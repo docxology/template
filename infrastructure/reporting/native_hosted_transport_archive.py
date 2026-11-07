@@ -1,4 +1,4 @@
-"""Closed Source-native archive bounds and confined member decoding."""
+"""Source-native archive encoding, bounded decoding and output layout."""
 
 from __future__ import annotations
 
@@ -6,9 +6,11 @@ import io
 import re
 import stat
 import zipfile
+from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 SCHEMA = "template-source-native-hosted-transport-v2"
 INDEX_ARTIFACT = "required-source-native-index"
@@ -18,6 +20,26 @@ MAX_MEMBERS = 200_000
 MAX_TOTAL = 8 * 1024 * 1024 * 1024
 MAX_CHUNK = 8 * 1024 * 1024
 MAX_SHARD = 32 * 1024 * 1024
+
+
+def encode_transport_zip(members: Mapping[str, bytes]) -> bytes:
+    """Encode a sorted, stored archive with a fixed timestamp and file mode."""
+    destination = io.BytesIO()
+    with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_STORED) as archive:
+        for label, body in sorted(members.items()):
+            entry = zipfile.ZipInfo(label, date_time=(1980, 1, 1, 0, 0, 0))
+            entry.create_system = 3
+            entry.external_attr = (stat.S_IFREG | 0o600) << 16
+            archive.writestr(entry, body)
+    return destination.getvalue()
+
+
+def is_transport_output(label: str) -> bool:
+    """Classify a canonical label as output rather than authored Source."""
+    path = Path(label)
+    return path.is_relative_to("output") or any(
+        path.is_relative_to(Path("projects") / scope / "output") for scope in PUBLIC_PROJECT_NAMES
+    )
 
 
 def _file_identity(path: Path) -> tuple[int, ...]:

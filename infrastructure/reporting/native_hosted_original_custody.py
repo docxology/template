@@ -48,6 +48,7 @@ from infrastructure.reporting.native_hosted_transport_archive import (
     _hash,
     _archive,
     _file_identity,
+    is_transport_output,
 )
 
 _COLLECTOR_KEY = object()
@@ -66,10 +67,8 @@ def _receive_native_original_file(
     when one exists. A differing earlier derived/evidence file is never replaced.
     This filesystem helper grants no Source or transport authentication itself.
     """
-    from infrastructure.reporting.native_hosted_original_producer import _mutable_output
-
     label = _path(label)
-    if not _mutable_output(label):
+    if not is_transport_output(label):
         raise ValueError("native hosted extraction refuses authored Source paths")
     target = root / label
     if target.exists() or target.is_symlink():

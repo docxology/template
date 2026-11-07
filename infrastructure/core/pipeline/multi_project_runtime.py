@@ -12,7 +12,7 @@ import sys
 import tempfile
 import time
 import uuid
-from dataclasses import dataclass, fields
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence, TYPE_CHECKING
 
@@ -33,11 +33,10 @@ from infrastructure.core.pipeline.plan import ExecutionPlan, compile_execution_p
 from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
 from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
 from infrastructure.core.pipeline.multi_project_output import BoundedWorkerOutput
+from infrastructure.core.pipeline.worker_transport import WORKER_SCHEMA, config_to_payload, results_from_payload
 
 if TYPE_CHECKING:
     from infrastructure.project.project_info import ProjectInfo
-
-WORKER_SCHEMA = "template-multi-project-worker/2"
 
 
 def _worker_bootstrap(implementation: Path, project: Path) -> str:
@@ -58,20 +57,8 @@ class ProjectExecutionSpec:
     plan: ExecutionPlan
 
     def to_dict(self) -> dict[str, Any]:
-        config = self.config
         return {
-            "config": {
-                "project_name": config.project_name,
-                "repo_root": str(config.repo_root),
-                "projects_dir": config.projects_dir,
-                "clean": config.clean,
-                "skip_infra": config.skip_infra,
-                "resume": config.resume,
-                "shared_infrastructure": config.shared_infrastructure,
-                "mode": config.mode,
-                "run_timeout_seconds": config.run_timeout_seconds,
-                "pipeline_path": str(config.pipeline_path) if config.pipeline_path is not None else None,
-            },
+            "config": config_to_payload(self.config),
             "plan": self.plan.to_dict(),
             "plan_digest": self.plan.digest,
         }
@@ -156,53 +143,6 @@ def selected_shared_config(specs: tuple[ProjectExecutionSpec, ...]) -> PipelineC
 def freeze_shared_plan(specs: tuple[ProjectExecutionSpec, ...]) -> ProjectExecutionSpec:
     config = selected_shared_config(specs)
     return ProjectExecutionSpec(config, compile_execution_plan(config, target_stage="infra_tests"))
-
-
-def results_from_payload(rows: Any) -> list[PipelineStageResult]:
-    """Refuse malformed or contradictory stage evidence at the worker boundary."""
-    if not isinstance(rows, list):
-        raise ValueError("Worker stage results must be a list")
-    expected = {field.name for field in fields(PipelineStageResult)}
-    result = []
-    for raw in rows:
-        if not isinstance(raw, dict) or set(raw) != expected or not isinstance(raw["outcome"], dict):
-            raise ValueError("Worker must return complete typed stage evidence")
-        row = dict(raw)
-        for name in ("success", "hitl_pause", "stage_completed"):
-            if type(row[name]) is not bool:
-                raise ValueError("Worker stage flags must be exact booleans")
-        if (
-            type(row["stage_num"]) is not int
-            or row["stage_num"] < 0
-            or type(row["exit_code"]) is not int
-            or isinstance(row["duration"], bool)
-            or not isinstance(row["duration"], (int, float))
-            or not math.isfinite(row["duration"])
-            or row["duration"] < 0
-        ):
-            raise ValueError("Worker stage numeric evidence is invalid")
-        if any(
-            not isinstance(row[name], str)
-            for name in ("stage_name", "error_message", "exception_type", "stage_key", "input_digest", "output_digest")
-        ):
-            raise ValueError("Worker stage text evidence must be strings")
-        if not isinstance(row["lessons"], list) or any(not isinstance(item, str) for item in row["lessons"]):
-            raise ValueError("Worker stage lessons must be a string list")
-        outcome = dict(row["outcome"])
-        if set(outcome) != {field.name for field in fields(StageOutcome)}:
-            raise ValueError("Worker stage outcome requires exact evidence fields")
-        if any(not isinstance(outcome[name], str) for name in ("stage_key", "diagnostic", "reason", "status")):
-            raise ValueError("Worker outcome text evidence must be strings")
-        if not isinstance(outcome["attempt_exit_codes"], list):
-            raise ValueError("Worker attempt codes must be a list")
-        outcome["status"] = StageStatus(outcome["status"])
-        outcome["attempt_exit_codes"] = tuple(outcome["attempt_exit_codes"])
-        row["outcome"] = StageOutcome(**outcome)
-        row["lessons"] = tuple(row["lessons"])
-        if row["stage_key"] != row["outcome"].stage_key or row["success"] != row["outcome"].complete:
-            raise ValueError("Worker stage and outcome identities or completion differ")
-        result.append(PipelineStageResult(**row))
-    return result
 
 
 def runtime_failure(

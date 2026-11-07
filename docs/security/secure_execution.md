@@ -85,6 +85,8 @@ STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh \
   --project templates/template_code_project
 ```
 
+The configured `output_suffix` is reserved at the end of PDF stems for secure variants. Secure runs skip these variants and legacy filenames containing `_steganography`, so a repeated run processes the same source PDFs.
+
 Trade-offs and internals: [steganography.md § Deterministic mode](steganography.md#deterministic-mode).
 
 ## See also

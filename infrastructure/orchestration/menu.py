@@ -5,14 +5,17 @@ Replaces the menu logic that previously lived in ``run.sh``. Pure functions:
 - :func:`render_menu` returns a deterministic string given a project name.
   Tests assert on the literal output rather than driving a TTY.
 - :func:`parse_choice_sequence` mirrors the bash helper of the same name.
-- :data:`MENU_OPTIONS` is the canonical ordered list of menu actions.
+- :data:`MENU_OPTIONS` exposes the ordered display rows from the action catalog.
 
 Interactive prompts and the menu redraw loop live in
 ``infrastructure.orchestration.cli`` (:func:`_interactive`).
 """
 
 from collections.abc import Iterable
+from dataclasses import dataclass
+from typing import Literal
 
+from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
 from infrastructure.core.pipeline.stage_vocabulary import (
     menu_stage_names,
 )
@@ -29,40 +32,80 @@ _MENU_FRAME_WIDTH = 74
 # Section dividers extend to match the widest menu row (~76 chars).
 _SECTION_BAR_WIDTH = 76
 
-# Canonical menu options. Each tuple is (key, label, description).
-MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (
-    ("0", "Environment Setup", "stage_00_setup.py"),
-    ("1", "Run Project Tests", "stage_01_test.py (project only)"),
-    ("2", "Run Analysis", "stage_02_analysis.py"),
-    ("3", "Render PDF", "stage_03_render.py"),
-    ("4", "Validate Output", "stage_04_validate.py"),
-    ("5", "Copy Outputs", "stage_05_copy.py"),
-    ("6", "LLM Review", "stage_06_llm_review.py reviews (Ollama)"),
-    ("7", "LLM Translations", "stage_06_llm_review.py translations (Ollama)"),
-    (
-        "8",
-        "Core Pipeline",
-        "current project · infra on · local stages",
+
+@dataclass(frozen=True)
+class MenuAction:
+    """Display and invocation policy for one menu choice."""
+
+    section: Literal["stage", "pipeline", "multi", "project"]
+    label: str
+    detail: str = ""
+    stage: str | None = None
+    mode: Literal["core", "live"] = "core"
+    skip_infra: bool = False
+    control: Literal["select", "info", "quit"] | None = None
+    exit_when_alone: bool = False
+
+
+_MENU_ACTIONS: dict[str, MenuAction] = {
+    "0": MenuAction("stage", "Environment Setup", "stage_00_setup.py", stage=MENU_KEY_TO_STAGE["0"]),
+    "1": MenuAction("stage", "Run Project Tests", "stage_01_test.py (project only)", stage=MENU_KEY_TO_STAGE["1"]),
+    "2": MenuAction("stage", "Run Analysis", "stage_02_analysis.py", stage=MENU_KEY_TO_STAGE["2"]),
+    "3": MenuAction("stage", "Render PDF", "stage_03_render.py", stage=MENU_KEY_TO_STAGE["3"]),
+    "4": MenuAction("stage", "Validate Output", "stage_04_validate.py", stage=MENU_KEY_TO_STAGE["4"]),
+    "5": MenuAction("stage", "Copy Outputs", "stage_05_copy.py", stage=MENU_KEY_TO_STAGE["5"]),
+    "6": MenuAction(
+        "stage", "LLM Review", "stage_06_llm_review.py reviews (Ollama)", stage=MENU_KEY_TO_STAGE["6"], mode="live"
     ),
-    (
-        "9",
-        "Live Pipeline",
-        "current project · infra on · live stages",
+    "7": MenuAction(
+        "stage",
+        "LLM Translations",
+        "stage_06_llm_review.py translations (Ollama)",
+        stage=MENU_KEY_TO_STAGE["7"],
+        mode="live",
     ),
-    ("f", "Live Pipeline (fast)", "current project · skip infra · LLM on"),
-    ("a", "All projects live", "all projects · infra on · LLM on · report"),
-    ("b", "All projects live (fast)", "all projects · skip infra · LLM on · report"),
-    ("c", "All projects core", "all projects · infra on · LLM off · report"),
-    ("d", "All projects core (fast)", "all projects · skip infra · LLM off · report"),
-    ("p", "Change Project", ""),
-    ("i", "Show Project Info", ""),
-    ("q", "Quit", ""),
+    "8": MenuAction("pipeline", "Core Pipeline", "current project · infra on · local stages"),
+    "9": MenuAction("pipeline", "Live Pipeline", "current project · infra on · live stages", mode="live"),
+    "f": MenuAction(
+        "pipeline", "Live Pipeline (fast)", "current project · skip infra · LLM on", mode="live", skip_infra=True
+    ),
+    "a": MenuAction("multi", "All projects live", "all projects · infra on · LLM on · report", mode="live"),
+    "b": MenuAction(
+        "multi", "All projects live (fast)", "all projects · skip infra · LLM on · report", mode="live", skip_infra=True
+    ),
+    "c": MenuAction("multi", "All projects core", "all projects · infra on · LLM off · report"),
+    "d": MenuAction(
+        "multi",
+        "All projects core (fast)",
+        "all projects · skip infra · LLM off · report",
+        skip_infra=True,
+        exit_when_alone=True,
+    ),
+    "p": MenuAction("project", "Change Project", control="select"),
+    "i": MenuAction("project", "Show Project Info", control="info"),
+    "q": MenuAction("project", "Quit", control="quit"),
+}
+
+MENU_OPTIONS: tuple[tuple[str, str, str], ...] = tuple(
+    (key, action.label, action.detail) for key, action in _MENU_ACTIONS.items()
 )
+
+_MENU_SECTIONS = (
+    ("stage", "INDIVIDUAL STAGES", "one script per key"),
+    ("pipeline", "ORCHESTRATION", "full DAG, current project"),
+    ("multi", "MULTI-PROJECT", "every discovered project"),
+    ("project", "PROJECT", ""),
+)
+
+
+def menu_action(key: str) -> MenuAction | None:
+    """Look up a parsed menu choice."""
+    return _MENU_ACTIONS.get(key)
 
 
 def menu_keys() -> set[str]:
     """Return the set of valid single-character menu keys."""
-    return {key for key, _, _ in MENU_OPTIONS}
+    return set(_MENU_ACTIONS)
 
 
 def _menu_row(key: str, label: str, detail: str) -> str:
@@ -136,33 +179,15 @@ def render_menu(current_project: str) -> str:
     lines.append("")
     lines.append("")
 
-    # Individual stages — one script per key.
-    lines.append(_section_header("INDIVIDUAL STAGES", "one script per key"))
-    lines.append("")
-    for key, label, desc in MENU_OPTIONS[:8]:
-        lines.append(_menu_row(key, label, desc))
-    lines.append("")
-
-    # Orchestration — full DAG against the currently-selected project.
-    lines.append(_section_header("ORCHESTRATION", "full DAG, current project"))
-    lines.append("")
-    for key, label, desc in MENU_OPTIONS[8:11]:
-        lines.append(_menu_row(key, label, desc))
-    lines.append("")
-
-    # Multi-project — sweep every discovered project.
-    lines.append(_section_header("MULTI-PROJECT", "every discovered project"))
-    lines.append("")
-    for key, label, desc in MENU_OPTIONS[11:15]:
-        lines.append(_menu_row(key, label, desc))
-    lines.append("")
-
-    # Project controls.
-    lines.append(_section_header("PROJECT"))
-    lines.append("")
-    for key, label, _ in MENU_OPTIONS[15:]:
-        lines.append(_menu_row(key, label, ""))
-    lines.append("")
+    for section, title, subtitle in _MENU_SECTIONS:
+        lines.append(_section_header(title, subtitle))
+        lines.append("")
+        lines.extend(
+            _menu_row(key, action.label, action.detail)
+            for key, action in _MENU_ACTIONS.items()
+            if action.section == section
+        )
+        lines.append("")
 
     # Legend — kept on stable wording so tests assert on literal substrings.
     footer_bar = _ascii_rule("-", fw)

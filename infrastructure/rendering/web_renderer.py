@@ -18,7 +18,7 @@ from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
-from infrastructure.rendering.manuscript_composition import write_manuscript_composition
+from infrastructure.rendering.manuscript_composition import COMPOSITION_RELATIVE_PATH, write_manuscript_composition
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.combined_native_commands import html_combined_command, html_metadata_arguments
@@ -48,12 +48,11 @@ class WebRenderer:
     def render(self, source_file: Path) -> Path:
         """Render markdown to HTML."""
         output_dir = Path(self.config.web_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
         output_file = self._output_file_for_source(source_file)
         profile = self.config.security()
         profile.validate_output(output_file)
         profile.validate_source(source_file)
+        profile.prepare_output_directory(output_dir)
 
         # Apply the same web-only markdown pass used for the combined build so
         # per-section HTML resolves Pandoc ``[@key]`` citations and raw-LaTeX
@@ -187,13 +186,15 @@ class WebRenderer:
         logger.info("=" * BANNER_WIDTH + "\n")
 
         output_dir = Path(self.config.web_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
         output_file = output_dir / "index.html"
         profile = self.config.security()
         profile.validate_output(output_file)
         for source_file in source_files:
             profile.validate_source(source_file)
+        if profile.untrusted:
+            receipt_parent = (output_dir.parents[1] / COMPOSITION_RELATIVE_PATH).parent
+            profile.validate_output_tree(receipt_parent, allow_missing_root=True)
+        profile.prepare_output_directory(output_dir)
 
         # Remove existing output file to ensure fresh generation
         if output_file.exists():

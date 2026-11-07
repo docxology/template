@@ -14,7 +14,13 @@ from pathlib import Path
 from dataclasses import asdict, dataclass, field
 
 from infrastructure.core.logging.utils import get_logger, log_operation
-from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig, resolve_git_commit
+from infrastructure.steganography.artifact_paths import hash_manifest_path, secure_pdf_path
+from infrastructure.steganography.config import (
+    BuildIdentity,
+    DocumentMetadata,
+    SteganographyConfig,
+    resolve_build_identity,
+)
 
 logger = get_logger(__name__)
 
@@ -31,6 +37,7 @@ class BarcodeBuildContext:
     hashes: dict[str, str] = field(default_factory=dict)
     source_filename: str = ""
     source_file_size: int = 0
+    timestamp: str | None = None
 
 
 @dataclass(frozen=True)
@@ -40,7 +47,7 @@ class ProcessingContext:
     config: SteganographyConfig
     document_id: str
     hashes: dict[str, str]
-    git_commit: str | None
+    build: BuildIdentity
     source_file_size: int
 
 
@@ -55,9 +62,15 @@ class SteganographyProcessor:
         processor.process(Path("paper.pdf"), Path("paper_steganography.pdf"))
     """
 
-    def __init__(self, config: SteganographyConfig | None = None):
-        """Initialize steganography processor with configuration."""
+    def __init__(
+        self,
+        config: SteganographyConfig | None = None,
+        *,
+        repo_root: Path | None = None,
+    ):
+        """Initialize a processor with configuration and optional explicit build provenance."""
         self.config = config or SteganographyConfig()
+        self.repo_root = repo_root
 
     # ── Public API ───────────────────────────────────────────────────
 
@@ -92,14 +105,12 @@ class SteganographyProcessor:
         if not input_pdf.exists():
             raise FileNotFoundError(f"Input PDF not found: {input_pdf}")
         if output_pdf is None:
-            output_pdf = input_pdf.with_stem(input_pdf.stem + config.output_suffix)
+            output_pdf = secure_pdf_path(input_pdf, config.output_suffix)
 
         from infrastructure.steganography.encryption import generate_document_id
         from infrastructure.steganography.publication import publish_artifacts, validate_destinations, validate_pdf
 
-        manifest_path = (
-            input_pdf.with_suffix(".hashes.json") if config.hashing_enabled and config.manifest_enabled else None
-        )
+        manifest_path = hash_manifest_path(input_pdf) if config.hashing_enabled and config.manifest_enabled else None
         destinations = [output_pdf, *([manifest_path] if manifest_path is not None else [])]
         if config.kmyth_enabled:
             for artifact in config.kmyth_seal_artifacts:
@@ -126,11 +137,12 @@ class SteganographyProcessor:
             directory = Path(temporary)
             working_pdf = directory / "working.pdf"
             shutil.copy2(input_pdf, working_pdf)
+            build = resolve_build_identity(repo_root=self.repo_root)
             ctx = ProcessingContext(
                 config=config,
-                document_id=generate_document_id(),
+                document_id=generate_document_id(deterministic=build.deterministic, timestamp=build.timestamp),
                 hashes=self._step_hashing(working_pdf, config) if config.hashing_enabled else {},
-                git_commit=resolve_git_commit(),
+                build=build,
                 source_file_size=working_pdf.stat().st_size,
             )
             if config.overlays_enabled or config.barcodes_enabled:
@@ -143,6 +155,7 @@ class SteganographyProcessor:
                     hashes=ctx.hashes,
                     source_filename=input_pdf.name,
                     source_file_size=ctx.source_file_size,
+                    timestamp=ctx.build.timestamp,
                 )
                 working_pdf = self._step_overlays_and_barcodes(working_pdf, barcode_context, config)
             if config.metadata_enabled:
@@ -219,6 +232,7 @@ class SteganographyProcessor:
                 title=ctx.title,
                 hashes=ctx.hashes,
                 document_id=ctx.document_id,
+                timestamp=ctx.timestamp,
             )
 
         for page_idx, page in enumerate(reader.pages):
@@ -270,7 +284,7 @@ class SteganographyProcessor:
                     source_filename=ctx.source_filename,
                     source_file_size=ctx.source_file_size,
                 )
-                footer_bytes = create_footer_overlay(page_width, page_height, footer_cfg)
+                footer_bytes = create_footer_overlay(page_width, page_height, footer_cfg, timestamp=ctx.timestamp)
                 footer_page = PdfReader(io.BytesIO(footer_bytes)).pages[0]
                 out_page.merge_page(footer_page)
 
@@ -300,6 +314,7 @@ class SteganographyProcessor:
                     source_filename=ctx.source_filename,
                     total_pages=total_pages,
                     source_file_size=ctx.source_file_size,
+                    timestamp=ctx.timestamp,
                 )
                 bc_page = PdfReader(io.BytesIO(bc_bytes)).pages[0]
                 out_page.merge_page(bc_page)
@@ -337,9 +352,10 @@ class SteganographyProcessor:
             hashes=ctx.hashes,
             document_id=ctx.document_id,
             keywords=keywords,
+            timestamp=ctx.build.timestamp,
             extra={
-                "GitCommit": ctx.git_commit or "unavailable",
-                "GitCommitAvailable": str(bool(ctx.git_commit)).lower(),
+                "GitCommit": ctx.build.git_commit or "unavailable",
+                "GitCommitAvailable": str(bool(ctx.build.git_commit)).lower(),
             },
         )
         meta = build_document_metadata(doc)
@@ -349,8 +365,8 @@ class SteganographyProcessor:
             "document_id": ctx.document_id,
             "hashes": ctx.hashes,
             "title": title,
-            "git_commit": ctx.git_commit,
-            "git_commit_available": bool(ctx.git_commit),
+            "git_commit": ctx.build.git_commit,
+            "git_commit_available": bool(ctx.build.git_commit),
             "steganography_applied": True,
         }
         attachments = {"stego_manifest.json": json.dumps(manifest_dict, indent=2).encode("utf-8")}
@@ -383,11 +399,12 @@ class SteganographyProcessor:
             original_pdf,
             ctx.hashes,
             output_path=output_path,
+            timestamp=ctx.build.timestamp,
             extra={
                 "document_id": ctx.document_id,
                 "source_size_bytes": ctx.source_file_size,
-                "git_commit": ctx.git_commit,
-                "git_commit_available": bool(ctx.git_commit),
+                "git_commit": ctx.build.git_commit,
+                "git_commit_available": bool(ctx.build.git_commit),
                 "steganography_applied": "true",
             },
         )

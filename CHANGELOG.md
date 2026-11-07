@@ -7,6 +7,24 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.2.0] - 2026-11-07
+
+See the [5.2.0 candidate notes](docs/releases/v5.2.0.md). This minor preparation
+coordinates the Root SDK and all 25 canonical exemplar compatibility bindings
+with preserved own versions, provider declarations and third-party locks.
+
+- Share lifecycle traversal and direct public selection, keeping private
+  workspaces outside the public roster.
+- Consolidate stage vocabulary and target admission, worker transport, report
+  validation and archive readback under their owning contracts.
+- Check untrusted rendering destinations before cleanup or writes. Preserve
+  secure-PDF provenance and custom-suffix idempotence across repeated runs.
+- Build Active Inference certificate and crosswalk output from a single ledger
+  projection and regenerate its method inventory.
+- Measure current release-profile coverage, regenerate dependent publication
+  outputs and validate the resulting committed tree before exact-main
+  acceptance and authenticated publication.
+
 ## [5.1.0] - 2026-11-06
 
 See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor

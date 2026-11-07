@@ -46,18 +46,7 @@ def execute_resolved_plan(
 
     validate_shared_runtime(executor.config, plan)
     plan.admit_targets(executor.config.repo_root)
-    executor.execution_plan = plan
-    executor._plan_digest = plan.digest
-    executor.config.total_stages = len(plan.stages)
-    executor._artifact_manifest_boundary_keys = frozenset(
-        stage.key for stage in plan.stages if stage.validation_boundary
-    )
-    executor._artifact_manifest_boundary_names = frozenset(
-        stage.name for stage in plan.stages if stage.validation_boundary
-    )
-    executor.checkpoint_manager.expected_plan_digest = plan.digest
-    executor.checkpoint_manager.expected_source_digest = plan.source_identity
-    executor.checkpoint_manager.run_id = executor.run_id
+    executor._install_execution_plan(plan)
     executor._run_deadline = deadline
     stages = plan.bind(executor)
     guard = execution_guard_result(

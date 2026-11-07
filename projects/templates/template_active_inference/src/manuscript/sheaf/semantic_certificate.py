@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -13,12 +14,12 @@ from manuscript.sheaf.coverage import gray_cell_count, load_sheaf_coverage_conte
 from manuscript.sheaf.semantic_evidence import (
     _canonical_restriction_snapshot,
     _claim_records,
+    _crosswalk_from_claims,
     _section_records,
     _semantic_artifact_sources,
     _semantic_payloads,
     _semantic_shared_symbols,
     _semantic_track_rows,
-    build_evidence_crosswalk,
     build_validation_dependency_graph,
 )
 from manuscript.sheaf.semantic_issues import semantic_gluing_issues
@@ -85,11 +86,12 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
     from validation_spine import validate_validation_spine
 
     proof_obligations = _proof_obligation_rows(canonical_restrictions)
+    claims = _claim_records(root)
     restrictions = {
         "coverage_missing": gray_cell_count(ctx.matrix),
         "section_count": len(ctx.manifest.sections),
         "track_count": len(ctx.registry.tracks),
-        "claim_count": len(_claim_records(root)),
+        "claim_count": len(claims),
         "policy_comparison_run_count": policy["run_count"],
         "policy_comparison_modes": policy["modes"],
         "policy_comparison_horizons": policy["horizons"],
@@ -199,8 +201,8 @@ def build_semantic_gluing_certificate(project_root: Path) -> dict[str, Any]:
         "artifact_sources": _semantic_artifact_sources(root),
         "restrictions": restrictions,
         "artifact_graph": dependency_graph["artifacts"],
-        "evidence_crosswalk": build_evidence_crosswalk(root),
-        "claims": _claim_records(root),
+        "evidence_crosswalk": _crosswalk_from_claims(root, deepcopy(claims)),
+        "claims": claims,
         "manuscript_variables": variables,
     }
 

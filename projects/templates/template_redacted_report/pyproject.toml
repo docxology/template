@@ -17,7 +17,7 @@ classifiers = [
 # visuals.py renders proof PDFs with reportlab and re-parses them with pypdf;
 # the isolated per-project interpreter needs both (mirrors template_pitch_deck).
 dependencies = [
-    "research-project-template==5.1.0",
+    "research-project-template==5.2.0",
     "pyyaml>=6.0",
     "reportlab>=4.0.0",
     # 6.21.4 is the first pypdf release with no open advisory: the pinned floors carried 18 advisories and 326 open Dependabot alerts in this repository. Do not lower this floor.
@@ -77,6 +77,6 @@ exclude_lines = [
 research-project-template = { path = "../../..", editable = true }
 
 [tool.template]
-platform_version = "5.1.0"
+platform_version = "5.2.0"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["raster-redaction"]

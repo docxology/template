@@ -27,34 +27,6 @@ def _configured_analysis_scripts(root: Path) -> list[str]:
     return [str(script) for script in scripts]
 
 
-def _claim_records(root: Path) -> list[dict[str, Any]]:
-    path = root / "data" / "claim_ledger.yaml"
-    ledger = load_yaml(path)
-    records: list[dict[str, Any]] = []
-    for claim in ledger.get("claims") or []:
-        records.append(
-            {
-                "id": claim.get("id"),
-                "statement": claim.get("statement"),
-                "path": claim.get("path"),
-                "section": claim.get("section"),
-                "tracks": claim.get("tracks") or [],
-                "evidence": claim.get("evidence") or {},
-            }
-        )
-    return records
-
-
-def _claims_by_path(root: Path) -> dict[str, list[str]]:
-    claims: dict[str, list[str]] = {}
-    for claim in _claim_records(root):
-        path = claim.get("path")
-        claim_id = claim.get("id")
-        if path and claim_id:
-            claims.setdefault(str(path), []).append(str(claim_id))
-    return claims
-
-
 def _animation_frame_count(root: Path) -> int:
     gif_path = root / "output" / "figures" / "si_belief_trajectory.gif"
     if not gif_path.is_file():

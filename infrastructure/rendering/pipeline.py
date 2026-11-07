@@ -11,7 +11,8 @@ This module coordinates the PDF rendering stage by:
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+import os
 from pathlib import Path
 from typing import Any
 
@@ -45,9 +46,14 @@ from infrastructure.rendering._pipeline_summary import (
     verify_pdf_outputs,
     verify_render_outputs,
 )
-from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.config import (
+    RenderingConfig,
+    load_render_config_for_verification,
+    render_config_manuscript_dir,
+)
 from infrastructure.rendering._paper_frontmatter import resolve_paper_layout, declared_frontmatter
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files, verify_figures_exist
+from infrastructure.rendering.native_render_custody import native_render_custody
 from infrastructure.rendering import RenderManager
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 
@@ -103,6 +109,41 @@ def _prepare_bookends_before_hydration(
         logger.warning("Transmission bookend preparation skipped: %s", exc)
 
 
+@dataclass(frozen=True)
+class _PreparedUntrustedRender:
+    manuscript_dir: Path
+    source_files: list[Path]
+    settings: RenderingConfig
+
+
+def _prepare_untrusted_render(
+    project_root: Path, deps: RenderPipelineDependencies, *, skip_manuscript_hydration: bool
+) -> _PreparedUntrustedRender | None:
+    """Admit only the preprepared HTML route with a covered process boundary."""
+    if os.environ.get("RENDER_SECURITY_PROFILE", "trusted-local") == "trusted-local":
+        return None
+    env = dict(os.environ)
+    profile = RenderingConfig.from_env(env).security()
+    profile.validate_output_tree(project_root / "output")
+    if not skip_manuscript_hydration:
+        raise RenderingError("untrusted Stage 3 requires --skip-manuscript-hydration and prepared inputs")
+    if native_render_custody("untrusted Stage 3 cannot use a native render origin") is not None:
+        raise RenderingError("untrusted Stage 3 cannot use native render launchers")
+    manuscript_dir = render_config_manuscript_dir(project_root)
+    verify_config_tokens_resolved(manuscript_dir / "config.yaml")
+    settings = load_render_config_for_verification(manuscript_dir, env=env)
+    if not settings.enable_html or any(
+        (settings.enable_pdf, settings.enable_slides, settings.enable_docx, settings.enable_epub)
+    ):
+        raise RenderingError("untrusted Stage 3 supports only the HTML format")
+    source_files = deps.discover_manuscript(manuscript_dir)
+    if not source_files or any(source.suffix != ".md" for source in source_files):
+        raise RenderingError("untrusted Stage 3 requires prepared Markdown inputs")
+    for source in source_files:
+        profile.validate_source(source)
+    return _PreparedUntrustedRender(manuscript_dir, source_files, settings)
+
+
 def _render_pipeline_impl(
     project_name: str = "project",
     *,
@@ -118,6 +159,7 @@ def _render_pipeline_impl(
     if not project_root.is_dir():
         logger.error(f"Project directory not found: {project_root}")
         return 1
+    untrusted = _prepare_untrusted_render(project_root, deps, skip_manuscript_hydration=skip_manuscript_hydration)
     reporter = DiagnosticReporter(
         project_name=project_name,
         output_dir=project_root / "output",
@@ -125,35 +167,35 @@ def _render_pipeline_impl(
     )
     reporter.clear_report()
 
-    if skip_manuscript_hydration:
-        logger.info("Skipping manuscript-variable hydration (--skip-manuscript-hydration)")
-    else:
-        _prepare_bookends_before_hydration(project_root, project_name, root, deps)
-        hydration_exit = deps.hydrate_manuscript(project_root, template_repo_root=root)
-        if hydration_exit != 0:
-            return hydration_exit
-
-    try:
-        manuscript_dir = resolve_manuscript_dir(project_root)
-    except ValidationError as exc:
-        # config.yaml feeds the PDF title page; an unresolved {{TOKEN}} there
-        # would print verbatim on the published cover. Fail closed instead.
-        logger.error("❌ %s", exc.message)
-        for suggestion in exc.suggestions:
-            logger.error("   %s", suggestion)
-        return 1
-
-    # Paper-frontmatter admission excludes transmission semantics. Do not run
-    # the legacy producer, which also consults source-project configuration,
-    # against this explicit consumed paper layout.
-    if not declared_frontmatter(deps.load_project_config(manuscript_dir)):
+    if untrusted is None:
+        if skip_manuscript_hydration:
+            logger.info("Skipping manuscript-variable hydration (--skip-manuscript-hydration)")
+        else:
+            _prepare_bookends_before_hydration(project_root, project_name, root, deps)
+            hydration_exit = deps.hydrate_manuscript(project_root, template_repo_root=root)
+            if hydration_exit != 0:
+                return hydration_exit
         try:
-            deps.write_bookends(project_root, project_name, repo_root=root)
-        except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
-            logger.warning("Transmission bookend generation skipped: %s", exc)
-
-    if deps.validate_latex() != 0:
-        return 1
+            manuscript_dir = resolve_manuscript_dir(project_root)
+        except ValidationError as exc:
+            # config.yaml feeds the PDF title page; an unresolved {{TOKEN}} there
+            # would print verbatim on the published cover. Fail closed instead.
+            logger.error("❌ %s", exc.message)
+            for suggestion in exc.suggestions:
+                logger.error("   %s", suggestion)
+            return 1
+        # Paper-frontmatter admission excludes transmission semantics. Do not run
+        # the legacy producer, which also consults source-project configuration,
+        # against this explicit consumed paper layout.
+        if not declared_frontmatter(deps.load_project_config(manuscript_dir)):
+            try:
+                deps.write_bookends(project_root, project_name, repo_root=root)
+            except Exception as exc:  # noqa: BLE001 — bookends must not block rendering
+                logger.warning("Transmission bookend generation skipped: %s", exc)
+        if deps.validate_latex() != 0:
+            return 1
+    else:
+        manuscript_dir = untrusted.manuscript_dir
 
     logger.info("Verifying figures from analysis stage...")
     fig_status = deps.verify_figures(project_root, manuscript_dir)
@@ -164,7 +206,7 @@ def _render_pipeline_impl(
     else:
         logger.warning("  ⚠️  No figures found - will render PDF with missing figures")
 
-    source_files = deps.discover_manuscript(manuscript_dir)
+    source_files = deps.discover_manuscript(manuscript_dir) if untrusted is None else untrusted.source_files
     if not source_files:
         logger.error("No manuscript files found; refusing to validate prior render outputs")
         return 1
@@ -172,38 +214,27 @@ def _render_pipeline_impl(
     log_manuscript_composition(source_files)
 
     try:
-        project_yaml = deps.load_project_config(manuscript_dir)
-        env_config = RenderingConfig.from_project_config(project_yaml)
-        config = RenderingConfig(
+        settings = (
+            RenderingConfig.from_project_config(deps.load_project_config(manuscript_dir))
+            if untrusted is None
+            else untrusted.settings
+        )
+        output_dir = project_root / "output"
+        config = replace(
+            settings,
             manuscript_dir=str(manuscript_dir),
-            figures_dir=str(project_root / "output" / "figures"),
-            output_dir=str(project_root / "output"),
-            pdf_dir=str(project_root / "output" / "pdf"),
-            web_dir=str(project_root / "output" / "web"),
-            slides_dir=str(project_root / "output" / "slides"),
-            docx_dir=str(project_root / "output" / "docx"),
-            epub_dir=str(project_root / "output" / "epub"),
-            slide_theme=env_config.slide_theme,
-            slides_profile=env_config.slides_profile,
-            slides_max_prose_words=env_config.slides_max_prose_words,
-            slides_max_table_rows=env_config.slides_max_table_rows,
-            slides_min_figure_area_percent=env_config.slides_min_figure_area_percent,
-            slides_title_font_pt=env_config.slides_title_font_pt,
-            slides_body_font_pt=env_config.slides_body_font_pt,
-            slides_figure_label_font_pt=env_config.slides_figure_label_font_pt,
-            slides_reader_href=env_config.slides_reader_href,
-            enable_pdf=env_config.enable_pdf,
-            enable_html=env_config.enable_html,
-            enable_slides=env_config.enable_slides,
-            enable_docx=env_config.enable_docx,
-            enable_epub=env_config.enable_epub,
-            latex_compiler=env_config.latex_compiler,
-            pandoc_path=env_config.pandoc_path,
+            figures_dir=str(output_dir / "figures"),
+            output_dir=str(output_dir),
+            pdf_dir=str(output_dir / "pdf"),
+            web_dir=str(output_dir / "web"),
+            slides_dir=str(output_dir / "slides"),
+            docx_dir=str(output_dir / "docx"),
+            epub_dir=str(output_dir / "epub"),
         )
         manager = deps.manager_factory(
             config,
             manuscript_dir=manuscript_dir,
-            figures_dir=project_root / "output" / "figures",
+            figures_dir=output_dir / "figures",
         )
         log_success("Initialized RenderManager from infrastructure.rendering", logger)
         logger.info(
@@ -285,12 +316,7 @@ def execute_render_pipeline(
             dependencies=deps,
         )
         if exit_code == 0:
-            outputs_valid = deps.verify_outputs(project_name, repo_root=root)
-            if outputs_valid:
-                log_success("PDF rendering complete - ready for validation", logger)
-            else:
-                logger.error("PDF rendering completed but output verification failed")
-                exit_code = 1
+            log_success("PDF rendering complete - ready for validation", logger)
         else:
             logger.error("PDF rendering failed - check logs for details")
 

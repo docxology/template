@@ -39,7 +39,7 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header
-from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.project.discovery import validate_project_slug
 from infrastructure.orchestration.stage_policy import execute_copy_stage
 
 # Set up logger for this module

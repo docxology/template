@@ -44,9 +44,7 @@ from infrastructure.reporting.native_preparation_resources import PREPARATION_PE
 from infrastructure.reporting.native_readiness_input_copy import copy_original_common_readiness, copy_source_mirror_data
 
 
-def native_cell_scope(cell: str) -> str:
-    """Resolve one sharded matrix cell exactly as every hosted lane resolves it."""
-    return public_cell_scope(cell)
+native_cell_scope = public_cell_scope
 
 
 def native_preparation_scopes(mode: str, source: Path, cell: str | None = None) -> tuple[str, ...]:
@@ -106,6 +104,29 @@ def _signed_failure(result: dict[str, object]) -> int:
     return 75
 
 
+def _add_source_selection_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
+    parser.add_argument("--source-root", required=True, type=Path)
+
+
+def _add_cell_selection_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
+    parser.add_argument("--native-cell-union", action="store_true", help="read every genuine native matrix cell")
+
+
+def _selected_cell_scope(parser: argparse.ArgumentParser, args: argparse.Namespace) -> str | None:
+    if args.native_cell_union and (args.mode not in {"reader", "handoff"} or args.matrix_cell is not None):
+        parser.error("native cell union is exclusive to the complete reader or handoff")
+    if args.matrix_cell is None:
+        return None
+    if args.mode not in {"original", "reader"}:
+        parser.error("native matrix cell scoping applies only to the original and reader roles")
+    try:
+        return native_cell_scope(args.matrix_cell)
+    except ValueError as error:
+        parser.error(str(error))
+
+
 def _print_preparation_scopes(argv: list[str]) -> int:
     """Report the project scopes this invocation would prepare; acquire nothing.
 
@@ -116,23 +137,13 @@ def _print_preparation_scopes(argv: list[str]) -> int:
     whose own lock diverges cannot install offline from a Root-only warm.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
-    parser.add_argument("--source-root", required=True, type=Path)
-    parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
-    parser.add_argument("--native-cell-union", action="store_true", help="read every genuine native matrix cell")
+    _add_source_selection_arguments(parser)
+    _add_cell_selection_arguments(parser)
     parser.add_argument("--print-preparation-scopes", action="store_true", required=True)
     # Ignore the launch nominations this report does not consume, so the workflow
     # can pass the same argument vocabulary as the real invocation.
     args, _unknown = parser.parse_known_args(argv)
-    if args.native_cell_union and (args.mode not in {"reader", "handoff"} or args.matrix_cell is not None):
-        parser.error("native cell union is exclusive to the complete reader or handoff")
-    if args.matrix_cell is not None and args.mode not in {"original", "reader"}:
-        parser.error("native matrix cell scoping applies only to the original and reader roles")
-    if args.matrix_cell is not None:
-        try:
-            native_cell_scope(args.matrix_cell)
-        except ValueError as error:
-            parser.error(str(error))
+    _selected_cell_scope(parser, args)
     for scope in native_preparation_scopes(args.mode, args.source_root.resolve(strict=True), cell=args.matrix_cell):
         print(scope)
     return 0
@@ -148,8 +159,7 @@ def main(argv: list[str] | None = None) -> int:
         argv = sys.argv[1:]
     if "--print-preparation-scopes" in argv:
         return _print_preparation_scopes(argv)
-    parser.add_argument("--mode", required=True, choices=("original", "reader", "handoff", "preflight"))
-    parser.add_argument("--source-root", required=True, type=Path)
+    _add_source_selection_arguments(parser)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--source-identity", required=True)
     parser.add_argument("--current-root", required=True, type=Path)
@@ -157,8 +167,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--python", required=True, type=Path)
     parser.add_argument("--uv", required=True, type=Path)
     parser.add_argument("--timeout", type=int, default=14400)
-    parser.add_argument("--matrix-cell", help="run one declared public exemplar as a sharded matrix cell")
-    parser.add_argument("--native-cell-union", action="store_true", help="read every genuine native matrix cell")
+    _add_cell_selection_arguments(parser)
     parser.add_argument("--expected-platform", required=True, choices=("Linux", "Darwin"))
     parser.add_argument("--mermaid-package-root", required=True, type=Path)
     parser.add_argument("--mermaid-dependency-root", required=True, type=Path)
@@ -195,21 +204,10 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(
             f"diagnostic preflight requires an explicit timeout at most {PREFLIGHT_MAX_OPERATION_SECONDS} seconds"
         )
-    if args.native_cell_union and (args.mode not in {"reader", "handoff"} or args.matrix_cell is not None):
-        parser.error("native cell union is exclusive to the complete reader or handoff")
-    cell_scope: str | None = None
-    if args.matrix_cell is not None:
-        if args.mode not in {"original", "reader"}:
-            parser.error("native matrix cell scoping applies only to the original and reader roles")
-        try:
-            cell_scope = native_cell_scope(args.matrix_cell)
-        except ValueError as error:
-            parser.error(str(error))
+    cell_scope = _selected_cell_scope(parser, args)
     if args.print_preparation_scopes:
-        # Retained for parity with the workflow flag; main() answers this before
-        # any required nomination is parsed, so this branch is unreachable in the
-        # CLI but keeps direct main() callers honest.
-        return _print_preparation_scopes(argv if argv is not None else sys.argv[1:])
+        # Argparse can recognize an abbreviated option after full parsing.
+        return _print_preparation_scopes(argv)
     deadline = started + args.timeout
 
     # The inner owner must return and retain its receipts inside the outer

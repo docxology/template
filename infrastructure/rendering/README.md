@@ -685,6 +685,17 @@ primitives. This process profile is separate from the accessible composer's
 AST, TeX, and raster preflights; callers handling external material should use
 both boundaries rather than treating either one as a complete content sandbox.
 
+The Stage 3 orchestrator accepts `untrusted` for an HTML-only build from
+prepared Markdown. Use `--skip-manuscript-hydration` and an existing
+temporary root that contains the project's `output/` directory. Stage 3
+skips project hydration, transmission generation, and LaTeX probes in this
+profile. Linked or special files in the output tree cause an early refusal.
+Direct TeX compilation through `PDFRenderer.render()` can separately use
+the untrusted profile with XeLaTeX or pdfLaTeX. Compiler and recovery passes
+run in the admitted output directory with shell escape disabled and a
+credential-free environment. Untrusted deterministic TeX requires an
+explicit `SOURCE_DATE_EPOCH`.
+
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via
 `aria-details`. The concise `alt_text`, visible caption, and long

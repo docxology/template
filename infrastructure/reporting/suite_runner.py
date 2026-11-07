@@ -333,6 +333,28 @@ def _remaining_attempt_timeout_seconds(
     return max(0.0, min(per_attempt_timeout_seconds, total_deadline_seconds - current_time))
 
 
+def _retry_coverage_conflict(
+    config: TestSuiteConfig,
+    retry_count: int,
+    max_retries: int,
+    *,
+    retry_message: str,
+    exhausted_message: str,
+) -> bool:
+    """Apply the shared cleanup and retry transition for a classified conflict."""
+    label = config.label.lower()
+    if retry_count > max_retries:
+        logger.error(exhausted_message, label)
+        return False
+    logger.warning(retry_message, label, retry_count, max_retries)
+    clean_coverage_files(
+        config.repo_root,
+        scope_dir=config.coverage_cleanup_scope_dir,
+        recursive=config.coverage_cleanup_recursive,
+    )
+    return True
+
+
 def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     """Execute a test suite with retry on coverage conflicts.
 
@@ -395,49 +417,30 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
 
             if exit_code != 0 and is_coverage_conflict:
                 retry_count += 1
-                if retry_count <= max_retries:
-                    logger.warning(
-                        "Coverage data conflict detected for %s tests, cleaning stale files and retrying (%d/%d)...",
-                        config.label.lower(),
-                        retry_count,
-                        max_retries,
-                    )
-                    clean_coverage_files(
-                        config.repo_root,
-                        scope_dir=config.coverage_cleanup_scope_dir,
-                        recursive=config.coverage_cleanup_recursive,
-                    )
+                if _retry_coverage_conflict(
+                    config,
+                    retry_count,
+                    max_retries,
+                    retry_message=(
+                        "Coverage data conflict detected for %s tests, cleaning stale files and retrying (%d/%d)..."
+                    ),
+                    exhausted_message="Coverage data conflict persisted for %s tests after cleanup retry.",
+                ):
                     continue
-                else:
-                    logger.error(
-                        "Coverage data conflict persisted for %s tests after cleanup retry.",
-                        config.label.lower(),
-                    )
             break
 
         except subprocess.SubprocessError as e:
             error_msg = str(e)
             if "coverage.exceptions.DataError" in error_msg or "no such table: file" in error_msg:
                 retry_count += 1
-                if retry_count <= max_retries:
-                    logger.warning(
-                        "Coverage database corruption detected for %s, cleaning and retrying (%d/%d)...",
-                        config.label.lower(),
-                        retry_count,
-                        max_retries,
-                    )
-                    clean_coverage_files(
-                        config.repo_root,
-                        scope_dir=config.coverage_cleanup_scope_dir,
-                        recursive=config.coverage_cleanup_recursive,
-                    )
+                if _retry_coverage_conflict(
+                    config,
+                    retry_count,
+                    max_retries,
+                    retry_message="Coverage database corruption detected for %s, cleaning and retrying (%d/%d)...",
+                    exhausted_message="Coverage database corruption persisted after cleanup for %s",
+                ):
                     continue
-                else:
-                    logger.error(
-                        "Coverage database corruption persisted after cleanup for %s",
-                        config.label.lower(),
-                    )
-                    raise
             raise
 
     coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, config.coverage_json_paths)

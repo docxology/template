@@ -93,11 +93,11 @@ class PDFRenderer:
         For this implementation, we focus on LaTeX compilation.
         """
         if source_file.suffix == ".tex":
-            self.config.security().validate_source(source_file)
             return compile_latex(
                 source_file,
                 Path(self.config.pdf_dir),
                 compiler=self.config.latex_compiler,
+                security_profile=self.config.security(),
             )
 
         # Use Markdown rendering for .md files
@@ -123,12 +123,13 @@ class PDFRenderer:
             RenderingError: If Pandoc rendering fails
         """
         output_dir = Path(self.config.pdf_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
         output_file = output_dir / (output_name or f"{source_file.stem}.pdf")
         profile = self.config.security()
         profile.validate_output(output_file)
         profile.validate_source(source_file)
+        if profile.untrusted and output_file.parent != output_dir:
+            profile.validate_output_tree(output_file.parent, allow_missing_root=True)
+        profile.prepare_output_directory(output_dir)
 
         # Build resource paths to help pandoc find figures
         resource_paths = []

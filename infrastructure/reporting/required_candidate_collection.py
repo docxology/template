@@ -31,8 +31,8 @@ from infrastructure.reporting.native_hosted_transport_archive import (
     _file_identity,
     _hash,
     _path,
+    is_transport_output,
 )
-from infrastructure.reporting.native_hosted_original_producer import _mutable_output
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.required_candidate_transport import INDEX_PATH, SCHEMA, SHARD_PREFIX
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
@@ -223,7 +223,7 @@ def collect_required_candidate(
             raise ValueError("candidate logical file has unsupported fields")
         label, digest = _path(row["path"]), _hash(row["sha256"])
         if (
-            not _mutable_output(label)
+            not is_transport_output(label)
             or label in paths
             or type(row["bytes"]) is not int
             or not 0 <= row["bytes"] <= MAX_ARCHIVE

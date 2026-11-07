@@ -211,11 +211,16 @@ def _dotted_path(repo_root: Path, package_dir: Path) -> str:
     return ".".join(rel.parts)
 
 
-def _module_docstring_first_line(source: str) -> str | None:
-    """Return the first non-empty line of a module docstring, if any."""
+def _parse_module(source: str) -> ast.Module | None:
     try:
-        tree = ast.parse(source)
+        return ast.parse(source)
     except SyntaxError:
+        return None
+
+
+def _module_docstring_first_line(tree: ast.Module | None) -> str | None:
+    """Return the first non-empty line of a module docstring, if any."""
+    if tree is None:
         return None
     doc = ast.get_docstring(tree)
     if not doc:
@@ -227,11 +232,9 @@ def _module_docstring_first_line(source: str) -> str | None:
     return None
 
 
-def _extract_subcommands(source: str) -> tuple[SubcommandInfo, ...]:
+def _extract_subcommands(tree: ast.Module | None) -> tuple[SubcommandInfo, ...]:
     """Statically extract ``add_parser("name", help="...")`` subcommands."""
-    try:
-        tree = ast.parse(source)
-    except SyntaxError:
+    if tree is None:
         return ()
     found: list[SubcommandInfo] = []
     seen: set[str] = set()
@@ -258,11 +261,9 @@ def _extract_subcommands(source: str) -> tuple[SubcommandInfo, ...]:
     return tuple(found)
 
 
-def _dunder_all_from_source(source: str) -> tuple[str, ...]:
-    """Return the ``__all__`` list declared in module source (static)."""
-    try:
-        tree = ast.parse(source)
-    except SyntaxError:
+def _declared_exports(tree: ast.Module | None) -> tuple[str, ...]:
+    """Return the statically declared ``__all__`` list."""
+    if tree is None:
         return ()
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
@@ -283,16 +284,14 @@ def _extract_dunder_all(init_path: Path) -> tuple[str, ...]:
     if not init_path.is_file():
         return ()
     try:
-        return _dunder_all_from_source(init_path.read_text(encoding="utf-8"))
+        return _declared_exports(_parse_module(init_path.read_text(encoding="utf-8")))
     except OSError:
         return ()
 
 
-def _has_main_guard(source: str) -> bool:
+def _has_main_guard(tree: ast.Module | None) -> bool:
     """Return whether module source contains a top-level ``__name__ == "__main__"`` guard."""
-    try:
-        tree = ast.parse(source)
-    except SyntaxError:
+    if tree is None:
         return False
     for node in ast.walk(tree):
         if not isinstance(node, ast.If) or not isinstance(node.test, ast.Compare):
@@ -312,6 +311,24 @@ def _module_dotted_path(repo_root: Path, module_file: Path) -> str:
     """Return the dotted import path for a single-file ``.py`` module under repo root."""
     rel = module_file.resolve().relative_to(repo_root.resolve())
     return ".".join(rel.with_suffix("").parts)
+
+
+def _describe_operation(
+    root: Path,
+    module: str,
+    source_path: Path,
+    tree: ast.Module | None,
+    exports: tuple[str, ...],
+) -> OperationDescriptor:
+    return OperationDescriptor(
+        module=module,
+        invocation=f"python -m {module}",
+        source_path=source_path.resolve().relative_to(root).as_posix(),
+        purpose=_module_docstring_first_line(tree),
+        subcommands=_extract_subcommands(tree),
+        exports=exports,
+        effect=_operation_effect(module),
+    )
 
 
 def _cli_source_for(package_dir: Path) -> Path:
@@ -369,17 +386,9 @@ def discover_operations(
             package_dirs.add(package_dir)
             dotted = _dotted_path(root, package_dir)
             source_path = _cli_source_for(package_dir)
-            source = source_path.read_text(encoding="utf-8") if source_path.is_file() else ""
+            tree = _parse_module(source_path.read_text(encoding="utf-8")) if source_path.is_file() else None
             descriptors.append(
-                OperationDescriptor(
-                    module=dotted,
-                    invocation=f"python -m {dotted}",
-                    source_path=source_path.resolve().relative_to(root).as_posix(),
-                    purpose=_module_docstring_first_line(source),
-                    subcommands=_extract_subcommands(source),
-                    exports=_extract_dunder_all(package_dir / "__init__.py"),
-                    effect=_operation_effect(dotted),
-                )
+                _describe_operation(root, dotted, source_path, tree, _extract_dunder_all(package_dir / "__init__.py"))
             )
     for root_name in roots:
         base = root / root_name
@@ -398,20 +407,11 @@ def discover_operations(
                 source = py_path.read_text(encoding="utf-8")
             except OSError:
                 continue
-            if not _has_main_guard(source):
+            tree = _parse_module(source)
+            if not _has_main_guard(tree):
                 continue
             dotted = _module_dotted_path(root, py_path)
-            descriptors.append(
-                OperationDescriptor(
-                    module=dotted,
-                    invocation=f"python -m {dotted}",
-                    source_path=py_path.resolve().relative_to(root).as_posix(),
-                    purpose=_module_docstring_first_line(source),
-                    subcommands=_extract_subcommands(source),
-                    exports=_dunder_all_from_source(source),
-                    effect=_operation_effect(dotted),
-                )
-            )
+            descriptors.append(_describe_operation(root, dotted, py_path, tree, _declared_exports(tree)))
     descriptors.sort(key=lambda d: d.module)
     return descriptors
 

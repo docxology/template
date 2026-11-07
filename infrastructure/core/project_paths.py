@@ -155,10 +155,7 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     # under ``projects/`` without re-prepending the hot-seat prefix.
     head = project_name.split("/", 1)[0]
     if head in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
-        qualified = confined_candidate(project_name)
-        if qualified.is_dir():
-            return qualified
-        return qualified
+        return confined_candidate(project_name)
 
     primary = confined_candidate(f"active/{project_name}")
     if primary.is_dir() and has_project_markers(primary):
@@ -188,8 +185,6 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     # behavior of returning it so bespoke layouts and error paths still resolve.
     if flat.is_dir():
         return flat
-    if primary.is_dir():
-        return primary
     return primary
 
 

@@ -16,6 +16,7 @@ from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSI
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.project.public_hosted_origin import HostedReadbackContext
 from infrastructure.publishing.release_acceptance import RECEIPT_PATH, _checkout_revision
+from infrastructure.reporting.readiness_artifact_graph import artifact_graph_paths
 from infrastructure.reporting.readiness_receipts import SCHEMA_VERSION, source_fingerprint
 from infrastructure.reporting.original_job_outcome import validate_auxiliary_receipt_closure
 from infrastructure.reporting.release_readiness_profile import collect_profile, required_profile
@@ -103,14 +104,12 @@ def auxiliary_owned_projection(values: dict[str, dict[str, Any]], requirements: 
 
 def _evidence_closure(reader: SnapshotReader, relative: str) -> dict[str, bytes]:
     """Follow the bounded whole-transport graph, preserving exact public bindings."""
-    from infrastructure.reporting.required_candidate_transport import _graph_paths
-
     deadline = reader.operation_deadline
     if deadline is None and reader.native_operation is not None:
         deadline = reader.native_operation.deadline
     if deadline is None:
         deadline = time.monotonic() + 300
-    paths = _graph_paths(reader.root, relative, reader, deadline=deadline, strict_bindings=True)
+    paths = artifact_graph_paths(reader.root, relative, reader, deadline=deadline, strict_bindings=True)
     content = {}
     from infrastructure.project.public_reference_git import remaining
 

@@ -11,10 +11,11 @@ Rules live in a ``rules/`` directory, with:
 
 from __future__ import annotations
 
-import yaml
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+from infrastructure.core.files.serialization import load_optional_resource_metadata
 
 
 @dataclass
@@ -62,36 +63,16 @@ def build_rule_info(rule_dir: Path, program: str = "") -> RuleInfo:
     Returns:
         Populated RuleInfo instance.
     """
-    metadata = _load_rules_manifest(rule_dir)
+    metadata = load_optional_resource_metadata(rule_dir / "rules.yaml")
     return RuleInfo(
         name=rule_dir.name,
         path=rule_dir,
-        rule_type=metadata.get("type", "project") if metadata else "project",
+        rule_type=metadata.get("type", "project"),
         has_soft=(rule_dir / "soft").exists(),
         has_strong=(rule_dir / "strong").exists(),
-        metadata=metadata or {},
+        metadata=metadata,
         program=program,
     )
-
-
-def _load_rules_manifest(rule_dir: Path) -> dict[str, Any] | None:
-    """Load rules.yaml if present.
-
-    Args:
-        rule_dir: Path to the rule directory.
-
-    Returns:
-        Parsed YAML dict or None if the file is absent or unreadable.
-    """
-    manifest_path = rule_dir / "rules.yaml"
-    if manifest_path.exists():
-        try:
-            with open(manifest_path, encoding="utf-8") as f:
-                loaded = yaml.safe_load(f)
-                return loaded if isinstance(loaded, dict) else None
-        except Exception:  # noqa: BLE001
-            return None
-    return None
 
 
 __all__ = [

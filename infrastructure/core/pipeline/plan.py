@@ -18,7 +18,11 @@ from infrastructure.core.pipeline.types import (
     StageSpec,
 )
 from infrastructure.core.pipeline.outcomes import StageOutcome
-from infrastructure.core.pipeline.target_contracts import canonical_target_contract, effective_target_tags
+from infrastructure.core.pipeline.target_contracts import (
+    canonical_target_contract,
+    effective_stage_declaration,
+    selects_default_stage,
+)
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -212,11 +216,7 @@ def resolve_execution_plan(
     path = sources.paths[0]
     control = sources.control(config)
     dag = sources.dag()
-    declarations = tuple(dag.sorted_stages())
-    declarations = tuple(
-        replace(stage, tags=list(effective_target_tags(stage.tags, stage.script, stage.method)))
-        for stage in declarations
-    )
+    declarations = tuple(effective_stage_declaration(stage) for stage in dag.sorted_stages())
     identities = {stage.name: stage.key for stage in declarations}
     source_ordinals = {stage.key: index for index, stage in enumerate(declarations, 1)}
     definition_identity = canonical_digest([asdict(stage) for stage in declarations])
@@ -233,23 +233,15 @@ def resolve_execution_plan(
         if config.mode == "core" and any({"live", "llm"}.intersection(stage.tags) for stage in selected):
             raise ValueError("Selected stages require explicit --mode live")
     else:
-        excluded_tags = set(dag.opt_in_tags) | {"paid"}
-        if config.mode == "core":
-            excluded_tags.update({"llm", "live"})
         selected = [
             stage
             for stage in declarations
-            if not excluded_tags.intersection(stage.tags)
-            and not canonical_target_contract(stage.script, stage.method).opt_in
-            and not (
-                skip_clean and (stage.key == "clean" or canonical_target_contract(stage.script, stage.method).clean)
-            )
-            and not (
-                config.skip_infra
-                and (
-                    stage.key == "infra_tests"
-                    or canonical_target_contract(stage.script, stage.method, stage.args).infrastructure_tests
-                )
+            if selects_default_stage(
+                stage,
+                mode=config.mode,
+                opt_in_tags=dag.opt_in_tags,
+                skip_clean=skip_clean,
+                skip_infra=config.skip_infra,
             )
         ]
     if not selected:

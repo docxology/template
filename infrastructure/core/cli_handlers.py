@@ -26,7 +26,7 @@ from infrastructure.core.pipeline.multi_project import (
 )
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
-from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.project.discovery import validate_project_slug
 from infrastructure.orchestration.pipeline_runner import PipelineInvocation, PipelineRunner
 
 logger = get_logger(__name__)

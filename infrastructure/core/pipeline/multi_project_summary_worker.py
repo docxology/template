@@ -12,10 +12,10 @@ from pathlib import Path
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.implementation_custody import verify_implementation_custody
 from infrastructure.core.pipeline.multi_project import MultiProjectResult
-from infrastructure.core.pipeline.multi_project_runtime import results_from_payload
 from infrastructure.core.pipeline.multi_project_support import SharedInfrastructureResult
 from infrastructure.core.pipeline.multi_project_summary import SCHEMA
 from infrastructure.core.pipeline.outcomes import RunResult
+from infrastructure.core.pipeline.worker_transport import results_from_payload
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
 from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report

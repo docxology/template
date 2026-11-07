@@ -9,7 +9,7 @@ from pathlib import Path
 
 from infrastructure.core.pipeline.hitl import HitlController
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
-from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.project.discovery import validate_project_slug
 
 
 @dataclass(frozen=True)

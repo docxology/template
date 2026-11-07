@@ -65,8 +65,13 @@ def _claim_records(root: Path) -> list[dict[str, Any]]:
 def build_evidence_crosswalk(project_root: Path) -> dict[str, Any]:
     """Build a claim-to-artifact crosswalk from the typed claim ledger."""
     root = project_root.resolve()
+    return _crosswalk_from_claims(root, _claim_records(root))
+
+
+def _crosswalk_from_claims(root: Path, claim_records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Annotate an existing claim projection with its artifact observations."""
     claims = []
-    for claim in _claim_records(root):
+    for claim in claim_records:
         rel = str(claim.get("path") or "")
         artifact = root / rel
         claims.append(

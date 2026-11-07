@@ -10,6 +10,10 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from pathlib import Path
 from collections.abc import Iterable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.dag import StageDefinition
 
 
 @dataclass(frozen=True)
@@ -62,4 +66,36 @@ def effective_target_tags(tags: Iterable[str], script: str | None, method: str |
     return tuple(dict.fromkeys((*tags, *canonical_target_contract(script, method).tags)))
 
 
-__all__ = ["TargetContract", "canonical_target_contract", "effective_target_tags"]
+def effective_stage_declaration(stage: StageDefinition) -> StageDefinition:
+    """Project a declaration into the form used by execution and custody digests."""
+    return replace(stage, tags=list(effective_target_tags(stage.tags, stage.script, stage.method)))
+
+
+def selects_default_stage(
+    stage: StageDefinition,
+    *,
+    mode: str,
+    opt_in_tags: frozenset[str],
+    skip_clean: bool = False,
+    skip_infra: bool = False,
+) -> bool:
+    """Apply default execution policy to a stage without binding or reordering it."""
+    target = canonical_target_contract(stage.script, stage.method, stage.args)
+    excluded = opt_in_tags | {"paid"}
+    if mode == "core":
+        excluded |= {"llm", "live"}
+    return (
+        not target.opt_in
+        and not excluded.intersection((*stage.tags, *target.tags))
+        and not (skip_clean and (stage.key == "clean" or target.clean))
+        and not (skip_infra and (stage.key == "infra_tests" or target.infrastructure_tests))
+    )
+
+
+__all__ = [
+    "TargetContract",
+    "canonical_target_contract",
+    "effective_stage_declaration",
+    "effective_target_tags",
+    "selects_default_stage",
+]

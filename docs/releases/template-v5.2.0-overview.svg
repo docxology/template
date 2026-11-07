@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title description">
+  <title id="title">Template 5.2.0 — shared infrastructure and exact release evidence</title>
+  <desc id="description">Proposed release sequence for lifecycle, pipeline, rendering and steganography changes. Freeze the Root SDK and canonical exemplar bindings, then refresh publication outputs and measure affected coverage. The lower sequence shows measured Source C, imported measurements D, dependent output refresh Q and final report candidate E. The merged main revision requires complete acceptance before tagging and authenticated publication. This illustration records requirements.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#12283b"/></linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#94a3b8"/></marker>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#background)"/>
+  <g font-family="Helvetica, Arial, sans-serif">
+    <text x="64" y="82" fill="#f8fafc" font-size="48" font-weight="700">Template 5.2.0</text>
+    <text x="64" y="132" fill="#cbd5e1" font-size="29">Modular lifecycle, pipeline and secure rendering</text>
+    <rect x="1100" y="50" width="436" height="52" rx="26" fill="#402e16" stroke="#eab76a"/>
+    <text x="1318" y="84" fill="#fbd89e" font-size="20" font-weight="700" text-anchor="middle">EXACT-SOURCE ACCEPTANCE REQUIRED</text>
+
+    <g>
+      <rect x="64" y="196" width="458" height="300" rx="20" fill="#142e4c" stroke="#518ccc" stroke-width="2"/>
+      <text x="94" y="240" fill="#93c5fd" font-size="20" font-weight="700">01 / FREEZE</text>
+      <text x="94" y="291" fill="#f8fafc" font-size="32" font-weight="700">SDK &amp; exemplar Source</text>
+      <text x="94" y="338" fill="#d5e2f1" font-size="24">Root SDK 5.1.0 → 5.2.0</text>
+      <text x="94" y="376" fill="#d5e2f1" font-size="24">25 canonical SDK bindings</text>
+      <text x="94" y="427" fill="#a9bfd6" font-size="22">Preserve exemplar versions,</text>
+      <text x="94" y="459" fill="#a9bfd6" font-size="22">provider declarations and lock pins.</text>
+
+      <rect x="571" y="196" width="458" height="300" rx="20" fill="#113b43" stroke="#4eb6b2" stroke-width="2"/>
+      <text x="601" y="240" fill="#81ded7" font-size="20" font-weight="700">02 / PRODUCE</text>
+      <text x="601" y="291" fill="#f8fafc" font-size="32" font-weight="700">Outputs &amp; coverage</text>
+      <text x="601" y="338" fill="#d4edeb" font-size="24">Refresh rendered publication</text>
+      <text x="601" y="376" fill="#d4edeb" font-size="24">outputs in provider order</text>
+      <text x="601" y="427" fill="#a6cfcd" font-size="22">Remeasure affected coverage.</text>
+      <text x="601" y="459" fill="#a6cfcd" font-size="22">Retain original results and provenance.</text>
+
+      <rect x="1078" y="196" width="458" height="300" rx="20" fill="#29334f" stroke="#a5a1e5" stroke-width="2"/>
+      <text x="1108" y="240" fill="#c6c2ff" font-size="20" font-weight="700">03 / QUALIFY</text>
+      <text x="1108" y="291" fill="#f8fafc" font-size="32" font-weight="700">The exact revision</text>
+      <text x="1108" y="338" fill="#e1e0f2" font-size="24">Config guard and both strict audits</text>
+      <text x="1108" y="376" fill="#e1e0f2" font-size="24">Reviewed PR and CI tree match</text>
+      <text x="1108" y="427" fill="#c0bed8" font-size="22">Complete acceptance on main,</text>
+      <text x="1108" y="459" fill="#c0bed8" font-size="22">then authenticate the release handoff.</text>
+    </g>
+    <g stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M531 346H560"/><path d="M1038 346H1067"/>
+    </g>
+
+    <rect x="64" y="541" width="1472" height="276" rx="20" fill="#0d1b2b" stroke="#40546c" stroke-width="2"/>
+    <text x="96" y="588" fill="#f8fafc" font-size="27" font-weight="700">Carry measured inputs through the final publication refresh</text>
+    <g text-anchor="middle">
+      <circle cx="200" cy="674" r="35" fill="#21516e"/><text x="200" y="685" fill="#f8fafc" font-size="31" font-weight="700">C</text>
+      <text x="200" y="738" fill="#cbd5e1" font-size="21">Measured Source</text>
+      <circle cx="600" cy="674" r="35" fill="#21516e"/><text x="600" y="685" fill="#f8fafc" font-size="31" font-weight="700">D</text>
+      <text x="600" y="738" fill="#cbd5e1" font-size="21">Commit imported measurements</text>
+      <circle cx="1000" cy="674" r="35" fill="#21516e"/><text x="1000" y="685" fill="#f8fafc" font-size="31" font-weight="700">Q</text>
+      <text x="1000" y="738" fill="#cbd5e1" font-size="21">Refresh dependent outputs</text>
+      <circle cx="1400" cy="674" r="35" fill="#21516e"/><text x="1400" y="685" fill="#f8fafc" font-size="31" font-weight="700">E</text>
+      <text x="1400" y="738" fill="#cbd5e1" font-size="21">Review report patch</text>
+    </g>
+    <g stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"><path d="M250 674H548"/><path d="M650 674H948"/><path d="M1050 674H1348"/></g>
+    <text x="400" y="653" fill="#93d3df" font-size="20" text-anchor="middle">Import while HEAD = C</text>
+    <text x="800" y="653" fill="#93d3df" font-size="20" text-anchor="middle">Run the real counts consumers</text>
+    <text x="1200" y="653" fill="#93d3df" font-size="20" text-anchor="middle">Verify 25 unchanged-output rebinds</text>
+    <text x="800" y="783" fill="#a7bed2" font-size="21" text-anchor="middle">Compare measured source and support hashes to C. Remeasure changed inputs before qualification.</text>
+
+    <text x="64" y="882" fill="#f8fafc" font-size="26" font-weight="700">Tag the accepted main revision and verify the published assets.</text>
+    <text x="64" y="923" fill="#a6bdd1" font-size="23">Retain original tags, historical releases, raw results and artifact custody.</text>
+    <text x="64" y="961" fill="#7e99b2" font-size="20">Explanatory artwork · Acceptance and publication require separate evidence</text>
+  </g>
+</svg>

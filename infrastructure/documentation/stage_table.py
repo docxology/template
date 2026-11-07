@@ -31,11 +31,7 @@ import yaml
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.dag import opt_in_tags_from_mapping
-from infrastructure.core.pipeline.stage_vocabulary import (
-    all_stage_names,
-    core_stage_names,
-    live_stage_names,
-)
+from infrastructure.core.pipeline.stage_vocabulary import stage_names_from_mapping
 from infrastructure.documentation.glossary_gen import inject_between_markers
 
 logger = get_logger(__name__)
@@ -152,9 +148,9 @@ def build_stage_summary(
     raw = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict) or "stages" not in raw:
         raise ValueError(f"pipeline.yaml must have a top-level 'stages' list: {yaml_path}")
-    declared = len(all_stage_names(yaml_path=yaml_path))
-    live_count = len(live_stage_names(yaml_path=yaml_path))
-    core_count = len(core_stage_names(yaml_path=yaml_path))
+    declared = len(stage_names_from_mapping(raw))
+    live_count = len(stage_names_from_mapping(raw, mode="live"))
+    core_count = len(stage_names_from_mapping(raw, mode="core"))
     last_index = max(declared - 1, 0)
     opt_in = ", ".join(f"`{tag}`" for tag in sorted(opt_in_tags_from_mapping(raw)))
     opt_in_clause = ""

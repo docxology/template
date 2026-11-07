@@ -42,7 +42,7 @@ from infrastructure.core.pipeline.multi_project_runtime import ProjectExecutionS
 from infrastructure.core.pipeline.multi_project_support import SharedInfrastructureResult, run_shared_infrastructure
 from infrastructure.core.pipeline.target_contracts import canonical_target_contract
 from infrastructure.core.pipeline.types import PipelineConfig
-from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.project.discovery import validate_project_slug
 
 DEFAULT_CONFIG_NAMES: tuple[str, ...] = ("run.config", "run.config.yaml", "run.config.yml")
 

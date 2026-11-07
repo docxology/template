@@ -12,6 +12,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.testing.ci_change_scope import documentation_only
 from infrastructure.project.public_package_dependencies import declared_local_dependencies
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -79,41 +80,6 @@ def _parse_changed_paths(output: bytes) -> tuple[tuple[str, ...], bool]:
                 return (), True
             paths.append(path)
     return tuple(sorted(set(paths))), ambiguous
-
-
-_DOCUMENTATION_SUFFIXES = frozenset({".md", ".rst", ".svg", ".png", ".jpg", ".jpeg", ".gif"})
-_GUIDE_NAMES = frozenset({"AGENTS.md", "README.md", "DESIGN.md"})
-_ROOT_GUIDES = _GUIDE_NAMES | frozenset(
-    {
-        "CHANGELOG.md",
-        "CLAUDE.md",
-        "CONTRIBUTING.md",
-        "MAINTAINERS.md",
-        "SECURITY.md",
-        "START_HERE.md",
-        "STATUS.md",
-        "TO-DO.md",
-    }
-)
-
-
-def documentation_only(paths: tuple[str, ...]) -> bool:
-    """Recognize guide-only changes without excluding runtime text or artwork."""
-
-    def is_guide(name: str) -> bool:
-        path = Path(name)
-        if path.is_absolute() or ".." in path.parts or "\\" in name or path.as_posix() != name:
-            return False
-        if len(path.parts) == 1:
-            return name in _ROOT_GUIDES
-        if path.parts[0] == "docs":
-            # These trees contain manuscript inputs and executable prompt assets.
-            return path.parts[1] not in {"manuscript", "prompts"} and path.suffix.lower() in _DOCUMENTATION_SUFFIXES
-        return (
-            path.parts[0] in {"infrastructure", "scripts", "tests", ".github", "projects"} and path.name in _GUIDE_NAMES
-        )
-
-    return bool(paths) and all(is_guide(name) for name in paths)
 
 
 def affected_projects(root: Path, paths: tuple[str, ...], *, full: bool = False) -> tuple[tuple[str, ...], str]:
@@ -191,15 +157,10 @@ def infrastructure_selection(root: Path, plan: dict[str, Any]) -> dict[str, Any]
     One assembly used by the CI selection CLI and local gates, so both derive
     their shard roster from the same source-owned functions.
     """
-    from infrastructure.core.testing.ci_contracts import contract_files
-    from infrastructure.core.testing.ci_infra import infrastructure_files, infrastructure_shards
+    from infrastructure.core.testing.ci_infra import infrastructure_selection_fields
 
     changed = tuple(plan["changed_paths"])
-    docs_only = not plan.get("full", False) and documentation_only(changed)
-    files = infrastructure_files(root, changed, documentation=docs_only)
-    plan["infra_shards"] = infrastructure_shards(root, changed, documentation=docs_only)
-    plan["contract_modules"] = list(contract_files(files, () if docs_only else infrastructure_files(root)))
-    plan["documentation_only"] = docs_only
+    plan.update(infrastructure_selection_fields(root, changed, full=plan.get("full", False)))
     return plan
 
 

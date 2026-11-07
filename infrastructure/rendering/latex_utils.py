@@ -5,13 +5,19 @@ import subprocess
 import sys
 import tempfile
 import time
+from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.core.determinism import deterministic_subprocess_env, resolve_source_date_epoch
+from infrastructure.core.determinism import (
+    deterministic_subprocess_env,
+    is_deterministic_requested,
+    resolve_source_date_epoch,
+)
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.native_render_custody import native_render_custody
+from infrastructure.rendering.security import RenderSecurityProfile, run_isolated_subprocess
 
 logger = get_logger(__name__)
 
@@ -33,6 +39,34 @@ _SIGPIPE_RETURNCODES = {-13, 141}
 
 _PDF_CANONICALIZATION_TIMEOUT_SECONDS = 300
 _PDF_CANONICALIZATION_WORKER = "infrastructure.rendering._pdf_canonicalization_worker"
+
+
+@dataclass(frozen=True)
+class _LatexIsolation:
+    profile: RenderSecurityProfile
+    output_dir: Path
+    environment: dict[str, str]
+    epoch: int | None
+
+
+def _admit_untrusted_latex(
+    profile: RenderSecurityProfile, tex_path: Path, output_dir: Path, compiler: str
+) -> _LatexIsolation:
+    if Path(compiler).name not in {"xelatex", "pdflatex"}:
+        raise CompilationError("untrusted TeX requires xelatex or pdflatex")
+    profile.validate_source(tex_path)
+    profile.validate_output_tree(output_dir)
+    if native_render_custody("untrusted TeX cannot use a native render origin") is not None:
+        raise CompilationError("untrusted TeX cannot use native render launchers")
+    epoch = resolve_source_date_epoch(deterministic=False)
+    if epoch is None and is_deterministic_requested():
+        raise CompilationError("untrusted deterministic TeX requires an explicit SOURCE_DATE_EPOCH")
+    environment = profile.environment()
+    assert environment is not None
+    environment.update(openout_any="p", TEXMFOUTPUT=str(output_dir))
+    if epoch is not None:
+        environment["SOURCE_DATE_EPOCH"] = str(epoch)
+    return _LatexIsolation(profile, output_dir, environment, epoch)
 
 
 def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
@@ -78,6 +112,16 @@ def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None =
     leaving page content and layout unchanged.
     """
     epoch = resolve_source_date_epoch(repo_root=repo_root)
+    return _canonicalize_pdf(pdf_path, epoch, repo_root=repo_root)
+
+
+def _canonicalize_pdf(
+    pdf_path: Path,
+    epoch: int | None,
+    *,
+    repo_root: Path | None = None,
+    isolation: _LatexIsolation | None = None,
+) -> Path:
     if epoch is None:
         return pdf_path
 
@@ -101,15 +145,23 @@ def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None =
             str(temporary_path),
             str(epoch),
         ]
-        result = subprocess.run(  # noqa: S603 - fixed internal worker module and argument vector
-            command,
-            cwd=source_root,
-            env=deterministic_subprocess_env(repo_root=repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=_PDF_CANONICALIZATION_TIMEOUT_SECONDS,
-        )
+        if isolation is None:
+            result = subprocess.run(  # noqa: S603 - fixed internal worker module and argument vector
+                command,
+                cwd=source_root,
+                env=deterministic_subprocess_env(repo_root=repo_root),
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=_PDF_CANONICALIZATION_TIMEOUT_SECONDS,
+            )
+        else:
+            result = run_isolated_subprocess(
+                command,
+                cwd=source_root,
+                env={**isolation.environment, "PYTHONDONTWRITEBYTECODE": "1"},
+                timeout=min(_PDF_CANONICALIZATION_TIMEOUT_SECONDS, isolation.profile.timeout_seconds),
+            )
         if result.returncode != 0:
             raise CompilationError(
                 "Deterministic PDF canonicalization worker failed",
@@ -192,8 +244,19 @@ def latex_compile_command(tex_path: Path, out_dir: Path, compiler: str, *, recor
     ]
 
 
-def _run_latex_pass(command: list[str], tex_path: Path, timeout: int) -> subprocess.CompletedProcess[str]:
+def _run_latex_pass(
+    command: list[str], tex_path: Path, timeout: int, *, isolation: _LatexIsolation | None = None
+) -> subprocess.CompletedProcess[str]:
     """Use genuine native stage custody when present, preserving the ordinary call."""
+    if isolation is not None:
+        result = run_isolated_subprocess(
+            command,
+            cwd=isolation.output_dir,
+            env=isolation.environment,
+            timeout=min(timeout, isolation.profile.timeout_seconds),
+        )
+        isolation.profile.validate_output_tree(isolation.output_dir)
+        return result
     environment = deterministic_subprocess_env(repo_root=tex_path.parent)
     custody = native_render_custody("native-origin section rendering lacks its actual Source owner")
     native = (
@@ -216,6 +279,8 @@ def compile_latex(
     compiler: str = "xelatex",
     timeout: int = 300,
     passes: int = 2,
+    *,
+    security_profile: RenderSecurityProfile | None = None,
 ) -> Path:
     """Compile LaTeX file to PDF.
 
@@ -224,6 +289,7 @@ def compile_latex(
         output_dir: Directory for output
         compiler: Compiler command (xelatex, pdflatex)
         timeout: Timeout in seconds
+        security_profile: Optional output and subprocess policy.
 
     Returns:
         Path to generated PDF
@@ -234,6 +300,10 @@ def compile_latex(
     if not tex_path.exists():
         raise CompilationError("LaTeX file not found", context={"file": str(tex_file)})
 
+    isolation = None
+    if security_profile is not None and security_profile.untrusted:
+        tex_path, out_dir = tex_path.absolute(), out_dir.absolute()
+        isolation = _admit_untrusted_latex(security_profile, tex_path, out_dir, compiler)
     out_dir.mkdir(parents=True, exist_ok=True)
     _clean_stale_aux_files(out_dir, tex_path.stem)
 
@@ -249,7 +319,7 @@ def compile_latex(
             pass_start = time.time()
             logger.debug(f"Pass {i + 1}/{max_passes}...")
 
-            result = _run_latex_pass(cmd, tex_path, timeout)
+            result = _run_latex_pass(cmd, tex_path, timeout, isolation=isolation)
 
             pass_duration = time.time() - pass_start
             logger.debug(f"Pass {i + 1} completed in {pass_duration:.2f}s")
@@ -269,7 +339,7 @@ def compile_latex(
                     if pdf_exists and not pdf_valid:
                         pdf_file_temp.unlink(missing_ok=True)
 
-                    recovery_result = _run_latex_pass(cmd, tex_path, timeout)
+                    recovery_result = _run_latex_pass(cmd, tex_path, timeout, isolation=isolation)
                     log_content = log_file.read_text(encoding="utf-8", errors="replace") if log_file.exists() else ""
                     pdf_exists = pdf_file_temp.exists()
                     pdf_valid = validate_pdf_structure(pdf_file_temp) if pdf_exists else False
@@ -346,7 +416,10 @@ def compile_latex(
         if not validate_pdf_structure(pdf_file):
             raise CompilationError("PDF generated but failed structural validation", context={"pdf": str(pdf_file)})
 
-        canonicalize_pdf_for_determinism(pdf_file, repo_root=tex_path.parent)
+        if isolation is None:
+            canonicalize_pdf_for_determinism(pdf_file, repo_root=tex_path.parent)
+        else:
+            _canonicalize_pdf(pdf_file, isolation.epoch, isolation=isolation)
         normalize_latex_sidecars(out_dir, tex_path.stem)
         total_duration = time.time() - start_time
         logger.info(f"LaTeX compilation completed in {total_duration:.2f}s")

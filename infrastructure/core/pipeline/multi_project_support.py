@@ -36,6 +36,14 @@ class SharedInfrastructureResult:
         return bound.exit_code if bound is not None else 1
 
 
+def validated_shared_run(shared: SharedInfrastructureResult | None, exit_code: int) -> RunResult | None:
+    """Admit shared child evidence only when it agrees with the exact aggregate exit code."""
+    if type(exit_code) is not int or not isinstance(shared, SharedInfrastructureResult):
+        return None
+    run = shared.validated_run()
+    return run if run is not None and run.exit_code == exit_code else None
+
+
 def run_shared_infrastructure(spec: ProjectExecutionSpec, *, deadline: float) -> SharedInfrastructureResult:
     """Execute the parent's canonical frozen infrastructure plan exactly once."""
     from infrastructure.core.pipeline.multi_project_runtime import execute_frozen_specs
@@ -60,11 +68,7 @@ def aggregate_project_exit_code(
     """Require an exact project set and each project's explicit stage contract."""
     if type(shared_exit_code) is not int:
         return 1
-    if shared_result is not None and (
-        not isinstance(shared_result, SharedInfrastructureResult)
-        or shared_result.validated_run() is None
-        or shared_result.exit_code != shared_exit_code
-    ):
+    if shared_result is not None and validated_shared_run(shared_result, shared_exit_code) is None:
         return 1
     if shared_exit_code != 0:
         return shared_exit_code if shared_exit_code in {130, 124, 75} else 1

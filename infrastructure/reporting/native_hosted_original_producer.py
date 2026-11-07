@@ -8,11 +8,9 @@ native, Code, original-process or publication acceptance on its own.
 from __future__ import annotations
 
 import hashlib
-import io
 import json
 import os
 import stat
-import zipfile
 from collections.abc import Mapping
 from dataclasses import dataclass, fields
 from pathlib import Path
@@ -23,7 +21,6 @@ from infrastructure.core.implementation_custody import source_file_bytes
 from infrastructure.project.public_acceptance_evidence import evidence_directory
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
 from infrastructure.project.public_reference_git import remaining
-from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.native_cell_selection import native_transport_scopes, validate_native_transport_receipt
 from infrastructure.reporting.native_format_joint_source import (
     NativeOriginalLaunch,
@@ -32,7 +29,7 @@ from infrastructure.reporting.native_format_joint_source import (
     validate_retained_sdk_closure,
 )
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumProvider
-from infrastructure.reporting.native_hosted_original_custody import (
+from infrastructure.reporting.native_hosted_transport_archive import (
     MAX_CHUNK,
     MAX_MEMBERS,
     MAX_SHARD,
@@ -42,6 +39,8 @@ from infrastructure.reporting.native_hosted_original_custody import (
     _file_identity,
     _hash,
     _path,
+    encode_transport_zip as _zip,
+    is_transport_output as _mutable_output,
 )
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
@@ -55,24 +54,6 @@ class NativeHostedTransportRequest:
     directory: Path
     repository: str
     run_id: int
-
-
-def _zip(members: Mapping[str, bytes]) -> bytes:
-    destination = io.BytesIO()
-    with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_STORED) as archive:
-        for label, body in sorted(members.items()):
-            entry = zipfile.ZipInfo(label, date_time=(1980, 1, 1, 0, 0, 0))
-            entry.create_system = 3
-            entry.external_attr = (stat.S_IFREG | 0o600) << 16
-            archive.writestr(entry, body)
-    return destination.getvalue()
-
-
-def _mutable_output(label: str) -> bool:
-    path = Path(label)
-    return path.is_relative_to("output") or any(
-        path.is_relative_to(Path("projects") / scope / "output") for scope in PUBLIC_PROJECT_NAMES
-    )
 
 
 def pack_native_hosted_originals(

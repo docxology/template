@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.steganography.artifact_paths import hash_manifest_path
 from infrastructure.steganography.config import resolve_build_timestamp
 
 logger = get_logger(__name__)
@@ -63,6 +64,8 @@ def write_hash_manifest(
     hashes: dict[str, str],
     output_path: Path | None = None,
     extra: dict[str, Any] | None = None,
+    *,
+    timestamp: str | None = None,
 ) -> Path:
     """Write a JSON sidecar manifest containing hash values.
 
@@ -72,12 +75,13 @@ def write_hash_manifest(
         output_path: Where to write the manifest.  Defaults to
                      ``<pdf_path>.hashes.json``.
         extra: Additional key-value pairs to include in the manifest.
+        timestamp: Timestamp captured for the document, when provided.
 
     Returns:
         Path to the written manifest file.
     """
     if output_path is None:
-        output_path = pdf_path.with_suffix(".hashes.json")
+        output_path = hash_manifest_path(pdf_path)
 
     from infrastructure.steganography.publication import validate_destinations
 
@@ -85,7 +89,7 @@ def write_hash_manifest(
 
     manifest: dict[str, Any] = {
         "source_file": pdf_path.name,
-        "timestamp": resolve_build_timestamp(),
+        "timestamp": timestamp if timestamp is not None else resolve_build_timestamp(),
         "hashes": hashes,
     }
     if extra:

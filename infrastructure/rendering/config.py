@@ -7,7 +7,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 from urllib.parse import urlsplit
 
+import yaml
+
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering.security import RenderSecurityProfile
 
 logger = get_logger(__name__)
@@ -338,3 +341,28 @@ class RenderingConfig:
             name=self.security_profile,
             temp_root=Path(self.untrusted_temp_root) if self.untrusted_temp_root else None,
         )
+
+
+def render_config_manuscript_dir(project_root: Path) -> Path:
+    """Select the manuscript that governs read-only render verification."""
+
+    injected = project_root / "output" / "manuscript"
+    if injected.exists() and any(injected.glob("*.md")):
+        return injected
+    return resolve_source_manuscript_dir(project_root)
+
+
+def load_render_config_for_verification(manuscript_dir: Path, *, env: dict[str, str] | None = None) -> RenderingConfig:
+    """Read effective settings without hydrating or modifying the manuscript."""
+
+    config_path = manuscript_dir / "config.yaml"
+    project_config: dict[str, Any] | None = None
+    if config_path.is_file():
+        try:
+            loaded = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError) as exc:
+            raise ValueError(f"Could not read rendering configuration {config_path}: {exc}") from exc
+        if loaded is not None and not isinstance(loaded, dict):
+            raise ValueError(f"Rendering configuration must be a mapping: {config_path}")
+        project_config = loaded
+    return RenderingConfig.from_project_config(project_config, env=env)

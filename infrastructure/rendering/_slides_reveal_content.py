@@ -7,6 +7,7 @@ import re
 from collections.abc import Mapping
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._html_attributes import set_html_attribute
 from infrastructure.rendering._web_postprocess import (
     MATHJAX_URL,
     _MATHJAX_CONFIG_SCRIPT,
@@ -155,24 +156,11 @@ def activate_hardened_reveal_mathjax(content: str) -> str:
     return content
 
 
-def _set_attribute(tag: str, name: str, value: str) -> str:
-    """Set one escaped HTML attribute without changing unrelated attributes."""
-
-    escaped = html.escape(value, quote=True)
-    pattern = re.compile(
-        rf"(?<!\S){re.escape(name)}\s*=\s*(?:\"[^\"]*\"|'[^']*'|[^\s>]+)",
-        flags=re.IGNORECASE,
-    )
-    if pattern.search(tag):
-        return pattern.sub(lambda _match: f'{name}="{escaped}"', tag, count=1)
-    return tag[:-1].rstrip() + f' {name}="{escaped}">' if tag.endswith(">") else tag
-
-
 def promote_display_math_labels(content: str) -> str:
     """Attach source equation labels to their display spans instead of printing them."""
 
     def _replace(match: re.Match[str]) -> str:
-        opening = _set_attribute(match.group("open"), "id", match.group("label"))
+        opening = set_html_attribute(match.group("open"), "id", match.group("label"))
         return f"{opening}{match.group('body')}</span>"
 
     return _DISPLAY_MATH_LABEL_RE.sub(_replace, content)

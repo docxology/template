@@ -153,7 +153,9 @@ def apply_steganography_to_project(
         logger.warning("No PDF output directory for %s", project_qualified_name)
         return 2
 
-    pdfs = [p for p in pdf_dir.glob("*.pdf") if "_steganography" not in p.stem]
+    from infrastructure.steganography.artifact_paths import DEFAULT_OUTPUT_SUFFIX, hash_manifest_path, is_secure_pdf
+
+    pdfs = [path for path in pdf_dir.glob("*.pdf") if not is_secure_pdf(path)]
     if not pdfs:
         logger.warning("No PDFs found in %s", pdf_dir)
         return 2
@@ -163,6 +165,14 @@ def apply_steganography_to_project(
     except Exception as exc:  # noqa: BLE001 - strict mode must fail closed
         logger.error("Could not load secure config for %s: %s", project_qualified_name, exc)
         return 1
+
+    steg_mapping = _effective_steganography_config(repo_root, config_yaml, force_secure=force_secure)
+    output_suffix = steg_mapping.get("output_suffix", DEFAULT_OUTPUT_SUFFIX)
+    if isinstance(output_suffix, str) and output_suffix != DEFAULT_OUTPUT_SUFFIX:
+        pdfs = [path for path in pdfs if not is_secure_pdf(path, output_suffix)]
+        if not pdfs:
+            logger.warning("No PDFs found in %s", pdf_dir)
+            return 2
 
     paper = config_yaml.get("paper")
     paper_mapping = paper if isinstance(paper, dict) else {}
@@ -176,18 +186,17 @@ def apply_steganography_to_project(
     keywords = config_yaml.get("keywords", [])
     if not isinstance(keywords, list):
         keywords = []
-    steg_mapping = _effective_steganography_config(repo_root, config_yaml, force_secure=force_secure)
 
     if processor_factory is None:  # pragma: no cover - heavy reportlab path
         SteganographyConfig, SteganographyProcessor = _load_steganography()
         steg_config = SteganographyConfig.from_dict(steg_mapping)
-        processor = SteganographyProcessor(steg_config)
+        processor = SteganographyProcessor(steg_config, repo_root=repo_root)
     else:
         processor = processor_factory(steg_mapping)
 
     success_count = 0
     for pdf_path in pdfs:
-        manifest_path = pdf_path.with_suffix(".hashes.json")
+        manifest_path = hash_manifest_path(pdf_path)
         manifest_mtime_before = manifest_path.stat().st_mtime_ns if manifest_path.exists() else None
         try:
             result = processor.process(

@@ -12,6 +12,7 @@ secure-pipeline runs produce byte-identical PDFs.
 """
 
 import os
+import re
 import subprocess
 from dataclasses import dataclass, field, fields
 from datetime import datetime, timezone
@@ -19,6 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.steganography.artifact_paths import DEFAULT_OUTPUT_SUFFIX
 
 logger = get_logger(__name__)
 
@@ -49,7 +51,7 @@ def resolve_build_timestamp(
     When ``deterministic`` is ``True`` (or the environment variable
     ``STEGANOGRAPHY_DETERMINISTIC`` is set to ``1`` / ``true`` / ``yes`` and
     ``deterministic`` is left ``None``), the timestamp is read from
-    ``git log -1 --format=%cI`` in *repo_root* — yielding a value that is
+    the current commit in *repo_root* — yielding a value that is
     stable across runs as long as ``HEAD`` does not move. Otherwise the
     current wall-clock time in UTC ISO-8601 (``Z`` suffix) is returned.
 
@@ -72,97 +74,102 @@ def resolve_build_timestamp(
         the commit's recorded timezone offset (``%cI``); in wall-clock mode
         the value uses the ``Z`` (UTC) suffix.
     """
-    if deterministic is None:
-        env = os.environ.get("STEGANOGRAPHY_DETERMINISTIC", "").strip().lower()
-        deterministic = env in {"1", "true", "yes", "on"}
-
-    if not deterministic:
+    if not deterministic_build_enabled(deterministic):
         return _wallclock_iso8601_z()
+    return _deterministic_build_identity(repo_root).timestamp
 
-    cwd = Path(repo_root) if repo_root is not None else Path.cwd()
 
-    try:
-        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
-            ["git", "log", "-1", "--format=%cI"],
-            cwd=str(cwd),
+def deterministic_build_enabled(explicit: bool | None) -> bool:
+    """Resolve an explicit setting before consulting the legacy environment flag."""
+
+    if explicit is not None:
+        return explicit
+    env = os.environ.get("STEGANOGRAPHY_DETERMINISTIC", "").strip().lower()
+    return env in {"1", "true", "yes", "on"}
+
+
+@dataclass(frozen=True)
+class BuildIdentity:
+    """Timestamp and Git provenance shared by one PDF and its sidecars."""
+
+    deterministic: bool
+    timestamp: str
+    git_commit: str | None
+
+
+def _read_git_build_identity(repo_root: Path | None) -> tuple[str, str]:
+    cwd = Path(repo_root).resolve() if repo_root is not None else Path.cwd()
+    environment = {key: value for key, value in os.environ.items() if repo_root is None or not key.startswith("GIT_")}
+    environment.update(GIT_OPTIONAL_LOCKS="0", GIT_NO_REPLACE_OBJECTS="1", GIT_NO_LAZY_FETCH="1")
+
+    def git(*args: str) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(  # noqa: S603 — fixed read-only Git commands
+            ["git", *args],
+            cwd=cwd,
+            env=environment,
             check=False,
             stdin=subprocess.DEVNULL,
             capture_output=True,
             text=True,
             timeout=5,
         )
-    except FileNotFoundError:
+
+    if repo_root is not None:
+        top = git("rev-parse", "--show-toplevel")
+        if top.returncode or not top.stdout.strip() or Path(top.stdout.strip()).resolve() != cwd:
+            raise ValueError("the nominated directory is not the root of its own Git checkout")
+    result = git("--no-pager", "show", "-s", "--no-show-signature", "--no-notes", "--format=%H%x00%cI", "HEAD^{commit}")
+    commit, _separator, timestamp = result.stdout.strip().partition("\x00")
+    if result.returncode:
+        raise ValueError(f"git exited with status {result.returncode}")
+    if (
+        not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", commit)
+        or not timestamp
+        or datetime.fromisoformat(timestamp).tzinfo is None
+    ):
+        raise ValueError("git returned incomplete provenance")
+    return commit, timestamp
+
+
+def _deterministic_build_identity(repo_root: Path | None) -> BuildIdentity:
+    try:
+        commit, timestamp = _read_git_build_identity(repo_root)
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
         logger.warning(
-            "STEGANOGRAPHY_DETERMINISTIC requested but 'git' is not on PATH; falling back to wall-clock timestamp."
-        )
-        return _wallclock_iso8601_z()
-    except (OSError, subprocess.SubprocessError) as exc:
-        logger.warning(
-            "STEGANOGRAPHY_DETERMINISTIC requested but git invocation failed (%s); "
+            "STEGANOGRAPHY_DETERMINISTIC requested but Git provenance is unavailable in %s (%s); "
             "falling back to wall-clock timestamp.",
+            repo_root if repo_root is not None else Path.cwd(),
             exc,
         )
-        return _wallclock_iso8601_z()
+        return BuildIdentity(deterministic=True, timestamp=_wallclock_iso8601_z(), git_commit=None)
+    return BuildIdentity(deterministic=True, timestamp=timestamp, git_commit=commit)
 
-    if result.returncode != 0:
-        logger.warning(
-            "STEGANOGRAPHY_DETERMINISTIC requested but 'git log -1 --format=%%cI' "
-            "returned exit %d in %s; falling back to wall-clock timestamp.",
-            result.returncode,
-            cwd,
-        )
-        return _wallclock_iso8601_z()
 
-    ts = result.stdout.strip()
-    if not ts:
-        logger.warning(
-            "STEGANOGRAPHY_DETERMINISTIC requested but git returned an empty "
-            "timestamp in %s; falling back to wall-clock timestamp.",
-            cwd,
-        )
-        return _wallclock_iso8601_z()
+def resolve_build_identity(*, repo_root: Path | None) -> BuildIdentity:
+    """Capture one clock reading and the matching deterministic commit, when available."""
 
-    return ts
+    if deterministic_build_enabled(None):
+        return _deterministic_build_identity(repo_root)
+    return BuildIdentity(
+        deterministic=False,
+        timestamp=_wallclock_iso8601_z(),
+        git_commit=resolve_git_commit(repo_root=repo_root),
+    )
 
 
 def resolve_git_commit(*, repo_root: Path | None = None) -> str | None:
     """Return the current Git commit hash, or ``None`` when unavailable.
 
-    The steganography layer records provenance only when it can verify it from
-    Git. Missing Git metadata is a valid state for copied PDFs, exported
-    bundles, and synthetic tests, so callers should record the unavailable
-    state rather than inventing a commit.
+        The steganography layer records provenance only when it can verify it from
+        Git. Missing Git metadata is a valid state for copied PDFs, exported
+        bundles, and synthetic tests, so callers should record the unavailable
+        state rather than inventing a commit. An explicit root must identify its
+    own checkout. With no root, Git discovers the current working tree.
     """
-    cwd = Path(repo_root) if repo_root is not None else Path.cwd()
-
     try:
-        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
-            ["git", "rev-parse", "HEAD"],
-            cwd=str(cwd),
-            check=False,
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-    except FileNotFoundError:
-        logger.warning("Git commit provenance unavailable: 'git' is not on PATH.")
-        return None
-    except (OSError, subprocess.SubprocessError) as exc:
-        logger.warning("Git commit provenance unavailable: git invocation failed (%s).", exc)
-        return None
-
-    if result.returncode != 0:
-        logger.warning(
-            "Git commit provenance unavailable: 'git rev-parse HEAD' returned exit %d in %s.",
-            result.returncode,
-            cwd,
-        )
-        return None
-
-    commit = result.stdout.strip()
-    if not commit:
-        logger.warning("Git commit provenance unavailable: git returned an empty commit in %s.", cwd)
+        commit, _timestamp = _read_git_build_identity(repo_root)
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        logger.warning("Git commit provenance unavailable in %s (%s).", repo_root or Path.cwd(), exc)
         return None
     return commit
 
@@ -181,6 +188,7 @@ class DocumentMetadata:
     document_id: str = ""
     keywords: list[str] | None = None
     extra: dict[str, str] | None = None
+    timestamp: str | None = None
 
 
 @dataclass
@@ -250,7 +258,7 @@ class SteganographyConfig:
     pdf_encryption_algorithm: str = "AES-256"
 
     # ── Output ────────────────────────────────────────────────────────
-    output_suffix: str = "_steganography"
+    output_suffix: str = DEFAULT_OUTPUT_SUFFIX
     manifest_enabled: bool = True
 
     # ── Optional Kmyth TPM sealing ─────────────────────────────────────

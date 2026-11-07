@@ -22,7 +22,7 @@ from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.pipeline.stage_registry import known_stage_keys
 from infrastructure.core.runtime.environment import validate_interpreter
-from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.project.discovery import validate_project_slug
 
 # Public imports for callers using the canonical runner module.
 __all__ = ["PipelineArgs", "handle_hitl_command", "execute_pipeline", "execute_single_stage", "main"]

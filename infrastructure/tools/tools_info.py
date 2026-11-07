@@ -14,10 +14,11 @@ Typical tool types:
 
 from __future__ import annotations
 
-import yaml
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+from infrastructure.core.files.serialization import load_optional_resource_metadata
 
 
 @dataclass
@@ -65,36 +66,16 @@ def build_tool_info(tool_dir: Path, program: str = "") -> ToolInfo:
     Returns:
         Populated ToolInfo instance.
     """
-    metadata = _load_tool_manifest(tool_dir)
+    metadata = load_optional_resource_metadata(tool_dir / "tools.yaml")
     return ToolInfo(
         name=tool_dir.name,
         path=tool_dir,
-        tool_type=metadata.get("type", "generic") if metadata else "generic",
+        tool_type=metadata.get("type", "generic"),
         has_scripts=(tool_dir / "scripts").exists(),
         has_tests=(tool_dir / "tests").exists(),
-        metadata=metadata or {},
+        metadata=metadata,
         program=program,
     )
-
-
-def _load_tool_manifest(tool_dir: Path) -> dict[str, Any] | None:
-    """Load tools.yaml if present.
-
-    Args:
-        tool_dir: Path to the tool directory.
-
-    Returns:
-        Parsed YAML dict or None if the file is absent or unreadable.
-    """
-    manifest_path = tool_dir / "tools.yaml"
-    if manifest_path.exists():
-        try:
-            with open(manifest_path, encoding="utf-8") as f:
-                loaded = yaml.safe_load(f)
-                return loaded if isinstance(loaded, dict) else None
-        except Exception:  # noqa: BLE001
-            return None
-    return None
 
 
 __all__ = [

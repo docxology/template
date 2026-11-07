@@ -468,6 +468,15 @@
       "effect": "mutating"
     },
     {
+      "module": "infrastructure.project.active_pipeline_diagnostics",
+      "invocation": "python -m infrastructure.project.active_pipeline_diagnostics",
+      "source_path": "infrastructure/project/active_pipeline_diagnostics.py",
+      "purpose": "Bounded failure observations for the selected Active evidence refresh.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.project.linking",
       "invocation": "python -m infrastructure.project.linking",
       "source_path": "infrastructure/project/linking.py",
@@ -555,6 +564,24 @@
       "effect": "mutating"
     },
     {
+      "module": "infrastructure.project.public_acceptance_literature_group_cli",
+      "invocation": "python -m infrastructure.project.public_acceptance_literature_group_cli",
+      "source_path": "infrastructure/project/public_acceptance_literature_group_cli.py",
+      "purpose": "Read one complete ARL original cell; never aggregate or authorize publication.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.project.public_acceptance_literature_readback",
+      "invocation": "python -m infrastructure.project.public_acceptance_literature_readback",
+      "source_path": "infrastructure/project/public_acceptance_literature_readback.py",
+      "purpose": "Authenticate and freshly read one downloaded ARL diagnostic at the same SHA.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.project.public_acceptance_pytest",
       "invocation": "python -m infrastructure.project.public_acceptance_pytest",
       "source_path": "infrastructure/project/public_acceptance_pytest.py",
@@ -604,6 +631,15 @@
       "invocation": "python -m infrastructure.project.public_root_lane_worker",
       "source_path": "infrastructure/project/public_root_lane_worker.py",
       "purpose": "Real exact-node Root v2 execution, guarded chunks and original case outcomes.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
+      "module": "infrastructure.project.public_root_policy_census",
+      "invocation": "python -m infrastructure.project.public_root_policy_census",
+      "source_path": "infrastructure/project/public_root_policy_census.py",
+      "purpose": "Compose original Root census, review ledger and optional same-job draft authoring.",
       "subcommands": [],
       "exports": [],
       "effect": "mutating"

@@ -16,29 +16,25 @@ from infrastructure.core.files.secure_write import (
 )
 from infrastructure.core.pipeline.execution_records import EXECUTION_RECORD_SCHEMA
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint_components
-from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
+from infrastructure.core.pipeline.outcomes import RunResult
 from infrastructure.core.pipeline.post_run_reporting import write_pipeline_post_run_reports
 from infrastructure.core.pipeline.report_finalization import REPORT_FILES, REPORT_RECEIPT_SCHEMA
 from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
+from infrastructure.core.pipeline.worker_transport import stage_result_from_payload
 from infrastructure.core.pipeline.plan import ExecutionPlan
 from infrastructure.core.pipeline.runtime_namespace import validate_shared_runtime
 from infrastructure.core.implementation_custody import verify_fresh_module_bytecode
 
 
 def _results(rows: Any) -> list[PipelineStageResult]:
+    """Read the execution-record shape, including older outcomes without a condition."""
     if not isinstance(rows, list) or not rows:
         raise ValueError("Reporting requires nonempty execution records")
     result = []
     for raw in rows:
         if not isinstance(raw, dict) or not isinstance(raw.get("outcome"), dict):
             raise ValueError("Reporting requires typed stage outcomes")
-        row = dict(raw)
-        outcome = dict(row["outcome"])
-        outcome["status"] = StageStatus(outcome["status"])
-        outcome["attempt_exit_codes"] = tuple(outcome["attempt_exit_codes"])
-        row["outcome"] = StageOutcome(**outcome)
-        row["lessons"] = tuple(row["lessons"])
-        result.append(PipelineStageResult(**row))
+        result.append(stage_result_from_payload(raw))
     return result
 
 
