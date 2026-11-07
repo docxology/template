@@ -256,8 +256,20 @@ def check_footprint(root: Path, plan: dict[str, Any]) -> list[str]:
         root, "diff", "--cached", "--name-only"
     ):
         raise ValueError("refresh Source or index moved before candidate capture")
-    if git(root, "ls-files", "--others", "--exclude-standard", "-z"):
-        raise ValueError("unexpected untracked path prevents complete refresh capture")
+    untracked = git(root, "ls-files", "--others", "--exclude-standard", "-z")
+    if untracked:
+        labels = [label for label in untracked.split(b"\0") if label]
+        details = {
+            "count": len(labels),
+            "paths": [label[:256].decode("utf-8", errors="backslashreplace") for label in labels[:16]],
+            "path_bytes_clipped": any(len(label) > 256 for label in labels[:16]),
+            "paths_omitted": max(0, len(labels) - 16),
+            "nul_listing_sha256": hashlib.sha256(untracked).hexdigest(),
+        }
+        raise ValueError(
+            "unexpected untracked path prevents complete refresh capture: "
+            + json.dumps(details, ensure_ascii=True, sort_keys=True)
+        )
     changed = [p.decode() for p in git(root, "diff", "--name-only", "-z", plan["base_commit"]).split(b"\0") if p]
     for path in changed:
         record = plan["allowed"].get(path)
