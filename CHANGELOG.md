@@ -84,6 +84,10 @@ matching tag identity and authenticated publication.
   outputs that consume those values, compare measured source/support hashes and
   remeasure affected source changes before all-project unchanged-output rebind
   and exact-main acceptance.
+- Reconcile the canonical release boundary with the genuine dependent Pitch
+  analysis/refresh and nine-project rebind complement. Require explicit consent
+  for automatic GitHub-release/Zenodo archival without changing hooks or other
+  operators' approvals.
 
 - Run coordinated publication preparation under the existing fresh execution
   account with exactly one generation worker, preserving strict original-process
