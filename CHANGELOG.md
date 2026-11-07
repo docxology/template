@@ -25,6 +25,9 @@ matching tag identity and authenticated publication.
 - Resolve output-validation exports lazily so cold evidence-registry and
   rendered-snapshot consumers do not enter an import cycle through leaf
   artifact readers; preserve all existing public provider identities.
+- Preserve the selected HTML asset mode through Stage 03 configuration.
+  Explicit offline requests publish the pinned local MathJax closure or refuse;
+  they never silently substitute CDN assets.
 - Probe the existing real tagged-PDF test independently on all four targets;
   require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving

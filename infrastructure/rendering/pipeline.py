@@ -16,31 +16,51 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import RenderingError, ValidationError
-from infrastructure.core.project_paths import resolve_source_manuscript_dir
+from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_live_resource_usage, log_success
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.discovery import resolve_project_root
+from infrastructure.rendering import RenderManager
 from infrastructure.rendering._combined_exports import (  # noqa: F401
     combined_source_files as combined_source_files,
+)
+from infrastructure.rendering._combined_exports import (
     html_combined_source_files as html_combined_source_files,
+)
+from infrastructure.rendering._combined_exports import (
     render_combined_docx as render_combined_docx,
+)
+from infrastructure.rendering._combined_exports import (
     render_combined_epub as render_combined_epub,
+)
+from infrastructure.rendering._combined_exports import (
     render_combined_outputs as render_combined_outputs,
 )
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
     clean_stale_render_deliverables as clean_stale_render_deliverables,
+)
+from infrastructure.rendering._manuscript_source import (
     load_project_config_yaml as load_project_config_yaml,
+)
+from infrastructure.rendering._manuscript_source import (
     log_manuscript_composition as log_manuscript_composition,
+)
+from infrastructure.rendering._manuscript_source import (
     render_individual_files as render_individual_files,
+)
+from infrastructure.rendering._manuscript_source import (
     resolve_manuscript_dir as resolve_manuscript_dir,
+)
+from infrastructure.rendering._manuscript_source import (
     run_manuscript_variable_script as run_manuscript_variable_script,
+)
+from infrastructure.rendering._manuscript_source import (
     validate_latex_packages as validate_latex_packages,
+)
+from infrastructure.rendering._manuscript_source import (
     verify_config_tokens_resolved as verify_config_tokens_resolved,
 )
-from infrastructure.validation.content.manuscript_config import (
-    has_generated_manuscript_ordering as has_generated_manuscript_ordering,
-    is_project_resolved as is_project_resolved,
-    unresolved_config_tokens as unresolved_config_tokens,
-)
+from infrastructure.rendering._paper_frontmatter import declared_frontmatter, resolve_paper_layout
 from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
     log_rendering_summary,
@@ -48,10 +68,16 @@ from infrastructure.rendering._pipeline_summary import (
     verify_render_outputs,
 )
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering._paper_frontmatter import resolve_paper_layout, declared_frontmatter
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files, verify_figures_exist
-from infrastructure.rendering import RenderManager
-from infrastructure.core.logging.diagnostic import DiagnosticReporter
+from infrastructure.validation.content.manuscript_config import (
+    has_generated_manuscript_ordering as has_generated_manuscript_ordering,
+)
+from infrastructure.validation.content.manuscript_config import (
+    is_project_resolved as is_project_resolved,
+)
+from infrastructure.validation.content.manuscript_config import (
+    unresolved_config_tokens as unresolved_config_tokens,
+)
 
 logger = get_logger(__name__)
 
@@ -182,6 +208,7 @@ def _render_pipeline_impl(
             output_dir=str(project_root / "output"),
             pdf_dir=str(project_root / "output" / "pdf"),
             web_dir=str(project_root / "output" / "web"),
+            web_asset_mode=env_config.web_asset_mode,
             slides_dir=str(project_root / "output" / "slides"),
             docx_dir=str(project_root / "output" / "docx"),
             epub_dir=str(project_root / "output" / "epub"),
