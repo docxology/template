@@ -22,6 +22,9 @@ matching tag identity and authenticated publication.
 - Collect and review Root family policy through actual same-checkout census
   originals on both supported Python minors and host families. Keep policy
   authoring separate from runtime and release acceptance.
+- Resolve output-validation exports lazily so cold evidence-registry and
+  rendered-snapshot consumers do not enter an import cycle through leaf
+  artifact readers; preserve all existing public provider identities.
 - Probe the existing real tagged-PDF test independently on all four targets;
   require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving
