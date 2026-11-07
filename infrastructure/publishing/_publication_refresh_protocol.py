@@ -31,6 +31,8 @@ def generation_commands(root: Path, plan: dict[str, Any], wave: list[str]) -> li
         ]
         if scope in plan["rebind"]:
             argv.append("--rebind")
+        else:
+            argv.append("--no-analysis-recovery")
         commands.append((scope.replace("/", "__") + "-generate", argv))
     return commands
 

@@ -155,7 +155,7 @@ jobs:
           run_original analysis uv run --locked --no-sync --offline python \
             scripts/pipeline/stage_02_analysis.py --project "$project"
           run_original render-validation uv run --locked --no-sync --offline python \
-            scripts/maintenance/refresh_rendered_provenance.py --project "$project"
+            scripts/maintenance/refresh_rendered_provenance.py --project "$project" --no-analysis-recovery
           run_original copy uv run --locked --no-sync --offline python \
             scripts/pipeline/stage_05_copy.py --project "$project"
           run_original canonical-validation uv run --locked --no-sync --offline \

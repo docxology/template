@@ -5,15 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-
 from analytical.hyperparameters import load_hyperparameters
-from contracts.artifact_contract import VARIABLE_ARTIFACTS
-from template_active_inference.json_io import load_json
-from template_active_inference.yaml_io import load_yaml
 from analytical.sweep_io import read_parameter_sweep
+from contracts.artifact_contract import VARIABLE_ARTIFACTS
 from gnn.concordance import BERNOULLI_EXPECTED_TERMS
 from manuscript.invariant_counts import load_invariant_counts
 from simulation.pymdp_config import load_pymdp_config
+from template_active_inference.json_io import load_json
+from template_active_inference.yaml_io import load_yaml
 
 
 def _ising_mi_saturation_from_sweep(sweep_rows: list[dict[str, float]]) -> float:
@@ -31,7 +30,6 @@ def _free_energy_argmin_lambda(hp: Any) -> float:
     source of truth. Returns the grid λ at the minimum, rounded to the grid precision.
     """
     import numpy as np
-
     from analytical.bernoulli_toy import ising_coupling, ising_joint_posterior, symmetric_mean_field_prior
     from analytical.decomposition import free_energy_against_entangled_prior
     from analytical.hyperparameters import lambda_grid
@@ -502,6 +500,14 @@ VARIABLE_TOKEN_BUILDERS = (
 )
 
 
+class RequiredAnalysisInputUnavailable(FileNotFoundError):
+    """The strict manuscript generator reached its missing or empty analysis input."""
+
+    def __init__(self, path: Path, message: str) -> None:
+        super().__init__(message)
+        self.path = path
+
+
 def generate_variables(project_root: Path, *, require_analysis_outputs: bool = True) -> dict[str, Any]:
     """Generate manuscript tokens from live configuration and output artifacts."""
     root = project_root.resolve()
@@ -512,8 +518,11 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = T
     stats_path = root / "output" / "data" / "analysis_statistics.json"
     inv_passed, inv_total = load_invariant_counts(root)
 
-    if require_analysis_outputs and not sweep_path.exists():
-        raise FileNotFoundError(f"missing analysis artifact: {sweep_path}")
+    if require_analysis_outputs:
+        try:
+            sweep_path.stat()
+        except FileNotFoundError as error:
+            raise RequiredAnalysisInputUnavailable(sweep_path, f"missing analysis artifact: {sweep_path}") from error
 
     sweep_rows = read_parameter_sweep(sweep_path)
     si_data = load_json(si_summary)

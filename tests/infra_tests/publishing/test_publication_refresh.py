@@ -508,10 +508,12 @@ def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_vers
                 "scripts/maintenance/refresh_rendered_provenance.py",
                 "--project",
                 DEPENDENT_ANALYSIS_SCOPE,
+                "--no-analysis-recovery",
             ],
         ),
     ]
-    assert "--rebind" not in commands[1][1]
+    parsed_refresh = _parse_args(commands[1][1][2:])
+    assert parsed_refresh.no_analysis_recovery and not parsed_refresh.rebind
     (repository / _DEPENDENT_INPUTS[0]).write_bytes(b"changed actual counts DATA")
     with pytest.raises(ValueError, match="differs"):
         check_footprint(repository, plan)

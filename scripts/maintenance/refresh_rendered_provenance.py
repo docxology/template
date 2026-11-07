@@ -36,6 +36,11 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "re-rendering. Refused for any project whose tracked output tree is dirty.",
     )
     parser.add_argument(
+        "--no-analysis-recovery",
+        action="store_true",
+        help="Make the first render failure terminal, including missing canonical analysis inputs.",
+    )
+    parser.add_argument(
         "--jobs",
         type=int,
         default=1,
@@ -47,7 +52,13 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     names = list(PUBLIC_PROJECT_NAMES if args.all_public else args.projects)
-    results = run(args.repo_root.resolve(), names, jobs=args.jobs, rebind=args.rebind)
+    results = run(
+        args.repo_root.resolve(),
+        names,
+        jobs=args.jobs,
+        rebind=args.rebind,
+        analysis_recovery=not args.no_analysis_recovery,
+    )
     failed = False
     for name, passed, message in sorted(results):
         if passed:

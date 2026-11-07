@@ -26,7 +26,9 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 
 ensure_repo_root_on_path()
 
+from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import get_logger, log_header
+from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.validation.output.pipeline import execute_validation_pipeline
 from infrastructure.validation.publication.rendered_provenance import (
     RenderedProvenanceError,
@@ -52,11 +54,24 @@ def main() -> int:
     log_header(f"STAGE 04: Validate Output (Project: {args.project})", logger)
 
     repo_root = Path(__file__).resolve().parents[2]
-    result = execute_validation_pipeline(args.project, repo_root=repo_root)
+    try:
+        project_root = resolve_project_root(repo_root, args.project)
+        with project_output_lock(project_root):
+            if resolve_project_root(repo_root, args.project) != project_root:
+                logger.error("Validation project moved before acquiring its output lock")
+                return 1
+            return _validate_and_seal(args.project, repo_root)
+    except (OSError, ValueError) as exc:
+        logger.error("Validation project failed: %s", exc)
+        return 1
+
+
+def _validate_and_seal(project_name: str, repo_root: Path) -> int:
+    result = execute_validation_pipeline(project_name, repo_root=repo_root)
     if result != 0:
         return result
     try:
-        receipt = write_rendered_provenance_receipt(repo_root, args.project)
+        receipt = write_rendered_provenance_receipt(repo_root, project_name)
     except RenderedProvenanceError as exc:
         logger.error("Rendered provenance receipt failed [%s]: %s", exc.code, exc)
         return 1

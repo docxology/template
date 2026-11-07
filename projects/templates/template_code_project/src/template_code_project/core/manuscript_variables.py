@@ -23,8 +23,8 @@ import os
 import platform
 import stat
 import sys
-from io import StringIO
 from datetime import datetime, timezone
+from io import StringIO
 from pathlib import Path
 from typing import Any
 
@@ -43,9 +43,14 @@ try:
     from .experiment_config import load_experiment_config
     from .optimizer import quadratic_optimum
 except ImportError:  # pragma: no cover — standalone load (no package context)
-    from template_code_project.core._runtime import get_logger, project_root, write_analysis_bytes  # type: ignore[no-redef]
-    from template_code_project.core._runtime import read_analysis_bytes  # type: ignore[no-redef]
-    from template_code_project.core._runtime import analysis_metadata_observation, retain_analysis_metadata  # type: ignore[no-redef]
+    from template_code_project.core._runtime import (  # type: ignore[no-redef]  # type: ignore[no-redef]
+        analysis_metadata_observation,
+        get_logger,
+        project_root,
+        read_analysis_bytes,  # type: ignore[no-redef]
+        retain_analysis_metadata,
+        write_analysis_bytes,
+    )
     from template_code_project.core.experiment_config import load_experiment_config  # type: ignore[no-redef]
     from template_code_project.core.optimizer import quadratic_optimum  # type: ignore[no-redef]
 
@@ -127,13 +132,47 @@ def _load_config(project_root: Path) -> dict[str, Any]:
     return yaml.safe_load(read_analysis_bytes(project_root, config_path)) or {}
 
 
-def _load_optimization_results(project_root: Path) -> list[dict[str, str]]:
+class RequiredAnalysisInputUnavailable(FileNotFoundError):
+    """The strict manuscript generator reached its missing or empty analysis input."""
+
+    def __init__(self, path: Path, message: str, *, empty_sha256: str | None = None) -> None:
+        super().__init__(message)
+        self.path = path
+        self.empty_sha256 = empty_sha256
+
+
+_OPTIMIZATION_FIELDS = (
+    "step_size",
+    "solution",
+    "objective_value",
+    "iterations",
+    "converged",
+    "gradient_norm",
+    "termination_reason",
+)
+
+
+def _load_optimization_results(project_root: Path, *, required: bool = False) -> list[dict[str, str]]:
     csv_path = project_root / "output" / "data" / "optimization_results.csv"
-    if not csv_path.exists():
+    unavailable = (
+        f"Analysis outputs required but missing or empty: {csv_path}. "
+        "Run projects/templates/template_code_project/scripts/optimization_analysis.py first."
+    )
+    try:
+        csv_path.stat()
+    except FileNotFoundError as error:
+        if required:
+            raise RequiredAnalysisInputUnavailable(csv_path, unavailable) from error
         logger.warning("Optimization results not found: %s", csv_path)
         return []
-    with StringIO(read_analysis_bytes(project_root, csv_path).decode(), newline=None) as body:
-        return list(csv.DictReader(body))
+    raw = read_analysis_bytes(project_root, csv_path)
+    reader = csv.DictReader(StringIO(raw.decode(), newline=""), strict=required)
+    rows = list(reader)
+    if required and not rows:
+        if tuple(reader.fieldnames or ()) != _OPTIMIZATION_FIELDS:
+            raise ValueError(f"Malformed optimization results CSV header: {csv_path}")
+        raise RequiredAnalysisInputUnavailable(csv_path, unavailable, empty_sha256=hashlib.sha256(raw).hexdigest())
+    return rows
 
 
 def _load_json_report(project_root: Path, name: str) -> dict[str, Any]:
@@ -314,13 +353,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     """
     config = _load_config(project_root)
     exp_cfg = load_experiment_config(project_root)
-    results = _load_optimization_results(project_root)
-    if require_analysis_outputs and not results:
-        csv_path = project_root / "output" / "data" / "optimization_results.csv"
-        raise FileNotFoundError(
-            f"Analysis outputs required but missing or empty: {csv_path}. "
-            "Run projects/templates/template_code_project/scripts/optimization_analysis.py first."
-        )
+    results = _load_optimization_results(project_root, required=require_analysis_outputs)
     stability = _load_json_report(project_root, "stability_analysis.json")
     metadata_observation = analysis_metadata_observation(project_root)
     artifact_counts = _count_output_artifacts(project_root, observation=metadata_observation)

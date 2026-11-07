@@ -9,16 +9,25 @@ import time
 import uuid
 from pathlib import Path
 
-from infrastructure.core.execution_boundary import BoundedSubprocessResult, run_bounded_subprocess
 from infrastructure.core.analysis_data_custody import capture_analysis_data, require_analysis_data
+from infrastructure.core.execution_boundary import BoundedSubprocessResult, run_bounded_subprocess
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
+from infrastructure.core.pipeline._stage_protocol import ANALYSIS_SCHEMA, SCHEMA
 from infrastructure.core.pipeline.failure_identity import ClockState, terminal_identity
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_content_fingerprint
+from infrastructure.core.pipeline.hydration_recovery import (
+    HYDRATION_INPUT_UNAVAILABLE,
+    HydrationInputObservation,
+    HydrationRecoveryCompletion,
+    HydrationRecoveryEvidence,
+    canonical_hydration_artifact,
+    capture_hydration_input,
+    verify_hydration_observation,
+)
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.skip_receipts import validate_skip_receipt
 from infrastructure.core.runtime.python_binding import admitted_runtime_report
-from infrastructure.core.pipeline._stage_protocol import SCHEMA, ANALYSIS_SCHEMA
 
 _BOOTSTRAP = (
     "import runpy,sys;sys.dont_write_bytecode=False;"
@@ -81,6 +90,7 @@ def launch_python_stage(
     interpreter: Path | None = None,
     analysis_runtime: dict[str, object] | None = None,
     analysis_receipt: dict[str, object] | None = None,
+    hydration_evidence: HydrationRecoveryEvidence | None = None,
     cwd: Path | None = None,
     stage_admission: dict[str, object] | None = None,
     project_test_measurement: dict[str, str] | None = None,
@@ -96,6 +106,7 @@ def launch_python_stage(
     receipt_error = ""
     data_error = ""
     data_before = {}
+    hydration_observation: HydrationInputObservation | None = None
     with tempfile.TemporaryDirectory(prefix="template-python-stage-") as temporary:
         scratch = Path(temporary).resolve()
         prefix = scratch / "bytecode"
@@ -123,6 +134,15 @@ def launch_python_stage(
                 analysis_nonce=uuid.uuid4().hex,
                 data_before=data_before,
             )
+        hydration_artifact = (
+            canonical_hydration_artifact(repo, project, payload["argv"], stage_key)
+            if analysis_runtime is not None and hydration_evidence is not None
+            else None
+        )
+        if hydration_artifact is not None:
+            prerequisite = capture_hydration_input(project, hydration_artifact, prepare_receipt_output=True)
+            if prerequisite is not None:
+                payload["hydration_prerequisite"] = prerequisite.to_dict()
         digest = canonical_digest(payload)
         request = scratch / "request.json"
         serialized_request = json.dumps(payload, sort_keys=True)
@@ -218,6 +238,8 @@ def launch_python_stage(
                         "supervisory_interrupted",
                     }
                 )
+            if "hydration_prerequisite" in payload and isinstance(receipt, dict) and "hydration_input" in receipt:
+                fields.add("hydration_input")
             if (
                 not isinstance(receipt, dict)
                 or set(receipt) != fields
@@ -244,6 +266,14 @@ def launch_python_stage(
                 )
             ):
                 raise ValueError("Python stage receipt does not match actual worker completion")
+            if "hydration_input" in receipt and (
+                receipt["custody"] != "verified"
+                or receipt["original_exit_code"] != 1
+                or child.original_returncode != 1
+                or type(child.pid) is not int
+                or child.pid <= 0
+            ):
+                raise ValueError("Hydration prerequisite differs from the actual failed original completion")
             if analysis_runtime is not None:
                 if (
                     receipt["source_content_digest"] != payload["source_content_digest"]
@@ -261,6 +291,18 @@ def launch_python_stage(
                     )
                 ):
                     raise ValueError("Analysis receipt lacks its admitted actual runtime/source identity")
+            if "hydration_input" in receipt:
+                reads = receipt["analysis_reads"]
+                if (
+                    not isinstance(reads, dict)
+                    or reads.get("run_id") != run_id
+                    or reads.get("stage_key") != stage_key
+                    or reads.get("request_digest") != digest
+                    or reads.get("analysis_nonce") != payload["analysis_nonce"]
+                    or reads.get("content_digest")
+                    != canonical_digest({key: value for key, value in reads.items() if key != "content_digest"})
+                ):
+                    raise ValueError("Hydration prerequisite lacks its actual worker observation identity")
             if stage_key == "project_tests" and analysis_runtime is None:
                 commitment = receipt["project_test_measurement_sha256"]
                 if commitment is not None:
@@ -288,6 +330,13 @@ def launch_python_stage(
                         stage_key=stage_key,
                         deadline=deadline,
                     )
+                    if "hydration_input" in receipt:
+                        assert hydration_artifact is not None
+                        hydration_observation = verify_hydration_observation(
+                            project, hydration_artifact, payload["hydration_prerequisite"], receipt["hydration_input"]
+                        )
+                        if hydration_observation is None:
+                            raise ValueError("Hydration prerequisite changed or differed from actual worker completion")
                 except (OSError, ValueError) as exc:
                     data_error = str(exc)
         except (OSError, ValueError) as exc:
@@ -412,6 +461,22 @@ def launch_python_stage(
     if data_error:
         state = StageStatus.BLOCKED if original in {0, 75} else StageStatus.FAILED
         return StageOutcome(stage_key, state, original, data_error, attempt_exit_codes=attempts)
+    if hydration_observation is not None:
+        assert hydration_evidence is not None and type(child.pid) is int
+        assert original == 1
+        hydration_evidence.completion = HydrationRecoveryCompletion(
+            hydration_observation, run_id, stage_key, digest, str(payload["analysis_nonce"]), child.pid
+        )
+        artifact = hydration_observation.artifact
+        return StageOutcome(
+            stage_key,
+            StageStatus.FAILED,
+            original,
+            f"Required manuscript analysis input unavailable: {artifact} ({hydration_observation.state})",
+            reason=artifact,
+            attempt_exit_codes=attempts,
+            condition=HYDRATION_INPUT_UNAVAILABLE,
+        )
     if original == 0:
         return StageOutcome(stage_key, StageStatus.SUCCEEDED, 0, attempt_exit_codes=attempts)
     if allow_skip and original == 2:

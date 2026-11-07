@@ -35,13 +35,27 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
-    from template_methods_paper.manuscript_variables import generate_variables, save_variables
-
-    variables = generate_variables(
-        _PROJECT_ROOT,
-        require_analysis_outputs=not args.allow_draft,
+    from template_methods_paper.manuscript_variables import (
+        RequiredAnalysisInputUnavailable,
+        generate_variables,
+        save_variables,
     )
+
+    from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
+
+    try:
+        variables = generate_variables(
+            _PROJECT_ROOT,
+            require_analysis_outputs=not args.allow_draft,
+        )
+    except RequiredAnalysisInputUnavailable as error:
+        from infrastructure.core.pipeline.hydration_recovery import HydrationInputUnavailable
+
+        raise HydrationInputUnavailable(
+            error.path.relative_to(_PROJECT_ROOT).as_posix(),
+            str(error),
+            empty_sha256=error.empty_sha256,
+        ) from error
     out_path = _PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"
     save_variables(variables, out_path)
     write_resolved_manuscript_tree(_PROJECT_ROOT, variables)

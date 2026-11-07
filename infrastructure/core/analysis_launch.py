@@ -2,19 +2,25 @@
 
 from __future__ import annotations
 
-import math
 import hashlib
 import json
+import math
 import time
 import uuid
 from dataclasses import replace
 from pathlib import Path
 
+from infrastructure.core.analysis_data_custody import require_analysis_data
 from infrastructure.core.files.secure_write import atomic_write_text_confined, unlink_confined
 from infrastructure.core.pipeline.fingerprints import (
+    canonical_digest,
     source_fingerprint,
     source_fingerprint_components,
-    canonical_digest,
+)
+from infrastructure.core.pipeline.hydration_recovery import (
+    HYDRATION_INPUT_UNAVAILABLE,
+    HydrationRecoveryCompletion,
+    HydrationRecoveryEvidence,
 )
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.stage_launch import launch_python_stage
@@ -50,6 +56,12 @@ def deadline_relabels_outcome(result: StageOutcome, deadline: float) -> bool:
     return not result.complete and time.monotonic() >= deadline and result.status is not StageStatus.INTERRUPTED
 
 
+def _without_hydration_recovery(result: StageOutcome) -> StageOutcome:
+    if result.condition == HYDRATION_INPUT_UNAVAILABLE:
+        return replace(result, condition=None, reason="")
+    return result
+
+
 def launch_analysis_script(
     script_path: Path,
     repo_root: Path,
@@ -60,8 +72,13 @@ def launch_analysis_script(
     *,
     stage_key: str | None = None,
     cwd: Path | None = None,
+    hydration_evidence: HydrationRecoveryEvidence | None = None,
 ) -> StageOutcome:
     """Run the actual nominated runtime without resolver or dependency acquisition."""
+    worker_hydration = None
+    if hydration_evidence is not None:
+        hydration_evidence.completion = None
+        worker_hydration = HydrationRecoveryEvidence()
     key = stage_key or analysis_stage_key(script_path, project_root)
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
         raise ValueError("Analysis deadline must be finite")
@@ -69,6 +86,7 @@ def launch_analysis_script(
 
     native_owner = current_native_producer_operation()
     if native_owner is not None:
+        worker_hydration = None
         if native_owner.source.bindings.current_root != repo_root:
             raise ValueError("Analysis actual repository differs from its already-live native Source owner")
         # The existing caller may select a shorter per-script/hydration ceiling,
@@ -110,6 +128,7 @@ def launch_analysis_script(
             interpreter=selected,
             analysis_runtime=runtime,
             analysis_receipt=raw_receipt,
+            hydration_evidence=worker_hydration,
             cwd=cwd,
         )
         actual_runtime = analysis_runtime_binding(project_root, interpreter=selected)
@@ -126,7 +145,11 @@ def launch_analysis_script(
             raise ValueError("Analysis controller source changed during execution")
     except KeyboardInterrupt:
         result = (
-            replace(result, status=StageStatus.INTERRUPTED, diagnostic="Analysis supervisor interrupted")
+            replace(
+                _without_hydration_recovery(result),
+                status=StageStatus.INTERRUPTED,
+                diagnostic="Analysis supervisor interrupted",
+            )
             if result is not None
             else _unreturned_outcome(
                 key,
@@ -137,7 +160,7 @@ def launch_analysis_script(
         )
     except TimeoutError as exc:
         result = (
-            replace(result, status=StageStatus.TIMED_OUT, diagnostic=str(exc))
+            replace(_without_hydration_recovery(result), status=StageStatus.TIMED_OUT, diagnostic=str(exc))
             if result is not None
             else _unreturned_outcome(key, raw_receipt, StageStatus.TIMED_OUT, str(exc))
         )
@@ -146,18 +169,23 @@ def launch_analysis_script(
             result = _unreturned_outcome(key, raw_receipt, StageStatus.BLOCKED, f"Analysis admission refused: {exc}")
         else:
             state = result.status if not result.complete else StageStatus.BLOCKED
-            result = replace(result, status=state, diagnostic=f"{result.diagnostic}; analysis custody refused: {exc}")
+            result = replace(
+                _without_hydration_recovery(result),
+                status=state,
+                diagnostic=f"{result.diagnostic}; analysis custody refused: {exc}",
+            )
     assert result is not None
     if deadline_relabels_outcome(result, deadline):
         result = replace(
-            result,
+            _without_hydration_recovery(result),
             status=StageStatus.TIMED_OUT,
             diagnostic=(
                 f"{result.diagnostic}; analysis deadline passed during finalisation "
                 "(not the cause of a completed stage)"
             ),
         )
-    return _persist_analysis_result(
+    completion = worker_hydration.completion if worker_hydration is not None else None
+    result = _persist_analysis_result(
         repo_root,
         project_root,
         run_id,
@@ -167,7 +195,11 @@ def launch_analysis_script(
         after,
         raw_receipt or None,
         deadline,
+        hydration=completion,
     )
+    if hydration_evidence is not None and result.condition == HYDRATION_INPUT_UNAVAILABLE:
+        hydration_evidence.completion = completion
+    return result
 
 
 def _unreturned_outcome(key: str, validated: dict[str, object], state: StageStatus, diagnostic: str) -> StageOutcome:
@@ -195,6 +227,8 @@ def _persist_analysis_result(
     after: dict[str, object] | None,
     worker: dict[str, object] | None,
     deadline: float,
+    *,
+    hydration: HydrationRecoveryCompletion | None = None,
 ) -> StageOutcome:
     """An incomplete or missing worker receipt cannot become completion evidence."""
     target = analysis_receipt_path(project, run_id, result.stage_key)
@@ -213,29 +247,53 @@ def _persist_analysis_result(
     }
     attempted = False
     try:
-        if result.complete and (worker is None or before is None or after != before):
+        recoverable = result.condition == HYDRATION_INPUT_UNAVAILABLE
+        if (result.complete or recoverable) and (worker is None or before is None or after != before):
             raise ValueError("Analysis completion requires unchanged controller and actual worker evidence")
+        if recoverable:
+            assert worker is not None
+            completion = worker.get("completion")
+            if (
+                hydration is None
+                or hydration.run_id != run_id
+                or hydration.stage_key != result.stage_key
+                or hydration.observation.artifact != result.reason
+                or not isinstance(completion, dict)
+                or not hydration.observation.matches_current(project)
+            ):
+                raise ValueError("Hydration prerequisite changed before leaf evidence promotion")
+            require_analysis_data(
+                completion.get("data_after"), project, run_id=run_id, stage_key=result.stage_key, deadline=deadline
+            )
         # This invocation owns its run/stage evidence slot. Mark ownership
         # before rename: interruption during the writer's final fsync must
         # invalidate a possibly promoted receipt, including prior retry data.
         attempted = True
         atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
-        if result.complete and before is not None:
+        if (result.complete or recoverable) and before is not None:
             actual = analysis_runtime_binding(project)
             if (
                 canonical_digest(actual) != before["runtime_digest"]
                 or source_fingerprint(repo, project) != before["source_digest"]
             ):
                 result = replace(
-                    result,
-                    status=StageStatus.BLOCKED,
+                    _without_hydration_recovery(result),
+                    status=StageStatus.BLOCKED if result.complete else result.status,
                     diagnostic="Analysis source/runtime changed during evidence promotion",
+                )
+                record.update(outcome=result.to_dict(), complete=False)
+                atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
+        if result.condition == HYDRATION_INPUT_UNAVAILABLE and hydration is not None:
+            if not hydration.observation.matches_current(project):
+                result = replace(
+                    _without_hydration_recovery(result),
+                    diagnostic="Hydration prerequisite changed during leaf evidence promotion",
                 )
                 record.update(outcome=result.to_dict(), complete=False)
                 atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
         if deadline_relabels_outcome(result, deadline):
             result = replace(
-                result,
+                _without_hydration_recovery(result),
                 status=StageStatus.TIMED_OUT,
                 diagnostic=(
                     f"{result.diagnostic}; evidence deadline passed during finalisation "
@@ -246,13 +304,22 @@ def _persist_analysis_result(
             atomic_write_text_confined(project, target, json.dumps(record, sort_keys=True) + "\n", mode=0o600)
     except KeyboardInterrupt:
         result = replace(
-            result, status=StageStatus.INTERRUPTED, diagnostic=f"{result.diagnostic}; evidence promotion interrupted"
+            _without_hydration_recovery(result),
+            status=StageStatus.INTERRUPTED,
+            diagnostic=f"{result.diagnostic}; evidence promotion interrupted",
         )
         if attempted:
             result = _remove_promoted(project, target, result)
     except (OSError, ValueError) as exc:
-        state = result.status if not result.complete else StageStatus.FAILED
-        result = replace(result, status=state, diagnostic=f"{result.diagnostic}; analysis evidence refused: {exc}")
+        if isinstance(exc, TimeoutError) and result.condition == HYDRATION_INPUT_UNAVAILABLE:
+            state = StageStatus.TIMED_OUT
+        else:
+            state = result.status if not result.complete else StageStatus.FAILED
+        result = replace(
+            _without_hydration_recovery(result),
+            status=state,
+            diagnostic=f"{result.diagnostic}; analysis evidence refused: {exc}",
+        )
         if attempted:
             result = _remove_promoted(project, target, result)
     return result

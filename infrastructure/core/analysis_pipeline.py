@@ -15,29 +15,34 @@ This module exists so that ``scripts/pipeline/stage_02_analysis.py`` can stay a 
 orchestrator that only parses CLI arguments and dispatches here.
 """
 
+import os
 import shlex
 import time
-import os
 import uuid
 from collections.abc import Mapping
+from functools import partial
 from pathlib import Path
 
 from infrastructure.core.analysis_evidence import AnalysisRunEvidence
-from infrastructure.core.analysis_timeout import analysis_run_timeout_seconds, parse_analysis_script_timeout_sec
-from infrastructure.core.execution_policy import apply_execution_policy
 from infrastructure.core.analysis_launch import analysis_stage_key, launch_analysis_script
-from infrastructure.core.exceptions import ScriptExecutionError
-from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
-from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
+from infrastructure.core.analysis_timeout import analysis_run_timeout_seconds, parse_analysis_script_timeout_sec
+from infrastructure.core.exceptions import PipelineError, ScriptExecutionError
+from infrastructure.core.execution_policy import apply_execution_policy
+from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import (
     get_logger,
+    log_header,
+    log_live_resource_usage,
     log_operation,
     log_success,
 )
+from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.progress import SubStageProgress
+from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.core.runtime.environment import build_analysis_script_cmd_and_env
 from infrastructure.core.runtime.python_binding import AnalysisRuntimeUnavailable
-from infrastructure.core.project_paths import resolve_project_root
+from infrastructure.core.script_discovery import discover_analysis_scripts, verify_analysis_outputs
 
 logger = get_logger(__name__)
 
@@ -51,6 +56,7 @@ def run_analysis_script_outcome(
     plan_digest: str | None = None,
     deadline: float | None = None,
     base_env: Mapping[str, str] | None = None,
+    project_dir: Path | None = None,
 ) -> StageOutcome:
     """Execute a single analysis script under the Stage-02 contract.
 
@@ -67,7 +73,7 @@ def run_analysis_script_outcome(
         ScriptExecutionError: If subprocess invocation itself fails (not when the
             script exits non-zero — that is reported via the return value).
     """
-    project_root = resolve_project_root(repo_root, project_name)
+    project_root = project_dir if project_dir is not None else resolve_project_root(repo_root, project_name)
     try:
         key = analysis_stage_key(script_path, project_root)
     except ValueError as exc:
@@ -156,6 +162,7 @@ def run_analysis_pipeline(
     project_name: str = "project",
     *,
     base_env: Mapping[str, str] | None = None,
+    project_dir: Path | None = None,
 ) -> int:
     """Execute all analysis scripts in sequence.
 
@@ -174,7 +181,7 @@ def run_analysis_pipeline(
         logger.info("  No analysis scripts found - skipping stage")
         return 0
 
-    project_root = resolve_project_root(repo_root, project_name)
+    project_root = project_dir if project_dir is not None else resolve_project_root(repo_root, project_name)
     expected = tuple(analysis_stage_key(script, project_root) for script in scripts)
     if len(expected) != len(set(expected)):
         raise ValueError("Analysis execution requires unique script identities")
@@ -204,13 +211,18 @@ def run_analysis_pipeline(
     failed: list[str] = []
     outcomes: list[StageOutcome] = []
     progress = SubStageProgress(total=len(scripts), stage_name="Analysis Pipeline", use_ema=True)
+    run_script = (
+        run_analysis_script_outcome
+        if project_dir is None
+        else partial(run_analysis_script_outcome, project_dir=project_dir)
+    )
 
     for i, script in enumerate(scripts, 1):
         progress.start_substage(i, f"{project_name}/{script.name}")
         try:
             if source_fingerprint(repo_root, project_root) != source:
                 raise ValueError("Analysis source changed before the next producer")
-            outcome = run_analysis_script_outcome(
+            outcome = run_script(
                 script,
                 repo_root,
                 project_name,
@@ -261,7 +273,75 @@ def run_analysis_pipeline(
     return evidence.finish(outcomes).exit_code
 
 
+def execute_analysis_stage(
+    repo_root: Path,
+    project_name: str = "project",
+    *,
+    expected_project_root: Path | None = None,
+    base_env: Mapping[str, str] | None = None,
+) -> int:
+    """Run the canonical Stage 02 command for one locked physical project.
+
+    A caller recovering in an owned copy can nominate its exact physical
+    project and pass an independent environment without changing process state.
+    """
+    try:
+        environment = apply_execution_policy(os.environ if base_env is None else base_env, repo_root)
+        project_root = resolve_project_root(repo_root, project_name)
+        if expected_project_root is not None and (project_root != expected_project_root or not project_root.is_dir()):
+            logger.error("Analysis project differs from the nominated physical project")
+            return 75
+    except ValueError as exc:
+        logger.error("Invalid analysis configuration: %s", exc)
+        return 2
+
+    log_header(f"STAGE 02: Run Analysis (Project: {project_name})", logger)
+    log_live_resource_usage("Analysis stage start", logger)
+    try:
+        original = project_root.stat() if project_root.is_dir() else None
+        with project_output_lock(project_root):
+            current = project_root.stat() if project_root.is_dir() else None
+            original_identity = (original.st_dev, original.st_ino) if original is not None else None
+            current_identity = (current.st_dev, current.st_ino) if current is not None else None
+            if resolve_project_root(repo_root, project_name) != project_root or current_identity != original_identity:
+                logger.error("Analysis project changed before Stage 02 execution")
+                return 75
+            scripts = discover_analysis_scripts(repo_root, project_name, project_dir=project_root)
+            analysis_run_timeout_seconds(len(scripts), environment)
+            if not scripts:
+                logger.info("  No analysis scripts found - skipping stage")
+                return 0
+            logger.info(
+                "  Running %d analysis script(s) in declared/discovered order: %s",
+                len(scripts),
+                ", ".join(script.name for script in scripts),
+            )
+            exit_code = run_analysis_pipeline(
+                scripts, repo_root, project_name, base_env=environment, project_dir=project_root
+            )
+            if exit_code != 0:
+                logger.error("\nAnalysis failed - fix issues and try again")
+                return exit_code
+            if not verify_analysis_outputs(repo_root, project_name, project_dir=project_root):
+                logger.error("\nAnalysis complete but output verification failed")
+                return 1
+            log_success("Analysis complete - ready for PDF rendering", logger)
+            return 0
+    except ValueError as exc:
+        logger.error("Invalid analysis configuration: %s", exc)
+        return 2
+    except (ScriptExecutionError, PipelineError) as exc:
+        logger.error("Pipeline error: %s", exc)
+        return 1
+    except Exception as exc:  # noqa: BLE001 — last-line crash containment
+        logger.error("Unexpected error: %s", exc, exc_info=True)
+        return 1
+    finally:
+        log_live_resource_usage("Analysis stage end", logger)
+
+
 __all__ = [
+    "execute_analysis_stage",
     "run_analysis_pipeline",
     "run_analysis_script",
     "run_analysis_script_outcome",
