@@ -16,7 +16,6 @@ from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
 )
-from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
 from infrastructure.rendering._pdf_latex_bibliography import process_bibliography
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
@@ -469,55 +468,6 @@ class TestBibliographyProcessingEdgeCases:
         result = process_bibliography(tex_file, output_dir, [bib_file])
 
         assert result is False
-
-
-class TestFixFigurePathsEdgeCases:
-    """Test edge cases in figure path fixing."""
-
-    def test_fix_paths_various_prefixes(self, tmp_path):
-        """Test fixing various path prefix formats."""
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
-
-        output_dir = tmp_path / "output" / "pdf"
-        output_dir.mkdir(parents=True)
-
-        figures_dir = tmp_path / "output" / "figures"
-        figures_dir.mkdir()
-        (figures_dir / "test.png").write_text("dummy")
-
-        # Test various path formats
-        tex_content = r"""
-\includegraphics{output/figures/test.png}
-\includegraphics{./figures/test.png}
-\includegraphics{test.png}
-"""
-
-        result = fix_figure_paths(tex_content, manuscript_dir=manuscript_dir, output_dir=output_dir)
-
-        # Should process all paths
-        assert result is not None
-
-    def test_fix_paths_with_backslash(self, tmp_path):
-        """Test fixing paths with backslash separators."""
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
-
-        output_dir = tmp_path / "output" / "pdf"
-        output_dir.mkdir(parents=True)
-
-        figures_dir = tmp_path / "output" / "figures"
-        figures_dir.mkdir()
-        (figures_dir / "test.png").write_text("dummy")
-
-        tex_content = r"\includegraphics{figures\test.png}"
-
-        result = fix_figure_paths(tex_content, manuscript_dir=manuscript_dir, output_dir=output_dir)
-
-        # Should handle backslash paths
-        assert result is not None
-
-
 
 
 class TestCombineMarkdownFilesEdgeCases:

@@ -110,8 +110,7 @@ class TestBibliographyProcessing:
         pdf_dir.mkdir()
         bib_file = tmp_path / "references.bib"
         (pdf_dir / "test.aux").write_text(
-            "\\relax\n\\citation{test}\n"
-            "\\bibstyle{absent-ageint-regression-style-17c487}\n\\bibdata{references}\n",
+            "\\relax\n\\citation{test}\n\\bibstyle{absent-ageint-regression-style-17c487}\n\\bibdata{references}\n",
             encoding="utf-8",
         )
         bib_file.write_text(
@@ -145,13 +144,9 @@ class TestBibliographyProcessing:
         )
         tex.write_text(valid_source, encoding="utf-8")
         published = pdf_dir / "book.pdf"
-        compile_latex_manuscript(
-            tex, markdown, pdf_dir, published, [bib_file], True, [markdown]
-        )
+        compile_latex_manuscript(tex, markdown, pdf_dir, published, [bib_file], True, [markdown])
         original = published.read_bytes()
-        text = " ".join(
-            " ".join(page.extract_text() or "" for page in PdfReader(published).pages).split()
-        )
+        text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(published).pages).split())
         assert "Boundary Evidence" in text
 
         tex.write_text(
@@ -159,9 +154,7 @@ class TestBibliographyProcessing:
             encoding="utf-8",
         )
         with pytest.raises(RenderingError):
-            compile_latex_manuscript(
-                tex, markdown, pdf_dir, published, [bib_file], True, [markdown]
-            )
+            compile_latex_manuscript(tex, markdown, pdf_dir, published, [bib_file], True, [markdown])
 
         assert published.read_bytes() == original
 
@@ -188,9 +181,7 @@ class TestBibliographyProcessing:
         )
 
         rendered = renderer.render_combined([source], manuscript, "unused")
-        text = " ".join(
-            " ".join(page.extract_text() or "" for page in PdfReader(rendered).pages).split()
-        )
+        text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(rendered).pages).split())
         assert "No scholarly citations requested." in text
         assert "Boundary Evidence" not in text
 
@@ -220,9 +211,7 @@ class TestBibliographyProcessing:
         rendered = compile_latex_manuscript(
             tex, markdown, pdf_dir, pdf_dir / "book.pdf", [bibliography], True, [markdown]
         )
-        text = " ".join(
-            " ".join(page.extract_text() or "" for page in PdfReader(rendered).pages).split()
-        )
+        text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(rendered).pages).split())
         assert "Included source" in text
         assert "Boundary Evidence" in text
 

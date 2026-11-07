@@ -17,8 +17,6 @@ from infrastructure.rendering.web_renderer import WebRenderer
 from ._web_renderer_test_helpers import _make_renderer
 
 
-
-
 class TestHtmlRendering:
     """Test HTML rendering functionality."""
 
@@ -40,8 +38,6 @@ class TestHtmlRendering:
         renderer = _make_renderer(tmp_path)
         result = renderer.render(md)
         assert result.parent == Path(renderer.config.web_dir)
-
-
 
 
 class TestCombineMarkdownFiles:
@@ -123,7 +119,6 @@ class TestCombineMarkdownFiles:
         assert "label{thm:demo}" not in result
         assert "**Theorem.**" in result
 
-
     def test_html_safe_markdown_preserves_pandoc_crossrefs(self, tmp_path):
         renderer = _make_renderer(tmp_path)
         source = (
@@ -179,13 +174,9 @@ def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(
         encoding="utf-8",
     )
     renderer = WebRenderer(
-        RenderingConfig(
-            output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web")
-        )
+        RenderingConfig(output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web"))
     )
-    rendered_path = (
-        renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
-    )
+    rendered_path = renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
     rendered = rendered_path.read_text(encoding="utf-8")
     assert 'src="../figures/plots/dense.png"' in rendered
     assert 'alt="A blue square; synthetic layout fixture."' in rendered
