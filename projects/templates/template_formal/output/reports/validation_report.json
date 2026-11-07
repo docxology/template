@@ -250,7 +250,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-04T23:39:23Z",
+  "timestamp": "2026-11-07T02:14:29Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -314,7 +314,7 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "500eb786031e8c69e756f3c49e81fcc3e6393b7ac1d314f56b77c8eb633c1018"
+        "sha256": "478c8a397ec979951725316a816b0c40908ace43c8a2bafe2bf6faa5be3fa48f"
       },
       "output": {
         "file_count": 32,
@@ -325,8 +325,8 @@
         "sha256": "8c270be8319ade6a3d31a34de42232df895dbf99d633d6edf34469c42af8d4d5"
       },
       "stage": {
-        "file_count": 1726,
-        "sha256": "78f433b909dc8f296b91f6f671b9f57dc0d460756267e1b2488b09d1bb4d6428"
+        "file_count": 1742,
+        "sha256": "e260f299ac2fbf3cb463ee903f078d201b800711fc31f376ff69f3d0d8522f40"
       }
     },
     "project": "templates/template_formal",
