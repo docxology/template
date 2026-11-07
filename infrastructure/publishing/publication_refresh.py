@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import sys
 import time
 import tomllib
 from typing import Any
@@ -76,7 +77,8 @@ def run_logged(root: Path, directory: Path, label: str, argv: list[str], *, time
         **{stream + "_sha256": process["streams"][stream]["sha256"] for stream in ("stdout", "stderr")},
     }
     write_json(diagnostics / f"{label}.exit.json", receipt)
-    print(f"{label}: original exit {original}; supervised result {code}", flush=True)
+    sys.stdout.write(f"{label}: original exit {original}; supervised result {code}\n")
+    sys.stdout.flush()
     return code
 
 

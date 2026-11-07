@@ -66,7 +66,7 @@ replaces the other.
 | Function | Severity returned | Purpose |
 |---|---|---|
 | `discover_markdown_files(root, scope=...)` | `tree` / `repo` / `link_audit` | Sorted markdown paths (canonical discovery API). |
-| `collect_symbols(paths)` | — | Set of `\label{}` and `{#anchor}` names. |
+| `collect_symbols(paths)` | — | Equation labels and Pandoc ID tokens, before or after classes/key-value attributes; quoted hash text is not an ID. |
 | `validate_images(paths, root)` | ERROR | Referenced images resolve on disk. |
 | `validate_refs(paths, root, labels, anchors)` | ERROR / WARNING | `\eqref` and `(#anchor)` resolve; bare URLs / non-informative link text. |
 | `validate_math(paths, root)` | WARNING / ERROR | Allows isolated Pandoc `$$` display blocks; flags inline/unbalanced `$$`, raw `\[`/`\]`, and equation-label issues. |

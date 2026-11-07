@@ -400,13 +400,17 @@ jobs:
               root, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
           )
           PYTHON
-          for kind in native-build native-runtime; do
-            uv venv --no-project --no-python-downloads --python .venv/bin/python \
-              "$scratch/$kind-environment"
-            uv pip sync --no-config --no-build --require-hashes \
-              --python "$scratch/$kind-environment/bin/python" \
-              "$scratch/$kind-requirements.txt"
-          done
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$scratch/native-build-environment"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$scratch/native-build-environment/bin/python" \
+            "$scratch/native-build-requirements.txt"
+          # Match native cache preparation: only Source-locked build tools are
+          # importable by sdist backends; runtime packages go to a separate target.
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$scratch/native-build-environment/bin/python" \
+            --target "$scratch/prepared-dependencies" \
+            --requirements "$scratch/native-runtime-requirements.txt"
           rm -rf "$scratch"
 
       - name: Verify selected Python minor
@@ -744,12 +748,10 @@ jobs:
           uv sync --locked "${groups[@]}"
 
       - name: Prepare exact standalone runtime dependencies
-        # The genuine standalone-wheel control installs the root build backend
-        # and the standalone runtime with `uv pip sync --offline --no-config
-        # --no-build --require-hashes`. A lockfile `uv sync` fetches wheels by
-        # their locked URLs and never records the registry entries that an
-        # offline `uv pip sync` resolves from, so warm both exact hash-pinned
-        # sets through the same installer here, while the network is allowed.
+        # Keep the native cache preparation model: hash-locked installed-build
+        # tools alone serve source backends, and runtime dependencies install to
+        # a separate target without build isolation or dependency resolution.
+        # The fresh offline standalone consumer retains --no-build.
         if: matrix.project == 'templates/template_autoresearch_project'
         timeout-minutes: 5
         run: |
@@ -765,13 +767,15 @@ jobs:
             --metadata-root projects/templates/template_autoresearch_project \
             --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
             --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
-          for kind in build runtime; do
-            uv venv --no-project --no-python-downloads --python .venv/bin/python \
-              "$RUNNER_TEMP/autoresearch-$kind-preparation"
-            uv pip sync --no-config --no-build --require-hashes \
-              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
-              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
-          done
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$RUNNER_TEMP/autoresearch-build-preparation"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            "$RUNNER_TEMP/autoresearch-build-requirements.txt"
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            --target "$RUNNER_TEMP/autoresearch-build-preparation/prepared-dependencies" \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
 
       # Active Inference and Formal execute their declared Lean proofs in
       # ordinary Stage 01 (Formal also runs TLC with the runner's Java and its
@@ -1477,9 +1481,8 @@ jobs:
         run: uv sync --locked --group public-exemplars --group installed-build --group active-inference
 
       - name: Prepare exact standalone runtime dependencies
-        # Same preparation as the test-project Autoresearch cell: warm the
-        # root installed-build backend and the standalone runtime through the
-        # offline fixture's exact installer while the network is allowed.
+        # Same Source-locked backend and separate runtime target preparation as
+        # the test-project Autoresearch cell; the offline consumer stays no-build.
         timeout-minutes: 5
         run: |
           set -euo pipefail
@@ -1494,13 +1497,15 @@ jobs:
             --metadata-root projects/templates/template_autoresearch_project \
             --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
             --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
-          for kind in build runtime; do
-            uv venv --no-project --no-python-downloads --python .venv/bin/python \
-              "$RUNNER_TEMP/autoresearch-$kind-preparation"
-            uv pip sync --no-config --no-build --require-hashes \
-              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
-              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
-          done
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$RUNNER_TEMP/autoresearch-build-preparation"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            "$RUNNER_TEMP/autoresearch-build-requirements.txt"
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            --target "$RUNNER_TEMP/autoresearch-build-preparation/prepared-dependencies" \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
 
       - uses: ./.github/actions/setup-acceptance-fixtures
 

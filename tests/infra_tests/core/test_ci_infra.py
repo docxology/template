@@ -52,7 +52,6 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
             "tests/infra_tests/methods/test_methods_orchestration.py",
             "tests/infra_tests/publishing/test_repro_bundle.py",
             "tests/infra_tests/publishing/test_repro_bundle_absent_output.py",
-            "tests/infra_tests/regression/test_manifest_contract.py",
             "tests/infra_tests/rendering/test_manifest.py",
             "tests/infra_tests/reporting/test_native_office_semantic_source.py",
             "tests/infra_tests/validation/test_publication_audit.py",

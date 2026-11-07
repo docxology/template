@@ -15,6 +15,7 @@ import os
 import re
 import stat
 import subprocess
+import sys
 import time
 import zipfile
 from dataclasses import asdict, dataclass
@@ -444,7 +445,7 @@ def main() -> int:
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         parser.error(str(error))
     if args.mode == "admit":
-        print(json.dumps(asdict(request), sort_keys=True))
+        sys.stdout.write(json.dumps(asdict(request), sort_keys=True) + "\n")
         return 0
     from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 
@@ -471,7 +472,7 @@ def main() -> int:
     except (OSError, ValueError, TypeError, KeyError, TimeoutError, UnicodeError, zipfile.BadZipFile) as error:
         result.update(status="failed", diagnostic=re.sub(r"https?://\S+", "<URL>", str(error))[:1200])
     binding = write_json(root, directory / "readback.json", result)
-    print(json.dumps({**result, "receipt": binding}, sort_keys=True))
+    sys.stdout.write(json.dumps({**result, "receipt": binding}, sort_keys=True) + "\n")
     return 0 if result["status"] == "passed" else 1
 
 

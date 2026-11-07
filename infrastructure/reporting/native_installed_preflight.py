@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -202,7 +203,7 @@ def _run_preflight(args: argparse.Namespace, deadline: float) -> int:
         environment_nomination=os.environ.get("TEMPLATE_PUBLIC_REFERENCE_COMMIT"),
     )
     write_json(root, args.evidence_dir / "diagnostic.json", record)
-    print(
+    sys.stdout.write(
         json.dumps(
             {
                 "schema_version": PREFLIGHT_SCHEMA,
@@ -213,6 +214,7 @@ def _run_preflight(args: argparse.Namespace, deadline: float) -> int:
             },
             sort_keys=True,
         )
+        + "\n"
     )
     return code
 

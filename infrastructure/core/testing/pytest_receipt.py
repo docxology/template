@@ -42,7 +42,7 @@ def _diagnostic_warning(error: Exception) -> None:
     if not _progress_error:
         _progress_error = True
         try:
-            print(f"pytest progress diagnostic disabled: {type(error).__name__}: {str(error)[:512]}", file=sys.stderr)
+            sys.stderr.write(f"pytest progress diagnostic disabled: {type(error).__name__}: {str(error)[:512]}\n")
         except Exception:
             pass
 

@@ -25,6 +25,7 @@ runs:
         export UV_CACHE_DIR="$cache" UV_LINK_MODE=copy
         echo "UV_CACHE_DIR=$cache" >> "$GITHUB_ENV"
         interpreter="$GITHUB_WORKSPACE/.venv/bin/python"
+        minor=$("$interpreter" -I -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
         build_requirements=$(mktemp "$RUNNER_TEMP/native-build-requirements.XXXXXX")
         uv export --directory "$GITHUB_WORKSPACE" --locked --only-group installed-build --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$build_requirements"
         # Root alone cannot serve a project lock that pins different versions of
@@ -60,7 +61,7 @@ runs:
           else
             uv export --directory "$metadata" --locked --no-default-groups --no-emit-project --no-emit-local --no-header --no-annotate --output-file "$requirements"
           fi
-          "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements"
+          "$interpreter" -m infrastructure.project.locked_dependency_export --metadata-root "$metadata" --requirements "$requirements" --minor "$minor"
           uv pip install --no-config --no-build-isolation --no-deps --require-hashes --python "$environment/bin/python" --target "$environment/prepared-dependencies" --requirements "$requirements"
           rm "$requirements"
         done

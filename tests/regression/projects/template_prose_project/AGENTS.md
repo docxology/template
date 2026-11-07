@@ -2,6 +2,6 @@
 
 Read [`../../AGENTS.md`](../../AGENTS.md) first.
 
-For prose-centric work, the pinned values are typically
-readability metrics, citation densities, and section word counts —
-re-derived via the project's `run_prose_pipeline.py`.
+This lane checks current manuscript citation keys against the actual
+bibliography. Editorial wording, readability and source counts remain derived
+measurements, not fixed numerical or prose baselines.

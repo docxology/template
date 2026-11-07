@@ -76,20 +76,19 @@ If a value changes, the failure must be **investigated** — is the change corre
 
 ## Directory layout
 
-The tree below is the live shape plus target naming convention. The
-`template_code_project/tables/test_optimization_results_claims.py` file is populated;
-other illustrative `test_figure_*` and `test_table_*` names show the intended expansion.
+The tree below shows populated regression lanes. Add a figure or table case only
+when a declared claim has an actual producer-backed assertion; non-collected
+scaffolds do not count as required regression evidence.
 
 ```
 tests/regression/
 ├── README.md                          (philosophy + how to add a regression case)
 ├── __init__.py
-├── conftest.py                        (fixtures for deterministic re-execution)
+├── conftest.py                        (fixtures and mandatory selection)
+├── manifest.json                     (required populated test files)
 ├── projects/
 │   ├── template_code_project/
 │   │   ├── __init__.py
-│   │   ├── figures/                   (one test file per manuscript figure)
-│   │   │   └── test_figure_TEMPLATE.py (non-collected scaffold)
 │   │   └── tables/                    (one test file per manuscript table)
 │   │       └── test_optimization_results_claims.py
 │   └── template_prose_project/
@@ -98,6 +97,10 @@ tests/regression/
     ├── template_code_project.json
     └── ...                           (other bound projects in claim_bindings.json)
 ```
+
+The manifest requires each declared file to contribute selected cases. Source
+presence or a large suite count cannot substitute for running a required lane;
+missing or deselected mandatory files refuse collection.
 
 ## How to add a regression case
 

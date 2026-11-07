@@ -354,7 +354,9 @@ def _root_prepare(path: Path) -> None:
         json.dump(data, output, sort_keys=True)
     os.chmod(path, 0o644)
     _require(shutil.disk_usage(temporary).free >= _files.RESERVE, "execution profile disk reserve refused")
-    print(json.dumps({"execution_uid": account.pw_uid, "execution_gid": account.pw_gid, "prepared": True}))
+    sys.stdout.write(
+        json.dumps({"execution_uid": account.pw_uid, "execution_gid": account.pw_gid, "prepared": True}) + "\n"
+    )
 
 
 def _identity(data: dict) -> None:
@@ -441,7 +443,7 @@ def main(argv: list[str] | None = None) -> int:
                 if readiness.exists()
                 else 0
             )
-            print(
+            sys.stdout.write(
                 json.dumps(
                     {
                         "transport_bytes": total,
@@ -450,6 +452,7 @@ def main(argv: list[str] | None = None) -> int:
                         "runtime_acceptance": False,
                     }
                 )
+                + "\n"
             )
         else:
             _files._phase("run-preflight")

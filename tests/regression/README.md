@@ -43,7 +43,8 @@ consumer-visible invariant that every current citation resolves in its bibliogra
 tests/regression/
 ├── README.md                          (this file)
 ├── __init__.py
-├── conftest.py                        (shared fixtures)
+├── conftest.py                        (fixtures and mandatory selection)
+├── manifest.json                     (required populated test files)
 ├── projects/
 │   ├── template_code_project/
 │   │   └── tables/test_optimization_results_claims.py
@@ -56,15 +57,14 @@ tests/regression/
 ## Running
 
 ```bash
-# Run all regression tests
+# Run every required regression file
 uv run pytest tests/regression/ -v
-
-# Run regression tests for one project
-uv run pytest tests/regression/projects/template_code_project/ -v
-
-# Run a specific figure or table
-uv run pytest tests/regression/projects/template_code_project/figures/test_figure_03_panel_b.py -v
 ```
+
+Every file declared in `manifest.json` must contribute selected cases. A missing
+or deselected required file refuses the tier even when other tests remain.
+There is no arbitrary total-case floor or non-collected scaffold in that roster.
+Keep the full selection when investigating this fail-closed tier.
 
 These tests are deliberately **not gated by the 90% coverage floor**. Coverage
 and declared-claim drift are separate signals; neither replaces the other or
@@ -76,12 +76,13 @@ establishes external scientific validity.
 2. Trace it to its producing function in `projects/<name>/src/` or `.../scripts/`.
 3. Re-run the pipeline with `--deterministic`; capture the output value.
 4. Add the entry to `pinned_values/<project>.json`.
-5. Write the test file (see template below).
+5. Write a consumer-visible test (see the worked example below).
 6. Open a PR. CI will fail until the new test passes.
 
-## Test file template
+## Worked example
 
-See [`tests/regression/projects/template_code_project/figures/test_figure_TEMPLATE.py`](./projects/template_code_project/figures/test_figure_TEMPLATE.py) for a worked example.
+A populated quantitative example is
+[`test_optimization_results_claims.py`](./projects/template_code_project/tables/test_optimization_results_claims.py).
 
 ## Pinned-values JSON schema
 

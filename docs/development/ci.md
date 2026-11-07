@@ -69,13 +69,14 @@ Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
 selected compiler controls also install the recommended TeX fonts and verify
 `pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract
 additionally prepares the declared Pandoc/XeTeX document producers and readers.
-Native portability preparation exports the locked build and runtime requirements
-and warms their exact hashes through the same `uv pip sync` installer in fresh
-job-owned environments. Auto's export uses the existing metadata-locked
-normalizer for the selected Python minor and its original archive nomination.
-The later fresh consumers retain offline, no-build and require-hashes checks;
-neither `uv sync` state nor a restored environment proves those archives remain
-available to the actual consumer.
+Native portability and Auto prepare fresh caches with Source-locked build tools
+in a backend-only environment. Online runtime preparation uses those tools
+without build isolation or dependency resolution and installs into a separate
+target, allowing exact locked sdists to build without polluting the backend.
+Both preparation and native consumption nominate archives for the actual
+selected interpreter's minor. Fresh consumers still require offline,
+no-build and exact-hash installation; neither `uv sync` state nor a restored
+environment proves those archives remain available to that consumer.
 
 Run a project's same selection locally after locked root setup:
 

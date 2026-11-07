@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 import time
 
@@ -51,7 +52,7 @@ def main() -> int:
             "release_authorized": False,
         }
     binding = write_json(root, output, result)
-    print(json.dumps({**result, "receipt": binding}, sort_keys=True))
+    sys.stdout.write(json.dumps({**result, "receipt": binding}, sort_keys=True) + "\n")
     return 0 if result["status"] == "passed" else 1
 
 

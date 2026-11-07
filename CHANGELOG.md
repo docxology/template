@@ -35,8 +35,8 @@ matching tag identity and authenticated publication.
   providers during cold API discovery.
 - Keep Linux hardening on its reviewed Noble distribution and provision Active's
   existing dependency group in the interpreter that actually runs its tests.
-  Warm exact build/runtime archives through the native offline consumer's
-  installer and normalize Auto's locked export for its selected Python minor.
+  Build exact runtime sdists online with Source-locked backend tools and
+  actual selected-minor nomination; retain fresh offline, no-build/hash consumers.
 - Derive original pytest worker identity from actual pytest configuration;
   inherited worker environment does not relabel a new serial controller.
 - Keep native process stream observations explicitly typed and distinct from
@@ -52,6 +52,12 @@ matching tag identity and authenticated publication.
 - Retire incidental prose wording/readability pins and workflow/HTML wiring
   assertions rather than repinning them. Retain current bibliography resolution,
   actual capability refusals and native consumer integrity controls.
+- Require selected cases from every declared regression file, not an incidental
+  suite-size floor; remove non-collected scaffolds and empty fixture packages.
+- Preserve native machine stdout/stderr protocols, explicit flushes and original
+  exits without library `print` calls.
+- Resolve Pandoc IDs before or after class/key-value attributes without treating
+  quoted hash text as a label or waiving genuinely missing targets.
 - Probe the existing real tagged-PDF test independently on all four targets;
   require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving
