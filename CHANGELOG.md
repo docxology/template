@@ -22,6 +22,9 @@ matching tag identity and authenticated publication.
 - Collect and review Root family policy through actual same-checkout census
   originals on both supported Python minors and host families. Keep policy
   authoring separate from runtime and release acceptance.
+- Refresh exhaustive family classifications from all four original native
+  collectors; verify exact native policy encoding and current Source admission
+  without turning retired incidental cases into waived runtime evidence.
 - Resolve output-validation exports lazily so cold evidence-registry and
   rendered-snapshot consumers do not enter an import cycle through leaf
   artifact readers; preserve all existing public provider identities.
