@@ -38,7 +38,7 @@
     },
     {
       "rendered_path": "output/manuscript/05_experimental_setup.md",
-      "rendered_sha256": "ad8ea010248f3d227cc8056a4ef493a0f67f9cded493b0ad7b6846cdad852a1a",
+      "rendered_sha256": "b8bf68f5c9d0b06cb26f39ddbbb10319d69e106673d9313881ced43f6499a1e8",
       "source_path": "manuscript/05_experimental_setup.md",
       "source_sha256": "9092fabe5b0c77a70dd2ffff7fa3437011a360cb8fc73b97364b7fba5163d0e7"
     },
@@ -70,22 +70,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1739fcd8108e1db8ddc339dc9c15750d1158ec0bb7d604ada6c943d5f9046346",
+      "sha256": "c701726a166ca063fae21fff515a41bf9551c07425b6bd35d09fec66c3bc214c",
       "size_bytes": 26174
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "0021d3526894f3364171f69afc2307f942a8642ee087143ce3262d3b08acfbb5",
+      "sha256": "9e40c1a85990a74ad992f87a5748cbd390e100bbf34cdb09182d2fc15f33deb9",
       "size_bytes": 51113
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "33864d03be43738221087440aeb7b6d33842de7fd5374d3015e9e8660ed54d0b",
+      "sha256": "7066ff9b900a3a70c2c1a501addabb2557e801d313592b4435c08c676b91db81",
       "size_bytes": 2753
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "66dd5eff6742f48497448638cb860d97ec84e9fdfc829a9a24807974afda02a9",
+      "sha256": "9657e133b5d632c3ebcfd29f267f9abe87c84df167ca33f0e1021b9f5ff90eaf",
       "size_bytes": 13844
     }
   },
@@ -97,7 +97,7 @@
     },
     "output": {
       "file_count": 80,
-      "sha256": "51ea276b4732e5da5468f1cded88bbbe51b1fb91cf3eacd1d60215f493d4b302"
+      "sha256": "37f19daae029869d5b8564f60826965e40945a20aab0159860f121bea90e41c6"
     },
     "source": {
       "file_count": 55,
@@ -105,7 +105,7 @@
     },
     "stage": {
       "file_count": 1744,
-      "sha256": "20e02b410d849cd07cea510b3ef6c0682ded2060e2f493338770e849c31b7919"
+      "sha256": "8bfaca5ea68e2f5863813e5523dc76fd7096563ffeae0a8cd4a8bfcd0b5eb528"
     }
   },
   "project": "templates/template_code_project",
