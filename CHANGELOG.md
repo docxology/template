@@ -7,6 +7,79 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [5.1.0] - 2026-11-06
+
+See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor
+preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
+preserving exemplar own versions and third-party locks. The release ceremony requires exact-source acceptance,
+matching tag identity and authenticated publication.
+
+- Bind each ARL capability projection to one invocation's original audited
+  producer, retaining the first verdict even on failure. Separately authenticate
+  and read a downloaded same-Source carrier with the full original reader.
+- Stream downloaded auxiliary evidence under the existing native aggregate
+  budget while preserving per-file bounds and the complete required closure.
+- Collect and review Root family policy through actual same-checkout census
+  originals on both supported Python minors and host families. Keep policy
+  authoring separate from runtime and release acceptance.
+- Probe the existing real tagged-PDF test independently on all four targets;
+  require one passing case with no skip before drawing a capability conclusion.
+- Retain bounded, allowlisted HTTP error-header observations while preserving
+  existing retry behavior and keeping quota interpretation separate.
+- Retain structured rendered-validation drift observations and original worker
+  results, plus bounded Active producer phase diagnostics.
+- Prepare native transmission images before Active hydration audits; regenerate
+  its tracked publication evidence through the actual producers.
+- Preserve Newspaper image resource refusals and exercise valid, corrupt and
+  resource-limited images in the persistent project smoke roster.
+- Update development and scientific dependencies within their declared Root and
+  project lock scopes; qualify the actual consumers with the locked toolchain.
+- Retain artifact-only publication refresh and unchanged-output rebind review
+  patches with finite generated ownership, original exits and committed-tree
+  gates. Direct push remains inactive pending its separate owner decision.
+- Freeze final metadata and Source before publication regeneration and coverage.
+  Import genuine coverage literals from measured Source, regenerate publication
+  outputs that consume those values, compare measured source/support hashes and
+  remeasure affected source changes before all-project unchanged-output rebind
+  and exact-main acceptance.
+
+- Run coordinated publication preparation under the existing fresh execution
+  account with exactly one generation worker, preserving strict original-process
+  observation and terminal phase failures through the disposable candidate and
+  review capture. Refuse concurrent shared-account workers before any phase.
+- Prepare Linux document tools from one frozen official TeX Live 2025 final
+  repository, with pinned installer and database bytes and coherent engine and
+  package selection.
+- Pack each native matrix cell with its exact selected original and collect the
+  complete ordered 25-cell union through the real artifact custodians. Assign
+  distinct receipt and transport paths at original creation, and preserve every
+  original receipt rather than synthesizing an aggregate pass.
+
+- Honor multi-project resume through the existing checkpoint policy and refuse
+  unsupported all-project incremental requests before execution.
+- Isolate optional PDF processing state per invocation, validate opt-in types,
+  stage PDF and sidecar publication, preserve prior destination modes and recover
+  ordinary publication errors without overwriting foreign edits.
+- Preserve existing PDF catalog objects through overlays, metadata injection and
+  password encryption except for explicitly replaced metadata; retain fresh
+  encryption randomness and the legacy source-name hash manifest convention.
+- Preserve Kmyth inputs and existing sidecars on provider failure, reject source
+  aliases, and remove inherited credential names and agent sockets from its
+  child environment while retaining declared TPM and library nominees.
+- Omit the CORS allow-origin header for the declared deny-default case, correct
+  the shared pipeline API examples and retain successful native-cell artifacts
+  for 30 days.
+
+- Add an exact Mermaid CLI 12.2 native profile using the patched Mermaid 12.3
+  browser distribution. Preserve the curated SDK font and rectangular viewport
+  APIs, actual caller custody and every native proof gate; retain historical
+  profiles separately.
+- Update the locked Node tooling to patched KaTeX and Zod dependency versions,
+  retain the scoped dependency audit, and run a persistent inherited-trust
+  regression. Resolve the Source-locked Puppeteer browser deterministically.
+- Bind ordinary Mermaid caches to renderer, font and toolchain inputs; native
+  custody requires each actual producer call even when prior image bytes exist.
+
 ## [5.0.2] - 2026-11-04
 
 See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root

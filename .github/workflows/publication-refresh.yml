@@ -17,10 +17,10 @@ on:
         options: ["refresh", "rebind-only"]
         default: "refresh"
       workers:
-        description: Independent projects per provider wave
+        description: One worker preserves strict shared-account process observation
         type: choice
-        options: ["1", "2", "3", "4"]
-        default: "2"
+        options: ["1"]
+        default: "1"
 
 permissions:
   contents: read

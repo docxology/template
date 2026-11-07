@@ -120,7 +120,11 @@ def genuine_platform_environment(
         package=root_metadata["name"],
     )
     admitted = freeze_wheel_bytes(
-        repo_root, requirement, read_bytes_confined(scratch, candidates[0]), scratch, candidates[0].name
+        repo_root,
+        requirement,
+        read_bytes_confined(scratch, candidates[0], max_bytes=64 * 1024 * 1024),
+        scratch,
+        candidates[0].name,
     )
     dependencies = scratch / "runtime-requirements.txt"
     run(

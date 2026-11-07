@@ -8,7 +8,7 @@ must call this action before running `scripts/audit/lint_docs.py`.
 
 - `actions/setup-node` and `actions/cache` remain pinned to full SHAs.
 - Select exactly Node 24.22.0 LTS; Root's `24.x` engine and native
-  Mermaid11 admission require the same major. Preserve the Source-declared
+  Mermaid CLI12.2 admission require the same major. Preserve the Source-declared
   npm serializer and every third-party lock record.
 - `setup-node` enables `cache: npm` (CI-FAST-DOCSLINT-NPM-1): the npm
   download cache is keyed on the lockfile by the official action; `npm ci`
@@ -26,3 +26,13 @@ must call this action before running `scripts/audit/lint_docs.py`.
 - The CI `Documentation Lint` and `Static Health Report` jobs are the real
   behavioral controls because the hosted-runner cache and `GITHUB_ENV`
   propagation are GitHub Actions behavior.
+
+
+The Source lock binds CLI12.2.0, Mermaid12.3.0 and its embedded patched KaTeX;
+the standalone KaTeX/CSS package has its own exact locked version. The setup
+runs the repository's output-only inherited-trust regression after npm install,
+with dependency lifecycle scripts disabled. Chrome's cache is keyed on this
+lock, and the awaited installed Puppeteer `executablePath({headless: 'shell'})`
+selects the actual required browser after installation. Cache enumeration cannot
+select an older retained browser. Preparation and these scoped controls do not
+grant native or release acceptance.

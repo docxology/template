@@ -17,6 +17,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.publishing.root_release_contract import root_package_version
 from infrastructure.publishing.publication_refresh import (
     _generation_sequence,
+    generate,
     generation_commands,
     main,
     provider_waves,
@@ -299,6 +300,8 @@ def test_manual_workflow_has_no_write_credential_and_requires_both_original_gate
     workflow = yaml.safe_load((ROOT / ".github/workflows/publication-refresh.yml").read_text())
     trigger = workflow.get("on", workflow.get(True))
     assert set(trigger) == {"workflow_dispatch"}
+    workers = trigger["workflow_dispatch"]["inputs"]["workers"]
+    assert workers["options"] == ["1"] and workers["default"] == "1"
     assert workflow["permissions"] == {"contents": "read"}
     job = workflow["jobs"]["refresh"]
     assert job["permissions"] == {"contents": "read"}
@@ -626,9 +629,10 @@ def test_dependent_analysis_refuses_omitted_or_reordered_canonical_consumers(
         _plan(repository)
 
 
+@pytest.mark.parametrize("entry", ["direct", "cli-default"])
 @pytest.mark.parametrize("mode", ["refresh", "rebind-only"])
 def test_coordinated_run_keeps_actual_prepare_failure_terminal(
-    repository: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+    repository: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str, entry: str
 ) -> None:
     version = root_package_version(ROOT)
     for relative in (
@@ -646,7 +650,25 @@ def test_coordinated_run_keeps_actual_prepare_failure_terminal(
     source = _commit(repository)
     monkeypatch.setenv("UV_OFFLINE", "1")
     directory = tmp_path / ("coordinated-" + mode)
-    assert run_coordinated(repository, directory, source, version, 2, mode=mode) != 0
+    if entry == "direct":
+        result = run_coordinated(repository, directory, source, version, 1, mode=mode)
+    else:
+        result = main(
+            [
+                "--repo-root",
+                str(repository),
+                "--directory",
+                str(directory),
+                "--mode",
+                mode,
+                "run",
+                "--source-sha",
+                source,
+                "--expected-version",
+                version,
+            ]
+        )
+    assert result != 0
     label = first.replace("/", "__") + "-prepare"
     original = json.loads((directory / "diagnostics" / (label + ".exit.json")).read_bytes())
     assert original["original_exit_code"] != 0 and original["returncode"] != 0
@@ -663,7 +685,7 @@ def test_coordinated_run_keeps_actual_prepare_failure_terminal(
     assert git(repository, "rev-parse", "HEAD").decode().strip() == source
 
 
-@pytest.mark.parametrize("workers", [0, 5, True])
+@pytest.mark.parametrize("workers", [0, 2, 3, 4, 5, True])
 def test_coordinated_run_refuses_bad_workers_before_creating_any_evidence(
     repository: Path, tmp_path: Path, workers: int
 ) -> None:
@@ -673,3 +695,42 @@ def test_coordinated_run_refuses_bad_workers_before_creating_any_evidence(
         run_coordinated(repository, directory, source, root_package_version(ROOT), workers)
     assert not directory.exists()
     assert git(repository, "rev-parse", "HEAD").decode().strip() == source
+
+
+@pytest.mark.parametrize("workers", [2, 3, 4])
+@pytest.mark.parametrize("entry", ["generate", "generate-cli", "run-cli"])
+def test_unsafe_shared_account_workers_refuse_before_any_plan_or_producer(
+    repository: Path, tmp_path: Path, workers: int, entry: str
+) -> None:
+    directory = tmp_path / "unsafe-workers"
+    source = git(repository, "rev-parse", "HEAD").decode().strip()
+    with pytest.raises(ValueError, match="workers.*exactly one.*census"):
+        if entry == "generate":
+            generate(repository, directory, workers)
+        else:
+            phase = "generate" if entry == "generate-cli" else "run"
+            argv = ["--repo-root", str(repository), "--directory", str(directory), phase, "--jobs", str(workers)]
+            if phase == "run":
+                argv.extend(["--source-sha", source, "--expected-version", root_package_version(ROOT)])
+            main(argv)
+    assert not directory.exists()
+    assert not (repository / "output/readiness/publication-refresh").exists()
+    assert not git(repository, "status", "--porcelain")
+    assert git(repository, "rev-parse", "HEAD").decode().strip() == source
+
+
+@pytest.mark.parametrize("worker_arguments", [[], ["--jobs", "1"]])
+def test_generate_cli_default_matches_explicit_single_worker_before_missing_preparation(
+    repository: Path, tmp_path: Path, worker_arguments: list[str]
+) -> None:
+    directory = tmp_path / "unprepared-single-worker"
+    write_json(directory / "plan.json", _plan(repository))
+    before = (directory / "plan.json").read_bytes()
+    # An allowed single worker reaches the unchanged own-runtime preparation
+    # requirement; no producer is substituted or admitted by this control.
+    with pytest.raises(FileNotFoundError, match="prepared.json"):
+        main(["--repo-root", str(repository), "--directory", str(directory), "generate", *worker_arguments])
+    assert (directory / "plan.json").read_bytes() == before
+    assert sorted(path.name for path in directory.iterdir()) == ["plan.json"]
+    assert not (repository / "output/readiness/publication-refresh").exists()
+    assert not git(repository, "status", "--porcelain")

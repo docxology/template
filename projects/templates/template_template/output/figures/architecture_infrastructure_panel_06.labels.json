@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "png_sha256": "e359a1c95381c081ecb522ab91f4f8fd678d559ccfe756878e64aab0f360638b",
+  "png_sha256": "8139b9131fa36d7aadcfc9f8b05e18d3154aec1050efaf2e87d3a86160174ce5",
   "width_px": 1700,
   "height_px": 1500,
   "dpi": 200,
@@ -29,7 +29,7 @@
       "minimum_label_px": 111.11111111111111
     },
     {
-      "text": "411 py\n[ARS\u00b7]",
+      "text": "416 py\n[ARS\u00b7]",
       "bbox_px": [
         243.0,
         704.888889,

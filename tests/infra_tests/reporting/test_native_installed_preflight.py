@@ -111,9 +111,10 @@ def test_preflight_refuses_invalid_or_restarted_clock(tmp_path: Path, clock: str
 
 
 def test_preflight_retains_expired_original_deadline(tmp_path: Path) -> None:
-    result = _run(
-        [*_arguments(tmp_path), "--timeout", "1", "--operation-started-monotonic", str(time.monotonic() - 60)]
-    )
+    started = time.monotonic()
+    assert started > 0
+    time.sleep(max(0.0, started + 1 - time.monotonic()))
+    result = _run([*_arguments(tmp_path), "--timeout", "1", "--operation-started-monotonic", str(started)])
     assert result.returncode != 0
     assert "TimeoutError: public reference deadline exhausted" in result.stderr
     assert not (tmp_path / "evidence-dir").exists()
