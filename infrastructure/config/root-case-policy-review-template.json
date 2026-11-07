@@ -21094,7 +21094,7 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
-      "source_sha256": "0aee1c0045e87492f469481f85d90f414249965d629227e1c526304351db00f3",
+      "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
       "families": [
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestBibliographyProcessingEdgeCases::test_bibliography_missing_aux_file",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestBibliographyProcessingEdgeCases::test_bibliography_missing_bib_file",
@@ -21118,8 +21118,6 @@
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestExtractPreamble::test_extract_preamble_no_latex_blocks",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestExtractPreamble::test_extract_preamble_read_error",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestExtractPreamble::test_extract_preamble_single_block",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixFigurePathsEdgeCases::test_fix_paths_various_prefixes",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixFigurePathsEdgeCases::test_fix_paths_with_backslash",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixMathDelimiters::test_fix_broken_display_math_no_label",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixMathDelimiters::test_fix_broken_display_math_with_label",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixMathDelimiters::test_fix_greek_letters",
@@ -21127,23 +21125,18 @@
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixMathDelimiters::test_fix_math_no_changes_needed",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixMathDelimiters::test_fix_math_underscore_patterns",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestFixMathDelimiters::test_fix_textbar_to_mid",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestModuleLevel::test_module_has_parse_missing_package",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestModuleLevel::test_module_has_pdf_renderer_class",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestModuleLevel::test_pdf_renderer_has_required_methods",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestParseMissingPackageError::test_parse_log_with_read_error",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestParseMissingPackageError::test_parse_missing_file_not_found",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestParseMissingPackageError::test_parse_missing_package_alternate_format",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestParseMissingPackageError::test_parse_missing_package_from_log",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestParseMissingPackageError::test_parse_no_missing_package",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestRenderCombinedEdgeCases::test_render_combined_finds_alternate_bib",
-        "tests/infra_tests/rendering/test_pdf_renderer.py::TestRenderCombinedEdgeCases::test_render_combined_removes_existing_output",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestTitlePageGenerationErrors::test_body_generation_empty_config",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestTitlePageGenerationErrors::test_body_generation_invalid_yaml",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestTitlePageGenerationErrors::test_preamble_generation_empty_config",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestTitlePageGenerationErrors::test_preamble_generation_invalid_yaml",
         "tests/infra_tests/rendering/test_pdf_renderer.py::TestTitlePageGenerationErrors::test_preamble_generation_no_authors"
       ],
-      "family_observations_sha256": "88e791486572ad423c531bd85cd8d6d4f9d70dac7bd7306ae5de960da619c7b5",
+      "family_observations_sha256": "1834ad7c37fc9d0fc70682b1006b608d008eb69aab9fe12a797a7c1959e6af94",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -21152,8 +21145,38 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
-          "source_sha256": "0aee1c0045e87492f469481f85d90f414249965d629227e1c526304351db00f3",
-          "line": 1
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 29
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 95
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 178
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 319
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 379
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 442
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer.py",
+          "source_sha256": "b5bbfb4e7b53f5daa3f35f16c6383fabe27358c70c0edaf9182bfc4b55cd8193",
+          "line": 482
         }
       ]
     },
@@ -21233,14 +21256,17 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
-      "source_sha256": "cbdbd560ae9604097edcd7591c153f80867ecfeb21ef498134e6f095ef209f89",
+      "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
       "families": [
-        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_bibtex_warning",
-        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_copies_all_bib_files",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_citations_in_included_auxiliary_files_are_resolved",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_failed_bibliography_does_not_replace_a_published_pdf",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_empty_paths",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_missing_aux_file",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_missing_bib_file",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_rejects_native_failure",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_resolves_all_database_files",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_success",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_unused_bibliography_does_not_require_processing",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestCitationProcessing::test_render_combined_includes_bibliography",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestFigurePathResolution::test_fix_figure_paths_already_correct",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestFigurePathResolution::test_fix_figure_paths_basic",
@@ -21248,19 +21274,132 @@
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestFigurePathResolution::test_fix_figure_paths_unicode_filename",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestFigurePathResolution::test_fix_figure_paths_with_options",
         "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestFigurePathResolution::test_fix_multiple_figure_paths",
-        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestIntegration::test_latex_content_with_citations_and_figures"
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestIntegration::test_latex_content_with_citations_and_figures",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestPDFPublicationSafety::test_rejected_source_preserves_the_prior_public_pdf",
+        "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestPDFPublicationSafety::test_zero_page_compile_cannot_republish_old_pdf"
       ],
-      "family_observations_sha256": "3054732ed3c1720a0ef6bafd771bf0526536070924a2ede1eaa852b8c4b9e335",
+      "family_observations_sha256": "55225077ddea1cebfe90cf7093ef2f1070ea2e17ea714fd2e47012b6a1f4471c",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_success",
+          "lane": "core",
+          "obligations": [
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_resolves_all_database_files",
+          "lane": "core",
+          "obligations": [
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_process_bibliography_rejects_native_failure",
+          "lane": "core",
+          "obligations": [
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_failed_bibliography_does_not_replace_a_published_pdf",
+          "lane": "core",
+          "obligations": [
+            "latex",
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_citations_in_included_auxiliary_files_are_resolved",
+          "lane": "core",
+          "obligations": [
+            "latex",
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestBibliographyProcessing::test_unused_bibliography_does_not_require_processing",
+          "lane": "core",
+          "obligations": [
+            "latex",
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestPDFPublicationSafety::test_rejected_source_preserves_the_prior_public_pdf",
+          "lane": "core",
+          "obligations": [
+            "latex",
+            "pandoc",
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestCitationProcessing::test_render_combined_includes_bibliography",
+          "lane": "core",
+          "obligations": [
+            "latex",
+            "pandoc",
+            "bibtex"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestPDFPublicationSafety::test_zero_page_compile_cannot_republish_old_pdf",
+          "lane": "core",
+          "obligations": [
+            "latex"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
-          "source_sha256": "cbdbd560ae9604097edcd7591c153f80867ecfeb21ef498134e6f095ef209f89",
-          "line": 1
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 30
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 65
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 106
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 124
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 161
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 188
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 221
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 251
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pdf_renderer_fixes.py",
+          "source_sha256": "ab30569c09695d4a0b070877024695f847b1097aaaf7c57dde4268c75bfda5b8",
+          "line": 371
         }
       ]
     },
@@ -23678,12 +23817,11 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-      "source_sha256": "a84e1535a69dfa87a1ad0ec1b6b1c2dc04874235108e35b91090af7eebc38932",
+      "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
       "families": [
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_adds_newline_if_missing",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_bom_removal",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_empty_files_raises",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_html_safe_markdown_normalizes_project_figure_paths",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_html_safe_markdown_preserves_pandoc_crossrefs",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_html_safe_markdown_preserves_raw_latex_visible_text",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_missing_file",
@@ -23694,26 +23832,100 @@
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_unicode_error",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestHtmlRendering::test_render_html",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestHtmlRendering::test_render_html_uses_configured_web_dir",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestWebRendererCore::test_has_render_functions",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestWebRendererCore::test_module_imports",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestWebRendererIntegration::test_full_render_workflow",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_individual_render_preserves_existing_page_permissions",
+        "tests/infra_tests/rendering/test_web_renderer_core.py::test_nested_manuscript_figures_keep_registry_identity_and_literal_paths",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_pandoc_metadata_args_enable_linked_references",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_cleans_private_source_after_pandoc_failure",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_preserves_planted_temporary_symlink",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_source_io_failure_keeps_rendering_error_contract"
       ],
-      "family_observations_sha256": "0a250820d12d306c16ee00be0d5b47fef4987dd09027c0d214231727e3277a1c",
+      "family_observations_sha256": "53f53a045a43630c1805cc49426b87a5a09f88e665ec9ce8664cd212386a235d",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/rendering/test_web_renderer_core.py::TestHtmlRendering::test_render_html",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_renderer_core.py::TestHtmlRendering::test_render_html_uses_configured_web_dir",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_renderer_core.py::test_nested_manuscript_figures_keep_registry_identity_and_literal_paths",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_preserves_planted_temporary_symlink",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_renderer_core.py::test_individual_render_preserves_existing_page_permissions",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "a84e1535a69dfa87a1ad0ec1b6b1c2dc04874235108e35b91090af7eebc38932",
-          "line": 1
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 23
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 34
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 44
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 151
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 208
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 232
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 244
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 259
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "line": 278
         }
       ]
     },
@@ -33719,14 +33931,13 @@
     },
     {
       "path": "tests/infra_tests/validation/test_claim_verification.py",
-      "source_sha256": "052b1181dc9584c13e81e5a61a7c8cf67389dedb31338cc76c6483cc2ab97190",
+      "source_sha256": "3e88841fe088386e123fae8dd45c2087f5fe9fdd0e828ea82c6bb402c830b64f",
       "families": [
-        "tests/infra_tests/validation/test_claim_verification.py::test_claim_verification_reads_docs_manuscript",
         "tests/infra_tests/validation/test_claim_verification.py::test_fact_check_verifier_scores_supported_and_insufficient",
-        "tests/infra_tests/validation/test_claim_verification.py::test_validation_output_import_does_not_load_search_backends",
-        "tests/infra_tests/validation/test_claim_verification.py::test_verify_project_claims_extracts_candidates_and_summarizes"
+        "tests/infra_tests/validation/test_claim_verification.py::test_generated_claim_admission_error_is_not_a_skipped_report",
+        "tests/infra_tests/validation/test_claim_verification.py::test_generated_claims_check_only_ordered_admitted_deep_inputs"
       ],
-      "family_observations_sha256": "0ac94c53d097b228b130fbfdcc43edd066d6a9eaa8fd3de70f4dabbd5ca5af0b",
+      "family_observations_sha256": "d63aea811c8e21781e5a0df8fbf2a53798e6af2fc2e8ca04d842f14d36f63360",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -33735,8 +33946,18 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_claim_verification.py",
-          "source_sha256": "052b1181dc9584c13e81e5a61a7c8cf67389dedb31338cc76c6483cc2ab97190",
-          "line": 1
+          "source_sha256": "3e88841fe088386e123fae8dd45c2087f5fe9fdd0e828ea82c6bb402c830b64f",
+          "line": 43
+        },
+        {
+          "path": "tests/infra_tests/validation/test_claim_verification.py",
+          "source_sha256": "3e88841fe088386e123fae8dd45c2087f5fe9fdd0e828ea82c6bb402c830b64f",
+          "line": 52
+        },
+        {
+          "path": "tests/infra_tests/validation/test_claim_verification.py",
+          "source_sha256": "3e88841fe088386e123fae8dd45c2087f5fe9fdd0e828ea82c6bb402c830b64f",
+          "line": 84
         }
       ]
     },
@@ -34311,7 +34532,7 @@
     },
     {
       "path": "tests/infra_tests/validation/test_evidence_registry.py",
-      "source_sha256": "992ce63252b6a0116a0d000d0d2f5ac9703d00089863d843f120badb9f891fae",
+      "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
       "families": [
         "tests/infra_tests/validation/test_evidence_registry.py::test_build_project_registry_bounds_raw_json_arrays_but_keeps_scalar_summaries",
         "tests/infra_tests/validation/test_evidence_registry.py::test_build_project_registry_collects_config_reports_and_nested_run_artifacts",
@@ -34322,6 +34543,8 @@
         "tests/infra_tests/validation/test_evidence_registry.py::test_compact_registry_report_caps_samples_and_summarizes_facts",
         "tests/infra_tests/validation/test_evidence_registry.py::test_fresh_fact_supports_number_in_strict_zone",
         "tests/infra_tests/validation/test_evidence_registry.py::test_full_registry_report_is_explicit_debug_opt_in",
+        "tests/infra_tests/validation/test_evidence_registry.py::test_generated_labels_respect_stable_output_admission",
+        "tests/infra_tests/validation/test_evidence_registry.py::test_generated_registry_resolves_only_selected_manuscript_labels",
         "tests/infra_tests/validation/test_evidence_registry.py::test_lookup_fresh_only_filters_stale_facts",
         "tests/infra_tests/validation/test_evidence_registry.py::test_missing_evidence_source_paths_accepts_existing_local_directory",
         "tests/infra_tests/validation/test_evidence_registry.py::test_missing_evidence_source_paths_accepts_existing_local_file",
@@ -34351,26 +34574,74 @@
         "tests/infra_tests/validation/test_evidence_registry.py::test_strict_zones_fail_but_introduction_numbers_warn",
         "tests/infra_tests/validation/test_evidence_registry.py::test_trusted_number_tiers_accepts_external_source",
         "tests/infra_tests/validation/test_evidence_registry.py::test_trusted_number_tiers_rejects_self_referential_metric",
+        "tests/infra_tests/validation/test_evidence_registry.py::test_undeclared_output_does_not_replace_manuscript_label_scope",
         "tests/infra_tests/validation/test_evidence_registry.py::test_write_evidence_registry_report",
         "tests/infra_tests/validation/test_evidence_registry.py::test_write_evidence_registry_report_preserves_stable_fact_timestamps"
       ],
-      "family_observations_sha256": "4478f70b671254efa7724c3b0340bade5f29b3df4efc84dd94df221d1227b1cd",
+      "family_observations_sha256": "f8051db5d658957cf6a09cd89848995ee3f03062a99bf43ad284b583d40fde31",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/validation/test_evidence_registry.py::test_project_registry_is_invariant_to_ignored_runtime_and_control_reports",
+          "lane": "core",
+          "obligations": [
+            "git"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/validation/test_evidence_registry.py::test_private_blanket_ignored_output_still_supplies_stable_local_evidence",
+          "lane": "core",
+          "obligations": [
+            "git"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/validation/test_evidence_registry.py::test_generated_labels_respect_stable_output_admission",
+          "lane": "core",
+          "obligations": [
+            "git"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_evidence_registry.py",
-          "source_sha256": "992ce63252b6a0116a0d000d0d2f5ac9703d00089863d843f120badb9f891fae",
-          "line": 1
+          "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
+          "line": 344
+        },
+        {
+          "path": "tests/infra_tests/validation/test_evidence_registry.py",
+          "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
+          "line": 383
+        },
+        {
+          "path": "tests/infra_tests/validation/test_evidence_registry.py",
+          "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
+          "line": 443
+        },
+        {
+          "path": "tests/infra_tests/validation/test_evidence_registry.py",
+          "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
+          "line": 497
+        },
+        {
+          "path": "tests/infra_tests/validation/test_evidence_registry.py",
+          "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
+          "line": 514
+        },
+        {
+          "path": "tests/infra_tests/validation/test_evidence_registry.py",
+          "source_sha256": "85532d6471b506d1f28fd0bda0e6f034317f8a7cc32a62328ce58eabd84705ef",
+          "line": 525
         }
       ]
     },
     {
       "path": "tests/infra_tests/validation/test_figure_validator.py",
-      "source_sha256": "47e781c8d8a4a3f7a6519bd34b85e218888e83ea5cac9bc6442a977e3eb183ea",
+      "source_sha256": "ec04f860c9600dbe8ca47ab3174687a4c98ad6634ae3d30609e30e3db9966562",
       "families": [
         "tests/infra_tests/validation/test_figure_validator.py::TestConfiguredCoverAccessibility::test_tagged_book_cover_uses_book_alt_when_book_title_selects_book_path",
         "tests/infra_tests/validation/test_figure_validator.py::TestConfiguredCoverAccessibility::test_tagged_cover_rejects_non_string_alt",
@@ -34398,9 +34669,10 @@
         "tests/infra_tests/validation/test_figure_validator.py::TestValidateFigureRegistry::test_validate_ref_and_label_patterns",
         "tests/infra_tests/validation/test_figure_validator.py::TestValidateFigureRegistry::test_validate_registry_not_found",
         "tests/infra_tests/validation/test_figure_validator.py::TestValidateFigureRegistry::test_validate_skips_documentation_files",
-        "tests/infra_tests/validation/test_figure_validator.py::TestValidateFigureRegistry::test_validate_unregistered_references"
+        "tests/infra_tests/validation/test_figure_validator.py::TestValidateFigureRegistry::test_validate_unregistered_references",
+        "tests/infra_tests/validation/test_figure_validator.py::test_explicit_figure_roster_rejects_symlink_escape"
       ],
-      "family_observations_sha256": "c6cd1e1c71c13dc789eaddf1dbd21a29f3d0e84534dcedece6c7662560712959",
+      "family_observations_sha256": "a3e6bd805a26a47a6757379307c2a06c1bd97af80c3aebb9645524a127032d65",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -34409,8 +34681,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_figure_validator.py",
-          "source_sha256": "47e781c8d8a4a3f7a6519bd34b85e218888e83ea5cac9bc6442a977e3eb183ea",
-          "line": 1
+          "source_sha256": "ec04f860c9600dbe8ca47ab3174687a4c98ad6634ae3d30609e30e3db9966562",
+          "line": 55
+        },
+        {
+          "path": "tests/infra_tests/validation/test_figure_validator.py",
+          "source_sha256": "ec04f860c9600dbe8ca47ab3174687a4c98ad6634ae3d30609e30e3db9966562",
+          "line": 524
         }
       ]
     },
@@ -34985,7 +35262,7 @@
     },
     {
       "path": "tests/infra_tests/validation/test_markdown_validator_checks.py",
-      "source_sha256": "5b50570f62cdd9bea7b4bb188dbb62cc654dbb0ba5d1550730276878f9370021",
+      "source_sha256": "f26501b8662317db75680f7aa1426efa562da872ca2e87b1d18d1bb06a765ae0",
       "families": [
         "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateImages::test_absolute_path",
         "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateImages::test_detects_missing_image",
@@ -35008,9 +35285,10 @@
         "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateRefs::test_detects_missing_anchor",
         "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateRefs::test_detects_missing_equation_label",
         "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateRefs::test_detects_non_informative_link",
-        "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateRefs::test_ignores_markdown_link_pattern_inside_fenced_code"
+        "tests/infra_tests/validation/test_markdown_validator_checks.py::TestValidateRefs::test_ignores_markdown_link_pattern_inside_fenced_code",
+        "tests/infra_tests/validation/test_markdown_validator_checks.py::test_explicit_markdown_roster_rejects_symlink_escape"
       ],
-      "family_observations_sha256": "de3e5ede1f9eb8a582c21154d24f22b7f33129fa833ee5c5896a12e83c320ad2",
+      "family_observations_sha256": "8a99dfe8b1c11bec80b42eba92c4524d5a4157ea50d5c766c1e081cbcef0fbe9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -35019,8 +35297,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_markdown_validator_checks.py",
-          "source_sha256": "5b50570f62cdd9bea7b4bb188dbb62cc654dbb0ba5d1550730276878f9370021",
-          "line": 1
+          "source_sha256": "f26501b8662317db75680f7aa1426efa562da872ca2e87b1d18d1bb06a765ae0",
+          "line": 21
+        },
+        {
+          "path": "tests/infra_tests/validation/test_markdown_validator_checks.py",
+          "source_sha256": "f26501b8662317db75680f7aa1426efa562da872ca2e87b1d18d1bb06a765ae0",
+          "line": 318
         }
       ]
     },
@@ -35328,16 +35611,17 @@
     },
     {
       "path": "tests/infra_tests/validation/test_prose_quality_cli.py",
-      "source_sha256": "46c4e54dd02ec3c927c2c640906f3cf9d33bc4930c1d28829daddd95214d4024",
+      "source_sha256": "918cb54f82b08b41bba527dca74ca9577659406d139fd5c0743eb264a85444c1",
       "families": [
         "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_advisory_by_default_exits_zero",
         "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_ai_file_fails_when_requested",
         "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_clean_file_exits_zero",
         "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_directory_scan",
         "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_json_output",
-        "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_missing_path"
+        "tests/infra_tests/validation/test_prose_quality_cli.py::TestProseQualityCommand::test_missing_path",
+        "tests/infra_tests/validation/test_prose_quality_cli.py::test_stage_four_prose_scans_only_admitted_deep_generated_branch"
       ],
-      "family_observations_sha256": "8ac3d4897c56ef762dd0a273d006d289930d778255f291903f49c7fd83871973",
+      "family_observations_sha256": "010a8c05e13a29131818708abab149b27fc82e4051b98c4c4cb0bcfc5cb599ff",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -35346,8 +35630,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_prose_quality_cli.py",
-          "source_sha256": "46c4e54dd02ec3c927c2c640906f3cf9d33bc4930c1d28829daddd95214d4024",
-          "line": 1
+          "source_sha256": "918cb54f82b08b41bba527dca74ca9577659406d139fd5c0743eb264a85444c1",
+          "line": 24
+        },
+        {
+          "path": "tests/infra_tests/validation/test_prose_quality_cli.py",
+          "source_sha256": "918cb54f82b08b41bba527dca74ca9577659406d139fd5c0743eb264a85444c1",
+          "line": 69
         }
       ]
     },
@@ -35582,16 +35871,23 @@
     },
     {
       "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
-      "source_sha256": "3de903ed18262f092e517b42327ea1e08e10a742a848c001fcc5ce045cbcb6a6",
+      "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
       "families": [
         "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_composition_drift_blocks_refresh_and_preserves_receipt",
         "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_composition_parser_rejects_every_malformed_sha_field",
         "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_composition_parser_rejects_mixed_or_noncanonical_roots",
         "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_composition_parser_rejects_noncanonical_combined_sizes",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_declared_generated_roster_binds_actual_order_without_authorship",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_generated_config_metadata_drift_changes_config_commitment",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_generated_declaration_cannot_admit_outside_project_bytes",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_generated_declaration_does_not_select_nested_only_output",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_generated_manuscript_requires_valid_explicit_declaration",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_generated_marker_after_block_scalar_selects_declared_input",
+        "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_generated_roster_cannot_rebind_stale_composition",
         "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_nonhydrated_sources_are_bound_to_actual_combined_manuscript",
         "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py::test_shared_combined_algorithm_is_accepted_by_current_snapshot"
       ],
-      "family_observations_sha256": "e929540e767a92173cbef5fbcd4938633c382bd6a1e0a81afcc9249fe6814240",
+      "family_observations_sha256": "3d17d5c5435852be6c82e1dd29fea7114e3cb3230f7bc8d3e31be2b9552b7f1d",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -35600,8 +35896,43 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
-          "source_sha256": "3de903ed18262f092e517b42327ea1e08e10a742a848c001fcc5ce045cbcb6a6",
-          "line": 1
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 34
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 175
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 188
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 228
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 240
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 270
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 287
+        },
+        {
+          "path": "tests/infra_tests/validation/test_rendered_provenance_composition_parser.py",
+          "source_sha256": "5db0a9bf046a880bbfdb85ab645d98d8af018b62785a435415216d88ff96674e",
+          "line": 307
         }
       ]
     },
@@ -36485,7 +36816,7 @@
     },
     {
       "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
-      "source_sha256": "431206082fb978666defe268072867880a2612b0e5bdcc3518fba019f977cd59",
+      "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
       "families": [
         "tests/infra_tests/validation/test_validation_output_pipeline.py::TestClaimVerificationGate::test_enabled_via_config_adds_claim_verification_summary",
         "tests/infra_tests/validation/test_validation_output_pipeline.py::TestExecuteValidationPipeline::test_docs_manuscript_figure_references_reach_registry_validation",
@@ -36536,10 +36867,14 @@
         "tests/infra_tests/validation/test_validation_output_pipeline.py::TestVerifyOutputsExist::test_returns_tuple_for_nonexistent_project",
         "tests/infra_tests/validation/test_validation_output_pipeline.py::TestVerifyOutputsExist::test_valid_structure",
         "tests/infra_tests/validation/test_validation_output_pipeline.py::TestVerifyOutputsExist::test_verify_outputs_resolves_wip_project",
+        "tests/infra_tests/validation/test_validation_output_pipeline.py::test_generated_deep_markdown_uses_consumed_root_context",
+        "tests/infra_tests/validation/test_validation_output_pipeline.py::test_generated_figure_references_reject_selected_but_not_residue",
+        "tests/infra_tests/validation/test_validation_output_pipeline.py::test_generated_markdown_diagnostics_exclude_undeclared_residue",
+        "tests/infra_tests/validation/test_validation_output_pipeline.py::test_generated_missing_declared_input_cannot_pass_neutral_markdown",
         "tests/infra_tests/validation/test_validation_output_pipeline.py::test_validate_project_design_includes_autoresearch_when_configured",
         "tests/infra_tests/validation/test_validation_output_pipeline.py::test_validation_stage_resolves_project_beside_entrypoint_with_independent_sdk"
       ],
-      "family_observations_sha256": "bdb8d7aa05f6579c249c418b189b3767f484e097779704719d8a66a3396ce5bb",
+      "family_observations_sha256": "c9c19b8e4690c618f3205c0362f16e85939c728a5a2052046ff1f529e7aec170",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -36556,8 +36891,33 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
-          "source_sha256": "431206082fb978666defe268072867880a2612b0e5bdcc3518fba019f977cd59",
-          "line": 1
+          "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
+          "line": 28
+        },
+        {
+          "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
+          "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
+          "line": 55
+        },
+        {
+          "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
+          "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
+          "line": 81
+        },
+        {
+          "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
+          "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
+          "line": 99
+        },
+        {
+          "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
+          "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
+          "line": 139
+        },
+        {
+          "path": "tests/infra_tests/validation/test_validation_output_pipeline.py",
+          "source_sha256": "e7532303eebc1ac1ca3a9dd8d633ecc6eb8ca2d200bef2fa874bcffcc1161bee",
+          "line": 676
         }
       ]
     },
