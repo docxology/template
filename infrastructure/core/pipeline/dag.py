@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING, Any, Callable, cast
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.target_contracts import _bind_script_target
 from infrastructure.core.pipeline.types import StageContract, StageHooks
 
 if TYPE_CHECKING:
@@ -343,21 +344,10 @@ class PipelineDAG:
     def _resolve_stage_func(self, stage: StageDefinition, executor: Any) -> Callable[[], bool | StageOutcome]:
         """Build a zero-arg callable for a stage definition."""
         if stage.script:
-            # Build a closure over the script + args
-            script = stage.script
-            args_list = list(stage.args)
-            if "--project" not in args_list:
-                args_list.extend(["--project", executor.config.project_name])
-            allow_skip = stage.allow_skip
-
-            def _run(
-                _script: str = script,
-                _args: list[str] = args_list,
-                _allow_skip: bool = allow_skip,
-            ) -> bool | StageOutcome:
-                return cast("bool | StageOutcome", executor._run_script(_script, *_args, allow_skip_code=_allow_skip))
-
-            return _run
+            arguments = tuple(stage.args)
+            if "--project" not in arguments:
+                arguments += ("--project", executor.config.project_name)
+            return _bind_script_target(executor, stage.script, arguments, allow_skip=stage.allow_skip)
 
         if stage.method:
             method = getattr(executor, stage.method, None)

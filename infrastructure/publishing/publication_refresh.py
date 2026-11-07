@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 from concurrent.futures import ThreadPoolExecutor
 import importlib.metadata
 import json
@@ -16,13 +17,18 @@ from typing import Any
 
 from infrastructure.core.secrets import strip_secret_env
 from infrastructure.project.public_acceptance_auxiliary_supervision import supervise
+from infrastructure.publishing._publication_refresh_protocol import (
+    COMMAND_STREAMS,
+    command_receipt,
+    gate_commands,
+    generation_commands,
+)
 from infrastructure.publishing.publication_refresh_custody import (
     REFRESH_MODES,
     build_plan,
     check_footprint,
     commit_candidate,
     finish_review,
-    gate_commands,
     git,
     load_plan,
     write_json,
@@ -42,7 +48,15 @@ def provider_waves(graph: dict[str, list[str]]) -> list[list[str]]:
     return waves
 
 
-def run_logged(root: Path, directory: Path, label: str, argv: list[str], *, timeout: int = 5400) -> int:
+def run_logged(
+    root: Path,
+    directory: Path,
+    label: str,
+    argv: list[str],
+    *,
+    timeout: int = 5400,
+    environment: Mapping[str, str] | None = None,
+) -> int:
     """Retain original bytes/exit through the existing owned-process supervisor."""
     if re.fullmatch(r"[A-Za-z0-9_-]+", label) is None:
         raise ValueError("refresh command label must be one bounded path component")
@@ -55,28 +69,18 @@ def run_logged(root: Path, directory: Path, label: str, argv: list[str], *, time
     cell = root / "output/readiness/publication-refresh" / label
     if cell.exists():
         raise ValueError("refresh process evidence must be fresh")
-    environment = strip_secret_env(dict(os.environ))
+    child_environment = strip_secret_env({**os.environ, **(environment or {})})
     for name in ("SSH_AUTH_SOCK", "GPG_AGENT_INFO"):
-        environment.pop(name, None)
-    process = supervise(argv, root, cell, time.monotonic() + timeout, environment=environment)
-    for stream in ("stdout", "stderr"):
+        child_environment.pop(name, None)
+    process = supervise(argv, root, cell, time.monotonic() + timeout, environment=child_environment)
+    for stream in COMMAND_STREAMS:
         body = (root / process["streams"][stream]["path"]).read_bytes()
         with (diagnostics / f"{label}.{stream}").open("xb") as output:
             output.write(body)
-    original = process["exit_code"]
-    code = original if type(original) is int and original != 0 else 0 if process["accepted"] else 1
-    if process["timed_out"]:
-        code = 124
-    receipt = {
-        "argv": argv,
-        "returncode": code,
-        "original_exit_code": original,
-        "process": process,
-        "source_commit": git(root, "rev-parse", "HEAD").decode().strip(),
-        **{stream + "_sha256": process["streams"][stream]["sha256"] for stream in ("stdout", "stderr")},
-    }
+    receipt = command_receipt(argv, process, git(root, "rev-parse", "HEAD").decode().strip())
     write_json(diagnostics / f"{label}.exit.json", receipt)
-    print(f"{label}: original exit {original}; supervised result {code}", flush=True)
+    code = receipt["returncode"]
+    print(f"{label}: original exit {receipt['original_exit_code']}; supervised result {code}", flush=True)
     return code
 
 
@@ -124,35 +128,16 @@ def prepare_environments(root: Path, directory: Path) -> int:
     return 0
 
 
-def generation_commands(root: Path, plan: dict[str, Any], wave: list[str]) -> list[tuple[str, list[str]]]:
-    """Select only the frozen original refresh or unchanged-output rebind CLI."""
-    commands = []
-    for scope in wave:
-        if scope == "root":
-            continue
-        if scope in plan["dependent_analysis"]:
-            commands.append(
-                (
-                    scope.replace("/", "__") + "-analysis",
-                    [str(root / ".venv/bin/python"), "scripts/pipeline/stage_02_analysis.py", "--project", scope],
-                )
-            )
-        argv = [
-            str(root / ".venv/bin/python"),
-            "scripts/maintenance/refresh_rendered_provenance.py",
-            "--project",
-            scope,
-        ]
-        if scope in plan["rebind"]:
-            argv.append("--rebind")
-        commands.append((scope.replace("/", "__") + "-generate", argv))
-    return commands
-
-
-def _generation_sequence(root: Path, directory: Path, commands: list[tuple[str, list[str]]]) -> int:
+def _generation_sequence(
+    root: Path,
+    directory: Path,
+    commands: list[tuple[str, list[str]]],
+    *,
+    environment: Mapping[str, str] | None = None,
+) -> int:
     """Keep a project's actual analysis/refresh commands sequential and terminal."""
     for label, argv in commands:
-        code = run_logged(root, directory, label, argv)
+        code = run_logged(root, directory, label, argv, environment=environment)
         if code:
             return code
     return 0
@@ -166,6 +151,11 @@ def _require_single_worker(jobs: int) -> None:
 
 def generate(root: Path, directory: Path, jobs: int) -> int:
     """Refresh tracked publication copies; revalidate the unchanged complement."""
+    code, _ = _generate(root, directory, jobs)
+    return code
+
+
+def _generate(root: Path, directory: Path, jobs: int) -> tuple[int, dict[str, str]]:
     _require_single_worker(jobs)
     plan = _source_plan(root, directory)
     prepared = json.loads((directory / "prepared.json").read_bytes())
@@ -176,22 +166,29 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
     }:
         raise ValueError("current own runtime preparation is missing")
     epoch = git(root, "show", "-s", "--format=%ct", plan["base_commit"]).decode().strip()
-    os.environ.update(
-        SOURCE_DATE_EPOCH=epoch,
-        TEMPLATE_BUILD_EPOCH_SOURCE="git:" + plan["base_commit"],
-        MPLBACKEND="Agg",
-        ANALYSIS_SCRIPT_TIMEOUT_SEC="1800",
-    )
-    for wave in provider_waves(plan["providers"]):
+    environment = {
+        "SOURCE_DATE_EPOCH": epoch,
+        "TEMPLATE_BUILD_EPOCH_SOURCE": "git:" + plan["base_commit"],
+        "MPLBACKEND": "Agg",
+        "ANALYSIS_SCRIPT_TIMEOUT_SEC": "1800",
+    }
+    waves = provider_waves(plan["providers"])
+    for wave in waves:
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             futures = [
-                pool.submit(_generation_sequence, root, directory, generation_commands(root, plan, [scope]))
+                pool.submit(
+                    _generation_sequence,
+                    root,
+                    directory,
+                    generation_commands(root, plan, [scope]),
+                    environment=environment,
+                )
                 for scope in wave
                 if scope != "root"
             ]
             codes = [future.result() for future in futures]
         if any(codes):
-            return 1
+            return 1, environment
         check_footprint(root, plan)
     write_json(
         directory / "generated.json",
@@ -201,21 +198,52 @@ def generate(root: Path, directory: Path, jobs: int) -> int:
             "refresh": plan["refresh"],
             "dependent_analysis": sorted(plan["dependent_analysis"]),
             "rebind": plan["rebind"],
-            "provider_waves": provider_waves(plan["providers"]),
+            "provider_waves": waves,
         },
     )
-    return 0
+    return 0, environment
 
 
-def verify(root: Path, directory: Path) -> int:
+def verify(root: Path, directory: Path, *, environment: Mapping[str, str] | None = None) -> int:
     """Run both unchanged strict gates on the committed disposable candidate."""
     candidate = json.loads((directory / "candidate.json").read_bytes())
     if git(root, "rev-parse", "HEAD").decode().strip() != candidate["commit"]:
         raise ValueError("candidate moved before strict verification")
     codes = [
-        run_logged(root, directory, label, argv, timeout=1800) for label, argv in gate_commands(root, directory).items()
+        run_logged(root, directory, label, argv, timeout=1800, environment=environment)
+        for label, argv in gate_commands(root, directory).items()
     ]
     return 1 if any(codes) else 0
+
+
+def _phase_paths(root: Path, directory: Path, *, mode: str | None = None) -> tuple[Path, Path]:
+    root, directory = root.absolute(), directory.absolute()
+    if directory.is_relative_to(root) or directory != directory.resolve():
+        raise ValueError("refresh evidence needs a fresh real directory outside Source")
+    if mode is not None:
+        load_plan(directory, mode=mode)
+    return root, directory
+
+
+def _create_plan(root: Path, directory: Path, source_sha: str, expected_version: str, mode: str) -> None:
+    if importlib.metadata.version("research-project-template") != expected_version:
+        raise ValueError("prepared Root distribution does not match requested Source version")
+    directory.mkdir()
+    write_json(directory / "plan.json", build_plan(root, source_sha, expected_version, mode=mode))
+
+
+def _capture_candidate(root: Path, directory: Path) -> None:
+    generated = json.loads((directory / "generated.json").read_bytes())
+    plan = load_plan(directory)
+    if (
+        generated.get("base_commit") != plan["base_commit"]
+        or generated.get("mode") != plan["mode"]
+        or generated.get("refresh") != plan["refresh"]
+        or generated.get("dependent_analysis") != sorted(plan["dependent_analysis"])
+        or generated.get("rebind") != plan["rebind"]
+    ):
+        raise ValueError("complete producer result is missing")
+    commit_candidate(root, directory)
 
 
 def run_coordinated(
@@ -223,30 +251,31 @@ def run_coordinated(
 ) -> int:
     """Run every existing phase in one execution-account payload; failure is terminal."""
     _require_single_worker(jobs)
-    common = ["--repo-root", str(root), "--directory", str(directory), "--mode", mode]
-    phases = (
-        ["plan", "--source-sha", source_sha, "--expected-version", expected_version],
-        ["prepare"],
-        ["generate", "--jobs", str(jobs)],
-        ["candidate"],
-        ["verify"],
-        ["finish"],
-    )
+    if mode not in REFRESH_MODES:
+        _parse_args(["--mode", mode])
     # Public artifact DATA must remain readable by the original upload account.
     # This does not change atomic producer modes or any ownership predicate.
     previous_umask = os.umask(0o022)
     try:
-        for phase in phases:
-            result = main([*common, *phase])
-            if result:
-                return result
+        _create_plan(*_phase_paths(root, directory), source_sha, expected_version, mode)
+        result = prepare_environments(*_phase_paths(root, directory, mode=mode))
+        if result:
+            return result
+        phase_root, phase_directory = _phase_paths(root, directory, mode=mode)
+        result, environment = _generate(phase_root, phase_directory, jobs)
+        if result:
+            return result
+        _capture_candidate(*_phase_paths(root, directory, mode=mode))
+        result = verify(*_phase_paths(root, directory, mode=mode), environment=environment)
+        if result:
+            return result
+        finish_review(*_phase_paths(root, directory, mode=mode))
     finally:
         os.umask(previous_umask)
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
-    """Expose only the finite phases used by the manual artifact workflow."""
+def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--directory", type=Path, required=True)
@@ -264,37 +293,26 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--jobs", type=int, default=1)
     for phase in ("candidate", "verify", "finish"):
         commands.add_parser(phase)
-    args = parser.parse_args(argv)
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Expose only the finite phases used by the manual artifact workflow."""
+    args = _parse_args(argv)
     if args.phase in ("run", "generate"):
         _require_single_worker(args.jobs)
-    root, directory = args.repo_root.absolute(), args.directory.absolute()
-    if directory.is_relative_to(root) or directory != directory.resolve():
-        raise ValueError("refresh evidence needs a fresh real directory outside Source")
+    required_mode = None if args.phase in ("plan", "run") else args.mode
+    root, directory = _phase_paths(args.repo_root, args.directory, mode=required_mode)
     if args.phase == "run":
         return run_coordinated(root, directory, args.source_sha, args.expected_version, args.jobs, mode=args.mode)
-    if args.phase != "plan":
-        load_plan(directory, mode=args.mode)
     if args.phase == "plan":
-        if importlib.metadata.version("research-project-template") != args.expected_version:
-            raise ValueError("prepared Root distribution does not match requested Source version")
-        directory.mkdir()
-        write_json(directory / "plan.json", build_plan(root, args.source_sha, args.expected_version, mode=args.mode))
+        _create_plan(root, directory, args.source_sha, args.expected_version, args.mode)
     elif args.phase == "prepare":
         return prepare_environments(root, directory)
     elif args.phase == "generate":
         return generate(root, directory, args.jobs)
     elif args.phase == "candidate":
-        generated = json.loads((directory / "generated.json").read_bytes())
-        plan = load_plan(directory)
-        if (
-            generated.get("base_commit") != plan["base_commit"]
-            or generated.get("mode") != plan["mode"]
-            or generated.get("refresh") != plan["refresh"]
-            or generated.get("dependent_analysis") != sorted(plan["dependent_analysis"])
-            or generated.get("rebind") != plan["rebind"]
-        ):
-            raise ValueError("complete producer result is missing")
-        commit_candidate(root, directory)
+        _capture_candidate(root, directory)
     elif args.phase == "verify":
         return verify(root, directory)
     else:

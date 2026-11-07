@@ -9,7 +9,12 @@ union is the one place that may claim the roster.
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
+import json
+from pathlib import Path
+import re
+import sys
 from typing import Any
 
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
@@ -24,6 +29,10 @@ from infrastructure.reporting.native_hosted_transport_archive import (
 )
 
 
+_CELL_ARTIFACT_PREFIX = "required-source-native-cell-"
+_SHARD_ORDINAL_SUFFIX = re.compile(r"-shard-[0-9]{4}$")
+
+
 def cell_artifact_names(cell: str | None) -> tuple[str, str]:
     """Return the (primary index artifact, shard artifact prefix) for one native target.
 
@@ -34,8 +43,52 @@ def cell_artifact_names(cell: str | None) -> tuple[str, str]:
     if cell is None:
         return INDEX_ARTIFACT, SHARD_PREFIX
     public_cell_scope(cell)
-    primary = "required-source-native-cell-" + cell
+    primary = _CELL_ARTIFACT_PREFIX + cell
     return primary, primary + "-shard-"
+
+
+def native_cell_matrix_json() -> str:
+    """Name every current hosted native cell in canonical Source order."""
+    matrix = {"include": [{"cell": scope.removeprefix("templates/")} for scope in PUBLIC_PROJECT_NAMES]}
+    return json.dumps(matrix, separators=(",", ":"))
+
+
+def native_primary_artifact_differences(cells: Sequence[str], names: Iterable[str]) -> tuple[list[str], list[str]]:
+    """Compare the exact primary names, keeping duplicate primary names visible."""
+    if not cells or len(cells) != len(set(cells)):
+        raise ValueError("native job matrix must name each nominated cell once")
+    expected = {cell_artifact_names(cell)[0]: cell for cell in cells}
+    actual = Counter(
+        name
+        for name in names
+        if name in expected
+        or (
+            name.startswith(_CELL_ARTIFACT_PREFIX)
+            and name != _CELL_ARTIFACT_PREFIX
+            and _SHARD_ORDINAL_SUFFIX.search(name) is None
+        )
+    )
+    missing = sorted(cell for name, cell in expected.items() if not actual[name])
+    extra_names = (actual - Counter(expected.keys())).elements()
+    unexpected = sorted(name.removeprefix(_CELL_ARTIFACT_PREFIX) for name in extra_names)
+    return missing, unexpected
+
+
+def check_native_artifact_listing(matrix_json: str, artifact_names_path: str) -> int:
+    """Precheck the emitted job matrix against the names-only listing."""
+    cells = [row["cell"] for row in json.loads(matrix_json)["include"]]
+    count = len(cells)
+    sys.stdout.write(f"expected native cells: {count}\n")
+    names = Path(artifact_names_path).read_text(encoding="utf-8").splitlines()
+    missing, unexpected = native_primary_artifact_differences(cells, names)
+    if missing:
+        sys.stdout.write(f"::error::missing native cell artifacts for: {' '.join(missing)}\n")
+        return 1
+    if unexpected:
+        sys.stdout.write(f"::error::unexpected native cell artifacts for: {' '.join(unexpected)}\n")
+        return 1
+    sys.stdout.write(f"complete native cell union: {count} of {count}\n")
+    return 0
 
 
 def cell_selection(scopes: Sequence[str]) -> bool:

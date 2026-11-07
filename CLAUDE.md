@@ -88,7 +88,7 @@ uv run python scripts/runner/execute_pipeline.py --project {project_name} --mode
 # Resume from checkpoint
 ./run.sh --pipeline --resume
 
-# Deterministic steganography timestamps (--deterministic is parsed by the Python `secure` subcommand, which sets STEGANOGRAPHY_DETERMINISTIC=1)
+# Deterministic steganography timestamps for the current secure invocation
 ./secure_run.sh --deterministic --project {project_name}
 ```
 

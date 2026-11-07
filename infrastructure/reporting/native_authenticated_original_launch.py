@@ -102,7 +102,7 @@ def admit_authenticated_native_originals(
         if native.json_object().get("execution_exit_code") != process.json_object().get("original_exit_code"):
             raise ValueError("authenticated original execution data differs from its independently retained OS result")
         operation = NativeReaderOperation(source, deadline, {scope: original}, {scope: current_provider})
-        reader.native_operation = operation
+        reader.bind_native_operation(operation)
         _, descriptor = validate_original_joint_launch(
             specification.json_object(), specification, process, closure, reader, operation
         )

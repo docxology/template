@@ -9,6 +9,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 import argparse
 import json
 from collections.abc import Sequence
+from logging import Logger
 
 from infrastructure.core.files.inventory import FileInventoryManager
 from infrastructure.core.logging.utils import get_logger
@@ -22,7 +23,7 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
     MultiProjectResult,
-    format_multi_project_outcome_lines,
+    _multi_project_outcome_lines,
 )
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
@@ -33,27 +34,16 @@ logger = get_logger(__name__)
 
 
 def _emit_multi_project_outcome(
-    log_obj: object,
+    log_obj: Logger,
     ordered_projects: Sequence[ProjectInfo],
     result: MultiProjectResult,
 ) -> None:
     """Log per-project outcomes (mirrors PipelineRunner banner detail)."""
-    lines = format_multi_project_outcome_lines(ordered_projects, result)
-    section: str | None = None
-    for line in lines:
-        if line == "Succeeded:":
-            section = "succeeded"
-            log_obj.info(line)  # type: ignore[attr-defined]
-        elif line == "Failed:":
-            section = "failed"
-            log_obj.error(line)  # type: ignore[attr-defined]
-        elif line.startswith("  - "):
-            if section == "failed":
-                log_obj.error(line)  # type: ignore[attr-defined]
-            else:
-                log_obj.info(line)  # type: ignore[attr-defined]
+    for severity, text in _multi_project_outcome_lines(ordered_projects, result):
+        if severity == "info":
+            log_obj.info(text)
         else:
-            log_obj.error(line)  # type: ignore[attr-defined]
+            log_obj.error(text)
 
 
 def handle_pipeline_command(args: argparse.Namespace) -> int:

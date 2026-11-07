@@ -694,7 +694,8 @@ Direct TeX compilation through `PDFRenderer.render()` can separately use
 the untrusted profile with XeLaTeX or pdfLaTeX. Compiler and recovery passes
 run in the admitted output directory with shell escape disabled and a
 credential-free environment. Untrusted deterministic TeX requires an
-explicit `SOURCE_DATE_EPOCH`.
+explicit `SOURCE_DATE_EPOCH`. The direct combined PDF renderer requires
+the `trusted-local` profile and checks it before creating output.
 
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via

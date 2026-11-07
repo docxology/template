@@ -15,6 +15,7 @@ from contextlib import ExitStack
 from pathlib import Path
 
 from infrastructure.core.files.secure_write import confined_file_lock
+from infrastructure.steganography.artifact_paths import secure_file_sha256
 
 __all__ = ["validate_destinations", "validate_pdf", "publish_artifacts"]
 
@@ -122,10 +123,12 @@ def publish_artifacts(
     *,
     source: Path,
     no_overwrite: set[Path] | None = None,
+    expected_pdf: tuple[Path, str | None] | None = None,
 ) -> None:
     """Publish destination→staged-source mappings, preserving previous modes.
 
     All inputs and previous destinations are copied before the first replace.
+    An expected PDF binds its preimage digest or requires a new destination.
     If rollback sees a foreign edit, it preserves the recovery preimages and
     reports their paths instead of overwriting that edit.
     """
@@ -150,6 +153,10 @@ def publish_artifacts(
                 if staged.is_symlink() or not staged.is_file():
                     raise ValueError(f"Staged artifact must be a regular file: {staged}")
                 admitted = _nullable_identity(destination)
+                if expected_pdf is not None and destination == expected_pdf[0]:
+                    digest = secure_file_sha256(destination) if admitted is not None else None
+                    if digest != expected_pdf[1] or _nullable_identity(destination) != admitted:
+                        raise ValueError(f"Custom secure PDF changed before publication: {destination}")
                 if admitted is not None:
                     if destination in (no_overwrite or set()):
                         raise FileExistsError(destination)

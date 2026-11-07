@@ -19,12 +19,7 @@ from typing import Any, Mapping, cast
 from infrastructure.project.auxiliary_matrix_plan import matrix_plan, receipt_path, validate_cell
 from infrastructure.project.auxiliary_print_hosted import AuxiliaryPrintHostedContext, _utc
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
-from infrastructure.project.public_hosted_origin import (
-    MAX_LISTING_PAGES,
-    WORKFLOW,
-    _context,
-    _merge_listing_pages,
-)
+from infrastructure.project._hosted_protocol import MAX_LISTING_PAGES, WORKFLOW, _context, collect_artifact_pages
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_hosted_transport_archive import import_auxiliary_archive
 from infrastructure.reporting.original_job_outcome import validate_auxiliary_receipt_closure
@@ -204,15 +199,15 @@ def collect_auxiliary_matrix(
     reader = SnapshotReader(root, operation_deadline=deadline)
     if workflow.get("path") != WORKFLOW or base64.b64decode(workflow["content"]) != reader.read(WORKFLOW).content:
         raise ValueError("auxiliary matrix workflow differs from current Source")
-    artifact_pages, job_pages, observations = [], [], [run_observation, workflow_observation]
-    for page in range(1, MAX_LISTING_PAGES + 1):
+    job_pages, observations = [], [run_observation, workflow_observation]
+
+    def read_listing_page(page: int) -> dict[str, Any]:
         value, binding = api.artifact_page(page)
-        artifact_pages.append(value)
         observations.append(binding)
-        listing = _merge_listing_pages(artifact_pages, complete=False)
-        if len(listing["artifacts"]) == listing["total_count"]:
-            break
-    artifacts = _merge_listing_pages(artifact_pages, complete=True)["artifacts"]
+        return value
+
+    listing, _ = collect_artifact_pages(read_listing_page)
+    artifacts = listing["artifacts"]
     for page in range(1, MAX_LISTING_PAGES + 1):
         value, binding = api.job_page(page)
         job_pages.append(value)

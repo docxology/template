@@ -62,7 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
             "\n"
             "  ./secure_run.sh --deterministic --project my_project\n"
             "      Pin embedded build timestamp to `git log -1 --format=%cI`\n"
-            "      so two consecutive runs produce byte-identical PDFs.\n"
+            "      so repeated unencrypted runs can produce byte-identical PDFs.\n"
             "\n"
             "  ./secure_run.sh --validate-kmyth --project my_project\n"
             "      Validate optional Kmyth/TPM tooling without running the pipeline."
@@ -93,8 +93,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--deterministic",
         action="store_true",
         help=(
-            "Pin steganography build timestamp to the latest commit's author "
-            "date (sets STEGANOGRAPHY_DETERMINISTIC=1) for byte-identical PDFs."
+            "Pin the steganography build timestamp to the latest commit's committer date. "
+            "Without this flag, honor STEGANOGRAPHY_DETERMINISTIC."
         ),
     )
     secure.add_argument(

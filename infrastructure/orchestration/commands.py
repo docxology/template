@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -133,8 +132,6 @@ def cmd_multi(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner) -
 
 def cmd_secure(ns: argparse.Namespace, *, secure_runner: Any = run_secure_pipeline) -> int:
     """Run secure pipeline orchestration with explicit option mapping."""
-    if getattr(ns, "deterministic", False):
-        os.environ["STEGANOGRAPHY_DETERMINISTIC"] = "1"
     return int(
         secure_runner(
             resolve_repo_root(ns),
@@ -145,6 +142,7 @@ def cmd_secure(ns: argparse.Namespace, *, secure_runner: Any = run_secure_pipeli
                 mode=ns.mode,
                 resume=ns.resume,
                 validate_kmyth=ns.validate_kmyth,
+                deterministic=True if getattr(ns, "deterministic", False) else None,
             ),
         )
     )

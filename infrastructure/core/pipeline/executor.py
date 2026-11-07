@@ -13,7 +13,7 @@ import time
 import uuid
 from dataclasses import replace
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import Callable
 
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.logging.utils import get_logger
@@ -52,10 +52,6 @@ from infrastructure.core.pipeline.artifact_contracts import (
 )
 
 logger = get_logger(__name__)
-
-if TYPE_CHECKING:
-    from infrastructure.core.pipeline.dag import PipelineDAG
-    from infrastructure.core.pipeline.plugins import PluginStageDeclaration
 
 
 class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
@@ -171,9 +167,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             purpose=PipelinePurpose.EXECUTION,
         ).path
 
-    def _project_pipeline_yaml(self) -> Path:
-        return Path(self.config.project_dir) / "pipeline.yaml"
-
     def _resolve_control_config(self) -> PipelineControlConfig:
         """Resolve advisory control config from YAML plus explicit config."""
         return resolve_plan_control_config(self.config)
@@ -217,20 +210,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     def _preview_identity(self, skip_clean: bool) -> tuple[object, ...]:
         return (skip_clean, configuration_control_identity(self.config, self._explicit_plan_control()))
-
-    # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
-
-    def _load_plugin_stages(self) -> list[PluginStageDeclaration]:
-        """Load validated plugin declarations for this project (``[]`` if none)."""
-        from infrastructure.core.pipeline.plugins import load_plugin_stages
-
-        return load_plugin_stages(self.config.project_dir)
-
-    def _merge_plugin_stages_into_dag(self, dag: PipelineDAG) -> None:
-        """Merge declared plugin stages into the DAG (no-op when none declared)."""
-        from infrastructure.core.pipeline.plugins import merge_plugin_stages
-
-        merge_plugin_stages(dag, self._load_plugin_stages())
 
     # -- Pipeline execution --------------------------------------------------
 

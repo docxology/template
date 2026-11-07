@@ -145,10 +145,10 @@ def _deterministic_build_identity(repo_root: Path | None) -> BuildIdentity:
     return BuildIdentity(deterministic=True, timestamp=timestamp, git_commit=commit)
 
 
-def resolve_build_identity(*, repo_root: Path | None) -> BuildIdentity:
+def resolve_build_identity(*, repo_root: Path | None, deterministic: bool | None = None) -> BuildIdentity:
     """Capture one clock reading and the matching deterministic commit, when available."""
 
-    if deterministic_build_enabled(None):
+    if deterministic_build_enabled(deterministic):
         return _deterministic_build_identity(repo_root)
     return BuildIdentity(
         deterministic=False,

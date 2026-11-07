@@ -549,10 +549,9 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  # Retained until the sharded cells are enabled: the single-job roster form
-  # cannot finish (one project measured 10264.8 s, 25 cannot fit one clock).
+  # Historical roster-wide diagnostics remain available with sharding disabled.
+  # A full roster has not been qualified within this single launcher clock.
   native-original:
-    # TODO(native-sharding): delete once native-original-cell runs.
     if: vars.NATIVE_SHARDING_CELLS != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 300
@@ -639,9 +638,8 @@ jobs:
           retention-days: 30
 
 
-  # The sharded native lane selects every canonical project from Source and
-  # admits only a complete cell union. NATIVE_SHARDING_CELLS selects this lane;
-  # the separately gated monolithic job remains the supported fallback.
+  # Current hosted acceptance uses the complete Source-owned sharded lane.
+  # The roster-wide diagnostic job is outside complete.needs.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     runs-on: ubuntu-24.04
@@ -659,10 +657,11 @@ jobs:
         id: plan
         run: |
           set -euo pipefail
-          # Reuse the Source-owned auxiliary matrix emitter. The `cell` values
-          # are bare project names; `root` is not a project and is excluded.
-          matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json \
-            | jq -c '{include: [.include[] | select(.cell != "root")]}')
+          # This planner uses runner Python and does not require a cached project environment.
+          matrix=$(python -B -c '
+          from infrastructure.reporting.native_cell_selection import native_cell_matrix_json
+          print(native_cell_matrix_json())
+          ')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   native-original-cell:
@@ -796,45 +795,28 @@ jobs:
       - uses: ./.github/actions/setup-native-installed-readiness
       - name: Require the complete native cell union before any admission
         if: vars.NATIVE_SHARDING_CELLS == 'true'
-        # Fail closed with a named project. This is the guard the roster-wide
-        # lane lacked: stopping early must never look like a 24-of-25 candidate.
+        # This job result and names-only precheck precedes independent authenticated admission.
         env:
           GH_TOKEN: ${{ github.token }}
           NATIVE_MATRIX: ${{ needs.native-plan.outputs.matrix }}
           NATIVE_JOB_RESULT: ${{ needs.native-original-cell.result }}
         run: |
           set -euo pipefail
-          expected=$(jq -r '.include[].cell' <<< "$NATIVE_MATRIX" | sort)
-          expected_count=$(wc -l <<< "$expected" | tr -d ' ')
-          echo "expected native cells: $expected_count"
           if [ "$NATIVE_JOB_RESULT" != "success" ]; then
             echo "::error::native cell lane result is '$NATIVE_JOB_RESULT', not success"
             exit 1
           fi
           gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
             --jq '.artifacts[].name' > "$RUNNER_TEMP/native-artifacts.txt"
-          # A cell uploads one primary index plus its own `-shard-NNNN` members.
-          # Only the primary names the cell, so the shard members are excluded:
-          # counting them would report every shard as an undeclared cell.
-          actual=$(grep -o '^required-source-native-cell-.*' "$RUNNER_TEMP/native-artifacts.txt" \
-            | grep -v -- '-shard-[0-9]\{4\}$' \
-            | sed 's/^required-source-native-cell-//' | sort || true)
-          # comm needs two file operands; a here-string is stdin, not operand one.
-          missing=$(comm -23 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual" | sed '/^$/d'))
-          extra=$(comm -13 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual" | sed '/^$/d'))
-          if [ -n "$missing" ]; then
-            echo "::error::missing native cell artifacts for: $(tr '\n' ' ' <<< "$missing")"
-            exit 1
-          fi
-          if [ -n "$extra" ]; then
-            echo "::error::unexpected native cell artifacts for: $(tr '\n' ' ' <<< "$extra")"
-            exit 1
-          fi
-          echo "complete native cell union: $expected_count of $expected_count"
+          env -u GH_TOKEN python -B -c '
+          import sys
+          from infrastructure.reporting.native_cell_selection import check_native_artifact_listing
+          raise SystemExit(check_native_artifact_listing(*sys.argv[1:]))
+          ' "$NATIVE_MATRIX" "$RUNNER_TEMP/native-artifacts.txt"
       - name: Note the disabled native cell lane
         if: vars.NATIVE_SHARDING_CELLS != 'true'
         run: |
-          echo "::warning::native cell lane disabled; native-original is the active lane"
+          echo "::warning::native sharding disabled; roster-wide diagnostics are outside the current sharded admission"
       - name: Independently admit complete candidate through fresh installed Source
         id: reader
         env:

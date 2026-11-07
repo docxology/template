@@ -160,7 +160,7 @@ def pack_native_hosted_originals(
         if native.sha256 != original.native_execution_sha256:
             raise ValueError("native producer original observation differs from genuine held completion")
         operation = NativeReaderOperation(source, deadline, {scope: original}, {scope: original.pdfium_provider})
-        reader.native_operation = operation
+        reader.bind_native_operation(operation)
         _, descriptor = validate_original_joint_launch(
             specification.json_object(), specification, process, closure, reader, operation
         )

@@ -211,6 +211,9 @@ class PDFRenderer:
             RenderingError: If combination or rendering fails
         """
 
+        if self.config.security().untrusted:
+            raise RenderingError("Combined PDF rendering requires the trusted-local profile")
+
         layout = admit_paper_layout(manuscript_dir, tuple(source_files), paper_layout)
         source_files = list(layout.complete)
 
@@ -231,10 +234,6 @@ class PDFRenderer:
 
         project_basename = Path(project_name).name
         output_file = output_dir / f"{project_basename}_combined.pdf"
-        profile = self.config.security()
-        for source_file in source_files:
-            profile.validate_source(source_file)
-        profile.validate_output(output_file)
 
         project_config, project_config_file = _load_render_config(manuscript_dir)
         tagged_pdf, language = _pdf_tagging_options(manuscript_dir)

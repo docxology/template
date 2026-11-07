@@ -114,8 +114,9 @@ class FrozenPlanSources:
             _typed_identity(copied) if copied is not None else None,
         )
 
-    def control(self, config: PipelineConfig) -> PipelineControlConfig:
-        config = self.configuration
+    def control(self, config: PipelineConfig | None = None) -> PipelineControlConfig:
+        """Resolve control from held inputs. The legacy config argument is ignored."""
+        frozen_config = self.configuration
         if self.explicit_control is not None:
             return self.explicit_control
         contents = dict(self.contents)
@@ -125,11 +126,11 @@ class FrozenPlanSources:
                 control = merge_control_configs(
                     control, control_config_from_dict(_mapping(contents[path], path).get("control"))
                 )
-        if config.hitl_mode and config.hitl_mode != "full-auto":
-            control = replace(control, hitl_mode=config.hitl_mode)
+        if frozen_config.hitl_mode and frozen_config.hitl_mode != "full-auto":
+            control = replace(control, hitl_mode=frozen_config.hitl_mode)
         return (
-            merge_control_configs(control, deepcopy(config.control))
-            if config.control != PipelineControlConfig()
+            merge_control_configs(control, deepcopy(frozen_config.control))
+            if frozen_config.control != PipelineControlConfig()
             else control
         )
 

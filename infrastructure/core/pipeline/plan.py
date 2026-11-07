@@ -19,6 +19,7 @@ from infrastructure.core.pipeline.types import (
 )
 from infrastructure.core.pipeline.outcomes import StageOutcome
 from infrastructure.core.pipeline.target_contracts import (
+    _bind_script_target,
     canonical_target_contract,
     effective_stage_declaration,
     selects_default_stage,
@@ -70,7 +71,7 @@ class PlanResolutionContext(Protocol):
 def resolve_plan_control_config(config: PipelineConfig) -> PipelineControlConfig:
     """Apply the canonical definition, project, CLI, and explicit control policy."""
     sources = FrozenPlanSources.capture(config)
-    loaded = sources.control(config)
+    loaded = sources.control()
     sources.verify(config)
     return loaded
 
@@ -184,14 +185,7 @@ class ExecutionPlan:
         for stage in self.stages:
             target: Callable[[], bool | StageOutcome]
             if stage.script:
-
-                def invoke(selected: PlannedStage = stage) -> StageOutcome:
-                    assert selected.script is not None
-                    return executor._run_script(
-                        selected.script, *selected.arguments, allow_skip_code=selected.allow_skip
-                    )
-
-                target = invoke
+                target = _bind_script_target(executor, stage.script, stage.arguments, allow_skip=stage.allow_skip)
             else:
                 target = getattr(executor, stage.method or "")
                 if not callable(target):
@@ -214,7 +208,7 @@ def resolve_execution_plan(
     sources = FrozenPlanSources.capture(executor.config, explicit)
     config = sources.configuration
     path = sources.paths[0]
-    control = sources.control(config)
+    control = sources.control()
     dag = sources.dag()
     declarations = tuple(effective_stage_declaration(stage) for stage in dag.sorted_stages())
     identities = {stage.name: stage.key for stage in declarations}

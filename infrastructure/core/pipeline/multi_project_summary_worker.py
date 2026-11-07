@@ -12,7 +12,7 @@ from pathlib import Path
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.implementation_custody import verify_implementation_custody
 from infrastructure.core.pipeline.multi_project import MultiProjectResult
-from infrastructure.core.pipeline.multi_project_support import SharedInfrastructureResult
+from infrastructure.core.pipeline.multi_project_support import SharedInfrastructureResult, validated_shared_run
 from infrastructure.core.pipeline.multi_project_summary import SCHEMA
 from infrastructure.core.pipeline.outcomes import RunResult
 from infrastructure.core.pipeline.worker_transport import results_from_payload
@@ -65,10 +65,7 @@ def main() -> int:
         if json.loads(json.dumps([outcome.to_dict() for outcome in shared_run.outcomes])) != shared_claim["outcomes"]:
             raise ValueError("Summary shared stage rows and typed parent outcomes differ")
         shared_result = SharedInfrastructureResult(tuple(shared_rows), shared_run)
-        if (
-            shared_result.validated_run() is None
-            or shared_result.exit_code != payload["shared_infrastructure_exit_code"]
-        ):
+        if validated_shared_run(shared_result, payload["shared_infrastructure_exit_code"]) is None:
             raise ValueError("Summary shared verification identity/status/exit differs")
         payload["shared_infrastructure_result"] = shared_result
     result = MultiProjectResult(**payload)

@@ -480,18 +480,17 @@ def test_cmd_secure_validate_kmyth(fake_repo: Path) -> None:
     assert captured["options"].validate_kmyth is True
 
 
-def test_cmd_secure_deterministic_flag_sets_env_var(
+def test_cmd_secure_deterministic_flag_is_invocation_scoped(
     fake_repo: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """--deterministic must set STEGANOGRAPHY_DETERMINISTIC=1 before run_secure_pipeline."""
-    monkeypatch.delenv("STEGANOGRAPHY_DETERMINISTIC", raising=False)
-    observed: dict[str, str | None] = {}
+    """The CLI opts in through the invocation while preserving the caller environment."""
+    monkeypatch.setenv("STEGANOGRAPHY_DETERMINISTIC", "0")
+    observed: dict[str, object] = {}
 
     def _fake_run_secure(repo_root, options):
-        import os as _os
-
-        observed["env"] = _os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
+        observed["env"] = os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
+        observed["deterministic"] = options.deterministic
         return 0
 
     rc = main(
@@ -505,21 +504,21 @@ def test_cmd_secure_deterministic_flag_sets_env_var(
         secure_runner=_fake_run_secure,
     )
     assert rc == 0
-    assert observed["env"] == "1"
+    assert observed == {"env": "0", "deterministic": True}
+    assert os.environ["STEGANOGRAPHY_DETERMINISTIC"] == "0"
 
 
-def test_cmd_secure_without_deterministic_does_not_set_env_var(
+def test_cmd_secure_without_deterministic_leaves_environment_selection(
     fake_repo: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Omitting --deterministic must leave STEGANOGRAPHY_DETERMINISTIC unset."""
-    monkeypatch.delenv("STEGANOGRAPHY_DETERMINISTIC", raising=False)
-    observed: dict[str, str | None] = {}
+    """Omitting the flag leaves legacy environment selection available."""
+    monkeypatch.setenv("STEGANOGRAPHY_DETERMINISTIC", "yes")
+    observed: dict[str, object] = {}
 
     def _fake_run_secure(repo_root, options):
-        import os as _os
-
-        observed["env"] = _os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
+        observed["env"] = os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
+        observed["deterministic"] = options.deterministic
         return 0
 
     rc = main(
@@ -527,7 +526,8 @@ def test_cmd_secure_without_deterministic_does_not_set_env_var(
         secure_runner=_fake_run_secure,
     )
     assert rc == 0
-    assert observed["env"] is None
+    assert observed == {"env": "yes", "deterministic": None}
+    assert os.environ["STEGANOGRAPHY_DETERMINISTIC"] == "yes"
 
 
 def test_secure_help_advertises_both_modes() -> None:

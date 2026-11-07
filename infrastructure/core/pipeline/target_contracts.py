@@ -9,11 +9,31 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from pathlib import Path
-from collections.abc import Iterable
-from typing import TYPE_CHECKING
+from collections.abc import Callable, Iterable
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.dag import StageDefinition
+    from infrastructure.core.pipeline.outcomes import StageOutcome
+
+
+class _StageScriptExecutor(Protocol):
+    def _run_script(self, script_name: str, *args: str, allow_skip_code: bool = False) -> bool | StageOutcome: ...
+
+
+def _bind_script_target(
+    executor: _StageScriptExecutor,
+    script: str,
+    arguments: tuple[str, ...],
+    *,
+    allow_skip: bool,
+) -> Callable[[], bool | StageOutcome]:
+    """Bind an already selected script and preserve the runner's outcome."""
+
+    def invoke() -> bool | StageOutcome:
+        return executor._run_script(script, *arguments, allow_skip_code=allow_skip)
+
+    return invoke
 
 
 @dataclass(frozen=True)

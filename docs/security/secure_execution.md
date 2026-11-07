@@ -74,7 +74,7 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 | `--skip-infra` | Skip infrastructure tests stage during pipeline phase. |
 | `--mode core` | Omit LLM-tagged stages during pipeline phase. |
 | `--resume` | Resume pipeline from checkpoint (pipeline phase only). |
-| `--deterministic` | Parsed by the Python `secure` subcommand ([`infrastructure/orchestration/cli.py`](../../infrastructure/orchestration/cli.py)): sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
+| `--deterministic` | Uses the Git committer date (`git log -1 --format=%cI`) for the steganography phase of this invocation. With identical source bytes and settings, unencrypted outputs are byte-identical at the same `HEAD`. When omitted, the phase honors `STEGANOGRAPHY_DETERMINISTIC`. |
 | `--validate-kmyth` | Validates optional Kmyth/TPM tooling from the effective secure-run configuration and exits without rendering or sealing PDFs; skips both the pipeline and steganography phases. |
 
 ### Deterministic / reproducible mode
@@ -85,7 +85,13 @@ STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh \
   --project templates/template_code_project
 ```
 
-The configured `output_suffix` is reserved at the end of PDF stems for secure variants. Secure runs skip these variants and legacy filenames containing `_steganography`, so a repeated run processes the same source PDFs.
+Secure runs skip legacy filenames containing `_steganography`. For a custom
+`output_suffix`, the source manifest records the secure PDF name and its SHA-256.
+A repeat run uses that record to recognize and replace its own previous output.
+An ordinary source may end in the same suffix. An existing destination without
+matching evidence causes the project run to fail before processing its PDFs.
+This includes earlier custom outputs without the new manifest fields and
+outputs created with manifest writing disabled.
 
 Trade-offs and internals: [steganography.md § Deterministic mode](steganography.md#deterministic-mode).
 

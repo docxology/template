@@ -44,7 +44,7 @@ def validate_shared_runtime(config: PipelineConfig, plan: ExecutionPlan) -> None
     if len(selected) != 1:
         raise ValueError("Canonical declaration must contain exactly one infrastructure gate")
     ordinal, stage = selected[0]
-    control = sources.control(config)
+    control = sources.control()
     arguments = tuple(stage.args)
     if stage.script and "--project" not in arguments:
         arguments += ("--project", config.project_name)

@@ -14,7 +14,12 @@ from pathlib import Path
 from dataclasses import asdict, dataclass, field
 
 from infrastructure.core.logging.utils import get_logger, log_operation
-from infrastructure.steganography.artifact_paths import hash_manifest_path, secure_pdf_path
+from infrastructure.steganography.artifact_paths import (
+    hash_manifest_path,
+    owned_secure_pdf_sha256,
+    secure_file_sha256,
+    secure_pdf_path,
+)
 from infrastructure.steganography.config import (
     BuildIdentity,
     DocumentMetadata,
@@ -67,10 +72,12 @@ class SteganographyProcessor:
         config: SteganographyConfig | None = None,
         *,
         repo_root: Path | None = None,
+        protect_output: bool = False,
     ):
-        """Initialize a processor with configuration and optional explicit build provenance."""
+        """Initialize a processor with optional build provenance and output ownership checks."""
         self.config = config or SteganographyConfig()
         self.repo_root = repo_root
+        self.protect_output = protect_output
 
     # ── Public API ───────────────────────────────────────────────────
 
@@ -83,6 +90,8 @@ class SteganographyProcessor:
         authors: list[str] | None = None,
         keywords: list[str] | None = None,
         author_emails: list[str] | None = None,
+        *,
+        deterministic: bool | None = None,
     ) -> Path:
         """Run all enabled steganographic techniques on *input_pdf*.
 
@@ -94,6 +103,8 @@ class SteganographyProcessor:
             authors: Author names for metadata.
             keywords: Keyword list for metadata.
             author_emails: Optional list of author email addresses for barcode metadata.
+            deterministic: Override build identity mode for this PDF. By default,
+                honor the legacy environment setting.
 
         Returns:
             Path to the generated steganography PDF.
@@ -118,6 +129,16 @@ class SteganographyProcessor:
                 if target is not None:
                     destinations.append(target.with_name(target.name + config.kmyth_output_suffix))
         validate_destinations(input_pdf, destinations)
+        expected_pdf = None
+        if self.protect_output:
+            previous = None
+            if output_pdf.exists():
+                previous = owned_secure_pdf_sha256(input_pdf, output_pdf)
+                if previous is None:
+                    raise ValueError(
+                        f"Cannot replace a custom secure PDF without matching source evidence: {output_pdf}"
+                    )
+            expected_pdf = (output_pdf, previous)
 
         if config.kmyth_enabled and not config.kmyth_overwrite:
             selected = []
@@ -137,7 +158,7 @@ class SteganographyProcessor:
             directory = Path(temporary)
             working_pdf = directory / "working.pdf"
             shutil.copy2(input_pdf, working_pdf)
-            build = resolve_build_identity(repo_root=self.repo_root)
+            build = resolve_build_identity(repo_root=self.repo_root, deterministic=deterministic)
             ctx = ProcessingContext(
                 config=config,
                 document_id=generate_document_id(deterministic=build.deterministic, timestamp=build.timestamp),
@@ -165,8 +186,16 @@ class SteganographyProcessor:
             validate_pdf(working_pdf, password=config.pdf_password)
 
             # No public artifact is changed until all required producers succeed.
+            artifact_evidence = None
+            if manifest_path and self.protect_output:
+                artifact_evidence = {
+                    "secure_pdf": output_pdf.name,
+                    "secure_pdf_sha256": secure_file_sha256(working_pdf),
+                }
             staged_manifest = (
-                self._step_manifest(input_pdf, ctx, directory / "manifest.json") if manifest_path else None
+                self._step_manifest(input_pdf, ctx, directory / "manifest.json", artifact_evidence=artifact_evidence)
+                if manifest_path
+                else None
             )
             artifacts = {output_pdf: working_pdf}
             if manifest_path is not None and staged_manifest is not None:
@@ -189,6 +218,7 @@ class SteganographyProcessor:
                 artifacts,
                 source=input_pdf,
                 no_overwrite=sealed_destinations if not config.kmyth_overwrite else None,
+                expected_pdf=expected_pdf,
             )
         logger.info("Steganography PDF written: %s", output_pdf.name)
         return output_pdf
@@ -391,7 +421,14 @@ class SteganographyProcessor:
         logger.info("║  ✓ PDF password protection applied")
         return working_pdf
 
-    def _step_manifest(self, original_pdf: Path, ctx: ProcessingContext, output_path: Path) -> Path:
+    def _step_manifest(
+        self,
+        original_pdf: Path,
+        ctx: ProcessingContext,
+        output_path: Path,
+        *,
+        artifact_evidence: dict[str, str] | None = None,
+    ) -> Path:
         """Write the JSON hash manifest sidecar."""
         from infrastructure.steganography.hashing import write_hash_manifest
 
@@ -406,6 +443,7 @@ class SteganographyProcessor:
                 "git_commit": ctx.build.git_commit,
                 "git_commit_available": bool(ctx.build.git_commit),
                 "steganography_applied": "true",
+                **(artifact_evidence or {}),
             },
         )
         logger.info("║  ✓ Hash manifest written")

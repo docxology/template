@@ -11,15 +11,14 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.testing.coverage_policy import PYTEST_HELP_PROBE_TIMEOUT_SECONDS
+from infrastructure.reporting.coverage_json_parser import read_coverage_total
 from infrastructure.reporting.coverage_parser import (
-    MIN_VALID_COVERAGE_FILE_BYTES,
-    _parse_coverage_json,
     _parse_failures_fallback,
     _parse_failures_section,
     _parse_failures_short,
     _parse_failures_timeout,
     _parse_failures_verbose,
-    _wait_for_coverage_file,
+    _wait_for_coverage_total,
     check_test_failures,
     extract_coverage_percentage,
     extract_failed_tests,
@@ -203,10 +202,11 @@ class TestExtractCoveragePercentage:
         found, pct = extract_coverage_percentage("no coverage here", [tmp_path / "missing.json"])
         assert found is False
         assert pct is None
+        assert extract_coverage_percentage("worker used 97.25% memory", []) == (False, None)
 
     def test_skips_small_json_file(self, tmp_path: Path):
         tiny = tmp_path / "tiny.json"
-        tiny.write_text("{}")  # < 100 bytes
+        tiny.write_text("{}")
         found, _pct = extract_coverage_percentage("", [tiny])
         assert found is False
 
@@ -270,32 +270,36 @@ class TestParseCoverageJson:
     def test_valid_json(self, tmp_path: Path) -> None:
         cov = tmp_path / "coverage.json"
         cov.write_text(json.dumps({"totals": {"percent_covered": 85.5}}), encoding="utf-8")
-        assert _parse_coverage_json(cov) == pytest.approx(85.5)
+        assert read_coverage_total(cov) == pytest.approx(85.5)
 
     def test_zero_coverage(self, tmp_path: Path) -> None:
         cov = tmp_path / "coverage.json"
         cov.write_text(json.dumps({"totals": {"percent_covered": 0}}), encoding="utf-8")
-        assert _parse_coverage_json(cov) is None
+        assert read_coverage_total(cov) == 0.0
+        assert extract_coverage_percentage("coverage: 97.25%", [cov]) == (True, 0.0)
 
     def test_corrupt_json_returns_none(self, tmp_path: Path) -> None:
         cov = tmp_path / "coverage.json"
         cov.write_text("{invalid", encoding="utf-8")
-        assert _parse_coverage_json(cov) is None
+        assert read_coverage_total(cov) is None
+        valid = tmp_path / "valid.json"
+        valid.write_text(json.dumps({"totals": {"percent_covered": 82.5}}), encoding="utf-8")
+        assert extract_coverage_percentage("", [cov, valid]) == (True, 82.5)
 
     def test_missing_file(self, tmp_path: Path) -> None:
-        assert _parse_coverage_json(tmp_path / "nonexistent.json") is None
+        assert read_coverage_total(tmp_path / "nonexistent.json") is None
 
 
 class TestWaitForCoverageFile:
     def test_valid_file(self, tmp_path: Path) -> None:
         cov = tmp_path / "coverage.json"
-        cov.write_text("x" * (MIN_VALID_COVERAGE_FILE_BYTES + 10), encoding="utf-8")
-        assert _wait_for_coverage_file([cov], max_retries=1, delay=0.01) == cov
+        cov.write_text(json.dumps({"totals": {"percent_covered": 82.5}}), encoding="utf-8")
+        assert _wait_for_coverage_total([cov], max_retries=1, delay=0.01) == 82.5
 
     def test_file_too_small(self, tmp_path: Path) -> None:
         cov = tmp_path / "coverage.json"
         cov.write_text("{}", encoding="utf-8")
-        assert _wait_for_coverage_file([cov], max_retries=1, delay=0.01) is None
+        assert _wait_for_coverage_total([cov], max_retries=1, delay=0.01) is None
 
     def test_no_files(self, tmp_path: Path) -> None:
-        assert _wait_for_coverage_file([tmp_path / "nonexistent.json"], max_retries=1, delay=0.01) is None
+        assert _wait_for_coverage_total([tmp_path / "nonexistent.json"], max_retries=1, delay=0.01) is None

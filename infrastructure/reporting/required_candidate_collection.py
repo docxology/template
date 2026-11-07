@@ -11,11 +11,10 @@ from typing import Any
 from infrastructure.project._hosted_api import fixed_hosted_api
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
-from infrastructure.project.public_hosted_origin import (
+from infrastructure.project._hosted_protocol import (
     MAX_ARCHIVE,
-    MAX_LISTING_PAGES,
     WORKFLOW,
-    _merge_listing_pages,
+    collect_artifact_pages,
 )
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -111,13 +110,7 @@ def collect_required_candidate(
         or base64.b64decode(workflow["content"]) != source.current_source_reader.read(WORKFLOW).content
     ):
         raise ValueError("candidate hosted workflow differs from the independently admitted Source")
-    pages = []
-    for ordinal in range(1, MAX_LISTING_PAGES + 1):
-        pages.append(api_response("listing", ordinal))
-        listing = _merge_listing_pages(pages, complete=False)
-        if len(listing["artifacts"]) == listing["total_count"]:
-            break
-    listing = _merge_listing_pages(pages, complete=True)
+    listing, _ = collect_artifact_pages(lambda page: api_response("listing", page))
     owned = [
         row
         for row in listing["artifacts"]

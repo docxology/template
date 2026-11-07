@@ -11,11 +11,14 @@ from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.pipeline.fingerprint_files import anchored_parent, verify_directory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+if TYPE_CHECKING:
+    from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
 
 PUBLIC_ROOT_FILES = frozenset(
     {
@@ -215,7 +218,7 @@ class SnapshotReader:
         self.operation_deadline = operation_deadline
         self.hosted_origin = hosted_origin
         # Live external context only; receipt decoding never populates this.
-        self.native_operation = native_operation
+        self._native_operation = native_operation
         # Explicit live owner only; never inferred from retained receipt DATA.
         self.native_producer_operation = native_producer_operation
         # A genuinely completed distinct original control; never receipt DATA.
@@ -237,6 +240,21 @@ class SnapshotReader:
         ) = None
         self.validated_exports: dict[str, str] = {}
         self.validated_export_commits: dict[str, str] = {}
+
+    @property
+    def native_operation(self) -> Any:
+        """Return the native context supplied to this reader."""
+        return self._native_operation
+
+    def bind_native_operation(self, operation: NativeReaderOperation) -> None:
+        """Attach live native context after observing the original artifacts."""
+        from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
+
+        if not isinstance(operation, NativeReaderOperation):
+            raise ValueError("snapshot reader needs a live native operation")
+        if self._native_operation is not None:
+            raise ValueError("snapshot reader already has a native operation")
+        self._native_operation = operation
 
     def _public_lexical_path(self, relative: str) -> Path:
         """Apply public scope policy without granting filesystem authority."""

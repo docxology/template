@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import math
 import os
+import re
 import sys
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -13,13 +14,22 @@ from typing import Any, Iterator
 
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
 from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.project._hosted_protocol import (
+    ARL_WORKFLOW,
+    DOWNLOAD_SCRIPT,
+    MAX_ARCHIVE,
+    MAX_LISTING_PAGES,
+    WORKFLOW,
+    _api_command,
+    _context,
+    _process,
+)
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.release_readiness_snapshot import json_object_from_bytes
 
 _PENDING: ContextVar[_ReaderCredentials | None] = ContextVar("fixed_hosted_reader_credentials", default=None)
 _KEY = object()
-_ARL_WORKFLOW = ".github/workflows/platform-native-preflight.yml"
 
 
 class _ReaderCredentials:
@@ -78,11 +88,7 @@ class _FixedHostedApi:
         deadline: float,
         environment: dict[str, str],
     ) -> None:
-        from infrastructure.project.public_hosted_origin import _context
-
         _context(repository, run_id, head)
-        if any(part in {".", ".."} for part in repository.split("/")):
-            raise ValueError("hosted repository segments must be literal owner and repository names")
         if type(deadline) not in (int, float) or not math.isfinite(deadline):
             raise ValueError("fixed hosted API requires the existing finite absolute deadline")
         remaining(deadline)
@@ -102,10 +108,6 @@ class _FixedHostedApi:
         self._used: set[str] = set()
 
     def _execute(self, command: list[str], label: str) -> tuple[dict[str, Any], dict[str, str]]:
-        import re
-
-        from infrastructure.project.public_hosted_origin import DOWNLOAD_SCRIPT, WORKFLOW, _api_command, _process
-
         api_command = command
         if command[:4] == [sys.executable, "-I", "-c", DOWNLOAD_SCRIPT]:
             if len(command) < 6 or Path(command[4]).parent != self.directory:
@@ -118,7 +120,7 @@ class _FixedHostedApi:
             in {
                 f"{prefix}/actions/runs/{self.run_id}",
                 f"{prefix}/contents/{WORKFLOW}?ref={self.head}",
-                f"{prefix}/contents/{_ARL_WORKFLOW}?ref={self.head}",
+                f"{prefix}/contents/{ARL_WORKFLOW}?ref={self.head}",
             }
             or re.fullmatch(
                 re.escape(prefix)
@@ -164,8 +166,6 @@ class _FixedHostedApi:
         return raw, binding
 
     def _json(self, endpoint: str, label: str) -> tuple[dict[str, Any], dict[str, str]]:
-        from infrastructure.project.public_hosted_origin import _api_command
-
         raw, binding = self._execute(_api_command(endpoint), label)
         return json_object_from_bytes(raw["stdout"].encode()), binding
 
@@ -173,13 +173,11 @@ class _FixedHostedApi:
         return self._json(f"repos/{self.repository}/actions/runs/{self.run_id}", "run")
 
     def workflow_metadata(self) -> tuple[dict[str, Any], dict[str, str]]:
-        from infrastructure.project.public_hosted_origin import WORKFLOW
-
         return self._json(f"repos/{self.repository}/contents/{WORKFLOW}?ref={self.head}", "workflow")
 
     def arl_workflow_metadata(self) -> tuple[dict[str, Any], dict[str, str]]:
         """Read only the fixed same-SHA ARL diagnostic workflow."""
-        return self._json(f"repos/{self.repository}/contents/{_ARL_WORKFLOW}?ref={self.head}", "arl-workflow")
+        return self._json(f"repos/{self.repository}/contents/{ARL_WORKFLOW}?ref={self.head}", "arl-workflow")
 
     def artifact_metadata(self, artifact_id: int) -> tuple[dict[str, Any], dict[str, str]]:
         self._positive(artifact_id)
@@ -191,8 +189,6 @@ class _FixedHostedApi:
             raise ValueError("fixed hosted API requires a positive integer identity")
 
     def _page(self, page: int, category: str) -> tuple[dict[str, Any], dict[str, str]]:
-        from infrastructure.project.public_hosted_origin import MAX_LISTING_PAGES
-
         self._positive(page)
         if page > MAX_LISTING_PAGES:
             raise ValueError("hosted API page exceeds its existing finite bound")
@@ -208,8 +204,6 @@ class _FixedHostedApi:
         return self._page(page, "jobs")
 
     def download_artifact(self, artifact_id: int, destination: Path) -> tuple[bytes, dict[str, str]]:
-        from infrastructure.project.public_hosted_origin import DOWNLOAD_SCRIPT, MAX_ARCHIVE, _api_command
-
         self._positive(artifact_id)
         if destination.parent != self.directory or destination.exists() or destination.is_symlink():
             raise ValueError("fixed hosted download requires one fresh confined evidence file")

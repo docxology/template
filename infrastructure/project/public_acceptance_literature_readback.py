@@ -220,7 +220,7 @@ def collect_carrier(
     from infrastructure.project._hosted_api import fixed_hosted_api
     from infrastructure.project.auxiliary_matrix_hosted import _jobs
     from infrastructure.project.public_acceptance_evidence import write_json
-    from infrastructure.project.public_hosted_origin import MAX_LISTING_PAGES, _merge_listing_pages
+    from infrastructure.project._hosted_protocol import MAX_LISTING_PAGES, collect_artifact_pages
 
     api = fixed_hosted_api(
         root,
@@ -237,15 +237,15 @@ def collect_carrier(
     workflow, observed = api.arl_workflow_metadata()
     observations.append(observed)
     validate_workflow(root, workflow)
-    artifact_pages, job_pages = [], []
-    for page in range(1, MAX_LISTING_PAGES + 1):
+    job_pages = []
+
+    def read_listing_page(page: int) -> dict[str, Any]:
         value, observed = api.artifact_page(page)
-        artifact_pages.append(value)
         observations.append(observed)
-        listing = _merge_listing_pages(artifact_pages, complete=False)
-        if len(listing["artifacts"]) == listing["total_count"]:
-            break
-    artifacts = _merge_listing_pages(artifact_pages, complete=True)["artifacts"]
+        return value
+
+    listing, _ = collect_artifact_pages(read_listing_page)
+    artifacts = listing["artifacts"]
     for page in range(1, MAX_LISTING_PAGES + 1):
         value, observed = api.job_page(page)
         job_pages.append(value)
