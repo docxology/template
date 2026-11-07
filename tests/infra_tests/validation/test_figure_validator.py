@@ -519,3 +519,15 @@ class TestEnvelopeShapeRegistry:
 
         assert success is True
         assert issues == []
+
+
+def test_explicit_figure_roster_rejects_symlink_escape(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    outside = tmp_path / "outside.md"
+    outside.write_text("# Unconsumed\n\nSee @fig:outside.\n", encoding="utf-8")
+    selected = manuscript / "selected.md"
+    selected.symlink_to(outside)
+
+    with pytest.raises(ValueError):
+        validate_figure_registry(tmp_path / "registry.json", manuscript, manuscript_files=[selected])

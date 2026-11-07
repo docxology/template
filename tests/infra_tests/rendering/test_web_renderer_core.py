@@ -4,31 +4,17 @@ Tests web/HTML rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering import web_renderer
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.web_renderer import WebRenderer
 
 from ._web_renderer_test_helpers import _make_renderer
-
-
-class TestWebRendererCore:
-    """Test core web renderer functionality."""
-
-    def test_module_imports(self):
-        """Test that module imports correctly."""
-        assert web_renderer is not None
-
-    def test_has_render_functions(self):
-        """Test that module has render functions."""
-        module_funcs = [
-            a for a in dir(web_renderer) if not a.startswith("_") and callable(getattr(web_renderer, a, None))
-        ]
-        assert len(module_funcs) > 0
 
 
 class TestHtmlRendering:
@@ -52,19 +38,6 @@ class TestHtmlRendering:
         renderer = _make_renderer(tmp_path)
         result = renderer.render(md)
         assert result.parent == Path(renderer.config.web_dir)
-
-
-class TestWebRendererIntegration:
-    """Integration tests for web renderer."""
-
-    def test_full_render_workflow(self, tmp_path):
-        """Test complete rendering workflow."""
-        # Create test content
-        md = tmp_path / "doc.md"
-        md.write_text("# Document\n\n## Section\n\nContent here.")
-
-        # Module should be importable
-        assert web_renderer is not None
 
 
 class TestCombineMarkdownFiles:
@@ -146,17 +119,6 @@ class TestCombineMarkdownFiles:
         assert "label{thm:demo}" not in result
         assert "**Theorem.**" in result
 
-    def test_html_safe_markdown_normalizes_project_figure_paths(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        source = "![A](../output/figures/a.png)\n![B](output/figures/b.png)\n![C](../../output/figures/c.png)\n"
-
-        result = renderer._html_safe_markdown(source)
-
-        assert "../output/figures/" not in result
-        assert "../../output/figures/" not in result
-        assert "output/figures/" not in result
-        assert result.count("../figures/") == 3
-
     def test_html_safe_markdown_preserves_pandoc_crossrefs(self, tmp_path):
         renderer = _make_renderer(tmp_path)
         source = (
@@ -184,6 +146,63 @@ class TestCombineMarkdownFiles:
         assert "[@sec:results]" not in result
         assert "[fig:coverage]" in result
         assert "[sec:results]" in result
+
+
+@pytest.mark.parametrize(
+    "relative_image",
+    ["../../../../figures/plots/dense.png", "../../../../../output/figures/plots/dense.png"],
+)
+@pytest.mark.parametrize("combined", [False, True])
+def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(
+    tmp_path: Path, combined: bool, relative_image: str
+) -> None:
+    output = tmp_path / "output"
+    manuscript = output / "manuscript"
+    source = manuscript / "parts" / "unit" / "chapter" / "overview.md"
+    source.parent.mkdir(parents=True)
+    figures = output / "figures"
+    (figures / "plots").mkdir(parents=True)
+    Image.new("RGB", (8, 8), color=(30, 60, 90)).save(figures / "plots" / "dense.png")
+    (figures / "figure_registry.json").write_text(
+        '{"fig:dense":{"filename":"plots/dense.png","alt_text":"A blue square; synthetic layout fixture."}}',
+        encoding="utf-8",
+    )
+    literal_tag = f'<img src="{relative_image}">'
+    source.write_text(
+        f"# Results\n\n![Caption]({relative_image}){{#fig:dense}}\n\n"
+        f"`{literal_tag}`\n\n```html\n{literal_tag}\n```\n\n`{relative_image}`\n",
+        encoding="utf-8",
+    )
+    renderer = WebRenderer(
+        RenderingConfig(output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web"))
+    )
+    rendered_path = renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
+    rendered = rendered_path.read_text(encoding="utf-8")
+    assert 'src="../figures/plots/dense.png"' in rendered
+    assert 'alt="A blue square; synthetic layout fixture."' in rendered
+
+    class CodeReader(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.active = False
+            self.code: list[str] = []
+
+        def handle_starttag(self, tag, attrs):
+            if tag == "code":
+                self.active = True
+                self.code.append("")
+
+        def handle_endtag(self, tag):
+            if tag == "code":
+                self.active = False
+
+        def handle_data(self, text):
+            if self.active:
+                self.code[-1] += text
+
+    reader = CodeReader()
+    reader.feed(rendered)
+    assert [code.strip() for code in reader.code] == [literal_tag, literal_tag, relative_image]
 
 
 @pytest.mark.parametrize("combined", [False, True])

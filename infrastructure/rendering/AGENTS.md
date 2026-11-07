@@ -6,6 +6,11 @@ Rendering turns manuscript sources and project outputs into publication formats:
 combined PDFs, slides, web HTML, DOCX, and EPUB. It coordinates format-specific
 renderers without owning validation policy or project analysis.
 
+Stable package exports resolve on first access, following the core/validation
+facade convention. Discovery and bibliography leaf imports do not initialize
+`RenderManager` or optional format providers; explicit public imports still
+return their original provider objects.
+
 WebRenderer pages share one `assets/source-web-fonts.js` per output directory,
 containing one deterministic LZMA-Alone stream for the unchanged twelve Source
 font bodies and full OFL notice. The Source-pinned local LZMA-JS decoder and full
@@ -27,7 +32,7 @@ not a claim of complete native-format acceptance.
 
 | Area | Files | Role |
 | --- | --- | --- |
-| Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
+| Facade | `__init__.py`, `core.py`, `config.py` | Lazy stable exports, `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
 | Format renderers | `slides_renderer.py`, `_slides_accessibility_ast.py`, `_slides_accessibility_composition.py`, `_slides_accessibility_contracts.py`, `_slides_accessibility_figures.py`, `_slides_accessibility_image_io.py`, `_slides_accessibility_limits.py`, `_slides_presentation_variants.py`, `_slides_accessibility_tables.py`, `_slides_accessibility_text_geometry.py`, `_slides_accessibility_raw_tex.py`, `_slides_accessibility_reveal.py`, `_slides_accessibility_reveal_controls.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_tex_tables.py`, `_slides_beamer_geometry.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `docx_renderer.py`, `epub_renderer.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `_slide_font_encoding.py`, `_slide_figure_layout.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition and fail-closed geometry, bounded Pandoc trees, confined local-raster inspection, figure allocation and intrinsic-raster checks, writer-specific formal-content fallback, Reveal navigation/zoom controls, Beamer math-header and figure/table safe-area helpers, rendered Beamer coordinate validation, profile-aware captioned listings and archive frame splitting, HTML orchestration, web-only Markdown preprocessing (citations/theorems), deterministic HTML post-processing and structured figure-detail association, dedicated DOCX and EPUB rendering, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
@@ -107,7 +112,7 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   copy whenever it is project-resolved — it carries the generated-ordering or
   project-resolved marker, or the source is still a `{{TOKEN}}` template whose
   tokens the injected copy has substituted
-  (`_manuscript_source.is_project_resolved`). A project generator's
+  (`validation.content.manuscript_config.is_project_resolved`). A project generator's
   substitution is never overwritten by the source template.
 - Whichever copy wins, `_manuscript_source.verify_config_tokens_resolved`
   rejects a surviving `{{UPPER_SNAKE}}` token in the `config.yaml` the render
@@ -150,6 +155,16 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   options only on the opt-in `metadata.tagged_pdf: true` LuaLaTeX path.
   Untagged PDFs are unchanged, and neither tagged rendering nor metadata
   injection is a claim of PDF/UA certification.
+- Rebase image sources only in emitted HTML, before exact web registry matching.
+  Never apply HTML image rewriting to raw Markdown, where inline/fenced code
+  may contain literal image tags and paths.
+- Requested bibliography processing is blocking: a nonzero native BibTeX exit
+  stops before final PDF promotion. Actual compiler auxiliary requests, including
+  `nocite` and included aux files, determine whether processing is required;
+  merely retaining an unused `.bib` file does not.
+- Keep prior published PDFs on source/compilation failure. Remove stale staging
+  PDFs before each compile and never accept an old final/staging PDF as a new
+  producer result. Retain diagnostics; consuming projects need no second driver.
 - Figure-registry 1.2 records may add a structured `long_description` and an
   `exact_value_fallback`. The renderer associates long descriptions through
   `aria-details`, validates the exact-value identifier inventory and its safe

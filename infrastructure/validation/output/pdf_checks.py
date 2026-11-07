@@ -9,6 +9,7 @@ from infrastructure.core.files import find_combined_pdf
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
 
 logger = get_logger(__name__)
 
@@ -23,7 +24,13 @@ def validate_transmission_bookends(
     from infrastructure.transmission.transmission_bookends import transmission_bookends_enabled
     from infrastructure.transmission.transmission_page_check import validate_transmission_bookend_pages
 
-    config_path = resolve_source_manuscript_dir(project_root) / "config.yaml"
+    generated_inputs = declared_generated_manuscript_inputs(project_root)
+    manuscript_dir = (
+        project_root / "output" / "manuscript"
+        if generated_inputs is not None
+        else resolve_source_manuscript_dir(project_root)
+    )
+    config_path = manuscript_dir / "config.yaml"
     if not transmission_bookends_enabled(config_path):
         return True
 

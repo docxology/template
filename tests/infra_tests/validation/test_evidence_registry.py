@@ -440,6 +440,101 @@ def test_build_project_registry_collects_docs_manuscript_bibliography_and_labels
     assert {fact.source_path for fact in registry.lookup("citation", "docs2026")} == {"docs/manuscript/references.bib"}
 
 
+def test_generated_registry_resolves_only_selected_manuscript_labels(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    source = project / "manuscript"
+    source.mkdir(parents=True)
+    (source / "chapter.md").write_text("# Old chapter {#sec:authored}\n", encoding="utf-8")
+    (source / "references.bib").write_text("@article{oldkey,title={Old}}\n", encoding="utf-8")
+    generated = project / "output" / "manuscript"
+    (generated / "chapters").mkdir(parents=True)
+    (generated / "config.yaml").write_text(
+        "# Generated manuscript ordering\nfront_matter:\n  files:\n    - chapters/selected.md\n",
+        encoding="utf-8",
+    )
+    (generated / "chapters" / "selected.md").write_text(
+        "# Methods {#sec:selected}\n"
+        "![Result](result.png){#fig:selected}\n"
+        "Table: Result {#tbl:selected}\n"
+        "Equation {#eq:selected}\n"
+        "Listing: Example {#lst:selected}\n",
+        encoding="utf-8",
+    )
+    (generated / "leftover.md").write_text("# Leftover {#sec:leftover}\n", encoding="utf-8")
+    (generated / "references.bib").write_text("@article{newkey,title={New}}\n", encoding="utf-8")
+    (generated / "residue").mkdir()
+    (generated / "residue/old.bib").write_text(
+        "@article{residuekey,title={Unconsumed bibliography}}\n", encoding="utf-8"
+    )
+
+    registry = build_project_evidence_registry(project)
+    report = validate_text_against_registry(
+        "# Results\nSee [@sec:selected; @fig:selected; @tbl:selected; @eq:selected; @lst:selected; @newkey].\n"
+        "Not [@sec:authored; @sec:leftover; @sec:missing; @fig:missing; @tbl:missing; @eq:missing; "
+        "@lst:missing; @oldkey; @missingkey; @residuekey].\n",
+        registry,
+    )
+
+    assert set(unsupported_citation_tokens(report)) == {
+        "sec:authored",
+        "sec:leftover",
+        "sec:missing",
+        "fig:missing",
+        "tbl:missing",
+        "eq:missing",
+        "lst:missing",
+        "oldkey",
+        "missingkey",
+        "residuekey",
+    }
+    assert {fact.source_path for fact in registry.lookup("section", "sec:selected")} == {
+        "output/manuscript/chapters/selected.md"
+    }
+    assert {fact.source_path for fact in registry.lookup("citation", "newkey")} == {"output/manuscript/references.bib"}
+
+
+@pytest.mark.parametrize("marker", ["", "# Project-resolved config\n"])
+def test_undeclared_output_does_not_replace_manuscript_label_scope(tmp_path: Path, marker: str) -> None:
+    project = tmp_path / "project"
+    source = project / "manuscript"
+    source.mkdir(parents=True)
+    (source / "chapter.md").write_text("# Methods {#sec:authored}\n", encoding="utf-8")
+    generated = project / "output" / "manuscript"
+    generated.mkdir(parents=True)
+    (generated / "config.yaml").write_text(marker + "paper: {}\n", encoding="utf-8")
+    (generated / "chapter.md").write_text("# Residue {#sec:residue}\n", encoding="utf-8")
+    (generated / "references.bib").write_text("@article{residuekey,title={Residue}}\n", encoding="utf-8")
+
+    registry = build_project_evidence_registry(project)
+    report = validate_text_against_registry("# Results\nSee [@sec:authored; @sec:residue; @residuekey].\n", registry)
+
+    assert set(unsupported_citation_tokens(report)) == {"sec:residue", "residuekey"}
+
+
+@pytest.mark.parametrize("local_mode", [False, True])
+def test_generated_labels_respect_stable_output_admission(tmp_path: Path, local_mode: bool) -> None:
+    project = tmp_path / "project"
+    generated = project / "output" / "manuscript"
+    generated.mkdir(parents=True)
+    (generated / "config.yaml").write_text(
+        "# Generated manuscript ordering\nfront_matter:\n  files:\n    - chapter.md\n",
+        encoding="utf-8",
+    )
+    (generated / "chapter.md").write_text("# Methods {#sec:selected}\n", encoding="utf-8")
+    (generated / "references.bib").write_text("@article{selectedkey,title={Selected}}\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(project)], check=True)  # noqa: S603, S607 - fixed test argv
+    (project / ".gitignore").write_text("output/\n", encoding="utf-8")
+
+    registry = (
+        build_project_evidence_registry(project, output_inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE)
+        if local_mode
+        else build_project_evidence_registry(project)
+    )
+    report = validate_text_against_registry("# Results\nSee [@sec:selected; @selectedkey].\n", registry)
+
+    assert set(unsupported_citation_tokens(report)) == (set() if local_mode else {"sec:selected", "selectedkey"})
+
+
 def test_registry_validates_internal_section_and_equation_references(tmp_path: Path) -> None:
     project = tmp_path / "project"
     manuscript = project / "manuscript"

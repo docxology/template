@@ -8,16 +8,30 @@ the former single `rendered_snapshot.py` module for the line-count gate.
 - `__init__.py` - public snapshot models and builders
 - `_scan.py` - repository-boundary scan (`FileRecord`, `Fingerprint`, `cached_records`, `iter_tree_files`, symlink confinement)
 - `_records.py` - record-set builders (`_stage_records`, `_project_records`, `_fingerprint`, `_is_config_path`) and implementation-root selection
+- `_inputs.py` - fail-closed admission of explicit compiler-owned generated ordering
 
 ## Public API
 
 Import from the package root only:
 
 ```python
-from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
+from infrastructure.validation.rendered_snapshot import (
+    build_current_rendered_snapshot,
+    declared_generated_manuscript_inputs,
+)
 ```
 
 Focused implementation controls import scanning helpers from `_scan.py`.
+
+The generated-input contract is documented in
+[`../README.md`](../README.md#rendered-input-commitments).
+
+For ignored working/external outputs,
+`publication.rendered_provenance.validate_current_rendered_provenance` checks
+the complete coherent derived snapshot. It does not grant native execution or
+acceptance authority. `validate_rendered_provenance` additionally requires
+byte-clean published Git evidence; current consistency cannot replace that
+publication boundary.
 
 ## Verification
 

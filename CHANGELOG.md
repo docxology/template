@@ -22,6 +22,12 @@ matching tag identity and authenticated publication.
 - Collect and review Root family policy through actual same-checkout census
   originals on both supported Python minors and host families. Keep policy
   authoring separate from runtime and release acceptance.
+- Resolve output-validation exports lazily so cold evidence-registry and
+  rendered-snapshot consumers do not enter an import cycle through leaf
+  artifact readers; preserve all existing public provider identities.
+- Preserve the selected HTML asset mode through Stage 03 configuration.
+  Explicit offline requests publish the pinned local MathJax closure or refuse;
+  they never silently substitute CDN assets.
 - Probe the existing real tagged-PDF test independently on all four targets;
   require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving
@@ -79,6 +85,19 @@ matching tag identity and authenticated publication.
   regression. Resolve the Source-locked Puppeteer browser deterministically.
 - Bind ordinary Mermaid caches to renderer, font and toolchain inputs; native
   custody requires each actual producer call even when prior image bytes exist.
+- Rebase emitted HTML image sources before exact web figure-registry matching,
+  preserving bare paths and literal image tags in inline/fenced Markdown code.
+- Require native BibTeX success for actual citation requests, including included
+  auxiliary files; unused bibliography files do not force processing.
+- Preserve prior published PDFs on rejected revisions and refuse stale final or
+  staging PDFs when the current compiler produces no output.
+- Admit explicit compiler-owned manuscript rosters without inventing authored
+  source mappings. Bind their consumed configuration and ordered bytes, and use
+  the same confined inputs for Stage 04 content, evidence and transmission
+  checks; unconsumed residue cannot supply manuscript evidence.
+- Resolve rendering-package exports lazily so shared discovery and bibliography
+  readers remain usable from validation without initializing format providers
+  or introducing import cycles.
 
 ## [5.0.2] - 2026-11-04
 
