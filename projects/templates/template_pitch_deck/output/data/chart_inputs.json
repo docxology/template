@@ -129,18 +129,18 @@
   "infrastructure_python": [
     [
       "reporting",
-      416
+      418
     ],
     [
       "core",
-      202
-    ],
-    [
-      "project",
-      123
+      204
     ],
     [
       "rendering",
+      125
+    ],
+    [
+      "project",
       123
     ],
     [
@@ -168,15 +168,15 @@
       16
     ],
     [
+      "steganography",
+      15
+    ],
+    [
       "doctor",
       14
     ],
     [
       "orchestration",
-      14
-    ],
-    [
-      "steganography",
       14
     ],
     [

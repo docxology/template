@@ -48,7 +48,7 @@ architecture side, the DSL is exercised by a zero-mock test suite under the
 repository's configured project coverage gate, generates 18 artifacts
 (1 figures, 7 data files,
 10 reports) per pipeline run, and injects reproducibility
-metadata (configuration hash `e8bbba50b298ba3f`, build timestamp
-`2026-11-07T07:01:20Z`) into [@sec:reproducibility].
+metadata (configuration hash `0bfa8a91262ffb45`, build timestamp
+`2026-11-07T10:38:24Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis

@@ -231,7 +231,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.5309858322143555
+      "total_size_mb": 5.531061172485352
     },
     "figures": {
       "files": 10,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 1123246
+          "size_bytes": 1123325
         },
         "web": {
           "files": 16,
@@ -279,7 +279,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 68,
-      "total_size_bytes": 5799659
+      "total_size_bytes": 5799738
     }
   },
   "recommendations": [],
@@ -290,21 +290,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-07T08:16:30Z",
+  "timestamp": "2026-11-07T10:38:24Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "377cfe1b29de7a70185c5e60fc206c67c6711f1f67052e841a6ef39317ad5c62",
+      "sha256": "2ebe78f11b9dbbcd08f3c33c38a13bf56ae3a280c69d5a9a6d126f8007b196bc",
       "size_bytes": 22233
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "99566c2aff0fce6573f5acc515c5a187aaea2465d5be8e82869846192eb2ffb1",
+      "sha256": "17e200e213280828e153c1374e073a6afc2dd963fc1d2e41f02dd5ca59af4c9a",
       "size_bytes": 73016
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "3430771fee095c19338d20764ec584b2a40a4e4acb94635b8c0349293587608f",
+      "sha256": "4cec51a7f20f52bc437f094919cd165a9e4e890b31b216218437ea923fa29a0a",
       "size_bytes": 2928
     },
     "consumed_manuscript": [
@@ -352,7 +352,7 @@
       },
       {
         "rendered_path": "output/manuscript/07_reproducibility.md",
-        "rendered_sha256": "3ae42fb2f76380d133337990bd8cb98fc701c26294a3d0d29fd687aa1c6d1d10",
+        "rendered_sha256": "187e32ec79f160f42a9e16531d9d605e951dee383792a09e17e6175a73c648f6",
         "source_path": "manuscript/07_reproducibility.md",
         "source_sha256": "c159af59625c5aa2a96f227a6face4df46caca09df75437fd7df4676b871cbfa"
       },
@@ -384,19 +384,19 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "3154a450d842cb2bbf57210b8fbc9b03e99bc9f4145a572a6119335c0648ac6a"
+        "sha256": "5686e45dd26b9b33f1bfd6b2ecb713c3f63606465f0773493cd3bd4a307d9f0d"
       },
       "output": {
         "file_count": 68,
-        "sha256": "57749521ebe37b1339bd6d75137215c949fadfdb58a71081d2fe4f5716f3a43f"
+        "sha256": "ff54fd475b587781512b32830501e90b12399cee000ccbb94f13b17b426ce83c"
       },
       "source": {
         "file_count": 42,
         "sha256": "498fc25e7b70be8833691df8e5087e7f3edcf618495ce1b95847d2964746a6d6"
       },
       "stage": {
-        "file_count": 1742,
-        "sha256": "e873fc8d848886c1b6b5a152c3f10fd07f360be43926f4a35c759e4dbb72d725"
+        "file_count": 1749,
+        "sha256": "0f17b044598b89bf6499a549b2239cb2569971405ca06b2aaa6d1ad21f9a6702"
       }
     },
     "project": "templates/template_madlib",

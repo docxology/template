@@ -69,7 +69,7 @@ Every quantitative claim in [@sec:results] is either a generated variable
 sourced from a live analysis output or registered in `data/claim_ledger.yaml` for
 evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
-Configuration provenance is itself injected: `e8bbba50b298ba3f` is the
+Configuration provenance is itself injected: `0bfa8a91262ffb45` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-11-07T07:01:20Z` records when the variables were generated
+`2026-11-07T10:38:24Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
