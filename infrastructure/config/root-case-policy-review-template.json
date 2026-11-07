@@ -16653,8 +16653,8 @@
         },
         {
           "path": "infrastructure/validation/rendered_snapshot/_records.py",
-          "source_sha256": "8f4eb6df1d27f97eea9089f9483827738e8d15d1949ea682e5adc2463f127e3d",
-          "line": 136
+          "source_sha256": "a7e2e90bdd053340ee43a4251758a706df5e42f8ea2d9080ead9f2764c444b80",
+          "line": 137
         },
         {
           "path": "infrastructure/validation/rendered_snapshot/_scan.py",
