@@ -29,7 +29,7 @@ jobs:
             host: darwin
         runner: [ubuntu-24.04, macos-latest]
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 180
+    timeout-minutes: ${{ matrix.host == 'linux' && 200 || 180 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -412,7 +412,7 @@ jobs:
       max-parallel: 4
       matrix: ${{ fromJSON(needs.auxiliary-plan.outputs.matrix) }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: ${{ matrix.formal && 110 || 90 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -554,7 +554,7 @@ jobs:
   native-original:
     if: vars.NATIVE_SHARDING_CELLS != 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 320
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -676,7 +676,7 @@ jobs:
     runs-on: ubuntu-24.04
     # 14,400 s launcher clock plus preparation and transport margin. One project
     # measured 10,264.8 s without completing in run 41539538215.
-    timeout-minutes: 300
+    timeout-minutes: 320
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -771,7 +771,7 @@ jobs:
     needs: [root-original, common-original, auxiliary-original, native-plan, native-original-cell]
     if: always() && !cancelled()
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 320
     steps:
       - name: Require successful native cell production
         env:

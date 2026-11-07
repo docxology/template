@@ -63,7 +63,7 @@ lengths and SHA-256 digests. The installer verifies its package downloads from
 that frozen repository; a closing database hash check rejects repository drift.
 The selected basic, LaTeX, LuaTeX, XeTeX, scientific, bibliography, recommended
 font and plain-generic collections replace the former Debian TeX package union.
-Documentation and package sources are excluded, and installation has a 1,200-second
+Documentation and package sources are excluded, and installation has a 2,400-second
 bound with 30 seconds for termination. All TeX executables select that same tree
 on PATH. Converter mode and the prepared Python environment remain unchanged.
 

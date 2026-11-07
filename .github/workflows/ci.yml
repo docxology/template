@@ -194,14 +194,14 @@ jobs:
     needs: detect-projects
     # Documentation-only changes run the documentation shard instead.
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: ${{ matrix.documents == 'native' && 165 || 120 }}
     strategy:
       fail-fast: false
       # One complete module per lane. Hosted timings for the 27 contract modules
       # give an LPT makespan of 2626s at 3 lanes, 1337s at 6, and 1031s at 8 —
       # 8 is the point where the schedule stops improving because the slowest
       # module (tests/infra_tests/project/test_root_case_lanes.py, 1031s) sets
-      # the floor. The 120-minute job budget is unchanged.
+      # the floor. Native document preparation has a separate outer allowance.
       max-parallel: 8
       matrix: ${{ fromJSON(needs.detect-projects.outputs.contracts) }}
     steps:

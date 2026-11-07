@@ -24,7 +24,7 @@ jobs:
   tagged-pdf:
     name: Tagged PDF (${{ matrix.host }}, ${{ matrix.python }})
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    timeout-minutes: ${{ matrix.host == 'linux' && 80 || 60 }}
     strategy:
       fail-fast: false
       matrix:

@@ -57,9 +57,9 @@ jobs:
     # Ubuntu 26.04 has no setup-python build for 3.14.4; this workflow needs the
     # same reviewed Noble image as ci.yml and the required acceptance.
     runs-on: ubuntu-24.04
-    # 12000s operation + cold setup/upload. The 1800s bound was measured below
-    # the cold lifecycle; see docs/guides/native-format-acceptance.md.
-    timeout-minutes: 240
+    # Reserve 12000s for the diagnostic and 40 minutes for cold TeX setup,
+    # with time for the remaining preparation and upload.
+    timeout-minutes: 260
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -180,7 +180,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_auxiliary == true && inputs.diagnostic_arl_readback != true
     name: ARL auxiliary diagnostic
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 110
     env:
       OLLAMA_SKIP_TEST_MODEL_PULL: '1'
     steps:

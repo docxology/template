@@ -251,7 +251,8 @@ runs:
         tlpdbopt_install_docfiles 0
         tlpdbopt_install_srcfiles 0
         PROFILE
-        sudo timeout --signal=TERM --kill-after=30 1200s \
+        # A cold Linux census reached only 1960 of 3059 pinned packages in 20 minutes.
+        sudo timeout --signal=TERM --kill-after=30 2400s \
           "$preparation/install-tl-20260301/install-tl" --no-interaction --verify-downloads \
           --repository "$repository" --profile "$preparation/install.profile"
         # Refuse repository drift even after a completed disposable installation.
