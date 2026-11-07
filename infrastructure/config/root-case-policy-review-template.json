@@ -21011,13 +21011,13 @@
         },
         {
           "path": "infrastructure/rendering/_pdf_mermaid.py",
-          "source_sha256": "a4f876de2c9b12688494478eb49b1e7eb9712d87891991a640efd0a5f33e3900",
-          "line": 480
+          "source_sha256": "66e03858b04cc1d570b122c08b19df6703d842f42c860eb9740cf41acd734a18",
+          "line": 479
         },
         {
           "path": "infrastructure/rendering/_pdf_mermaid.py",
-          "source_sha256": "a4f876de2c9b12688494478eb49b1e7eb9712d87891991a640efd0a5f33e3900",
-          "line": 64
+          "source_sha256": "66e03858b04cc1d570b122c08b19df6703d842f42c860eb9740cf41acd734a18",
+          "line": 63
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
@@ -26042,13 +26042,13 @@
         },
         {
           "path": "infrastructure/rendering/_mermaid_native_profile.py",
-          "source_sha256": "4dca3545ef6baf428dcd1fb7c8b4fe684d756f077ba5fb0edc174feec91e3764",
-          "line": 17
+          "source_sha256": "f1fecf279a39bb13a030de91cd2a70dfa93314c04f95e6b749814f53727b2e0f",
+          "line": 38
         },
         {
           "path": "infrastructure/rendering/_mermaid_native_profile.py",
-          "source_sha256": "4dca3545ef6baf428dcd1fb7c8b4fe684d756f077ba5fb0edc174feec91e3764",
-          "line": 58
+          "source_sha256": "f1fecf279a39bb13a030de91cd2a70dfa93314c04f95e6b749814f53727b2e0f",
+          "line": 79
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
