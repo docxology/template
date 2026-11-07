@@ -12,13 +12,15 @@ facade convention. Discovery and bibliography leaf imports do not initialize
 return their original provider objects.
 
 WebRenderer pages share one `assets/source-web-fonts.js` per output directory,
-containing one deterministic LZMA-Alone stream for the unchanged twelve Source
-font bodies and full OFL notice. The Source-pinned local LZMA-JS decoder and full
-MIT notice travel in the asset; it needs no font fetch, worker, or new browser
-compression API. Before decoding, the loader bounds the compressed and decoded
-sizes and checks fixed LZMA properties, dictionary and known-length header;
-each reconstructed face still passes its original length and SHA-256 checks
-before font construction. Independent native controls use the current raw
+containing one deterministic native LZMA-Alone stream for the unchanged twelve
+Source font bodies and full OFL notice. Preserve the native unknown-size header
+and end marker. The Source-pinned local LZMA-JS adaptation and full MIT notice
+travel in the asset; no font fetch, worker or new browser compression API is
+needed. Bound compressed input, output and dictionary before decoding. Require
+the separate exact finite output budget, complete input and unsigned final range
+state; refuse truncated, over-budget and trailing streams. Every reconstructed
+face still passes its original length and SHA-256 checks before font
+construction. Independent native controls use the current raw
 inline font API; explicit per-face transport encodings are refused.
 Copy
 the complete web directory, including assets, for offline/file or HTTP reading;

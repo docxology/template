@@ -38,8 +38,8 @@ RECEIPT_DIR = Path("output/readiness/ordinary-infra-ci")
 
 
 def ci_matrix() -> dict[str, list[dict[str, object]]]:
-    """Keep the existing four OS/minor pairs and partition each completely."""
-    environments = [("ubuntu-latest", version) for version in CANONICAL_CI_PYTHON_VERSIONS]
+    """Partition both Linux minors and the retained macOS minor completely."""
+    environments = [("ubuntu-24.04", version) for version in CANONICAL_CI_PYTHON_VERSIONS]
     environments.append(("macos-latest", CANONICAL_CI_PYTHON_VERSIONS[-1]))
     return {
         "include": [

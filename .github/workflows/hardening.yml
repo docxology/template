@@ -381,6 +381,32 @@ jobs:
           scratch=$(mktemp -d "$RUNNER_TEMP/uv-offline-warm.XXXXXX")
           UV_PROJECT_ENVIRONMENT="$scratch/venv" uv sync --frozen --no-python-downloads \
             --python .venv/bin/python
+          uv export --locked --only-group installed-build --no-emit-project \
+            --no-header --no-annotate --output-file "$scratch/native-build-requirements.txt"
+          .venv/bin/python -B - "$scratch/native-runtime-requirements.txt" <<'PYTHON'
+          import shutil
+          import subprocess
+          import sys
+          from pathlib import Path
+          from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
+          from infrastructure.reporting.native_installed_preparation import native_runtime_export_command
+
+          root = Path.cwd()
+          requirements = Path(sys.argv[1])
+          uv = shutil.which("uv")
+          assert uv is not None, "native runtime preparation requires uv"
+          subprocess.run(native_runtime_export_command(Path(uv), root, requirements), check=True)
+          normalize_locked_dependency_export(
+              root, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
+          )
+          PYTHON
+          for kind in native-build native-runtime; do
+            uv venv --no-project --no-python-downloads --python .venv/bin/python \
+              "$scratch/$kind-environment"
+            uv pip sync --no-config --no-build --require-hashes \
+              --python "$scratch/$kind-environment/bin/python" \
+              "$scratch/$kind-requirements.txt"
+          done
           rm -rf "$scratch"
 
       - name: Verify selected Python minor
@@ -706,11 +732,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        # `public-exemplars` is the single deterministic dependency contract
-        # for every canonical public project, including scientific, literature,
-        # PPTX, and monitoring dependencies. Prepare the locked backend before
-        # genuine standalone-wheel controls run with networking disabled.
-        run: uv sync --locked --group public-exemplars --group installed-build
+        # The Active replay also needs its existing opt-in runtime group in
+        # this selected interpreter. Other project cells keep the base groups.
+        shell: bash
+        run: |
+          set -euo pipefail
+          groups=(--group public-exemplars --group installed-build)
+          if [ "${{ matrix.project }}" = templates/template_active_inference ]; then
+            groups+=(--group active-inference)
+          fi
+          uv sync --locked "${groups[@]}"
 
       - name: Prepare exact standalone runtime dependencies
         # The genuine standalone-wheel control installs the root build backend
@@ -730,6 +761,10 @@ jobs:
             --locked --no-default-groups --no-emit-project --no-emit-local \
             --no-header --no-annotate \
             --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          .venv/bin/python -B -m infrastructure.project.locked_dependency_export \
+            --metadata-root projects/templates/template_autoresearch_project \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
+            --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
           for kind in build runtime; do
             uv venv --no-project --no-python-downloads --python .venv/bin/python \
               "$RUNNER_TEMP/autoresearch-$kind-preparation"
@@ -1439,7 +1474,7 @@ jobs:
           python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --locked --group public-exemplars --group installed-build
+        run: uv sync --locked --group public-exemplars --group installed-build --group active-inference
 
       - name: Prepare exact standalone runtime dependencies
         # Same preparation as the test-project Autoresearch cell: warm the
@@ -1455,6 +1490,10 @@ jobs:
             --locked --no-default-groups --no-emit-project --no-emit-local \
             --no-header --no-annotate \
             --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          .venv/bin/python -B -m infrastructure.project.locked_dependency_export \
+            --metadata-root projects/templates/template_autoresearch_project \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
+            --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
           for kind in build runtime; do
             uv venv --no-project --no-python-downloads --python .venv/bin/python \
               "$RUNNER_TEMP/autoresearch-$kind-preparation"

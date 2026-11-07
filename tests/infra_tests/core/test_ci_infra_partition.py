@@ -143,7 +143,7 @@ def test_declared_matrix_retains_every_environment_and_shard() -> None:
     expected = {
         (runner, version, shard)
         for runner, versions in (
-            ("ubuntu-latest", CANONICAL_CI_PYTHON_VERSIONS),
+            ("ubuntu-24.04", CANONICAL_CI_PYTHON_VERSIONS),
             ("macos-latest", ("3.15",)),
         )
         for version in versions

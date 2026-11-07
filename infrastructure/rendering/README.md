@@ -249,12 +249,15 @@ WebRenderer font-bearing pages share one local `assets/source-web-fonts.js`
 per output directory instead of repeating twelve font bodies in every HTML
 file. The exact Source font bytes, full OFL notice, constructor hashes, and
 loading observations are preserved. The shared asset packs the twelve whole
-bodies into one deterministic LZMA-Alone stream. Its small Source-pinned local
-LZMA-JS decoder and full MIT notice are embedded alongside the full font OFL
-notice, so loading needs no font fetch or worker. The loader checks compressed
-and decoded size bounds, fixed properties and dictionary, and the actual known
-output-length header before decoding; it then reconstructs each complete face
-and checks its original length and SHA-256 before construction. Independent
+bodies into one deterministic native LZMA-Alone stream, retaining its unknown-size
+header and end marker rather than rewriting it into a nonportable known-size
+stream. A Source-pinned local adaptation of LZMA-JS and its full MIT notice travel
+beside the full font OFL notice; loading needs no font fetch or worker. The loader
+bounds compressed input, decoded output and dictionary before decoding. The
+synchronous decoder requires the separately declared exact finite output budget,
+checks the complete input and unsigned final range state, and refuses truncated,
+over-budget or trailing data. Every reconstructed face still passes its original
+length and SHA-256 before construction. Independent
 native controls use the current raw inline font API. Compression caches
 only an immutable byte result after every call freshly reads and hashes the
 physical font bodies; it never substitutes a cache for Source selection.

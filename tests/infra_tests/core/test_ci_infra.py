@@ -390,6 +390,9 @@ def test_changed_python_helper_routes_complete_actual_consumer_package(tmp_path:
     environment = {
         **os.environ,
         "PYTEST_ADDOPTS": "",
+        "PYTEST_XDIST_WORKER": "gw-parent",
+        "PYTEST_XDIST_WORKER_COUNT": "8",
+        "PYTEST_XDIST_TESTRUNUID": "parent-session",
         DIRECTORY_ENV: str(directory),
         NONCE_ENV: nonce,
         ROOT_ENV: str(root),

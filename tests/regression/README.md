@@ -21,7 +21,8 @@ the checkout. Mutation tests cover producer, location, revision, and symlink
 drift; these are source-integrity controls, not evidence that an external or
 live-data claim is true.
 
-This is **different from coverage** — coverage tells you "the code ran"; regression tests tell you "the science is still the science."
+This is **different from coverage**: these tests check declared deterministic
+claim baselines and source integrity, not the truth of every scientific claim.
 
 `claim_bindings.json` is the roster-level receipt consumed by
 `scripts/audit/check_claim_bindings.py`. Every canonical public exemplar must
@@ -30,6 +31,11 @@ failure. Bound pins carry manuscript location, verifier producer,
 inputs/configuration, tolerance, revision, date, and a provenance rationale.
 The explicit non-bound states prevent a scaffold or external-data lane from
 being promoted by an accidental empty collection.
+
+Current manuscript wording is not a fixed scientific baseline. Prose word and
+sentence counts, readability and citation totals are derived from current
+Source; copy edits must not require repinning them. The prose lane retains the
+consumer-visible invariant that every current citation resolves in its bibliography.
 
 ## Layout
 
@@ -42,9 +48,9 @@ tests/regression/
 │   ├── template_code_project/
 │   │   └── tables/test_optimization_results_claims.py
 │   └── ...                             (one isolated lane per bound exemplar)
-└── pinned_values/                     (committed ground-truth values)
+└── pinned_values/                     (declared quantitative baselines)
     ├── template_code_project.json
-    └── template_prose_project.json
+    └── ...                           (only projects declaring bound claims)
 ```
 
 ## Running
@@ -60,7 +66,9 @@ uv run pytest tests/regression/projects/template_code_project/ -v
 uv run pytest tests/regression/projects/template_code_project/figures/test_figure_03_panel_b.py -v
 ```
 
-These tests are deliberately **not gated by the 90% coverage floor** — they are a *separate* signal. The coverage floor checks code execution; these check scientific claim integrity. Both matter; neither replaces the other.
+These tests are deliberately **not gated by the 90% coverage floor**. Coverage
+and declared-claim drift are separate signals; neither replaces the other or
+establishes external scientific validity.
 
 ## Adding a new regression case
 

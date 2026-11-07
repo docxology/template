@@ -448,7 +448,7 @@ def test_mutated_fresh_cache_is_rejected_without_decoding_its_body(tmp_path):
         site,
         tmp_path,
         "import infrastructure.custody_probe as p;from pathlib import Path;"
-        "cache=Path(p.__cached__);raw=cache.read_bytes();cache.write_bytes(raw[:16]+b'not marshal data');"
+        "cache=Path(p.__spec__.cached);raw=cache.read_bytes();cache.write_bytes(raw[:16]+b'not marshal data');"
         "from infrastructure.core.implementation_custody import capture_implementation_custody;"
         "capture_implementation_custody(fresh_pycache_prefix=Path(sys.pycache_prefix))",
     )

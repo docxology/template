@@ -8,7 +8,7 @@ not initialize performance or scientific dependencies.
 from __future__ import annotations
 
 from importlib import import_module
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 _EXPORTS: dict[str, tuple[str, str]] = {
     "CheckpointManager": ("infrastructure.core.runtime.checkpoint", "CheckpointManager"),
@@ -23,7 +23,28 @@ _EXPORTS: dict[str, tuple[str, str]] = {
     "TemplateError": ("infrastructure.core.exceptions", "TemplateError"),
 }
 
-__all__ = sorted(_EXPORTS)
+if TYPE_CHECKING:
+    from .exceptions import TemplateError
+    from .logging.helpers import format_duration
+    from .logging.utils import get_logger, log_operation, log_stage, log_success
+    from .progress import ProgressBar
+    from .runtime.checkpoint import CheckpointManager
+    from .runtime.function_profiler import monitor_performance
+    from .runtime.health_check import SystemHealthChecker
+
+
+__all__ = [
+    "CheckpointManager",
+    "ProgressBar",
+    "SystemHealthChecker",
+    "TemplateError",
+    "format_duration",
+    "get_logger",
+    "log_operation",
+    "log_stage",
+    "log_success",
+    "monitor_performance",
+]
 
 
 def __getattr__(name: str) -> Any:

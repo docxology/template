@@ -57,13 +57,25 @@ dependency group and root lock/package/Python-selector inputs. Every caller
 still runs its declared locked reconciliation. Reused downloads or environments
 are preparation inputs, never accepted runtime results.
 
+Hardening retains four infrastructure shards for Linux on both supported Python
+minors and macOS on Python 3.15. Linux uses `ubuntu-24.04`, matching the pinned
+Noble APT admission rather than admitting a new runner distribution implicitly.
+Original pytest worker identity comes from actual `Config.workerinput`; an
+inherited `PYTEST_XDIST_WORKER` does not turn a fresh serial controller into a
+worker. The Active project cells and public-matrix interpreter include the
+existing `active-inference` group; default SDK installation is unchanged.
+
 Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
 selected compiler controls also install the recommended TeX fonts and verify
 `pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract
-additionally prepares the declared Pandoc/XeTeX document producers and readers. The native portability contract warms the exact Root
-lockfile's default and dev groups in a fresh job-owned environment before its
-unchanged offline fixture runs; a restored environment alone does not establish
-that the required wheel archives remain cached.
+additionally prepares the declared Pandoc/XeTeX document producers and readers.
+Native portability preparation exports the locked build and runtime requirements
+and warms their exact hashes through the same `uv pip sync` installer in fresh
+job-owned environments. Auto's export uses the existing metadata-locked
+normalizer for the selected Python minor and its original archive nomination.
+The later fresh consumers retain offline, no-build and require-hashes checks;
+neither `uv sync` state nor a restored environment proves those archives remain
+available to the actual consumer.
 
 Run a project's same selection locally after locked root setup:
 

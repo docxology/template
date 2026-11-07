@@ -217,6 +217,108 @@ A named set of weighted benchmark dimensions.
 
 *symbol — defined in `infrastructure.benchmark`*
 
+## Package: `infrastructure.core`
+
+### `CheckpointManager`
+
+*class — defined in `infrastructure.core.runtime.checkpoint`*
+
+```python
+class CheckpointManager(checkpoint_dir: Path | None=None, project_name: str='project', repo_root: Path | None=None, project_dir: Path | None=None, output_dir: Path | None=None)
+```
+
+Manages pipeline checkpoints for resume capability.
+
+### `format_duration`
+
+*function — defined in `infrastructure.core.logging.helpers`*
+
+```python
+format_duration(seconds: float) -> str
+```
+
+Format duration in seconds to human-readable string (e.g., '1m 23s', '45s').
+
+### `get_logger`
+
+*function — defined in `infrastructure.core.logging.setup`*
+
+```python
+get_logger(name: str) -> logging.Logger
+```
+
+Return a logger configured with standard handlers for the given name.
+
+### `log_operation`
+
+*function — defined in `infrastructure.core.logging.pipeline_logging`*
+
+```python
+log_operation(operation: str, logger: logging.Logger | None=None, level: int=logging.INFO, min_duration_to_log: float=0.1, log_completion: bool=True) -> Iterator[None]
+```
+
+Context manager that logs operation start, completion, and failure.
+
+### `log_stage`
+
+*function — defined in `infrastructure.core.logging.pipeline_logging`*
+
+```python
+log_stage(stage_num: int, total_stages: int, stage_name: str, logger: logging.Logger | None=None) -> None
+```
+
+Log a numbered pipeline stage header with a visual separator.
+
+### `log_success`
+
+*function — defined in `infrastructure.core.logging.pipeline_logging`*
+
+```python
+log_success(message: str, logger: logging.Logger | None=None) -> None
+```
+
+Log message at INFO level prefixed with the success emoji.
+
+### `monitor_performance`
+
+*function — defined in `infrastructure.core.runtime.function_profiler`*
+
+```python
+monitor_performance(operation_name: str, track_memory: bool=True) -> Callable[[Callable[..., Any]], Callable[..., Any]]
+```
+
+Decorator for monitoring function performance via the global CodeProfiler.
+
+### `ProgressBar`
+
+*class — defined in `infrastructure.core.progress`*
+
+```python
+class ProgressBar(total: int, task: str='', width: int=30, show_eta: bool=True, update_interval: float=0.1, use_ema: bool=True)
+```
+
+Simple text-based progress bar for terminal output.
+
+### `SystemHealthChecker`
+
+*class — defined in `infrastructure.core.runtime.health_check`*
+
+```python
+class SystemHealthChecker(repo_root: Path | None=None, start_time: float | None=None, network_test_hosts: tuple[str, ...] | None=None)
+```
+
+Comprehensive system health monitoring.
+
+### `TemplateError`
+
+*class — defined in `infrastructure.core._exceptions_core`*
+
+```python
+class TemplateError(message: str, context: dict[str, Any] | None=None, suggestions: list[str] | None=None, recovery_commands: list[str] | None=None)
+```
+
+Base exception for all template-related errors.
+
 ## Package: `infrastructure.doctor`
 
 ### `build_plans_for_findings`
@@ -3799,7 +3901,7 @@ Return an ISO-8601 build timestamp.
 seal_file_with_kmyth(input_path: Path, output_path: Path | None=None, *, options: KmythSealOptions | None=None) -> Path
 ```
 
-Seal *input_path* with ``kmyth-seal`` and return the ``.ski`` path.
+Seal an artifact while preserving its input and previous sidecar on failure.
 
 ### `SteganographyConfig`
 
@@ -4052,27 +4154,21 @@ Scan extracted text for common rendering issues.
 *function — defined in `infrastructure.validation.content.validator_citations`*
 
 ```python
-validate_citations(md_paths: list[str], repo_root: str | Path, bib_file: str | Path | list[str | Path] | None=None) -> list[DiagnosticEvent]
+validate_citations(md_paths: list[str], repo_root: str | Path, bib_file: str | Path | list[str | Path] | None=None, *, include_documentation: bool=False) -> list[DiagnosticEvent]
 ```
 
-Verify every ``[@key]`` citation resolves in the project's BibTeX file(s).
+Verify citations; explicit consumed rosters may include documentation names.
 
 ### `validate_copied_outputs`
 
-*function — defined in `infrastructure.validation.output.validator`*
-
-```python
-validate_copied_outputs(output_dir: Path, *, project_name: str | None=None, enabled_formats: Collection[str], manuscript_dir: Path | None=None, inventory: StableOutputInventory | None=None, slides_profile: str='archive') -> bool
-```
-
-Validate all project outputs were copied successfully.
+*symbol — defined in `infrastructure.validation.output`*
 
 ### `validate_figure_registry`
 
 *function — defined in `infrastructure.validation.content.figure_validator`*
 
 ```python
-validate_figure_registry(registry_path: Path, manuscript_dir: Path, *, require_accessibility: bool=False, additional_manuscript_dirs: Iterable[Path]=()) -> tuple[bool, list[str]]
+validate_figure_registry(registry_path: Path, manuscript_dir: Path, *, require_accessibility: bool=False, additional_manuscript_dirs: Iterable[Path]=(), manuscript_files: Iterable[Path] | None=None) -> tuple[bool, list[str]]
 ```
 
 Validate figure registry against manuscript references.
@@ -4092,10 +4188,10 @@ Validate that all referenced images exist in the filesystem.
 *function — defined in `infrastructure.validation.content.markdown_validator`*
 
 ```python
-validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: bool=False) -> tuple[list[DiagnosticEvent], int]
+validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: bool=False, *, manuscript_files: Iterable[Path] | None=None, extra_search_dirs: list[str | Path] | None=None) -> tuple[list[DiagnosticEvent], int]
 ```
 
-Validate all markdown files in a directory.
+Validate directory Markdown or a confined roster, with optional image roots.
 
 ### `validate_math`
 
@@ -4109,23 +4205,17 @@ Validate mathematical equation formatting and labeling.
 
 ### `validate_output_structure`
 
-*function — defined in `infrastructure.validation.output.validator`*
-
-```python
-validate_output_structure(output_dir: Path, *, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str], inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> OutputStructureResult
-```
-
-Validate complete output directory structure.
+*symbol — defined in `infrastructure.validation.output`*
 
 ### `validate_pandoc_pitfalls`
 
 *function — defined in `infrastructure.validation.content.validator_pitfalls`*
 
 ```python
-validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]
+validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path, *, include_documentation: bool=False) -> list[DiagnosticEvent]
 ```
 
-Flag markdown patterns Pandoc converts to LaTeX ``\mid`` in text mode.
+Flag Pandoc pitfalls, including documentation names only when consumed.
 
 ### `validate_pdf_rendering`
 

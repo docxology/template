@@ -93,10 +93,10 @@ tests/regression/
 │   │   └── tables/                    (one test file per manuscript table)
 │   │       └── test_optimization_results_claims.py
 │   └── template_prose_project/
-│       └── (same shape)
-└── pinned_values/                     (committed ground-truth values, JSON)
+│       └── tables/test_editorial_report_claims.py (bibliography integrity, no wording pins)
+└── pinned_values/                     (declared quantitative baselines, JSON)
     ├── template_code_project.json
-    └── template_prose_project.json
+    └── ...                           (other bound projects in claim_bindings.json)
 ```
 
 ## How to add a regression case
@@ -177,6 +177,12 @@ def test_solution_accuracy_claims_rederive_from_quadratic(load_pinned_values: An
 - **Numeric coefficients / rates / effect sizes**: tolerance documented per pin. Default to 3 significant figures (e.g., tolerance = `1e-4` for a value like 0.4271).
 - **p-values**: pin the value but tolerance is more permissive (1e-3) because numerical instability is normal at small p; if the value changes by orders of magnitude, fail.
 - **NEVER** use a percentage tolerance that's so wide a real regression would pass.
+
+These tolerances apply to declared domain quantities and controlled-data
+outcomes, not incidental manuscript wording. Derive editorial counts and
+readability from current Source instead of freezing them. Prose bibliography
+resolution remains a regression invariant; a copy edit alone is not grounds
+for adding or repinning a numerical claim.
 
 ## Workflow: changing a value
 

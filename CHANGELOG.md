@@ -31,6 +31,27 @@ matching tag identity and authenticated publication.
 - Discover browser mathematics with bounded scanner-entry appends rather than
   whole-document argument spreads. Preserve raw and Pandoc equations, selected
   roots, ignore/process boundaries and live viewport reflow in large books.
+- Document the existing lazy Core facade exports without importing heavy
+  providers during cold API discovery.
+- Keep Linux hardening on its reviewed Noble distribution and provision Active's
+  existing dependency group in the interpreter that actually runs its tests.
+  Warm exact build/runtime archives through the native offline consumer's
+  installer and normalize Auto's locked export for its selected Python minor.
+- Derive original pytest worker identity from actual pytest configuration;
+  inherited worker environment does not relabel a new serial controller.
+- Keep native process stream observations explicitly typed and distinct from
+  confined artifact input bindings. Copy disposable source bytes without
+  propagating privileged BSD flags or hardlinking candidate Source.
+- Reject lazy-import syntax above the declared Python floor and tolerate absent
+  optional distribution Version metadata without introducing persistent identity
+  reuse. Read bytecode locations through current module specifications.
+- Preserve portable native unknown-size LZMA streams. Bound the locally adapted
+  synchronous decoder by exact finite output, input and dictionary budgets,
+  complete stream consumption and unsigned final range state; retain every
+  original font body, hash and license.
+- Retire incidental prose wording/readability pins and workflow/HTML wiring
+  assertions rather than repinning them. Retain current bibliography resolution,
+  actual capability refusals and native consumer integrity controls.
 - Probe the existing real tagged-PDF test independently on all four targets;
   require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving

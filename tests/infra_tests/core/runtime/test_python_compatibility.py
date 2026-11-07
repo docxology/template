@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.core.runtime.python_compatibility import (
     scan_python_312_compatibility,
     scan_python_314_compatibility,
@@ -75,8 +77,9 @@ def test_python_312_stdlib_and_syntax_are_supported(tmp_path: Path) -> None:
     assert scan_python_312_compatibility([source], repo_root=tmp_path) == ()
 
 
-def test_current_floor_rejects_315_only_syntax_and_apis(tmp_path: Path) -> None:
-    (tmp_path / "future_syntax.py").write_text("lazy import json\n", encoding="utf-8")
+@pytest.mark.parametrize("syntax", ("lazy import json\n", "lazy from pathlib import Path\n"))
+def test_current_floor_rejects_315_only_syntax_and_apis(tmp_path: Path, syntax: str) -> None:
+    (tmp_path / "future_syntax.py").write_text(syntax, encoding="utf-8")
     (tmp_path / "future_api.py").write_text(
         "from typing import TypeForm, NoExtraItems, disjoint_base\nvalue = frozendict()\n",
         encoding="utf-8",
@@ -90,6 +93,7 @@ def test_current_floor_accepts_314_apis_and_guarded_315_backports(tmp_path: Path
     source = tmp_path / "supported.py"
     source.write_text(
         "import annotationlib\nfrom typing import TypeIs, ReadOnly\n"
+        "lazy = 'lazy import json'\n# lazy from pathlib import Path\n"
         "try:\n    from typing import TypeForm\nexcept ImportError:\n    from typing_extensions import TypeForm\n",
         encoding="utf-8",
     )

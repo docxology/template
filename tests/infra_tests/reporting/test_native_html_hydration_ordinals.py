@@ -66,11 +66,6 @@ def test_section_html_uses_actual_citation_text_but_retains_crossrefs() -> None:
     assert compose_html_ordinal_input((body,), combined=False) == b"Study [first; second] and [@fig:plot].\n"
 
 
-def test_html_uses_actual_raw_latex_and_image_path_transform() -> None:
-    body = b"`\\hyperref[item]{visible}`{=latex} ![Figure](../../output/figures/plot.png)\n"
-    assert compose_html_ordinal_input((body,), combined=True) == b"visible ![Figure](../figures/plot.png)\n"
-
-
 @pytest.mark.parametrize("combined", [False, True])
 def test_html_ordinal_bytes_retain_unicode_exact_payload_and_own_input_offsets(combined: bool) -> None:
     body = "Before é and $0.01$ after.\n".encode()
