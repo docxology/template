@@ -31,6 +31,9 @@ matching tag identity and authenticated publication.
 - Discover browser mathematics with bounded scanner-entry appends rather than
   whole-document argument spreads. Preserve raw and Pandoc equations, selected
   roots, ignore/process boundaries and live viewport reflow in large books.
+- Keep document roots unclipped so deep mobile anchors remain painted in long
+  books; retain responsive wrapping and table-local scrolling without masking
+  horizontal overflow at the page boundary.
 - Document the existing lazy Core facade exports without importing heavy
   providers during cold API discovery.
 - Keep Linux hardening on its reviewed Noble distribution and provision Active's
@@ -49,8 +52,8 @@ matching tag identity and authenticated publication.
   synchronous decoder by exact finite output, input and dictionary budgets,
   complete stream consumption and unsigned final range state; retain every
   original font body, hash and license.
-- Retire incidental prose wording/readability pins and workflow/HTML wiring
-  assertions rather than repinning them. Retain current bibliography resolution,
+- Retire incidental prose/readability, CSS token and workflow/HTML wiring
+  assertions rather than repinning them. Retain bibliography resolution,
   actual capability refusals and native consumer integrity controls.
 - Require selected cases from every declared regression file, not an incidental
   suite-size floor; remove non-collected scaffolds and empty fixture packages.

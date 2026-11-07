@@ -53,7 +53,7 @@ test("display equations retain visible numbers after live viewport resizing", as
   const file = testInfo.outputPath("math-reflow.html");
   fs.mkdirSync(testInfo.outputDir, { recursive: true });
   const html = String.raw`<!doctype html><html lang="en"><head><meta charset="utf-8">
-    <style>body { margin: 0; padding: 16px; overflow-x: clip; font-size: 16px; }</style>
+    <style>body { margin: 0; padding: 16px; font-size: 16px; }</style>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
     </head><body><h1>Equation reflow</h1><p><span class="math display">\[
     u_{n+1}=a_1x_1+a_2x_2+a_3x_3+a_4x_4+a_5x_5+a_6x_6+a_7x_7+a_8x_8
