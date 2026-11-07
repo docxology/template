@@ -20,7 +20,7 @@ from infrastructure.core.pipeline.artifacts import (
     StableOutputInventory,
     collect_stable_output_inventory,
 )
-from infrastructure.transmission.transmission_bookends import is_transmission_bookend
+from infrastructure.rendering._slides_participation import is_beamer_manuscript_section, skips_beamer
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.config import (
     RenderingConfig,
@@ -205,14 +205,14 @@ def _expected_slide_outputs(output_dir: Path, manuscript_dir: Path) -> list[Path
 
     expected: list[Path] = []
     for source_file in source_files:
-        if source_file.suffix != ".md" or is_transmission_bookend(source_file):
+        if not is_beamer_manuscript_section(source_file):
             continue
         try:
             source_text = source_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
             logger.error("Could not inspect slide source %s: %s", source_file, exc)
             return None
-        if "<!-- render:skip-beamer -->" in source_text:
+        if skips_beamer(source_text):
             continue
         expected.append(output_dir / "slides" / f"{source_file.stem}_slides.pdf")
     return expected

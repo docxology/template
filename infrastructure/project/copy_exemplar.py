@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import fnmatch
 import hashlib
 import json
 import re
@@ -17,6 +16,11 @@ from typing import Sequence
 
 
 from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.project._exemplar_export_policy import (
+    declared_resource_dependencies as _declared_resource_dependencies,
+    is_clean_resource_path as _is_clean_resource_path,
+    is_clean_source_path as _is_clean_source_path,
+)
 from infrastructure.project.public_reference_git import (
     _PARTIAL_CONFIGURATION,
     GitReference,
@@ -30,28 +34,6 @@ from infrastructure.project.fork_identity import apply_fork_identity
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 
-_IGNORED_NAMES = frozenset(
-    {
-        ".DS_Store",
-        ".cache",
-        ".lake",
-        ".mypy_cache",
-        ".nox",
-        ".pytest_cache",
-        ".ruff_cache",
-        ".tox",
-        ".venv",
-        "__pycache__",
-        "build",
-        "dist",
-        "htmlcov",
-        "lake-packages",
-        "output",
-        "rendered",
-        "venv",
-    }
-)
-_IGNORED_PATTERNS = ("*.egg-info", "*.pyc", "*.pyo")
 _PROJECT_SLUG_RE = re.compile(r"^[a-z][a-z0-9_-]*$")
 
 
@@ -292,28 +274,6 @@ def _build_export_manifest(
     )
 
 
-def _declared_resource_dependencies(source_root: Path) -> tuple[str, ...]:
-    """Read validated cross-root resource declarations from ``export.toml``."""
-    config_path = source_root / "export.toml"
-    if not config_path.is_file():
-        return ()
-    payload = tomllib.loads(config_path.read_text(encoding="utf-8"))
-    config = payload.get("template_export", {})
-    if not isinstance(config, dict):
-        raise ValueError(f"[template_export] must be a table: {config_path}")
-    raw = config.get("cross_root_dependencies", [])
-    if not isinstance(raw, list) or not all(isinstance(item, str) for item in raw):
-        raise ValueError("template_export.cross_root_dependencies must be a list of strings")
-    dependencies = tuple(raw)
-    allowed = {"fonds/templates", "rules/templates", "tools/templates", "infrastructure"}
-    invalid = sorted(set(dependencies) - allowed)
-    if invalid:
-        raise ValueError(f"unsupported cross-root resource dependencies: {', '.join(invalid)}")
-    if len(dependencies) != len(set(dependencies)):
-        raise ValueError("cross-root resource dependencies must be unique")
-    return dependencies
-
-
 def _resource_git_reference(repo_root: Path, dependency: str, deadline: float) -> GitReference | None:
     """Admit actual Gitlinks through the existing pinned public reference contract."""
     remaining(deadline)
@@ -367,16 +327,6 @@ def _copy_resource_dependency(repo_root: Path, dependency: str, destination: Pat
         if hashlib.sha256(closing).hexdigest() != digest:
             raise ValueError("public resource source changed during export")
     remaining(deadline)
-
-
-def _is_clean_resource_path(path: Path, dependency: str) -> bool:
-    """Apply artifact exclusions without hiding Layer-1 ``output`` source."""
-    for part in path.parts:
-        if part in _IGNORED_NAMES and not (dependency == "infrastructure" and part == "output"):
-            return False
-        if any(fnmatch.fnmatch(part, pattern) for pattern in _IGNORED_PATTERNS):
-            return False
-    return True
 
 
 def _git_head(repo_root: Path) -> str:
@@ -518,15 +468,6 @@ def _walk_source_files(source_root: Path, *, resource_dependency: str | None = N
         if clean:
             files.append(rel)
     return tuple(files)
-
-
-def _is_clean_source_path(path: Path) -> bool:
-    for part in path.parts:
-        if part in _IGNORED_NAMES:
-            return False
-        if any(fnmatch.fnmatch(part, pattern) for pattern in _IGNORED_PATTERNS):
-            return False
-    return True
 
 
 def _copy_one(

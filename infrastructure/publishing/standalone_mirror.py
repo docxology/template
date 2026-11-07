@@ -43,10 +43,10 @@ from infrastructure.core.execution_boundary import build_bounded_env, run_bounde
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.core.pipeline.fingerprint_files import observation
 from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES as PUBLIC_FOND_NAMES
-from infrastructure.project.copy_exemplar import (
-    _declared_resource_dependencies,
-    _is_clean_resource_path,
-    _is_clean_source_path,
+from infrastructure.project._exemplar_export_policy import (
+    declared_resource_dependencies as _declared_resource_dependencies,
+    is_clean_resource_path as _is_clean_resource_path,
+    is_clean_source_path as _is_clean_source_path,
 )
 from infrastructure.project.public_reference_git import GitReference, inventory
 from infrastructure.publishing._standalone_export import canonical_snapshot_export

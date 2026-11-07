@@ -16,7 +16,7 @@ import yaml
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
-from infrastructure.transmission.transmission_bookends import is_transmission_bookend
+from infrastructure.rendering._slides_participation import is_beamer_manuscript_section, skips_beamer
 from infrastructure.rendering.config import (
     RenderingConfig,
     load_render_config_for_verification,
@@ -252,14 +252,14 @@ def _expected_slide_outputs(project_root: Path) -> list[Path]:
     slides_dir = project_root / "output" / "slides"
     expected: list[Path] = []
     for source_file in discover_manuscript_files(manuscript_dir):
-        if source_file.suffix != ".md" or is_transmission_bookend(source_file):
+        if not is_beamer_manuscript_section(source_file):
             continue
         try:
             source_text = source_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
             logger.error("Could not inspect slide source %s: %s", source_file, exc)
             return [slides_dir / "__unverifiable_slide_source__.pdf"]
-        if "<!-- render:skip-beamer -->" in source_text:
+        if skips_beamer(source_text):
             continue
         expected.append(slides_dir / f"{source_file.stem}_slides.pdf")
     return expected

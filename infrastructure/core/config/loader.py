@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.project_paths import validate_project_name
+from infrastructure.core.project_paths import BARE_PROJECT_LOCATIONS, validate_project_name
 
 # Re-export all schema types so existing imports continue to work
 from infrastructure.core.config.schema import (  # noqa: F401
@@ -301,8 +301,8 @@ def find_config_file(
 
     Args:
         repo_root: Root directory of the repository.
-        project_name: Name of the project; if None, the first config found under
-                      ``<projects_dir>/*/manuscript/`` is returned.
+        project_name: Bare or qualified project name. If omitted, exactly one
+                      manuscript config must exist under ``projects_dir``.
         projects_dir: Name of the active projects directory (default: ``'projects'``).
 
     Returns:
@@ -319,36 +319,35 @@ def find_config_file(
             logger.warning("Ignoring unsafe project name %r: %s", project_name, exc)
             return None
 
-        direct = projects_root.joinpath(*normalized_name.split("/"), "manuscript", "config.yaml")
-        if direct.is_file():
-            return direct
+        if "/" in normalized_name:
+            direct = projects_root.joinpath(*normalized_name.split("/"), "manuscript", "config.yaml")
+            return direct if direct.is_file() else None
 
-        # Bare names must also resolve canonical nested exemplars and
-        # lifecycle trees. Prefer the same active/working/flat/templates order
-        # used by project-path resolution, then refuse a genuinely ambiguous
-        # match instead of silently choosing filesystem order.
-        candidates = sorted(
+        candidates = {
             path
             for path in projects_root.rglob("config.yaml")
             if path.parent.name == "manuscript" and path.parent.parent.name == normalized_name
-        )
+        }
+        # rglob does not descend through managed project-leaf symlinks.
+        for location in BARE_PROJECT_LOCATIONS:
+            lane = projects_root / location
+            manuscript = lane / normalized_name / "manuscript"
+            if location and (lane.is_symlink() or manuscript.is_symlink()):
+                continue
+            direct = manuscript / "config.yaml"
+            if direct.is_file():
+                candidates.add(direct)
         if not candidates:
             return None
 
+        precedence = {location: index for index, location in enumerate(BARE_PROJECT_LOCATIONS)}
+
         def priority(path: Path) -> int:
-            relative = path.relative_to(projects_root).parts
-            if relative and relative[0] == "active":
-                return 0
-            if relative and relative[0] == "working":
-                return 1
-            if relative and relative[0] == "templates":
-                return 3
-            if len(relative) == 3:
-                return 2
-            return 4
+            parts = path.parent.parent.relative_to(projects_root).parts
+            return precedence.get(parts[0] if len(parts) > 1 else "", len(precedence))
 
         best_priority = min(priority(path) for path in candidates)
-        best = [path for path in candidates if priority(path) == best_priority]
+        best = sorted(path for path in candidates if priority(path) == best_priority)
         if len(best) == 1:
             return best[0]
         logger.warning("Ambiguous config for project %r: %s", project_name, ", ".join(map(str, best)))
@@ -357,10 +356,10 @@ def find_config_file(
     # Unqualified discovery is intentionally fail-closed. A repository with
     # multiple project configs must provide a project name rather than letting
     # the first glob result select an arbitrary manuscript.
-    candidates = sorted(path for path in projects_root.rglob("config.yaml") if path.parent.name == "manuscript")
-    if len(candidates) == 1:
-        return candidates[0]
-    if candidates:
+    unnamed_candidates = sorted(path for path in projects_root.rglob("config.yaml") if path.parent.name == "manuscript")
+    if len(unnamed_candidates) == 1:
+        return unnamed_candidates[0]
+    if unnamed_candidates:
         logger.warning(
             "Multiple manuscript configs found under %s; pass project_name explicitly",
             projects_root,

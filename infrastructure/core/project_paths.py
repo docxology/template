@@ -22,6 +22,8 @@ from pathlib import Path
 #: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
 NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "archive"})
 
+BARE_PROJECT_LOCATIONS = ("active", "working", "", "templates")
+
 _MANUSCRIPT_SOURCE_SUFFIXES: frozenset[str] = frozenset({".md", ".tex"})
 _MANUSCRIPT_AUXILIARY_NAMES: frozenset[str] = frozenset(
     {"AGENTS.md", "README.md", "SKILL.md", "SYNTAX.md", "preamble.md"}
@@ -157,10 +159,13 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     if head in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
         return confined_candidate(project_name)
 
-    primary = confined_candidate(f"active/{project_name}")
+    active, working, flat_name, template = (
+        f"{location}/{project_name}" if location else project_name for location in BARE_PROJECT_LOCATIONS
+    )
+    primary = confined_candidate(active)
     if primary.is_dir() and has_project_markers(primary):
         return primary
-    wip = confined_candidate(f"working/{project_name}")
+    wip = confined_candidate(working)
     if wip.is_dir():
         return wip
     # A flat standalone tree only wins outright when it carries source markers.
@@ -168,7 +173,7 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     # minted by a prior run) must not shadow a real exemplar under
     # ``projects/templates/`` — that shadow made bare-name consumers such as
     # ``build_evidence_graph`` silently see an empty project.
-    flat = confined_candidate(project_name)
+    flat = confined_candidate(flat_name)
     if flat.is_dir() and has_project_markers(flat):
         return flat
     # Public canonical exemplars live under ``projects/templates/<name>`` and
@@ -178,7 +183,7 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     # ``infrastructure.autoresearch.build_autoresearch_plan`` silently load
     # default config instead of the exemplar's own. Checked after the
     # hot-seat/WIP/flat trees so an actually-promoted project still wins.
-    templated = confined_candidate(f"templates/{project_name}")
+    templated = confined_candidate(template)
     if templated.is_dir() and has_project_markers(templated):
         return templated
     # Marker-less flat tree with no exemplar counterpart: keep the historical
@@ -189,6 +194,7 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
 
 
 __all__ = [
+    "BARE_PROJECT_LOCATIONS",
     "NON_RENDERED_SUBDIRS",
     "find_repo_root",
     "resolve_project_root",

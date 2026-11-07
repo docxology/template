@@ -24,6 +24,7 @@ from infrastructure.rendering._pdf_combined_prevalidate import prevalidate_for_r
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
 from infrastructure.rendering._slides_crossref import COMBINED_AUX_BASENAME
+from infrastructure.rendering._slides_participation import skips_beamer
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 
 logger = get_logger(__name__)
@@ -543,7 +544,7 @@ def _slide_refresh_sources(md_files: list[Path]) -> list[Path]:
                 f"Could not inspect slide source before AUX refresh: {exc}",
                 context={"source": str(source_file)},
             ) from exc
-        if not is_transmission_bookend(source_file) and "<!-- render:skip-beamer -->" not in source_text:
+        if not is_transmission_bookend(source_file) and not skips_beamer(source_text):
             refresh_sources.append(source_file)
     return refresh_sources
 
