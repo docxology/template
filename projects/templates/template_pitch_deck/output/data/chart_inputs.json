@@ -76,6 +76,11 @@
       94.04
     ],
     [
+      "template_sia",
+      130,
+      93.11
+    ],
+    [
       "template_autoscientists",
       191,
       92.95
@@ -84,11 +89,6 @@
       "template_gold_refinement",
       337,
       92.8
-    ],
-    [
-      "template_sia",
-      130,
-      92.72
     ],
     [
       "template_search_project",
@@ -113,7 +113,7 @@
     [
       "template_active_inference",
       992,
-      91.03
+      91.15
     ],
     [
       "template_eda_notebook",

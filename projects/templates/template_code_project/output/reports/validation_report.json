@@ -298,11 +298,11 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 1766976
+          "size_bytes": 1766975
         },
         "epub": {
           "files": 1,
-          "size_bytes": 1770104
+          "size_bytes": 1770105
         },
         "figures": {
           "files": 10,
@@ -346,21 +346,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-07T10:38:24Z",
+  "timestamp": "2026-11-07T13:30:27Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "8829e3be4e8feb0e60374582e2a5b87222557f005f15155b74d2d055b09f5c67",
+      "sha256": "b758411bcff480eea625156f8b10d13eb8136b237d477e9d3c159799a3ce7c09",
       "size_bytes": 26174
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "e487bcacc7a49f3bc86078ce1efe6e7cf1afed41e57a7a62c0a9611e5daaae65",
+      "sha256": "7b18ba957a8c837cf495086b73325a0a2e534947a172dd6b96cdd0a8e2d0eb03",
       "size_bytes": 51113
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "bc0990f7f5545f450c01ae4c3712905d038981df14ba23de4c6d64936c7eb0bb",
+      "sha256": "4ccda37a89ffd7c0af338903af39cd346ded38c02062eacc60e5d760da63d1fc",
       "size_bytes": 2753
     },
     "consumed_manuscript": [
@@ -402,7 +402,7 @@
       },
       {
         "rendered_path": "output/manuscript/05_experimental_setup.md",
-        "rendered_sha256": "903f863c5fb099811a2177535aa721724031f254df44dbb861af539356f4079d",
+        "rendered_sha256": "d9c5d33e4eaee9ce9644d0df267b4f34288f12e802ab5bcb1d380f9355e46e6d",
         "source_path": "manuscript/05_experimental_setup.md",
         "source_sha256": "9092fabe5b0c77a70dd2ffff7fa3437011a360cb8fc73b97364b7fba5163d0e7"
       },
@@ -438,7 +438,7 @@
       },
       "output": {
         "file_count": 80,
-        "sha256": "90631784eaf431d9cc132436d574044f7cfb96b2a5f6cd9839ec74b510e336f3"
+        "sha256": "e3965726c0920e504df14cf8e5201b68a87367cff9d19aee35c57e67c4fa851f"
       },
       "source": {
         "file_count": 55,
@@ -446,7 +446,7 @@
       },
       "stage": {
         "file_count": 1749,
-        "sha256": "0f17b044598b89bf6499a549b2239cb2569971405ca06b2aaa6d1ad21f9a6702"
+        "sha256": "7a58725a2307b0b2cef161344974dfa8dc0d077d724f4a0ede6cbbaa032817b5"
       }
     },
     "project": "templates/template_code_project",
