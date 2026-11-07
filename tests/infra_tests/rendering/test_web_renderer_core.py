@@ -7,6 +7,7 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import web_renderer
@@ -184,6 +185,40 @@ class TestCombineMarkdownFiles:
         assert "[@sec:results]" not in result
         assert "[fig:coverage]" in result
         assert "[sec:results]" in result
+
+
+@pytest.mark.parametrize("combined", [False, True])
+def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(
+    tmp_path: Path, combined: bool
+) -> None:
+    output = tmp_path / "output"
+    manuscript = output / "manuscript"
+    source = manuscript / "parts" / "unit" / "chapter" / "overview.md"
+    source.parent.mkdir(parents=True)
+    figures = output / "figures"
+    (figures / "plots").mkdir(parents=True)
+    Image.new("RGB", (8, 8), color=(30, 60, 90)).save(figures / "plots" / "dense.png")
+    (figures / "figure_registry.json").write_text(
+        '{"fig:dense":{"filename":"plots/dense.png","alt_text":"A blue square; synthetic layout fixture."}}',
+        encoding="utf-8",
+    )
+    relative_image = "../../../../figures/plots/dense.png"
+    source.write_text(
+        f"# Results\n\n![Caption]({relative_image}){{#fig:dense}}\n\n`{relative_image}`\n",
+        encoding="utf-8",
+    )
+    renderer = WebRenderer(
+        RenderingConfig(
+            output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web")
+        )
+    )
+    rendered_path = (
+        renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
+    )
+    rendered = rendered_path.read_text(encoding="utf-8")
+    assert 'src="../figures/plots/dense.png"' in rendered
+    assert 'alt="A blue square; synthetic layout fixture."' in rendered
+    assert f"<code>{relative_image}</code>" in rendered
 
 
 @pytest.mark.parametrize("combined", [False, True])

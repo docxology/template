@@ -320,11 +320,15 @@ def compile_latex_manuscript(
         # Phase 3: Bibliography processing
         if bib_exists:
             logger.info("  Bibliography processing...")
-            try:
-                process_bibliography(combined_tex, output_dir, bib_files)
-            except Exception as bib_error:  # noqa: BLE001
-                logger.warning(f"  Bibliography processing failed: {bib_error}")
-                logger.warning("  Continuing PDF generation without bibliography processing")
+            if not process_bibliography(combined_tex, output_dir, bib_files):
+                raise RenderingError(
+                    "Bibliography processing failed; PDF was not published",
+                    context={
+                        "source": str(combined_tex),
+                        "output": str(output_file),
+                        "log_file": str(output_dir / f"{tex_stem}.blg"),
+                    },
+                )
 
         # Phase 4: Additional compilation passes (2-4)
         for run in range(1, MAX_LATEX_PASSES):

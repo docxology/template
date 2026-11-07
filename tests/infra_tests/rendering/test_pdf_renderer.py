@@ -9,7 +9,6 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering import pdf_renderer
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
     extract_preamble,
@@ -21,7 +20,7 @@ from infrastructure.rendering._pdf_title_page import (
 )
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
-from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+from infrastructure.rendering._pdf_latex_bibliography import process_bibliography
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
@@ -596,58 +595,6 @@ authors:
             renderer.render_combined(source_files, manuscript_dir, "test")
         except (RenderingError, Exception):
             pass  # Expected if pandoc/LaTeX not available
-
-
-class TestModuleLevel:
-    """Test module-level functions and attributes."""
-
-    def test_module_has_pdf_renderer_class(self):
-        """Test that module exports PDFRenderer class."""
-
-        assert hasattr(pdf_renderer, "PDFRenderer")
-        assert callable(pdf_renderer.PDFRenderer)
-
-    def test_module_has_parse_missing_package(self):
-        """Test that helpers export parse_missing_latex_package_from_log."""
-        from infrastructure.rendering._pdf_latex_helpers import (
-            parse_missing_latex_package_from_log,
-        )
-
-        assert callable(parse_missing_latex_package_from_log)
-
-    def test_pdf_renderer_has_required_methods(self):
-        """Test PDFRenderer has all required methods."""
-        from infrastructure.rendering.config import RenderingConfig
-        from infrastructure.rendering.pdf_renderer import PDFRenderer
-
-        renderer = PDFRenderer(RenderingConfig(output_dir="/tmp"))
-
-        assert hasattr(renderer, "render")
-        assert hasattr(renderer, "render_markdown")
-        assert hasattr(renderer, "render_combined")
-
-        # Verify extracted module functions are importable
-        from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
-        from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
-        from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
-        from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
-        from infrastructure.rendering._pdf_latex_helpers import (
-            extract_preamble,
-            check_latex_log_for_graphics_errors,
-        )
-        from infrastructure.rendering._pdf_title_page import (
-            generate_title_page_preamble,
-            generate_title_page_body,
-        )
-
-        assert callable(combine_manuscript_markdown_sections)
-        assert callable(process_bibliography)
-        assert callable(extract_preamble)
-        assert callable(fix_figure_paths)
-        assert callable(fix_math_delimiters)
-        assert callable(check_latex_log_for_graphics_errors)
-        assert callable(generate_title_page_preamble)
-        assert callable(generate_title_page_body)
 
 
 class TestCombineMarkdownFilesEdgeCases:

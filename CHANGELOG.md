@@ -79,6 +79,10 @@ matching tag identity and authenticated publication.
   regression. Resolve the Source-locked Puppeteer browser deterministically.
 - Bind ordinary Mermaid caches to renderer, font and toolchain inputs; native
   custody requires each actual producer call even when prior image bytes exist.
+- Rebase nested manuscript image sources before exact web figure-registry
+  matching while preserving literal nested paths in prose and code.
+- Treat native BibTeX failures as blocking before PDF promotion, preserving the
+  prior published PDF instead of silently replacing it without a bibliography.
 
 ## [5.0.2] - 2026-11-04
 

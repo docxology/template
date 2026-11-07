@@ -11,12 +11,15 @@ Follows No Mocks Policy - all tests use real data and real execution.
 import shutil
 import unicodedata
 
+from pypdf import PdfReader
 import pytest
 
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
-from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+from infrastructure.rendering._pdf_latex_bibliography import process_bibliography
+from infrastructure.rendering._pdf_latex_pipeline import compile_latex_manuscript
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 
 
@@ -25,25 +28,25 @@ class TestBibliographyProcessing:
 
     @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
     def test_process_bibliography_success(self, tmp_path):
-        """Test successful bibliography processing with real bibtex.
-
-        Local-only coverage: CI installs pandoc but not TeX Live, so this
-        skips on GitHub runners and is enforced on developer machines.
-        """
-        # Create necessary files
+        """A real BibTeX run must resolve the cited source into its bibliography."""
         tex_file = tmp_path / "test.tex"
-        aux_file = tmp_path / "pdf" / "test.aux"
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
         bib_file = tmp_path / "references.bib"
+        (pdf_dir / "test.aux").write_text(
+            "\\relax\n\\citation{test}\n\\bibstyle{plain}\n\\bibdata{references}\n",
+            encoding="utf-8",
+        )
+        bib_file.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
 
-        tex_file.write_text("\\documentclass{article}\n\\begin{document}\n\\end{document}")
-        (tmp_path / "pdf").mkdir(exist_ok=True)
-        aux_file.write_text("some aux content")
-        bib_file.write_text("@article{test,\n  title={Test}\n}")
-
-        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
-        assert isinstance(result, bool)
-        # The bib file must have been copied next to the aux file either way.
-        assert (tmp_path / "pdf" / "references.bib").exists()
+        assert process_bibliography(tex_file, pdf_dir, [bib_file]) is True
+        bibliography = (pdf_dir / "test.bbl").read_text(encoding="utf-8")
+        assert "\\bibitem{test}" in bibliography
+        assert "Boundary Evidence" in bibliography
 
     def test_process_bibliography_missing_bib_file(self, tmp_path):
         """Test bibliography processing with missing bib file."""
@@ -58,19 +61,34 @@ class TestBibliographyProcessing:
         (tmp_path / "pdf").mkdir(exist_ok=True)
         assert process_bibliography(tex_file, tmp_path / "pdf", []) is False
 
-    def test_process_bibliography_copies_all_bib_files(self, tmp_path):
+    @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
+    def test_process_bibliography_resolves_all_database_files(self, tmp_path):
         pdf_dir = tmp_path / "pdf"
         pdf_dir.mkdir()
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text("% stub\n")
-        (pdf_dir / "test.aux").write_text("\\bibdata{references,extra}\n")
+        (pdf_dir / "test.aux").write_text(
+            "\\relax\n\\citation{a,b}\n\\bibstyle{plain}\n\\bibdata{references,extra}\n",
+            encoding="utf-8",
+        )
         bib_a = tmp_path / "references.bib"
         bib_b = tmp_path / "extra.bib"
-        bib_a.write_text("@article{a,title={A},year={2024}}\n")
-        bib_b.write_text("@article{b,title={B},year={2024}}\n")
-        process_bibliography(tex_file, pdf_dir, [bib_a, bib_b])
-        assert (pdf_dir / "references.bib").exists()
-        assert (pdf_dir / "extra.bib").exists()
+        bib_a.write_text(
+            "@book{a,author={Evidence, Casey},title={First Database},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        bib_b.write_text(
+            "@book{b,author={Evidence, Casey},title={Second Database},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+
+        assert process_bibliography(tex_file, pdf_dir, [bib_a, bib_b]) is True
+        bibliography = (pdf_dir / "test.bbl").read_text(encoding="utf-8")
+        assert "\\bibitem{a}" in bibliography
+        assert "\\bibitem{b}" in bibliography
+        assert "First Database" in bibliography
+        assert "Second Database" in bibliography
 
     def test_process_bibliography_missing_aux_file(self, tmp_path):
         """Test bibliography processing with missing auxiliary file."""
@@ -84,20 +102,67 @@ class TestBibliographyProcessing:
         result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
         assert result is False
 
-    def test_process_bibliography_bibtex_warning(self, tmp_path):
-        """Test bibliography processing handles bibtex warnings gracefully."""
+    @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
+    def test_process_bibliography_rejects_native_failure(self, tmp_path):
         tex_file = tmp_path / "test.tex"
-        aux_file = tmp_path / "pdf" / "test.aux"
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
         bib_file = tmp_path / "references.bib"
+        (pdf_dir / "test.aux").write_text(
+            "\\relax\n\\citation{test}\n"
+            "\\bibstyle{absent-ageint-regression-style-17c487}\n\\bibdata{references}\n",
+            encoding="utf-8",
+        )
+        bib_file.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
 
-        tex_file.write_text("test")
-        (tmp_path / "pdf").mkdir(exist_ok=True)
-        aux_file.write_text("aux content")
-        bib_file.write_text("@article{test, title={Test}}")
+        assert process_bibliography(tex_file, pdf_dir, [bib_file]) is False
 
-        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
-        assert isinstance(result, bool)
-        assert (tmp_path / "pdf" / "references.bib").exists()
+    @pytest.mark.skipif(
+        shutil.which("bibtex") is None or shutil.which("xelatex") is None,
+        reason="native BibTeX and XeLaTeX are required",
+    )
+    def test_failed_bibliography_does_not_replace_a_published_pdf(self, tmp_path):
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
+        tex = pdf_dir / "_combined_manuscript.tex"
+        markdown = tmp_path / "source.md"
+        markdown.write_text("# Native bibliography boundary\n", encoding="utf-8")
+        bib_file = tmp_path / "references.bib"
+        bib_file.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        valid_source = (
+            "\\documentclass{article}\n\\begin{document}\n"
+            "Native bibliography boundary.\n\\nocite{*}\n"
+            "\\bibliographystyle{plain}\n\\bibliography{references}\n\\end{document}\n"
+        )
+        tex.write_text(valid_source, encoding="utf-8")
+        published = pdf_dir / "book.pdf"
+        compile_latex_manuscript(
+            tex, markdown, pdf_dir, published, [bib_file], True, [markdown]
+        )
+        original = published.read_bytes()
+        text = " ".join(
+            " ".join(page.extract_text() or "" for page in PdfReader(published).pages).split()
+        )
+        assert "Boundary Evidence" in text
+
+        tex.write_text(
+            valid_source.replace("{plain}", "{absent-ageint-regression-style-17c487}"),
+            encoding="utf-8",
+        )
+        with pytest.raises(RenderingError):
+            compile_latex_manuscript(
+                tex, markdown, pdf_dir, published, [bib_file], True, [markdown]
+            )
+
+        assert published.read_bytes() == original
 
 
 class TestFigurePathResolution:
