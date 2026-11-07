@@ -21634,18 +21634,19 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_pipeline_execute.py",
-      "source_sha256": "edc41bc97250128c0e84af919e0c0c5eb2568b8c84a0da7106b404c4a3dcc72a",
+      "source_sha256": "cacd4238aa96e36192bdcd6c64be962f4c36fc327f089dcd0b89a97bb19e3ea7",
       "families": [
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_combined_packages_do_not_require_pdf",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_html_only_needs_no_pdf_and_removes_stale_pdf",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_missing_project_returns_one",
+        "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_never_substitutes_cdn_for_local_assets",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_outer_exception_returns_one",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_pdf_enabled_rejects_stale_prior_pdf",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_execute_render_pipeline_verify_pdf_false_returns_one",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_render_pipeline_refuses_a_false_render_verdict",
         "tests/infra_tests/rendering/test_pipeline_execute.py::test_render_stage_resolves_project_beside_entrypoint_with_independent_sdk"
       ],
-      "family_observations_sha256": "5bed7eec4bb61c4f69ca99ccd114df1e415a4b51894ad90b9fcfeb3e57f87fdf",
+      "family_observations_sha256": "c123f71d1fe3687c0026271c52f1d8a2240df8256049d4eb349d0100388fa7df",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -21692,8 +21693,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_pipeline_execute.py",
-          "source_sha256": "edc41bc97250128c0e84af919e0c0c5eb2568b8c84a0da7106b404c4a3dcc72a",
-          "line": 36
+          "source_sha256": "cacd4238aa96e36192bdcd6c64be962f4c36fc327f089dcd0b89a97bb19e3ea7",
+          "line": 38
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_pipeline_execute.py",
+          "source_sha256": "cacd4238aa96e36192bdcd6c64be962f4c36fc327f089dcd0b89a97bb19e3ea7",
+          "line": 215
         }
       ]
     },
