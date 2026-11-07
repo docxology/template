@@ -2707,7 +2707,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_infra.py",
-      "source_sha256": "b1111157916ccf88b49f6b0e490b9f6ee2ed8f9041a5b73f3e055c0bcd27dfb3",
+      "source_sha256": "6ed703a7ffdb5b0efefc6c49599ce1f60d0a436274b88ed4d3d80ea15dd10bd0",
       "families": [
         "tests/infra_tests/core/test_ci_infra.py::test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source_owners",
         "tests/infra_tests/core/test_ci_infra.py::test_aggregate_receipt_checks_exact_selected_file_and_member_union",
@@ -2719,7 +2719,7 @@
         "tests/infra_tests/core/test_ci_infra.py::test_shard_manifest_refuses_missing_duplicate_empty_and_extra_work",
         "tests/infra_tests/core/test_ci_infra.py::test_shard_seconds_target_refuses_invalid_values"
       ],
-      "family_observations_sha256": "b6f42d49dffff0b90ba4a824ec9c0bcac31b3728f2f9e5fd2aae79fa998cc1b6",
+      "family_observations_sha256": "053df02f791fe04cf38bed27d7cd05bd7b861e148bb053c6f169c3fb7b52832a",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2728,7 +2728,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_infra.py",
-          "source_sha256": "b1111157916ccf88b49f6b0e490b9f6ee2ed8f9041a5b73f3e055c0bcd27dfb3",
+          "source_sha256": "6ed703a7ffdb5b0efefc6c49599ce1f60d0a436274b88ed4d3d80ea15dd10bd0",
           "line": 1
         }
       ]
@@ -5659,27 +5659,27 @@
         {
           "line": 51,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
           "line": 55,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
           "line": 73,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
           "line": 92,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
-          "line": 438,
+          "line": 441,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         }
       ]
     },
@@ -13663,27 +13663,27 @@
         {
           "line": 51,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
           "line": 55,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
           "line": 73,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
           "line": 92,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         },
         {
-          "line": 438,
+          "line": 441,
           "path": "infrastructure/project/public_acceptance_auxiliary_pipeline.py",
-          "source_sha256": "fae96379c67fe5eb8480c070b5bfa1554f3266c44d6afdf57bc949ee640ca331"
+          "source_sha256": "642fdba517511b645438077dfc7baa0f706ad06d37c507c6ca6c1b30175faa9d"
         }
       ]
     },
@@ -16618,28 +16618,28 @@
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 161
+          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "line": 163
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 167
+          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "line": 169
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 221
+          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "line": 223
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 248
+          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "line": 250
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 90
+          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "line": 92
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
@@ -18627,27 +18627,6 @@
         {
           "path": "tests/infra_tests/regression/test_literature_source_imports.py",
           "source_sha256": "4adf0a49dbb2c98d924b3d6fe38192022fab97d1a736e051df3465943d344039",
-          "line": 1
-        }
-      ]
-    },
-    {
-      "path": "tests/infra_tests/regression/test_manifest_contract.py",
-      "source_sha256": "9f26cc5dfb4eff6fc8a31bb4e378be0d92059dce82b54390026b98c68b0c40d7",
-      "families": [
-        "tests/infra_tests/regression/test_manifest_contract.py::test_regression_manifest_has_nonzero_collection_floor",
-        "tests/infra_tests/regression/test_manifest_contract.py::test_regression_manifest_names_every_claim_binding_test_file"
-      ],
-      "family_observations_sha256": "2468c5105f6720ea9fcfa2451697efceea318d753a1e8e4ed3ff62da8ff0302c",
-      "decision": {
-        "lane": "core",
-        "obligations": []
-      },
-      "exceptions": [],
-      "evidence": [
-        {
-          "path": "tests/infra_tests/regression/test_manifest_contract.py",
-          "source_sha256": "9f26cc5dfb4eff6fc8a31bb4e378be0d92059dce82b54390026b98c68b0c40d7",
           "line": 1
         }
       ]
@@ -23758,29 +23737,6 @@
       ]
     },
     {
-      "path": "tests/infra_tests/rendering/test_web_css.py",
-      "source_sha256": "b4be558fdbe046388f01274ab7a658dbb18f08e3154f91b2f6dec9d18710b04c",
-      "families": [
-        "tests/infra_tests/rendering/test_web_css.py::TestCssIntegration::test_rendered_html_includes_stylesheet_or_inline_style",
-        "tests/infra_tests/rendering/test_web_css.py::TestEmbedCss::test_embed_in_head",
-        "tests/infra_tests/rendering/test_web_css.py::TestEmbedCss::test_embed_includes_shared_design_tokens",
-        "tests/infra_tests/rendering/test_web_css.py::TestEmbedCss::test_no_head_tag"
-      ],
-      "family_observations_sha256": "918c5ba5f025a0740157668d688638f24b53fc0c4432632953514862402cf51d",
-      "decision": {
-        "lane": "core",
-        "obligations": []
-      },
-      "exceptions": [],
-      "evidence": [
-        {
-          "path": "tests/infra_tests/rendering/test_web_css.py",
-          "source_sha256": "b4be558fdbe046388f01274ab7a658dbb18f08e3154f91b2f6dec9d18710b04c",
-          "line": 1
-        }
-      ]
-    },
-    {
       "path": "tests/infra_tests/rendering/test_web_mathjax.py",
       "source_sha256": "62feb41cf64ee11ac97fcf0f89b60de965c82ad6c8fabec466bfa5448c4cb0c6",
       "families": [
@@ -25615,7 +25571,7 @@
         {
           "line": 109,
           "path": "infrastructure/reporting/native_installed_launcher.py",
-          "source_sha256": "0f9072320ae592dcc7ea50a0495366bb2914a2c94e1660efb247190d406cd062"
+          "source_sha256": "ed8a70be7a7760866f01a313ae33c62d338185c3d064e607138617c97b662ea1"
         },
         {
           "line": 604,
@@ -35323,8 +35279,9 @@
     },
     {
       "path": "tests/infra_tests/validation/test_markdown_validator_discovery.py",
-      "source_sha256": "928e1fcb4dd1a2ac9d4af6e61d390f4cadae0dae5f533ea04d06a0f03a593d61",
+      "source_sha256": "01862430b3b3c806fc64b13883a6efe6d72b7cacf76ead1c0782e19e044bed19",
       "families": [
+        "tests/infra_tests/validation/test_markdown_validator_discovery.py::TestCollectSymbols::test_cross_file_links_resolve_ids_but_not_quoted_attribute_values",
         "tests/infra_tests/validation/test_markdown_validator_discovery.py::TestCollectSymbols::test_empty_file_list",
         "tests/infra_tests/validation/test_markdown_validator_discovery.py::TestCollectSymbols::test_extracts_labels_and_anchors",
         "tests/infra_tests/validation/test_markdown_validator_discovery.py::TestDiscoverMarkdownFilesTree::test_empty_directory",
@@ -35335,7 +35292,7 @@
         "tests/infra_tests/validation/test_markdown_validator_discovery.py::TestFindManuscriptDirectory::test_finds_project_manuscript",
         "tests/infra_tests/validation/test_markdown_validator_discovery.py::TestFindManuscriptDirectory::test_raises_when_not_found"
       ],
-      "family_observations_sha256": "d9154666a80eb2f2e51b22c605aa5c36f3ea4cd1a6b4a2f609affb955f23e7fa",
+      "family_observations_sha256": "2fef15c3b8da412a57a753245153a172ce88e82d1f960df6e76b5392b07304f2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -35344,8 +35301,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_markdown_validator_discovery.py",
-          "source_sha256": "928e1fcb4dd1a2ac9d4af6e61d390f4cadae0dae5f533ea04d06a0f03a593d61",
+          "source_sha256": "01862430b3b3c806fc64b13883a6efe6d72b7cacf76ead1c0782e19e044bed19",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/validation/test_markdown_validator_discovery.py",
+          "source_sha256": "01862430b3b3c806fc64b13883a6efe6d72b7cacf76ead1c0782e19e044bed19",
+          "line": 92
         }
       ]
     },
@@ -37505,7 +37467,7 @@
         "tests/regression/projects/template_active_inference/tables/test_analytical_sweep_claims.py::test_mi_sweep_grid_claims_rederive_from_source",
         "tests/regression/projects/template_active_inference/tables/test_analytical_sweep_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "03a169760d3c4f5b94d3bab4affc6b970e08eeb0c0a6103582afc279ca58148d",
+      "family_observations_sha256": "98768fb73d02bd0b5af6512f7b7c00b78d5934399a56a57087c4e75ba683c014",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37528,7 +37490,7 @@
         "tests/regression/projects/template_autoresearch_project/tables/test_candidate_outcome_claims.py::test_model_and_benchmark_claims_rederive_from_bounded_ml_task",
         "tests/regression/projects/template_autoresearch_project/tables/test_candidate_outcome_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "dfe0141690c796e1ccaa2c4c3739bd634ff8dc21076489215fcb8f0437ed420c",
+      "family_observations_sha256": "9f64d5def763e445dd3f6605727a8a88878619d98dff1cb7542973905245d938",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37550,7 +37512,7 @@
         "tests/regression/projects/template_autoscientists/tables/test_coordination_results_claims.py::test_matched_budget_efficiency_claims_rederive_from_source",
         "tests/regression/projects/template_autoscientists/tables/test_coordination_results_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "ba04f0f427635f118e71fda2f6b1935fc1acfe49a46a8a596676e566bef0e9d4",
+      "family_observations_sha256": "4a9096fb7140d2015ac8f5dbe6ef7a0a02b7d6c51770b38978a2ab7a17f663eb",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37572,7 +37534,7 @@
         "tests/regression/projects/template_code_project/tables/test_optimization_results_claims.py::test_pin_mutation_negative_control_fails",
         "tests/regression/projects/template_code_project/tables/test_optimization_results_claims.py::test_solution_accuracy_claims_rederive_from_quadratic"
       ],
-      "family_observations_sha256": "77a777b366c8363ba74088074e0c84e22c5e73720bb43b42f9d4e2cde1baa173",
+      "family_observations_sha256": "6ff2a1540de8cb08a9f8b46d79ada80c851cf81832f8ac341521fbb55d9189fb",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37595,7 +37557,7 @@
         "tests/regression/projects/template_eda_notebook/tables/test_eda_results_claims.py::test_height_histogram_counts_sum_to_complete_cases",
         "tests/regression/projects/template_eda_notebook/tables/test_eda_results_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "4f0a01c879dcc4132aa81356dbc4a46cafcaa1f6a51c601a5e8b6907d02e9b6e",
+      "family_observations_sha256": "788eb023054260bb5a1ab9d47a94f2e302b8c792fa181359ffdaae65b1df9259",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37618,7 +37580,7 @@
         "tests/regression/projects/template_gold_refinement/tables/test_refinery_certification_claims.py::test_pin_mutation_negative_control_fails",
         "tests/regression/projects/template_gold_refinement/tables/test_refinery_certification_claims.py::test_refinery_certification_claims_rederive_from_source"
       ],
-      "family_observations_sha256": "3ab400d998b20c8ab8ae1279cfdfd21c2f7d6d6feaaad983cfa21a047abfa8b6",
+      "family_observations_sha256": "60d43658d52f697352ab2f8e4a0e70d9b082d832aacb419d2ee10e7fe59be741",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37641,7 +37603,7 @@
         "tests/regression/projects/template_literature_meta_analysis/tables/test_field_overview_claims.py::test_field_overview_size_and_identifier_claims_rederive_from_source",
         "tests/regression/projects/template_literature_meta_analysis/tables/test_field_overview_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "0a3410c85360342f79c85e8e2e4a7848bf8965cdade5d5cd0f621eeb2f6a8cd9",
+      "family_observations_sha256": "42c48b28376d46d5197845dcd31c2df78451272bcf470b7c88b52bbe0c44042d",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37663,7 +37625,7 @@
         "tests/regression/projects/template_madlib/tables/test_configuration_counts_claims.py::test_probe_slot_and_visualization_counts_rederive_from_source",
         "tests/regression/projects/template_madlib/tables/test_configuration_counts_claims.py::test_token_plan_and_lexicon_counts_rederive_from_source"
       ],
-      "family_observations_sha256": "b14b83b108b0452dad21c09260897aa68363b813ca61455e8dfa02ca9699d1ab",
+      "family_observations_sha256": "2e6752575c497849ee9b16f1c95b6462bcdb8b48de69378fe859516c850b28a3",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37686,7 +37648,7 @@
         "tests/regression/projects/template_methods_paper/tables/test_compiled_plan_claims.py::test_provenance_chain_claim_rederives_from_source",
         "tests/regression/projects/template_methods_paper/tables/test_compiled_plan_claims.py::test_validation_gate_tally_claims_rederive_from_source"
       ],
-      "family_observations_sha256": "de8be21d020f89f23a03e400be7397c7d8b83e080a4d0cb7e7f3294603121384",
+      "family_observations_sha256": "fffad28368f51b228184d95dd196fbff7325cdf6c50399257b7298c40347cf0c",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37708,7 +37670,7 @@
         "tests/regression/projects/template_newspaper/tables/test_layout_statistics_claims.py::test_page_and_trim_claims_rederive_from_source",
         "tests/regression/projects/template_newspaper/tables/test_layout_statistics_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "c732a3aecda8b065fe78c72eb64f314003dbfd4404a55d839c089ce9656a79c2",
+      "family_observations_sha256": "6aa24a1a60147bd830468600e881bdef90e390ed59fe7dca84baa3efae041fcb",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37751,7 +37713,7 @@
         "tests/regression/projects/template_search_project/tables/test_run_snapshot_claims.py::test_run_snapshot_enrichment_coverage_rederives_from_source",
         "tests/regression/projects/template_search_project/tables/test_run_snapshot_claims.py::test_run_snapshot_paper_count_rederives_from_source"
       ],
-      "family_observations_sha256": "7db7171697091adb0e282aa298c960e48e610c31bdcd6d69bb785274adc134ba",
+      "family_observations_sha256": "49facf84fe081b8d8f7b60cc4fadab848ad5fa379dc64ae666464a52af6ba282",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37773,7 +37735,7 @@
         "tests/regression/projects/template_sia/tables/test_generation_metrics_claims.py::test_pin_mutation_negative_control_fails",
         "tests/regression/projects/template_sia/tables/test_generation_metrics_claims.py::test_self_improvement_delta_claim_rederives_from_source"
       ],
-      "family_observations_sha256": "f4e986fe15929ef9d3ef392c969f6204a0e68f474e064396ad4abfbd6d9fad99",
+      "family_observations_sha256": "99038a78ee96936d3a3b553706d0b46bef0dad7eeb508769bdf92b882f51fdd1",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37796,7 +37758,7 @@
         "tests/regression/projects/template_template/tables/test_introspection_metrics_claims.py::test_pipeline_dag_stage_counts_rederive_from_yaml",
         "tests/regression/projects/template_template/tables/test_introspection_metrics_claims.py::test_public_exemplar_roster_count_rederives_from_source"
       ],
-      "family_observations_sha256": "4eb981a327a268f2087f226b7b09afded08ef7a7e12313d0536ff9323c099943",
+      "family_observations_sha256": "4f7ed9d935a55f8df93d462f8ceb5286e5c9ad29184a4e95af3487a3fcbd51b2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -37819,7 +37781,7 @@
         "tests/regression/projects/template_textbook/tables/test_structure_claims.py::test_part_and_chapter_counts_rederive_from_config",
         "tests/regression/projects/template_textbook/tables/test_structure_claims.py::test_pin_mutation_negative_control_fails"
       ],
-      "family_observations_sha256": "4b2678be8b067a237798a8a3a48ef0f049cf2f7b100e957eda8ffe9a801d194a",
+      "family_observations_sha256": "4d103a6e2ca27d2c1f7252a14c517465ad2eefac06a855c51ab008c676048329",
       "decision": {
         "lane": "core",
         "obligations": []
