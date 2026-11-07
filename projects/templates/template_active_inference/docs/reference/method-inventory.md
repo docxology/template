@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 894
+Total documented definitions: 896
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -531,23 +531,25 @@ Total documented definitions: 894
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 19 | `function` | `_ising_mi_saturation_from_sweep` | docstring | Maximum closed-form MI on the measured λ grid (nats). |
-| 26 | `function` | `_free_energy_argmin_lambda` | docstring | λ minimizing free energy of the entangled posterior vs the mean-field prior. |
-| 53 | `function` | `_policy_goal_counts_by_mode` | docstring | Goal-reaching run counts split by inference mode from si_policy_comparison runs. |
-| 67 | `function` | `_pipeline_track_count` | docstring | Required pipeline tracks from ``tracks.yaml`` (distinct from ``sheaf_track_count``). |
-| 75 | `function` | `_gnn_spec_version` | inventory fallback | Inventory fallback for function `_gnn_spec_version` defined at `src/manuscript/variables.py:75`. |
-| 91 | `function` | `_efe_token_values` | docstring | Manuscript tokens for the closed-form Expected Free Energy decomposition. |
-| 115 | `function` | `_precision_token_values` | docstring | Manuscript tokens for the closed-form precision (gamma) sweep. |
-| 137 | `function` | `_cue_tmaze_token_values` | docstring | Manuscript tokens for the cue-then-reward T-maze epistemic-necessity result. |
-| 156 | `function` | `_dirichlet_token_values` | docstring | Manuscript tokens for the deterministic Dirichlet likelihood-learning run. |
-| 173 | `function` | `_load_variable_artifacts` | docstring | Load optional generated artifacts used by manuscript tokens. |
-| 178 | `function` | `_core_token_values` | docstring | Return project, analytical, invariant, and structural manuscript tokens. |
-| 205 | `function` | `_simulation_token_values` | docstring | Return SI, PyMDP runtime, posterior, and graph-world manuscript tokens. |
-| 264 | `function` | `_validation_spine_token_values` | docstring | Return provenance, replay, and counterexample manuscript tokens. |
-| 288 | `function` | `_toy_formal_token_values` | docstring | Return promoted toy-sweep, formal-interop, and animation manuscript tokens. |
-| 325 | `function` | `_semantic_visualization_token_values` | docstring | Return semantic, visualization, staleness, and cross-track manuscript tokens. |
-| 402 | `function` | `_canonical_sheaf_token_values` | docstring | Return canonical sheaf-track, release, proof, and scholarship tokens. |
-| 505 | `function` | `generate_variables` | docstring | Generate manuscript tokens from live configuration and output artifacts. |
+| 18 | `function` | `_ising_mi_saturation_from_sweep` | docstring | Maximum closed-form MI on the measured λ grid (nats). |
+| 25 | `function` | `_free_energy_argmin_lambda` | docstring | λ minimizing free energy of the entangled posterior vs the mean-field prior. |
+| 51 | `function` | `_policy_goal_counts_by_mode` | docstring | Goal-reaching run counts split by inference mode from si_policy_comparison runs. |
+| 65 | `function` | `_pipeline_track_count` | docstring | Required pipeline tracks from ``tracks.yaml`` (distinct from ``sheaf_track_count``). |
+| 73 | `function` | `_gnn_spec_version` | inventory fallback | Inventory fallback for function `_gnn_spec_version` defined at `src/manuscript/variables.py:73`. |
+| 89 | `function` | `_efe_token_values` | docstring | Manuscript tokens for the closed-form Expected Free Energy decomposition. |
+| 113 | `function` | `_precision_token_values` | docstring | Manuscript tokens for the closed-form precision (gamma) sweep. |
+| 135 | `function` | `_cue_tmaze_token_values` | docstring | Manuscript tokens for the cue-then-reward T-maze epistemic-necessity result. |
+| 154 | `function` | `_dirichlet_token_values` | docstring | Manuscript tokens for the deterministic Dirichlet likelihood-learning run. |
+| 171 | `function` | `_load_variable_artifacts` | docstring | Load optional generated artifacts used by manuscript tokens. |
+| 176 | `function` | `_core_token_values` | docstring | Return project, analytical, invariant, and structural manuscript tokens. |
+| 203 | `function` | `_simulation_token_values` | docstring | Return SI, PyMDP runtime, posterior, and graph-world manuscript tokens. |
+| 262 | `function` | `_validation_spine_token_values` | docstring | Return provenance, replay, and counterexample manuscript tokens. |
+| 286 | `function` | `_toy_formal_token_values` | docstring | Return promoted toy-sweep, formal-interop, and animation manuscript tokens. |
+| 323 | `function` | `_semantic_visualization_token_values` | docstring | Return semantic, visualization, staleness, and cross-track manuscript tokens. |
+| 400 | `function` | `_canonical_sheaf_token_values` | docstring | Return canonical sheaf-track, release, proof, and scholarship tokens. |
+| 503 | `class` | `RequiredAnalysisInputUnavailable` | docstring | The strict manuscript generator reached its missing or empty analysis input. |
+| 506 | `function` | `RequiredAnalysisInputUnavailable.__init__` | inventory fallback | Inventory fallback for function `RequiredAnalysisInputUnavailable.__init__` defined at `src/manuscript/variables.py:506`. |
+| 511 | `function` | `generate_variables` | docstring | Generate manuscript tokens from live configuration and output artifacts. |
 
 ## `src/ontology/bindings.py`
 
