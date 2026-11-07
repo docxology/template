@@ -25884,7 +25884,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_installed_preflight.py",
-      "source_sha256": "57d960b4ef4cda714d566f292ab85d162af33d46d3b33bdf553f5ed09eb56b45",
+      "source_sha256": "0e75524908c24145ef9c1c9bde0e38ae1858c7b5e60b56c454f6297a874d96dd",
       "families": [
         "tests/infra_tests/reporting/test_native_installed_preflight.py::test_complete_native_modes_keep_the_public_roster_without_diagnostic_selection",
         "tests/infra_tests/reporting/test_native_installed_preflight.py::test_preflight_build_selection_follows_genuine_transitive_local_metadata",
@@ -25898,7 +25898,7 @@
         "tests/infra_tests/reporting/test_native_installed_preflight.py::test_success_cannot_masquerade_as_complete_release_acceptance",
         "tests/infra_tests/reporting/test_native_installed_preflight.py::test_zero_exit_after_the_original_deadline_remains_refused"
       ],
-      "family_observations_sha256": "73afe6beeeb60af0fce63062a91d0b3e06b0222b85cbf53ae254015d8fd4f7a9",
+      "family_observations_sha256": "80dbf41ddf1ef3346b70167579d65e4e8aae5b8828fe19a9e223281cd8645d3b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25907,7 +25907,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_installed_preflight.py",
-          "source_sha256": "57d960b4ef4cda714d566f292ab85d162af33d46d3b33bdf553f5ed09eb56b45",
+          "source_sha256": "0e75524908c24145ef9c1c9bde0e38ae1858c7b5e60b56c454f6297a874d96dd",
           "line": 19
         }
       ]
