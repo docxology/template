@@ -558,16 +558,26 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
         assert test_indices and setup_indices[0] < min(test_indices)
 
     action_steps = action["runs"]["steps"]
+    named = {step["name"]: (index, step) for index, step in enumerate(action_steps)}
+    assert len(named) == len(action_steps)
+    mode_index, mode = named["Validate document preparation mode"]
+    cache_index, cache = named["Restore exact official document archives"]
+    converter_index, converter = named["Prepare exact compatible Pandoc and cross-reference binaries"]
+    frozen_index, frozen = named["Prepare the frozen tagging-capable Linux TeX distribution"]
+    prerequisites_index, prerequisites = named["Prepare native document prerequisites"]
+    font_index, _ = named["Prepare exact JuliaMono family"]
+    providers_index, _ = named["Record actual native TeX providers"]
+    assert (
+        mode_index < cache_index < converter_index < frozen_index < prerequisites_index < font_index < providers_index
+    )
     assert action["inputs"]["mode"]["default"] == "native"
     assert action["inputs"]["python-executable"]["default"] == ".venv/bin/python"
     assert action["inputs"]["python-executable"]["required"] is False
-    mode = action_steps[0]
     assert mode["id"] == "preparation-mode" and "if" not in mode
     assert mode["env"] == {
         "PREPARATION_MODE": "${{ inputs.mode }}",
         "PREPARED_PYTHON": "${{ inputs.python-executable }}",
     }
-    cache = action_steps[1]
     assert cache["uses"] == "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9"
     assert cache["with"] == {
         "path": "${{ runner.temp }}/template-acceptance-document-archives",
@@ -575,13 +585,13 @@ def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() ->
         "${{ steps.preparation-mode.outputs.mode }}-"
         "${{ hashFiles('.github/actions/setup-acceptance-documents/action.yml') }}",
     }
-    assert action_steps[2]["name"] == "Prepare exact compatible Pandoc and cross-reference binaries"
-    assert "if" not in cache and "if" not in action_steps[2]
-    assert action_steps[3]["name"] == "Prepare native document prerequisites"
-    assert action_steps[3]["env"] == {"PREPARED_PYTHON": "${{ inputs.python-executable }}"}
-    assert action_steps[4]["name"] == "Prepare exact JuliaMono family"
-    for step in action_steps[3:]:
-        assert step["if"] == "steps.preparation-mode.outputs.mode == 'native'"
+    assert "if" not in cache and "if" not in converter
+    assert prerequisites["env"] == {"PREPARED_PYTHON": "${{ inputs.python-executable }}"}
+    native = "steps.preparation-mode.outputs.mode == 'native'"
+    for step in action_steps[converter_index + 1 :]:
+        expected = f"{native} && runner.os == 'Linux'" if step is frozen else native
+        assert step["if"] == expected
+    assert "--verify-downloads" in frozen["run"]
 
     # Each narrowed preparation route is explicit; new callers retain native.
     project_mode = "${{ matrix.project == 'templates/template_eda_notebook' && 'native' || 'converter' }}"
