@@ -76,8 +76,11 @@ def execute_resolved_plan(
                 if guard is not None:
                     results.append(guard)
             results = write_execution_record(executor, results)
-            results = finalize_execution_reports(executor, results)
-            return write_execution_record(executor, results)
+            reported_results = finalize_execution_reports(executor, results)
+            if reported_results == results:
+                # Successful reporting already verified the persisted record bytes.
+                return reported_results
+            return write_execution_record(executor, reported_results)
     except TimeoutError as exc:
         return [
             PipelineStageResult(

@@ -9,6 +9,7 @@ import stat
 import time
 from contextlib import suppress, contextmanager
 from collections.abc import Iterator
+from dataclasses import dataclass
 from pathlib import Path
 
 _DIRECTORY_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
@@ -27,13 +28,17 @@ def _relative_target(root: Path, target: Path) -> tuple[Path, tuple[str, ...], s
         raise ValueError(f"write target escapes confinement root: {target}") from exc
     if not relative.parts or any(part in {"", ".", ".."} for part in relative.parts):
         raise ValueError(f"write target must name a confined file: {target}")
-    try:
-        root_mode = lexical_root.lstat().st_mode
-    except OSError as exc:
-        raise ValueError(f"confinement root is unavailable: {lexical_root}") from exc
-    if stat.S_ISLNK(root_mode) or not stat.S_ISDIR(root_mode):
-        raise ValueError(f"confinement root must be a real directory: {lexical_root}")
+    _require_lexical_directory(lexical_root)
     return lexical_root, relative.parts[:-1], relative.parts[-1]
+
+
+def _require_lexical_directory(path: Path) -> None:
+    try:
+        mode = path.lstat().st_mode
+    except OSError as exc:
+        raise ValueError(f"confinement root is unavailable: {path}") from exc
+    if not stat.S_ISDIR(mode):
+        raise ValueError(f"confinement root must be a real directory: {path}")
 
 
 def _open_directory(parent_fd: int, name: str, *, create: bool, ancestor: bool = False) -> int:
@@ -131,6 +136,42 @@ def _directory_identity_matches(
         expected = os.fstat(expected_fd)
         observed = os.fstat(current)
         return (expected.st_dev, expected.st_ino) == (observed.st_dev, observed.st_ino)
+    finally:
+        _close_all(opened)
+
+
+@dataclass(frozen=True)
+class HeldDirectory:
+    """A confined directory descriptor borrowed during the holding context."""
+
+    descriptor: int
+    _root: Path
+    _parts: tuple[str, ...]
+    _root_identity: tuple[int, int]
+
+    def matches_path(self) -> bool:
+        """Check that the original lexical path still names this directory."""
+        return _directory_identity_matches(self._root, self._parts, self.descriptor, self._root_identity)
+
+
+@contextmanager
+def hold_confined_directory(
+    root: Path,
+    relative: Path,
+    *,
+    expected_root_identity: tuple[int, int],
+    create: bool = False,
+) -> Iterator[HeldDirectory]:
+    """Hold a directory and all ancestors without following any symlink."""
+    root = root.absolute()
+    if ".." in root.parts or relative.anchor or ".." in relative.parts:
+        raise ValueError("held directory must stay within its confinement root")
+    _require_lexical_directory(root)
+    descriptor, opened = _open_parent(
+        root, relative.parts, create=create, expected_root_identity=expected_root_identity
+    )
+    try:
+        yield HeldDirectory(descriptor, root, relative.parts, expected_root_identity)
     finally:
         _close_all(opened)
 
@@ -466,4 +507,6 @@ __all__ = [
     "append_text_confined",
     "unlink_confined",
     "confined_file_lock",
+    "HeldDirectory",
+    "hold_confined_directory",
 ]
