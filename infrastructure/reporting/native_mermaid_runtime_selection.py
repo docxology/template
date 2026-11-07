@@ -36,10 +36,10 @@ from infrastructure.reporting.native_source_external_admission import NativeSour
 from infrastructure.reporting.native_tool_producer import NativeProducerOperation, current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
-SCHEMA = "template-native-source11-npm-mermaid-runtime-v2"
-SELECTION_SCHEMA = "template-native-source11-mermaid-selection-v1"
+SCHEMA = "template-native-source122-npm-mermaid-runtime-v1"
+SELECTION_SCHEMA = "template-native-source122-mermaid-selection-v1"
 CLI_NAME = "@mermaid-js/mermaid-cli"
-CLI_VERSION = "11.16.0"
+CLI_VERSION = "12.2.0"
 CLI_RELATIVE = "@mermaid-js/mermaid-cli"
 _SEAL = object()
 
@@ -98,7 +98,7 @@ def _validate_source_inputs(inputs: object) -> tuple[dict[str, Any], dict[str, A
         parsed.append(json_object_from_bytes(raw))
     package, lock = parsed
     if package.get("devDependencies", {}).get(CLI_NAME) != CLI_VERSION:
-        raise ValueError("Source does not declare this exact Mermaid11 profile")
+        raise ValueError("Source does not declare this exact Mermaid122 profile")
     packages = lock.get("packages")
     if lock.get("lockfileVersion") != 3 or not isinstance(packages, dict) or not 1 < len(packages) <= MAX_FILES:
         raise ValueError("Source npm lock lacks its finite complete v3 package map")
@@ -107,8 +107,8 @@ def _validate_source_inputs(inputs: object) -> tuple[dict[str, Any], dict[str, A
     if package.get("engines") != {"node": "24.x"} or packages.get("", {}).get("engines") != package["engines"]:
         raise ValueError("Source npm package and locked Root Node24 engine declarations differ")
     cli = packages.get("node_modules/" + CLI_RELATIVE, {})
-    if cli.get("version") != CLI_VERSION or cli.get("engines", {}).get("node") != "^18.19 || >=20.0":
-        raise ValueError("Source Mermaid lock differs from the exact Source-pinned Mermaid11 package profile")
+    if cli.get("version") != CLI_VERSION or cli.get("engines", {}).get("node") != ">=22.13.0":
+        raise ValueError("Source Mermaid lock differs from the exact Source-pinned Mermaid122 package profile")
     for relative, row in packages.items():
         if relative == "":
             continue
@@ -232,10 +232,10 @@ def _installation(root: Path, lock: dict[str, Any], deadline: float) -> dict[str
         cli.get("name") != CLI_NAME
         or cli.get("version") != CLI_VERSION
         or cli.get("exports", {}).get(".", {}).get("default") != "./src/index.js"
-        or cli.get("engines", {}).get("node") != "^18.19 || >=20.0"
+        or cli.get("engines", {}).get("node") != ">=22.13.0"
         or cli.get("bin") != {"mmdc": "./src/cli.js"}
     ):
-        raise ValueError("actual installed Mermaid11 API/CLI/Node declaration differs")
+        raise ValueError("actual installed Mermaid122 API/CLI/Node declaration differs")
     result = {
         "hidden_lock": {"sha256": hashlib.sha256(hidden_bytes).hexdigest(), "bytes": len(hidden_bytes)},
         "locked_installed_packages": packages,
@@ -255,7 +255,7 @@ def _observe(selection: NativeMermaidSelection, source: NativeSourceContext, dea
         or selection.package_root != package
         or package != dependency / CLI_RELATIVE
     ):
-        raise ValueError("Source11 Mermaid package is not the exact explicitly nominated npm dependency member")
+        raise ValueError("Source122 Mermaid package is not the exact explicitly nominated npm dependency member")
     node = selection.node_executable.resolve(strict=True)
     chrome = selection.chrome_executable.resolve(strict=True)
     result = {
@@ -313,10 +313,10 @@ class NativeMermaidRuntimeAdmission:
         self.producer.verify(reader, run_id=self.source.bindings.run_id, deadline=self.deadline)
         snapshot = reader.read(self.node_version_artifact["path"])
         if snapshot.sha256 != self.node_version_artifact["sha256"] or snapshot.json_object() != record:
-            raise ValueError("Source11 Node24 process differs from its actual original invocation")
+            raise ValueError("Source122 Node24 process differs from its actual original invocation")
         self.producer.validate_tool(self.node_version_artifact, record, reader, run_id=self.source.bindings.run_id)
         if not reader.unchanged():
-            raise ValueError("Source11 original Node24 process custody changed")
+            raise ValueError("Source122 original Node24 process custody changed")
 
     def node_version_proof(self) -> dict[str, Any]:
         reader = SnapshotReader(self.source.bindings.current_root, native_producer_operation=self.producer)
@@ -337,7 +337,7 @@ def admit_source_mermaid_selection(
     directory: Path,
     env: dict[str, str],
 ) -> NativeMermaidRuntimeAdmission:
-    """Admit Source11 plus actual Node24 using registered original ToolAPI facts."""
+    """Admit Source122 plus actual Node24 using registered original ToolAPI facts."""
     producer = current_native_producer_operation()
     if not isinstance(selection, NativeMermaidSelection) or not isinstance(source, NativeSourceContext):
         raise ValueError("Mermaid selection requires independently held nominations and genuine Source")
@@ -414,7 +414,7 @@ def readmit_source_mermaid_selection(
 
 
 def validate_source_mermaid_runtime(raw: dict[str, Any]) -> None:
-    """Validate portable Source11 byte inventories without reopening origin paths."""
+    """Validate portable Source122 byte inventories without reopening origin paths."""
     expected = {
         "schema_version",
         "package_root_label",
@@ -431,32 +431,32 @@ def validate_source_mermaid_runtime(raw: dict[str, Any]) -> None:
         "content_digest",
     }
     if set(raw) != expected or raw.get("schema_version") != SCHEMA:
-        raise ValueError("portable Source11 Mermaid runtime schema differs")
+        raise ValueError("portable Source122 Mermaid runtime schema differs")
     for name in ("package_root_label", "dependency_root_label", "node_executable_label"):
         value = raw[name]
         if not isinstance(value, str) or not Path(value).is_absolute() or ".." in Path(value).parts:
-            raise ValueError("portable Source11 runtime label is not an explicit confined absolute path")
+            raise ValueError("portable Source122 runtime label is not an explicit confined absolute path")
     if (
         raw["package_name"] != CLI_NAME
         or raw["version"] != CLI_VERSION
         or raw["cli_member"] != CLI_RELATIVE + "/src/cli.js"
         or Path(raw["package_root_label"]) != Path(raw["dependency_root_label"]) / CLI_RELATIVE
     ):
-        raise ValueError("portable Source11 runtime package/CLI/dependency-root identity differs")
+        raise ValueError("portable Source122 runtime package/CLI/dependency-root identity differs")
     _, lock = _validate_source_inputs(raw["source_npm_inputs"])
     tree = raw["dependency_tree"]
     if not isinstance(tree, dict) or set(tree) != {"members", "bytes", "content_digest"}:
-        raise ValueError("portable Source11 dependency byte inventory fields differ")
+        raise ValueError("portable Source122 dependency byte inventory fields differ")
     members = tree["members"]
     if not isinstance(members, list) or not 0 < len(members) <= MAX_FILES:
-        raise ValueError("portable Source11 npm dependency census is absent/unbounded")
+        raise ValueError("portable Source122 npm dependency census is absent/unbounded")
     files: dict[str, dict[str, Any]] = {}
     aliases = []
     seen = set()
     total = 0
     for item in members:
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
-            raise ValueError("portable Source11 dependency member is not literal")
+            raise ValueError("portable Source122 dependency member is not literal")
         path = PurePosixPath(item["path"])
         if (
             path.is_absolute()
@@ -465,7 +465,7 @@ def validate_source_mermaid_runtime(raw: dict[str, Any]) -> None:
             or path.as_posix() != item["path"]
             or item["path"] in seen
         ):
-            raise ValueError("portable Source11 dependency member is unconfined/duplicate")
+            raise ValueError("portable Source122 dependency member is unconfined/duplicate")
         seen.add(item["path"])
         if item.get("kind") == "file" and set(item) == {"path", "kind", "sha256", "bytes"}:
             _validate_identity({"sha256": item["sha256"], "bytes": item["bytes"]})
@@ -473,17 +473,17 @@ def validate_source_mermaid_runtime(raw: dict[str, Any]) -> None:
             total += item["bytes"]
         elif item.get("kind") == "alias" and set(item) == {"path", "kind", "target"}:
             if not isinstance(item["target"], str):
-                raise ValueError("portable Source11 dependency alias is not literal")
+                raise ValueError("portable Source122 dependency alias is not literal")
             target = PurePosixPath(item["target"])
             if target.is_absolute() or not target.parts or ".." in target.parts:
-                raise ValueError("portable Source11 dependency alias escapes its declared npm root")
+                raise ValueError("portable Source122 dependency alias escapes its declared npm root")
             aliases.append(item["target"])
         else:
-            raise ValueError("portable Source11 dependency member fields differ")
+            raise ValueError("portable Source122 dependency member fields differ")
     if type(tree["bytes"]) is not int or not total == tree["bytes"] <= MAX_BYTES or raw["cli_member"] not in files:
-        raise ValueError("portable Source11 full npm dependency bytes/CLI closure differs")
+        raise ValueError("portable Source122 full npm dependency bytes/CLI closure differs")
     if any(target not in seen and not any(name.startswith(target + "/") for name in seen) for target in aliases):
-        raise ValueError("portable Source11 dependency alias lacks its declared original target")
+        raise ValueError("portable Source122 dependency alias lacks its declared original target")
     installation = raw["installation"]
     if not isinstance(installation, dict) or set(installation) != {
         "hidden_lock",
@@ -492,38 +492,38 @@ def validate_source_mermaid_runtime(raw: dict[str, Any]) -> None:
         "missing_optional_packages",
         "content_digest",
     }:
-        raise ValueError("portable Source11 installed npm lock fields differ")
+        raise ValueError("portable Source122 installed npm lock fields differ")
     _validate_identity(installation["hidden_lock"])
     hidden = files.get(".package-lock.json")
     if hidden is None or {key: hidden[key] for key in ("sha256", "bytes")} != installation["hidden_lock"]:
-        raise ValueError("portable Source11 hidden npm lock bytes omitted from complete dependency closure")
+        raise ValueError("portable Source122 hidden npm lock bytes omitted from complete dependency closure")
     packages = installation["locked_installed_packages"]
     if not isinstance(packages, dict) or not 0 < len(packages) <= MAX_FILES:
-        raise ValueError("portable Source11 installed locked package census is absent/unbounded")
+        raise ValueError("portable Source122 installed locked package census is absent/unbounded")
     expected_manifests = set()
     for relative, item in packages.items():
         if relative == "" or lock["packages"].get(relative) != item:
-            raise ValueError("portable Source11 installed package resolution/integrity differs from Source")
+            raise ValueError("portable Source122 installed package resolution/integrity differs from Source")
         expected_manifests.add(PurePosixPath(relative).relative_to("node_modules").as_posix() + "/package.json")
     manifests = installation["package_manifests"]
     if not isinstance(manifests, list) or len(manifests) != len(expected_manifests):
-        raise ValueError("portable Source11 complete installed package manifest census differs")
+        raise ValueError("portable Source122 complete installed package manifest census differs")
     observed_manifests = set()
     for item in manifests:
         if not isinstance(item, dict) or set(item) != {"path", "sha256", "bytes"} or item["path"] in observed_manifests:
-            raise ValueError("portable Source11 package manifest binding fields differ/duplicate")
+            raise ValueError("portable Source122 package manifest binding fields differ/duplicate")
         _validate_identity({key: item[key] for key in ("sha256", "bytes")})
         member = files.get(item["path"])
         if member is None or {key: member[key] for key in item} != item:
-            raise ValueError("portable Source11 installed manifest bytes differ from complete dependency census")
+            raise ValueError("portable Source122 installed manifest bytes differ from complete dependency census")
         observed_manifests.add(item["path"])
     if observed_manifests != expected_manifests:
-        raise ValueError("portable Source11 installed package manifest identities differ")
+        raise ValueError("portable Source122 installed package manifest identities differ")
     missing = sorted(set(lock["packages"]) - set(packages) - {""})
     if installation["missing_optional_packages"] != missing or any(
         lock["packages"][name].get("optional") is not True for name in missing
     ):
-        raise ValueError("portable Source11 omits a required Source package or alters optional absence census")
+        raise ValueError("portable Source122 omits a required Source package or alters optional absence census")
     _validate_identity(raw["node"])
     chrome = raw["chrome"]
     executable = PurePosixPath(chrome["executable"]).relative_to(PurePosixPath(chrome["root"])).as_posix()
@@ -531,13 +531,13 @@ def validate_source_mermaid_runtime(raw: dict[str, Any]) -> None:
         (item["sha256"] for item in chrome["files"] if item["path"] == executable and item["kind"] == "file"), None
     )
     if digest is None:
-        raise ValueError("portable Source11 Chrome executable is absent from its complete application closure")
+        raise ValueError("portable Source122 Chrome executable is absent from its complete application closure")
     validate_runtime(chrome, chrome["executable"], digest)
     for item in (tree, installation, raw):
         if item["content_digest"] != canonical_digest(
             {key: value for key, value in item.items() if key != "content_digest"}
         ):
-            raise ValueError("portable Source11 runtime/package/dependency digest differs")
+            raise ValueError("portable Source122 runtime/package/dependency digest differs")
 
 
 def _validate_identity(value: object) -> None:
@@ -549,7 +549,7 @@ def _validate_identity(value: object) -> None:
         or not isinstance(value["sha256"], str)
         or re.fullmatch(r"[0-9a-f]{64}", value["sha256"]) is None
     ):
-        raise ValueError("portable Source11 runtime file identity is invalid/unbounded")
+        raise ValueError("portable Source122 runtime file identity is invalid/unbounded")
 
 
 # Process-local custody is seeded only by the actual Source-owned factory. It is

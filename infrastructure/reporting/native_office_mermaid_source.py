@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 from pathlib import Path
 from typing import Any
 
 from defusedxml.ElementTree import fromstring
 
-from infrastructure.core.files.secure_write import atomic_write_bytes_confined
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
 from infrastructure.reporting.native_format_browser_runtime import observe_runtime, validate_runtime
@@ -17,7 +18,7 @@ from infrastructure.reporting.native_office_mermaid_semantics import (
     inspect_mermaid_svg_source,
     mermaid_source_semantics,
 )
-from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 from infrastructure.rendering._pdf_mermaid import _MERMAID_BLOCK_RE, _normalise_mermaid_source, _source_hash
 
 
@@ -49,6 +50,30 @@ def _svg_observation(data: bytes) -> dict[str, Any]:
     }
 
 
+def _reject_current_cli_api_profile(version: str) -> None:
+    """Keep this historical CLI observer separate from the full current API."""
+    if version == "12.2.0":
+        raise ValueError(
+            "historical Office Mermaid CLI observer does not support12.2; use the full Source-owned Mermaid API"
+        )
+
+
+def _reject_selected_current_cli_api(env: dict[str, str]) -> None:
+    selected = shutil.which("mmdc", path=env.get("PATH"))
+    if selected is None:
+        return
+    command = Path(selected).resolve(strict=True)
+    if command.name != "cli.js" or command.parent.name != "src":
+        return
+    package = command.parent.parent
+    manifest = json_object_from_bytes(read_bytes_confined(package, package / "package.json", max_bytes=1024 * 1024))
+    if manifest.get("name") == "@mermaid-js/mermaid-cli":
+        version = manifest.get("version")
+        if not isinstance(version, str):
+            raise ValueError("selected Mermaid package version is absent or malformed")
+        _reject_current_cli_api_profile(version)
+
+
 def observe_office_mermaid_source(
     root: Path,
     directory: Path,
@@ -73,6 +98,7 @@ def observe_office_mermaid_source(
     matches = tuple(_MERMAID_BLOCK_RE.finditer(source.decode()))
     if not matches or len(matches) > 100:
         raise ValueError("Office Mermaid source requires a bounded nonempty source fence set")
+    _reject_selected_current_cli_api(env)
     create_private_native_directory(root, directory)
     consumed = directory / "combined-source.md"
     atomic_write_bytes_confined(root, consumed, source, mode=0o600)

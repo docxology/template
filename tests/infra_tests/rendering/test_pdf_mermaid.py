@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from infrastructure.rendering import _mermaid_v11
+from infrastructure.rendering import _mermaid_v122
 
 from infrastructure.rendering._pdf_mermaid import _resolve_chrome_executable, replace_inline_mermaid
 
@@ -128,8 +128,8 @@ def mermaid_runtime(monkeypatch: pytest.MonkeyPatch) -> Path:
     local_mmdc = Path(__file__).resolve().parents[3] / "node_modules" / ".bin" / "mmdc"
     mmdc = shutil.which("mmdc") or (str(local_mmdc) if local_mmdc.is_file() else None)
     if mmdc is None or shutil.which("node") is None:
-        pytest.skip("real Mermaid11.16 and Node runtime are not installed")
-    _mermaid_v11.selected_package(mmdc)
+        pytest.skip("real Mermaid12.2 and Node runtime are not installed")
+    _mermaid_v122.selected_package(mmdc)
     chrome = _resolve_chrome_executable()
     if chrome is None:
         pytest.skip("real Chrome runtime is not installed")
@@ -143,7 +143,7 @@ def _render_evidence(manuscript_dir: Path, *, success: bool) -> tuple[Path, dict
     records = list(directory.glob("*.mermaid-process.json"))
     assert len(records) == 1
     process = json.loads(records[0].read_bytes())
-    assert process["invocation_policy"] == _mermaid_v11.POLICY
+    assert process["invocation_policy"] == _mermaid_v122.POLICY
     assert process["pid"] > 0
     assert (process["original_exit_code"] == 0) is success
     assert process["input_sha256_before"] == process["input_sha256_after"]
@@ -289,3 +289,55 @@ def test_unprofiled_mermaid_executable_is_refused_before_execution(
     assert not list(directory.glob("*.png"))
     assert not list(directory.glob("*.mermaid-process.json"))
     assert any("no admitted runtime profile" in record.message for record in caplog.records)
+
+
+def test_inline_mermaid_regenerates_changed_profile_cache(tmp_path: Path, mermaid_runtime: Path):
+    from infrastructure.rendering._pdf_mermaid import _render_mermaid
+
+    config = tmp_path / "puppeteer.json"
+    config.write_text(
+        json.dumps({"executablePath": str(mermaid_runtime), "userDataDir": str(tmp_path / "browser-profile")}) + "\n"
+    )
+    mmdc = shutil.which("mmdc")
+    assert mmdc is not None
+    output = _render_mermaid(
+        mmdc=mmdc, output_dir=tmp_path, stem="profile", source="flowchart TD\n A-->B", puppeteer_config=config
+    )
+    before = output.stat().st_mtime_ns
+    cache = tmp_path / "profile.mermaid-cache.json"
+    previous = json.loads(cache.read_bytes())
+    previous["policy"] = (
+        "template-mermaid-v11-source-pinned-official-render-default-theme-liberation-sans-before-layout-1400x900-v2"
+    )
+    cache.write_text(json.dumps(previous) + "\n")
+    _render_mermaid(
+        mmdc=mmdc, output_dir=tmp_path, stem="profile", source="flowchart TD\n A-->B", puppeteer_config=config
+    )
+    assert output.stat().st_mtime_ns != before
+    assert json.loads(cache.read_bytes())["policy"] == _mermaid_v122.POLICY
+
+
+@pytest.mark.parametrize("field", ("source_lock_sha256", "node_sha256"))
+def test_inline_mermaid_regenerates_foreign_tooling_cache(tmp_path: Path, mermaid_runtime: Path, field: str):
+    from infrastructure.rendering._pdf_mermaid import _render_mermaid
+
+    config = tmp_path / "puppeteer.json"
+    config.write_text(
+        json.dumps({"executablePath": str(mermaid_runtime), "userDataDir": str(tmp_path / "browser-profile")}) + "\n"
+    )
+    mmdc = shutil.which("mmdc")
+    assert mmdc is not None
+    output = _render_mermaid(
+        mmdc=mmdc, output_dir=tmp_path, stem="tooling", source="flowchart TD\n A-->B", puppeteer_config=config
+    )
+    before = output.stat().st_mtime_ns
+    cache = tmp_path / "tooling.mermaid-cache.json"
+    value = json.loads(cache.read_bytes())
+    assert value["tooling"][field] != "0" * 64
+    value["tooling"][field] = "0" * 64
+    cache.write_text(json.dumps(value) + "\n")
+    _render_mermaid(
+        mmdc=mmdc, output_dir=tmp_path, stem="tooling", source="flowchart TD\n A-->B", puppeteer_config=config
+    )
+    assert output.stat().st_mtime_ns != before
+    assert json.loads(cache.read_bytes())["tooling"][field] != "0" * 64

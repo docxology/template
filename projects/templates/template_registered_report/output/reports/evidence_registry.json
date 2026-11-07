@@ -1971,25 +1971,25 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "figure",
-      "source": "manuscript/02_hypotheses.md",
+      "source": "manuscript/05_deviations.md",
       "source_field": "",
-      "source_path": "manuscript/02_hypotheses.md",
+      "source_path": "manuscript/05_deviations.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:hypothesis_map"
+      "value": "fig:deviation_timeline"
     },
     {
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "figure",
-      "source": "output/figures/hypothesis_map.png",
+      "source": "output/figures/deviation_timeline.png",
       "source_field": "",
-      "source_path": "output/figures/hypothesis_map.png",
+      "source_path": "output/figures/deviation_timeline.png",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:hypothesis_map"
+      "value": "fig:deviation_timeline"
     },
     {
       "active": true,
@@ -2019,25 +2019,25 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "figure",
-      "source": "manuscript/05_deviations.md",
+      "source": "manuscript/02_hypotheses.md",
       "source_field": "",
-      "source_path": "manuscript/05_deviations.md",
+      "source_path": "manuscript/02_hypotheses.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:deviation_timeline"
+      "value": "fig:hypothesis_map"
     },
     {
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "figure",
-      "source": "output/figures/deviation_timeline.png",
+      "source": "output/figures/hypothesis_map.png",
       "source_field": "",
-      "source_path": "output/figures/deviation_timeline.png",
+      "source_path": "output/figures/hypothesis_map.png",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:deviation_timeline"
+      "value": "fig:hypothesis_map"
     },
     {
       "active": true,
@@ -2055,6 +2055,30 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "section",
+      "source": "manuscript/05_deviations.md",
+      "source_field": "",
+      "source_path": "manuscript/05_deviations.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:deviations"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-14T14:20:53Z",
+      "kind": "section",
+      "source": "manuscript/04_results.md",
+      "source_field": "",
+      "source_path": "manuscript/04_results.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:results"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-14T14:20:53Z",
+      "kind": "section",
       "source": "manuscript/06_discussion.md",
       "source_field": "",
       "source_path": "manuscript/06_discussion.md",
@@ -2067,18 +2091,6 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "section",
-      "source": "manuscript/99_references.md",
-      "source_field": "",
-      "source_path": "manuscript/99_references.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:references"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
       "source": "manuscript/02_hypotheses.md",
       "source_field": "",
       "source_path": "manuscript/02_hypotheses.md",
@@ -2086,6 +2098,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "sec:hypotheses"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-14T14:20:53Z",
+      "kind": "section",
+      "source": "manuscript/99_references.md",
+      "source_field": "",
+      "source_path": "manuscript/99_references.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:references"
     },
     {
       "active": true,
@@ -2110,30 +2134,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "sec:abstract"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
-      "source": "manuscript/04_results.md",
-      "source_field": "",
-      "source_path": "manuscript/04_results.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:results"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
-      "source": "manuscript/05_deviations.md",
-      "source_field": "",
-      "source_path": "manuscript/05_deviations.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:deviations"
     },
     {
       "active": true,

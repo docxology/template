@@ -540,3 +540,22 @@ and holds each custodian under the same Source and deadline. It consumes every
 original receipt and rejects conflicting shared bytes. DATA selection helpers in
 `native_cell_selection.py` grant no native authority; the full union and complete
 profile validators remain mandatory before candidate publication.
+
+
+## Current Source Mermaid profile
+
+The current Source-owned profile admits exact Mermaid CLI 12.2.0 with the
+declared Root Node 24 engine and complete Source-pinned npm lock, installed
+package manifests and dependency-body inventory. Keep the installed KaTeX
+package version separate from independently inspected bundled ESM code;
+neither an inventory nor a version label grants native or release authority.
+
+Single and ordered Source 12.2 references retain the licensed Source fonts,
+default theme, white background, 1400x900 viewport, scale 1 and disabled Mermaid
+font embedding. Every original still requires actual Node 24 proof, live
+before/after library observations, independent paint/font/topology checks,
+finite pixel and storage budgets, process custody and the original clock.
+The historical 11.16.0 and 12.0.0 render profiles remain distinct; the current
+profile cannot enter the historical 12 path with weaker font obligations.
+The historical Office CLI observer explicitly refuses 12.2 before creating
+output evidence; current native consumers use the full Source-owned API.

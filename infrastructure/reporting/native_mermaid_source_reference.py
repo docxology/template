@@ -60,7 +60,7 @@ from infrastructure.rendering._mermaid_native_profile import (
 )
 from infrastructure.reporting.native_mermaid_runtime_selection import NativeMermaidRuntimeAdmission
 
-SCHEMA = "template-native-mermaid-original-source-reference-source11-licensed-font-runtime-v4"
+SCHEMA = "template-native-mermaid-original-source-reference-licensed-font-runtime-v5"
 TopologyInspector = Callable[[bytes, bytes], dict[str, Any]]
 ArtifactReader = Callable[[dict[str, Any]], bytes]
 ProcessAdmitter = Callable[[dict[str, Any]], None]
@@ -142,18 +142,25 @@ def _process_clock(process: dict[str, Any], name: str) -> float:
 
 def _runtime_version(runtime: dict[str, Any]) -> str:
     version = runtime["package"]["version"] if "package" in runtime else runtime["version"]
-    if version not in {"11.16.0", "12.0.0"}:
+    if version not in {"11.16.0", "12.0.0", "12.2.0"}:
         raise ValueError("original Mermaid runtime lacks its exact Source-owned finite profile")
     return str(version)
 
 
-def _source11_live_node_reports(process: dict[str, Any]) -> None:
+def _source11_live_node_reports(process: dict[str, Any], *, version: str = "11.16.0") -> None:
+    if version not in {"11.16.0", "12.2.0"}:
+        raise ValueError("live Source Node reports require an exact licensed-font profile")
+    schema = (
+        "template-native-source122-node-live-loaded-report-v1"
+        if version == "12.2.0"
+        else "template-native-source11-node-live-loaded-report-v1"
+    )
     stdout = process.get("stdout")
     if not isinstance(stdout, str) or len(stdout.encode("utf-8")) > 8 * 1024 * 1024:
-        raise ValueError("Source11 original Node stdout is absent/unbounded")
+        raise ValueError("Source-owned original Node stdout is absent/unbounded")
     lines = stdout.splitlines()
     if len(lines) != 2:
-        raise ValueError("Source11 original Node lacks both actual live loaded-library API observations")
+        raise ValueError("Source-owned original Node lacks both actual live loaded-library API observations")
     expected_fields = {
         "schema_version",
         "api",
@@ -172,7 +179,7 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
         report = json_object_from_bytes(line.encode("utf-8"))
         if (
             set(report) != expected_fields
-            or report.get("schema_version") != "template-native-source11-node-live-loaded-report-v1"
+            or report.get("schema_version") != schema
             or report.get("api") != "process.report.getReport"
             or report.get("phase") != phase
             or type(report.get("pid")) is not int
@@ -186,7 +193,7 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
             or report.get("remaining_admission")
             != ["source-required loaded library bodies and shared-cache/kernel closure"]
         ):
-            raise ValueError("Source11 original Node live self/API/PID observation differs")
+            raise ValueError("Source-owned original Node live self/API/PID observation differs")
         libraries = report.get("shared_objects")
         if (
             not isinstance(libraries, list)
@@ -199,14 +206,14 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
                 for name in libraries
             )
         ):
-            raise ValueError("Source11 original Node live loaded-library name census is absent/unbounded")
+            raise ValueError("Source-owned original Node live loaded-library name census is absent/unbounded")
         bodies = report.get("loaded_library_bodies")
         if not isinstance(bodies, list) or len(bodies) != len(libraries):
-            raise ValueError("Source11 original live loaded-library body observation census differs")
+            raise ValueError("Source-owned original live loaded-library body observation census differs")
         total = 0
         for name, body in zip(libraries, bodies, strict=True):
             if not isinstance(body, dict) or body.get("path") != name:
-                raise ValueError("Source11 original live loaded-library body path differs from actual loaded API")
+                raise ValueError("Source-owned original live loaded-library body path differs from actual loaded API")
             if name == "linux-vdso.so.1":
                 # Retain the actual kernel label without claiming a file/body.
                 if report["platform"] != "linux" or body != {
@@ -214,7 +221,7 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
                     "status": "unsupported-kernel-virtual-provider",
                     "reason": "linux-kernel-vdso-has-no-regular-file-body; separate-kernel-closure-required",
                 }:
-                    raise ValueError("Source11 kernel virtual provider cannot claim regular-file custody")
+                    raise ValueError("Source-owned kernel virtual provider cannot claim regular-file custody")
                 continue
             if body.get("status") == "observed-regular-body":
                 if (
@@ -232,20 +239,20 @@ def _source11_live_node_reports(process: dict[str, Any]) -> None:
                     )
                     or int(body["identity_before"]["size"]) != body["bytes"]
                 ):
-                    raise ValueError("Source11 original live library regular-body/physical custody differs")
+                    raise ValueError("Source-owned original live library regular-body/physical custody differs")
                 if name in earlier and earlier[name].get("status") == "observed-regular-body" and body != earlier[name]:
                     raise ValueError(
-                        "Source11 actual live loaded-library body/physical identity changed during import/render"
+                        "Source-owned actual live loaded-library body/physical identity changed during import/render"
                     )
                 total += body["bytes"]
             elif body.get("status") == "unsupported-loaded-provider":
                 if set(body) != {"path", "status", "reason"} or not isinstance(body["reason"], str):
-                    raise ValueError("Source11 unavailable live loaded provider reason is not retained")
+                    raise ValueError("Source-owned unavailable live loaded provider reason is not retained")
             else:
-                raise ValueError("Source11 original live loaded-library provider status differs")
+                raise ValueError("Source-owned original live loaded-library provider status differs")
         earlier = {body["path"]: body for body in bodies}
         if total > 1024 * 1024 * 1024:
-            raise ValueError("Source11 original live loaded-library observed body closure exceeds its finite bound")
+            raise ValueError("Source-owned original live loaded-library observed body closure exceeds its finite bound")
 
 
 def _original_process_closure(row: dict[str, Any], original_runtime: dict[str, Any]) -> None:
@@ -275,8 +282,8 @@ def _original_process_closure(row: dict[str, Any], original_runtime: dict[str, A
             or process["pid"] <= 0
         ):
             raise ValueError("portable original Mermaid process execution/runtime closure differs")
-        if version == "11.16.0":
-            _source11_live_node_reports(process)
+        if version in {"11.16.0", "12.2.0"}:
+            _source11_live_node_reports(process, version=version)
         started, duration, deadline = (
             _process_clock(process, name)
             for name in ("started_at_monotonic", "duration_seconds", "original_deadline_monotonic")
@@ -365,10 +372,10 @@ def observe_original_mermaid_sources(
         raw_path = leaf.freeze("original.mmd", source)
         normal_path = leaf.freeze("normalized.mmd", normal)
         adapter = leaf.freeze(adapter_filename(version), adapter_bytes(version))
-        if version == "11.16.0":
+        if version in {"11.16.0", "12.2.0"}:
             if runtime_admission is None or on_original_tool is None:
                 raise ValueError(
-                    "Source11 licensed font profile requires genuine Source runtime and live original process owner"
+                    "Source-owned licensed font profile requires genuine Source runtime and live original process owner"
                 )
             leaf.freeze(PROFILE_NAME, default_font_profile_bytes(deadline=deadline))
             leaf.freeze(SCRIPT_NAME, default_font_script_bytes())
@@ -409,8 +416,8 @@ def observe_original_mermaid_sources(
                 [str(adapter), str(request)],
                 f"original-mermaid-{kind}",
             )
-            if version == "11.16.0":
-                _source11_live_node_reports(process)
+            if version in {"11.16.0", "12.2.0"}:
+                _source11_live_node_reports(process, version=version)
                 font_path = output.with_name(output.name + ".source-fonts.json")
                 font_content = leaf.read(font_path)
                 font_observation = json_object_from_bytes(font_content)
@@ -429,9 +436,9 @@ def observe_original_mermaid_sources(
         topology = _topology(normal, svg, inspect_svg)
         paint_process = None
         paint_process_artifact = None
-        if version == "11.16.0":
+        if version in {"11.16.0", "12.2.0"}:
             if runtime_admission is None or on_original_tool is None:
-                raise ValueError("Source11 licensed font paint requires its genuine Source/runtime/original owner")
+                raise ValueError("Source-owned licensed font paint requires its genuine Source/runtime/original owner")
             with source_mermaid_font_bodies_operation(
                 NativeMermaidFontSelection(font_files), runtime_admission.source, deadline=deadline
             ) as bodies:
@@ -522,10 +529,10 @@ def _admit_source11_version_proof(
     admit_original_process: ProcessAdmitter,
 ) -> None:
     if not isinstance(proof, dict) or set(proof) != {"artifact", "process"}:
-        raise ValueError("Source11 reference lacks its actual original Node24 process proof")
+        raise ValueError("Source-owned reference lacks its actual original Node24 process proof")
     binding, process = proof["artifact"], proof["process"]
     if not isinstance(binding, dict) or set(binding) != {"path", "sha256"} or not isinstance(process, dict):
-        raise ValueError("Source11 Node24 ToolAPI process binding differs")
+        raise ValueError("Source-owned Node24 ToolAPI process binding differs")
     content = artifact_reader(binding)
     if (
         len(content) > 64 * 1024 * 1024
@@ -548,7 +555,7 @@ def _admit_source11_version_proof(
         or process.get("stderr")
         or process.get("diagnostic")
     ):
-        raise ValueError("Source11 Node24 exact original successful native invocation differs")
+        raise ValueError("Source-owned Node24 exact original successful native invocation differs")
     admit_original_process(process)
 
 
@@ -578,10 +585,10 @@ def validate_original_mermaid_sources(
         raise ValueError("portable original Mermaid complete runtime before/after differs")
     version = _runtime_version(original["runtime_before"])
     proof = original.get("runtime_process")
-    if version == "11.16.0":
+    if version in {"11.16.0", "12.2.0"}:
         _admit_source11_version_proof(proof, original["runtime_before"], artifact_reader, admit_original_process)
     elif proof is not None:
-        raise ValueError("historical Mermaid12 record cannot borrow a Source11 Node24 runtime proof")
+        raise ValueError("historical Mermaid12 record cannot borrow a Source-owned Node24 runtime proof")
     rows = original["occurrences"]
     if not isinstance(rows, list) or len(rows) != len(sources) or original["blockers"]:
         raise ValueError("portable original Mermaid source census retains unresolved diagrams")
@@ -630,7 +637,7 @@ def validate_original_mermaid_sources(
             }
             if config != expected:
                 raise ValueError("portable original Mermaid native Chrome/private network config differs")
-            if version == "11.16.0":
+            if version in {"11.16.0", "12.2.0"}:
                 observation_binding = row["producer_font_observations"][kind]
                 if Path(observation_binding["path"]).name != f"original.{kind}.source-fonts.json":
                     raise ValueError("original Source-font result artifact identity differs")
@@ -651,7 +658,7 @@ def validate_original_mermaid_sources(
                         for field in ("input_observations_before", "input_observations_after")
                     ):
                         raise ValueError(
-                            "original Source11 invocation omitted its exact consumed font profile/constructor"
+                            "original Source-owned invocation omitted its exact consumed font profile/constructor"
                         )
             before = row["processes"][kind]["input_observations_before"]
             if not any(
@@ -685,18 +692,18 @@ def validate_original_mermaid_sources(
         ):
             raise ValueError("portable independently interpreted original Mermaid graph/topology differs")
         paint = row["paint"]
-        if version == "11.16.0":
+        if version in {"11.16.0", "12.2.0"}:
             process = row.get("paint_process")
             binding = row.get("paint_process_artifact")
             if not isinstance(process, dict) or not isinstance(binding, dict) or set(binding) != {"path", "sha256"}:
-                raise ValueError("Source11 licensed-font independent paint lacks actual original Tool custody")
+                raise ValueError("Source-owned licensed-font independent paint lacks actual original Tool custody")
             content = artifact_reader(binding)
             if (
                 hashlib.sha256(content).hexdigest() != binding["sha256"]
                 or json_object_from_bytes(content) != process
                 or set(process) != CITATION_TOOL_FIELDS
             ):
-                raise ValueError("Source11 independent actual paint process bytes changed")
+                raise ValueError("Source-owned independent actual paint process bytes changed")
             admit_original_process(process)
             if (
                 process["pid"] != paint["browser_pid"]
@@ -705,7 +712,7 @@ def validate_original_mermaid_sources(
                 or process["raw_stdout"]["sha256"] != paint["stdout_sha256"]
                 or process["raw_stderr"]["sha256"] != paint["stderr_sha256"]
             ):
-                raise ValueError("Source11 licensed-font Source paint differs from actual owned original browser")
+                raise ValueError("Source-owned licensed-font Source paint differs from actual owned original browser")
         if paint.get("content_digest") != canonical_digest(
             {key: value for key, value in paint.items() if key != "content_digest"}
         ):

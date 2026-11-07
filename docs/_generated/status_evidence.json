@@ -166,6 +166,17 @@
       "verified_by": "Release lane (agent session)"
     },
     {
+      "command": "`uv run --no-sync --offline python scripts/audit/check_release_versions.py`",
+      "health": "\ud83d\udfe1 Metadata preparation only; exact-source acceptance required",
+      "id": "STATUS-ROOT-RELEASE-4",
+      "last_verified": "2026-11-05",
+      "mode": "manual",
+      "receipt": "docs/_generated/status_evidence.json",
+      "subsystem": "Root 5.1.0 metadata preparation (2026-11-05)",
+      "verification_scope": "The reviewed Source-owned 5.0.2 to 5.1.0 minor transaction prepared 77 metadata files with exact original-byte journal custody, preserving exemplar own versions and third-party dependency records. The source version-identity check covers Root and all 25 exemplar bindings and authored release materials. This scope excludes installed SDK agreement, final publication outputs, new coverage, CI Gate, required acceptance, tag creation and publication. The dated 2026-11-05 GitHub observation records v5.0.0 as the latest published Release and v5.0.2 as a retained tag without a Release. Historical rows remain unchanged.",
+      "verified_by": "Codex (agent session)"
+    },
+    {
       "command": "`uv run python -m infrastructure.skills check`",
       "health": "\ud83d\udfe1 Platform 4 acceptance pending",
       "id": "STATUS-SKILLS-1",
@@ -212,5 +223,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "0210cc7eb730e7fb668c2cedad5080b1ea85e86e7682b2011a8db64d7b0568a7"
+  "source_sha256": "5cb806c8ab899475523e56d84a9bc5afd62369301943c6a39040274c93af5c54"
 }

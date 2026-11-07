@@ -2,8 +2,8 @@
   "exemplar_coverage": [
     [
       "template_newspaper",
-      153,
-      99.25
+      156,
+      99.08
     ],
     [
       "template_methods_paper",
@@ -38,7 +38,12 @@
     [
       "template_textbook",
       299,
-      96.01
+      96.17
+    ],
+    [
+      "template_storybook",
+      45,
+      95.57
     ],
     [
       "template_template",
@@ -49,11 +54,6 @@
       "template_literature_meta_analysis",
       1261,
       95.48
-    ],
-    [
-      "template_storybook",
-      45,
-      95.38
     ],
     [
       "template_registered_report",
@@ -72,8 +72,8 @@
     ],
     [
       "template_advanced_literature_review",
-      160,
-      94.27
+      163,
+      94.04
     ],
     [
       "template_autoscientists",
@@ -96,11 +96,6 @@
       92.0
     ],
     [
-      "template_autopoiesis",
-      578,
-      91.88
-    ],
-    [
       "template_experiment_tree",
       32,
       91.85
@@ -111,14 +106,19 @@
       91.67
     ],
     [
-      "template_eda_notebook",
-      132,
-      91.01
+      "template_autopoiesis",
+      579,
+      91.43
     ],
     [
       "template_active_inference",
       992,
-      91.0
+      91.03
+    ],
+    [
+      "template_eda_notebook",
+      132,
+      91.01
     ],
     [
       "template_formal",
@@ -129,19 +129,19 @@
   "infrastructure_python": [
     [
       "reporting",
-      411
+      416
     ],
     [
       "core",
-      201
-    ],
-    [
-      "rendering",
-      120
+      202
     ],
     [
       "project",
-      117
+      123
+    ],
+    [
+      "rendering",
+      123
     ],
     [
       "validation",
@@ -149,7 +149,7 @@
     ],
     [
       "publishing",
-      85
+      89
     ],
     [
       "search",
@@ -177,7 +177,7 @@
     ],
     [
       "steganography",
-      13
+      14
     ],
     [
       "autoresearch",

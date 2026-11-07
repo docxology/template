@@ -1,4 +1,4 @@
-"""Genuine ordered Source11 artifacts and independently owned batch readers.
+"""Genuine ordered Source122 artifacts and independently owned batch readers.
 
 Each native batch has one actual supervised Node process and one actual
 Source-only Chrome process. Every ordered occurrence has its own inputs and
@@ -34,6 +34,7 @@ from infrastructure.reporting.native_mermaid_runtime_custody import (
     validate_mermaid_runtime,
 )
 from infrastructure.reporting.native_mermaid_runtime_selection import (
+    CLI_VERSION,
     NativeMermaidRuntimeAdmission,
 )
 from infrastructure.reporting.native_mermaid_source_reference import (
@@ -66,9 +67,9 @@ from infrastructure.rendering._mermaid_source_font_default import (
 )
 from infrastructure.rendering._mermaid_native_profile import rendering_profile
 
-SCHEMA = "template-native-mermaid-source11-actual-ordered-batch-reference-v1"
-REQUEST_SCHEMA = "template-mermaid-source11-ordered-batch-request-licensed-font-v2"
-REPORT_SCHEMA = "template-mermaid-source11-actual-ordered-batch-artifacts-licensed-font-v2"
+SCHEMA = "template-native-mermaid-source122-actual-ordered-batch-reference-v1"
+REQUEST_SCHEMA = "template-mermaid-source122-ordered-batch-request-licensed-font-v1"
+REPORT_SCHEMA = "template-mermaid-source122-actual-ordered-batch-artifacts-licensed-font-v1"
 REMAINING_ADMISSION = (
     "actual enclosing independently admitted Source/SDK/provider/terminal original custody",
     "source-required loaded-library/shared-cache/kernel and actual platform font selection/shaping custody",
@@ -77,7 +78,7 @@ REMAINING_ADMISSION = (
 
 
 def _adapter() -> bytes:
-    return (Path(__file__).absolute().parent.parent / "rendering/_mermaid_v11_batch_adapter.mjs").read_bytes()
+    return (Path(__file__).absolute().parent.parent / "rendering/_mermaid_v122_batch_adapter.mjs").read_bytes()
 
 
 def _record_binding(
@@ -162,7 +163,7 @@ def observe_original_mermaid_batch(
         run_id=run_id,
         on_original_tool=on_original_tool,
     )
-    adapter = tool.freeze("source11-ordered-batch.mjs", _adapter())
+    adapter = tool.freeze("source122-ordered-batch.mjs", _adapter())
     font_helper = tool.freeze(SCRIPT_NAME, default_font_script_bytes())
     font_profile_data = default_font_profile_bytes(deadline=deadline)
     font_profile = tool.freeze(PROFILE_NAME, font_profile_data)
@@ -208,13 +209,13 @@ def observe_original_mermaid_batch(
         "package_root": str(runtime_admission.selection.package_root.resolve(strict=True)),
         "dependency_root": str(runtime_admission.selection.dependency_root.resolve(strict=True)),
         "puppeteer_config": str(config),
-        "render_profile": rendering_profile("11.16.0"),
+        "render_profile": rendering_profile(CLI_VERSION),
         "occurrences": request_rows,
         "result_output": str(report_path),
     }
     request = tool.freeze("batch-request.json", (json.dumps(request_data, sort_keys=True) + "\n").encode())
     process = tool.tool("node", [str(adapter), str(request)], "original-mermaid-ordered-batch")
-    _source11_live_node_reports(process)
+    _source11_live_node_reports(process, version=CLI_VERSION)
     report_bytes = tool.read(report_path)
     native_report = json_object_from_bytes(report_bytes)
     if (
@@ -377,11 +378,11 @@ def validate_original_mermaid_batch(
         or chrome_process["purpose"] != "original-svg-ordered-batch-paint"
     ):
         raise ValueError("original actual Source paint browser executable/purpose differs")
-    _source11_live_node_reports(process)
+    _source11_live_node_reports(process, version=CLI_VERSION)
     adapter_data = _read(original["producer_adapter"], artifact_reader)
     if adapter_data != _adapter():
         raise ValueError("original actual Source batch adapter differs from independently selected SDK")
-    _consumed(process, "source11-ordered-batch.mjs", adapter_data)
+    _consumed(process, "source122-ordered-batch.mjs", adapter_data)
     request_data = _read(original["producer_request"], artifact_reader)
     config_data = _read(original["producer_config"], artifact_reader)
     _consumed(process, "batch-request.json", request_data)
@@ -408,7 +409,7 @@ def validate_original_mermaid_batch(
         or process["command"]
         != [
             before["node_executable_label"],
-            str(cwd / "source11-ordered-batch.mjs"),
+            str(cwd / "source122-ordered-batch.mjs"),
             str(cwd / "batch-request.json"),
         ]
         or request["font_profile"] != str(cwd / PROFILE_NAME)
@@ -422,7 +423,7 @@ def validate_original_mermaid_batch(
         or request["schema_version"] != REQUEST_SCHEMA
         or request["package_root"] != before["package_root_label"]
         or request["dependency_root"] != before["dependency_root_label"]
-        or request["render_profile"] != rendering_profile("11.16.0")
+        or request["render_profile"] != rendering_profile(CLI_VERSION)
         or native["schema_version"] != REPORT_SCHEMA
         or native["pid"] != process["pid"]
         or native["owner_pid"] != process["owner_pid"]
