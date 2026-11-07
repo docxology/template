@@ -85,6 +85,13 @@ matching tag identity and authenticated publication.
   auxiliary files; unused bibliography files do not force processing.
 - Preserve prior published PDFs on rejected revisions and refuse stale final or
   staging PDFs when the current compiler produces no output.
+- Admit explicit compiler-owned manuscript rosters without inventing authored
+  source mappings. Bind their consumed configuration and ordered bytes, and use
+  the same confined inputs for Stage 04 content, evidence and transmission
+  checks; unconsumed residue cannot supply manuscript evidence.
+- Resolve rendering-package exports lazily so shared discovery and bibliography
+  readers remain usable from validation without initializing format providers
+  or introducing import cycles.
 
 ## [5.0.2] - 2026-11-04
 

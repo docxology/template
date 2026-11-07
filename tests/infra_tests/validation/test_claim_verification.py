@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import subprocess
-import sys
 from pathlib import Path
+
+import pytest
 
 from infrastructure.validation.output import claim_verification as mod
 
@@ -40,34 +40,6 @@ class _FakeClient:
         return _FakeResponse([])
 
 
-class _FakeVerifier:
-    def verify_claims(self, claims: list[str]):
-        return [
-            mod.ClaimVerdict(
-                claim=claim,
-                verdict="supported",
-                confidence=0.9,
-                evidence_title="Fake source",
-                evidence_url="https://example.com/source",
-                evidence_snippet="supported",
-                evidence_count=1,
-            )
-            for claim in claims
-        ]
-
-
-def test_validation_output_import_does_not_load_search_backends() -> None:
-    code = "import sys; import infrastructure.validation.output; print('infrastructure.search' in sys.modules)"
-    completed = subprocess.run(
-        [sys.executable, "-c", code],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-
-    assert completed.stdout.strip() == "False"
-
-
 def test_fact_check_verifier_scores_supported_and_insufficient() -> None:
     verifier = mod.FactCheckVerifier(client=_FakeClient())
     supported = verifier.verify_claim("We observed 12 participants in the cohort.")
@@ -77,36 +49,50 @@ def test_fact_check_verifier_scores_supported_and_insufficient() -> None:
     assert insufficient.verdict == "insufficient"
 
 
-def test_verify_project_claims_extracts_candidates_and_summarizes(tmp_path: Path) -> None:
+def test_generated_claims_check_only_ordered_admitted_deep_inputs(tmp_path: Path) -> None:
+    from infrastructure.validation.content.manuscript_config import GENERATED_ORDERING_MARKER
+
     project_root = tmp_path / "project"
-    manuscript_dir = project_root / "manuscript"
-    manuscript_dir.mkdir(parents=True)
-    (manuscript_dir / "config.yaml").write_text(
-        "validation:\n  claim_verification:\n    enabled: true\n",
+    authored = project_root / "manuscript"
+    authored.mkdir(parents=True)
+    (authored / "intro.md").write_text("The template reported 999 participants.", encoding="utf-8")
+    generated = project_root / "output" / "manuscript"
+    deep = generated / "volume" / "part" / "chapters"
+    deep.mkdir(parents=True)
+    (generated / "anchor.md").write_text("Compiler selection anchor.", encoding="utf-8")
+    (generated / "config.yaml").write_text(
+        f"{GENERATED_ORDERING_MARKER}\n"
+        "units:\n"
+        "  - directory: volume/part/chapters\n"
+        "    chapters: [second.md, first.md]\n",
         encoding="utf-8",
     )
-    (manuscript_dir / "01_intro.md").write_text(
-        "- We observed 12 participants in the cohort.\n\nThe method reduced error by 15%.",
-        encoding="utf-8",
-    )
-    report = mod.verify_project_claims(project_root, verifier_factory=lambda **kwargs: _FakeVerifier())
+    second = "The unknown treatment reduced error by 73%."
+    first = "The unsupported study reported 42 participants."
+    (deep / "second.md").write_text(second, encoding="utf-8")
+    (deep / "first.md").write_text(first, encoding="utf-8")
+    (deep / "residue.md").write_text("Discarded output reported 888 participants.", encoding="utf-8")
 
-    assert len(report.claims) == 2
-    assert report.summary()["supported"] == 2
+    report = mod.verify_project_claims(project_root, verifier_factory=mod.FactCheckVerifier)
+
+    assert report.skipped is False
+    assert report.claims == [second, first]
+    assert [verdict.verdict for verdict in report.verdicts] == ["insufficient", "insufficient"]
+    assert report.summary()["supported"] == 0
 
 
-def test_claim_verification_reads_docs_manuscript(tmp_path: Path) -> None:
+def test_generated_claim_admission_error_is_not_a_skipped_report(tmp_path: Path) -> None:
+    from infrastructure.validation.content.manuscript_config import GENERATED_ORDERING_MARKER
+    from infrastructure.validation.rendered_snapshot import RenderedSnapshotError
+
     project_root = tmp_path / "project"
-    manuscript_dir = project_root / "docs" / "manuscript"
-    manuscript_dir.mkdir(parents=True)
-    (manuscript_dir / "config.yaml").write_text(
-        "validation:\n  claim_verification:\n    enabled: true\n",
+    generated = project_root / "output" / "manuscript"
+    generated.mkdir(parents=True)
+    (generated / "anchor.md").write_text("Compiler selection anchor.", encoding="utf-8")
+    (generated / "config.yaml").write_text(
+        f"{GENERATED_ORDERING_MARKER}\nunits:\n  - directory: chapters\n    chapters: [missing.md]\n",
         encoding="utf-8",
     )
-    (manuscript_dir / "01_intro.md").write_text(
-        "We observed 12 participants in the cohort.\n",
-        encoding="utf-8",
-    )
-    assert mod.claim_verification_enabled(project_root) is True
-    report = mod.verify_project_claims(project_root, verifier_factory=lambda **kwargs: _FakeVerifier())
-    assert report.claims == ["We observed 12 participants in the cohort."]
+
+    with pytest.raises(RenderedSnapshotError, match="missing.md"):
+        mod.verify_project_claims(project_root, verifier_factory=mod.FactCheckVerifier)

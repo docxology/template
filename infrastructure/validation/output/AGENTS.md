@@ -24,7 +24,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 ### `pipeline.py`
 
-- `validate_manuscript_output_markdown(project_name)` — pipeline wrapper; resolves `projects/{name}/manuscript/` and calls content `validate_markdown()`. **Not** the same symbol as content `validate_markdown(dir, repo_root)`.
+- `validate_manuscript_output_markdown(project_name)` — pipeline wrapper; inspects the declared generated input roster or the ordinary authored tree through content `validate_markdown()`. Markdown notes remain advisory; invalid generated declarations and validator failures do not pass.
 - `validate_pdfs(project_name)` — PDF validation for project output dir
 - `execute_validation_pipeline(project_name)` — runs PDF + markdown checks for Stage 4
 - `validate_claim_verification(project_root)` — optional report-only web claim verification over manuscript Markdown

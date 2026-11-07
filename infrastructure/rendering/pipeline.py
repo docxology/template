@@ -28,16 +28,18 @@ from infrastructure.rendering._combined_exports import (  # noqa: F401
 )
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
     clean_stale_render_deliverables as clean_stale_render_deliverables,
-    has_generated_manuscript_ordering as has_generated_manuscript_ordering,
-    is_project_resolved as is_project_resolved,
     load_project_config_yaml as load_project_config_yaml,
     log_manuscript_composition as log_manuscript_composition,
     render_individual_files as render_individual_files,
     resolve_manuscript_dir as resolve_manuscript_dir,
     run_manuscript_variable_script as run_manuscript_variable_script,
-    unresolved_config_tokens as unresolved_config_tokens,
     validate_latex_packages as validate_latex_packages,
     verify_config_tokens_resolved as verify_config_tokens_resolved,
+)
+from infrastructure.validation.content.manuscript_config import (
+    has_generated_manuscript_ordering as has_generated_manuscript_ordering,
+    is_project_resolved as is_project_resolved,
+    unresolved_config_tokens as unresolved_config_tokens,
 )
 from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,

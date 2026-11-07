@@ -52,13 +52,22 @@ def validate_configured_cover_accessibility(
     return [f"Tagged PDF requires non-empty {section_name}.cover.alt when {section_name}.cover.image is configured"]
 
 
-def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
+def _scan_manuscript_references(manuscript_dir: Path, manuscript_files: Iterable[Path] | None = None) -> set[str]:
     """Return all figure labels and references found in manuscript files."""
     referenced: set[str] = set()
-    if not manuscript_dir.exists():
-        return referenced
-    for md_file in manuscript_dir.rglob("*.md"):
-        if md_file.name in _SKIP_DOCS:
+    paths: Iterable[Path]
+    if manuscript_files is None:
+        if not manuscript_dir.exists():
+            return referenced
+        paths = manuscript_dir.rglob("*.md")
+    else:
+        paths = tuple(manuscript_files)
+        for path in paths:
+            path.resolve(strict=True).relative_to(manuscript_dir.resolve(strict=True))
+            if not path.is_file():
+                raise ValueError(f"Manuscript input is not a file: {path}")
+    for md_file in paths:
+        if manuscript_files is None and md_file.name in _SKIP_DOCS:
             continue
         try:
             text = _strip_reference_examples(
@@ -72,6 +81,8 @@ def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
             referenced.update(_normalise_figure_label(label) for label in _PANDOC_FIGURE_REF_PATTERN.findall(text))
             referenced.update(_normalise_figure_label(label) for label in _PANDOC_IMAGE_LABEL_PATTERN.findall(text))
         except (OSError, UnicodeDecodeError) as e:
+            if manuscript_files is not None:
+                raise
             logger.warning(f"Could not read {md_file.name}: {e}")
     return referenced
 
@@ -148,6 +159,7 @@ def validate_figure_registry(
     *,
     require_accessibility: bool = False,
     additional_manuscript_dirs: Iterable[Path] = (),
+    manuscript_files: Iterable[Path] | None = None,
 ) -> tuple[bool, list[str]]:
     """Validate figure registry against manuscript references.
 
@@ -166,6 +178,8 @@ def validate_figure_registry(
             trees whose references must be covered by the same registry. This
             prevents producer-injected figures from bypassing a source-only
             accessibility audit.
+        manuscript_files: Exact consumed roster confined to manuscript_dir;
+            None retains recursive authored-tree discovery.
 
     Returns:
         Tuple of (success, list of issues found):
@@ -174,7 +188,7 @@ def validate_figure_registry(
     """
     log_substep("Validating figure registry...", logger)
 
-    referenced_figures = _scan_manuscript_references(manuscript_dir)
+    referenced_figures = _scan_manuscript_references(manuscript_dir, manuscript_files)
     for additional_dir in additional_manuscript_dirs:
         referenced_figures.update(_scan_manuscript_references(additional_dir))
     registered_figures, load_error = _load_registry(registry_path)

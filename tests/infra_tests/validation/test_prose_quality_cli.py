@@ -63,3 +63,33 @@ class TestProseQualityCommand:
             with pytest.raises(SystemExit):
                 cli.validate_prose_quality_command(_args(path=str(f), json=True))
         assert "ai_term_per_1k" in caplog.text
+
+
+@pytest.mark.parametrize("admit_flagged_branch", [True, False])
+def test_stage_four_prose_scans_only_admitted_deep_generated_branch(tmp_path, caplog, admit_flagged_branch):
+    import logging
+
+    from infrastructure.validation.content.manuscript_config import GENERATED_ORDERING_MARKER
+    from infrastructure.validation.output.prose_quality import validate_prose_quality
+
+    project = tmp_path / "project"
+    authored = project / "manuscript"
+    authored.mkdir(parents=True)
+    (authored / "template.md").write_text("Ants forage and return home.", encoding="utf-8")
+    generated = project / "output" / "manuscript"
+    deep = generated / "volume" / "part" / "chapters"
+    deep.mkdir(parents=True)
+    (generated / "anchor.md").write_text("Compiler selection anchor.", encoding="utf-8")
+    (deep / "flagged.md").write_text(AI_PROSE, encoding="utf-8")
+    (deep / "clean.md").write_text("Ants forage and return home.", encoding="utf-8")
+    selected = "flagged.md" if admit_flagged_branch else "clean.md"
+    (generated / "config.yaml").write_text(
+        f"{GENERATED_ORDERING_MARKER}\nunits:\n  - directory: volume/part/chapters\n    chapters: [{selected}]\n",
+        encoding="utf-8",
+    )
+
+    with caplog.at_level(logging.INFO):
+        assert validate_prose_quality(project) is True
+
+    flagged_path = "output/manuscript/volume/part/chapters/flagged.md"
+    assert (flagged_path in caplog.text) is admit_flagged_branch
