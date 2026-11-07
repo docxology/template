@@ -91,11 +91,11 @@ def _validate_ordering(loaded: Mapping[str, object], root: Path) -> None:
             bundle = _mapping(raw, f"{group} bundle")
             if not _enabled(bundle):
                 continue
-            unit = bundle.get("unit")
-            if not isinstance(unit, str) or not unit:
+            unit_name = bundle.get("unit")
+            if not isinstance(unit_name, str) or not unit_name:
                 raise ValueError(f"generated manuscript {group} bundle must name its unit")
-            relative = Path(unit)
-            if relative.is_absolute() or ".." in relative.parts or relative.as_posix() != unit:
+            relative = Path(unit_name)
+            if relative.is_absolute() or ".." in relative.parts or relative.as_posix() != unit_name:
                 raise ValueError("generated manuscript appendix unit must use a canonical relative directory")
             _declared_files(bundle.get("files", []), (root / group / relative,))
     if _enabled(appendices, "include_reference", False):

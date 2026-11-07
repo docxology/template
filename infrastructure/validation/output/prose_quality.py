@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
@@ -47,6 +48,7 @@ def validate_prose_quality(project_root: Path) -> bool:
     log_substep("Analyzing prose quality (AI-writing fingerprints)...", logger)
     generated_inputs = declared_generated_manuscript_inputs(project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
+    inputs: Iterable[Path]
     if generated_inputs is None:
         if not manuscript_dir.is_dir():
             logger.warning("Prose quality: manuscript directory not found at %s", manuscript_dir)
