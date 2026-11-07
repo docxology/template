@@ -853,6 +853,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-11-07T21:17:53Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.infrastructure_python[5][1]",
+      "source_field": "$.infrastructure_python[5][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "90"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T16:23:58+00:00",
       "kind": "number",
       "source": ".github/workflows/ci.yml project source coverage gate (numeric variant)",
@@ -871,6 +883,18 @@
       "source_field": "$.tool.coverage.report.fail_under",
       "source_path": "pyproject.toml",
       "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T21:17:53Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.infrastructure_python[5][1] (numeric variant)",
+      "source_field": "$.infrastructure_python[5][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.9"
@@ -2386,30 +2410,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "91"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-10-30T19:22:57Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[24][1]",
-      "source_field": "$.exemplar_coverage[24][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "380"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-10-30T19:22:57Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[24][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[24][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3.8"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
