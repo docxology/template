@@ -435,6 +435,7 @@ jobs:
         if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          npm ci --ignore-scripts --no-audit --no-fund
           npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
           .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
           NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \

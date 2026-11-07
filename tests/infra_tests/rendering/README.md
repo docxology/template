@@ -56,6 +56,8 @@ Python 3.14 infrastructure cell runs the suite.
 Run it locally from the repository root with:
 
 ```bash
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+npm ci --ignore-scripts --no-audit --no-fund
 npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
 .tmp/playwright-node/node_modules/.bin/playwright install chromium
 NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
