@@ -10851,7 +10851,7 @@
     },
     {
       "path": "tests/infra_tests/orchestration/test_cli.py",
-      "source_sha256": "00d2cb53f7f43591708ec2bb0a9fec9cd1d8c15322343125c7bdc8a29c6e3af8",
+      "source_sha256": "25608f2830da3be80fca665fadebf045ae01f72bbfc73060045b6f2e66eae7fe",
       "families": [
         "tests/infra_tests/orchestration/test_cli.py::test_actual_invalid_project_preflight_exits_two_without_execution",
         "tests/infra_tests/orchestration/test_cli.py::test_build_parser_help_works",
@@ -10873,10 +10873,10 @@
         "tests/infra_tests/orchestration/test_cli.py::test_cmd_pipeline_default_project",
         "tests/infra_tests/orchestration/test_cli.py::test_cmd_pipeline_no_projects",
         "tests/infra_tests/orchestration/test_cli.py::test_cmd_pipeline_with_explicit_project",
-        "tests/infra_tests/orchestration/test_cli.py::test_cmd_secure_deterministic_flag_sets_env_var",
+        "tests/infra_tests/orchestration/test_cli.py::test_cmd_secure_deterministic_flag_is_invocation_scoped",
         "tests/infra_tests/orchestration/test_cli.py::test_cmd_secure_steg_only",
         "tests/infra_tests/orchestration/test_cli.py::test_cmd_secure_validate_kmyth",
-        "tests/infra_tests/orchestration/test_cli.py::test_cmd_secure_without_deterministic_does_not_set_env_var",
+        "tests/infra_tests/orchestration/test_cli.py::test_cmd_secure_without_deterministic_leaves_environment_selection",
         "tests/infra_tests/orchestration/test_cli.py::test_default_project_name_matches_canonical_qualified",
         "tests/infra_tests/orchestration/test_cli.py::test_dispatch_menu_key_f_skips_infra",
         "tests/infra_tests/orchestration/test_cli.py::test_dispatch_menu_key_unknown_returns_one",
@@ -10908,7 +10908,7 @@
         "tests/infra_tests/orchestration/test_cli.py::test_resolve_repo_root_respects_override",
         "tests/infra_tests/orchestration/test_cli.py::test_secure_help_advertises_both_modes"
       ],
-      "family_observations_sha256": "44c1e09eb64f598d759bc69af6b29981ec5da6984b3cab4920b03c676760f92f",
+      "family_observations_sha256": "5bde5bbf9c662b6f031f54101e808fbb97dbbacb5b34ff2fbebd15037b516bc4",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -10917,8 +10917,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/orchestration/test_cli.py",
-          "source_sha256": "00d2cb53f7f43591708ec2bb0a9fec9cd1d8c15322343125c7bdc8a29c6e3af8",
-          "line": 1
+          "line": 1,
+          "source_sha256": "25608f2830da3be80fca665fadebf045ae01f72bbfc73060045b6f2e66eae7fe"
         }
       ]
     },
@@ -11112,8 +11112,8 @@
         },
         {
           "path": "infrastructure/orchestration/commands.py",
-          "source_sha256": "da09ff51d1b4cdfc3e33e5f460fb67d9a4af7b3f9d84bbc30d8203f90291d5ef",
-          "line": 75
+          "line": 74,
+          "source_sha256": "b4ec03998e2d13fadae50113bce9af8843e1d723764310f5b834e8ff2ba379a0"
         },
         {
           "path": "infrastructure/orchestration/pipeline_runner.py",
@@ -11127,8 +11127,8 @@
         },
         {
           "path": "infrastructure/core/pipeline/multi_project_runtime.py",
-          "source_sha256": "dd2c085d53eee2928438b2d0b0831c63f3db30b1550e8eb1f41c4d749a5c03bf",
-          "line": 115
+          "line": 102,
+          "source_sha256": "12ecd04b898af0c4b27e6a6360d91d3ad05116efe0cd7800a2ef7bd0a7b6d54f"
         },
         {
           "path": "infrastructure/core/pipeline/resume.py",
@@ -11137,8 +11137,8 @@
         },
         {
           "path": "infrastructure/core/pipeline/multi_project_support.py",
-          "source_sha256": "dd2e5428ff6621a9cd98f2d44d17270617f38e892ef7750dd253c8bb55d2fbe2",
-          "line": 52
+          "line": 60,
+          "source_sha256": "3347cb70dae8332cde93311c4dfcda15565b4a48680e9cfbea2316446a9f89b9"
         }
       ]
     },
@@ -13473,29 +13473,29 @@
           "source_sha256": "8ed457ec6925d947f81fd23b853c8130f0462e537d7871b7f7f979e3d0676204"
         },
         {
-          "line": 53,
-          "path": "infrastructure/reporting/required_candidate_transport.py",
-          "source_sha256": "b32469fc0f960bbaa38e622e0f6e9ef811e16b47016ff53f4981b48f61a3aefa"
+          "path": "infrastructure/reporting/readiness_artifact_graph.py",
+          "line": 12,
+          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
         },
         {
-          "line": 64,
-          "path": "infrastructure/reporting/required_candidate_transport.py",
-          "source_sha256": "b32469fc0f960bbaa38e622e0f6e9ef811e16b47016ff53f4981b48f61a3aefa"
+          "path": "infrastructure/reporting/readiness_artifact_graph.py",
+          "line": 23,
+          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
         },
         {
-          "line": 76,
-          "path": "infrastructure/reporting/required_candidate_transport.py",
-          "source_sha256": "b32469fc0f960bbaa38e622e0f6e9ef811e16b47016ff53f4981b48f61a3aefa"
+          "path": "infrastructure/reporting/readiness_artifact_graph.py",
+          "line": 35,
+          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
         },
         {
-          "line": 89,
-          "path": "infrastructure/reporting/required_candidate_transport.py",
-          "source_sha256": "b32469fc0f960bbaa38e622e0f6e9ef811e16b47016ff53f4981b48f61a3aefa"
+          "path": "infrastructure/reporting/readiness_artifact_graph.py",
+          "line": 48,
+          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
         },
         {
-          "line": 82,
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "source_sha256": "9ab948549d7f2f22f7527cc50f9eb1a73c1d321e0743b3650688189477bf785b"
+          "line": 85,
+          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
         }
       ]
     },
@@ -16618,28 +16618,28 @@
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 161
+          "line": 146,
+          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 167
+          "line": 152,
+          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 221
+          "line": 249,
+          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 248
+          "line": 299,
+          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "4c20e62e19214a2ee72054e6ebef555ad1eedca6410c72e8e8c2b1334960e5b3",
-          "line": 90
+          "line": 94,
+          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
@@ -23897,19 +23897,19 @@
           "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
         },
         {
-          "line": 53,
-          "path": "infrastructure/reporting/required_candidate_transport.py",
-          "source_sha256": "b32469fc0f960bbaa38e622e0f6e9ef811e16b47016ff53f4981b48f61a3aefa"
+          "path": "infrastructure/reporting/readiness_artifact_graph.py",
+          "line": 12,
+          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
         },
         {
-          "line": 82,
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "source_sha256": "9ab948549d7f2f22f7527cc50f9eb1a73c1d321e0743b3650688189477bf785b"
+          "line": 85,
+          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
         },
         {
-          "line": 95,
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "source_sha256": "9ab948549d7f2f22f7527cc50f9eb1a73c1d321e0743b3650688189477bf785b"
+          "line": 99,
+          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
         }
       ]
     },
@@ -24059,7 +24059,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_coverage_parser.py",
-      "source_sha256": "c2683f3635e80e87b498fb53da5859af5289f560362c6ef8ca00dd963ff77d8a",
+      "source_sha256": "0c25374fc6d2603fd34244bc28cb5ffc650eb77bac9d1d5d4bb35e8b11868b02",
       "families": [
         "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckCovDatafileSupport::test_result_matches_actual_pytest_help",
         "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckCovDatafileSupport::test_returns_bool",
@@ -24101,7 +24101,7 @@
         "tests/infra_tests/reporting/test_coverage_parser.py::TestWaitForCoverageFile::test_no_files",
         "tests/infra_tests/reporting/test_coverage_parser.py::TestWaitForCoverageFile::test_valid_file"
       ],
-      "family_observations_sha256": "d7bf6bf86321513832493ec1ab573fd07ffb54db15d568982b696c901f3c117d",
+      "family_observations_sha256": "25daf35d51eacb63612e60fceddc429bd5dd83fdc34ce7f0c65afcd46bcc5113",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -24110,8 +24110,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_coverage_parser.py",
-          "source_sha256": "c2683f3635e80e87b498fb53da5859af5289f560362c6ef8ca00dd963ff77d8a",
-          "line": 1
+          "line": 1,
+          "source_sha256": "0c25374fc6d2603fd34244bc28cb5ffc650eb77bac9d1d5d4bb35e8b11868b02"
         }
       ]
     },
@@ -25366,34 +25366,34 @@
           "source_sha256": "6b9109f479bcfae89977f31d5220a60cb19b037538d319e24d6e9240f7ccc676"
         },
         {
-          "line": 52,
           "path": "infrastructure/reporting/native_cell_selection.py",
-          "source_sha256": "cef3e31ecc93e8fbd28fa626ec69ff2437a5e2a793283d4649e3648562098511"
+          "line": 105,
+          "source_sha256": "0fb01632dd838ae040bca3a5f8d2d0acbd0ea5853e41f7a1471e9121581c8b3f"
         },
         {
-          "line": 64,
           "path": "infrastructure/reporting/native_cell_selection.py",
-          "source_sha256": "cef3e31ecc93e8fbd28fa626ec69ff2437a5e2a793283d4649e3648562098511"
+          "line": 117,
+          "source_sha256": "0fb01632dd838ae040bca3a5f8d2d0acbd0ea5853e41f7a1471e9121581c8b3f"
         },
         {
-          "line": 83,
           "path": "infrastructure/reporting/native_cell_selection.py",
-          "source_sha256": "cef3e31ecc93e8fbd28fa626ec69ff2437a5e2a793283d4649e3648562098511"
+          "line": 136,
+          "source_sha256": "0fb01632dd838ae040bca3a5f8d2d0acbd0ea5853e41f7a1471e9121581c8b3f"
         },
         {
-          "line": 91,
           "path": "infrastructure/reporting/native_cell_selection.py",
-          "source_sha256": "cef3e31ecc93e8fbd28fa626ec69ff2437a5e2a793283d4649e3648562098511"
+          "line": 144,
+          "source_sha256": "0fb01632dd838ae040bca3a5f8d2d0acbd0ea5853e41f7a1471e9121581c8b3f"
         },
         {
-          "line": 109,
           "path": "infrastructure/reporting/native_installed_launcher.py",
-          "source_sha256": "0f9072320ae592dcc7ea50a0495366bb2914a2c94e1660efb247190d406cd062"
+          "line": 130,
+          "source_sha256": "e7fc2e5b3828a8e335cc5bf9728e4b8bc056838fe44861da152f2e1724761d61"
         },
         {
-          "line": 604,
           "path": "infrastructure/reporting/native_hosted_original_custody.py",
-          "source_sha256": "ddbeb3f8fff85164959af5f488c689c743e4a626ed3581589a7e33c6d398c8d3"
+          "line": 596,
+          "source_sha256": "b3fe0a1144c428685949285742675bb61de5d1d02f06e89084d7710bf1f4bc5a"
         }
       ]
     },
@@ -29264,19 +29264,19 @@
           "source_sha256": "f19313066e4670335edfc57c177bc8a7ba08944d0cc904b685ac4926c9c4aaf2"
         },
         {
-          "line": 53,
-          "path": "infrastructure/reporting/required_candidate_transport.py",
-          "source_sha256": "b32469fc0f960bbaa38e622e0f6e9ef811e16b47016ff53f4981b48f61a3aefa"
+          "path": "infrastructure/reporting/readiness_artifact_graph.py",
+          "line": 12,
+          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
         },
         {
-          "line": 82,
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "source_sha256": "9ab948549d7f2f22f7527cc50f9eb1a73c1d321e0743b3650688189477bf785b"
+          "line": 85,
+          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
         },
         {
-          "line": 95,
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "source_sha256": "9ab948549d7f2f22f7527cc50f9eb1a73c1d321e0743b3650688189477bf785b"
+          "line": 99,
+          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
         }
       ]
     },
@@ -31348,14 +31348,14 @@
           "source_sha256": "060d8cb23151e274c1e850c776713704c2d207386ea4667f5688d19a32d4c4d3"
         },
         {
-          "line": 268,
           "path": "infrastructure/steganography/config.py",
-          "source_sha256": "f093040ffe366aaef668f6aafb5bea0c75bc15f12be04ee60a7d87e23b368668"
+          "line": 276,
+          "source_sha256": "d9906b681181b409bd986ec8303313099c0fc38730c43ed553f9044b8e59ad48"
         },
         {
-          "line": 277,
           "path": "infrastructure/steganography/config.py",
-          "source_sha256": "f093040ffe366aaef668f6aafb5bea0c75bc15f12be04ee60a7d87e23b368668"
+          "line": 285,
+          "source_sha256": "d9906b681181b409bd986ec8303313099c0fc38730c43ed553f9044b8e59ad48"
         },
         {
           "line": 152,
@@ -31514,14 +31514,14 @@
           "source_sha256": "676e3ffb2a642d34ff505e8b8d95ef3d5977a63e1bd3d9f7c7876bfddbe65dd3"
         },
         {
-          "line": 43,
           "path": "infrastructure/steganography/encryption.py",
-          "source_sha256": "42ff8d7dd2a78cec00be67e5f6d1b165f1ca92f9ec1ca77be9a3a3192b7b5c17"
+          "line": 43,
+          "source_sha256": "0256684365f5851d0fc25729840906ea4d03c2e9f91631f78e79cdf1268c12d1"
         },
         {
-          "line": 143,
           "path": "infrastructure/steganography/encryption.py",
-          "source_sha256": "42ff8d7dd2a78cec00be67e5f6d1b165f1ca92f9ec1ca77be9a3a3192b7b5c17"
+          "line": 137,
+          "source_sha256": "0256684365f5851d0fc25729840906ea4d03c2e9f91631f78e79cdf1268c12d1"
         },
         {
           "line": 152,
@@ -31684,14 +31684,14 @@
           "source_sha256": "502f11a6f474c5e63f10515517afe24a670a3ad92706d4e8d97f1c0deec1a24c"
         },
         {
-          "line": 29,
           "path": "infrastructure/steganography/hashing.py",
-          "source_sha256": "9db64539c58afbbfdba4418c07c7a5c3ed7648a3f47d9c641552fe036e3d142f"
+          "line": 30,
+          "source_sha256": "b1e428318785ef453764268be74b1a5f2644dc59ed6ff73b08f91b4cef6ecb8c"
         },
         {
-          "line": 61,
           "path": "infrastructure/steganography/hashing.py",
-          "source_sha256": "9db64539c58afbbfdba4418c07c7a5c3ed7648a3f47d9c641552fe036e3d142f"
+          "line": 62,
+          "source_sha256": "b1e428318785ef453764268be74b1a5f2644dc59ed6ff73b08f91b4cef6ecb8c"
         },
         {
           "line": 152,
@@ -32002,9 +32002,9 @@
           "source_sha256": "597407f5e8f76e921cd6cae48a7b1b10d82b5a02a05c3f126b35639e8208ad41"
         },
         {
-          "line": 70,
           "path": "infrastructure/steganography/metadata.py",
-          "source_sha256": "8559dd02ee343dd4a4e2edefcf31ab4ec35b655c524b92c8c1531f2ece6517c0"
+          "line": 70,
+          "source_sha256": "d853af836b7aa6bd5c5baccdee0dbf45f80caf56fdfb461803119737b01ab7ea"
         },
         {
           "line": 152,
@@ -32192,24 +32192,24 @@
           "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
         },
         {
-          "line": 62,
           "path": "infrastructure/steganography/core.py",
-          "source_sha256": "6e5aed553d4703ff89b38fdff8d2d136e74850bb3ca556f2077ec895ba885068"
+          "line": 85,
+          "source_sha256": "a2d967995eff3cfddba81c8b95891e52f9fabf6c53ba4a1d150959b9b252e1f6"
         },
         {
-          "line": 191,
           "path": "infrastructure/steganography/core.py",
-          "source_sha256": "6e5aed553d4703ff89b38fdff8d2d136e74850bb3ca556f2077ec895ba885068"
+          "line": 234,
+          "source_sha256": "a2d967995eff3cfddba81c8b95891e52f9fabf6c53ba4a1d150959b9b252e1f6"
         },
         {
-          "line": 328,
           "path": "infrastructure/steganography/core.py",
-          "source_sha256": "6e5aed553d4703ff89b38fdff8d2d136e74850bb3ca556f2077ec895ba885068"
+          "line": 373,
+          "source_sha256": "a2d967995eff3cfddba81c8b95891e52f9fabf6c53ba4a1d150959b9b252e1f6"
         },
         {
-          "line": 23,
           "path": "infrastructure/steganography/publication.py",
-          "source_sha256": "e073a0852c08d2dc6c768c59ce89ba74aab767e65598ebe293aff380e413fdb7"
+          "line": 24,
+          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
         },
         {
           "line": 152,
@@ -32346,19 +32346,19 @@
           "source_sha256": "483704f806c8614baf2fa42e0b60d716a051ef2ca24aed8d5d6e52a5b2c4955b"
         },
         {
-          "line": 23,
           "path": "infrastructure/steganography/publication.py",
-          "source_sha256": "e073a0852c08d2dc6c768c59ce89ba74aab767e65598ebe293aff380e413fdb7"
+          "line": 24,
+          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
         },
         {
+          "path": "infrastructure/steganography/publication.py",
           "line": 52,
-          "path": "infrastructure/steganography/publication.py",
-          "source_sha256": "e073a0852c08d2dc6c768c59ce89ba74aab767e65598ebe293aff380e413fdb7"
+          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
         },
         {
-          "line": 116,
           "path": "infrastructure/steganography/publication.py",
-          "source_sha256": "e073a0852c08d2dc6c768c59ce89ba74aab767e65598ebe293aff380e413fdb7"
+          "line": 117,
+          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
         },
         {
           "line": 152,
