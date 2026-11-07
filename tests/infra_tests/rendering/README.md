@@ -47,11 +47,12 @@ uv run pytest tests/infra_tests/rendering/test_web_renderer.py -v
 - Cross-reference handling
 - Style application
 
-The real Chromium regression in `mathjax_reflow.spec.cjs` typesets an equation
-through the shared pinned MathJax configuration, then changes the viewport from
-desktop to 200% and 400% equivalent widths and back. It checks visible equation
-numbers, unchanged input mathematics, and document width after asynchronous
-typesetting completes. It runs in the Ubuntu/Python 3.14 infrastructure CI cell.
+The real Chromium regressions in `mathjax_reflow.spec.cjs` check visible equation
+numbers, unchanged mathematics and document width through asynchronous viewport
+reflow. Large local/CDN documents exercise the browser argument-stack boundary;
+scoped cases retain raw TeX, ignored and explicitly processed content, source
+positions and later selected-root typesetting. The scheduled/manual Ubuntu
+Python 3.14 infrastructure cell runs the suite.
 Run it locally from the repository root with:
 
 ```bash
@@ -63,7 +64,11 @@ NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
   --workers=1 --output=.tmp/mathjax-browser
 ```
 
-The probe requires the pinned MathJax CDN assets; it is not an offline test.
+CDN cases require the pinned external assets. Local cases require regular
+Source-locked MathJax/newcm 4.0.0 packages and reject external requests. Keep
+the output under the repository root: local asset publication enforces that
+confinement. Review the Source-owned bounded find action and offset mapping
+when changing the pinned MathJax version.
 
 ### Slide Renderer Tests
 

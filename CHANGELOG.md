@@ -28,6 +28,9 @@ matching tag identity and authenticated publication.
 - Preserve the selected HTML asset mode through Stage 03 configuration.
   Explicit offline requests publish the pinned local MathJax closure or refuse;
   they never silently substitute CDN assets.
+- Discover browser mathematics with bounded scanner-entry appends rather than
+  whole-document argument spreads. Preserve raw and Pandoc equations, selected
+  roots, ignore/process boundaries and live viewport reflow in large books.
 - Probe the existing real tagged-PDF test independently on all four targets;
   require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving
