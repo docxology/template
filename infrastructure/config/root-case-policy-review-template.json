@@ -3191,7 +3191,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_config_loader_queries.py",
-      "source_sha256": "a2ccd71f08854a090823f6839f82c234b569a5628ce02b8da7a0f1511be13c71",
+      "source_sha256": "c881612ce442160407b19c93773ba3657d79e16d42b9c2a23e504a67fb2d2263",
       "families": [
         "tests/infra_tests/core/test_config_loader_queries.py::TestGetReviewTypes::test_filters_invalid_review_types",
         "tests/infra_tests/core/test_config_loader_queries.py::TestGetReviewTypes::test_returns_all_valid_review_types",
@@ -3212,9 +3212,10 @@
         "tests/infra_tests/core/test_config_loader_queries.py::TestGetTranslationLanguages::test_returns_languages_when_enabled",
         "tests/infra_tests/core/test_config_loader_queries.py::TestGetTranslationLanguages::test_returns_single_language",
         "tests/infra_tests/core/test_config_loader_queries.py::TestTestingConfig::test_get_testing_config_no_config",
-        "tests/infra_tests/core/test_config_loader_queries.py::TestTestingConfig::test_get_testing_config_with_testing_section"
+        "tests/infra_tests/core/test_config_loader_queries.py::TestTestingConfig::test_get_testing_config_with_testing_section",
+        "tests/infra_tests/core/test_config_loader_queries.py::test_review_queries_keep_exact_project_config"
       ],
-      "family_observations_sha256": "1f5bdf01a3f7b6b94c15fce209cd9bd48853a9e4b940c03b87b2c74bbbc4dc3c",
+      "family_observations_sha256": "b0b529afe64c4bb1cfa013e031959bcbf75e68ddaca99596370d09f44c9096da",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -3223,8 +3224,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_config_loader_queries.py",
-          "source_sha256": "a2ccd71f08854a090823f6839f82c234b569a5628ce02b8da7a0f1511be13c71",
+          "source_sha256": "c881612ce442160407b19c93773ba3657d79e16d42b9c2a23e504a67fb2d2263",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/core/test_config_loader_queries.py",
+          "source_sha256": "c881612ce442160407b19c93773ba3657d79e16d42b9c2a23e504a67fb2d2263",
+          "line": 366
         }
       ]
     },
@@ -10177,7 +10183,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_review_saving.py",
-      "source_sha256": "9628246ec7d4808648394adae5c2411c88ca2de508c05a49a768a9fbd194f7c7",
+      "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
       "families": [
         "tests/infra_tests/llm/test_review_saving.py::TestGenerateReviewSummary::test_generate_summary",
         "tests/infra_tests/llm/test_review_saving.py::TestGenerateReviewSummaryFromReviewSaving::test_basic_summary",
@@ -10191,9 +10197,12 @@
         "tests/infra_tests/llm/test_review_saving.py::TestSaveSingleReview::test_saves_file",
         "tests/infra_tests/llm/test_review_saving.py::TestSaveSingleReviewFromReviewSaving::test_basic_save",
         "tests/infra_tests/llm/test_review_saving.py::TestSaveSingleReviewFromReviewSaving::test_creates_output_dir",
-        "tests/infra_tests/llm/test_review_saving.py::TestSaveSingleReviewFromReviewSaving::test_translation_save"
+        "tests/infra_tests/llm/test_review_saving.py::TestSaveSingleReviewFromReviewSaving::test_translation_save",
+        "tests/infra_tests/llm/test_review_saving.py::test_review_write_preserves_unrelated_temporary_symlink",
+        "tests/infra_tests/llm/test_review_saving.py::test_review_writers_confine_project_output",
+        "tests/infra_tests/llm/test_review_saving.py::test_review_writers_refuse_nonportable_paths"
       ],
-      "family_observations_sha256": "f1b0085ddc43fd09ef19753b015f346d6cf7ace3be69260758d93527609ae711",
+      "family_observations_sha256": "8c2fdf8f66aaeb7d288c503f1b35a60caea2e5a21710e8eedc76e1d2cda1f779",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -10202,8 +10211,33 @@
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_review_saving.py",
-          "source_sha256": "9628246ec7d4808648394adae5c2411c88ca2de508c05a49a768a9fbd194f7c7",
+          "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/llm/test_review_saving.py",
+          "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
+          "line": 294
+        },
+        {
+          "path": "tests/infra_tests/llm/test_review_saving.py",
+          "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
+          "line": 278
+        },
+        {
+          "path": "tests/infra_tests/llm/test_review_saving.py",
+          "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
+          "line": 269
+        },
+        {
+          "path": "tests/infra_tests/llm/test_review_saving.py",
+          "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
+          "line": 75
+        },
+        {
+          "path": "tests/infra_tests/llm/test_review_saving.py",
+          "source_sha256": "f27a1a4bdba412c657477998fdd35ee8e653519b79df07780003e828882a282f",
+          "line": 105
         }
       ]
     },
@@ -23565,6 +23599,115 @@
       ]
     },
     {
+      "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+      "decision": {
+        "lane": "core",
+        "obligations": []
+      },
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/rendering/test_untrusted_web.py::test_direct_untrusted_web_refuses_unsupported_document_before_replacing_output",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_pandoc_output_limit_is_applied_to_live_stream",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_refuses_one_unsupported_section_before_publishing_any_page",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_renders_regular_prepared_sources",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 121
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 94
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 186
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 237
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 222
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 210
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 70
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 140
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 175
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 159
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_untrusted_web.py",
+          "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+          "line": 42
+        }
+      ],
+      "source_sha256": "2d77773a9d05f949464b28932c0181d6157a92f8da0aca8ab6a51b956dd06168",
+      "families": [
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_direct_untrusted_pdf_requires_os_sandbox_before_source_read",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_direct_untrusted_web_refuses_unsupported_document_before_replacing_output",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_html_refuses_temporary_root_with_linked_ancestor",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_html_split_budget_counts_repeated_utf8_shell",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_pandoc_output_limit_is_applied_to_live_stream",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_refuses_casefolded_output_collision",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_refuses_linked_inputs_before_output_changes",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_refuses_one_unsupported_section_before_publishing_any_page",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_refuses_project_slot_alias",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_refuses_unready_input_roster",
+        "tests/infra_tests/rendering/test_untrusted_web.py::test_untrusted_stage_three_renders_regular_prepared_sources"
+      ],
+      "family_observations_sha256": "4e94444f7f7c76dc18c87a3733d12373c26dbfea6783f647d737d68a4267d880"
+    },
+    {
       "path": "tests/infra_tests/rendering/test_web_accessibility.py",
       "source_sha256": "7aab346a5f9df23121a99ef9840a16d9f88c304a88f175df53de409da2ab6985",
       "families": [
@@ -32293,7 +32436,7 @@
     },
     {
       "path": "tests/infra_tests/steganography/test_processor.py",
-      "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef",
+      "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
       "families": [
         "tests/infra_tests/steganography/test_processor.py::TestProcessPdfConvenience::test_embed_steganography",
         "tests/infra_tests/steganography/test_processor.py::TestSteganographyProcessor::test_process_auto_output_name",
@@ -32304,14 +32447,19 @@
         "tests/infra_tests/steganography/test_processor.py::TestSteganographyProcessor::test_process_preserves_page_count",
         "tests/infra_tests/steganography/test_processor.py::test_encrypted_variant_keeps_embedded_provenance_attachment",
         "tests/infra_tests/steganography/test_processor.py::test_missing_output_parent_preserves_previous_manifest",
+        "tests/infra_tests/steganography/test_processor.py::test_missing_pdf_with_nonprivate_receipt_refuses_publication",
         "tests/infra_tests/steganography/test_processor.py::test_overlay_only_preserves_existing_document_catalog",
+        "tests/infra_tests/steganography/test_processor.py::test_private_receipt_publication_rolls_back_when_directory_is_substituted",
+        "tests/infra_tests/steganography/test_processor.py::test_protected_custom_pdf_reruns_without_a_public_manifest",
+        "tests/infra_tests/steganography/test_processor.py::test_public_manifest_does_not_classify_a_naturally_suffixed_pdf",
         "tests/infra_tests/steganography/test_processor.py::test_required_missing_kmyth_preserves_all_published_artifacts",
         "tests/infra_tests/steganography/test_processor.py::test_reused_processor_does_not_embed_previous_document_hashes",
         "tests/infra_tests/steganography/test_processor.py::test_runtime_config_mutation_is_validated_before_processing",
         "tests/infra_tests/steganography/test_processor.py::test_source_alias_refused_before_any_artifact_write",
-        "tests/infra_tests/steganography/test_processor.py::test_success_preserves_source_manifest_name_and_previous_destination_modes"
+        "tests/infra_tests/steganography/test_processor.py::test_success_preserves_source_manifest_name_and_previous_destination_modes",
+        "tests/infra_tests/steganography/test_processor.py::test_unavailable_private_ownership_preserves_previous_custom_output"
       ],
-      "family_observations_sha256": "6ef7a20f879fc757710a849dc319bceebb7afac0504945ec42dc1ccf33476705",
+      "family_observations_sha256": "40187752fe67df82c9283bd098b7f87408fcfb2f029c406d7149489b5ffd18e5",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -32323,27 +32471,27 @@
         {
           "line": 1,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
           "path": "infrastructure/steganography/core.py",
-          "line": 85,
-          "source_sha256": "a2d967995eff3cfddba81c8b95891e52f9fabf6c53ba4a1d150959b9b252e1f6"
+          "line": 86,
+          "source_sha256": "c31976a240056ab12925ae04616973e20b725167567e080374f51c479bd31e58"
         },
         {
           "path": "infrastructure/steganography/core.py",
-          "line": 234,
-          "source_sha256": "a2d967995eff3cfddba81c8b95891e52f9fabf6c53ba4a1d150959b9b252e1f6"
+          "line": 239,
+          "source_sha256": "c31976a240056ab12925ae04616973e20b725167567e080374f51c479bd31e58"
         },
         {
           "path": "infrastructure/steganography/core.py",
-          "line": 373,
-          "source_sha256": "a2d967995eff3cfddba81c8b95891e52f9fabf6c53ba4a1d150959b9b252e1f6"
+          "line": 378,
+          "source_sha256": "c31976a240056ab12925ae04616973e20b725167567e080374f51c479bd31e58"
         },
         {
           "path": "infrastructure/steganography/publication.py",
-          "line": 24,
-          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
+          "line": 30,
+          "source_sha256": "9a36e825f0dca98aad2f7782d1b162b37f1c2dbe734a5098665d68cfcff4b23b"
         },
         {
           "line": 152,
@@ -32366,79 +32514,104 @@
           "source_sha256": "27d75256f81c4542ca2272753c8dfa38ced53138a1d6debcf3b0cc38e3e16693"
         },
         {
-          "line": 247,
+          "line": 362,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 183,
+          "line": 298,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 146,
+          "line": 261,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 153,
+          "line": 268,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 162,
+          "line": 277,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 220,
+          "line": 335,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 201,
+          "line": 316,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 130,
+          "line": 245,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 69,
+          "line": 184,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 263,
+          "line": 378,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 78,
+          "line": 193,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
           "line": 38,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 121,
+          "line": 236,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
           "line": 53,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
         },
         {
-          "line": 102,
+          "line": 217,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "5719444c68f8b1da9286f447407af9c9eeba74c7aa9c87687e33f16f05f63cef"
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+        },
+        {
+          "path": "tests/infra_tests/steganography/test_processor.py",
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "line": 127
+        },
+        {
+          "path": "tests/infra_tests/steganography/test_processor.py",
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "line": 148
+        },
+        {
+          "path": "tests/infra_tests/steganography/test_processor.py",
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "line": 69
+        },
+        {
+          "path": "tests/infra_tests/steganography/test_processor.py",
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "line": 85
+        },
+        {
+          "path": "tests/infra_tests/steganography/test_processor.py",
+          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "line": 107
         }
       ]
     },
@@ -32481,18 +32654,18 @@
         },
         {
           "path": "infrastructure/steganography/publication.py",
-          "line": 24,
-          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
+          "line": 30,
+          "source_sha256": "9a36e825f0dca98aad2f7782d1b162b37f1c2dbe734a5098665d68cfcff4b23b"
         },
         {
           "path": "infrastructure/steganography/publication.py",
-          "line": 52,
-          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
+          "line": 58,
+          "source_sha256": "9a36e825f0dca98aad2f7782d1b162b37f1c2dbe734a5098665d68cfcff4b23b"
         },
         {
           "path": "infrastructure/steganography/publication.py",
-          "line": 117,
-          "source_sha256": "5378c3f7b005a163e84c8ab6b991bdaddcb77ba48c17454a66d7fa32e144377a"
+          "line": 160,
+          "source_sha256": "9a36e825f0dca98aad2f7782d1b162b37f1c2dbe734a5098665d68cfcff4b23b"
         },
         {
           "line": 152,
