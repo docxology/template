@@ -1,9 +1,9 @@
 {
-  "measured_at": "2026-11-07",
+  "measured_at": "2026-11-08",
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.03 %",
-      "source_hash": "93123f979353b426120bd95d63edec7f43e4e1f951fecdd6e910e1f58eef3b25"
+      "source_hash": "c55d7d9c4d9d4d322a5ef7ef196cd57fddeeb1cb7f9fbdcc636b39f45adf4d5c"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.04 %",
@@ -18,7 +18,7 @@
       "source_hash": "2dfcccc0aaff6c0f209970fad5b0f9c7fa800b05c9454cbc78056bd3c03e4c5b"
     },
     "template_autoscientists": {
-      "coverage_pct": "92.95 %",
+      "coverage_pct": "93.39 %",
       "source_hash": "7f6949d333257ac9d77973340c46760362c6e447a0cdde8ede5d3669bc0162a3"
     },
     "template_code_project": {
@@ -38,7 +38,7 @@
       "source_hash": "da065c5e2e17b98166993b280724a9ae7721cda1dfe7e19c6309b895b3950451"
     },
     "template_formal": {
-      "coverage_pct": "90.39 %",
+      "coverage_pct": "90.30 %",
       "source_hash": "75fb7c53e444f7df7fd2e11fec30b0ef06460c8dbd46eb1db379b694bb537ec8"
     },
     "template_gold_refinement": {
@@ -98,12 +98,12 @@
       "source_hash": "c4df6662d4cfa64efaa595ef72283c8a66f1bc1ac269f02a7d1884133d15f6d0"
     },
     "template_textbook": {
-      "coverage_pct": "96.17 %",
+      "coverage_pct": "96.06 %",
       "source_hash": "6ecf3e110f2eaf532220e23dab08437930733713a91ac1538ef298014ddd117a"
     }
   },
   "schema_version": 5,
-  "source_commit": "e4a77fddd72ab0df70cea3779f5fb8e37d70c952",
+  "source_commit": "f22cfef0fb681ad37cadc16398c6c404b04d84d9",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -111,7 +111,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "6f7b7698f7ad12d9106834dda1db5a5fd496a48cdeee41854855acf74db70471",
+        "digest": "54c75c43d20c00b85c565b43f18281f56779628518481f81bfdf6e5c5e36560f",
         "entries": [
           {
             "identity": "sha256",
@@ -175,7 +175,7 @@
           {
             "identity": "sha256",
             "path": "docs/development/ci.md",
-            "sha256": "4524ba2633e092797adb4a3aa335608628bb8e4d3d1d082545bcb63f0f57692b",
+            "sha256": "207d5e1f1ec1803875b8ca0027c30d48a77aadbf35cde0464c6a14993ad2af51",
             "type": "file"
           },
           {
@@ -205,7 +205,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "93123f979353b426120bd95d63edec7f43e4e1f951fecdd6e910e1f58eef3b25",
+      "template_active_inference": "c55d7d9c4d9d4d322a5ef7ef196cd57fddeeb1cb7f9fbdcc636b39f45adf4d5c",
       "template_advanced_literature_review": "7f227f4d9c0c46c0272028be02efd779eb684df58e4587336b9d4ce716df71a5",
       "template_autopoiesis": "53d8ddca2ccb878605fcbb221a86b0d0b6db0c53650b2ac5e263b3d3edabb5b3",
       "template_autoresearch_project": "2dfcccc0aaff6c0f209970fad5b0f9c7fa800b05c9454cbc78056bd3c03e4c5b",
