@@ -25,6 +25,12 @@ matching tag identity and authenticated publication.
 - Refresh exhaustive family classifications from all four original native
   collectors; verify exact native policy encoding and current Source admission
   without turning retired incidental cases into waived runtime evidence.
+- Include genuine fixture setup in Root prerequisite review: complete-source
+  clones require Git even when the eventual case body tests a refusal. Preserve
+  genuinely pre-I/O refusal exceptions instead of widening their requirements.
+- Describe the existing publication DOI as an immutable version identifier,
+  preserving its preferred article citation without inventing a software-release
+  DOI or changing any archival record.
 - Resolve output-validation exports lazily so cold evidence-registry and
   rendered-snapshot consumers do not enter an import cycle through leaf
   artifact readers; preserve all existing public provider identities.

@@ -1,6 +1,6 @@
 # Citation File Format — https://citation-file-format.github.io/
-# Single source of truth for "Cite this repository". Keep the DOI in sync
-# with the README badge and the Zenodo concept record.
+# Repository citation prefers the immutable publication reference below.
+# Its DOI is not a concept DOI or a release-specific SDK archive identifier.
 cff-version: 1.2.0
 message: "If you use this template in your research, please cite it as below."
 title: >-
@@ -18,7 +18,7 @@ doi: "10.5281/zenodo.19139090"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.19139090"
-    description: "Concept DOI (always resolves to the latest release)"
+    description: "Immutable publication version DOI (v1), not a software release DOI"
 preferred-citation:
   type: article
   title: >-
