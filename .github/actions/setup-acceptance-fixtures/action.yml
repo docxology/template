@@ -35,8 +35,8 @@ runs:
         if set(values) != fields:
             raise SystemExit("TLC source pin tuple is incomplete")
         url, digest, size = values["TLC_URL"], values["TLC_SHA256"], values["TLC_BYTES"]
-        if type(url) is not str or re.fullmatch(r"https://github\.com/tlaplus/tlaplus/releases/download/[A-Za-z0-9._-]+/tla2tools\.jar", url) is None:
-            raise SystemExit("TLC URL must be an exact HTTPS official release locator")
+        if type(url) is not str or re.fullmatch(r"https://api\.github\.com/repos/tlaplus/tlaplus/releases/assets/[1-9][0-9]*", url) is None:
+            raise SystemExit("TLC URL must be an exact HTTPS official immutable asset locator")
         if type(digest) is not str or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
             raise SystemExit("TLC SHA256 must be 64 lowercase hexadecimal characters")
         if type(size) is not int or not 0 < size <= 64 * 1024 * 1024:
@@ -47,7 +47,7 @@ runs:
         read -r url expected_sha expected_bytes <<< "$pins"
         tool=$(mktemp -d "$RUNNER_TEMP/template-tlc-tools.XXXXXX")
         jar="$tool/tla2tools.jar"
-        curl --fail --location --proto '=https' --proto-redir '=https' --retry 2 --max-time 120 --output "$jar" "$url"
+        curl --fail --location --header 'Accept: application/octet-stream' --proto '=https' --proto-redir '=https' --retry 2 --max-time 120 --output "$jar" "$url"
         actual_bytes=$(wc -c < "$jar" | tr -d '[:space:]')
         if [ "$actual_bytes" != "$expected_bytes" ]; then
           printf 'TLC byte length mismatch: expected %s, got %s\n' "$expected_bytes" "$actual_bytes" >&2
