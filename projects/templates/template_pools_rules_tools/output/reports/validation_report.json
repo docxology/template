@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_pools_rules_tools_combined.pdf",
           "largest_file_path": "pdf/template_pools_rules_tools_combined.pdf",
-          "size_mb": "1.14"
+          "size_mb": "1.21"
         },
         "reports": {
           "exists": true,
@@ -97,7 +97,7 @@
           "file_count": 8,
           "largest_file": "06_integration_slides.pdf",
           "largest_file_path": "slides/06_integration_slides.pdf",
-          "size_mb": "1.26"
+          "size_mb": "1.43"
         },
         "web": {
           "exists": true,
@@ -138,7 +138,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 1.14
+            "size_mb": 1.21
           },
           "data": {
             "exists": true,
@@ -198,7 +198,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.14
+            "size_mb": 1.21
           },
           "reports": {
             "exists": true,
@@ -229,7 +229,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.26
+            "size_mb": 1.43
           },
           "web": {
             "exists": true,
@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.670372009277344
+      "total_size_mb": 7.912479400634766
     },
     "figures": {
       "files": 10,
@@ -256,7 +256,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.1393861770629883
+      "size_mb": 1.211935043334961
     },
     "stable_inventory": {
       "categories": {
@@ -278,7 +278,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1194733
+          "size_bytes": 1270806
         },
         "reports": {
           "files": 4,
@@ -290,16 +290,16 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 1321092
+          "size_bytes": 1499625
         },
         "web": {
           "files": 12,
-          "size_bytes": 2353847
+          "size_bytes": 2353109
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 60,
-      "total_size_bytes": 8042968
+      "total_size_bytes": 8296836
     }
   },
   "recommendations": [],
@@ -310,21 +310,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-06T18:06:46Z",
+  "timestamp": "2026-11-08T08:12:22Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a76458ec47a89b5629c0c27cc81909f16e92322ce839de393ea30975a943306d",
-      "size_bytes": 18127
+      "sha256": "559e12c63086a030cd90d59cf5ea6f7e8bc34657a5b0660bc9a740a866559c4b",
+      "size_bytes": 19627
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "b02292d7646e34fb0f18e6197503d14d67720c41045d1f8987a77ff7be396c89",
-      "size_bytes": 60698
+      "sha256": "602df6d8f85157910af853b13cff4f7194bf9c78589204a18966e9a068ea7c15",
+      "size_bytes": 60706
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "fbe77fea8a1b3c148e3c60e6136ff255419d49b31f00212dfd39976890fdba7b",
+      "sha256": "524e0f5f7ac5fffcc1e99e5b62b6d7785b077fde92a5604008dc136e61094a73",
       "size_bytes": 2116
     },
     "consumed_manuscript": [
@@ -380,19 +380,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "a4d854987671d978a3ff1914b19404986d83cc1c1286f60fc5fc94a52fbcde30"
+        "sha256": "8fa024e98016072aa78a59c4bc1113ce3ffc24d18f52bbb84b0395199d86a1f7"
       },
       "output": {
         "file_count": 60,
-        "sha256": "75b165dc52b1c80770f8b552bbbeab0d26cd8e62f92ffbf4b3469d037da5d945"
+        "sha256": "a4171c2f4cd3d6bce6628169a09306122e3c8fb766441488fb5dee0976054c96"
       },
       "source": {
         "file_count": 51,
         "sha256": "ef590270c743c586ba3acab9ea34212360abbacf03ed71d48887f1938968f7b0"
       },
       "stage": {
-        "file_count": 1614,
-        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+        "file_count": 1744,
+        "sha256": "3a3657c2d32848eca92445d11d97a280249f8dc177289bcb42487f7ced69a903"
       }
     },
     "project": "templates/template_pools_rules_tools",

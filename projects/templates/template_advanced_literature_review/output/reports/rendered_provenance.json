@@ -142,42 +142,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f9186931034bb5911e8ab937013d4e68a0de28d5ddbbca67f7325e5f0457b596",
-      "size_bytes": 31496
+      "sha256": "a0f233adac5d1260a64f9fb68ac02c9b5ac8721d4c2a7517614fd101cf0bdbe4",
+      "size_bytes": 34071
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "23aa0866aba9a37511c811867f1a00222ab569eeb929e16272ebe4f94edc3cf0",
-      "size_bytes": 71226
+      "sha256": "f5d493248f99abc5d6f67930950e601e85ef74b068dcaa3b7a345f9997e54c9c",
+      "size_bytes": 71345
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "de042aa9c7a95c83e74ba3e172e26912bcc9a151cd6966ecc87dca75e2269da1",
+      "sha256": "296c26d148dd4ed6c5f50c2052bef7bee61819d53cbd695790e61b9859f368b4",
       "size_bytes": 5244
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9b929bf6a06cd0fb181e9a4ed9c92478b6c8f0ebb9746730421149b6f72ccdde",
-      "size_bytes": 16095
+      "sha256": "8c3b3689044149a9e3594f187587354487109693ff941b37b40ab17e7d64b374",
+      "size_bytes": 16093
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 21,
-      "sha256": "15b49ec24c7d2aba773163faae70b7972ad53e784365892e02672e4133af4a4c"
+      "sha256": "fd4b3c0a69db4063823d0e1ca06beca9ddb5f5c8b29a0ce0ed412f0833b873a9"
     },
     "output": {
       "file_count": 103,
-      "sha256": "dbc8579be19ffb77a10d774328b44609173b6134d1b2575253d16da06f6f0843"
+      "sha256": "b0feb783205fb9a8f7db05ea9233bed8616c8d86ec9bc9e6c8378e2e40b8ddc3"
     },
     "source": {
       "file_count": 101,
       "sha256": "053599c9deb2dcd9d5053402eb95c92fc50109ae7b56fd0cba1491b9edc1dfab"
     },
     "stage": {
-      "file_count": 1614,
-      "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+      "file_count": 1744,
+      "sha256": "3a3657c2d32848eca92445d11d97a280249f8dc177289bcb42487f7ced69a903"
     }
   },
   "project": "templates/template_advanced_literature_review",

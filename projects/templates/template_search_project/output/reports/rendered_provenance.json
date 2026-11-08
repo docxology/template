@@ -64,42 +64,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "015988166e5ee6b709075b967942927f7daa4d8f94b602a1026f0e623cfec561",
-      "size_bytes": 131275
+      "sha256": "45e80ae9b0c662cbfd77be0e173d28ee39e8939939ca7cdda48ca266a945ac1f",
+      "size_bytes": 141050
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "12dbcc032e6b78df28c6957a16df2eb0e0aa32dfebc405aa2dee9eafad0e5482",
-      "size_bytes": 103457
+      "sha256": "695cebf59ddca2dcb56f1b01b5c742dd140882d536275ce94f83c8173c481121",
+      "size_bytes": 103486
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "ea811762f2d48028d70eedc990232e582e0a1416c6f92d12039e97b54a1600ff",
+      "sha256": "1b69ca87ad3910043d6ba1c456248aad0f08473d4ac05f9348aab19dabbf9f47",
       "size_bytes": 2536
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "bf49b175becbcb2b52755695b776b30a106d6abedc6659f0ef6e40a76b3e4964",
-      "size_bytes": 14304
+      "sha256": "b39fe1e87eed6aa2593909440ac6d073aba3a24d30d9dfed2da0c0bf42fe6df0",
+      "size_bytes": 14317
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 18,
-      "sha256": "5111e3f48f1b3792d7970df7109fba845fcb078e10cdc4b1f84cbc9b2d7aa166"
+      "sha256": "52fef870ff59898de5f9583ef950318a9ac39089182b30f3a56cfbd5c026cf9e"
     },
     "output": {
       "file_count": 391,
-      "sha256": "5d651f6dcf7186ccc1e96424d3afc1aaabd5ae629a1800a199634836c5371548"
+      "sha256": "1b401d68c8bbe18679689abd98ff5b2217ab1ffb26e8cc7c428f15ca2ba2207b"
     },
     "source": {
       "file_count": 56,
       "sha256": "c0df55e20af1648001ce23ad4015549e0f27eddd46a382115a2810c157188549"
     },
     "stage": {
-      "file_count": 1614,
-      "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+      "file_count": 1744,
+      "sha256": "3a3657c2d32848eca92445d11d97a280249f8dc177289bcb42487f7ced69a903"
     }
   },
   "project": "templates/template_search_project",

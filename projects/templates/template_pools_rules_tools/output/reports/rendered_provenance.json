@@ -52,42 +52,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a76458ec47a89b5629c0c27cc81909f16e92322ce839de393ea30975a943306d",
-      "size_bytes": 18127
+      "sha256": "559e12c63086a030cd90d59cf5ea6f7e8bc34657a5b0660bc9a740a866559c4b",
+      "size_bytes": 19627
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "b02292d7646e34fb0f18e6197503d14d67720c41045d1f8987a77ff7be396c89",
-      "size_bytes": 60698
+      "sha256": "602df6d8f85157910af853b13cff4f7194bf9c78589204a18966e9a068ea7c15",
+      "size_bytes": 60706
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "fbe77fea8a1b3c148e3c60e6136ff255419d49b31f00212dfd39976890fdba7b",
+      "sha256": "524e0f5f7ac5fffcc1e99e5b62b6d7785b077fde92a5604008dc136e61094a73",
       "size_bytes": 2116
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "1c8a257ac5757c18dcf90eaac42f825e2626d34b1dc7d6e676d6b75b80531fec",
-      "size_bytes": 12009
+      "sha256": "eb417c65298357c14451056a8b40f2a042c1b13b1136649f48087916df0b6fef",
+      "size_bytes": 12008
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 15,
-      "sha256": "a4d854987671d978a3ff1914b19404986d83cc1c1286f60fc5fc94a52fbcde30"
+      "sha256": "8fa024e98016072aa78a59c4bc1113ce3ffc24d18f52bbb84b0395199d86a1f7"
     },
     "output": {
       "file_count": 60,
-      "sha256": "75b165dc52b1c80770f8b552bbbeab0d26cd8e62f92ffbf4b3469d037da5d945"
+      "sha256": "a4171c2f4cd3d6bce6628169a09306122e3c8fb766441488fb5dee0976054c96"
     },
     "source": {
       "file_count": 51,
       "sha256": "ef590270c743c586ba3acab9ea34212360abbacf03ed71d48887f1938968f7b0"
     },
     "stage": {
-      "file_count": 1614,
-      "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+      "file_count": 1744,
+      "sha256": "3a3657c2d32848eca92445d11d97a280249f8dc177289bcb42487f7ced69a903"
     }
   },
   "project": "templates/template_pools_rules_tools",
