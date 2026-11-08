@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 36,
-  "bundle_hash": "7b3f36af4b00e0b8fb86fc7a8bf25bef31bfa0616eed21f7def330c0cd887745",
+  "bundle_hash": "3d4cd5401e48a194e1df87cb2250f018a4f714a5521c1980e39f8b3cb7a59cdd",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -681,7 +681,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599"
+      "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
@@ -744,7 +744,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "fc84a469565972c0cf7d51b6ed842e67d395cbcc8004d3d1de7ac8f0f04fa172"
+      "source_sha256": "c337e1c7a3b945d1778fd9089d1b298881da746e3dcfe4e7db50b48e525d4602"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -780,7 +780,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "dc9d6c4cf63363d2be465f03bd3ca624a9f402a58bea6425559f2e7a1898c0f3"
+      "source_sha256": "6cd6ad3c225b29470d1a1198ded739ac8d15af83c2488b819c8b2289b39d456f"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
