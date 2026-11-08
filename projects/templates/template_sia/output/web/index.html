@@ -202,9 +202,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -296,8 +296,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -382,7 +382,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -639,10 +646,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -693,10 +708,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -766,6 +777,7 @@ class="toc-section-number">6</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This exemplar documents <strong>template_sia</strong>, a
@@ -782,7 +794,9 @@ samples. Values are injected by
 analysis.</p>
 <p><strong>Keywords:</strong> self-improvement agents, benchmark
 harness, reproducible evaluation, agent loops</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>This exemplar ships <strong>template_sia</strong>, a deterministic
@@ -803,7 +817,9 @@ is a threshold classifier on one feature column. Results demonstrate
 harness wiring and artifact contracts—not state-of-the-art accuracy.</p>
 <p><strong>Run contract.</strong> Task <code>mini_classify</code>, run
 1, up to 3 generation(s), live=false.</p>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <h2 data-number="3.1" id="sia-loop"><span
@@ -863,7 +879,9 @@ alt="A two-row heatmap compares accuracy and sample count across 3 generation(s)
 <figcaption>Figure 2: Per-generation metric heatmap
 showing accuracy and sample count across SIA generations.</figcaption>
 </figure>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>tbl. <a href="#tbl:sia-metrics">1</a> summarizes fixture-replay
@@ -924,7 +942,9 @@ metric delta (Δaccuracy) for the SIA fixture replay; the flat trace
 confirms threshold robustness and prevents a fabricated improvement
 claim.</figcaption>
 </figure>
+
 <hr />
+
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
 <p>template_sia demonstrates how to embed the SIA harness contract in
@@ -940,13 +960,16 @@ self-modification and external LLM calls remain opt-in; default CI never
 executes generated agent code or claims benchmark parity with <span
 class="citation" data-cites="sia2026">(<a href="#ref-sia2026"
 role="doc-biblioref">AI 2026</a>)</span>.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:references"><span
 class="header-section-number">6</span> References</h1>
 <p>See <code>references.bib</code> for BibTeX entries cited in this
 manuscript, including <span class="citation" data-cites="sia2026">(<a
 href="#ref-sia2026" role="doc-biblioref">AI 2026</a>)</span> and the
 template repository DOI from <code>manuscript/config.yaml</code>.</p>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-sia2026" class="csl-entry" role="listitem">

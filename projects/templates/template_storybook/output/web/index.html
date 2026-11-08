@@ -210,9 +210,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -241,8 +241,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -327,7 +327,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -345,8 +352,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -359,8 +364,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -588,10 +591,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -642,10 +653,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -701,6 +708,7 @@ class="toc-section-number">6</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p><code>template_storybook</code> demonstrates a public, standalone
@@ -722,7 +730,9 @@ cover, each page script renders a numbered page, and a final script
 assembles the PDF. This makes the exemplar a forkable pattern for
 full-page creative artifacts rather than standard manuscript-centered
 figure generation.</p>
+
 <hr />
+
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>Most template exemplars in this repository produce analytical
@@ -737,7 +747,9 @@ meeting is arranged around a yin-yang-like valley so that each family
 contains a trace of the other without erasing its own geometry. The
 point is not mathematical instruction; it is a compact visual grammar
 for reciprocal belonging.</p>
+
 <hr />
+
 <h1 data-number="3" id="architecture"><span
 class="header-section-number">3</span> Architecture</h1>
 <p>The storybook uses the same Layer-2 project contract as the other
@@ -761,7 +773,9 @@ PDF and writes the manifest.</li>
 orchestration: cover, page 1, page 2, and so on. The repetition keeps
 the creative page surface easy to inspect while preventing scripts from
 becoming hidden rendering engines.</p>
+
 <hr />
+
 <h1 data-number="4" id="story-and-graphics"><span
 class="header-section-number">4</span> Story and Graphics</h1>
 <p>Every page is rendered as a full-page PNG. Some pages place text
@@ -782,7 +796,9 @@ role="doc-biblioref">Fuller 1975</a>)</span>. Later pages extend that
 grammar through projection, push-pull balance, and directional growth.
 This gives forks a readable baseline. Replacing the story does not
 require editing Python; replacing the visual grammar does.</p>
+
 <hr />
+
 <h1 data-number="5" id="reproducibility"><span
 class="header-section-number">5</span> Reproducibility</h1>
 <p>The project avoids external image services and live APIs. Page images
@@ -795,12 +811,15 @@ root.</p>
 <p>The generated manifest records the cast, page list, and render paths.
 That manifest is the compact evidence surface for the primary
 artifact.</p>
+
 <hr />
+
 <h1 data-number="6" id="references"><span
 class="header-section-number">6</span> References</h1>
 <p>The bundled story is illustrative fiction. The Synergetics reference
 grounds the tetrahedron-inside-cube design motif used in the stability
 page and the later tensegrity/vector motifs.</p>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-fuller1975synergetics" class="csl-entry" role="listitem">

@@ -22,6 +22,8 @@ _SUPPORTED_ALGORITHMS = {
     "shared-combined-markdown-v1",
     "web-renderer-paper-frontmatter-v1",
     "shared-paper-frontmatter-markdown-v1",
+    "web-renderer-source-context-v2",
+    "web-renderer-paper-source-context-v2",
 }
 
 

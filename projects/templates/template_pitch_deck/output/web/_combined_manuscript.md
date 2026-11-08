@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 Research groups routinely need to pitch their work — to funders, partners, or
@@ -26,11 +30,19 @@ both file formats, not by inspection.
 communication, meta-science infrastructure, token validation, PPTX, PDF
 rendering.
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -80,11 +92,19 @@ reproducibility guarantees ([@sec:reproducibility]) that let
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-2-start-->
+```
 
 # Deck Rendering Architecture {#sec:architecture}
 
@@ -145,11 +165,19 @@ and all three original claims without shrinking presentation body text;
 executable tests derive the exact roster dynamically and bind each authored
 deck to its declared budget.
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-3-start-->
+```
 
 # Content and Validation {#sec:validation}
 
@@ -201,11 +229,19 @@ across all three lengths as part of the same audit script, and — like the
 token check — is proven to fire on a deliberately cliché-laden sentence
 before the real content's cleanliness is trusted.
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-4-start-->
+```
 
 # Reproducibility {#sec:reproducibility}
 
@@ -235,11 +271,19 @@ and requires no LLM/Ollama stage — deck content is authored and
 token-resolved, not generated at render time by a model call, which keeps
 the artifact deterministic and the core pipeline Ollama-optional.
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-5-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -270,13 +314,25 @@ Three offline audits run as real gates before the deck ships:
 `scripts/30_audit_diligence.py` enforces 100% fact-citation coverage across all
 three lengths. PowerPoint/PDF slide-count parity is verified for every render.
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-5-end-->
+```
+
 
 
 ---
 
 
 
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-6-start-->
+```
+
 # References {#sec:references}
 
 ::: {#refs}
 :::
+
+```{=html}
+<!--template-web-source-5dc1b7071fd83a897b961c9af1dfc57a176c49683f9a90ec971365a225eb137b-6-end-->
+```

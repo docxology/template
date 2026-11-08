@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-0-start-->
+```
+
 ```{=latex}
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -54,11 +58,19 @@ Structured manifest: `../data/transmission_manifest.json`
 
 <!-- BEGINNING OF TRANSMISSION -->
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-1-start-->
+```
 
 # Abstract {#sec:abstract}
 
@@ -72,11 +84,19 @@ The contribution is methodological and architectural: a *generic, reusable* pros
 
 **Keywords:** prose analysis, readability, editorial review, reproducible manuscript review, scientific infrastructure
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-2-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -88,11 +108,19 @@ The architecture is simple. `manuscript/config.yaml` defines policy: target grad
 
 The remainder of this paper documents the methodology ([@sec:methodology]), the run-time results on the bundled manuscript ([@sec:results]), and the architectural lessons drawn from wiring prose analysis through the template pipeline ([@sec:conclusion]).
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-3-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -168,11 +196,19 @@ stages always see a fresh review):
   along with a resolved manuscript tree under `output/manuscript/`.
 * `manuscript/references.bib` is **not** modified by this pipeline — the prose project does not generate citations, only validates them.
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-4-start-->
+```
 
 # Results {#sec:results}
 
@@ -202,11 +238,19 @@ The figures in `output/figures/` are colour-blind-safe (Wong 2011 palette) [@won
 
 The full pass/fail summary lands in `output/review_report.md`, which is itself a Markdown file rendered alongside the manuscript by Pandoc — i.e. the project reports on itself in the same compilation step that produces the manuscript PDF.
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-5-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -227,11 +271,19 @@ Three concrete extensions follow naturally:
 2. **Diff-aware review** — restrict the report to files modified since a given git ref so editorial review can run on every PR.
 3. **LLM-assisted rewriting** — pipe long sentences and passive candidates into `infrastructure.llm` for suggested rewrites, using the same `seed=42, temperature=0.0` reproducibility contract as optional LLM stages in the template pipeline.
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-6-start-->
+```
 
 # Pipeline Internals {#sec:pipeline_internals}
 
@@ -330,11 +382,19 @@ classDiagram
     ProseRunArtifacts --> "*" CheckResult
 ```
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-7-start-->
+```
 
 # Reproducibility {#sec:reproducibility}
 
@@ -371,11 +431,19 @@ The diff should be empty. If it is not, the pipeline has acquired non-determinis
 | Figure generation | yes (within Matplotlib version) | fixed palette, no random subsampling |
 | Manuscript variables | yes | derived from the deterministic JSON report |
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-8-start-->
+```
 
 # References {#sec:references}
 
@@ -390,11 +458,19 @@ uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_prose_project/manuscript/references.bib --strict
 ```
 
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-8-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-9-start-->
+```
 
 ```{=latex}
 % transmission-end-bookend
@@ -422,3 +498,7 @@ uv run python -m infrastructure.reference.citation.cli validate \
 
 
 <!-- END OF TRANSMISSION -->
+
+```{=html}
+<!--template-web-source-0cba95f322ac235f166abdf5b24b53c937b9608542413d668c8b4e59311d0c08-9-end-->
+```

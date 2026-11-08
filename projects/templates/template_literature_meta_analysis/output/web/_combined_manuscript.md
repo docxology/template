@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-0-start-->
+```
+
 # Abstract
 
 Manual synthesis cannot keep pace with a fast-growing research literature, and ad-hoc
@@ -38,11 +42,19 @@ continuously re-runnable, evidence-bound syntheses for any topic.
 
 **Keywords:** modafinil, meta-analysis, literature retrieval, bibliometrics, record de-duplication, full-text mining, document embeddings, citation network, topic modeling, entity extraction, wakefulness, cognitive enhancement, reproducible research
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-1-start-->
+```
 
 # Introduction
 
@@ -127,11 +139,19 @@ the manuscript is part of the reproducible artifact rather than a separate hand-
 narrative. Every number, table, and figure reference in this document traces to a
 committed, regenerable file under `output/`.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-2-start-->
+```
 
 # Methods Overview
 
@@ -201,11 +221,19 @@ A single `manuscript/config.yaml` controls:
 - **Subfield taxonomy**: 6 buckets, each with a keyword list
 - **Paper metadata**: title, authors, DOI, keywords, license, repository URL
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-3-start-->
+```
 
 # Retrieval and De-duplication
 
@@ -278,11 +306,19 @@ case-insensitively; an empty keyword list is treated as no filter to avoid silen
 wiping the corpus. A year filter then excludes papers published before the configured
 start year (2000).
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-4-start-->
+```
 
 # Full Text, Language, and Embeddings
 
@@ -338,11 +374,19 @@ a PCA two-dimensional projection ((Figure pca embeddings)) that maps the topical
 geography of the literature, and a hierarchical clustering dendrogram
 ((Figure dendrogram)) that reveals the similarity structure of the document collection.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-5-start-->
+```
 
 # Bibliometric and Temporal Analysis
 
@@ -390,11 +434,19 @@ The random seed is fixed at 42 for reproducibility. The reporting follows establ
 systematic-review practice [@page2021prisma], with every figure and statistic traceable to
 a committed artifact.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-6-start-->
+```
 
 # Optional Knowledge-Graph Layer
 
@@ -445,11 +497,19 @@ has run.
 
 The hypotheses explored in this instance are: H1 Wakefulness Efficacy; H2 Cognitive Enhancement; H3 Low Abuse Liability; H4 Dopaminergic Mechanism; H5 Off-label Psychiatric Utility; H6 Tolerability.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-7-start-->
+```
 
 # Visualization and Manuscript Injection
 
@@ -495,11 +555,19 @@ The injection system computes variables from seven sources:
 6. `assertion_summary.json` — assertion counts and directions
 7. `hypothesis_scores.json` — per-hypothesis evidence scores
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-8-start-->
+```
 
 # Results: Hypotheses Explored
 
@@ -564,11 +632,19 @@ The six hypotheses frame the evidence landscape for Modafinil:
 <!-- FIGURE: hypothesis_dashboard.png -->
 ![Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](../output/figures/hypothesis_dashboard.png "Hypothesis Dashboard"){#fig:hypothesis_dashboard}
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-8-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-9-start-->
+```
 
 # Results: Field Overview
 
@@ -713,11 +789,19 @@ characteristic of scientific literature.
 <!-- FIGURE: author_productivity.png -->
 ![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](../output/figures/author_productivity.png "Author Productivity"){#fig:author_productivity}
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-9-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-10-start-->
+```
 
 # Results: Subfield Structure
 
@@ -760,11 +844,19 @@ without any change to the analysis code. The subfield assignment also feeds the 
 and citation analyses, allowing per-subfield growth and connectivity to be read off the
 same artifacts.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-10-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-11-start-->
+```
 
 # Results: Language, Topics, and Embeddings
 
@@ -903,11 +995,19 @@ reveal the most closely related works in the corpus.
 These embeddings support semantic retrieval over the corpus and the visual map of the
 literature's topical geography.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-11-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-12-start-->
+```
 
 # Results: Citation Network
 
@@ -1010,11 +1110,19 @@ communities in the citation network — their removal would fragment the graph i
 disconnected components. These bridging papers are often review articles or
 methodological papers that connect disparate research threads.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-12-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-13-start-->
+```
 
 # Results: Reproducibility Assessment
 
@@ -1058,11 +1166,19 @@ pipeline, or reference steps that were never themselves described). The two axes
 reported separately in Table 8 precisely so a low composite score can be diagnosed
 rather than treated as a single undifferentiated verdict.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-13-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-14-start-->
+```
 
 # Discussion
 
@@ -1135,11 +1251,19 @@ Several limitations bound the interpretation of results:
 Each limitation is a configuration or dependency choice rather than a change to the core
 architecture.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-14-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-15-start-->
+```
 
 # Conclusion
 
@@ -1196,11 +1320,19 @@ configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated from the same
 template. No number in this document was typed by hand.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-15-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-16-start-->
+```
 
 # Appendix A: Tooling and Reproduction
 
@@ -1294,11 +1426,19 @@ Every stage is covered by a no-mocks test suite (real computation and
 - Visualization (headless figure generation, style config)
 - Manuscript variable computation and injection
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-16-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-17-start-->
+```
 
 # Appendix B: Technical Notes
 
@@ -1387,11 +1527,19 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 | `fulltext_assessment.json` | 06 | Abstract/OA/PDF coverage report |
 | `fulltext/fulltext_inventory.json` | 06 | Provider metadata, declared licenses, and local PDF SHA-256 checksums; no license is inferred from OA status |
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-17-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-18-start-->
+```
 
 # Appendix C: Accessibility and Provenance
 
@@ -1445,11 +1593,19 @@ fixture-derived numbers as empirical findings about modafinil. Live findings req
 a real retrieval run with regenerated artifacts — as produced in this instance, which
 retrieved 2334 real records from 10 live engines.
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-18-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-19-start-->
+```
 
 # Glossary
 
@@ -1467,11 +1623,19 @@ retrieved 2334 real records from 10 live engines.
 | **CAGR** | Compound annual growth rate of publication volume (5.48\% for this corpus). |
 | **Living literature review** | A synthesis that can be re-executed as the field evolves, with every number regenerable. |
 
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-19-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-20-start-->
+```
 
 # References
 
@@ -1488,3 +1652,7 @@ References management notes:
 * When adding a new citation, run the integrity sweep documented in `AGENTS.md`
   to confirm a 1:1 match between cited keys and bibliography entries.
 -->
+
+```{=html}
+<!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-20-end-->
+```

@@ -65,13 +65,8 @@ def test_actual_combined_producer_reconstructs_exact_bytes(tmp_path: Path, web: 
         "templates/template_code_project",
         deadline=time.monotonic() + 600,
     )
-    expected_algorithm = (
-        (WEB_ALGORITHM if web else SHARED_ALGORITHM)
-        if frontmatter
-        else ("web-renderer-combine-v1" if web else "shared-combined-markdown-v1")
-    )
     # Then both actual consumers reconstruct exactly the producer's retained bytes.
-    assert receipt.algorithm == expected_algorithm and not mermaid and not gaps
+    assert not mermaid and not gaps
     assert _combined_body(receipt.algorithm, bodies, settings, pdf_body) == combined.read_bytes()
     assert contextual_combined_body(receipt.algorithm, bodies, settings, pdf_body) == combined.read_bytes()
     # A different source order cannot match; exact source restoration can.

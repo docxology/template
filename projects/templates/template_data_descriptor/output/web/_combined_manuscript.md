@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-0-start-->
+```
+
 # Abstract
 
 This exemplar demonstrates a **data descriptor** workflow in which the schema,
@@ -17,11 +21,19 @@ than transcribing values that would drift. This is a template with a
 demonstration dataset: it makes no scientific claim about the data, only about
 how to describe and release a dataset responsibly.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -63,11 +75,19 @@ follow describe the demonstration dataset ([@sec:data]), its schema
 binds the descriptor to the bytes it names ([@sec:quality]), and close with
 usage and forking notes ([@sec:usage]).
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-2-start-->
+```
 
 # Data description {#sec:data}
 
@@ -105,11 +125,19 @@ obtain the files through the appropriate channel. In this template the fixture
 bytes are public and small, so they are shipped alongside the descriptor and used
 to demonstrate end-to-end verification.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-3-start-->
+```
 
 # Schema and data dictionary {#sec:schema}
 
@@ -155,11 +183,19 @@ the minimum exceeds the maximum, and patterns declared on non-text fields. On th
 shipped descriptor none of these fire — the data dictionary above is complete, so
 the readiness score is unpenalised (see [@sec:quality]).
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-4-start-->
+```
 
 # Provenance {#sec:provenance}
 
@@ -198,11 +234,19 @@ minimum a downstream reuser needs to judge whether the dataset was produced the
 way they require. For a real dataset, these steps would cite concrete tools,
 versions, and operators rather than the template's synthetic agents.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-5-start-->
+```
 
 # Quality validation {#sec:quality}
 
@@ -262,11 +306,19 @@ byte-level verification against real temporary files, figure-data preparation, a
 an integration test that runs the figure script end to end and asserts real PNGs
 are written. Coverage exceeds the 90% project gate with no mocks.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-6-start-->
+```
 
 # Usage notes {#sec:usage}
 
@@ -313,11 +365,19 @@ data. When you fork it, keep that discipline: a data descriptor earns trust by
 describing a dataset precisely and verifiably, not by over-claiming what the
 dataset shows.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-7-start-->
+```
 
 # References {#sec:references}
 
@@ -335,4 +395,8 @@ clean and complete:
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_data_descriptor/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-7-end-->
 ```

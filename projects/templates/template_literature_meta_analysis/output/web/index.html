@@ -266,9 +266,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -360,8 +360,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -446,7 +446,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -703,10 +710,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -757,10 +772,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -1060,6 +1071,7 @@ class="toc-section-number">21</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Manual synthesis cannot keep pace with a fast-growing research
@@ -1108,7 +1120,9 @@ retrieval, bibliometrics, record de-duplication, full-text mining,
 document embeddings, citation network, topic modeling, entity
 extraction, wakefulness, cognitive enhancement, reproducible
 research</p>
+
 <hr />
+
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>The scholarly literature on any active topic grows faster than any
@@ -1199,7 +1213,9 @@ pipeline outputs, the manuscript is part of the reproducible artifact
 rather than a separate hand-authored narrative. Every number, table, and
 figure reference in this document traces to a committed, regenerable
 file under <code>output/</code>.</p>
+
 <hr />
+
 <h1 data-number="3" id="methods-overview"><span
 class="header-section-number">3</span> Methods Overview</h1>
 <p>The pipeline is a sequence of deterministic stages, each reading the
@@ -1286,7 +1302,9 @@ list</li>
 <li><strong>Paper metadata</strong>: title, authors, DOI, keywords,
 license, repository URL</li>
 </ul>
+
 <hr />
+
 <h1 data-number="4" id="retrieval-and-de-duplication"><span
 class="header-section-number">4</span> Retrieval and De-duplication</h1>
 <p>Retrieval dispatches the configured query across 10 independent
@@ -1445,7 +1463,9 @@ alertness, sleep deprivation, vigilance, eugeroic). Keywords are matched
 case-insensitively; an empty keyword list is treated as no filter to
 avoid silently wiping the corpus. A year filter then excludes papers
 published before the configured start year (2000).</p>
+
 <hr />
+
 <h1 data-number="5" id="full-text-language-and-embeddings"><span
 class="header-section-number">5</span> Full Text, Language, and
 Embeddings</h1>
@@ -1507,7 +1527,9 @@ two visualizations: a PCA two-dimensional projection ((Figure pca
 embeddings)) that maps the topical geography of the literature, and a
 hierarchical clustering dendrogram ((Figure dendrogram)) that reveals
 the similarity structure of the document collection.</p>
+
 <hr />
+
 <h1 data-number="6" id="bibliometric-and-temporal-analysis"><span
 class="header-section-number">6</span> Bibliometric and Temporal
 Analysis</h1>
@@ -1570,7 +1592,9 @@ class="citation" data-cites="page2021prisma">(<a
 href="#ref-page2021prisma" role="doc-biblioref"><span
 class="nocase">Page et al.</span> 2021</a>)</span>, with every figure
 and statistic traceable to a committed artifact.</p>
+
 <hr />
+
 <h1 data-number="7" id="optional-knowledge-graph-layer"><span
 class="header-section-number">7</span> Optional Knowledge-Graph
 Layer</h1>
@@ -1636,7 +1660,9 @@ scoring stage has run.</p>
 Efficacy; H2 Cognitive Enhancement; H3 Low Abuse Liability; H4
 Dopaminergic Mechanism; H5 Off-label Psychiatric Utility; H6
 Tolerability.</p>
+
 <hr />
+
 <h1 data-number="8" id="visualization-and-manuscript-injection"><span
 class="header-section-number">8</span> Visualization and Manuscript
 Injection</h1>
@@ -1695,7 +1721,9 @@ directions</li>
 <li><code>hypothesis_scores.json</code> — per-hypothesis evidence
 scores</li>
 </ol>
+
 <hr />
+
 <h1 data-number="9" id="results-hypotheses-explored"><span
 class="header-section-number">9</span> Results: Hypotheses Explored</h1>
 <p>The template scores a configurable set of hypotheses about the topic.
@@ -1804,7 +1832,9 @@ Modafinil. The dashboard summarizes the evidence scores across the 6
 configured hypotheses, showing the direction and magnitude of
 citation-weighted assertion evidence.</figcaption>
 </figure>
+
 <hr />
+
 <h1 data-number="10" id="results-field-overview"><span
 class="header-section-number">10</span> Results: Field Overview</h1>
 <p>The de-duplicated retrieval corpus for <strong>Modafinil</strong>
@@ -2159,7 +2189,9 @@ Modafinil. The horizontal bar chart shows the 20 authors with the most
 papers in the corpus, revealing the most prolific contributors to the
 modafinil literature.</figcaption>
 </figure>
+
 <hr />
+
 <h1 data-number="11" id="results-subfield-structure"><span
 class="header-section-number">11</span> Results: Subfield Structure</h1>
 <p>The subfield taxonomy is defined entirely in configuration; for this
@@ -2202,7 +2234,9 @@ this section’s structure and numbers without any change to the analysis
 code. The subfield assignment also feeds the temporal and citation
 analyses, allowing per-subfield growth and connectivity to be read off
 the same artifacts.</p>
+
 <hr />
+
 <h1 data-number="12" id="results-language-topics-and-embeddings"><span
 class="header-section-number">12</span> Results: Language, Topics, and
 Embeddings</h1>
@@ -2579,7 +2613,9 @@ together in the literature.</figcaption>
 </figure>
 <p>These embeddings support semantic retrieval over the corpus and the
 visual map of the literature’s topical geography.</p>
+
 <hr />
+
 <h1 data-number="13" id="results-citation-network"><span
 class="header-section-number">13</span> Results: Citation Network</h1>
 <h2 data-number="13.1" id="rq4-citation-geometry"><span
@@ -2808,7 +2844,9 @@ different topical communities in the citation network — their removal
 would fragment the graph into disconnected components. These bridging
 papers are often review articles or methodological papers that connect
 disparate research threads.</p>
+
 <hr />
+
 <h1 data-number="14" id="results-reproducibility-assessment"><span
 class="header-section-number">14</span> Results: Reproducibility
 Assessment</h1>
@@ -2865,7 +2903,9 @@ do not chain into a coherent source-to-sink pipeline, or reference steps
 that were never themselves described). The two axes are reported
 separately in Table 8 precisely so a low composite score can be
 diagnosed rather than treated as a single undifferentiated verdict.</p>
+
 <hr />
+
 <h1 data-number="15" id="discussion"><span
 class="header-section-number">15</span> Discussion</h1>
 <h2 data-number="15.1" id="what-the-template-is-and-is-not"><span
@@ -2939,7 +2979,9 @@ models and embeddings toward well-indexed sources.</p></li>
 </ul>
 <p>Each limitation is a configuration or dependency choice rather than a
 change to the core architecture.</p>
+
 <hr />
+
 <h1 data-number="16" id="conclusion"><span
 class="header-section-number">16</span> Conclusion</h1>
 <p>We have presented a configurable, reproducible meta-analysis template
@@ -2999,7 +3041,9 @@ same configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated
 from the same template. No number in this document was typed by
 hand.</p>
+
 <hr />
+
 <h1 data-number="17" id="appendix-a-tooling-and-reproduction"><span
 class="header-section-number">17</span> Appendix A: Tooling and
 Reproduction</h1>
@@ -3103,7 +3147,9 @@ extraction)</li>
 <li>Visualization (headless figure generation, style config)</li>
 <li>Manuscript variable computation and injection</li>
 </ul>
+
 <hr />
+
 <h1 data-number="18" id="appendix-b-technical-notes"><span
 class="header-section-number">18</span> Appendix B: Technical Notes</h1>
 <h2 data-number="18.1" id="determinism"><span
@@ -3264,7 +3310,9 @@ checksums; no license is inferred from OA status</td>
 </tr>
 </tbody>
 </table></div>
+
 <hr />
+
 <h1 data-number="19" id="appendix-c-accessibility-and-provenance"><span
 class="header-section-number">19</span> Appendix C: Accessibility and
 Provenance</h1>
@@ -3328,7 +3376,9 @@ does not present fixture-derived numbers as empirical findings about
 modafinil. Live findings require a real retrieval run with regenerated
 artifacts — as produced in this instance, which retrieved 2334 real
 records from 10 live engines.</p>
+
 <hr />
+
 <h1 data-number="20" id="glossary"><span
 class="header-section-number">20</span> Glossary</h1>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
@@ -3406,7 +3456,9 @@ number regenerable.</td>
 </tr>
 </tbody>
 </table></div>
+
 <hr />
+
 <h1 data-number="21" id="references"><span
 class="header-section-number">21</span> References</h1>
 <p>The bibliography is generated automatically during PDF compilation
@@ -3425,6 +3477,7 @@ References management notes:
 * When adding a new citation, run the integrity sweep documented in `AGENTS.md`
   to confirm a 1:1 match between cited keys and bibliography entries.
 -->
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-clauset2004finding" class="csl-entry" role="listitem">

@@ -187,7 +187,7 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
 
 ### manuscript_injection.py
 
-Shared `{{TOKEN}}` substitution utility. All three template projects delegate to these functions so the regex, excluded-file logic, and unresolved-token behaviour are identical across projects.
+Shared `{{TOKEN}}` substitution utility. All three template projects delegate to these functions so the regex, excluded-file logic, and unresolved-token behavior are identical across projects.
 
 #### EXCLUDED_DOC_FILENAMES (constant)
 ```python
@@ -247,35 +247,31 @@ class WebRenderer:
             Path to generated HTML
         """
 
-    def render_combined(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+    def render_combined(
+        self,
+        source_files: list[Path],
+        manuscript_dir: Path,
+        project_name: str = "project",
+        *,
+        paper_layout: PaperLayout | None = None,
+    ) -> Path:
         """Render multiple markdown files as a combined HTML document.
 
-        Combines all source files, applies CSS styling, and generates a single index.html
-        with table of contents and embedded CSS.
+        Resolves the complete manuscript once, generates index.html with table
+        of contents and embedded CSS, and creates or replaces every source's
+        split page using that same global reference and numbering context.
 
         Args:
-            source_files: List of markdown files in order
+            source_files: Complete manuscript roster in order
             manuscript_dir: Directory containing manuscript files
             project_name: Name of the project for filename generation
+            paper_layout: Optional admitted paper layout
 
         Returns:
             Path to generated combined HTML file (index.html)
 
         Raises:
             RenderingError: If combination or rendering fails
-        """
-
-    def _combine_markdown_files(self, source_files: List[Path]) -> str:
-        """Combine multiple markdown files into one.
-
-        Args:
-            source_files: List of markdown files in order
-
-        Returns:
-            Combined markdown content
-
-        Raises:
-            RenderingError: If any file cannot be read or contains invalid content
         """
 
     def _embed_css(self, html_file: Path) -> None:
@@ -407,7 +403,7 @@ def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -
 | --- | --- |
 | `_pdf_combined_markdown.py` | Mermaid, figure paths, dotted-key `manuscript_vars.yaml` substitution (`{{maturity.real}}`, etc.) — not UPPER_SNAKE project tokens (see `manuscript_injection.py`) |
 | `_pdf_combined_pandoc.py` | Pandoc CLI construction and subprocess execution |
-| `_pdf_combined_latex.py` | Starred-heading hyperref repair, post-Pandoc LaTeX normalisation |
+| `_pdf_combined_latex.py` | Starred-heading hyperref repair, post-Pandoc LaTeX normalization |
 | `_pdf_combined_preamble.py` | `preamble.md` + title page injection (via `_pdf_title_page.py`) |
 | `_pdf_combined_bibliography.py` | Multi-`.bib` discovery and `\bibliography{}` placement |
 | `_pdf_combined_prevalidate.py` | Figure reference checks, markdown/citation hard gate |
@@ -491,7 +487,7 @@ defends against this on two complementary axes:
    long h2 across slides automatically.
 
 The Lua filter is applied defensively (only when the file is present),
-so removing it falls back to the previous behaviour without breaking
+so removing it falls back to the previous behavior without breaking
 the renderer.
 
 ### latex_utils.py

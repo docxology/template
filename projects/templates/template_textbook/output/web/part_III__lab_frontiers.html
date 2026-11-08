@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>lab_frontiers.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -305,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -323,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -337,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -566,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -620,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -652,40 +744,41 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:lab_part_III_frontiers">Lab — Frontiers and Open
+<h1 data-number="30" id="sec:lab_part_III_frontiers"><span
+class="header-section-number">30</span> Lab — Frontiers and Open
 Problems</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
 <p>Guided lab · Materials: Python environment, notebook or terminal, and
 a written observation record</p>
 </blockquote>
-<h2 id="objectives">Objectives</h2>
+<h2 data-number="30.1" id="objectives-11"><span
+class="header-section-number">30.1</span> Objectives</h2>
 <p>Execute <code>textbook.models.normalize_unit_interval</code> with the
 declared inputs, compare its output with an independently worked
 expectation, and explain which part of the chapter’s claim the result
 checks. Write a claim, a discriminating check and an explicit boundary
 around the result.</p>
-<h2 id="background">Background</h2>
-<p>Linked chapter: <span class="citation"
-data-cites="sec:part_III_frontiers">[@sec:part_III_frontiers]</span>. A
-team can regenerate every figure, yet two rival explanations still fit
-the data. Another team has a plausible theory but cannot reconstruct
-which input produced its graph. The first faces an evidence gap; the
-second faces a custody gap. Calling both problems “more research needed”
+<h2 data-number="30.2" id="background-11"><span
+class="header-section-number">30.2</span> Background</h2>
+<p>Linked chapter: sec. <a href="part_III__frontiers.html#sec:part_III_frontiers">18</a>. A team
+can regenerate every figure, yet two rival explanations still fit the
+data. Another team has a plausible theory but cannot reconstruct which
+input produced its graph. The first faces an evidence gap; the second
+faces a custody gap. Calling both problems “more research needed”
 conceals the different next actions that could resolve them. The values
 below are instructional inputs. No experiment on people, organisms or
 services is being reported. The exercise checks mathematical behavior
 under the model’s assumptions rather than supplying evidence that the
 scenario is real.</p>
-<h2 id="procedure">Procedure</h2>
+<h2 data-number="30.3" id="procedure-11"><span
+class="header-section-number">30.3</span> Procedure</h2>
 <ol type="1">
-<li>Write the input quantities, units and assumptions from <span
-class="citation"
-data-cites="tbl:part_III_frontiers_parameters">[@tbl:part_III_frontiers_parameters]</span>.</li>
+<li>Write the input quantities, units and assumptions from tbl. <a
+href="part_III__frontiers.html#tbl:part_III_frontiers_parameters">12</a>.</li>
 <li>Before running code, predict one boundary value and one interior
-value using <span class="citation"
-data-cites="eq:part_III_frontiers_model">[@eq:part_III_frontiers_model]</span>.
-Keep the prediction even if it proves incorrect.</li>
+value using eq. <a href="part_III__frontiers.html#eq:part_III_frontiers_model">13</a>. Keep the
+prediction even if it proves incorrect.</li>
 <li>Run the workflow below in a fresh interpreter. Preserve the command
 and output.</li>
 <li>Change one allowed input or parameter and explain which qualitative
@@ -695,7 +788,8 @@ comparison.</li>
 contract; record whether it is rejected or handled by an explicit
 convention.</li>
 </ol>
-<h2 id="analysis">Analysis</h2>
+<h2 data-number="30.4" id="analysis-11"><span
+class="header-section-number">30.4</span> Analysis</h2>
 <p>The reference range is twenty. Subtracting ten from the three
 observations gives zero, ten and twenty, and division by the range gives
 zero, one half and one. A constant collection has no nonzero range, so
@@ -707,21 +801,23 @@ arithmetic should lead you to inspect units, input order and the
 declared convention. Agreement on these synthetic inputs establishes a
 limited computational result; it does not establish the opening
 scenario’s observation rule or empirical adequacy.</p>
-<h2 id="computational-workflow">Computational Workflow</h2>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> normalize_unit_interval</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> normalize_unit_interval([<span class="fl">10.0</span>, <span class="fl">20.0</span>, <span class="fl">30.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(z, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>])</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(normalize_unit_interval([<span class="fl">7.0</span>, <span class="fl">7.0</span>]), [<span class="fl">0.0</span>, <span class="fl">0.0</span>])</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code></pre></div>
+<h2 data-number="30.5" id="computational-workflow-11"><span
+class="header-section-number">30.5</span> Computational Workflow</h2>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> normalize_unit_interval</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> normalize_unit_interval([<span class="fl">10.0</span>, <span class="fl">20.0</span>, <span class="fl">30.0</span>])</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(z, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>])</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(normalize_unit_interval([<span class="fl">7.0</span>, <span class="fl">7.0</span>]), [<span class="fl">0.0</span>, <span class="fl">0.0</span>])</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code></pre></div>
 <p>The code calls the shared model implementation and asserts
 independently known properties. Add the changed-input result to the same
 record without overwriting the first one. If an assertion fails,
 preserve the failing inputs and exception before changing the
 computation.</p>
-<h2 id="reflection">Reflection</h2>
+<h2 data-number="30.6" id="reflection-11"><span
+class="header-section-number">30.6</span> Reflection</h2>
 <ul>
 <li>What makes a negative control useful? Explain your answer before
 consulting the question bank.</li>
@@ -730,7 +826,8 @@ consulting the question bank.</li>
 needed to decide whether the model is useful for a real instance of the
 scenario?</li>
 </ul>
-<h2 id="worked-solution">Worked Solution</h2>
+<h2 data-number="30.7" id="worked-solution-11"><span
+class="header-section-number">30.7</span> Worked Solution</h2>
 <p>It can fail the particular claim for a relevant, inspectable reason.
 Name the gap, producer, artifact, consumer, discriminating check and the
 scope of any resulting conclusion. The code’s assertions give the

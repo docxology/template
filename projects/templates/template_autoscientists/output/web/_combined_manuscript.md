@@ -1,14 +1,26 @@
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 Recent work on *AutoScientists* [@gao2026autoscientists] coordinates self-organizing teams of language-model agents through a small set of shared mechanisms: a champion-and-experiment-log shared state, a registry of retired dead-end directions, effect-size ranking of candidate directions, noise-band confirmation of claimed improvements, and stagnation-driven reorganization of teams. This exemplar provides a deterministic, standalone reference implementation of those mechanisms and studies them honestly as a *testbed* rather than as a performance claim.
 
 We make the comparison fair by holding the total number of objective evaluations fixed: coordinated teams *partition* a single sequential experiment budget rather than adding parallel compute. Under that matched budget, coordination cannot — and in our results does not — beat a single-thread baseline on the final champion metric; we report the actual numbers and claim no speedup. What the testbed *does* demonstrate are two distinct, independently measurable benefits. First, noise-robustness: because the objective is stochastic, a single observed gain can be a draw of evaluation noise, so we separate the *reported* champion metric from the *clean* noise-free ground truth and show that noise-band confirmation shrinks the gap between them by roughly an order of magnitude — with confirmation on, the final champion's reported metric sits $0.0012$ above its clean value, against $0.0156$ with confirmation removed, while every configuration reaches the same clean optimum. Second, search hygiene: the dead-end registry, consulted by the proposer, cuts redundant re-probes of retired directions from $36$ to $0$ and halts at $36$ of the $60$ experiments — the same clean answer, reached with less waste. A per-mechanism ablation isolates each component's contribution, and the language-model proposer is a clean plug-in seam: a deterministic rule-based agent drives the reproducible figures, and a bounded local model proposer (served by Ollama) can be swapped in without touching the coordination loop.
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -39,11 +51,19 @@ A configuration that accepts noise-inflated champions will show a large reported
 
 The remainder of the paper specifies the mechanisms (@sec:methodology), reports the matched-budget comparison and the per-mechanism ablation with the numbers our scripts actually produce (@sec:results), states the scope and limits of those claims (@sec:scope), and documents reproduction (@sec:reproducibility).
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-2-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -108,11 +128,19 @@ The loop depends only on a `Proposer` protocol — `propose(state, axes, propose
 
 The explicit live comparison runs both coordinated and single-agent arms under equal ceilings. Its scoped local numerical results are separate from the deterministic manuscript figures and do not establish general scientific-agent superiority.
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-3-start-->
+```
 
 # Results {#sec:results}
 
@@ -166,11 +194,19 @@ Four honest conclusions follow directly from the data:
 3. The dead-end registry delivers a measurable efficiency benefit: redundant re-probes fall from $36$ to $0$ and the search halts at $36$ rather than $60$ experiments — with the clean answer unchanged.
 4. Effect-size ranking and reorganization are correctly implemented and ablatable, but do not by themselves change any measured quantity on this objective — a result we report rather than obscure.
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-4-start-->
+```
 
 # Experimental Setup {#sec:setup}
 
@@ -201,11 +237,19 @@ Two thin orchestrator scripts produce all results:
 
 Each script imports all computation from `src/`, runs the configurations, and writes a figure plus a machine-readable summary. The numbers quoted in @sec:results are read directly from those JSON files.
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-5-start-->
+```
 
 # Reproducibility {#sec:reproducibility}
 
@@ -259,11 +303,19 @@ publication occurs. Full instructions: `docs/live-coordination.md`.
 
 The noise-band confirmation estimator is generic. A synchronized copy lives at `infrastructure.scientific.confirmation` (`confirm_improvement`, `Confirmation`) for reuse by any other project that compares a stochastic metric to a baseline, and is covered by `tests/infra_tests/scientific/test_confirmation.py`. The project keeps its own standalone copy so the exemplar runs self-contained.
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-6-start-->
+```
 
 # Scope and Related Work {#sec:scope}
 
@@ -289,11 +341,19 @@ The original system [@gao2026autoscientists] runs real language-model agent team
 
 The confirmation mechanism is an application of standard effect-size and standard-error reasoning [@cohen1988statistical] to online acceptance decisions. The dead-end registry, effect-size ranking, and reorganization are coordination heuristics whose lineage runs through population- and restart-based search [@whitley2001overview]; the contribution here is not the heuristics but their honest, ablatable measurement. The broader setting — teams of language-model agents pursuing a long-running objective — sits within the rapidly growing literature on LLM-based autonomous agents [@wang2023survey]. Throughout, the emphasis on regenerable figures, fixed seeds, and a tested core follows the reproducible-research tradition [@peng2011reproducible].
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-7-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -303,11 +363,19 @@ Two results are worth keeping. The first is the noise-robustness measurement: by
 
 Two properties make the artifact reusable. First, every mechanism is gated behind a single configuration object, so the ablation is a clean subtraction and the testbed extends naturally to harder objectives where the structural mechanisms have more to do. Second, the language-model proposer is a genuine plug-in seam: the deterministic proposer drives the reproducible figures, and a bounded local model proposer can replace it without touching the coordination loop. The honest-testbed framing is the contribution — a small, fully reproducible instrument for attributing coordination effects to mechanisms and for distinguishing real gains from noise.
 
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-8-start-->
+```
 
 # References {#sec:references}
 
@@ -318,4 +386,8 @@ To validate that `references.bib` is syntactically clean and contains the requir
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_autoscientists/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-441a603a44e0b4b473bc3f5cbd2625a64fd6689a74e8119113fe1bb5ccd6006f-8-end-->
 ```

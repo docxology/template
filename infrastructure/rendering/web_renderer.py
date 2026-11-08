@@ -12,7 +12,7 @@ from tempfile import TemporaryDirectory
 import yaml
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout, combine_layout, WEB_ALGORITHM
+from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout
 from infrastructure.rendering._paper_frontmatter_render import place_frontmatter_html
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
@@ -29,6 +29,13 @@ from infrastructure.rendering._web_markdown_preprocess import (
     html_safe_markdown,
     html_theorem_blocks,
 )
+from infrastructure.rendering._web_source_context import (
+    WEB_PAPER_SOURCE_ALGORITHM,
+    WEB_SOURCE_ALGORITHM,
+    compose_web_source_context,
+    split_canonical_html,
+)
+from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 
 logger = get_logger(__name__)
 
@@ -88,12 +95,8 @@ class WebRenderer:
                 str(render_target),
                 "--standalone",
                 f"--mathjax={_MATHJAX_URL}",
-                # A per-section page is rendered alone, so numbering here is
-                # section-local: correct for the section that declares the blocks
-                # (manuscripts keep them together), and unresolvable for a reference
-                # made from a different section, which the filter then leaves visible
-                # and reports. The combined ``index.html`` is the authoritative HTML
-                # edition and numbers the whole document.
+                # This API renders a standalone source. Final project pages are
+                # replaced from the globally resolved combined edition below.
                 *formalism_filter_args(),
             ]
 
@@ -200,12 +203,17 @@ class WebRenderer:
             output_file.unlink()
             logger.debug(f"Removed existing output file: {output_file.name}")
 
-        # Combine markdown files
+        # Boundaries carry source ownership through the one canonical global
+        # formalism/Crossref/citeproc run; they do not resolve references.
         combined_md = output_dir / "_combined_manuscript.md"
-        combined_content = self._html_safe_markdown(
-            combine_layout(layout, web=True) if layout.frontmatter else self._combine_markdown_files(source_files),
-            render_citations=False,
-        )
+        try:
+            source_bodies = tuple(source.read_bytes() for source in source_files)
+            combined_content = self._html_safe_markdown(
+                compose_web_source_context(source_bodies, len(layout.frontmatter)),
+                render_citations=False,
+            )
+        except (OSError, UnicodeError) as exc:
+            raise RenderingError("Failed to prepare complete HTML manuscript") from exc
         atomic_write_text_confined(output_dir, combined_md, combined_content)
         logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
         write_manuscript_composition(
@@ -213,7 +221,7 @@ class WebRenderer:
             project_name,
             source_files,
             combined_md,
-            algorithm=WEB_ALGORITHM if layout.frontmatter else "web-renderer-combine-v1",
+            algorithm=WEB_PAPER_SOURCE_ALGORITHM if layout.frontmatter else WEB_SOURCE_ALGORITHM,
         )
 
         # Build pandoc command for HTML conversion
@@ -300,6 +308,29 @@ class WebRenderer:
         finally:
             render_target.unlink(missing_ok=True)
 
+        # Publish each final section from the actual resolved global HTML, not
+        # a second local parse or a guessed reference-label substitution.
+        canonical_html, section_html = split_canonical_html(output_file.read_text(encoding="utf-8"), source_bodies)
+        atomic_write_text_confined(output_dir, output_file, canonical_html)
+        for source_file, content in zip(source_files, section_html, strict=True):
+            if is_transmission_bookend(source_file):
+                continue
+            section_file = self._output_file_for_source(source_file)
+            profile.validate_output(section_file)
+            mode = stat.S_IMODE(section_file.stat().st_mode) if section_file.exists() else 0o644
+            atomic_write_text_confined(output_dir, section_file, content, mode=mode)
+            self._harden_mathjax_script(section_file, asset_mode=self.config.web_asset_mode)
+            self._embed_favicon(section_file)
+            self._embed_css(section_file)
+            self._normalize_figure_paths_in_file(section_file)
+            self._enhance_accessibility(
+                section_file,
+                language=self._manuscript_language(manuscript_dir),
+                registry_path=figures_dir / "figure_registry.json",
+            )
+            self._add_full_resolution_figure_links(section_file)
+            self._add_responsive_image_variants(section_file)
+
         # Embed CSS styling in the generated HTML
         if output_file.exists():
             self._harden_mathjax_script(output_file, asset_mode=self.config.web_asset_mode)
@@ -364,99 +395,6 @@ class WebRenderer:
         if not isinstance(metadata, dict):
             return "en"
         return str(metadata.get("language") or "en")
-
-    def _combine_markdown_files(self, source_files: list[Path]) -> str:
-        """Combine multiple markdown files into one.
-
-        Args:
-            source_files: List of markdown files in order
-
-        Returns:
-            Combined markdown content
-
-        Raises:
-            RenderingError: If any file cannot be read or contains invalid content
-        """
-        combined_parts = []
-
-        for i, md_file in enumerate(source_files):
-            try:
-                # Read with explicit UTF-8 encoding and error handling
-                content = md_file.read_text(encoding="utf-8", errors="strict")
-
-                # Validate file ends with newline for proper spacing
-                if not content.endswith("\n"):
-                    content += "\n"
-
-                # Strip trailing whitespace from each file to avoid double newlines
-                # But preserve a single trailing newline
-                content = content.rstrip() + "\n"
-
-                # Add file content
-                combined_parts.append(content)
-
-                # Add section separator between sections (only if not the last file)
-                # For HTML, we use a horizontal rule instead of LaTeX \newpage
-                if i < len(source_files) - 1:
-                    combined_parts.append("\n---\n\n")
-
-            except UnicodeDecodeError as e:
-                raise RenderingError(
-                    f"Failed to read markdown file (encoding error): {md_file.name}",
-                    context={
-                        "file": str(md_file),
-                        "error": str(e),
-                        "position": i + 1,
-                        "total_files": len(source_files),
-                    },
-                    suggestions=[
-                        f"Check file encoding: {md_file}",
-                        "Ensure file is UTF-8 encoded",
-                        "Remove any non-UTF-8 characters from the file",
-                    ],
-                ) from e
-            except OSError as e:
-                raise RenderingError(
-                    f"Failed to read markdown file: {md_file.name}",
-                    context={
-                        "file": str(md_file),
-                        "error": str(e),
-                        "position": i + 1,
-                        "total_files": len(source_files),
-                    },
-                    suggestions=[
-                        f"Verify file exists and is readable: {md_file}",
-                        "Check file permissions",
-                        "Ensure file is valid markdown",
-                    ],
-                ) from e
-
-        # Join with newlines, ensuring proper spacing
-        combined = "\n\n".join(combined_parts)
-
-        # Ensure the combined content starts cleanly (no leading whitespace issues)
-        combined = combined.lstrip("\n\r")
-
-        # Validate that the combined markdown is not empty
-        if not combined.strip():
-            raise RenderingError(
-                "Combined markdown is empty",
-                context={
-                    "source_files": [str(f) for f in source_files],
-                    "file_count": len(source_files),
-                },
-                suggestions=[
-                    "Verify that all source markdown files contain content",
-                    "Check file permissions and encoding",
-                ],
-            )
-
-        # Remove BOM if present (UTF-8 BOM is \ufeff)
-        if combined.startswith("\ufeff"):
-            logger.warning("Removing UTF-8 BOM from combined markdown")
-            combined = combined[1:]
-
-        return combined
 
     @classmethod
     def _html_safe_markdown(

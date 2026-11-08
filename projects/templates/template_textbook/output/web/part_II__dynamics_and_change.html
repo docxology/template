@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>dynamics_and_change.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,13 +744,14 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_II_dynamics_and_change">Dynamics and Change</h1>
+<h1 data-number="13" id="sec:part_II_dynamics_and_change"><span
+class="header-section-number">13</span> Dynamics and Change</h1>
 <figure id="fig:part_II_dynamics_and_change">
-<a class="figure-full-size-link" href="../figures/part_II_dynamics_and_change.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Deterministic exponential decay with its first half-life marked."><img src="../figures/part_II_dynamics_and_change.png"
+<a class="figure-full-size-link" href="../figures/part_II_dynamics_and_change.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, Deterministic exponential decay with its first half-life marked."><img src="../figures/part_II_dynamics_and_change.png"
 style="width:90.0%"
 alt="A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Deterministic exponential decay with its
-first half-life marked.</figcaption>
+<figcaption>Figure 8: Deterministic exponential decay
+with its first half-life marked.</figcaption>
 </figure>
 <!-- alt: A smooth quantity-versus-time curve starts at one hundred and decreases toward zero; a vertical dashed line at approximately one point three nine time units marks where the remaining amount is fifty. -->
 <!-- chapter-metadata-badge -->
@@ -732,7 +760,8 @@ first half-life marked.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="13.0.1" id="study-blueprint-7"><span
+class="header-section-number">13.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> A dynamic law specifies how state changes
 with time; its rate and timescale must remain distinct.</li>
@@ -741,22 +770,23 @@ href="manuscript__glossary.html#gl:dynamics"><strong>dynamics</strong></a>, <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
 href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_II_dynamics_and_change_model">[@eq:part_II_dynamics_and_change_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_II_dynamics_and_change_model">9</a>.</li>
 <li><strong>Data skill:</strong> Use ratios over equal intervals to
 inspect a proposed constant fractional loss rate.</li>
 <li><strong>Common misconception to repair:</strong> Deterministic
 equations do not automatically provide accurate forecasts for
 arbitrarily long times.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_II_dynamics_and_change">[@sec:lab_part_II_dynamics_and_change]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_II_dynamics_and_change">[@sec:q_part_II_dynamics_and_change]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_II__lab_dynamics_and_change.html#sec:lab_part_II_dynamics_and_change">26</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_II__q_dynamics_and_change.html#sec:q_part_II_dynamics_and_change">38</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.exponential_decay</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="13.1" id="learning-objectives-7"><span
+class="header-section-number">13.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Derive a half-life from a fractional decay law.</li>
 <li>Compare changes over equal time intervals.</li>
@@ -771,7 +801,9 @@ fractional-loss model instead predicts twelve and one half. The choice
 between constant amount and constant fraction is a claim about change,
 and data can distinguish them.</p>
 </blockquote>
-<h2 id="from-a-rate-to-a-trajectory">From a rate to a trajectory</h2>
+<h2 data-number="13.2" id="from-a-rate-to-a-trajectory"><span
+class="header-section-number">13.2</span> From a rate to a
+trajectory</h2>
 <p>The decay law says the instantaneous loss rate is proportional to the
 amount remaining. In differential form it is <span
 class="math inline">\(de/dt=-\lambda e\)</span>. The closed form in the
@@ -781,7 +813,8 @@ change per time. Confusing these meanings produces errors in both
 dimensions and interpretation. Multiplying the decay rate by a time
 interval gives a dimensionless exponent, which is a useful unit check
 before evaluating the expression.</p>
-<h2 id="equal-intervals-unequal-losses">Equal intervals, unequal
+<h2 data-number="13.3" id="equal-intervals-unequal-losses"><span
+class="header-section-number">13.3</span> Equal intervals, unequal
 losses</h2>
 <p>For a time increment <span class="math inline">\(\Delta t\)</span>,
 the ratio between successive amounts is <span
@@ -793,7 +826,9 @@ diagnostic, but remember that noisy measurements and replenishment can
 change them. An exact synthetic sequence verifies the formula; an actual
 sequence requires an observation model before the rate can be inferred
 reliably.</p>
-<h2 id="timescales-help-comparisons">Timescales help comparisons</h2>
+<h2 data-number="13.4" id="timescales-help-comparisons"><span
+class="header-section-number">13.4</span> Timescales help
+comparisons</h2>
 <p>The reciprocal rate is a characteristic time, while the half-life
 includes a factor of the logarithm of two. Both decrease as the rate
 increases. Stating a timescale often makes a comparison easier to
@@ -802,17 +837,21 @@ dimensional error visible: a half-life must have time units. At zero
 rate the amount stays constant and there is no finite half-life. The
 helper’s rejection of a zero rate in <code>half_life</code> preserves
 that distinction instead of returning a misleading finite number.</p>
-<h2 id="initial-conditions-and-forecast-limits">Initial conditions and
+<h2 data-number="13.5" id="initial-conditions-and-forecast-limits"><span
+class="header-section-number">13.5</span> Initial conditions and
 forecast limits</h2>
 <p>Changing the initial amount scales the entire exponential trajectory.
 Changing the rate changes its shape on the time axis. In more general
 nonlinear systems, small changes in the initial state can have larger
 effects than simple scaling. Lorenz’s specified nonlinear flow model
-[lorenz1963deterministic] provides a primary example of sensitivity to
-initial conditions. This book’s exponential exercise is not a simulation
-of that system. It is a tractable contrast that shows why forecast
-claims must be attached to a particular model and domain.</p>
-<h2 id="check-change-at-several-resolutions">Check change at several
+<span class="citation" data-cites="lorenz1963deterministic">(<a
+href="index.html#ref-lorenz1963deterministic" role="doc-biblioref">Lorenz
+1963</a>)</span> provides a primary example of sensitivity to initial
+conditions. This book’s exponential exercise is not a simulation of that
+system. It is a tractable contrast that shows why forecast claims must
+be attached to a particular model and domain.</p>
+<h2 data-number="13.6" id="check-change-at-several-resolutions"><span
+class="header-section-number">13.6</span> Check change at several
 resolutions</h2>
 <p>A coarse measurement interval can conceal fast transients or an
 external pulse. Collecting more decimal places at the same coarse times
@@ -822,12 +861,13 @@ Compare predicted and observed quantities in their original units before
 normalizing a display. The lab asks you to halve the measurement
 interval while retaining the same rate, so that an altered sampling grid
 can be distinguished from a genuinely changed process.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[e(t)=e_0e^{-\lambda t},\qquad
-t_{1/2}=\frac{\ln 2}{\lambda}\]</span>
-{#eq:part_II_dynamics_and_change_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_dynamics_and_change_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+<h2 data-number="13.7" id="a-worked-formalism-6"><span
+class="header-section-number">13.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_II_dynamics_and_change_model"><span
+class="math display">\[e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
+2}{\lambda}\qquad{(9)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 8: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_dynamics_and_change_parameters" data-responsive-table="true">
+<caption>Table 8: Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -866,41 +906,42 @@ the half-life is about <span class="math inline">\(1.386\)</span> time
 units. Starting at one hundred, successive half-lives give fifty and
 twenty-five; equal time intervals remove equal fractions, not equal
 amounts.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> exponential_decay, half_life</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>t_half <span class="op">=</span> half_life(rate)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> exponential_decay([<span class="fl">0.0</span>, t_half, <span class="dv">2</span><span class="op">*</span>t_half], initial<span class="op">=</span><span class="fl">100.0</span>, rate<span class="op">=</span>rate)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(values, [<span class="fl">100.0</span>, <span class="fl">50.0</span>, <span class="fl">25.0</span>])</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t_half, values)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> exponential_decay, half_life</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>t_half <span class="op">=</span> half_life(rate)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> exponential_decay([<span class="fl">0.0</span>, t_half, <span class="dv">2</span><span class="op">*</span>t_half], initial<span class="op">=</span><span class="fl">100.0</span>, rate<span class="op">=</span>rate)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(values, [<span class="fl">100.0</span>, <span class="fl">50.0</span>, <span class="fl">25.0</span>])</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t_half, values)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.exponential_decay</code>. The assertions above are
 independent expectations for this designed example; the displayed figure
-in <span class="citation"
-data-cites="fig:part_II_dynamics_and_change">[@fig:part_II_dynamics_and_change]</span>
-is a deterministic illustration with its own explicitly stated inputs,
-not evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+in fig. <a href="#fig:part_II_dynamics_and_change">8</a> is a
+deterministic illustration with its own explicitly stated inputs, not
+evidence collected from the opening scenario.</p>
+<h2 data-number="13.8" id="assumptions-and-limits-6"><span
+class="header-section-number">13.8</span> Assumptions and Limits</h2>
 <p>The model assumes a constant fractional loss rate with no
 replenishment. For a feedback interpretation it also assumes a
 continuous, undelayed ideal controller with an unsaturated actuator. A
 changing rate, external input or measurement delay breaks the
 closed-form description. The function permits zero rate as a constant
 trajectory, but half-life requires a strictly positive rate.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="13.9" id="summary-7"><span
+class="header-section-number">13.9</span> Summary</h2>
 <p>A dynamic law specifies how state changes with time; its rate and
 timescale must remain distinct. The worked example makes a narrow
 quantitative claim that can be checked with exact inputs and a tested
@@ -909,23 +950,31 @@ forecasts for arbitrarily long times. State the assumptions, preserve
 the observation record and choose a comparison that can distinguish an
 arithmetic error from an inadequate model. Those habits make a result
 inspectable without expanding what its evidence establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
+<h2 data-number="13.10" id="key-terms-7"><span
+class="header-section-number">13.10</span> Key Terms</h2>
 <p><a href="manuscript__glossary.html#gl:dynamics"><strong>dynamics</strong></a>, <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
 href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Lorenz [lorenz1963deterministic] studies one specific nonlinear flow
-model; May [may1976simple] examines discrete-time dynamics, which should
-not be conflated with this continuous decay law.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="13.11" id="further-reading-7"><span
+class="header-section-number">13.11</span> Further Reading</h2>
+<p>Lorenz <span class="citation"
+data-cites="lorenz1963deterministic">(<a
+href="index.html#ref-lorenz1963deterministic" role="doc-biblioref">Lorenz
+1963</a>)</span> studies one specific nonlinear flow model; May <span
+class="citation" data-cites="may1976simple">(<a
+href="index.html#ref-may1976simple" role="doc-biblioref">May 1976</a>)</span>
+examines discrete-time dynamics, which should not be conflated with this
+continuous decay law.</p>
+<h2 data-number="13.12" id="practice-7"><span
+class="header-section-number">13.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_II_dynamics_and_change">[@sec:lab_part_II_dynamics_and_change]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_II_dynamics_and_change">[@sec:q_part_II_dynamics_and_change]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_II__lab_dynamics_and_change.html#sec:lab_part_II_dynamics_and_change">26</a> — execute the worked
+computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_II__q_dynamics_and_change.html#sec:q_part_II_dynamics_and_change">38</a> — compare your
+reasoning with the supplied solutions.</li>
 </ul>
 </main>
 </body>

@@ -24,7 +24,11 @@ from infrastructure.reporting.native_format_html_source_metadata import (
 )
 from infrastructure.reporting.native_format_observer_source_replay import replay_html_source
 from infrastructure.reporting.native_format_portable_custody import producer_path
-from infrastructure.reporting.native_format_semantic_source import observe_html_source, semantic_source_plan
+from infrastructure.reporting.native_format_semantic_source import (
+    observe_html_source,
+    semantic_source_plan,
+    semantic_parser_options,
+)
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
@@ -85,7 +89,9 @@ def observe_html_source_witness(
     atomic_write_bytes_confined(root, copied_path, config.content, mode=0o600)
     copied = reader.read(copied_path.relative_to(root).as_posix())
     transcript = _body_transcript(body, reader, run_id)
-    args = [*transcript["command"][1:], *source["pandoc_args"]]
+    # The body already uses the canonical config metadata. Repeating those
+    # options would duplicate accumulating fields such as author.
+    args = list(transcript["command"][1:])
     crossref_filter = None
     if "--filter" in args:
         from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
@@ -195,7 +201,7 @@ def replay_html_source_witness(
     if ast.path != directory / "semantic-config-metadata-ast.json":
         raise ValueError("HTML metadata AST belongs to another artifact/attempt")
     transcript = _body_transcript(body, reader, run_id)
-    args = [*transcript["command"][1:], *source["pandoc_args"]]
+    args = list(transcript["command"][1:])
     if "--filter" in args:
         from infrastructure.reporting.native_crossref_replay import CrossrefFilterReaderOperation
         from infrastructure.reporting.native_format_joint_source import require_native_operation
@@ -240,14 +246,12 @@ def replay_html_source_witness(
         crossref="--filter" in transcript["command"],
     ) as current:
         local_source = current.runtime.freeze("source.md", content)
-        local_filter = current.runtime.freeze("formalism.lua", _file(body["filters"][0]["consumed"], reader).content)
-        local_args = [
-            str(local_source),
-            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
-            "--to=json",
-            "--lua-filter",
-            str(local_filter),
-        ]
+        local_args = [str(local_source), *semantic_parser_options(root, scope)]
+        for index, entry in enumerate(body["filters"]):
+            local_filter = current.runtime.freeze(f"filter-{index}.lua", _file(entry["consumed"], reader).content)
+            local_args.extend(["--lua-filter", str(local_filter)])
+        if current.crossref is not None:
+            local_args.extend(["--filter", current.crossref])
         local_bibs: list[tuple[str, bytes]] = []
         for index, (_, data) in enumerate(bibliographies):
             path = current.runtime.freeze(f"bibliography-{index}.bib", data)
@@ -255,9 +259,6 @@ def replay_html_source_witness(
             local_bibs.append((str(path), data))
         if bibliographies:
             local_args.extend(["--citeproc", "--metadata=link-citations:true"])
-        if current.crossref is not None:
-            local_args.extend(["--filter", current.crossref])
-        local_args.extend(source["pandoc_args"])
         if current.crossref is not None:
             result, _ = current.source_crossref_tool(
                 local_args, "current-html-metadata-ast", scope=scope, output_format="json"

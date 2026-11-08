@@ -30,7 +30,7 @@ from infrastructure.reporting.native_format_html_source_styles import (
 from infrastructure.reporting.native_format_content_contracts import (
     NativeContentContract,
 )
-from infrastructure.reporting.native_format_semantic_source import semantic_source_plan
+from infrastructure.reporting.native_format_semantic_source import semantic_source_plan, semantic_contract_ast
 from infrastructure.reporting.native_pitch_source_admission import SourceCorrespondence
 from infrastructure.reporting.native_projection_contracts import (
     ProjectionSourceUnsupported,
@@ -152,7 +152,7 @@ def _compile(
     fidelity = compile_html_fidelity_source(
         (*sources, *bibliographies),
         original.content,
-        projected.content,
+        semantic_contract_ast(root, scope, artifact, sources, projected.content),
         metadata_source=metadata,
         source_styles=source_styles,
         deadline=deadline,

@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-0-start-->
+```
+
 # Abstract
 
 `template_storybook` demonstrates a public, standalone picture-book workflow in
@@ -19,11 +23,19 @@ numbered page, and a final script assembles the PDF. This makes the exemplar a
 forkable pattern for full-page creative artifacts rather than standard
 manuscript-centered figure generation.
 
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-1-start-->
+```
 
 # Introduction
 
@@ -40,11 +52,19 @@ around a yin-yang-like valley so that each family contains a trace of the other
 without erasing its own geometry. The point is not mathematical instruction; it
 is a compact visual grammar for reciprocal belonging.
 
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-2-start-->
+```
 
 # Architecture
 
@@ -66,11 +86,19 @@ orchestration: cover, page 1, page 2, and so on. The repetition keeps the
 creative page surface easy to inspect while preventing scripts from becoming
 hidden rendering engines.
 
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-3-start-->
+```
 
 # Story and Graphics
 
@@ -92,11 +120,19 @@ projection, push-pull balance, and directional growth. This gives forks a
 readable baseline. Replacing the story does not require editing Python;
 replacing the visual grammar does.
 
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-4-start-->
+```
 
 # Reproducibility
 
@@ -110,14 +146,26 @@ script can run against a temporary project root.
 The generated manifest records the cast, page list, and render paths. That
 manifest is the compact evidence surface for the primary artifact.
 
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-4-end-->
+```
+
 
 
 ---
 
 
 
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-5-start-->
+```
+
 # References
 
 The bundled story is illustrative fiction. The Synergetics reference grounds
 the tetrahedron-inside-cube design motif used in the stability page and the
 later tensegrity/vector motifs.
+
+```{=html}
+<!--template-web-source-91d84baccb531fcf1831434f8117d0a9657d7e61563dd885a08854ffad3e1b48-5-end-->
+```

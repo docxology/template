@@ -261,7 +261,7 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   HTML-only semantic fallback, so neither writer silently loses the statement.
   Dense captions and complete
   tables link to the canonical manuscript HTML. Beamer remains an explicitly
-  labelled untagged presentation derivative. Neither a successful render nor
+  labeled untagged presentation derivative. Neither a successful render nor
   these design constraints establish WCAG or PDF/UA conformance.
 - Accessible and archive Beamer single-image figures may select a bounded, source-bound panel
   manifest through `data-slide-manifest`. `_slides_presentation_variants.py`
@@ -311,9 +311,12 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   `_pandoc_filters.formalism_filter_args()`, never by hand-writing the path;
   the combined DOCX/EPUB/ebook lanes get it through
   `_pandoc_args.combined_pandoc_args`, which also carries the shared
-  resource-path triple and citeproc wiring;
-  `tests/infra_tests/rendering/test_formalism_wiring.py` reads the constructed
-  command line of each writer and fails if one drops it.
+  resource-path triple and citeproc wiring. Validate the produced numbers,
+  citation text, and real destinations rather than treating command-line
+  presence as evidence of rendered correctness. The real consumer regressions
+  in `tests/infra_tests/rendering/test_web_fragments.py` exercise forward/back
+  references, grouped/narrative citations, global counters, and split/combined
+  destination ownership; `test_formalism_filter.py` covers the filter semantics.
 - `pandoc-crossref` is an optional external binary, so a missing one warns and
   continues. `formalism.lua` ships with the repo, so a missing one **raises**
   `FormalismFilterMissingError` — degrading to unnumbered output while exiting
@@ -325,9 +328,16 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   of regular-file outputs, and reject malformed or unwritable cache state with
   a `RenderCacheError`. Callers must regenerate a render when the cache is
   missing or invalid.
-- The per-section HTML path (`WebRenderer.render`) intentionally gets neither
-  filter: it pre-converts citations and renders sections standalone, where
-  restarted numbering would be misleading.
+- `WebRenderer.render(source)` produces an isolated single-source preview.
+  `render_combined(complete_sources, manuscript_dir, project_name)` resolves the
+  whole manuscript once, creates or replaces the exact roster of split pages
+  in that global context, and produces `index.html`. A preview call is not
+  required. Finalized split pages share the combined edition's formalism,
+  cross-reference, citation, and footnote numbers. Keep live local anchors
+  local; route unique remote anchors to their actual produced pages and
+  combined-only bibliography/footnote/contents destinations to `index.html`.
+  Do not replace reference-looking strings in raw HTML, scripts, styles,
+  comments, code examples, or inert templates.
 - Raw-LaTeX theorem-like environments (`\begin{theorem|lemma|proposition|`
   `corollary|definition}`) render in the PDF via the manuscript preamble's
   `\newtheorem` definitions. Pandoc's HTML writer cannot, so `web_renderer.py`

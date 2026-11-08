@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>orientation.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,13 +744,14 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_0_orientation">Orientation to the Field</h1>
+<h1 data-number="4" id="sec:part_0_orientation"><span
+class="header-section-number">4</span> Orientation to the Field</h1>
 <figure id="fig:part_0_orientation">
-<a class="figure-full-size-link" href="../figures/part_0_orientation.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_0_orientation.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_0_orientation.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_0_orientation.png" style="width:90.0%"
 alt="Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Deterministic logistic trajectories at
-three positive growth rates with common initial state and
-capacity.</figcaption>
+<figcaption>Figure 1: Deterministic logistic
+trajectories at three positive growth rates with common initial state
+and capacity.</figcaption>
 </figure>
 <!-- alt: Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner. -->
 <!-- chapter-metadata-badge -->
@@ -732,7 +760,8 @@ capacity.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="4.0.1" id="study-blueprint"><span
+class="header-section-number">4.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> Begin a model by naming a question, a
 boundary and an observation that could change your mind.</li>
@@ -741,21 +770,22 @@ href="manuscript__glossary.html#gl:system"><strong>system</strong></a>, <a
 href="manuscript__glossary.html#gl:boundary"><strong>boundary</strong></a>, <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
 href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_0_orientation_model">[@eq:part_0_orientation_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_0_orientation_model">1</a>.</li>
 <li><strong>Data skill:</strong> Keep observation definitions and model
 assumptions next to the prediction.</li>
 <li><strong>Common misconception to repair:</strong> A plausible curve
 is not a complete explanation of the system.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_orientation">[@sec:lab_part_0_orientation]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_orientation">[@sec:q_part_0_orientation]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_0__lab_orientation.html#sec:lab_part_0_orientation">19</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_0__q_orientation.html#sec:q_part_0_orientation">31</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.logistic_growth</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="4.1" id="learning-objectives"><span
+class="header-section-number">4.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Draw a system boundary and classify the inputs that cross it.</li>
 <li>Distinguish a state, a measurement and a parameter in a concrete
@@ -771,7 +801,8 @@ can organize that question, but the curve alone cannot tell us who was
 excluded, whether the town changed, or how sign-ups were recorded. Those
 omissions are where modeling begins.</p>
 </blockquote>
-<h2 id="a-question-before-an-equation">A question before an
+<h2 data-number="4.2" id="a-question-before-an-equation"><span
+class="header-section-number">4.2</span> A question before an
 equation</h2>
 <p>The useful starting question is precise enough to make an observation
 relevant. “How does the service work?” is a broad invitation. “How many
@@ -781,7 +812,8 @@ The conditional phrase is essential: a prediction is about specified
 circumstances, not a promise that those circumstances will continue.
 Write the question before choosing a familiar equation, so that
 convenience does not decide what the study is about.</p>
-<h2 id="choosing-the-boundary">Choosing the boundary</h2>
+<h2 data-number="4.3" id="choosing-the-boundary"><span
+class="header-section-number">4.3</span> Choosing the boundary</h2>
 <p>A boundary decides which processes the model represents explicitly
 and which arrive as inputs or disturbances. For sign-ups, the modeled
 state might be the number of registered accounts; publicity, population
@@ -791,7 +823,9 @@ investigators can draw different boundaries around the same service and
 produce different useful models because they are answering different
 questions. Record the choice and the reason rather than arguing that one
 diagram is the service itself.</p>
-<h2 id="state-is-not-the-measurement">State is not the measurement</h2>
+<h2 data-number="4.4" id="state-is-not-the-measurement"><span
+class="header-section-number">4.4</span> State is not the
+measurement</h2>
 <p>The account count is an observable produced by a counting procedure.
 A person may hold two accounts, and a registered account may never
 borrow anything. A state representing active participants is therefore
@@ -802,7 +836,8 @@ are instructional examples; they do not report actual users or
 biological populations. Keeping that distinction prevents synthetic
 examples from acquiring false authority merely because they are drawn as
 precise curves.</p>
-<h2 id="the-prediction-and-its-challenge">The prediction and its
+<h2 data-number="4.5" id="the-prediction-and-its-challenge"><span
+class="header-section-number">4.5</span> The prediction and its
 challenge</h2>
 <p>The logistic illustration combines an initial value, a positive
 growth rate and a capacity. Several rate choices produce the family in
@@ -813,22 +848,24 @@ revise the capacity assumption or select another model. Adjusting every
 parameter after every new observation without preserving the previous
 forecast removes this challenge. Keep the original forecast and compare
 it with the later outcome before revising the next one.</p>
-<h2 id="an-evidence-record">An evidence record</h2>
+<h2 data-number="4.6" id="an-evidence-record"><span
+class="header-section-number">4.6</span> An evidence record</h2>
 <p>For this exercise, keep four items: the question, the observation
 definition, the model configuration and the resulting prediction. Attach
 the input data and execution command when computation enters the record.
 A hash identifies bytes, a test checks selected behavior, and a
 comparison checks a prediction; none substitutes for the others. Box
-discusses iterative contact between theory and practice
-[box1976science]. The lab translates that idea into a small record that
-another learner can inspect without knowing what its author
-intended.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span
-class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\]</span>
-{#eq:part_0_orientation_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_orientation_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+discusses iterative contact between theory and practice <span
+class="citation" data-cites="box1976science">(<a
+href="index.html#ref-box1976science" role="doc-biblioref">Box 1976</a>)</span>.
+The lab translates that idea into a small record that another learner
+can inspect without knowing what its author intended.</p>
+<h2 data-number="4.7" id="a-worked-formalism"><span
+class="header-section-number">4.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_0_orientation_model"><span
+class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\qquad{(1)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_orientation_parameters" data-responsive-table="true">
+<caption>Table 1: Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -882,11 +919,11 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <p>The equation is evaluated by the tested
 <code>textbook.models.logistic_growth</code>. The assertions above are
 independent expectations for this designed example; the displayed figure
-in <span class="citation"
-data-cites="fig:part_0_orientation">[@fig:part_0_orientation]</span> is
-a deterministic illustration with its own explicitly stated inputs, not
-evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+in fig. <a href="#fig:part_0_orientation">1</a> is a deterministic
+illustration with its own explicitly stated inputs, not evidence
+collected from the opening scenario.</p>
+<h2 data-number="4.8" id="assumptions-and-limits"><span
+class="header-section-number">4.8</span> Assumptions and Limits</h2>
 <p>The closed form assumes a constant positive rate and a fixed capacity
 with an initial state strictly above zero and no larger than capacity.
 It omits migration, changing resources and random shocks. A discrepancy
@@ -904,7 +941,8 @@ class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a 
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="4.9" id="summary"><span
+class="header-section-number">4.9</span> Summary</h2>
 <p>Begin a model by naming a question, a boundary and an observation
 that could change your mind. The worked example makes a narrow
 quantitative claim that can be checked with exact inputs and a tested
@@ -913,23 +951,27 @@ State the assumptions, preserve the observation record and choose a
 comparison that can distinguish an arithmetic error from an inadequate
 model. Those habits make a result inspectable without expanding what its
 evidence establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
+<h2 data-number="4.10" id="key-terms"><span
+class="header-section-number">4.10</span> Key Terms</h2>
 <p><a href="manuscript__glossary.html#gl:system"><strong>system</strong></a>, <a
 href="manuscript__glossary.html#gl:boundary"><strong>boundary</strong></a>, <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
 href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Box [box1976science] discusses model-building as an iterative
-scientific activity; compare the role of a model check with changing a
-parameter.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="4.11" id="further-reading"><span
+class="header-section-number">4.11</span> Further Reading</h2>
+<p>Box <span class="citation" data-cites="box1976science">(<a
+href="index.html#ref-box1976science" role="doc-biblioref">Box 1976</a>)</span>
+discusses model-building as an iterative scientific activity; compare
+the role of a model check with changing a parameter.</p>
+<h2 data-number="4.12" id="practice"><span
+class="header-section-number">4.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_orientation">[@sec:lab_part_0_orientation]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_orientation">[@sec:q_part_0_orientation]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_0__lab_orientation.html#sec:lab_part_0_orientation">19</a> — execute the worked
+computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_0__q_orientation.html#sec:q_part_0_orientation">31</a> — compare your reasoning with
+the supplied solutions.</li>
 </ul>
 </main>
 </body>

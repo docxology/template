@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 This exemplar documents **template_sia**, a deterministic implementation of the Self-Improvement Agent (SIA) harness contract described in [@sia2026]. The default pipeline replays fixture-backed generations for the `mini_classify` task; opt-in live mode runs bounded target subprocesses and optional Ollama-backed meta/feedback steps.
@@ -6,11 +10,19 @@ This exemplar documents **template_sia**, a deterministic implementation of the 
 
 **Keywords:** self-improvement agents, benchmark harness, reproducible evaluation, agent loops
 
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -22,11 +34,19 @@ Compared with the AutoResearch exemplar, SIA focuses on **meta → target → fe
 
 **Run contract.** Task `mini_classify`, run 1, up to 3 generation(s), live=false.
 
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-2-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -65,11 +85,19 @@ count, enabling at-a-glance comparison across runs.
 
 ![Per-generation metric heatmap showing accuracy and sample count across SIA generations.](../figures/sia_generation_heatmap.png){#fig:sia-generation-heatmap width=80%}
 
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-3-start-->
+```
 
 \clearpage
 
@@ -101,11 +129,19 @@ fabricating an improvement signal where the evaluation cannot distinguish one.
 
 ![Generation-over-generation metric delta (Δaccuracy) for the SIA fixture replay; the flat trace confirms threshold robustness and prevents a fabricated improvement claim.](../figures/sia_improvement_delta.png){#fig:sia-improvement-delta width=80%}
 
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-4-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -113,12 +149,24 @@ template_sia demonstrates how to embed the SIA harness contract in the Research 
 
 **Non-claims.** This tree is a harness and documentation exemplar. Fixture-replay metrics (final accuracy=1.0000) validate wiring only—they are not evidence of state-of-the-art self-improvement. Live self-modification and external LLM calls remain opt-in; default CI never executes generated agent code or claims benchmark parity with [@sia2026].
 
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-4-end-->
+```
+
 
 
 ---
 
 
 
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-5-start-->
+```
+
 # References {#sec:references}
 
 See `references.bib` for BibTeX entries cited in this manuscript, including [@sia2026] and the template repository DOI from `manuscript/config.yaml`.
+
+```{=html}
+<!--template-web-source-f0e38fd654f4f2e3bb35db8cafba3ff8eeccffc757d0df9827fb11e528aa5af4-5-end-->
+```

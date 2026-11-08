@@ -274,9 +274,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -305,8 +305,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -391,7 +391,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -409,8 +416,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -423,8 +428,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -652,10 +655,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -706,10 +717,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -897,6 +904,7 @@ class="toc-section-number">7</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This paper presents a strongly-typed, decentralized multiagent
@@ -972,7 +980,9 @@ than one-off scripts.</p>
 <p><strong>Keywords:</strong> strongly typed programming, session types,
 algebraic data types, category theory, Active Inference, multiagent
 systems, affine types, illegal state unrepresentable.</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <h2 data-number="2.1" id="why-ant-robots"><span
@@ -1099,7 +1109,9 @@ is a deliberately minimal, documentary stand-in for the kind of
 shared-coordination-state problem Raft solves in full; the comparison is
 drawn explicitly, not left implicit, in sec. <a
 href="#sec:results-discussion">6</a>.</p>
+
 <hr />
+
 <h1 data-number="3" id="sec:type-architecture"><span
 class="header-section-number">3</span> Type Architecture</h1>
 <h2 data-number="3.1" id="module-layout"><span
@@ -1381,7 +1393,9 @@ paragraph deliberately does not use, run against this manuscript,
 returns zero matches (ISC-44) — there is no limitations subsection that
 needs the exemption, because the template makes neither claim anywhere
 to begin with.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:storage-functor"><span
 class="header-section-number">4</span> Storage as a Functor</h1>
 <h2 data-number="4.1" id="the-framing"><span
@@ -1459,7 +1473,9 @@ accepts one either. <code>tests/agent/test_agent_isolation.py</code>
 confirms this structurally (ISC-30): a second agent’s storage file path
 is unreachable through the first agent’s public API, not merely
 unreached in the tests that happen to exist.</p>
+
 <hr />
+
 <h1 data-number="5" id="sec:active-inference"><span
 class="header-section-number">5</span> The Active Inference Framing of
 the Decision Loop</h1>
@@ -1575,7 +1591,9 @@ public interface and to the shared <code>PheromoneField</code>
 This keeps the “many local free-energy minimizers coordinating through a
 shared environment, with no shared internal state” framing honest at the
 code level, not just at the level of the manuscript’s prose.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:results-discussion"><span
 class="header-section-number">6</span> Results and Discussion</h1>
 <h2 data-number="6.1" id="mypy-as-oracle-proof-of-detection"><span
@@ -3056,7 +3074,9 @@ decay threshold has additional informal spot-checks at other seed bases;
 the real-vs-null gap and the zero-deposit ablation do not, and neither
 is gated by a cross-seed-base regression test the way the heterogeneity
 ordering is).</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:references"><span
 class="header-section-number">7</span> References</h1>
 <p>Bibliography lives in <a
@@ -3071,6 +3091,7 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_formal/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-ehresmann2007memory" class="csl-entry" role="listitem">

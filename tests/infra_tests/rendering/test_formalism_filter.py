@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.rendering._pandoc_filters import formalism_filter_path
+from infrastructure.rendering._pandoc_filters import FormalismFilterMissingError, formalism_filter_path
 
 PANDOC_FORMAT = "markdown+tex_math_dollars+raw_tex+header_attributes"
 
@@ -27,6 +27,12 @@ def _pandoc_path() -> str:
     if pandoc is None:
         pytest.skip("pandoc not available on PATH")
     return pandoc
+
+
+def test_missing_shipped_filter_refuses_a_broken_install(tmp_path: Path) -> None:
+    """A missing shipped filter must fail rather than publish unnumbered blocks."""
+    with pytest.raises(FormalismFilterMissingError):
+        formalism_filter_path(package_dir=tmp_path)
 
 
 def _run_pandoc(

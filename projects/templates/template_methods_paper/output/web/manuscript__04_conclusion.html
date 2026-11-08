@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>04_conclusion.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL" />
+  <title>A Domain Language for Specifying Controlled Methods</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +173,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -232,7 +383,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -489,10 +647,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -543,10 +709,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -575,15 +737,19 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:conclusion">Conclusion</h1>
+<h1 data-number="5" id="sec:conclusion"><span
+class="header-section-number">5</span> Conclusion</h1>
 <p>This paper presented a small, tested domain language for specifying
-controlled methods, informed by BPL’s [bpl2026] domain-language design
-for laboratory protocols and generalized to any controlled procedure. It
-validates a simple proposition: a controlled vocabulary expressed as
-typed, validated dataclasses — not a parsed text grammar — is sufficient
-to reproduce BPL’s core safety properties at a scope appropriate for a
+controlled methods, informed by BPL’s <span class="citation"
+data-cites="bpl2026">(<a href="index.html#ref-bpl2026" role="doc-biblioref">Bota
+Biosciences 2026</a>)</span> domain-language design for laboratory
+protocols and generalized to any controlled procedure. It validates a
+simple proposition: a controlled vocabulary expressed as typed,
+validated dataclasses — not a parsed text grammar — is sufficient to
+reproduce BPL’s core safety properties at a scope appropriate for a
 template exemplar.</p>
-<h2 id="exemplar-achievements">Exemplar achievements</h2>
+<h2 data-number="5.1" id="exemplar-achievements"><span
+class="header-section-number">5.1</span> Exemplar achievements</h2>
 <p>Operating as the methods-paper exemplar for the Research Project
 Template methodology, the project deployed the three foundational
 pillars:</p>
@@ -600,30 +766,37 @@ every gate-failure mode, under a ≥90% project coverage gate.</li>
 correspondence with BPL’s pipeline, testing philosophy, and operational
 rules that keep the library, scripts, and manuscript aligned.</li>
 </ol>
-<h2 id="technical-contributions">Technical contributions</h2>
-<h3 id="controlled-vocabulary-in-code-not-a-parser">Controlled
-vocabulary in code, not a parser</h3>
+<h2 data-number="5.2" id="technical-contributions"><span
+class="header-section-number">5.2</span> Technical contributions</h2>
+<h3 data-number="5.2.1"
+id="controlled-vocabulary-in-code-not-a-parser"><span
+class="header-section-number">5.2.1</span> Controlled vocabulary in
+code, not a parser</h3>
 <p>The hallmark of this exemplar is the design choice it demonstrates: a
 <code>.bpl</code> file’s text grammar buys generality this template does
 not need, while a frozen-dataclass model buys construction-time
 validation (<code>__post_init__</code>) that a parsed AST would have to
 re-derive. The controlled vocabulary’s discipline lives in the
 <em>types</em>, not in concrete syntax.</p>
-<h3 id="honest-handling-of-trust-boundaries">Honest handling of trust
+<h3 data-number="5.2.2" id="honest-handling-of-trust-boundaries"><span
+class="header-section-number">5.2.2</span> Honest handling of trust
 boundaries</h3>
 <p><code>trust.py</code>’s hash-chain documents its own limit
 explicitly: it detects in-chain tampering but cannot detect a chain
 rewritten from record zero. This makes the provenance guarantee a
 visible, testable property rather than an implied cryptographic
 guarantee the implementation does not actually provide.</p>
-<h2 id="key-insights">Key insights</h2>
+<h2 data-number="5.3" id="key-insights"><span
+class="header-section-number">5.3</span> Key insights</h2>
 <ol type="1">
 <li><strong>Determinism follows from explicit tie-breaking</strong>:
-Kahn’s algorithm [kahn1962topological] alone does not guarantee a stable
-schedule across runs — the ascending-<code>step_id</code> tie-break is
-what makes <code>plan_hash</code> reproducible, and <span
-class="citation" data-cites="sec:results">[@sec:results]</span> checks
-this live rather than asserting it.</li>
+Kahn’s algorithm <span class="citation"
+data-cites="kahn1962topological">(<a href="index.html#ref-kahn1962topological"
+role="doc-biblioref">Kahn 1962</a>)</span> alone does not guarantee a
+stable schedule across runs — the ascending-<code>step_id</code>
+tie-break is what makes <code>plan_hash</code> reproducible, and sec. <a
+href="manuscript__03_results.html#sec:results">4</a> checks this live rather than asserting
+it.</li>
 <li><strong>Staged short-circuit avoids misleading errors</strong>:
 running <code>plan_gate</code> and <code>target_gate</code> against a
 structurally invalid method would report noise, not signal —
@@ -637,7 +810,8 @@ steps and <code>HUMAN</code> sign-off all draw on the same controlled
 vocabulary <code>PBSPreparation</code> uses — nothing was added to
 support a second domain.</li>
 </ol>
-<h2 id="future-extensions">Future extensions</h2>
+<h2 data-number="5.4" id="future-extensions"><span
+class="header-section-number">5.4</span> Future extensions</h2>
 <p>This foundation could be extended to:</p>
 <ul>
 <li><strong>A real <code>.bpl</code>-style parser</strong>: add
@@ -651,7 +825,8 @@ translation layer.</li>
 declarations, generalizing BPL’s <code>capabilities/</code> registry and
 <code>bplc capabilities</code> report.</li>
 </ul>
-<h2 id="final-assessment">Final assessment</h2>
+<h2 data-number="5.5" id="final-assessment"><span
+class="header-section-number">5.5</span> Final assessment</h2>
 <p>The <code>template_methods_paper</code> tree is the canonical
 reference for how a methods paper — a manuscript whose subject is a
 methodology — stays synchronized with the code implementing that

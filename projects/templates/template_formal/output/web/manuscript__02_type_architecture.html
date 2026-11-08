@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_type_architecture.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Session Types, Affine Handles, and Machine-Checked Invariants in a Simulated Ant-Robot Colony -- and an Honest Account of Where the Guarantees Stop" />
+  <title>Illegal States, Mostly Unrepresentable</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +246,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +274,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +305,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +391,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +416,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +428,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +655,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +717,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,8 +745,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:type-architecture">Type Architecture</h1>
-<h2 id="module-layout">Module layout</h2>
+<h1 data-number="3" id="sec:type-architecture"><span
+class="header-section-number">3</span> Type Architecture</h1>
+<h2 data-number="3.1" id="module-layout"><span
+class="header-section-number">3.1</span> Module layout</h2>
 <p>The typed surface described in this section is not spread arbitrarily
 across the codebase — each layer below owns exactly one of the concerns
 this paper argues for (ADTs, nominal identifiers, session types, affine
@@ -735,7 +765,8 @@ class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a 
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">E</span> <span class="pp">--&gt;</span> <span class="dt">H</span>[<span class="vs">src/template_formal/network/bus.py</span>]</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">src/template_formal/colony/pheromone.py</span>]</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">F</span> <span class="pp">--&gt;</span> <span class="dt">J</span>[<span class="vs">expected_free_energy — Friston 2005 framing</span>]</span></code></pre></div>
-<h2 id="algebraic-data-types-resultt-e">Algebraic data types:
+<h2 data-number="3.2" id="algebraic-data-types-resultt-e"><span
+class="header-section-number">3.2</span> Algebraic data types:
 <code>Result[T, E]</code></h2>
 <p><code>src/template_formal/types/result.py</code> defines
 <code>Result[T, E]</code> as a tagged union of two frozen dataclasses,
@@ -743,22 +774,26 @@ class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a 
 <code>Literal["ok"]</code>/<code>Literal["err"]</code> tag field. This
 is the closest structural analogue Python offers to the sum types of
 ML-family languages (<span class="citation"
-data-cites="milner1978theory">@milner1978theory</span>) and to the
-Curry–Howard “propositions as types” reading of a disjoint union as a
-proof of “either <span class="math inline">\(A\)</span> or <span
+data-cites="milner1978theory">Milner (<a href="index.html#ref-milner1978theory"
+role="doc-biblioref">1978</a>)</span>) and to the Curry–Howard
+“propositions as types” reading of a disjoint union as a proof of
+“either <span class="math inline">\(A\)</span> or <span
 class="math inline">\(B\)</span>” (<span class="citation"
-data-cites="wadler2015propositions">@wadler2015propositions</span>): a
-function returning <code>Result[T, E]</code> documents, in its
-signature, that failure is an ordinary, structurally-typed value — never
-an uncaught exception for an <em>expected</em> failure mode.
-<code>match</code>/<code>case</code> narrowing on the <code>tag</code>
-field, combined with <code>typing.assert_never</code> in the default
-arm, makes an exhaustiveness bug — a <code>match</code> that handles
-<code>Ok</code> and forgets <code>Err</code> — a real
-<code>mypy --strict</code> type error, not a runtime surprise.</p>
-<h2 id="nominal-identifiers-agentid-messageid-txnid">Nominal
-identifiers: <code>AgentId</code>, <code>MessageId</code>,
-<code>TxnId</code></h2>
+data-cites="wadler2015propositions">Wadler (<a
+href="index.html#ref-wadler2015propositions"
+role="doc-biblioref">2015</a>)</span>): a function returning
+<code>Result[T, E]</code> documents, in its signature, that failure is
+an ordinary, structurally-typed value — never an uncaught exception for
+an <em>expected</em> failure mode. <code>match</code>/<code>case</code>
+narrowing on the <code>tag</code> field, combined with
+<code>typing.assert_never</code> in the default arm, makes an
+exhaustiveness bug — a <code>match</code> that handles <code>Ok</code>
+and forgets <code>Err</code> — a real <code>mypy --strict</code> type
+error, not a runtime surprise.</p>
+<h2 data-number="3.3"
+id="nominal-identifiers-agentid-messageid-txnid"><span
+class="header-section-number">3.3</span> Nominal identifiers:
+<code>AgentId</code>, <code>MessageId</code>, <code>TxnId</code></h2>
 <p><code>src/template_formal/types/ids.py</code> wraps
 <code>uuid.UUID</code> three times via <code>typing.NewType</code>:
 <code>AgentId</code>, <code>MessageId</code>, <code>TxnId</code>. All
@@ -768,14 +803,18 @@ The distinction exists <strong>only</strong> at the type-checker level:
 <code>mypy --strict</code> rejects passing an <code>AgentId</code> where
 a <code>MessageId</code> is expected, even though nothing about the
 underlying bytes differs. This is Pierce’s (<span class="citation"
-data-cites="pierce2002types">@pierce2002types</span>) textbook case for
-nominal typing over structural typing where the underlying
-representation is shared but the domain meaning is not.</p>
-<h2 id="session-typed-protocol-state-machine">Session-typed protocol
-state machine</h2>
+data-cites="pierce2002types">Pierce (<a href="index.html#ref-pierce2002types"
+role="doc-biblioref">2002</a>)</span>) textbook case for nominal typing
+over structural typing where the underlying representation is shared but
+the domain meaning is not.</p>
+<h2 data-number="3.4" id="session-typed-protocol-state-machine"><span
+class="header-section-number">3.4</span> Session-typed protocol state
+machine</h2>
 <p><code>src/template_formal/protocol/session.py</code> implements a
-session-typed handshake protocol in the tradition of
-[honda1998language]: four distinct classes — <code>IdleSession</code>,
+session-typed handshake protocol in the tradition of <span
+class="citation" data-cites="honda1998language">(<a
+href="index.html#ref-honda1998language" role="doc-biblioref">Honda et al.
+1998</a>)</span>: four distinct classes — <code>IdleSession</code>,
 <code>HandshakingSession</code>, <code>EstablishedSession</code>,
 <code>ClosedSession</code> — each parameterizing
 <code>SessionEndpoint[PhaseT]</code> with exactly one phase marker from
@@ -827,10 +866,10 @@ phase machine plus its two fault-injected error edges — dropped frames
 surface as <code>ProtocolViolation</code> at the session-method
 boundary, corrupted frames surface as <code>MalformedMessage</code> at
 the wire-decode boundary, and neither ever crashes or silently advances
-the phase (<span class="citation"
-data-cites="sec:results-discussion">@sec:results-discussion</span>,
-“Fault-injected protocol negative controls”).</em></p>
-<h2 id="affine-discipline-resource-handles">Affine-discipline resource
+the phase (sec. <a href="manuscript__05_results_discussion.html#sec:results-discussion">6</a>, “Fault-injected
+protocol negative controls”).</em></p>
+<h2 data-number="3.5" id="affine-discipline-resource-handles"><span
+class="header-section-number">3.5</span> Affine-discipline resource
 handles</h2>
 <div class="theorem-box definition">
 <p><strong>Definition 1</strong> (Affine-discipline resource handle). An
@@ -853,17 +892,19 @@ carrying a private consumed flag, checked and raised
 every consuming method call. The term is chosen deliberately over
 describing Python’s guarantee here as compiler-enforced structural
 linearity of the kind <span class="citation"
-data-cites="jung2018rustbelt">@jung2018rustbelt</span> formalize for
-Rust’s ownership/borrowing system: Rust’s borrow checker rejects a
-double-move or a use-after-move <strong>at compile time</strong>, as a
-type error; Python’s runtime here rejects a double-commit <strong>at
-runtime</strong>, as a raised exception, one call after the type checker
-has already let the program through. Both defend the same invariant — a
-resource is consumed at most once — but by different mechanisms, and
-this paper is careful never to claim Python achieves the compile-time
-version.</p>
-<h2 id="sec:honesty-line">What mypy –strict proves vs. what is a runtime
-discipline</h2>
+data-cites="jung2018rustbelt">Jung et al. (<a
+href="index.html#ref-jung2018rustbelt" role="doc-biblioref">2018</a>)</span>
+formalize for Rust’s ownership/borrowing system: Rust’s borrow checker
+rejects a double-move or a use-after-move <strong>at compile
+time</strong>, as a type error; Python’s runtime here rejects a
+double-commit <strong>at runtime</strong>, as a raised exception, one
+call after the type checker has already let the program through. Both
+defend the same invariant — a resource is consumed at most once — but by
+different mechanisms, and this paper is careful never to claim Python
+achieves the compile-time version.</p>
+<h2 data-number="3.6" id="sec:honesty-line"><span
+class="header-section-number">3.6</span> What mypy –strict proves
+vs. what is a runtime discipline</h2>
 <p>This section states, claim by claim, exactly which invariants above
 are edit-time/CI-time type-checker guarantees and which are
 runtime-checked disciplines — and cites the ISC (Ideal-State Criterion)

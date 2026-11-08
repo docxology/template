@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_experimental_setup.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for source-owned lexical composition" />
+  <title>Template Madlib: Deterministic Token Injection for Conditional
+IMRAD Manuscripts</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -172,6 +175,71 @@
       vertical-align: middle;
     }
   </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -232,7 +300,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -489,10 +564,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -543,10 +626,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -575,9 +654,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1
-id="configuration-schema-controlled-lexicon-slots-and-narrative-moves">Configuration:
-Schema-Controlled Lexicon, Slots, and Narrative Moves</h1>
+<h1 data-number="6"
+id="configuration-schema-controlled-lexicon-slots-and-narrative-moves"><span
+class="header-section-number">6</span> Configuration: Schema-Controlled
+Lexicon, Slots, and Narrative Moves</h1>
 <p>The active composition depth is <code>deep</code>. The lexicon
 exposes 10 category list(s), and the slot declaration expands to 40
 concrete token choice(s). Section switches are evaluated before
@@ -598,23 +678,25 @@ field that appears in the rendered manuscript may be intentionally
 authored in <code>config.yaml</code>, or it may be a documented default
 inherited from the template.</p>
 <figure id="fig:configured-field-matrix">
-<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Configured field origin matrix"><img src="../figures/configured_field_matrix.png"
+<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Configured field origin matrix"><img src="../figures/configured_field_matrix.png"
 alt="Five-by-two heatmap of tracked config-field paths by scope and origin: schema: 19 explicit, 0 defaulted; section: 33 explicit, 0 defaulted; lexicon: 10 explicit, 0 defaulted; slot: 55 explicit, 11 defaulted; visualization: 9 explicit, 0 defaulted. Counts describe configuration provenance and do not establish schema completeness." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Configured field origin
+<figcaption>Figure 5: Configured field origin
 matrix</figcaption>
 </figure>
 <figure id="fig:section-configuration-heatmap">
-<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Section configuration heatmap"><img src="../figures/section_configuration_heatmap.png"
+<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Section configuration heatmap"><img src="../figures/section_configuration_heatmap.png"
 alt="11-row heatmap with columns for section switch, title, narrative moves, and slot count: abstract: switch explicit, title explicit, moves explicit, 3 slots; introduction: switch explicit, title explicit, moves explicit, 8 slots; methods: switch explicit, title explicit, moves explicit, 6 slots; results: switch explicit, title explicit, moves explicit, 5 slots; discussion: switch explicit, title explicit, moves explicit, 3 slots; configuration: switch explicit, title explicit, moves explicit, 1 slots; evaluation: switch explicit, title explicit, moves explicit, 5 slots; reproducibility: switch explicit, title explicit, moves explicit, 2 slots; limitations: switch explicit, title explicit, moves explicit, 3 slots; scope: switch explicit, title explicit, moves explicit, 2 slots; authoring_contract: switch explicit, title explicit, moves explicit, 2 slots. The matrix records configuration coverage, not manuscript quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Section configuration
+<figcaption>Figure 6: Section configuration
 heatmap</figcaption>
 </figure>
 <figure id="fig:field-origin-summary">
-<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Field origin summary"><img src="../figures/field_origin_summary.png"
+<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Field origin summary"><img src="../figures/field_origin_summary.png"
 alt="Two horizontal bars summarize configured-field provenance: 126 explicit paths and 11 defaulted paths, out of 137 tracked paths. The counts identify origin and do not indicate validation status or research quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Field origin summary</figcaption>
+<figcaption>Figure 7: Field origin
+summary</figcaption>
 </figure>
-<h2 id="declared-section-titles">Declared Section Titles</h2>
+<h2 data-number="6.1" id="declared-section-titles"><span
+class="header-section-number">6.1</span> Declared Section Titles</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 30%" />
@@ -688,7 +770,8 @@ Moves</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="configuration-counts">Configuration Counts</h2>
+<h2 data-number="6.2" id="configuration-counts"><span
+class="header-section-number">6.2</span> Configuration Counts</h2>
 <ul>
 <li>Seed: <code>431</code></li>
 <li>Composition depth: <code>deep</code></li>
@@ -711,7 +794,8 @@ Moves</td>
 <li>Audit rules: <code>12</code></li>
 <li>Contribution claims: <code>9</code></li>
 </ul>
-<h2 id="configured-field-summary">Configured Field Summary</h2>
+<h2 data-number="6.3" id="configured-field-summary"><span
+class="header-section-number">6.3</span> Configured Field Summary</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
@@ -758,7 +842,8 @@ Moves</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="configured-field-inventory">Configured Field Inventory</h2>
+<h2 data-number="6.4" id="configured-field-inventory"><span
+class="header-section-number">6.4</span> Configured Field Inventory</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />

@@ -42,9 +42,9 @@ window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
 }});
 var templateMathOutput = window.MathJax.output || {{}};
 window.MathJax.output = Object.assign({{}}, templateMathOutput, {{
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({{}}, templateMathOutput.linebreaks, {{
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   }})
@@ -136,8 +136,8 @@ window.MathJax.startup = Object.assign({{}}, window.MathJax.startup, {{
         .then(async function () {{
           var width = document.documentElement.clientWidth;
           try {{
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -234,7 +234,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;

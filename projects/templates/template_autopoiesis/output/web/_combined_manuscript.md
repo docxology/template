@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-0-start-->
+```
+
 ## Abstract
 
 `template_autopoiesis` is a combinatoric grammar that **deterministically generates
@@ -63,11 +67,19 @@ flowchart TB
 - **Grammar hash**: `a1f3e428cf1fb3e3`
 - **Tests**: 578 · **Coverage**: 91.88%
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-1-start-->
+```
 
 ## Introduction
 
@@ -262,11 +274,19 @@ pipeline that share both values are required, by construction, to select
 identically — a requirement enforced by the property tests, not merely
 claimed by this paragraph.
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-2-start-->
+```
 
 ## Methods
 
@@ -566,11 +586,19 @@ to switch which hashing function actually runs. Reporting that precisely,
 rather than implying the profile already gates behavior, is the same
 honesty discipline the project asks of its own manuscript elsewhere.
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-3-start-->
+```
 
 ## Results
 
@@ -816,11 +844,19 @@ snapshot, not a permanent state: coverage moves as tests are added or code
 changes, and [@fig:coverage_by_module] should be regenerated (`stage_02_analysis.py`)
 rather than trusted from a prior render whenever that question matters.
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-4-start-->
+```
 
 ## Honesty Contract
 
@@ -1041,11 +1077,19 @@ gated at 90% coverage. What this section documents is narrower and more
 modest: the mechanism by which this manuscript's claims are kept from
 silently diverging from the source code that is supposed to back them.
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-5-start-->
+```
 
 ## Reproducibility
 
@@ -1260,11 +1304,19 @@ reuses that stage's original same-run measurement instead of running the suite
 again; standalone analysis produces a fresh measurement. The full per-module
 report and aggregate tokens remain tied to that one original run.
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-6-start-->
+```
 
 ## Limitations
 
@@ -1408,11 +1460,19 @@ rather than forthcoming. `99_references.md` annotates each entry against the
 section that relies on it rather than listing citations independent of the
 bibliography.
 
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-7-start-->
+```
 
 ## References
 
@@ -1452,3 +1512,7 @@ that a bare bibliography entry doesn't carry:
   integrity of a large structure from its leaves up, without trusting the
   producer's say-so. This project's `integrity_profile: merkle` grammar slot
   is a direct, if much smaller-scale, application of that idea.
+
+```{=html}
+<!--template-web-source-f99e60eb4da4cb72133f41db2e0026a88efbea8776795ef94dc013ceb796a251-7-end-->
+```
