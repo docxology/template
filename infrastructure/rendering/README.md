@@ -1480,6 +1480,10 @@ frontmatter image. HTML retains the whole-pass figure numbering, concise registr
 alternatives and long descriptions, copies the configured cover with its alt,
 and moves the actual unique TOC element by its structural identity. Export the
 complete web directory so shared font assets remain available.
+HTML template contents are inert: nested descendants cannot supply or duplicate
+live structural IDs. The outer template element and its authored bytes remain
+intact, including HTML's ignored self-closing flag on `<template/>`. Duplicate
+live IDs and invalid or unclosed structural containers still fail admission.
 
 Opt-in receipts identify `web-renderer-paper-frontmatter-v1` or
 `shared-paper-frontmatter-markdown-v1`. Existing algorithm names retain their

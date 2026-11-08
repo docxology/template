@@ -97,7 +97,7 @@ class _Element:
 
 
 class _Structure(HTMLParser):
-    """Locate actual element spans without serializing or rewriting their descendants."""
+    """Locate live element spans without rewriting descendants or inert template contents."""
 
     def __init__(self, text: str) -> None:
         super().__init__(convert_charrefs=False)
@@ -106,6 +106,7 @@ class _Structure(HTMLParser):
         self.stack: list[tuple[str, str, int, int]] = []
         self.elements: list[_Element] = []
         self.identifiers: set[str] = set()
+        self._template_depth = 0
         self.feed(text)
         self.close()
         if self.stack:
@@ -116,6 +117,11 @@ class _Structure(HTMLParser):
         return self.offsets[line - 1] + column
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        in_template = self._template_depth > 0
+        if tag == "template":
+            self._template_depth += 1
+        if in_template:
+            return
         identifier = dict(attrs).get("id") or ""
         if identifier:
             if identifier in self.identifiers:
@@ -143,10 +149,16 @@ class _Structure(HTMLParser):
 
     def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         self.handle_starttag(tag, attrs)
-        if self.stack and self.stack[-1][0] == tag:
+        if tag != "template" and not self._template_depth and self.stack and self.stack[-1][0] == tag:
             self.stack.pop()
 
     def handle_endtag(self, tag: str) -> None:
+        if self._template_depth:
+            if tag != "template":
+                return
+            self._template_depth -= 1
+            if self._template_depth:
+                return
         if not self.stack or self.stack[-1][0] != tag:
             raise RenderingError(f"paper.frontmatter HTML has an invalid closing element: {tag}")
         opened, identifier, start, parent = self.stack.pop()
