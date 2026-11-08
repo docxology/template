@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_methods_analytical.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
+  <title>Active Inference Multi-Track Exemplar</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +181,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -188,9 +274,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -219,8 +305,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -305,7 +391,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -323,8 +416,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -337,8 +428,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -566,10 +655,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -620,10 +717,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -652,32 +745,37 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:methods_analytical">Bernoulli–Ising analytical model</h1>
+<h1 data-number="5" id="sec:methods_analytical"><span
+class="header-section-number">5</span> Bernoulli–Ising analytical
+model</h1>
 <!-- sheaf-track:prose -->
 <p>The analytical method is a finite <strong>K=2 Bernoulli /
-Ising</strong> oracle. The entangled joint <span class="citation"
-data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> gives
-closed-form mutual information <span
-class="math inline">\(I(\lambda)\)</span>;
+Ising</strong> oracle. The entangled joint eq. <a
+href="#eq:entangled_joint">1</a> gives closed-form mutual information
+<span class="math inline">\(I(\lambda)\)</span>;
 <code>output/data/parameter_sweep.csv</code> then checks the same curve
 by an independent exact total-correlation recomputation before the value
-is used in <span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>. GNN
-and ontology rows share the same symbol surface (<span class="citation"
-data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>),
-so the derivation, sweep, and model notation are one audited toy
-contract rather than parallel descriptions.</p>
+is used in sec. <a href="manuscript__10_results_mi_sweep.html#sec:results_mi_sweep">9</a>. GNN and ontology
+rows share the same symbol surface (fig. <a
+href="#fig:gnn_ontology_concordance">4</a>), so the derivation, sweep,
+and model notation are one audited toy contract rather than parallel
+descriptions.</p>
 <p>The scope is intentionally small: finite variational quantities only,
 no sampling, and no empirical generalization. “Free energy” here means
 exactly computed variational functionals on this tiny discrete
-state-space, aligned with mathematical FEP reviews
-[buckley2017mathreview], not continuous-time or biological FEP dynamics
-[gershman2019fepbrain]. The generated sweep contains 21 grid points, and
-the merged invariant report records 12 / 12 passing checks.</p>
+state-space, aligned with mathematical FEP reviews <span
+class="citation" data-cites="buckley2017mathreview">(<a
+href="index.html#ref-buckley2017mathreview" role="doc-biblioref">Buckley et al.
+2017</a>)</span>, not continuous-time or biological FEP dynamics <span
+class="citation" data-cites="gershman2019fepbrain">(<a
+href="index.html#ref-gershman2019fepbrain" role="doc-biblioref">Gershman
+2019</a>)</span>. The generated sweep contains 21 grid points, and the
+merged invariant report records 12 / 12 passing checks.</p>
 <!-- sheaf-track:formalism -->
 <p>The entangled joint over binary policies satisfies</p>
-<p><span class="math display">\[q_\lambda(\pi) \propto
-E(\pi)\,\exp(\lambda J(\pi)),\]</span> {#eq:entangled_joint}</p>
+<p><span id="eq:entangled_joint"><span
+class="math display">\[q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda
+J(\pi)),\qquad{(1)}\]</span></span></p>
 <p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
 and deformation parameter <span class="math inline">\(\lambda\)</span>.
 Let <span
@@ -702,10 +800,9 @@ so the derivation is auditable rather than asserted.</p>
 <p>The analytical track writes a parameter sweep comparing closed-form
 mutual information with an independent exact recomputation of it (via
 total correlation) across <span class="math inline">\(\lambda \in [0,
-4]\)</span> on 21 grid points (<span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
-class="citation"
-data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
+4]\)</span> on 21 grid points (sec. <a
+href="manuscript__10_results_mi_sweep.html#sec:results_mi_sweep">9</a>, fig. <a
+href="#fig:ising_mi_curve">3</a>).</p>
 <!-- sheaf-track:assumption_index -->
 <p>The <code>assumption_index</code> fragment makes the analytical
 equations inspectable as a generated artifact instead of relying on
@@ -718,10 +815,10 @@ artifacts that test the same symbols. Any missing equation identifier or
 empty assumption list fails the toy-sweep validation gate.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:ising_mi_curve">
-<a class="figure-full-size-link" href="../figures/ising_mi_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Closed-form I(\lambda) and an independent exact recomputation via total correlation"><img src="../figures/ising_mi_curve.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/ising_mi_curve.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Closed-form I(\lambda) and an independent exact recomputation via total correlation"><img src="../figures/ising_mi_curve.png" style="width:90.0%"
 data-fig-alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision."
 alt="Two-panel plot of mutual information versus coupling strength lambda for the symmetric Bernoulli-Ising toy. Left panel shows the closed-form curve (solid dark line) and an independent exact recomputation via total correlation (dashed blue line) with lambda on the x-axis and mutual information in nats on the y-axis. Right panel shows the recompute-minus-closed-form residual versus lambda with a zero reference line; the two deterministic estimators agree to machine precision." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Closed-form <span
+<figcaption>Figure 3: Closed-form <span
 class="math inline">\(I(\lambda)\)</span> and an independent exact
 recomputation via total correlation for the symmetric Bernoulli-Ising
 toy across 21 grid points up to <span
@@ -731,27 +828,28 @@ panel is a cross-implementation agreement check (max residual 0 nats),
 not a sampling residual.</figcaption>
 </figure>
 <figure id="fig:gnn_ontology_concordance">
-<a class="figure-full-size-link" href="../figures/gnn_ontology_concordance.png" target="_blank" rel="noopener" aria-label="Open full-size figure, GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)."><img src="../figures/gnn_ontology_concordance.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/gnn_ontology_concordance.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, GNN \leftrightarrow ontology concordance for the Bernoulli–Ising toy (GNN v1.1)."><img src="../figures/gnn_ontology_concordance.png" style="width:90.0%"
 data-fig-alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms."
 alt="Layered concordance diagram linking analytical symbols, GNN variables from bernoulli_toy.gnn.md (GNN v1.1), and Active Inference Ontology terms." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>GNN <span
+<figcaption>Figure 4: GNN <span
 class="math inline">\(\leftrightarrow\)</span> ontology concordance for
 the Bernoulli–Ising toy (GNN v1.1).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
 <p>The Bernoulli toy is declared in
 <code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1), following the GNN
-notation role described by Smekal and Friedman [gnn2023]. <span
-class="citation"
-data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>
-links GNN variables to Active Inference Ontology terms bound in the
-analytical ontology fragment; round-trip parity is checked before
-render.</p>
-<p>Measured MI and sweep artifacts in <span class="citation"
-data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> ground
-the same symbol map used in the concordance diagram.</p>
+notation role described by Smekal and Friedman <span class="citation"
+data-cites="gnn2023">(<a href="index.html#ref-gnn2023" role="doc-biblioref">Smékal
+and Friedman 2023</a>)</span>. fig. <a
+href="#fig:gnn_ontology_concordance">4</a> links GNN variables to Active
+Inference Ontology terms bound in the analytical ontology fragment;
+round-trip parity is checked before render.</p>
+<p>Measured MI and sweep artifacts in sec. <a
+href="manuscript__10_results_mi_sweep.html#sec:results_mi_sweep">9</a> ground the same symbol map used in
+the concordance diagram.</p>
 <!-- sheaf-track:ontology -->
-<h3 id="ontology-bindings">Ontology bindings</h3>
+<h3 data-number="5.0.1" id="ontology-bindings-1"><span
+class="header-section-number">5.0.1</span> Ontology bindings</h3>
 <ul>
 <li><code>E1</code> → <strong>Stream1HabitPrior</strong></li>
 <li><code>E2</code> → <strong>Stream2HabitPrior</strong></li>

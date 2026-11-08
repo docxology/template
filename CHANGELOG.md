@@ -21,6 +21,27 @@ are excluded.
   section roster and combined index. Keep valid local links local; retain unknown
   and ambiguous targets as visible defects. Preserve fragment encoding, external
   and asset links, authored content, and source IDs.
+- Finalize split HTML references in the combined manuscript's global context.
+  The earlier fragment-routing correction could route existing anchors but
+  isolated section rendering still restarted formalism counters and left
+  cross-source citations unresolved. Split pages now share the combined edition's
+  resolved reference text and numbers, including grouped/narrative citations and
+  footnotes, while retaining real local or produced-page destinations and
+  combined-only fallbacks. Single-source rendering remains an isolated preview;
+  project finalization requires the complete source roster. Optional
+  `pandoc-crossref` availability still governs figure/table/equation/section
+  resolution. Authored source, code, and inert/raw HTML content are preserved.
+  Generated transmission bookends retain their existing combined-only publication
+  policy rather than becoming unintended standalone section artifacts.
+- Keep EPUB content within narrow reading surfaces without hiding it. Long
+  prose and identifiers wrap; wide code, tables, and MathML remain scrollable.
+  Existing stylesheet bytes, reader color schemes, chapter content, and image
+  bytes are preserved. Effective-package identity includes the added layout
+  rules.
+- Preserve wide HTML mathematics on narrow viewports. MathJax expressions scroll
+  locally instead of overlapping through automatic line breaking or disappearing
+  behind page-level clipping. Authored TeX, fonts, and mathematical content remain
+  unchanged.
 
 These source corrections do not establish a new SDK release or adopt pending
 minor-release candidate work.

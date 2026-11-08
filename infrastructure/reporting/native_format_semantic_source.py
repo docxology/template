@@ -19,49 +19,95 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 from infrastructure.validation.publication.rendered_provenance import validate_current_rendered_provenance
+from infrastructure.rendering._combined_exports import combined_source_files
+from infrastructure.rendering._paper_frontmatter import admit_paper_layout
+from infrastructure.rendering._web_source_context import compose_web_source_context, project_source_context_ast
 
 
 def semantic_source_plan(
     root: Path, scope: str, artifact: NativeArtifact, reader: SnapshotReader
 ) -> tuple[bytes, tuple[tuple[str, bytes], ...], tuple[tuple[str, bytes], ...]]:
     """Rebuild exact source transforms and ordering from current consumed bytes."""
-    from infrastructure.rendering.web_renderer import WebRenderer
-    from infrastructure.rendering.config import RenderingConfig
+    from infrastructure.rendering._web_markdown_preprocess import html_safe_markdown
     from infrastructure.rendering._bibliography import resolve_bibliography
 
     if artifact.format != "html" or not validate_current_rendered_provenance(root, scope).valid:
         raise ValueError("HTML semantics requires actual current consumed hydration")
     reader.read(f"projects/{scope}/manuscript/config.yaml")
     manuscript = render_config_manuscript_dir(root / "projects" / scope)
-    paths = discover_manuscript_files(manuscript)
-    if artifact.id.startswith("section:") and artifact.id.endswith(":html"):
-        name = artifact.id.removeprefix("section:").removesuffix(":html")
-        paths = [path for path in paths if path.relative_to(manuscript).as_posix() == name]
-        if len(paths) != 1:
-            raise ValueError("section identity requires one exact source-relative manuscript")
+    config = manuscript / "config.yaml"
+    if config.is_file():
+        reader.read(config.relative_to(root).as_posix())
+    layout = admit_paper_layout(manuscript, tuple(combined_source_files(discover_manuscript_files(manuscript))))
+    paths = list(layout.complete)
     if not paths:
         raise ValueError("source-owned HTML artifact has no consumed source")
     sources = tuple(
         (item.relative, item.content) for item in (reader.read(path.relative_to(root).as_posix()) for path in paths)
     )
-    combined = artifact.id == "manuscript:html"
-    if combined:
-        content = WebRenderer._html_safe_markdown(
-            WebRenderer(RenderingConfig())._combine_markdown_files(paths), render_citations=False
-        )
-    else:
-        content = WebRenderer._html_safe_markdown(sources[0][1].decode(), preserve_crossrefs=True)
-    bibliographies = (
-        tuple(
-            (item.relative, item.content)
-            for item in (reader.read(path.relative_to(root).as_posix()) for path in resolve_bibliography(manuscript))
-        )
-        if combined
-        else ()
+    content = html_safe_markdown(
+        compose_web_source_context(tuple(data for _, data in sources), len(layout.frontmatter)),
+        render_citations=False,
+    )
+    bibliographies = tuple(
+        (item.relative, item.content)
+        for item in (reader.read(path.relative_to(root).as_posix()) for path in resolve_bibliography(manuscript))
     )
     if not reader.unchanged():
         raise ValueError("consumed semantic sources changed during reconstruction")
     return content.encode(), sources, bibliographies
+
+
+def semantic_source_index(
+    root: Path, scope: str, artifact: NativeArtifact, sources: tuple[tuple[str, bytes], ...]
+) -> int | None:
+    """Bind a split artifact to one exact source in the complete context."""
+    if not (artifact.id.startswith("section:") and artifact.id.endswith(":html")):
+        return None
+    name = artifact.id.removeprefix("section:").removesuffix(":html")
+    expected = (render_config_manuscript_dir(root / "projects" / scope) / name).relative_to(root).as_posix()
+    matches = [index for index, (path, _) in enumerate(sources) if path == expected]
+    if len(matches) != 1:
+        raise ValueError("section identity requires one exact source-relative manuscript")
+    return matches[0]
+
+
+def semantic_owned_sources(
+    root: Path, scope: str, artifact: NativeArtifact, sources: tuple[tuple[str, bytes], ...]
+) -> tuple[tuple[str, bytes], ...]:
+    """Select original survival obligations, retaining full context elsewhere."""
+    index = semantic_source_index(root, scope, artifact, sources)
+    return sources if index is None else (sources[index],)
+
+
+def semantic_contract_ast(
+    root: Path, scope: str, artifact: NativeArtifact, sources: tuple[tuple[str, bytes], ...], ast: bytes
+) -> bytes:
+    """Project only owned blocks from the independently parsed complete AST."""
+    return project_source_context_ast(
+        ast, tuple(data for _, data in sources), semantic_source_index(root, scope, artifact, sources)
+    )
+
+
+def semantic_parser_options(root: Path, scope: str) -> list[str]:
+    """Use the canonical HTML reader's section and configured metadata context."""
+    from infrastructure.rendering.web_renderer import WebRenderer
+
+    return [
+        "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
+        "--to=json",
+        "--number-sections",
+        *WebRenderer._pandoc_metadata_args(render_config_manuscript_dir(root / "projects" / scope)),
+    ]
+
+
+def semantic_lua_filters() -> tuple[Path, ...]:
+    """Select the same ordered Source filters as the canonical HTML writer."""
+    from infrastructure.rendering._pandoc_filters import formalism_filter_args
+
+    rendering = Path(__file__).absolute().parents[1] / "rendering"
+    images = rendering / "convert_latex_images.lua"
+    return (*((images,) if images.is_file() else ()), *(Path(path) for path in formalism_filter_args()[1::2]))
 
 
 def observe_html_source(
@@ -81,13 +127,12 @@ def observe_html_source(
     content, sources, bibliographies = semantic_source_plan(root, scope, artifact, reader)
     source = directory / "semantic-source.md"
     atomic_write_bytes_confined(root, source, content, mode=0o600)
-    args = [str(source), "--from=markdown+tex_math_dollars+raw_tex+header_attributes", "--to=json"]
+    args = [str(source), *semantic_parser_options(root, scope)]
     copied = []
     sdk_root = Path(__file__).absolute().parents[2]
     sdk_reader = SnapshotReader(sdk_root)
-    from infrastructure.rendering._pandoc_filters import formalism_filter_args
 
-    for index, original in enumerate(formalism_filter_args()[1::2]):
+    for index, original in enumerate(semantic_lua_filters()):
         snapshot = sdk_reader.read(Path(original).relative_to(sdk_root).as_posix())
         target = directory / f"semantic-filter-{index}.lua"
         atomic_write_bytes_confined(root, target, snapshot.content, mode=0o600)
@@ -98,16 +143,15 @@ def observe_html_source(
                 "consumed": {"path": target.relative_to(root).as_posix(), "sha256": snapshot.sha256},
             }
         )
-    if artifact.id == "manuscript:html":
-        for index, (path, data) in enumerate(bibliographies):
-            target = directory / f"semantic-bibliography-{index}.bib"
-            atomic_write_bytes_confined(root, target, data, mode=0o600)
-            args.append(f"--bibliography={target}")
-        if bibliographies:
-            args.extend(["--citeproc", "--metadata=link-citations:true"])
-        crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
-        if crossref:
-            args.extend(["--filter", crossref])
+    crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
+    if crossref:
+        args.extend(["--filter", crossref])
+    for index, (_, data) in enumerate(bibliographies):
+        target = directory / f"semantic-bibliography-{index}.bib"
+        atomic_write_bytes_confined(root, target, data, mode=0o600)
+        args.append(f"--bibliography={target}")
+    if bibliographies:
+        args.extend(["--citeproc", "--metadata=link-citations:true"])
     crossref_filter = None
     if "--filter" in args:
         from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
@@ -139,11 +183,19 @@ def observe_html_source(
     atomic_write_bytes_confined(root, ast_path, ast, mode=0o600)
     ast_snapshot = snapshot_reader.read(ast_path.relative_to(root).as_posix())
     consumed = snapshot_reader.read(source.relative_to(root).as_posix())
-    contract = semantic_content_contract_from_ast(artifact.id, (*sources, *bibliographies), ast)
+    contract = semantic_content_contract_from_ast(
+        artifact.id, (*sources, *bibliographies), semantic_contract_ast(root, scope, artifact, sources, ast)
+    )
     from infrastructure.reporting.native_format_semantic_original import observe_original_source
 
     contract, original_source = observe_original_source(
-        root, directory, (*sources, *bibliographies), contract, env=env, deadline=deadline, run_id=run_id
+        root,
+        directory,
+        (*semantic_owned_sources(root, scope, artifact, sources), *bibliographies),
+        contract,
+        env=env,
+        deadline=deadline,
+        run_id=run_id,
     )
     if artifact.id != "manuscript:html" and not (artifact.id.startswith("section:") and artifact.id.endswith(":html")):
         from dataclasses import replace
@@ -155,7 +207,7 @@ def observe_html_source(
     if not reader.unchanged() or not snapshot_reader.unchanged() or not sdk_reader.unchanged():
         raise ValueError("semantic consumed custody changed")
     return contract, {
-        "schema_version": "template-native-semantic-source-observation-v2",
+        "schema_version": "template-native-semantic-source-observation-v3",
         "source": {"path": consumed.relative, "sha256": consumed.sha256},
         "ast": {"path": ast_snapshot.relative, "sha256": ast_snapshot.sha256},
         "tool": tool,

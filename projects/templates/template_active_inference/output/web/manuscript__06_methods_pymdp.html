@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_methods_pymdp.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
+  <title>Active Inference Multi-Track Exemplar</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +181,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -188,9 +274,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -219,8 +305,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -305,7 +391,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -323,8 +416,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -337,8 +428,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -566,10 +655,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -620,10 +717,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -652,21 +745,27 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:methods_pymdp">pymdp simulation harness</h1>
+<h1 data-number="6" id="sec:methods_pymdp"><span
+class="header-section-number">6</span> pymdp simulation harness</h1>
 <!-- sheaf-track:prose -->
 <p><strong>Sophisticated inference (planning horizon).</strong> The
 pymdp method is a deterministic state-inference harness on a minimal
-T-maze (<span class="citation"
-data-cites="fig:tmaze_schematic">[@fig:tmaze_schematic]</span>) with
-planning horizon <code>policy_len = 2</code>. The discrete-state framing
-follows finite POMDP active-inference treatments and
-sophisticated-inference analyses [dacosta2020discrete;
-smith2022tutorial; friston2021sophisticated; dacosta2023reward], and the
-implementation anchor is the pymdp software paper [pymdp2024]. The
-default <code>state_inference</code> rollout writes the summary/trace
-artifacts used in <span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>; mean
-belief entropy is 0.0000.</p>
+T-maze (fig. <a href="#fig:tmaze_schematic">5</a>) with planning horizon
+<code>policy_len = 2</code>. The discrete-state framing follows finite
+POMDP active-inference treatments and sophisticated-inference analyses
+<span class="citation"
+data-cites="dacosta2020discrete smith2022tutorial friston2021sophisticated dacosta2023reward">(<a
+href="index.html#ref-dacosta2020discrete" role="doc-biblioref">Da Costa et al.
+2020</a>, <a href="index.html#ref-dacosta2023reward"
+role="doc-biblioref">2023</a>; <a href="index.html#ref-smith2022tutorial"
+role="doc-biblioref">Smith et al. 2022</a>; <a
+href="index.html#ref-friston2021sophisticated" role="doc-biblioref">Friston et al.
+2021</a>)</span>, and the implementation anchor is the pymdp software
+paper <span class="citation" data-cites="pymdp2024">(<a
+href="index.html#ref-pymdp2024" role="doc-biblioref">Heins et al.
+2022</a>)</span>. The default <code>state_inference</code> rollout
+writes the summary/trace artifacts used in sec. <a
+href="manuscript__12_results_si_tmaze.html#sec:results_si_tmaze">11</a>; mean belief entropy is 0.0000.</p>
 <p>The method keeps runtime, posterior, and extension evidence separate.
 <code>output/data/si_policy_comparison.json</code> compares
 <code>state_inference</code> and <code>policy_inference</code> over
@@ -691,19 +790,21 @@ class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
 horizon <span class="math inline">\(H =\)</span> 2, which defines the
 <strong>policy depth</strong> used when constructing candidate policies
 (logged as <code>num_policies</code> in the SI summary artifact; see
-<span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>).</p>
+sec. <a href="manuscript__12_results_si_tmaze.html#sec:results_si_tmaze">11</a>).</p>
 <p>The default harness records belief entropy per step; extending to
 full expected-free-energy policy selection (<code>infer_policies</code>)
-is documented as a follow-on track in <span class="citation"
-data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
+is documented as a follow-on track in sec. <a
+href="manuscript__15_discussion_outlook.html#sec:discussion_outlook">13</a>.</p>
 <!-- sheaf-track:pymdp -->
 <p>SI artifacts (summary, trace, optional JSONL log) record step count,
-actions, observations, and belief entropy for <span class="citation"
-data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>. Steps
-recorded: 2. Branching-time and variational formulations of active
-inference planning are treated here as related planning context
-[champion2021branching; nuijten2026efeplanning]; the live evidence
+actions, observations, and belief entropy for sec. <a
+href="manuscript__12_results_si_tmaze.html#sec:results_si_tmaze">11</a>. Steps recorded: 2. Branching-time
+and variational formulations of active inference planning are treated
+here as related planning context <span class="citation"
+data-cites="champion2021branching nuijten2026efeplanning">(<a
+href="index.html#ref-champion2021branching" role="doc-biblioref">Champion et al.
+2021</a>; <a href="index.html#ref-nuijten2026efeplanning"
+role="doc-biblioref">Nuijten et al. 2026</a>)</span>; the live evidence
 remains the finite local artifacts <code>si_policy_grid.json</code>,
 <code>si_efe_terms.json</code>, and
 <code>model_checking_witnesses.json</code>, not a claim about scalable
@@ -724,18 +825,19 @@ alias, dropped JSON field, shape diff, or dtype diff is therefore a
 validation failure before rendering.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:tmaze_schematic">
-<a class="figure-full-size-link" href="../figures/tmaze_schematic.png" target="_blank" rel="noopener" aria-label="Open full-size figure, T-maze generative model schematic (2-step policy horizon, state_inference mode)."><img src="../figures/tmaze_schematic.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/tmaze_schematic.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, T-maze generative model schematic (2-step policy horizon, state_inference mode)."><img src="../figures/tmaze_schematic.png" style="width:85.0%"
 data-fig-alt="Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2."
 alt="Schematic of the minimal T-maze POMDP with start and goal states, discrete actions and observations, and planning horizon policy_len = 2." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>T-maze generative model schematic (2-step
-policy horizon, state_inference mode).</figcaption>
+<figcaption>Figure 5: T-maze generative model
+schematic (2-step policy horizon, state_inference mode).</figcaption>
 </figure>
 <!-- sheaf-track:gnn -->
 <p>See <code>gnn/si_tmaze.gnn.md</code> for a GNN view of the T-maze
 hidden state, observation, and policy variables with ontology
 bindings.</p>
 <!-- sheaf-track:ontology -->
-<h3 id="ontology-bindings">Ontology bindings</h3>
+<h3 data-number="6.0.1" id="ontology-bindings-2"><span
+class="header-section-number">6.0.1</span> Ontology bindings</h3>
 <ul>
 <li><code>belief_entropy</code> → <strong>BeliefEntropy</strong></li>
 <li><code>loc</code> → <strong>HiddenState</strong></li>

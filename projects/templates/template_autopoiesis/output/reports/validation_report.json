@@ -95,7 +95,7 @@
           "file_count": 12,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.31"
+          "size_mb": "2.36"
         }
       },
       "file_counts": {
@@ -217,7 +217,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.31
+            "size_mb": 2.36
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.4841556549072266
+      "total_size_mb": 3.5332250595092773
     },
     "figures": {
       "files": 13,
@@ -262,16 +262,16 @@
         },
         "reports": {
           "files": 3,
-          "size_bytes": 10277
+          "size_bytes": 10284
         },
         "web": {
           "files": 12,
-          "size_bytes": 2419177
+          "size_bytes": 2470623
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 122,
-      "total_size_bytes": 3653402
+      "total_size_bytes": 3704855
     }
   },
   "recommendations": [],
@@ -282,22 +282,22 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-06T18:06:46Z",
+  "timestamp": "2026-11-08T06:08:09Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "c62a993f4909eb33cace3893ce2345929e7195f0d3d8305e4b49f8fa48cf5651",
+      "sha256": "039d00a0531d3fa233ff1983c56e65005211d476b57c25384ce2250fb47452a2",
       "size_bytes": 39048
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "7a2ace99e728f1b6f50375c902aa72e8ac9808a59628d448b126af3dbae2b86f",
-      "size_bytes": 84133
+      "sha256": "ffbb4e7db24d21f3907d31ac3f21407b8ef9d6c5bead400124d6bbb304f24727",
+      "size_bytes": 85973
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "248b39b3b848cd329430effe194687d06cb7fdbeb776dfa7408ac37f458b133f",
-      "size_bytes": 2124
+      "sha256": "2331edef30d5c9f7b885d72d908b84707ebd7295cf734b7e29985eb214f8244c",
+      "size_bytes": 2131
     },
     "consumed_manuscript": [
       {
@@ -356,15 +356,15 @@
       },
       "output": {
         "file_count": 122,
-        "sha256": "7c527a68f9c780e05e12ebb226b97fc680316462ae86ef23c3d1c817527ee3fe"
+        "sha256": "007e2dc99d0ba006f26f416b982955a6cc8d8a4cbc4fd5c0a75a9fe1abbcbf9f"
       },
       "source": {
         "file_count": 64,
         "sha256": "43f7fdb3954c02573440c0c844bd1fcee42f561a0441c8d9dd65150cdfb8edbc"
       },
       "stage": {
-        "file_count": 1614,
-        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+        "file_count": 1616,
+        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
       }
     },
     "project": "templates/template_autopoiesis",

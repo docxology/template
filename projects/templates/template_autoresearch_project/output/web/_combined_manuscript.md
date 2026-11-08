@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-0-start-->
+```
+
 ```{=latex}
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -54,11 +58,19 @@ Structured manifest: `../data/transmission_manifest.json`
 
 <!-- BEGINNING OF TRANSMISSION -->
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-1-start-->
+```
 
 # Abstract {#sec:abstract}
 
@@ -88,11 +100,19 @@ with `0` checksum mismatch(es). The final
 readiness status is `passed`, with review gates deferred to a
 human rather than self-approved by the generated run.
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-2-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -329,11 +349,19 @@ exemplar borrows those frameworks as disciplined analogies for local research
 artifact integrity: checksums, inventories, review gates, and explicit
 non-claims, not production deployment certification.
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-3-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -611,11 +639,19 @@ maintained manually.
 
 \endgroup
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-4-start-->
+```
 
 # Results {#sec:results}
 
@@ -1212,11 +1248,19 @@ recorded as deferred for human review rather than as self-approval.
 
 : Variable provenance summary from `output/data/manuscript_variable_provenance.json`. {#tbl:variable-provenance}
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-5-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -1259,21 +1303,37 @@ deterministic, evidence-governed baseline remains useful because it preserves th
 part of scientific automation that should not be optional: inspectable
 provenance, explicit limits, and human-governed publication judgment.
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-6-start-->
+```
 
 # References
 
 References are managed in `references.bib`.
 
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-7-start-->
+```
 
 ```{=latex}
 % transmission-end-bookend
@@ -1301,3 +1361,7 @@ References are managed in `references.bib`.
 
 
 <!-- END OF TRANSMISSION -->
+
+```{=html}
+<!--template-web-source-ad5385d724ab6e36c526bb2e307064da25113e69f0fdf96e241d2363d02462b0-7-end-->
+```

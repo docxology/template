@@ -83,7 +83,7 @@
           "file_count": 11,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.35"
+          "size_mb": "2.38"
         }
       },
       "file_counts": {
@@ -189,7 +189,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.35
+            "size_mb": 2.38
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.4231443405151367
+      "total_size_mb": 3.4526987075805664
     },
     "figures": {
       "files": 8,
@@ -226,20 +226,20 @@
         },
         "reports": {
           "files": 3,
-          "size_bytes": 2814
+          "size_bytes": 2822
         },
         "slides": {
           "files": 7,
-          "size_bytes": 494801
+          "size_bytes": 494777
         },
         "web": {
           "files": 11,
-          "size_bytes": 2466323
+          "size_bytes": 2497329
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 3589427
+      "total_size_bytes": 3620417
     }
   },
   "recommendations": [],
@@ -250,63 +250,63 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-06T18:06:46Z",
+  "timestamp": "2026-11-08T06:08:09Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "77def7697d17b1ada27459269d290528ca4c5a9ea5473b657cfd394ceaa76445",
-      "size_bytes": 9898
+      "sha256": "6b4a5e93dc671b81f620375ab184a74d8e23655758c5226c3ba369e050135eb2",
+      "size_bytes": 9900
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
-      "size_bytes": 98816
+      "sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
+      "size_bytes": 100426
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "9a3b869d054c883ab67a99440825fa0a818ae632c70b8920890c3f0d3c33b8a5",
-      "size_bytes": 1902
+      "sha256": "9a90ab7e0160db732058b32709daacdbd268a225f7e120eee5c4f7314bcd4056",
+      "size_bytes": 1910
     },
     "consumed_manuscript": [
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/00_abstract.md",
         "source_sha256": "58da6a0b0b5103dfd45144796f7fe129224435838207e5512594257fe9c3ea96"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/01_introduction.md",
         "source_sha256": "599e5840ae5f2903835263d166498b2817cd301021fdf67f98e33717768b60cb"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/02_type_architecture.md",
         "source_sha256": "d34164ff802d8e6bd074bc6bead46e85ddbc056005f953cceb4b2509278154cb"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/03_storage_as_functor.md",
         "source_sha256": "cdd2bf4bdf9a08959d0e0eb481c87804fdd76d899491db73f943c7edfd88f7ae"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/04_active_inference.md",
         "source_sha256": "6266ab547479b0588a782e0b2892fd6ce0e6dac4f97dbcf41608af693f2ad870"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/05_results_discussion.md",
         "source_sha256": "e58e1d7cd03f2327fe433ffd5ed003acc1f6c0d13d0172057d8dc430994d5ff6"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "07598a2d41f35a022f1c1b1e1bb3f19e5d9856f9bbb63de1813dc3d52d68cf43",
+        "rendered_sha256": "13bfa9d9affc1747987b6b999638ed13225f6a899ae006f45ace475b34df19fc",
         "source_path": "manuscript/99_references.md",
         "source_sha256": "5abaacd9073c47791020625fc753aced1cb9674a446d0745b39cd12b0755373a"
       }
@@ -318,15 +318,15 @@
       },
       "output": {
         "file_count": 32,
-        "sha256": "e1f37e3c3ed56c3fcd2cdc2381172c3ea4a24d536eb6d50fab07102940f18b61"
+        "sha256": "2d97a7cc4db03b6e5eb8b0b9d1c4eec610e4a57d97168cfc8b388b2f6796eefc"
       },
       "source": {
         "file_count": 61,
         "sha256": "8c270be8319ade6a3d31a34de42232df895dbf99d633d6edf34469c42af8d4d5"
       },
       "stage": {
-        "file_count": 1614,
-        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+        "file_count": 1616,
+        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
       }
     },
     "project": "templates/template_formal",

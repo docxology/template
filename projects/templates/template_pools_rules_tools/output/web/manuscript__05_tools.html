@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_tools.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software" />
+  <title>Pools, Rules, and Tools: A Template-Integrated Resource
+Architecture</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +247,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -305,7 +392,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -323,8 +417,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -337,8 +429,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -566,10 +656,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -620,10 +718,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -652,8 +746,11 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:tools">Tools: Executable Entry Points</h1>
-<h2 id="what-is-a-tool">What Is a Tool?</h2>
+<h1 data-number="6" id="sec:tools"><span
+class="header-section-number">6</span> Tools: Executable Entry
+Points</h1>
+<h2 data-number="6.1" id="what-is-a-tool"><span
+class="header-section-number">6.1</span> What Is a Tool?</h2>
 <p>A <strong>tool</strong> in the template repository is a directory
 under <code>tools/&lt;scope&gt;/&lt;name&gt;/</code> that packages one
 or more executable scripts behind a typed manifest
@@ -663,54 +760,62 @@ constraints, tools supply <em>behaviour</em> — computations, validation
 runs, and agent skill invocations that projects can trigger without
 re-implementing the underlying logic.</p>
 <p>The tools layer deliberately mirrors the Unix philosophy of small,
-composable utilities that communicate through standard interfaces
-[Raymond2003art]. Each tool declares its entrypoints (shell scripts),
+composable utilities that communicate through standard interfaces <span
+class="citation" data-cites="Raymond2003art">(<a
+href="index.html#ref-Raymond2003art" role="doc-biblioref">Raymond
+2003</a>)</span>. Each tool declares its entrypoints (shell scripts),
 its invocation contract (stdin/stdout/exit-code semantics), and its
 capabilities (type, version, tags) in a single manifest file. Consumers
 invoke tools through the <code>tools_invoker</code> module without
 needing to understand the tool’s implementation details — a textbook
-application of the Facade pattern [Gamma1994design].</p>
-<h2 id="tool-manifest-contract">Tool Manifest Contract</h2>
+application of the Facade pattern <span class="citation"
+data-cites="Gamma1994design">(<a href="index.html#ref-Gamma1994design"
+role="doc-biblioref">Gamma et al. 1994</a>)</span>.</p>
+<h2 data-number="6.2" id="tool-manifest-contract"><span
+class="header-section-number">6.2</span> Tool Manifest Contract</h2>
 <p>Every tool root must contain a <code>tools.yaml</code> manifest with
 the following fields:</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> code_executor | validator | skill | agent | renderer</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Human-readable description of the tool&quot;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0.0&quot;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">curated</span><span class="kw">,</span><span class="at"> exemplar</span><span class="kw">,</span><span class="at"> production</span><span class="kw">,</span><span class="at"> experimental</span><span class="kw">]</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">creator</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;org/repo&quot;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">license</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Apache-2.0&quot;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">entrypoints</span><span class="kw">:</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="at">scripts/run.sh</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="at">scripts/validate.sh</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">type</span><span class="kw">:</span><span class="at"> code_executor | validator | skill | agent | renderer</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Human-readable description of the tool&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0.0&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">curated</span><span class="kw">,</span><span class="at"> exemplar</span><span class="kw">,</span><span class="at"> production</span><span class="kw">,</span><span class="at"> experimental</span><span class="kw">]</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">creator</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;org/repo&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">license</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Apache-2.0&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">entrypoints</span><span class="kw">:</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="at">scripts/run.sh</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="at">scripts/validate.sh</span></span></code></pre></div>
 <p>The <code>type</code> field determines the invocation contract the
 consumer should expect. The <code>entrypoints</code> list names the
 files that must exist on disk; the <code>tools_invoker</code> module
 validates their presence at discovery time rather than at invocation
 time, making failures visible early in the pipeline rather than at
 runtime — a manifest naming a missing entrypoint file is rejected during
-discovery instead of failing later mid-invocation. <span
-class="citation" data-cites="fig:toolcontract">@fig:toolcontract</span>
-visualises the stdin/stdout/exit-code contract for all 4 discovered
-template tools side by side. Note that the <em>shape</em> of stdin and
-stdout differs per tool while the <em>presence</em> of a well-defined
-contract does not — this is what makes <code>tools_invoker</code> able
-to discover and validate any tool generically without knowing its
-payload schema. A declared entrypoint that is missing blocks invocation
-— absent files make the tool unavailable rather than silently deferred.
-The strong-rule evaluator carries matching negative controls:
+discovery instead of failing later mid-invocation. fig. <a
+href="#fig:toolcontract">4</a> visualises the stdin/stdout/exit-code
+contract for all 4 discovered template tools side by side. Note that the
+<em>shape</em> of stdin and stdout differs per tool while the
+<em>presence</em> of a well-defined contract does not — this is what
+makes <code>tools_invoker</code> able to discover and validate any tool
+generically without knowing its payload schema. A declared entrypoint
+that is missing blocks invocation — absent files make the tool
+unavailable rather than silently deferred. The strong-rule evaluator
+carries matching negative controls:
 <code>tests/rules/test_strong_rule_evaluator.py</code> flags missing
 manuscript sections, missing <code>src/</code>, and missing context keys
 on known-wrong fixtures.</p>
 <figure id="fig:toolcontract">
-<a class="figure-full-size-link" href="../figures/tool_contract.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Invocation contract for the 4 discovered template tools: stdin payload, tool behaviour"><img src="../figures/tool_contract.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/tool_contract.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Invocation contract for the 4 discovered template tools: stdin payload, tool behaviour"><img src="../figures/tool_contract.png" style="width:90.0%"
 alt="Contract diagram comparing tool inputs, behavior, outputs, and exit codes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Invocation contract for the 4 discovered
-template tools: stdin payload, tool behaviour, and stdout/exit-code
-shape.</figcaption>
+<figcaption>Figure 4: Invocation contract for the 4
+discovered template tools: stdin payload, tool behaviour, and
+stdout/exit-code shape.</figcaption>
 </figure>
-<h2 id="discovered-template-tools">Discovered Template Tools</h2>
-<h3 id="template_code_executor"><code>template_code_executor</code></h3>
+<h2 data-number="6.3" id="discovered-template-tools"><span
+class="header-section-number">6.3</span> Discovered Template Tools</h2>
+<h3 data-number="6.3.1" id="template_code_executor"><span
+class="header-section-number">6.3.1</span>
+<code>template_code_executor</code></h3>
 <p>A generic code execution tool that accepts a JSON payload on standard
 input and returns execution results as JSON. The invocation contract
 is:</p>
@@ -747,7 +852,9 @@ is:</p>
 <p>The code executor exemplifies tools that wrap a computational
 capability. The JSON-in/JSON-out contract makes it easily composable
 with pipeline orchestrators and agent frameworks.</p>
-<h3 id="template_validator"><code>template_validator</code></h3>
+<h3 data-number="6.3.2" id="template_validator"><span
+class="header-section-number">6.3.2</span>
+<code>template_validator</code></h3>
 <p>A JSON Schema validation tool. It reads a target document and a
 schema from disk and reports validation results in human-readable form.
 The entrypoint <code>scripts/validate.sh</code> exits 0 when the
@@ -755,7 +862,9 @@ document is valid and non-zero with a detailed error message otherwise.
 its <code>scripts/schema.json</code> requires <code>name</code> and
 <code>version</code>, and the test suite exercises both valid and
 invalid payloads with real subprocesses.</p>
-<h3 id="template_skill"><code>template_skill</code></h3>
+<h3 data-number="6.3.3" id="template_skill"><span
+class="header-section-number">6.3.3</span>
+<code>template_skill</code></h3>
 <p>An agent skill invocation tool that wraps a Hermes-compatible skill
 definition. The entrypoint <code>scripts/invoke.sh</code> accepts a
 prompt string on standard input and returns the agent response as text.
@@ -771,7 +880,9 @@ Reproducibility Checklist), and no CI job in this repository injects
 <code>OPENAI_API_KEY</code> into this project’s test run.
 <code>template_code_executor</code>, <code>template_validator</code>,
 and <code>template_model</code> are fully local and deterministic.</p>
-<h3 id="template_model"><code>template_model</code></h3>
+<h3 data-number="6.3.4" id="template_model"><span
+class="header-section-number">6.3.4</span>
+<code>template_model</code></h3>
 <p>A pre-trained linear-regression model exemplar. It predicts a numeric
 target from <code>hours_studied</code> using fixed coefficients in
 <code>model_weights.json</code>; <code>scripts/predict.sh</code> reads
@@ -779,25 +890,26 @@ target from <code>hours_studied</code> using fixed coefficients in
 The manifest declares the weights file as an entrypoint, so the same
 discovery and existence-validation contract covers both executable
 scripts and model data.</p>
-<h2 id="tool-discovery-module">Tool Discovery Module</h2>
+<h2 data-number="6.4" id="tool-discovery-module"><span
+class="header-section-number">6.4</span> Tool Discovery Module</h2>
 <p>The
 <code>src/template_pools_rules_tools/tools/tools_invoker.py</code>
 module provides three public functions:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.tools.tools_invoker <span class="im">import</span> (</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    discover_tools,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    get_tool_entrypoints,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    validate_tool_scripts_exist,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>tools <span class="op">=</span> discover_tools()</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># → [{&quot;name&quot;: &quot;template_code_executor&quot;, &quot;manifest&quot;: {...}}, ...]</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> get_tool_entrypoints(<span class="st">&quot;template_code_executor&quot;</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># → [&quot;scripts/run.sh&quot;, &quot;scripts/validate.sh&quot;]</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> validate_tool_scripts_exist(<span class="st">&quot;template_code_executor&quot;</span>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># → {&quot;status&quot;: &quot;ok&quot; | &quot;partial&quot; | &quot;missing&quot;, &quot;missing_scripts&quot;: [...]}</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> template_pools_rules_tools.tools.tools_invoker <span class="im">import</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    discover_tools,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    get_tool_entrypoints,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    validate_tool_scripts_exist,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>tools <span class="op">=</span> discover_tools()</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># → [{&quot;name&quot;: &quot;template_code_executor&quot;, &quot;manifest&quot;: {...}}, ...]</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> get_tool_entrypoints(<span class="st">&quot;template_code_executor&quot;</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># → [&quot;scripts/run.sh&quot;, &quot;scripts/validate.sh&quot;]</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> validate_tool_scripts_exist(<span class="st">&quot;template_code_executor&quot;</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># → {&quot;status&quot;: &quot;ok&quot; | &quot;partial&quot; | &quot;missing&quot;, &quot;missing_scripts&quot;: [...]}</span></span></code></pre></div>
 <p><code>discover_tools()</code> scans <code>tools/templates/</code> and
 returns one <code>ToolEntry</code> per subdirectory, regardless of
 whether a manifest is present: a directory with a parseable
@@ -817,10 +929,10 @@ the filesystem. It returns a structured result distinguishing between
 tools that are fully ready (<code>"ok"</code>), partially configured
 (<code>"partial"</code> — some scripts missing), and entirely absent
 (<code>"missing"</code>). In the current integration run, <strong>4
-tools</strong> were discovered (<span class="citation"
-data-cites="fig:counts">@fig:counts</span>), all with valid
-manifests.</p>
-<h2 id="tool-discovery-and-reproducibility">Tool Discovery and
+tools</strong> were discovered (fig. <a href="manuscript__06_integration.html#fig:counts">5</a>), all
+with valid manifests.</p>
+<h2 data-number="6.5" id="tool-discovery-and-reproducibility"><span
+class="header-section-number">6.5</span> Tool Discovery and
 Reproducibility</h2>
 <p>The tools layer contributes to reproducibility by making the
 <em>availability</em> of computational capabilities explicit and
@@ -829,12 +941,14 @@ brittle when the repository is reorganised. By contrast, a project that
 calls <code>discover_tools()</code> and checks
 <code>validate_tool_scripts_exist()</code> will detect missing
 entrypoints at pipeline initialisation time and report them clearly,
-rather than failing silently at execution time [Stodden2016enhancing].
-This shift from implicit to explicit dependency declaration is a key
-design principle of the template architecture (see <span
-class="citation"
-data-cites="fig:architecture">@fig:architecture</span>).</p>
-<h2 id="tool-composition-and-failure-modes">Tool Composition and Failure
+rather than failing silently at execution time <span class="citation"
+data-cites="Stodden2016enhancing">(<a href="index.html#ref-Stodden2016enhancing"
+role="doc-biblioref">Stodden et al. 2013</a>)</span>. This shift from
+implicit to explicit dependency declaration is a key design principle of
+the template architecture (see fig. <a
+href="manuscript__02_introduction.html#fig:architecture">1</a>).</p>
+<h2 data-number="6.6" id="tool-composition-and-failure-modes"><span
+class="header-section-number">6.6</span> Tool Composition and Failure
 Modes</h2>
 <p>Because every tool exposes the same discovery contract (manifest +
 entrypoint list), tools compose without any consumer-side
@@ -864,19 +978,18 @@ collection or <code>"missing"</code> status without ever raising — this
 matters for partially-scaffolded work-in-progress tool directories
 created by a parallel agent.</li>
 <li><strong>Manifest malformed YAML.</strong> The same
-graceful-degradation pattern from <span class="citation"
-data-cites="sec:pools">@sec:pools</span> applies here: a parse error is
-caught and logged, and the offending tool is quietly excluded from the
-discovery result, leaving the pipeline free to continue with everything
-else it found.</li>
+graceful-degradation pattern from sec. <a href="manuscript__03_pools.html#sec:pools">4</a>
+applies here: a parse error is caught and logged, and the offending tool
+is quietly excluded from the discovery result, leaving the pipeline free
+to continue with everything else it found.</li>
 </ol>
 <p>Each of these is a distinct, testable branch in
 <code>tests/tools/test_tools_invoker.py</code>, and each maps to one row
-of the resilience taxonomy in <span class="citation"
-data-cites="fig:resilience">@fig:resilience</span>.</p>
-<h2
-id="execution-proof-testing-beyond-manifest-checking">Execution-Proof
-Testing: Beyond Manifest Checking</h2>
+of the resilience taxonomy in fig. <a href="manuscript__06_integration.html#fig:resilience">8</a>.</p>
+<h2 data-number="6.7"
+id="execution-proof-testing-beyond-manifest-checking"><span
+class="header-section-number">6.7</span> Execution-Proof Testing: Beyond
+Manifest Checking</h2>
 <p>Everything described so far — discovery, entrypoint-existence
 validation, the three failure modes above — is <em>structural</em>: it
 confirms a tool’s files are present and well-formed without ever running
@@ -886,8 +999,8 @@ public API deliberately stays that way, because subprocess execution is
 exactly the kind of operation that can raise (a missing
 <code>bash</code>/<code>jq</code>/<code>python3</code> binary, a
 permission error, a timeout), and this project’s readers are contracted
-to degrade gracefully rather than propagate exceptions (see <span
-class="citation" data-cites="sec:pools">@sec:pools</span>).</p>
+to degrade gracefully rather than propagate exceptions (see sec. <a
+href="manuscript__03_pools.html#sec:pools">4</a>).</p>
 <p>The test suite closes this gap without weakening that contract:
 <code>tests/tools/test_tools_invoker.py</code> genuinely
 subprocess-invokes the two fully local, deterministic tools and asserts

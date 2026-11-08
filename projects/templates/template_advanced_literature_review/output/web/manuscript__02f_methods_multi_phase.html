@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02f_methods_multi_phase.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Synthetic Fixture Exemplar with Source-Aware Retrieval and Optional LLM Analysis" />
+  <title>A Reproducible Multi-Phase Literature-Review Pipeline for
+Exoplanet Atmospheres</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +182,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -240,7 +392,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -258,8 +417,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -272,8 +429,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -501,10 +656,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -555,10 +718,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -587,16 +746,20 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="multi-phase-search-strategy-and-results">Multi-Phase Search
-Strategy and Results</h1>
-<h2 id="three-phase-architecture">Three-Phase Architecture</h2>
+<h1 data-number="9" id="multi-phase-search-strategy-and-results"><span
+class="header-section-number">9</span> Multi-Phase Search Strategy and
+Results</h1>
+<h2 data-number="9.1" id="three-phase-architecture"><span
+class="header-section-number">9.1</span> Three-Phase Architecture</h2>
 <p>This review employs a <strong>three-phase search strategy</strong>
 that progressively refines coverage from broad foundational literature
 through technology-specific studies to targeted molecular detection
 analyses. Each phase builds on prior phases through cross-phase citation
 validation and shared deduplication.</p>
-<h3 id="phase-1-exoplanet-atmosphere-foundation">Phase 1: Exoplanet
-Atmosphere Foundation</h3>
+<h3 data-number="9.1.1"
+id="phase-1-exoplanet-atmosphere-foundation"><span
+class="header-section-number">9.1.1</span> Phase 1: Exoplanet Atmosphere
+Foundation</h3>
 <p><strong>Objective:</strong> Establish the foundational literature on
 exoplanet atmospheric studies, covering the broadest range of research
 from 2010 onwards.</p>
@@ -613,8 +776,10 @@ recent work)</p>
 foundational knowledge base for the review. This phase captures the
 broadest scope of atmospheric research, from observational
 characterizations to theoretical modeling studies.</p>
-<h3 id="phase-2-james-webb-space-telescope-studies">Phase 2: James Webb
-Space Telescope Studies</h3>
+<h3 data-number="9.1.2"
+id="phase-2-james-webb-space-telescope-studies"><span
+class="header-section-number">9.1.2</span> Phase 2: James Webb Space
+Telescope Studies</h3>
 <p><strong>Objective:</strong> Identify papers specifically utilizing
 JWST observational data for exoplanet atmospheric analysis, capturing
 the post-launch (2021+) surge in high-precision spectroscopic
@@ -633,8 +798,9 @@ papers.</p>
 This phase targets records associated with JWST-era observations and
 analysis. Any claim about instrumental capability or scientific findings
 requires live, source-backed review.</p>
-<h3 id="phase-3-molecular-detection-studies">Phase 3: Molecular
-Detection Studies</h3>
+<h3 data-number="9.1.3" id="phase-3-molecular-detection-studies"><span
+class="header-section-number">9.1.3</span> Phase 3: Molecular Detection
+Studies</h3>
 <p><strong>Objective:</strong> Identify papers focused on detecting and
 analyzing specific atmospheric molecules (H₂O, CO₂, CH₄, H₂S, Na, K) in
 the configured domain.</p>
@@ -654,22 +820,28 @@ papers.</p>
 <p><strong>Results:</strong> 29 papers covering molecular detection
 across diverse exoplanet populations, from hot Jupiters to terrestrial
 worlds.</p>
-<h2 id="cross-phase-analysis">Cross-Phase Analysis</h2>
-<h3 id="phase-overlap">Phase Overlap</h3>
+<h2 data-number="9.2" id="cross-phase-analysis"><span
+class="header-section-number">9.2</span> Cross-Phase Analysis</h2>
+<h3 data-number="9.2.1" id="phase-overlap"><span
+class="header-section-number">9.2.1</span> Phase Overlap</h3>
 <p>The three phases produced complementary but overlapping corpora, with
 49.5% average Jaccard similarity between phases. Papers discovered in
 multiple phases are tracked with full provenance, enabling analysis of
 papers that span multiple research paradigms.</p>
-<h3 id="citation-validation">Citation Validation</h3>
+<h3 data-number="9.2.2" id="citation-validation"><span
+class="header-section-number">9.2.2</span> Citation Validation</h3>
 <p>Cross-phase citation analysis records that 39.4% of later-phase
 papers cite foundational work from Phase 1. This is a descriptive
 connection statistic for the retained corpus; it does not establish
 methodological coherence across the field.</p>
-<h3 id="combined-corpus">Combined Corpus</h3>
+<h3 data-number="9.2.3" id="combined-corpus"><span
+class="header-section-number">9.2.3</span> Combined Corpus</h3>
 <p>The deduplicated combined phase corpus contains 46 unique papers
 spanning 2000–2023 (23 years). It provides a multi-phase description of
 the retained retrieval slice, not a field-wide account.</p>
-<h2 id="llm-based-content-filtering">LLM-Based Content Filtering</h2>
+<h2 data-number="9.3" id="llm-based-content-filtering"><span
+class="header-section-number">9.3</span> LLM-Based Content
+Filtering</h2>
 <p>Three LLM-based content filters were designed for this review:</p>
 <ol type="1">
 <li><p><strong>Study Type Classification</strong>: Categorizes papers as

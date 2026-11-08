@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_limitations.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
+  <title>Autopoietic Project Generation</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +181,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -240,7 +391,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -258,8 +416,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -272,8 +428,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -501,10 +655,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -555,10 +717,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -587,7 +745,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 id="limitations">Limitations</h2>
+<h2 data-number="7" id="limitations"><span
+class="header-section-number">7</span> Limitations</h2>
 <p>This section states what the exemplar does <em>not</em> do, alongside
 what it does. Coverage and test-count figures are not restated as
 literal numbers here — those live only in the <code>578</code> /
@@ -595,9 +754,10 @@ literal numbers here — those live only in the <code>578</code> /
 measurement
 (<code>src/template_autopoiesis/manuscript/manuscript_variables.py::measure_test_summary</code>),
 not hand-typed.</p>
-<h3
-id="reserved-slots-are-excluded-from-the-effective-product-space">Reserved
-slots are excluded from the effective product space</h3>
+<h3 data-number="7.1"
+id="reserved-slots-are-excluded-from-the-effective-product-space"><span
+class="header-section-number">7.1</span> Reserved slots are excluded
+from the effective product space</h3>
 <p>The grammar declares six slots, but <code>materialize()</code> only
 branches on three of them — <code>primitive_domain</code>,
 <code>track</code>, <code>section_set</code>. The remaining 3
@@ -619,7 +779,9 @@ this manuscript can the larger, nominal number be quoted without the
 smaller, effective one appearing beside it. Wiring the reserved slots
 into <code>materialize()</code> is an open item, not a claimed
 capability.</p>
-<h3 id="no-child-pdf-rendering-in-ci">No child-PDF rendering in CI</h3>
+<h3 data-number="7.2" id="no-child-pdf-rendering-in-ci"><span
+class="header-section-number">7.2</span> No child-PDF rendering in
+CI</h3>
 <p><code>realize.py::render_child_manuscript()</code> writes manuscript
 stubs for a generated child but does not invoke Pandoc or Chrome. Absent
 a full rendering toolchain — the default posture in CI — it returns
@@ -628,7 +790,8 @@ rather than raising or silently skipping. Verifying a child’s
 <em>files</em> (<code>verify_child</code> /
 <code>verify_child_full</code>) is decoupled from verifying that its
 manuscript renders; only the former is tested here.</p>
-<h3 id="within-platform-guarantee-only">Within-platform guarantee
+<h3 data-number="7.3" id="within-platform-guarantee-only"><span
+class="header-section-number">7.3</span> Within-platform guarantee
 only</h3>
 <p>Determinism is derived from <code>hashlib.sha256</code> over Python
 strings (<code>expand.py</code>’s seed/slot/ordinal/options digest, and
@@ -640,14 +803,20 @@ version running <code>materialize()</code> — is not independently fuzzed
 across platforms in this suite. What is actually tested is determinism
 within one CPython version on one OS, a narrower claim than the
 cross-platform, bit-for-bit reproducibility discussed in the
-reproducible-builds literature [reproducible_builds]. A second CI leg
-that materializes the same seed on a second OS/Python and diffs tree
+reproducible-builds literature <span class="citation"
+data-cites="reproducible_builds">(<a href="index.html#ref-reproducible_builds"
+role="doc-biblioref">Lamb and Zacchiroli 2022</a>)</span>. A second CI
+leg that materializes the same seed on a second OS/Python and diffs tree
 hashes would close this gap; it does not currently exist.</p>
-<h3 id="grammar-does-not-self-modify">Grammar does not self-modify</h3>
+<h3 data-number="7.4" id="grammar-does-not-self-modify"><span
+class="header-section-number">7.4</span> Grammar does not
+self-modify</h3>
 <p>The autopoiesis metaphor is figurative. Maturana and Varela’s
 operational sense of autopoiesis is a system that continuously
 regenerates its own constitutive components through its own operation
-[maturana_varela_1980]. Here the grammar
+<span class="citation" data-cites="maturana_varela_1980">(<a
+href="index.html#ref-maturana_varela_1980" role="doc-biblioref">Maturana and
+Varela 1980</a>)</span>. Here the grammar
 (<code>manuscript/config.yaml</code>) is fixed input;
 <code>parse_grammar</code> and <code>expand</code> are pure functions of
 that input plus a seed; no code path feeds a materialized child back
@@ -657,9 +826,10 @@ causally downstream of the grammar — the reverse direction does not
 occur in the current codebase. The name is a provocation about what
 genuine self-production would require, not a claim this exemplar
 achieves it.</p>
-<h3
-id="integrity-verification-checks-self-consistency-not-tamper-proofing">Integrity
-verification checks self-consistency, not tamper-proofing</h3>
+<h3 data-number="7.5"
+id="integrity-verification-checks-self-consistency-not-tamper-proofing"><span
+class="header-section-number">7.5</span> Integrity verification checks
+self-consistency, not tamper-proofing</h3>
 <p><code>verify_child</code> recomputes a tree hash from the files
 <em>listed inside</em> <code>provenance.json</code> and compares it
 against the <code>tree_hash</code> field stored in that same file
@@ -671,11 +841,13 @@ time; nothing external anchors them. An actor who can rewrite
 recompute a matching hash from whatever content they choose, and
 <code>verify_child</code> would report a match — it only checks internal
 consistency, not consistency against something outside the child’s own
-directory [merkle_tree_provenance]. <code>verify_seal</code> similarly
-checks the shape of an optional <code>seal.json</code> written by the
-same run it would need to audit. This detects accidental post-generation
-drift, the tested use case; it is not a defense against deliberate
-tampering with write access. Also worth naming precisely:
+directory <span class="citation" data-cites="merkle_tree_provenance">(<a
+href="index.html#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span>. <code>verify_seal</code> similarly checks the shape of
+an optional <code>seal.json</code> written by the same run it would need
+to audit. This detects accidental post-generation drift, the tested use
+case; it is not a defense against deliberate tampering with write
+access. Also worth naming precisely:
 <code>tree_hash_from_content_hashes</code> sorts
 <code>path:content_hash</code> pairs and hashes their concatenation once
 — a flat manifest digest, not a hierarchical Merkle tree with per-file
@@ -683,13 +855,13 @@ inclusion proofs. <code>integrity.py</code> separately defines
 <code>merkle_root</code>, an actual pairwise-reduction tree, but
 <code>materialize()</code>/<code>verify()</code> call the flat function,
 not that one.</p>
-<h3 id="coverage-is-uneven-across-modules">Coverage is uneven across
+<h3 data-number="7.6" id="coverage-is-uneven-across-modules"><span
+class="header-section-number">7.6</span> Coverage is uneven across
 modules</h3>
 <p>The aggregate 91.88% combines covered statements and branch exits
 across the measured source inventory. Passing the configured 90%
 aggregate gate (<code>--cov-fail-under=90</code>) does not establish a
-90% floor for every module. <span class="citation"
-data-cites="fig:coverage_by_module">[@fig:coverage_by_module]</span>
+90% floor for every module. fig. <a href="manuscript__03_results.html#fig:coverage_by_module">4</a>
 preserves the per-module spread and marks values below that reference
 line in red. The chart and headline percentage come from the same
 persisted <code>output/data/coverage_full.json</code>, rather than
@@ -699,18 +871,22 @@ Property-based tests
 (<code>tests/gates/test_property_invariants.py</code>, Hypothesis) and
 the stress/edge suite
 (<code>tests/core/test_stress_edge_cases.py</code>) exercise boundary
-seeds and all-reserved-slot configurations [claessen2000quickcheck;
-maciver2019hypothesis], but generated inputs do not replace direct
-negative controls or inspection of unexecuted statements and branch
-exits.</p>
+seeds and all-reserved-slot configurations <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="index.html#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="index.html#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span>, but generated
+inputs do not replace direct negative controls or inspection of
+unexecuted statements and branch exits.</p>
 <p>Module rankings and gaps can change whenever source or tests change.
 Inspect the current coverage report and regenerate the analysis and
 figure after a changed input, rather than treating an earlier module
 list or a passing aggregate as proof that all modules clear the
 reference line.</p>
-<h3
-id="cover-art-includes-the-qr-seal-with-direct-rendering-controls">Cover
-art includes the QR seal with direct rendering controls</h3>
+<h3 data-number="7.7"
+id="cover-art-includes-the-qr-seal-with-direct-rendering-controls"><span
+class="header-section-number">7.7</span> Cover art includes the QR seal
+with direct rendering controls</h3>
 <p>An earlier draft of this section reported that the title-page cover
 image omitted the originally envisioned QR seal, gradient glow, and
 seed-derived dot placement. That is no longer accurate and is corrected

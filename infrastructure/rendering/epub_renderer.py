@@ -23,6 +23,7 @@ from pathlib import Path, PurePosixPath
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._epub_cover_accessibility import apply_epub_cover_accessibility
+from infrastructure.rendering._epub_reflow import apply_epub_reflow
 from infrastructure.rendering._epub_xhtml_sanitizer import sanitize_epub_xhtml
 from infrastructure.rendering._epub_package_validation import (
     _CONTAINER_MEMBER,
@@ -302,9 +303,10 @@ def render_epub(
     """Render *combined_md* to an EPUB at *output_path*.
 
     The EPUB package identifier is a deterministic UUIDv5 over the effective
-    package's canonical member names and uncompressed bytes after Pandoc and
-    cover-accessibility processing, with only the OPF/NCX identifier fields
-    normalized out. A valid caller ``SOURCE_DATE_EPOCH`` controls Pandoc's OPF
+    package's canonical member names and uncompressed bytes after Pandoc,
+    cover-accessibility, and responsive-layout processing, with only the
+    OPF/NCX identifier fields normalized out. A valid caller ``SOURCE_DATE_EPOCH``
+    controls Pandoc's OPF
     modification time and therefore participates in package identity; absent
     or invalid values use the fixed ZIP-safe epoch ``1980-01-01T00:00:00Z``.
     The final archive rewrite normalizes ZIP member timestamps without
@@ -453,8 +455,9 @@ def render_epub(
             sanitize_epub_xhtml(rendered_path)
             if cover_image is not None:
                 apply_epub_cover_accessibility(rendered_path, normalized_cover_alt)
-            # Re-run the complete package contract after cover processing and
-            # before canonicalization reads every effective-package payload.
+            apply_epub_reflow(rendered_path)
+            # Re-run the complete package contract after accessibility/layout
+            # processing and before canonicalization reads effective payloads.
             with zipfile.ZipFile(rendered_path) as archive:
                 validate_epub_package(archive)
             finalized_identifier = _normalize_epub_archive(

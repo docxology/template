@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-0-start-->
+```
+
 # Pools, Rules, and Tools: A Template-Integrated Resource Architecture
 
 **A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software**
@@ -49,11 +53,19 @@ This exemplar targets full computational reproducibility for every quantitative 
 
 A reader who clones the repository and runs the listed commands in order reproduces every number and image in this document without manual intervention. Quantitative claims in this document — fond/rule/tool counts, project inventory counts, and the runtime bar-chart figures (@fig:counts, @fig:pipeline) — are derived from the integration result, declared figure contracts, or the project filesystem at render time. None of these values are hand-typed; negative controls in `tests/figures/test_manuscript_variables.py` change both integration inputs and a real temporary project tree to prove that token generation tracks its sources rather than emitting fixed constants.
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-1-start-->
+```
 
 # Abstract
 
@@ -71,11 +83,19 @@ This reference implementation is deliberately reproducible end-to-end: every cou
 
 **Keywords:** research software engineering, monorepo architecture, reproducibility, fonds, governance rules, tool discovery, graceful degradation
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-2-start-->
+```
 
 # Introduction
 
@@ -128,11 +148,19 @@ The remainder of this paper is structured as follows. @sec:pools describes the f
 
 The architecture overview in @fig:architecture provides a visual map of these relationships. Runtime statistics collected during integration are visualised in @fig:counts, and the corresponding per-component pass/partial/missing states are shown in @fig:pipeline.
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-3-start-->
+```
 
 # Pools: Fonds as Passive Data Resources {#sec:pools}
 
@@ -209,11 +237,19 @@ Consider a concrete failure scenario: a parallel automation agent is in the proc
 
 This sequence is exercised directly by `tests/tools/test_fonds_reader.py::test_missing_data_dir_contacts_returns_none`, which constructs a fond directory with a manifest but no `data/` subdirectory and asserts the reader returns `None` rather than raising. The same existence-check-then-parse pattern repeats identically across `fonds_reader.py`'s three readers, `rules_applier.py`, and `tools_invoker.py`, which is why @fig:resilience presents it as one repeated design, not three independent ad-hoc fixes.
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-4-start-->
+```
 
 # Rules: Soft and Strong Governance {#sec:rules}
 
@@ -335,11 +371,19 @@ Each evaluator distinguishes structured violation *reasons* rather than collapsi
 
 Crucially, `section_schema` and `reference_schema` are not evaluated against synthetic fixtures — `load_rule_context_from_project()` (in `scripts/04_validate_strong_rules.py`) builds their context by parsing *this project's own, current* `manuscript/references.bib` into structured reference entries and extracting the real `# `-level headings from every file under `manuscript/*.md`. Running `uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py` therefore semantically validates this exact manuscript's own bibliography and section structure, live, on every invocation — re-run that command to see the current evaluation and violation counts rather than trusting a number printed here, since either count can legitimately change as the manuscript grows.
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-5-start-->
+```
 
 # Tools: Executable Entry Points {#sec:tools}
 
@@ -447,11 +491,19 @@ The test suite closes this gap without weakening that contract: `tests/tools/tes
 
 Both test classes are guarded with `pytest.mark.skipif` on the real runtime dependency each script needs (`timeout`/`gtimeout` plus `jq` for the code executor; the `jsonschema` package for the validator), so a missing binary skips the test cleanly instead of failing it — on the machine this manuscript was rendered on, the code-executor tests skip (no `timeout`/`gtimeout` on this macOS host) while the validator tests run for real, which is itself a demonstration of the skip-guard working as intended rather than masking a failure.
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-6-start-->
+```
 
 # Integration: Unified Pipeline and Token Injection {#sec:integration}
 
@@ -532,11 +584,19 @@ The resilience design above trades a small, constant amount of I/O overhead for 
 
 The 13 `src/` modules — including the readers, orchestrator, evaluator, figure modules, token generator, resource-schema validator, and type definitions — are covered by tests across 13 test files in `tests/`, including property-based tests (`test_property_based.py`) and coverage-extras tests targeting previously-uncovered branches (`test_coverage_extras.py`). Tests use real file paths, real YAML files, and real BibTeX content rather than mocks, ensuring that coverage numbers reflect genuine code paths through the resource-discovery logic. The current coverage report shows combined line coverage comfortably above the project's 90% floor; exact test and coverage totals drift as the suite grows, so re-run `uv run pytest … --cov-report=term` for the current measurements. The `tests/tools/test_integration.py` suite includes an end-to-end test that calls `run_integration_demo()` and asserts that the `summary` dict contains the expected keys with non-negative integer values — a contract test that verifies the token injection pipeline's data source. `tests/figures/test_manuscript_variables.py` adds negative controls that change both integration results and a real temporary project tree, proving the token generator tracks runtime and filesystem sources rather than emitting fixed constants.
 
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-7-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -585,3 +645,7 @@ A second direction, **cross-fond validation**, is now implemented: `src/template
 A third direction, suggested directly by the Limitations above, was extending `strong_rule_evaluator` with additional rule kinds beyond the original four. The `manifest_freshness` kind — flagging a fond whose `version` field has not been bumped despite its `data/` files changing more recently than its manifest — is now implemented: `src/template_pools_rules_tools/rules/strong_rule_evaluator.py::_evaluate_manifest_freshness()` is a fifth dispatch entry, unit-tested against synthetic rule dicts (`tests/rules/test_strong_rule_evaluator.py`). It is deliberately **not** yet wired to a real strong-rule YAML file: doing so would mean adding a file under the shared `rules/templates/template_project_rules/strong/` or `rules/templates/template_manuscript_rules/strong/` directory, which this project's own read-only contract against `fonds/`, `rules/`, and `tools/` reserves for an explicit decision rather than a routine content edit. The evaluator's logic is proven correct against synthetic input; proving it against a real fond's real manifest and data-file timestamps is the natural next step, pending that decision.
 
 The exemplar is ready to fork. A project team wishing to adopt this architecture need only copy the relevant `src/template_pools_rules_tools/` modules (the three readers plus `integration.py` are the minimum; `strong_rule_evaluator.py` and `figures.py` are optional extensions), update the resource directory paths in each reader, and replace the exemplar fond/rules/tool names with their own.
+
+```{=html}
+<!--template-web-source-a3b31a20e18d9593a4d84fcb8c512fc3c5f5b9248f0696f7ddf626daa72297ac-7-end-->
+```

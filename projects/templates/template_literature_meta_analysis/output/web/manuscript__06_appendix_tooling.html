@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_appendix_tooling.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Multi-Engine Retrieval, De-duplication, Embeddings, and Bibliometrics for a Single Search Term" />
+  <title>A Living Meta-Analysis of the Modafinil Literature</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +246,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +274,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +305,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +391,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +416,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +428,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +655,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +717,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,7 +745,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="appendix-a-tooling-and-reproduction">Appendix A: Tooling and
+<h1 data-number="17" id="appendix-a-tooling-and-reproduction"><span
+class="header-section-number">17</span> Appendix A: Tooling and
 Reproduction</h1>
 <p>The pipeline is a two-layer system: generic infrastructure
 (rendering, validation, logging) shared across the template monorepo,
@@ -725,7 +754,8 @@ and project-local <code>src/</code> modules that implement the
 meta-analysis. All numbered <code>scripts/</code> are thin orchestrators
 that wire I/O, configuration loading, and logging — no computational
 logic resides in scripts.</p>
-<h2 id="reproduce-the-offline-default-run">Reproduce the Offline Default
+<h2 data-number="17.1" id="reproduce-the-offline-default-run"><span
+class="header-section-number">17.1</span> Reproduce the Offline Default
 Run</h2>
 <p>No network, no language model required:</p>
 <div class="sourceCode" id="cb1"><pre
@@ -734,7 +764,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/03_build_knowledge_graph.py <span class="at">--max-papers</span> 0</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/04_generate_figures.py <span class="at">--dpi</span> 300</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/05_inject_variables.py</span></code></pre></div>
-<h2 id="reproduce-the-live-run">Reproduce the Live Run</h2>
+<h2 data-number="17.2" id="reproduce-the-live-run"><span
+class="header-section-number">17.2</span> Reproduce the Live Run</h2>
 <p>This manuscript was generated from a live retrieval run. To
 reproduce:</p>
 <div class="sourceCode" id="cb2"><pre
@@ -749,14 +780,17 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/06_fulltext_assessment.py</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/07_literature_evaluation.py</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/09_export_bibliography.py</span></code></pre></div>
-<h2 id="re-target-to-another-topic">Re-target to Another Topic</h2>
+<h2 data-number="17.3" id="re-target-to-another-topic"><span
+class="header-section-number">17.3</span> Re-target to Another
+Topic</h2>
 <p>Edit <code>manuscript/config.yaml</code> —
 <code>project_config.search.term</code>, <code>query</code>,
 <code>relevance_keywords</code>, <code>subfield_keywords</code>, and
 <code>hypothesis_definitions</code> — then regenerate the seed corpus
 and re-run. No code changes are required; the manuscript re-targets
 through token injection.</p>
-<h2 id="live-retrieval">Live Retrieval</h2>
+<h2 data-number="17.4" id="live-retrieval"><span
+class="header-section-number">17.4</span> Live Retrieval</h2>
 <p>Enable engines under <code>project_config.search.engines</code>,
 supply any optional credentials (Unpaywall email, Semantic Scholar key),
 and run <code>scripts/01_literature_search.py</code>; absent engines
@@ -766,8 +800,9 @@ degrade to skipped sources. The CLI supports per-engine skip flags:
 <code>--skip-pubmed</code>, <code>--skip-sovietrxiv</code>,
 <code>--skip-chinarxiv</code>, <code>--skip-europepmc</code>,
 <code>--skip-biorxiv</code>, <code>--skip-medrxiv</code>.</p>
-<h2 id="deep-research-offline-fixture-replay">Deep Research (Offline
-Fixture Replay)</h2>
+<h2 data-number="17.5" id="deep-research-offline-fixture-replay"><span
+class="header-section-number">17.5</span> Deep Research (Offline Fixture
+Replay)</h2>
 <p>This exemplar also demonstrates the shared
 <code>infrastructure.search.deep_research</code> capability —
 provider-neutral dispatch to OpenAI and Gemini deep-research agents.
@@ -792,7 +827,8 @@ by supplying <code>OPENAI_API_KEY</code> /
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Offline (default): replays the recorded report, no key required</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/08_deep_research_dispatch.py</span></code></pre></div>
-<h2 id="test-suite">Test Suite</h2>
+<h2 data-number="17.6" id="test-suite"><span
+class="header-section-number">17.6</span> Test Suite</h2>
 <p>Every stage is covered by a no-mocks test suite (real computation and
 <code>pytest-httpserver</code> for network adapters) gated at <span
 class="math inline">\(\geq 90\%\)</span> statement coverage on

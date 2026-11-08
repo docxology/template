@@ -14,6 +14,32 @@ Order matters. `[@def:x]` and `[@knuth1997]` are both Pandoc *citations*; the fo
 
 Because these tools cooperate, **all citations must use Pandoc bracket-cite syntax** and **all cross-references must use Pandoc-crossref syntax**. Raw `\cite{}` and `\ref{}` work in PDF but break HTML / EPUB rendering and clutter the source.
 
+### HTML project context
+
+The finalized split HTML pages and combined `index.html` use the same
+whole-manuscript reference context, in admitted manuscript order. Formalism
+counters continue across source files (independently per kind, unless an
+explicit reset is configured). Forward and backward references, grouped and
+narrative citations, figure/table/equation/section numbers, bibliography entries,
+and footnote numbers come from that complete context, not a fresh count for
+each section. `pandoc-crossref` remains optional; absent tools do not establish
+cross-format numbering parity.
+
+For direct Python consumers, `WebRenderer.render(source)` is an isolated
+single-source preview. Call
+`WebRenderer.render_combined(sources, manuscript_dir, project_name)` with the
+complete source roster to produce the combined index and create or replace
+every corresponding split page in project context. A preceding preview call
+is not required. Do not publish isolated previews as a finalized split edition.
+
+Finalized links retain live local destinations, point to the actual produced
+section page for a unique remote destination, and use `index.html` for
+combined-only destinations such as its table of contents. Unknown or ambiguous
+destinations remain visible defects. Explicit document, external, and asset
+links are not rebound. Raw HTML, scripts, styles, comments, code examples, and
+inert template content are not reference-replacement templates; source files
+and stable authored IDs remain unchanged.
+
 ## 1. Citations
 
 ### Syntax — 1. Citations
@@ -129,11 +155,11 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
    complex figure cannot be conveyed concisely.
    Tagged-PDF mode binds the same registry text into the PDF structure tree;
    ordinary untagged PDF output makes no PDF/UA or assistive-technology claim.
-   An intentionally repeated, unlabelled registry image authored as `![](...)`
+   An intentionally repeated, unlabeled registry image authored as `![](...)`
    remains decorative: the HTML renderer restores Pandoc's omitted `alt=""`
-   attribute instead of repeating the canonical labelled figure's long
+   attribute instead of repeating the canonical labeled figure's long
    description. An unregistered image with no authored alternative fails.
-6. Do not encode meaning by colour alone. Use a colour-accessible palette plus
+6. Do not encode meaning by color alone. Use a color-accessible palette plus
    redundant shapes, line styles, direct labels, or patterns; check contrast,
    grayscale legibility, type size, clipping, and panel order in the final
    render.
@@ -222,13 +248,13 @@ Remark. Numbering is not a claim about importance.
 By Definition 1 the registry is well formed, which Proposition 1 extends.
 ```
 
-Recognised classes: `definition`, `proposition`, `theorem`, `lemma`, `corollary`, `remark`, `axiom`, `claim`, `example`.
+Recognized classes: `definition`, `proposition`, `theorem`, `lemma`, `corollary`, `remark`, `axiom`, `claim`, `example`.
 
 ### Rules — 6. Formalism blocks
 
 1. **Never write the number.** `**Definition 3.**` typed by hand goes stale the moment a block is inserted above it, and the prose referring to it keeps pointing at the old number. That silent drift is the entire reason this filter exists.
 2. **Reference with `[@def:label]`**, the same bracket syntax used for figures, tables and equations. The filter consumes these before the citation machinery sees them, so a formalism label must **not** appear in `references.bib`.
-3. Counters are **per kind** and run in document order: Definitions and Propositions each have their own sequence.
+3. Counters are **per kind** and run in whole-manuscript order across source files: Definitions and Propositions each have their own sequence. Finalized split HTML uses these same global numbers rather than restarting per page.
 4. A label is required for any block you intend to reference; an unlabelled block still gets a number.
 5. A reference to a label that was never declared is **left exactly as written** and reported on stderr, so a broken cross-reference stays visible in the output instead of silently vanishing. Watch the build log.
 6. Duplicate labels are reported on stderr; the last block declaring a label wins.

@@ -142,23 +142,23 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f9186931034bb5911e8ab937013d4e68a0de28d5ddbbca67f7325e5f0457b596",
+      "sha256": "033b7d3e45c96c1c6c63c6c5ca01cae88b6098a6b5db2d6de08a71d03b2067c4",
       "size_bytes": 31496
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "23aa0866aba9a37511c811867f1a00222ab569eeb929e16272ebe4f94edc3cf0",
-      "size_bytes": 71226
+      "sha256": "63635e3c74f7b50377ea9142b089a49897bfd9bc3d1ac600a7946b33ff1aefc0",
+      "size_bytes": 76542
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "de042aa9c7a95c83e74ba3e172e26912bcc9a151cd6966ecc87dca75e2269da1",
-      "size_bytes": 5244
+      "sha256": "34ecfa206da6a02a094f21ef7132ab29c86fd75f051da78f2e35e8b26a4e1d0e",
+      "size_bytes": 5251
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9b929bf6a06cd0fb181e9a4ed9c92478b6c8f0ebb9746730421149b6f72ccdde",
-      "size_bytes": 16095
+      "sha256": "bf94309e464785d01c8522e3e480bd90a4f9c1b6d4386ddbff2e74050a9f18f5",
+      "size_bytes": 16096
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -169,15 +169,15 @@
     },
     "output": {
       "file_count": 103,
-      "sha256": "dbc8579be19ffb77a10d774328b44609173b6134d1b2575253d16da06f6f0843"
+      "sha256": "e94dff0a57abd9ecf1e37fdb2e62129c587db6c7fbb03467e0897447af819d00"
     },
     "source": {
       "file_count": 101,
       "sha256": "053599c9deb2dcd9d5053402eb95c92fc50109ae7b56fd0cba1491b9edc1dfab"
     },
     "stage": {
-      "file_count": 1614,
-      "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+      "file_count": 1616,
+      "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
     }
   },
   "project": "templates/template_advanced_literature_review",

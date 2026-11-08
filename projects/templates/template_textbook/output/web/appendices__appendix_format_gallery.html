@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>appendix_format_gallery.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,7 +744,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:appendix_format_gallery">Appendix — Format Gallery</h1>
+<h1 data-number="47" id="sec:appendix_format_gallery"><span
+class="header-section-number">47</span> Appendix — Format Gallery</h1>
 <p>This appendix is a <strong>kitchen-sink demonstration</strong>: a
 working example of every content primitive this template supports. Copy
 any block into a chapter and adapt it. Each example is real and renders
@@ -732,18 +760,21 @@ cross-references, media, and pedagogy blocks. The Markdown source is the
 example — view it next to the rendered output.</p>
 </blockquote>
 <hr />
-<h2 id="text-and-inline-formatting">1. Text and inline formatting</h2>
+<h2 data-number="47.1" id="text-and-inline-formatting"><span
+class="header-section-number">47.1</span> 1. Text and inline
+formatting</h2>
 <p>Plain paragraph text wraps and flows normally. Inline styles:
 <strong>bold</strong>, <em>italic</em>, <strong><em>bold
 italic</em></strong>, <code>inline code</code>,
 <del>strikethrough</del>, H<sub>2</sub>O with a subscript, E =
-mc<sup>2</sup> with a superscript, and a footnote.<a href="#fn1"
+mc<sup>2</sup> with a superscript, and a footnote.<a href="index.html#fn1"
 class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>You can hard-break a line with a backslash at the line end.<br />
 The next line begins after that break; separate paragraphs with a blank
 line. Escape literal Markdown with a backslash: *not italic*.</p>
 <hr />
-<h2 id="lists">2. Lists</h2>
+<h2 data-number="47.2" id="lists"><span
+class="header-section-number">47.2</span> 2. Lists</h2>
 <p>Unordered, with nesting:</p>
 <ul>
 <li>First item</li>
@@ -791,7 +822,9 @@ href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>).
 </dd>
 </dl>
 <hr />
-<h2 id="block-quotes-and-callouts">3. Block quotes and callouts</h2>
+<h2 data-number="47.3" id="block-quotes-and-callouts"><span
+class="header-section-number">47.3</span> 3. Block quotes and
+callouts</h2>
 <p>A plain block quote:</p>
 <blockquote>
 <p>“Form follows function.” Use quotes for epigraphs and primary-source
@@ -826,12 +859,12 @@ styles <code>.callout-note</code>, it appears as a boxed admonition;
 otherwise it renders as a normal block.</p>
 </div>
 <hr />
-<h2 id="tables">4. Tables</h2>
+<h2 data-number="47.4" id="tables"><span
+class="header-section-number">47.4</span> 4. Tables</h2>
 <p>A simple table with column alignment and a cross-referencable caption
-(<span class="citation"
-data-cites="tbl:gallery_alignment">[@tbl:gallery_alignment]</span>):</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Column alignment — left, centre, right."><table id="tbl:gallery_alignment" data-responsive-table="true">
-<caption>Column alignment — left, centre, right.</caption>
+(tbl. <a href="#tbl:gallery_alignment">14</a>):</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 14: Column alignment — left, centre, right."><table id="tbl:gallery_alignment" data-responsive-table="true">
+<caption>Table 14: Column alignment — left, centre, right.</caption>
 <thead>
 <tr>
 <th style="text-align: left;">Left</th>
@@ -890,14 +923,15 @@ text):</p>
 </tbody>
 </table></div>
 <hr />
-<h2 id="mathematics-and-units">5. Mathematics and units</h2>
+<h2 data-number="47.5" id="mathematics-and-units"><span
+class="header-section-number">47.5</span> 5. Mathematics and units</h2>
 <p>Inline math: the half-life is <span class="math inline">\(t_{1/2} =
 \ln 2 / \lambda\)</span>.</p>
-<p>A numbered display equation, cross-referenced as <span
-class="citation"
-data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span>:</p>
-<p><span class="math display">\[N(t) = \frac{K}{1 + \left(\dfrac{K -
-N_0}{N_0}\right) e^{-rt}}\]</span> {#eq:gallery_logistic}</p>
+<p>A numbered display equation, cross-referenced as eq. <a
+href="#eq:gallery_logistic">17</a>:</p>
+<p><span id="eq:gallery_logistic"><span class="math display">\[N(t) =
+\frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right)
+e^{-rt}}\qquad{(17)}\]</span></span></p>
 <p>Multi-line aligned derivation:</p>
 <p><span class="math display">\[\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
@@ -918,15 +952,15 @@ PDF-only builds you may instead use <code>siunitx</code> macros such as
 <code>\SI{0.5}{\per\second}</code>, which the preamble loads — but
 math-mode units are the portable choice.)</p>
 <hr />
-<h2 id="figures">6. Figures</h2>
+<h2 data-number="47.6" id="figures"><span
+class="header-section-number">47.6</span> 6. Figures</h2>
 <p>A single figure with caption, label, and alt text, cross-referenced
-as <span class="citation"
-data-cites="fig:gallery_line">[@fig:gallery_line]</span>:</p>
+as fig. <a href="#fig:gallery_line">13</a>:</p>
 <figure id="fig:gallery_line">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ."><img src="../figures/gallery/gallery_line.png" style="width:80.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 13, A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ."><img src="../figures/gallery/gallery_line.png" style="width:80.0%"
 alt="Three sinusoidal curves share one time axis, with progressively higher oscillation frequency." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>A multi-series line plot of three sine
-waves, produced by
+<figcaption>Figure 13: A multi-series line plot of
+three sine waves, produced by
 <code>visualization.gallery.line_plot</code>.</figcaption>
 </figure>
 <!-- alt: Line plot with three sinusoidal curves of increasing frequency. -->
@@ -934,23 +968,23 @@ waves, produced by
 stacked):</p>
 <div data-layout-ncol="2">
 <figure id="fig:gallery_bar">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Bar chart."><img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 14, Bar chart."><img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
 alt="A vertical bar chart compares several labeled categories, with bar height encoding each category&#x27;s value." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Bar chart.</figcaption>
+<figcaption>Figure 14: Bar chart.</figcaption>
 </figure>
 <figure id="fig:gallery_pie">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Pie chart."><img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 15, Pie chart."><img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
 alt="A circular chart is divided into labeled slices whose angles encode category proportions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Pie chart.</figcaption>
+<figcaption>Figure 15: Pie chart.</figcaption>
 </figure>
 </div>
-<p>A multi-panel composite (<span class="citation"
-data-cites="fig:gallery_multipanel">[@fig:gallery_multipanel]</span>):</p>
+<p>A multi-panel composite (fig. <a
+href="#fig:gallery_multipanel">16</a>):</p>
 <figure id="fig:gallery_multipanel">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A 2×2 composite: line, scatter, bar, and histogram panels."><img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, A 2×2 composite: line, scatter, bar, and histogram panels."><img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
 alt="A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>A 2×2 composite: line, scatter, bar, and
-histogram panels.</figcaption>
+<figcaption>Figure 16: A 2×2 composite: line,
+scatter, bar, and histogram panels.</figcaption>
 </figure>
 <p>The full plot-type gallery lives in <code>../figures/gallery/</code>
 and includes: line, scatter-with-fit, bar, grouped bar, horizontal bar,
@@ -959,104 +993,115 @@ area, error bars, log-log, pie, annotated, and multi-panel. The chapters
 use the model curves and instructional error bars; the remaining plots
 demonstrate alternative presentations.</p>
 <hr />
-<h2 id="diagrams-mermaid">7. Diagrams (Mermaid)</h2>
+<h2 data-number="47.7" id="diagrams-mermaid"><span
+class="header-section-number">47.7</span> 7. Diagrams (Mermaid)</h2>
 <p>The pipeline renders fenced <code>mermaid</code> blocks to figures
 (and falls back to the <code>.mmd</code> source if the Mermaid CLI is
 absent). One worked example of each kind the builders in
 <code>src/mermaid/diagrams.py</code> support:</p>
 <p>Flowchart:</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Inputs</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Model</span>]</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Predictions</span>]</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|revise|</span> <span class="dt">A</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Inputs</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Model</span>]</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Predictions</span>]</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|revise|</span> <span class="dt">A</span></span></code></pre></div>
 <p>Sequence:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sequenceDiagram</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">participant</span><span class="vs"> Author</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="vs">  participant Engine</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="vs">  Author </span><span class="dt">-&gt;&gt;</span><span class="vs"> Engine</span><span class="dt">:</span><span class="vs"> edit config</span><span class="dt">.</span><span class="vs">yaml</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="vs">  Engine </span><span class="dt">--&gt;&gt;</span><span class="vs"> Author</span><span class="dt">:</span><span class="vs"> rendered PDF</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sequenceDiagram</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">participant</span><span class="vs"> Author</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="vs">  participant Engine</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="vs">  Author </span><span class="dt">-&gt;&gt;</span><span class="vs"> Engine</span><span class="dt">:</span><span class="vs"> edit config</span><span class="dt">.</span><span class="vs">yaml</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="vs">  Engine </span><span class="dt">--&gt;&gt;</span><span class="vs"> Author</span><span class="dt">:</span><span class="vs"> rendered PDF</span></span></code></pre></div>
 <p>State:</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">stateDiagram-v2</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">[*]</span> <span class="pp">--&gt;</span> <span class="dt">Stub</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Stub</span> <span class="pp">--&gt;</span> <span class="dt">Drafted</span>:<span class="vs"> fill</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Drafted</span> <span class="pp">--&gt;</span> <span class="dt">Reviewed</span>:<span class="vs"> review</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Reviewed</span> <span class="pp">--&gt;</span> <span class="dt">[*]</span>:<span class="vs"> publish</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">stateDiagram-v2</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">[*]</span> <span class="pp">--&gt;</span> <span class="dt">Stub</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Stub</span> <span class="pp">--&gt;</span> <span class="dt">Drafted</span>:<span class="vs"> fill</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Drafted</span> <span class="pp">--&gt;</span> <span class="dt">Reviewed</span>:<span class="vs"> review</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Reviewed</span> <span class="pp">--&gt;</span> <span class="dt">[*]</span>:<span class="vs"> publish</span></span></code></pre></div>
 <p>Class:</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">classDiagram</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span><span class="dt"> ChapterRef {</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str part_id</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str file</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>stem() str</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">}</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ChapterRef</span> <span class="pp">--&gt;</span> <span class="dt">TocEntry</span> :<span class="vs"> numbered as</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">classDiagram</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span><span class="dt"> ChapterRef {</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str part_id</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str file</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>stem() str</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">}</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ChapterRef</span> <span class="pp">--&gt;</span> <span class="dt">TocEntry</span> :<span class="vs"> numbered as</span></span></code></pre></div>
 <p>Entity-relationship:</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">erDiagram</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">PART</span> <span class="pp">||--o{</span> <span class="dt">CHAPTER</span> :<span class="vs"> contains</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">CHAPTER</span> <span class="pp">||--||</span> <span class="dt">LAB</span> :<span class="vs"> has</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">erDiagram</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">PART</span> <span class="pp">||--o{</span> <span class="dt">CHAPTER</span> :<span class="vs"> contains</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">CHAPTER</span> <span class="pp">||--||</span> <span class="dt">LAB</span> :<span class="vs"> has</span></span></code></pre></div>
 <p>Pie, Gantt, mindmap, timeline, quadrant, and user-journey diagrams
 are also supported — see <code>src/mermaid/diagram_specs.yaml</code> for
 a worked spec of each.</p>
 <hr />
-<h2 id="code">8. Code</h2>
+<h2 data-number="47.8" id="code"><span
+class="header-section-number">47.8</span> 8. Code</h2>
 <p>Inline code: call
 <code>textbook.models.logistic_growth(t, r=..., ...)</code>.</p>
 <p>A fenced code block with a language (syntax-highlighted) and a
-caption ([lst:gallery_code]):</p>
-<div class="sourceCode" id="lst:gallery_code"
-data-caption="Calling the tested computational backbone."><pre
-class="sourceCode python"><code class="sourceCode python"><span id="lst:gallery_code-1"><a href="#lst:gallery_code-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="lst:gallery_code-2"><a href="#lst:gallery_code-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="lst:gallery_code-3"><a href="#lst:gallery_code-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="lst:gallery_code-4"><a href="#lst:gallery_code-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
-<span id="lst:gallery_code-5"><a href="#lst:gallery_code-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> models.logistic_growth(t, r<span class="op">=</span><span class="fl">0.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
-<span id="lst:gallery_code-6"><a href="#lst:gallery_code-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(n[<span class="op">-</span><span class="dv">1</span>])  <span class="co"># -&gt; approaches the carrying capacity</span></span></code></pre></div>
+caption (lst. <a href="#lst:gallery_code">1</a>):</p>
+<div id="lst:gallery_code" class="listing python">
+<p>Listing 1: Calling the tested computational backbone.</p>
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> models.logistic_growth(t, r<span class="op">=</span><span class="fl">0.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(n[<span class="op">-</span><span class="dv">1</span>])  <span class="co"># -&gt; approaches the carrying capacity</span></span></code></pre></div>
+</div>
 <p>A shell example:</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/generate_figures.py</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--extra</span> dev python <span class="at">-m</span> pytest tests/ <span class="at">--cov</span><span class="op">=</span>src</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/generate_figures.py</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--extra</span> dev python <span class="at">-m</span> pytest tests/ <span class="at">--cov</span><span class="op">=</span>src</span></code></pre></div>
 <hr />
-<h2 id="cross-references-and-citations">9. Cross-references and
+<h2 data-number="47.9" id="cross-references-and-citations"><span
+class="header-section-number">47.9</span> 9. Cross-references and
 citations</h2>
-<p>Cross-references resolve by label: figure <span class="citation"
-data-cites="fig:gallery_line">[@fig:gallery_line]</span>, table <span
-class="citation"
-data-cites="tbl:gallery_alignment">[@tbl:gallery_alignment]</span>,
-equation <span class="citation"
-data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span>, and
-section <span class="citation"
-data-cites="sec:appendix_formalisms">[@sec:appendix_formalisms]</span>.
-Never hand-number — Pandoc fills these in.</p>
+<p>Cross-references resolve by label: figure fig. <a
+href="#fig:gallery_line">13</a>, table tbl. <a
+href="#tbl:gallery_alignment">14</a>, equation eq. <a
+href="#eq:gallery_logistic">17</a>, and section sec. <a
+href="appendices__appendix_formalisms.html#sec:appendix_formalisms">46</a>. Never hand-number — Pandoc fills
+these in.</p>
 <p>Citations resolve against <code>references.bib</code>: a single
-source [box1976science], multiple sources [sandve2013ten;
-nyquist1932regeneration], and an in-text form — <span class="citation"
-data-cites="lorenz1963deterministic">@lorenz1963deterministic</span>
-showed the effect first. A locator narrows the reference
-[may1976simple].</p>
+source <span class="citation" data-cites="box1976science">(<a
+href="index.html#ref-box1976science" role="doc-biblioref">Box 1976</a>)</span>,
+multiple sources <span class="citation"
+data-cites="sandve2013ten nyquist1932regeneration">(<a
+href="index.html#ref-sandve2013ten" role="doc-biblioref">Sandve et al. 2013</a>;
+<a href="index.html#ref-nyquist1932regeneration" role="doc-biblioref">Nyquist
+1932</a>)</span>, and an in-text form — <span class="citation"
+data-cites="lorenz1963deterministic">Lorenz (<a
+href="index.html#ref-lorenz1963deterministic"
+role="doc-biblioref">1963</a>)</span> showed the effect first. A locator
+narrows the reference <span class="citation"
+data-cites="may1976simple">(<a href="index.html#ref-may1976simple"
+role="doc-biblioref">May 1976, 12–14</a>)</span>.</p>
 <hr />
-<h2 id="media-and-data">10. Media and data</h2>
+<h2 data-number="47.10" id="media-and-data"><span
+class="header-section-number">47.10</span> 10. Media and data</h2>
 <p>Embedded raster image (any PNG/JPG works the same way as a
 figure):</p>
 <figure id="fig:gallery_media">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A generated heatmap embedded as a raster image."><img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, A generated heatmap embedded as a raster image."><img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
 alt="A rectangular heatmap uses a light-to-dark color scale to encode values across rows and columns." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>A generated heatmap embedded as a raster
-image.</figcaption>
+<figcaption>Figure 17: A generated heatmap embedded
+as a raster image.</figcaption>
 </figure>
 <p>Audio and video embed in HTML targets (PDF shows the caption + link).
 Syntax:</p>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for an audio clip.](../assets/media/clip.mp3)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for a video.](../assets/media/demo.mp4)</span>{width=70%}</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for an audio clip.](../assets/media/clip.mp3)</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="al">![Caption for a video.](../assets/media/demo.mp4)</span>{width=70%}</span></code></pre></div>
 <p>A downloadable data file lives at <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_textbook/manuscript/assets/data/sample_dataset.csv"><code>assets/data/sample_dataset.csv</code></a>;
 a four-row excerpt appears below:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Four-row excerpt from assets/data/sample_dataset.csv ."><table id="tbl:gallery_data" data-responsive-table="true">
-<caption>Four-row excerpt from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 15: Four-row excerpt from assets/data/sample_dataset.csv ."><table id="tbl:gallery_data" data-responsive-table="true">
+<caption>Table 15: Four-row excerpt from
 <code>assets/data/sample_dataset.csv</code>.</caption>
 <thead>
 <tr>
@@ -1093,17 +1138,17 @@ a four-row excerpt appears below:</p>
 </tr>
 </tbody>
 </table></div>
-<p>The error-bar figure <span class="citation"
-data-cites="fig:gallery_errorbar">[@fig:gallery_errorbar]</span>
+<p>The error-bar figure fig. <a href="#fig:gallery_errorbar">18</a>
 visualises this kind of data:</p>
 <figure id="fig:gallery_errorbar">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Means with standard-error bars."><img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 18, Means with standard-error bars."><img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
 alt="Six condition means rise from left to right; every point has a vertical standard-error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Means with standard-error
+<figcaption>Figure 18: Means with standard-error
 bars.</figcaption>
 </figure>
 <hr />
-<h2 id="pedagogical-blocks">11. Pedagogical blocks</h2>
+<h2 data-number="47.11" id="pedagogical-blocks"><span
+class="header-section-number">47.11</span> 11. Pedagogical blocks</h2>
 <p>These are the reusable teaching elements chapters draw on.</p>
 <blockquote>
 <p><strong>Learning objective.</strong> After this section a reader can
@@ -1115,8 +1160,8 @@ example.</p>
 <p><strong>Worked example.</strong> Given <span class="math inline">\(r
 = 0.8\)</span>, <span class="math inline">\(K = 100\)</span>, <span
 class="math inline">\(N_0 = 5\)</span>, evaluate <span
-class="math inline">\(N(10)\)</span> via <span class="citation"
-data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span> using
+class="math inline">\(N(10)\)</span> via eq. <a
+href="#eq:gallery_logistic">17</a> using
 <code>textbook.models.logistic_growth</code>. The result approaches
 <span class="math inline">\(K\)</span>. At <span
 class="math inline">\(t=10\)</span>, the denominator is <span
@@ -1145,7 +1190,8 @@ set. Check these examples in each selected output format when changing
 the rendering toolchain.</p>
 </blockquote>
 <hr />
-<h2 id="miscellany">12. Miscellany</h2>
+<h2 data-number="47.12" id="miscellany"><span
+class="header-section-number">47.12</span> 12. Miscellany</h2>
 <p>A horizontal rule separates major shifts in topic (three or more
 dashes):</p>
 <hr />
@@ -1155,15 +1201,6 @@ dashes):</p>
 Markdown. Unicode renders directly: α, β, γ, Δ, ∑, ∞, ≈, →. For PDF
 math, prefer LaTeX (<code>$\alpha$</code>) over raw Unicode in
 equations.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document"
-role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1"><p>Footnotes collect at the end of the document (or page,
-in PDF). Use them for asides that would interrupt the sentence.<a
-href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>
 </main>
 </body>
 </html>
