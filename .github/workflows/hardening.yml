@@ -1580,10 +1580,12 @@ jobs:
           echo "TEMPLATE_SIA_TEST_IMAGE=$SIA_SANDBOX_IMAGE" >> "$GITHUB_ENV"
 
       - name: Run receipt-bearing public matrix
+        # Do not contend real database experiment fixtures across outer projects.
+        # Preserve every scope, test clock, marker expression and coverage floor.
         run: >-
           uv run python scripts/pipeline/stage_01_test.py
           --project-only --all-projects --public-projects
-          --project-workers auto
+          --project-workers 1
           --receipt public_matrix_receipt.json
 
       - name: Upload public-matrix receipt

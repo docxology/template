@@ -133,6 +133,8 @@ def _check_fatal_error(
         "Emergency stop",
         "That makes 100 errors",
         "TeX capacity exceeded",
+        # Measured authored overflow cannot be repaired by another compiler pass.
+        "Package paperfrontmatter Error: paper.frontmatter page overflow",
     )
     has_fatal_marker = any(marker in log_content for marker in fatal_markers)
     is_fatal_exit = result.returncode != 0

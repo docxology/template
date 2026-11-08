@@ -348,7 +348,9 @@ def _native_project(tmp_path: Path, *, overflow: bool = False):
         names.append(source_name)
         caption = f"Engineering panel {name}. Complete caption retained at ordinary text size. Terminal caption {name}."
         if overflow and index == 0:
-            caption += " Overflow content must fail rather than shrink or clip." * 220
+            # Authored Markdown hard breaks make the excess height deterministic,
+            # without making paragraph line-breaking complexity the negative control.
+            caption += "  \nOverflow content must fail rather than shrink or clip." * 220
         (manuscript / source_name).write_text(
             f"# Panel {name}\n\n![{caption}](../output/figures/{filename}){{#fig:plate-{name.lower()}}}\n",
             encoding="utf-8",

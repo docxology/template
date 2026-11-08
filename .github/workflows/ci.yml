@@ -74,7 +74,7 @@ jobs:
 
       # Root tag/notes/artwork identity plus each exemplar's intended-versus-
       # published version agreement across pyproject, CITATION, codemeta and
-      # .zenodo.json. On a tag push the tag must equal the declared version.
+      # .zenodo.json. A tag-ref manual dispatch must match the declared version.
       - name: Release version identity
         env:
           RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}

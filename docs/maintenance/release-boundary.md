@@ -172,8 +172,9 @@ before the final Source freeze. The command creates no tag, release or acceptanc
    reader authenticates the complete indexed collection and its logical readiness
    bytes; a flat rebuilt archive or an index alone cannot replace that admission.
 4. Create the matching root tag only after acceptance passes, then manually
-   dispatch the release workflow with that handoff. A root 4+ tag push alone is
-   blocked. The dedicated [required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml)
+   dispatch the release workflow with that handoff. Creating or pushing a tag
+   alone does not start this publication workflow or execute its acceptance gates.
+   The dedicated [required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml)
    produces the complete bundle only after every original requirement passes;
    partial CI receipts cannot authorize this step.
    Set `RELEASE_TAG` to the verified existing tag whose dereferenced commit

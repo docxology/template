@@ -68,12 +68,15 @@ def place_frontmatter_latex(tex: str, layout: PaperLayout, height: str) -> str:
         bounded = rf"[width=\linewidth,height={height}\textheight,keepaspectratio"
         bounded += ("," + ",".join(retained) if retained else "") + "]"
         region = region[:start] + bounded + region[end:]
+        # PackageError alone continues under nonstopmode. Close the conditional
+        # before stopping TeX so an over-height box is never shipped or retried.
         boxed = (
             "\\clearpage\n\\begin{lrbox}{\\templatepaperfrontmatterbox}\n"
             "\\begin{minipage}{\\textwidth}\n" + region + "\n\\end{minipage}\n\\end{lrbox}\n"
             "\\ifdim\\dimexpr\\ht\\templatepaperfrontmatterbox+\\dp\\templatepaperfrontmatterbox\\relax>\\textheight\n"
             "\\PackageError{paperfrontmatter}{paper.frontmatter page overflow}"
             "{Shorten the authored region; text is never shrunk}\n"
+            "\\expandafter\\stop\n"
             "\\fi\n\\noindent\\usebox{\\templatepaperfrontmatterbox}\n\\clearpage\n"
         )
         tex = tex[: match.start()] + boxed + tex[match.end() :]

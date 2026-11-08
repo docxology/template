@@ -34,8 +34,7 @@ from tests.infra_tests.project.test_public_reference import complete_reference a
 def _require_stage_closure(root: Path) -> None:
     """Require the complete owned fixture before exercising its binding gate."""
     assert stage_digest(root) is not None, (
-        "the owned complete public reference must substantiate its stage closure"
-        f" ({unavailable_cause(root)})"
+        f"the owned complete public reference must substantiate its stage closure ({unavailable_cause(root)})"
     )
 
 

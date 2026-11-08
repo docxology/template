@@ -73,10 +73,15 @@ it for nested `uv` consumers; the account's credential-filter allowlist is not
 expanded. Locked native exports likewise select their actual installed
 interpreter rather than inheriting `.python-version`.
 
-Infrastructure scheduling uses `load --maxschedchunk=1`: selected cases remain
-in their original file partition, but long native controls do not monopolize a
-whole-module worker queue. Worker crashes must return their genuine failed exit
-without an artificial controller interruption. Worker counts, marker selections,
+Infrastructure scheduling uses `load --maxschedchunk=1`. Ordinary modules retain
+their stable file assignment. The complete parameter inventories in
+`test_native_pdfium_runtime_guard.py`, `test_native_pdfium_verify_current.py` and
+`test_native_source_wheel_guard.py` are distributed round-robin over the same four
+shards, in canonical collected order. Every control retains its independent
+Source, wheel, installation and fresh audit; no mutable authority or result is
+shared to save time. Extra worker-local fixture setup trades bounded duplication
+for balanced execution. Worker crashes must return their genuine failed exit
+without artificial controller interruption. Worker counts, marker selections,
 job and per-test clocks, explicit test-owned timeout markers and the 60% complete
 coverage union remain unchanged.
 

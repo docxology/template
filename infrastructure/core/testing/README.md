@@ -30,7 +30,7 @@ probes, and test-selection planning. Re-homed from the flat
 | `pytest_receipt.py`, `pytest_observations.py` | Explicitly enabled nonce-bound original pytest collection/outcome records and independent readback. |
 | `project_test_measurement.py` | Compose a complete original serial Stage-01 branch-aware combined coverage measurement into the same pipeline, using the original producer hash carried by the stage worker. |
 | `_pytest_runtime_controls.py` | Private default-only benchmark storage relocation; absent/disabled plugins and explicit user destinations retain their behavior. |
-| `ci_infra_partition.py` | Source-declared complete ordinary-CI module partition and selection admission. |
+| `ci_infra_partition.py` | Source-declared complete ordinary-CI case partition, balanced heavy parameter inventories and selection admission. |
 | `ci_infra_shard_plugin.py` | Explicit pytest/xdist collection partition, actual completion accounting and bounded diagnostics-only controller records. |
 | `ci_infra_coverage.py` | Confined shard transfer checks and the complete ≥60% branch-coverage union. |
 | `test_impact.py` | Advisory changed-surface test-lane planner. |

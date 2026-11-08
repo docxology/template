@@ -1,4 +1,4 @@
-"""Complete, source-declared module partition for ordinary hosted infrastructure CI.
+"""Complete, source-declared case partition for ordinary hosted infrastructure CI.
 
 These selection records describe ordinary CI's existing marker-filtered suite.
 They do not classify Root release obligations or authorize a Platform 4 release.
@@ -26,6 +26,15 @@ RESERVED_MODULES = {
     "tests/infra_tests/core/test_execution_contract.py": 2,
     "tests/infra_tests/project/test_root_acceptance.py": 3,
 }
+# These genuine guard matrices cannot accumulate in one module-only shard.
+# Balance their complete collected parameters without sharing mutable authority.
+_CASE_BALANCED_MODULES = frozenset(
+    {
+        "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
+    }
+)
 INFRA_MARKERS = build_pytest_marker_expression(
     skip_requires_ollama=True,
     skip_slow=True,
@@ -92,8 +101,15 @@ def partition(node_ids: list[str] | tuple[str, ...]) -> tuple[tuple[str, ...], .
     if not node_ids or len(set(node_ids)) != len(node_ids):
         raise ValueError("infrastructure collection must be nonempty and have unique node IDs")
     shards: list[list[str]] = [[] for _ in range(SHARD_COUNT)]
+    positions: dict[str, int] = {}
     for node_id in sorted(node_ids):
-        shards[module_shard(case_module(node_id))].append(node_id)
+        module = case_module(node_id)
+        shard = module_shard(module)
+        if module in _CASE_BALANCED_MODULES:
+            position = positions.get(module, 0)
+            shard = (shard + position) % SHARD_COUNT
+            positions[module] = position + 1
+        shards[shard].append(node_id)
     return tuple(tuple(shard) for shard in shards)
 
 

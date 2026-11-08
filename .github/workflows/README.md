@@ -43,9 +43,9 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 | File | Trigger | Purpose |
 |---|---|---|
 | [`ci.yml`](ci.yml) | main push, pull request, or manual | Linux/Python 3.14 functional checks, all public project wheel builds and focused behavioral tests, aggregated by `CI Gate` |
-| [`hardening.yml`](hardening.yml) | manual only | **20 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; manual-only lanes: **`test-infra-slow`** and **`public-matrix-receipt`**; see [`AGENTS.md`](AGENTS.md)) |
+| [`hardening.yml`](hardening.yml) | manual only | Complete Source-derived project and infrastructure matrices, slow lane, compiler/security/document checks and `Hardening Gate`; declared optional projects remain conditional |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
-| [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
+| [`release.yml`](release.yml) | manual only, with an existing accepted tag and authenticated handoff | Publish admitted distributions and verify retrieved GitHub Release assets |
 | [`platform-required-acceptance.yml`](platform-required-acceptance.yml) | manual only | Original required-profile observations and strict exact-source acceptance bundle |
 | [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` + `workflow_run` (Dependabot only) | Marks safe (minor/patch) Dependabot PRs, then squash-merges them after the `CI` run for the same head commit succeeds |
 
@@ -161,7 +161,7 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 ## Release Workflow (`release.yml`)
 
-Triggered on `v*.*.*` tag push or `workflow_dispatch`. The workflow resolves
+Triggered only by `workflow_dispatch` with an explicit existing tag. The workflow resolves
 the tag before checkout, checks out that exact ref, proves `HEAD` matches the
 dereferenced tag commit, runs the root release contract, and requires the
 no-mocks gate, bounded pipeline-smoke infra lane, public capability manifest,
@@ -170,7 +170,7 @@ the modular `scripts/audit/check_publication_outputs.py --all-public --strict --
 major versions 4 and later additionally require an explicit hosted acceptance
 handoff before those checks: the successful run ID, exact
 `platform-required-acceptance` artifact ID, and aggregate receipt SHA256.
-Tag pushes without this handoff stop; use manual dispatch after acceptance.
+Creating or pushing a tag does not start this workflow or supply acceptance; manually dispatch after the full handoff passes.
 The artifact must come from this repository at the tagged SHA and contain only
 bounded, previously absent `output/readiness` files. Its canonical
 `output/readiness/release-candidate/receipt.json` must bind that commit and pass
@@ -183,9 +183,9 @@ matrix from that exact hosted candidate. Release asset admission revalidates
 its source, versions, full roster, both supported runtimes, original process and Code
 observations, dependency providers, and wheel bytes, then publishes that already
 tested wheel from the reader mirror. It does not rebuild the installed matrix
-after the handoff. Earlier majors still run the complete installed matrix in
-the release job. Both paths build and admit a fresh source distribution and
-recheck the selected assets before and after publication.
+after the handoff. Every current release follows this authenticated path; the
+former pre-4 alternative is retired. The workflow builds and admits a fresh
+source distribution and rechecks selected assets before and after publication.
 
 The candidate implementation includes
 [`platform-required-acceptance.yml`](platform-required-acceptance.yml).

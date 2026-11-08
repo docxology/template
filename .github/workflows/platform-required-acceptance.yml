@@ -614,8 +614,8 @@ jobs:
           # of this workflow's 31 failures retained its transport correctly and
           # then expired after one day before anyone read it. The refusal that
           # blocks every release has therefore never been diagnosed. Thirty days
-          # covers a release cycle. The per-cell indexes below keep one day:
-          # they are bulk, and they are not the diagnostic.
+          # covers a release cycle; per-cell primary indexes and shards also
+          # explicitly request thirty days. Retrieval still checks actual expiry.
           retention-days: 30
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
@@ -765,7 +765,7 @@ jobs:
           # workflow's 31 failures retained its transport and then expired after
           # one day before anyone read it, so the refusal that blocks every
           # release has never been diagnosed. Thirty days covers a release cycle;
-          # primary per-cell indexes keep their one-day default.
+          # primary per-cell indexes and shards also explicitly request thirty days.
           retention-days: 30
 
   complete:

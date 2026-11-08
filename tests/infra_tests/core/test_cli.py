@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -111,9 +112,11 @@ class TestCLISubprocess:
             ],
             capture_output=True,
             text=True,
+            # This disposable non-Git fixture owns its deterministic epoch.
+            env={**os.environ, "SOURCE_DATE_EPOCH": "0"},
             timeout=30,
         )
-        assert result.returncode == 0, result.stderr
+        assert result.returncode == 0, (result.stdout, result.stderr)
         assert (tmp_path / "process_order.log").read_text().splitlines() == [
             f"templates/demo:{step}" for step in expected_steps
         ]
@@ -138,11 +141,12 @@ class TestCLISubprocess:
             ],
             capture_output=True,
             text=True,
+            env={**os.environ, "SOURCE_DATE_EPOCH": "0"},
             # Guardian startup, the shared gate and one project child run in turn;
             # this bounds only the test's wait (CI lanes pass --timeout=120).
             timeout=110,
         )
-        assert result.returncode == expected_code, result.stderr
+        assert result.returncode == expected_code, (result.stdout, result.stderr)
         rows = (tmp_path / "process_order.log").read_text().splitlines()
         assert rows == (
             ["templates/beta:infra", "templates/beta:analysis"] if infra_exit == 0 else ["templates/beta:infra"]

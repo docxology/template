@@ -147,6 +147,13 @@ def test_declared_matrix_retains_every_environment_and_shard() -> None:
 
 def test_partition_covers_future_modules_and_every_parameter_without_overlap() -> None:
     ids = [f"{module}::test_actual[param-{parameter}]" for module in RESERVED_MODULES for parameter in range(3)]
+    heavy_modules = (
+        "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
+    )
+    for module in heavy_modules:
+        ids.extend(f"{module}::test_actual[control-{parameter}]" for parameter in range(17))
     ids.extend(f"tests/infra_tests/new_family/test_future_{index}.py::test_case" for index in range(20))
     assignments = partition(ids)
     assert sorted(node for assigned in assignments for node in assigned) == sorted(ids)
@@ -154,6 +161,10 @@ def test_partition_covers_future_modules_and_every_parameter_without_overlap() -
     assert partition(list(reversed(ids))) == assignments
     for module, shard in RESERVED_MODULES.items():
         assert module_shard(module) == shard
+        assert all(node in assignments[shard] for node in ids if node.startswith(module + "::"))
+    for module in heavy_modules:
+        counts = [sum(node.startswith(module + "::") for node in assigned) for assigned in assignments]
+        assert max(counts) - min(counts) <= 1
 
 
 def test_partition_admits_escaped_parametrization_ids_from_actual_collection() -> None:

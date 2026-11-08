@@ -43,8 +43,7 @@ def _require_stage_closure(root: Path) -> str:
     """Require complete owned Source instead of silently skipping its controls."""
     resolved = stage_digest(root)
     assert resolved is not None, (
-        "the owned complete public reference must substantiate its stage closure"
-        f" ({unavailable_cause(root)})"
+        f"the owned complete public reference must substantiate its stage closure ({unavailable_cause(root)})"
     )
     return resolved
 

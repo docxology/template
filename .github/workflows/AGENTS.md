@@ -50,9 +50,9 @@ flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
     W --> FAST[ci.yml<br/>Linux/Python 3.14 functional checks · CI Gate]
-    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>manual-only lanes: test-infra-slow, public-matrix-receipt]
+    W --> CI[hardening.yml<br/>Manual complete Source-derived matrices<br/>Slow lane · Hardening Gate]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
-    W --> REL[release.yml<br/>Create GitHub Releases on version tags]
+    W --> REL[release.yml<br/>Manual publication from an accepted version tag]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
     W --> RB[rebind.yml<br/>Post-merge receipt rebind on main]
@@ -164,7 +164,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 - **Runner:** `ubuntu-latest` / Python 3.14
 - **Shared gates:** [`run-public-lint`](../actions/run-public-lint/README.md) with `type-check: ratchet` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`, concurrently with separate logs) and [`run-tracked-guards`](../actions/run-tracked-guards/README.md) (confidentiality, secrets, generated artifacts — sequential).
-- **Tools:** `./.github/actions/run-public-lint` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`), `./.github/actions/run-tracked-guards` (confidentiality, secrets and generated artifacts), `scripts/audit/check_exemplar_configs.py`, and `scripts/audit/check_release_versions.py` (with `--tag "$RELEASE_TAG"` on tag pushes). The publication audit is **not** part of this job: `hardening.yml` runs the source-only `publication-audit --all-public --strict --format json`, and `release.yml` runs the modular `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` over rendered exemplars and uploads one receipt per project.
+- **Tools:** `./.github/actions/run-public-lint` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`), `./.github/actions/run-tracked-guards` (confidentiality, secrets and generated artifacts), `scripts/audit/check_exemplar_configs.py`, and `scripts/audit/check_release_versions.py` (with `--tag "$RELEASE_TAG"` when manually dispatched at a tag ref). The publication audit is **not** part of this job: `hardening.yml` runs the source-only `publication-audit --all-public --strict --format json`, and `release.yml` runs the modular `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` over rendered exemplars and uploads one receipt per project.
 - **Scope:** Ruff and mypy use the public scopes from `infrastructure.project.public_scope ci-paths` (resolved once inside the shared action); Bandit lives in the `security` job.
 
 #### 2. Static Health Report (`health`)
@@ -196,7 +196,7 @@ A negative control backs this contract: deliberately breaking any represented st
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. The canonical workflow guard in `tests/infra_tests/core/test_ci_infra_partition.py` checks both setup declarations against the actual native Git index and public submodule declaration. `test-project`, `test-infra-slow`, and `public-matrix-receipt` use the same pinned, credential-free checkout contract before their genuine standalone export controls.
+- **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. Genuine clone/reference and submodule-tamper controls in `tests/infra_tests/project/test_public_reference.py` verify the native Git inventory and pinned object bytes without workflow Source-text guards. `test-project`, `test-infra-slow`, and `public-matrix-receipt` use the same pinned, credential-free checkout contract before their genuine standalone export controls.
 - **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
 - **Offline warm:** a scratch `uv sync --frozen` against the selected interpreter re-populates the uv cache with every locked default-group wheel (setup-uv prunes registry wheels from the saved cache), so infra tests that build fresh environments with `uv sync --locked --offline` do not depend on a cold or pruned cache. The scratch environment is deleted.
 - **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. It verifies exact pinned Pandoc/crossref/font archives, prepares the complete TeX and native-reader package union, and probes the selected executables. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
@@ -321,11 +321,11 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 
 ## Release Workflow (`release.yml`)
 
-Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both triggers serialize by the selected tag and preserve in-flight publication; a manual dispatch from a different branch cannot race the same tag push.
+Triggers only on `workflow_dispatch` with an explicit existing tag. Dispatches serialize by that selected tag and preserve in-flight publication; another branch cannot race publication of the same tag. Creating or pushing a tag starts neither this workflow nor its acceptance checks.
 
 1. Resolves the requested tag before checkout, initializes its pinned submodules, and proves `HEAD` equals the dereferenced tag commit
 2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs; audits pristine published exemplars before the installed handoff
-3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. Tag pushes without that explicit handoff stop
+3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. A tag alone cannot supply that handoff
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
 5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
@@ -511,6 +511,20 @@ print(s.getvalue())
 - [Codecov Documentation](https://docs.codecov.com/)
 
 The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents optional exhaustive hardening acceptance. Root 4 release evidence remains separately required.
+
+The complete collected parameters in the three PDFium runtime, PDFium use-time
+and Source-wheel guard modules are balanced over those same four shards.
+Ordinary modules keep their stable file assignment. Every original control and
+per-case audit remains required; independent mutable Source/installations and
+the existing clocks are not replaced by shared results or larger deadlines.
+See the [execution details](../../docs/development/ci.md).
+
+The manual `public-matrix-receipt` job uses one outer project worker. This
+preserves its complete 25-project roster, current marker selection, serial inner
+execution, per-test clocks and coverage floors while avoiding contention between
+scientific experiment fixtures that commit real SQLite observations. The
+120-minute job budget is unchanged; no seed, trial, sample or scientific result
+is substituted to fit it.
 
 Required auxiliary execution uses a Source-derived complete project matrix and
 one separate Root checks cell. Each serial cell retains its 1,800-second

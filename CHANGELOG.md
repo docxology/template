@@ -54,12 +54,37 @@ matching tag identity and authenticated publication.
   `uv` consumers and locked exports, prepare admissible copied Active runtimes,
   and transport original readiness and coverage bytes after same-UID export.
 - Balance infrastructure cases with `load --maxschedchunk=1` without changing
-  partitions, workers, clocks, exclusions or coverage floors. Require natural
+  shard count, workers, clocks, exclusions or coverage floors. Require natural
   failed completion after a worker crash instead of interrupting its controller.
 - Exercise evidence-class mutations on authentic owned Source copies with
   initialized pinned submodules, never on the loaded SDK. Missing positive
   fixture closure fails instead of silently skipping its controls; deliberate
   unavailable-source refusals remain covered.
+- Keep those positive fixture assertions in canonical Ruff syntax without
+  changing their semantics or turning missing closure into a skip.
+- Correct workflow guidance to describe manual-only authenticated publication
+  from an accepted tag, the retired pre-4 path and actual native retention.
+  Tag creation is not publication, and input admission is not runtime acceptance.
+- Isolate composed-receipt controls on genuine per-test Source and artifact
+  trees; never delete or restore another worker's shared receipt.
+- Run the complete public-matrix receipt with one outer project worker while
+  preserving test clocks, coverage floors and every scientific input/assertion.
+  Keep database durability and seeded model algorithms unchanged.
+- Make genuine parallel-worker deadline and interruption controls wait for atomic
+  stage readiness within one shared 30-second fixture deadline, rather than
+  assuming native startup fits 12 seconds. Keep the separate four-second
+  exhaustion control, required cleanup assertions and production clocks; make
+  both fixture processes outlive that deadline and nominate the actual SDK root.
+- Spread every parameter in the three expensive native guard matrices over the
+  existing infrastructure shards. Preserve canonical full-case union, stable
+  ordinary-module assignment, independent mutable fixtures and every guard;
+  never reuse custody authority or raise deadlines to fit the work.
+- Stop measured frontmatter overflow on its first LaTeX pass, preserving actual
+  compiler/stdout diagnostics and refusing a published PDF. Keep all authored
+  negative-control content with deterministic hard breaks, not text reduction.
+- Give disposable non-Git CLI fixtures an explicit deterministic epoch instead
+  of depending on ambient workflow metadata. Retain both consumer output streams
+  on failure without changing production epoch admission or exit semantics.
 - Derive original pytest worker identity from actual pytest configuration;
   inherited worker environment does not relabel a new serial controller.
 - Keep native process stream observations explicitly typed and distinct from
