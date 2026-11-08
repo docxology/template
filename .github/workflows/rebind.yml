@@ -114,12 +114,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          installer="$RUNNER_TEMP/active-refresh-elan-init.sh"
-          curl --fail --location --retry 2 --max-time 60 \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$installer"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $installer" | sha256sum --check --status
-          sh "$installer" -y --default-toolchain none
+          bash scripts/shell/prepare_ci_lean.sh
           pin=$(tr -d '[:space:]' < projects/templates/template_active_inference/lean/lean-toolchain)
           "$HOME/.elan/bin/elan" toolchain install "$pin"
           "$HOME/.elan/bin/elan" run "$pin" lean --version
