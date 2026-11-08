@@ -125,16 +125,16 @@ Result: **1831** project-scope infrastructure tests collected and **1359** publi
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 992 | 91.17 % |
+| `template_active_inference` | 992 | 91.16 % |
 | `template_advanced_literature_review` | 163 | 94.04 % |
 | `template_autopoiesis` | 579 | 91.43 % |
 | `template_autoresearch_project` | 398 | 96.49 % |
-| `template_autoscientists` | 191 | 92.95 % |
+| `template_autoscientists` | 191 | 93.39 % |
 | `template_code_project` | 296 | 94.04 % |
 | `template_data_descriptor` | 78 | 96.26 % |
 | `template_eda_notebook` | 132 | 91.01 % |
 | `template_experiment_tree` | 32 | 91.85 % |
-| `template_formal` | 380 | 90.39 % |
+| `template_formal` | 380 | 90.30 % |
 | `template_gold_refinement` | 337 | 92.81 % |
 | `template_literature_meta_analysis` | 1261 | 95.48 % |
 | `template_madlib` | 198 | 98.95 % |
@@ -146,10 +146,10 @@ Result: **1831** project-scope infrastructure tests collected and **1359** publi
 | `template_redacted_report` | 156 | 97.03 % |
 | `template_registered_report` | 87 | 95.19 % |
 | `template_search_project` | 458 | 92.00 % |
-| `template_sia` | 130 | 93.11 % |
+| `template_sia` | 130 | 92.72 % |
 | `template_storybook` | 45 | 95.57 % |
 | `template_template` | 161 | 95.55 % |
-| `template_textbook` | 299 | 96.17 % |
+| `template_textbook` | 299 | 96.06 % |
 
 Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs. Coverage snapshots use genuine `release`-profile measurements and current source-input hashes. For hosted canonical batches, retain the original workflow receipt plus its run, attempt, artifact and SHA-256 custody; the receipt records the project, profile, source commit, source hash and measured percentage. This summary evidence does not retain a coverage database or permit independent recomputation. A successful canonical project batch can supply those measurements when its profile, project roster, coverage configuration and source inputs match, so the same suites need not run again. `uv run python scripts/docgen/counts.py --verify-coverage` remains the standalone measurement route using each project's declared environment, including `template_active_inference`'s project-owned toolchain. After changing an inventoried project coverage input—including source, tests, scripts, configuration, data, manuscript content, or dependency locks—rerun its coverage gate, then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when coverage-input hashes no longer match. Generated output plus runtime, build, cache, and environment artifacts are excluded from that versioned inventory. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
