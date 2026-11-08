@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>04_honesty.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
+  <title>Autopoietic Project Generation</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +246,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -652,8 +738,11 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 id="honesty-contract">Honesty Contract</h2>
-<h3 id="why-a-manifest-not-a-claim">Why a manifest, not a claim</h3>
+<h2 data-number="5" id="honesty-contract"><span
+class="header-section-number">5</span> Honesty Contract</h2>
+<h3 data-number="5.1" id="why-a-manifest-not-a-claim"><span
+class="header-section-number">5.1</span> Why a manifest, not a
+claim</h3>
 <p>A generator that produces a manuscript describing its own code faces
 an obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
@@ -670,7 +759,9 @@ rather than trusting the prose that asserts it.</p>
 <code>template_autopoiesis</code>. An autopoietic system, in Maturana
 and Varela’s original sense, is one whose components participate in
 producing and verifying the very network of processes that produced them
-[maturana_varela_1980] — organizational closure, not open-loop
+<span class="citation" data-cites="maturana_varela_1980">(<a
+href="index.html#ref-maturana_varela_1980" role="doc-biblioref">Maturana and
+Varela 1980</a>)</span> — organizational closure, not open-loop
 assertion. The honesty manifest is the narrow, literal, code-level
 analogue of that closure: the manuscript’s claims about the code are
 checked <em>by the code</em>, not by a separate act of faith from the
@@ -679,7 +770,8 @@ author. The analogy should not be over-read —
 scan, not a self-maintaining living system — but it is the reason this
 mechanism exists at all rather than a simple “trust me” comment
 block.</p>
-<h3 id="ground-truth-table">Ground-truth table</h3>
+<h3 data-number="5.2" id="ground-truth-table"><span
+class="header-section-number">5.2</span> Ground-truth table</h3>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
@@ -734,7 +826,8 @@ below walks mechanically. If a row’s evidence path stops existing, the
 manifest fails and <code>test_honesty.py</code> fails with it; the table
 cannot silently drift out of sync with the source tree without a red
 test.</p>
-<h3 id="the-structural-evidence-catalogue">The structural evidence
+<h3 data-number="5.3" id="the-structural-evidence-catalogue"><span
+class="header-section-number">5.3</span> The structural evidence
 catalogue</h3>
 <p><code>STRUCTURAL_EVIDENCE</code> is a
 <code>dict[str, list[str]]</code> mapping a claim identifier
@@ -747,8 +840,9 @@ rows as the ground-truth table above, expressed as data instead of
 prose. This catalogue is the single source of truth the checker walks;
 the manuscript table is a human-readable rendering of it, not an
 independent claim.</p>
-<h3 id="how-build_manifest-inspects-the-ast">How
-<code>build_manifest</code> inspects the AST</h3>
+<h3 data-number="5.4" id="how-build_manifest-inspects-the-ast"><span
+class="header-section-number">5.4</span> How <code>build_manifest</code>
+inspects the AST</h3>
 <p><code>build_manifest(project_root)</code> iterates every claim in
 <code>STRUCTURAL_EVIDENCE</code> and, for each
 <code>"path::function"</code> reference:</p>
@@ -787,18 +881,19 @@ failure of a manuscript claiming evidence at a path or function name
 that was renamed, deleted, or not written in the first place — a much
 cheaper property to check, and one that catches an entire class of “the
 docs still describe last month’s API” drift for free.</p>
-<h3 id="the-honestymanifest-dataclass">The <code>HonestyManifest</code>
-dataclass</h3>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> HonestyManifest:</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    evidence: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">bool</span>] <span class="op">=</span> field(default_factory<span class="op">=</span><span class="bu">dict</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    missing_calls: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> field(default_factory<span class="op">=</span><span class="bu">list</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    unsupported_claims: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> field(default_factory<span class="op">=</span><span class="bu">list</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> all_passed(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">all</span>(<span class="va">self</span>.evidence.values()) <span class="kw">and</span> <span class="kw">not</span> <span class="va">self</span>.missing_calls <span class="kw">and</span> <span class="kw">not</span> <span class="va">self</span>.unsupported_claims</span></code></pre></div>
+<h3 data-number="5.5" id="the-honestymanifest-dataclass"><span
+class="header-section-number">5.5</span> The
+<code>HonestyManifest</code> dataclass</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> HonestyManifest:</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    evidence: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">bool</span>] <span class="op">=</span> field(default_factory<span class="op">=</span><span class="bu">dict</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    missing_calls: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> field(default_factory<span class="op">=</span><span class="bu">list</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    unsupported_claims: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> field(default_factory<span class="op">=</span><span class="bu">list</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> all_passed(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">all</span>(<span class="va">self</span>.evidence.values()) <span class="kw">and</span> <span class="kw">not</span> <span class="va">self</span>.missing_calls <span class="kw">and</span> <span class="kw">not</span> <span class="va">self</span>.unsupported_claims</span></code></pre></div>
 <p><code>all_passed</code> is a conjunction over three independent
 failure modes: any claim whose evidence resolution failed, any specific
 missing-call detail recorded during that resolution, and any
@@ -813,8 +908,9 @@ against itself, not only against synthetic fixtures.
 asserts <code>missing_calls</code> is non-empty, which is the negative
 control for the checker itself: a project with no source files at all
 must fail every claim, or the checker has no teeth.</p>
-<h3 id="prose-scanning-for-unsupported-claims">Prose scanning for
-unsupported claims</h3>
+<h3 data-number="5.6" id="prose-scanning-for-unsupported-claims"><span
+class="header-section-number">5.6</span> Prose scanning for unsupported
+claims</h3>
 <p><code>verify_honesty(project_root, manuscript_dir=None)</code> first
 calls <code>build_manifest</code>, then — if a <code>manuscript/</code>
 directory exists — reads every <code>*.md</code> file in it and scans
@@ -852,9 +948,10 @@ prose style out of that particular assertion. Reading only that one test
 in isolation would suggest the prose scanner is a lint rather than a
 gate; reading the CLI path shows it is a real gate on the
 <code>honesty</code> subcommand specifically.</p>
-<h3
-id="the-mutation-gate-proving-the-acceptance-criteria-have-teeth">The
-mutation gate: proving the acceptance criteria have teeth</h3>
+<h3 data-number="5.7"
+id="the-mutation-gate-proving-the-acceptance-criteria-have-teeth"><span
+class="header-section-number">5.7</span> The mutation gate: proving the
+acceptance criteria have teeth</h3>
 <p><code>test_meta_teeth.py</code> targets a different failure mode than
 <code>honesty.py</code>: not “does the claimed function exist” but
 “would a fake implementation of it get away with passing.” It is
@@ -903,7 +1000,8 @@ domain the grammar knows about, which is the concrete, source-grounded
 meaning behind calling this a “mutation gate”: it exists specifically to
 catch the case where a future refactor quietly replaces a real primitive
 with a stub and nothing downstream notices.</p>
-<h3 id="what-this-buys-and-what-it-does-not">What this buys, and what it
+<h3 data-number="5.8" id="what-this-buys-and-what-it-does-not"><span
+class="header-section-number">5.8</span> What this buys, and what it
 does not</h3>
 <p>The honesty manifest and the mutation gate are complementary, not
 redundant, but both are narrower than they might sound.

@@ -498,7 +498,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_redacted_report_combined.pdf",
-      "sha256": "694b638937196a3bbc3505a0dc41547c0b78c6450f7c405271ac56e72eb1e7f9",
+      "sha256": "d451ab6da37bb98f28725407be1c6ccec4f7e28877577e381eb86c05a82fb136",
       "size_bytes": 227542,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -507,8 +507,8 @@
     {
       "contract_match": true,
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "81195fef74d26b7b073358d988ccdc66c9a164b18200c402ce865406ba744d6c",
-      "size_bytes": 1125,
+      "sha256": "c8e8192dbcdf97de156c141807faa4bdbc45e9987544113fe89a47cb18dff856",
+      "size_bytes": 1132,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -543,7 +543,7 @@
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "1a0a187d1a019428c0c127601787ee3f9c8240ab9404b5dfa20de0af919ef0ee",
+      "sha256": "4def551b112ca5d18d5bc48d561ebcae4cf25a47f5b36684dedf773d5f9814be",
       "size_bytes": 12045,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -552,7 +552,7 @@
     {
       "contract_match": true,
       "path": "output/slides/01_methods_slides.pdf",
-      "sha256": "24c4842b7c2403828984e1cba2f9629ff0d039c43ed4f19cc8474d81bc0858bf",
+      "sha256": "60fb7aae67879f57a5984ac02f3ceaaf915c8a8dc0f3e6809836026354a5dc8a",
       "size_bytes": 123638,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -561,8 +561,8 @@
     {
       "contract_match": true,
       "path": "output/slides/02_results_slides.pdf",
-      "sha256": "ba7b1f01708dc33d2144dd40740805e0733d874faa3a0cc71946872c82a7b675",
-      "size_bytes": 139931,
+      "sha256": "4adee5fbac4e0566b182132a3fc56518ad24ddb410a86d035323740ebc9019c7",
+      "size_bytes": 139935,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -570,8 +570,8 @@
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "e04a9ea5c755242dd9c2d9b7b7cd783bf3483d745db585db59eeb19802f23837",
-      "size_bytes": 16064,
+      "sha256": "5141dd7bac11242cfcfc96c003c771117be62de1ef14cdc4dfcc5a7ed23ec5c1",
+      "size_bytes": 16754,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -597,8 +597,8 @@
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "15a9034ea1c4ea33b9deef5f6b9acaf3a89ec7ca4bede49bcd2edf686314665c",
-      "size_bytes": 39578,
+      "sha256": "ac97826bb0f07368e864bf05a7c695ee9d39afeb53382fb5f58aaa6db9a0c597",
+      "size_bytes": 39584,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -606,8 +606,8 @@
     {
       "contract_match": true,
       "path": "output/web/manuscript__00_abstract.html",
-      "sha256": "574f99bc6e3b012eabff842b19259f0115bc51f5be7673bf0669335a9d88cb18",
-      "size_bytes": 13524,
+      "sha256": "0f1fbfc7aae59359495632a85691be12a6b3a1d465040c03b1a3d8edbaa28008",
+      "size_bytes": 16785,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -615,8 +615,8 @@
     {
       "contract_match": true,
       "path": "output/web/manuscript__01_methods.html",
-      "sha256": "6dc4c72c3bf15d1ca4d1f8fdcfc469a99c4097c307ff94f6d01a0437f213eec4",
-      "size_bytes": 20407,
+      "sha256": "a33cca5914862887021ebef70ab333c2f97823664ad0b15cc874053cbdacb0af",
+      "size_bytes": 24025,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -624,8 +624,8 @@
     {
       "contract_match": true,
       "path": "output/web/manuscript__02_results.html",
-      "sha256": "2d34df8c339625be8b65f9e6ef924cc36e680eaa9b8b992c482ddf17d7237679",
-      "size_bytes": 22309,
+      "sha256": "c321e00ce5f32ba213c7473f7fa7d3533eaaec8af8ba7a042154e68acd80ea7d",
+      "size_bytes": 26111,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02a_methods_retrieval.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Multi-Engine Retrieval, De-duplication, Embeddings, and Bibliometrics for a Single Search Term" />
+  <title>A Living Meta-Analysis of the Modafinil Literature</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +181,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -652,34 +738,50 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="retrieval-and-de-duplication">Retrieval and De-duplication</h1>
+<h1 data-number="4" id="retrieval-and-de-duplication"><span
+class="header-section-number">4</span> Retrieval and De-duplication</h1>
 <p>Retrieval dispatches the configured query across 10 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
 SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv). Each engine is
 an isolated adapter exposing a uniform
 <code>search(query) -&gt; list[Record]</code> interface; engines that
-are keyless — arXiv, OpenAlex [priem2022openalex], Crossref
-[hendricks2020crossref], PubMed/Entrez [sayers2022entrez], SovietRxiv /
-RussiaRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv — need no
-credentials, while Semantic Scholar [kinney2023semantic] uses a key when
+are keyless — arXiv, OpenAlex <span class="citation"
+data-cites="priem2022openalex">(<a href="index.html#ref-priem2022openalex"
+role="doc-biblioref">Priem et al. 2022</a>)</span>, Crossref <span
+class="citation" data-cites="hendricks2020crossref">(<a
+href="index.html#ref-hendricks2020crossref" role="doc-biblioref">Hendricks et al.
+2020</a>)</span>, PubMed/Entrez <span class="citation"
+data-cites="sayers2022entrez">(<a href="index.html#ref-sayers2022entrez"
+role="doc-biblioref"><span class="nocase">Sayers et al.</span>
+2022</a>)</span>, SovietRxiv / RussiaRxiv, ChinaRxiv, Europe PMC, and
+bioRxiv/medRxiv — need no credentials, while Semantic Scholar <span
+class="citation" data-cites="kinney2023semantic">(<a
+href="index.html#ref-kinney2023semantic" role="doc-biblioref"><span
+class="nocase">Kinney et al.</span> 2023</a>)</span> uses a key when
 present. SovietRxiv is a translated archive of Soviet-era scientific
-preprints sourced from Math-Net.Ru and CyberLeninka [sovietrxiv];
-ChinaRxiv serves translated Chinese preprints from ChinaXiv via the same
-unified API. Both retain original-language PDFs alongside each
-translation, and their polite rate-limit pool (300/min vs 30/min
-anonymous) is activated by an optional <code>X-API-Email</code> header.
-Europe PMC is a keyless biomedical aggregator covering PubMed, PMC,
-patents, and preprints in a single search call. bioRxiv/medRxiv share
-one unified date-window + cursor API; unlike the other engines it is not
-a free-text search endpoint, so the adapter walks the date window page
-by page and keeps only records whose title and abstract match every
-query term client-side. Optional full-text resolution queries Unpaywall
-[piwowar2018state] for open-access locations. <strong>Multiple dispatch
-degrades gracefully</strong>: an engine that is disabled in the
-configuration, lacks a required key, or cannot reach the network returns
-a <em>skipped</em> status, and the run completes from the remaining
-engines plus the committed offline corpus.</p>
-<h2 id="engine-details">Engine Details</h2>
+preprints sourced from Math-Net.Ru and CyberLeninka <span
+class="citation" data-cites="sovietrxiv">(<a href="index.html#ref-sovietrxiv"
+role="doc-biblioref">SovietRxiv Project 2026</a>)</span>; ChinaRxiv
+serves translated Chinese preprints from ChinaXiv via the same unified
+API. Both retain original-language PDFs alongside each translation, and
+their polite rate-limit pool (300/min vs 30/min anonymous) is activated
+by an optional <code>X-API-Email</code> header. Europe PMC is a keyless
+biomedical aggregator covering PubMed, PMC, patents, and preprints in a
+single search call. bioRxiv/medRxiv share one unified date-window +
+cursor API; unlike the other engines it is not a free-text search
+endpoint, so the adapter walks the date window page by page and keeps
+only records whose title and abstract match every query term
+client-side. Optional full-text resolution queries Unpaywall <span
+class="citation" data-cites="piwowar2018state">(<a
+href="index.html#ref-piwowar2018state" role="doc-biblioref"><span
+class="nocase">Piwowar et al.</span> 2018</a>)</span> for open-access
+locations. <strong>Multiple dispatch degrades gracefully</strong>: an
+engine that is disabled in the configuration, lacks a required key, or
+cannot reach the network returns a <em>skipped</em> status, and the run
+completes from the remaining engines plus the committed offline
+corpus.</p>
+<h2 data-number="4.1" id="engine-details"><span
+class="header-section-number">4.1</span> Engine Details</h2>
 <p>Each engine adapter follows a uniform contract: a module-level API
 URL constant, a pure <code>_parse_*</code> parser function, and a
 <code>search_*</code> entry point with pagination, retry, and graceful
@@ -766,7 +868,8 @@ distinguishable from a disabled adapter or an HTTP failure. The
 committed corpus predates that report contract, so this paper
 intentionally does not reconstruct source-specific counts from the
 merged corpus.</p>
-<h2 id="canonical-identifier-hierarchy">Canonical Identifier
+<h2 data-number="4.2" id="canonical-identifier-hierarchy"><span
+class="header-section-number">4.2</span> Canonical Identifier
 Hierarchy</h2>
 <p>Heterogeneous records are reconciled by a <strong>canonical
 identifier hierarchy</strong> — DOI <span
@@ -784,7 +887,8 @@ de-duplicated retrieval corpus holds <span class="math inline">\(N =
 2334\)</span> records. The separate analysis subset contains 2234
 records, of which 2234 have publication years in the observed 2000–2026
 analysis window.</p>
-<h2 id="relevance-filtering">Relevance Filtering</h2>
+<h2 data-number="4.3" id="relevance-filtering"><span
+class="header-section-number">4.3</span> Relevance Filtering</h2>
 <p>After de-duplication, a relevance filter drops papers whose title and
 abstract contain none of the configured relevance keywords (modafinil,
 armodafinil, provigil, wakefulness, narcolepsy, cognitive enhancement,

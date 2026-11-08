@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>applied_models.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -717,12 +737,14 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_III_applied_models">Applied Models</h1>
+<h1 data-number="16" id="sec:part_III_applied_models"><span
+class="header-section-number">16</span> Applied Models</h1>
 <figure id="fig:part_III_applied_models">
-<a class="figure-full-size-link" href="../figures/part_III_applied_models.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Static saturating responses with a shared half-saturation input"><img src="../figures/part_III_applied_models.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_III_applied_models.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, Static saturating responses with a shared half-saturation input"><img src="../figures/part_III_applied_models.png" style="width:90.0%"
 alt="Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Static saturating responses with a shared
-half-saturation input and different shape exponents.</figcaption>
+<figcaption>Figure 10: Static saturating responses
+with a shared half-saturation input and different shape
+exponents.</figcaption>
 </figure>
 <!-- alt: Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point. -->
 <!-- chapter-metadata-badge -->
@@ -731,7 +753,8 @@ half-saturation input and different shape exponents.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="16.0.1" id="study-blueprint-9"><span
+class="header-section-number">16.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> Choose a model family by the question and
 evidence it can represent, then compare alternatives where they
@@ -741,21 +764,22 @@ href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
 href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a>, <a
 href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_III_applied_models_model">[@eq:part_III_applied_models_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_III_applied_models_model">11</a>.</li>
 <li><strong>Data skill:</strong> Compare model predictions at designed
 inputs that discriminate between families.</li>
 <li><strong>Common misconception to repair:</strong> The best fit within
 the existing range need not provide the best prediction outside it.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_III_applied_models">[@sec:lab_part_III_applied_models]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_III_applied_models">[@sec:q_part_III_applied_models]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_III__lab_applied_models.html#sec:lab_part_III_applied_models">28</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_III__q_applied_models.html#sec:q_part_III_applied_models">40</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.saturating_response</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="16.1" id="learning-objectives-9"><span
+class="header-section-number">16.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Select a static or dynamic family for a stated observation.</li>
 <li>Use limiting behavior to distinguish a line from a saturating
@@ -770,7 +794,8 @@ higher inputs. The next useful observation is therefore not necessarily
 another low-input replicate: it may be a safe, controlled input where
 the two predictions diverge.</p>
 </blockquote>
-<h2 id="match-the-family-to-the-question">Match the family to the
+<h2 data-number="16.2" id="match-the-family-to-the-question"><span
+class="header-section-number">16.2</span> Match the family to the
 question</h2>
 <p>A static input-output calibration calls for a response function; a
 state evolving over time calls for a dynamic law. A model family should
@@ -780,7 +805,8 @@ not use a saturating response to claim adaptation time, or a logistic
 time trajectory to imply that a measured input caused the change. Naming
 the independent variable and its units is an effective first check of
 whether a proposed family fits the question.</p>
-<h2 id="examine-limiting-behavior">Examine limiting behavior</h2>
+<h2 data-number="16.3" id="examine-limiting-behavior"><span
+class="header-section-number">16.3</span> Examine limiting behavior</h2>
 <p>A fitted straight line increases or decreases without a ceiling. The
 response curve has a finite positive maximum. In a narrow range both can
 resemble the same local trend. Their disagreement at other inputs
@@ -790,7 +816,8 @@ diminishing gains without claiming that every physical process must
 saturate. Write each alternative’s limiting behavior next to its
 data-range fit, so that a convenient interpolation does not quietly
 become an unlimited extrapolation.</p>
-<h2 id="fitting-uses-information">Fitting uses information</h2>
+<h2 data-number="16.4" id="fitting-uses-information"><span
+class="header-section-number">16.4</span> Fitting uses information</h2>
 <p>Parameters estimated from observations have already used those
 observations. Judging predictions on the same data therefore answers a
 different question from judging future or held-out observations.
@@ -800,18 +827,23 @@ an evaluation set and then describing that set as untouched. For a very
 small instructional dataset, it can be more honest to call the fit a
 descriptive exercise and identify independent evaluation as the next
 needed step.</p>
-<h2 id="inspect-residuals-and-domain-restrictions">Inspect residuals and
-domain restrictions</h2>
+<h2 data-number="16.5"
+id="inspect-residuals-and-domain-restrictions"><span
+class="header-section-number">16.5</span> Inspect residuals and domain
+restrictions</h2>
 <p>A single fit score compresses several forms of inadequacy. Inspect
 residuals in original units and against the input: a consistent curve, a
 changed spread or an isolated outlier can suggest different failures.
 Also check whether the parameter values lie within the implementation’s
 accepted domain. A numerical optimizer returning a value does not make
-that value meaningful. Box’s primary discussion [box1976science]
-connects selective concern about model inadequacies with scientific
-iteration; this chapter’s small comparisons practice that judgment
-without inventing a universal model-selection rule.</p>
-<h2 id="communicate-a-bounded-recommendation">Communicate a bounded
+that value meaningful. Box’s primary discussion <span class="citation"
+data-cites="box1976science">(<a href="index.html#ref-box1976science"
+role="doc-biblioref">Box 1976</a>)</span> connects selective concern
+about model inadequacies with scientific iteration; this chapter’s small
+comparisons practice that judgment without inventing a universal
+model-selection rule.</p>
+<h2 data-number="16.6" id="communicate-a-bounded-recommendation"><span
+class="header-section-number">16.6</span> Communicate a bounded
 recommendation</h2>
 <p>A recommendation should state the application range, observation
 rule, fitted parameters, evaluation evidence and remaining uncertainty.
@@ -822,11 +854,12 @@ not that one equation has discovered the mechanism. The lab uses exact
 response values and a simple line to make the disagreement explicit. Its
 arithmetic is reproducible, while the question of which family describes
 a real system remains an empirical task.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\]</span>
-{#eq:part_III_applied_models_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_III_applied_models_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+<h2 data-number="16.7" id="a-worked-formalism-8"><span
+class="header-section-number">16.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_III_applied_models_model"><span
+class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\qquad{(11)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 10: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_III_applied_models_parameters" data-responsive-table="true">
+<caption>Table 10: Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -864,40 +897,41 @@ fifths. At the half-saturation input, the numerator and the other
 denominator term are equal. Doubling the input from three to six
 therefore does not double the output: the finite ceiling changes the
 arithmetic.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> saturating_response</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> saturating_response(x, maximum<span class="op">=</span><span class="fl">1.0</span>, half_saturation<span class="op">=</span><span class="fl">3.0</span>, hill<span class="op">=</span><span class="fl">2.0</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(y, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> saturating_response</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>])</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> saturating_response(x, maximum<span class="op">=</span><span class="fl">1.0</span>, half_saturation<span class="op">=</span><span class="fl">3.0</span>, hill<span class="op">=</span><span class="fl">2.0</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(y, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.saturating_response</code>. The assertions above
 are independent expectations for this designed example; the displayed
-figure in <span class="citation"
-data-cites="fig:part_III_applied_models">[@fig:part_III_applied_models]</span>
-is a deterministic illustration with its own explicitly stated inputs,
-not evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+figure in fig. <a href="#fig:part_III_applied_models">10</a> is a
+deterministic illustration with its own explicitly stated inputs, not
+evidence collected from the opening scenario.</p>
+<h2 data-number="16.8" id="assumptions-and-limits-8"><span
+class="header-section-number">16.8</span> Assumptions and Limits</h2>
 <p>This function is a static response curve: it relates an input to an
 output without a state or elapsed time. It cannot by itself explain
 adaptation, delays, oscillation or memory. Different exponents describe
 different shapes but do not uniquely identify a physical mechanism.
 Interpret the parameters within the declared model rather than treating
 a fitted shape as a causal discovery.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="16.9" id="summary-9"><span
+class="header-section-number">16.9</span> Summary</h2>
 <p>Choose a model family by the question and evidence it can represent,
 then compare alternatives where they differ. The worked example makes a
 narrow quantitative claim that can be checked with exact inputs and a
@@ -906,23 +940,28 @@ the best prediction outside it. State the assumptions, preserve the
 observation record and choose a comparison that can distinguish an
 arithmetic error from an inadequate model. Those habits make a result
 inspectable without expanding what its evidence establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
+<h2 data-number="16.10" id="key-terms-9"><span
+class="header-section-number">16.10</span> Key Terms</h2>
 <p><a href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
 href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a>, <a
 href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Box [box1976science] offers primary guidance on confronting model
-inadequacy; compare a residual diagnostic with collecting a new
-discriminating observation.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="16.11" id="further-reading-9"><span
+class="header-section-number">16.11</span> Further Reading</h2>
+<p>Box <span class="citation" data-cites="box1976science">(<a
+href="index.html#ref-box1976science" role="doc-biblioref">Box 1976</a>)</span>
+offers primary guidance on confronting model inadequacy; compare a
+residual diagnostic with collecting a new discriminating
+observation.</p>
+<h2 data-number="16.12" id="practice-9"><span
+class="header-section-number">16.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_III_applied_models">[@sec:lab_part_III_applied_models]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_III_applied_models">[@sec:q_part_III_applied_models]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_III__lab_applied_models.html#sec:lab_part_III_applied_models">28</a> — execute the worked
+computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_III__q_applied_models.html#sec:q_part_III_applied_models">40</a> — compare your reasoning
+with the supplied solutions.</li>
 </ul>
 </main>
 </body>

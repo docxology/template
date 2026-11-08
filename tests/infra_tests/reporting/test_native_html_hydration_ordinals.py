@@ -4,12 +4,24 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
+import subprocess
+from html.parser import HTMLParser
+from pathlib import Path
 
 import pytest
 
+from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._pandoc_filters import formalism_filter_path
 from infrastructure.rendering.manuscript_ordinal_anchors import (
     annotate_manuscript_ordinals,
     require_unannotated_parser_bytes,
+)
+from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
+from infrastructure.reporting.native_format_semantic_source import (
+    semantic_contract_ast,
+    semantic_lua_filters,
+    semantic_parser_options,
 )
 from infrastructure.reporting.native_format_html_glyph_contours import compile_source_character_runs
 from infrastructure.reporting.native_html_hydration_ordinals import compose_html_ordinal_input, _table_native_projection
@@ -40,48 +52,17 @@ def _figure(caption: list[dict], *, short: list[dict] | None = None) -> dict:
     }
 
 
-def test_combined_html_keeps_own_source_order_and_separator() -> None:
-    assert (
-        compose_html_ordinal_input((b"\nfirst  \n\n", b"second\n"), combined=True)
-        == b"first\n\n\n\n---\n\n\n\nsecond\n"
-    )
-
-
-def test_section_html_keeps_own_original_newlines() -> None:
-    assert compose_html_ordinal_input((b"\nfirst  \n\n",), combined=False) == b"\nfirst  \n\n"
-
-
-def test_section_cannot_acquire_combined_inputs() -> None:
-    with pytest.raises(ValueError, match="exactly one"):
-        compose_html_ordinal_input((b"a\n", b"b\n"), combined=False)
-
-
-def test_combined_html_preserves_citations_for_real_citeproc() -> None:
-    body = b"Study [@first; @second] and [@fig:plot].\n"
-    assert compose_html_ordinal_input((body,), combined=True) == body
-
-
-def test_section_html_uses_actual_citation_text_but_retains_crossrefs() -> None:
-    body = b"Study [@first; @second] and [@fig:plot].\n"
-    assert compose_html_ordinal_input((body,), combined=False) == b"Study [first; second] and [@fig:plot].\n"
-
-
-def test_html_uses_actual_raw_latex_and_image_path_transform() -> None:
-    body = b"`\\hyperref[item]{visible}`{=latex} ![Figure](../../output/figures/plot.png)\n"
-    assert compose_html_ordinal_input((body,), combined=True) == b"visible ![Figure](../figures/plot.png)\n"
-
-
-@pytest.mark.parametrize("combined", [False, True])
-def test_html_ordinal_bytes_retain_unicode_exact_payload_and_own_input_offsets(combined: bool) -> None:
+def test_html_ordinal_bytes_retain_unicode_payload_in_composed_parser_input() -> None:
     body = "Before é and $0.01$ after.\n".encode()
     first = len("Before ".encode())
     last = first + len("é".encode())
     marked, anchors = annotate_manuscript_ordinals(
         (body,), ((0, 1, "UNICODE", first, last, hashlib.sha256(body[first:last]).hexdigest()),)
     )
-    original = compose_html_ordinal_input((body,), combined=combined)
-    annotated = compose_html_ordinal_input(marked, combined=combined)
-    assert require_unannotated_parser_bytes(annotated, original, anchors) == ((first, last),)
+    original = compose_html_ordinal_input((body,))
+    annotated = compose_html_ordinal_input(marked, boundary_bodies=(body,))
+    ranges = require_unannotated_parser_bytes(annotated, original, anchors)
+    assert tuple(original[start:end] for start, end in ranges) == (body[first:last],)
 
 
 def test_html_complete_table_carrier_preserves_actual_grid_and_payload_interval() -> None:
@@ -93,9 +74,11 @@ def test_html_complete_table_carrier_preserves_actual_grid_and_payload_interval(
     )
     assert anchors[0].boundary_kind == "containing-table"
     assert (anchors[0].carrier_first, anchors[0].carrier_last) == (0, len(body) - 1)
-    assert require_unannotated_parser_bytes(
-        compose_html_ordinal_input(marked, combined=True), compose_html_ordinal_input((body,), combined=True), anchors
-    ) == ((first, last),)
+    original = compose_html_ordinal_input((body,))
+    ranges = require_unannotated_parser_bytes(
+        compose_html_ordinal_input(marked, boundary_bodies=(body,)), original, anchors
+    )
+    assert tuple(original[start:end] for start, end in ranges) == (body[first:last],)
 
 
 def test_html_transform_inside_selected_payload_is_refused_without_a_span_adapter() -> None:
@@ -106,10 +89,146 @@ def test_html_transform_inside_selected_payload_is_refused_without_a_span_adapte
     )
     with pytest.raises(ValueError):
         require_unannotated_parser_bytes(
-            compose_html_ordinal_input(marked, combined=True),
-            compose_html_ordinal_input((body,), combined=True),
+            compose_html_ordinal_input(marked, boundary_bodies=(body,)),
+            compose_html_ordinal_input((body,)),
             anchors,
         )
+
+
+class _CustodyDocument(HTMLParser):
+    """Observe only actual Pandoc destinations, reference labels, and table cells."""
+
+    def __init__(self, content: str) -> None:
+        super().__init__(convert_charrefs=True)
+        self.ids: set[str] = set()
+        self.links: list[tuple[str, str]] = []
+        self.cells: list[str] = []
+        self.text: list[str] = []
+        self.link: tuple[str, list[str]] | None = None
+        self.cell: list[str] | None = None
+        self.feed(content)
+        self.close()
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        if values.get("id") is not None:
+            self.ids.add(str(values["id"]))
+        if tag == "a" and values.get("href") is not None:
+            self.link = (str(values["href"]), [])
+        if tag == "td":
+            self.cell = []
+
+    def handle_data(self, data: str) -> None:
+        self.text.append(data)
+        if self.link is not None:
+            self.link[1].append(data)
+        if self.cell is not None:
+            self.cell.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "a" and self.link is not None:
+            self.links.append((self.link[0], " ".join("".join(self.link[1]).split())))
+            self.link = None
+        if tag == "td" and self.cell is not None:
+            self.cells.append(" ".join("".join(self.cell).split()))
+            self.cell = None
+
+
+def test_annotated_whole_html_context_preserves_real_reference_and_table_consumers() -> None:
+    """Ordinal custody must preserve globally resolved prose and an actual table DOM."""
+    pandoc = shutil.which("pandoc")
+    if pandoc is None:
+        pytest.skip("pandoc not available on PATH")
+    bodies = (
+        ("# Opening\n\n::: {.definition #def:first}\nFirst body.\n:::\n\nForward [@def:later]; visible é.\n").encode(),
+        (
+            "# Later\n\n::: {.definition #def:later}\nLater body.\n:::\n\n| Key | Value |\n| --- | --- |\n| a | 7 |\n"
+        ).encode(),
+    )
+    unicode_first = bodies[0].index("é".encode())
+    unicode_last = unicode_first + len("é".encode())
+    table_first = bodies[1].index(b"a | 7")
+    table_last = table_first + len(b"a | 7")
+    occurrences = tuple(
+        (index, 1, key, first, last, hashlib.sha256(bodies[index][first:last]).hexdigest())
+        for index, key, first, last in [
+            (0, "UNICODE", unicode_first, unicode_last),
+            (1, "TABLE", table_first, table_last),
+        ]
+    )
+    marked, anchors = annotate_manuscript_ordinals(bodies, occurrences)
+    original = compose_html_ordinal_input(bodies)
+    annotated = compose_html_ordinal_input(marked, boundary_bodies=bodies)
+    ranges = require_unannotated_parser_bytes(annotated, original, anchors)
+    assert [original[first:last] for first, last in ranges] == ["é".encode(), b"a | 7"]
+
+    result = subprocess.run(
+        [
+            pandoc,
+            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
+            "--to=html5",
+            "--lua-filter",
+            str(formalism_filter_path()),
+        ],
+        input=annotated,
+        capture_output=True,
+        check=True,
+    )
+    document = _CustodyDocument(result.stdout.decode("utf-8"))
+    assert {"def:first", "def:later"} <= document.ids
+    assert ("#def:later", "Definition 2") in document.links
+    visible = " ".join("".join(document.text).split())
+    assert "Definition 1." in visible and "Definition 2." in visible
+    assert "visible é" in visible
+    assert document.cells == ["a", "7"]
+
+
+def test_real_source_projection_retains_owned_definitions_and_global_reference_values(tmp_path: Path) -> None:
+    """Real parser and writer data exercise source ownership without inventing native authority."""
+    pandoc = shutil.which("pandoc")
+    if pandoc is None:
+        pytest.skip("pandoc not available on PATH")
+    scope = "working/reference-proof"
+    manuscript = tmp_path / "projects" / scope / "manuscript"
+    manuscript.mkdir(parents=True)
+    bodies = (
+        (
+            "---\ntitle: Global source ownership\nformalism_kinds:\n  definition: Contract\n---\n\n"
+            "# Opening\n\n::: {.definition #def:first}\nOpening body.\n:::\n"
+        ).encode(),
+        (
+            "# Later\n\n::: {.definition #def:second}\nLater body.\n:::\n\nEarlier [@def:first]; local [@def:second].\n"
+        ).encode(),
+    )
+    sources = []
+    for name, body in zip(("00_opening.md", "01_later.md"), bodies, strict=True):
+        path = manuscript / name
+        path.write_bytes(body)
+        sources.append((path.relative_to(tmp_path).as_posix(), body))
+    arguments = [pandoc, *semantic_parser_options(tmp_path, scope)]
+    for lua_filter in semantic_lua_filters():
+        arguments.extend(["--lua-filter", str(lua_filter)])
+    actual = subprocess.run(arguments, input=compose_html_ordinal_input(bodies), capture_output=True, check=True).stdout
+    artifact = NativeArtifact(
+        id="section:01_later.md:html",
+        format="html",
+        path=f"projects/{scope}/output/web/manuscript__01_later.html",
+    )
+    projected = semantic_contract_ast(tmp_path, scope, artifact, tuple(sources), actual)
+    rendered = subprocess.run(
+        [pandoc, "--from=json", "--to=html5"], input=projected, capture_output=True, check=True
+    ).stdout
+    document = _CustodyDocument(rendered.decode())
+    assert "def:second" in document.ids and "def:first" not in document.ids
+    assert "Contract 2." in " ".join("".join(document.text).split())
+    assert document.links == [("#def:first", "Contract 1"), ("#def:second", "Contract 2")]
+    assert json.loads(projected)["meta"] == {}
+
+    damaged = json.loads(actual)
+    first_boundary = next(index for index, block in enumerate(damaged["blocks"]) if block["t"] == "RawBlock")
+    del damaged["blocks"][first_boundary]
+    with pytest.raises(RenderingError):
+        semantic_contract_ast(tmp_path, scope, artifact, tuple(sources), json.dumps(damaged).encode())
 
 
 def test_modern_figure_caption_has_own_visible_source_run_and_no_alt_relabel() -> None:

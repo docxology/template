@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_results.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for sanitized release workflows" />
+  <title>Redacted Report Template: Disclosure Control and Release
+Audit</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -180,6 +183,71 @@
       vertical-align: middle;
     }
   </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -587,8 +655,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="results">Results</h1>
-<h2 id="fixture-release-packet">Fixture Release Packet</h2>
+<h1 data-number="4" id="results"><span
+class="header-section-number">4</span> Results</h1>
+<h2 data-number="4.1" id="fixture-release-packet"><span
+class="header-section-number">4.1</span> Fixture Release Packet</h2>
 <p>The fixture release packet contains fourteen segments spanning four
 classification levels: UNCLASSIFIED (ten segments), CUI (one segment),
 SECRET (two segments), and TOP_SECRET (one segment). Four segments carry
@@ -667,7 +737,9 @@ manuscript-binding tests:</p>
 retains two warning-level residual markers,
 <code>final_release_recommended</code> is false even though the packet
 is releasable and the review gate is approved.</p>
-<h2 id="source-safe-redaction-ledger">Source-Safe Redaction Ledger</h2>
+<h2 data-number="4.2" id="source-safe-redaction-ledger"><span
+class="header-section-number">4.2</span> Source-Safe Redaction
+Ledger</h2>
 <p>The redaction ledger records each decision with:</p>
 <ul>
 <li>A decision ID derived from the SHA-256 of the segment ID, span,
@@ -688,7 +760,8 @@ outcomes, review-gate status, findings, scores, counts, and paragraph
 metadata. Both canonical files omit narrative text, review rationales,
 and reviewer identities; the comprehensive sanitized packet is evaluated
 in memory rather than serialized to the public output tree.</p>
-<h2 id="segment-hash-manifest">Segment Hash Manifest</h2>
+<h2 data-number="4.3" id="segment-hash-manifest"><span
+class="header-section-number">4.3</span> Segment Hash Manifest</h2>
 <p>The hash manifest records, for each segment:</p>
 <ul>
 <li><code>source_sha256</code>: SHA-256 of the original segment
@@ -698,7 +771,8 @@ text.</li>
 </ul>
 <p>This allows downstream verification that the public release matches
 the audited version without comparing source text directly.</p>
-<h2 id="review-gate">Review Gate</h2>
+<h2 data-number="4.4" id="review-gate"><span
+class="header-section-number">4.4</span> Review Gate</h2>
 <p>The release gate requires three reviewer roles: originator,
 classification reviewer, and release authority. Each reviewer provides a
 non-empty rationale. The fixture reviews all approve, yielding: The
@@ -714,7 +788,8 @@ originator, release_authority.</li>
 <p>The <code>final_release_recommended</code> flag is true only when the
 packet is releasable, the review gate is approved, and no blocking
 warnings remain.</p>
-<h2 id="visual-proof-matrix">Visual Proof Matrix</h2>
+<h2 data-number="4.5" id="visual-proof-matrix"><span
+class="header-section-number">4.5</span> Visual Proof Matrix</h2>
 <p>The development proof matrix produces sixteen base PDFs (four
 redaction styles × four backgrounds) and, when steganography is enabled,
 sixteen companion steganography PDFs with hash manifests. Each variant
@@ -726,18 +801,20 @@ records:</p>
 <li>Kmyth sidecar count and filenames (when Kmyth is available).</li>
 </ul>
 <figure id="fig:disclosure_control_matrix">
-<a class="figure-full-size-link" href="../figures/disclosure_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Development proof matrix: four redaction styles"><img src="../figures/disclosure_control_matrix.png"
+<a class="figure-full-size-link" href="../figures/disclosure_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Development proof matrix: four redaction styles"><img src="../figures/disclosure_control_matrix.png"
 alt="A four-by-four grid of redaction style tokens (blackout, whiteout, grayout, blur) on PDF backgrounds (white, gray, black, blur), with the note that all sixteen variants apply identical source-safe redaction decisions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Development proof matrix: four redaction
-styles (blackout, whiteout, grayout, blur) rendered across four PDF
-backgrounds (white, gray, black, blur); every one of the sixteen cells
-applies the identical source-safe redaction decisions.</figcaption>
+<figcaption>Figure 2: Development proof matrix: four
+redaction styles (blackout, whiteout, grayout, blur) rendered across
+four PDF backgrounds (white, gray, black, blur); every one of the
+sixteen cells applies the identical source-safe redaction
+decisions.</figcaption>
 </figure>
-<p><span class="citation"
-data-cites="fig:disclosure_control_matrix">[@fig:disclosure_control_matrix]</span>
-renders the sixteen style-background combinations; only the visual token
-and the page background differ between cells.</p>
-<h2 id="kmyth-tpm-sidecar-production">Kmyth TPM Sidecar Production</h2>
+<p>fig. <a href="#fig:disclosure_control_matrix">2</a> renders the
+sixteen style-background combinations; only the visual token and the
+page background differ between cells.</p>
+<h2 data-number="4.6" id="kmyth-tpm-sidecar-production"><span
+class="header-section-number">4.6</span> Kmyth TPM Sidecar
+Production</h2>
 <p>When Kmyth tools are runnable and a TPM backend is available, each
 variant produces two <code>.ski</code> sidecars:</p>
 <ol type="1">
@@ -754,7 +831,8 @@ configuration.</p>
 yielding thirty-two <code>.ski</code> files total. The kmyth-seal
 binary’s FlushContext patch ensured that consecutive seal invocations
 did not exhaust the swtpm transient object slots.</p>
-<h2 id="residual-risk-detection">Residual Risk Detection</h2>
+<h2 data-number="4.7" id="residual-risk-detection"><span
+class="header-section-number">4.7</span> Residual Risk Detection</h2>
 <p>The residual-risk detector scans sanitized text for common
 public-release leaks:</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
@@ -806,7 +884,8 @@ public-release leaks:</p>
 </table></div>
 <p>Each detected marker generates a warning finding. The mosaic risk
 score aggregates residual markers across all segments.</p>
-<h1 id="discussion">Discussion</h1>
+<h1 data-number="5" id="discussion"><span
+class="header-section-number">5</span> Discussion</h1>
 <p>The exemplar demonstrates that disclosure control can be decomposed
 into orthogonal concerns: text-level audit, visual presentation,
 steganographic provenance, and hardware-backed sealing. Each concern is
@@ -828,7 +907,8 @@ sealing workflows. Without it, the second kmyth-seal invocation fails
 with “out of memory for object contexts” because the storage key from
 the first invocation remains loaded in the TPM’s transient object
 table.</p>
-<h2 id="limitations">Limitations</h2>
+<h2 data-number="5.1" id="limitations"><span
+class="header-section-number">5.1</span> Limitations</h2>
 <ul>
 <li>The fixture data is invented; real release packets may require
 additional classification taxonomies and review-role policies.</li>

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_results_discussion.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Session Types, Affine Handles, and Machine-Checked Invariants in a Simulated Ant-Robot Colony -- and an Honest Account of Where the Guarantees Stop" />
+  <title>Illegal States, Mostly Unrepresentable</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +181,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -652,8 +738,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:results-discussion">Results and Discussion</h1>
-<h2 id="mypy-as-oracle-proof-of-detection">mypy-as-oracle
+<h1 data-number="6" id="sec:results-discussion"><span
+class="header-section-number">6</span> Results and Discussion</h1>
+<h2 data-number="6.1" id="mypy-as-oracle-proof-of-detection"><span
+class="header-section-number">6.1</span> mypy-as-oracle
 proof-of-detection</h2>
 <p><code>tests/test_mypy_oracle.py</code> runs
 <code>mypy --strict</code> as a real subprocess against every fixture
@@ -662,15 +750,14 @@ programs, one per ISC-2/4/15/18/31/32 — and asserts a
 <strong>non-zero</strong> exit code plus the presence of a genuine
 <code>error:</code> line on each (ISC-19, reusing a consumed
 protocol-phase instance, deliberately has <strong>no</strong> fixture
-here: it is a runtime-only discipline, not a static one — see <span
-class="citation"
-data-cites="sec:type-architecture">@sec:type-architecture</span> — so
-there is nothing for a static oracle to catch). <strong>Three</strong>
-known-good fixtures are the suite’s positive controls, each guarding a
-generic-API or structural-conformance surface <code>src/</code> itself
-never instantiates concretely:
-<code>good_agent_belief_instantiation.py</code> (the template’s flagship
-generic instantiation, <code>Agent[BeliefState]</code>),
+here: it is a runtime-only discipline, not a static one — see sec. <a
+href="manuscript__02_type_architecture.html#sec:type-architecture">3</a> — so there is nothing for a static
+oracle to catch). <strong>Three</strong> known-good fixtures are the
+suite’s positive controls, each guarding a generic-API or
+structural-conformance surface <code>src/</code> itself never
+instantiates concretely: <code>good_agent_belief_instantiation.py</code>
+(the template’s flagship generic instantiation,
+<code>Agent[BeliefState]</code>),
 <code>good_bus_wire_message_instantiation.py</code>
 (<code>InProcessBus[WireMessage]</code>), and
 <code>good_pheromone_conformance.py</code>
@@ -693,29 +780,28 @@ signal that the oracle had gone vacuous, not that the type architecture
 had improved.</p>
 <p>A cross-vendor audit of this template caught a genuine defect the
 <code>src/</code>-only oracle could not see: an earlier revision of the
-<code>GaussianBelief</code> structural <code>Protocol</code> (<span
-class="citation"
-data-cites="sec:type-architecture">@sec:type-architecture</span>)
-declared its <code>mean</code>/<code>variance</code> members as plain
-mutable attributes, which a <code>frozen=True</code> dataclass can never
-satisfy under mypy –strict — so <code>Agent[BeliefState]</code>, the
-template’s own reference instantiation, failed
-<code>mypy --strict</code> at the one call site that matters, even while
-the <code>src/</code>-only gate reported zero errors (because
-<code>src/</code> never itself instantiates <code>Agent</code> with a
-concrete type argument). The fix was to declare
-<code>GaussianBelief.mean</code>/<code>.variance</code> as read-only
-<code>@property</code> members instead of plain attributes, and the
-good-fixture above is the permanent regression guard. This episode is
-recorded here rather than quietly fixed and forgotten because it is
-precisely the failure mode <span class="citation"
-data-cites="sec:type-architecture">@sec:type-architecture</span> warns
-about in the abstract: a green gate over an incomplete scan-set is not
-the same claim as “the type architecture works,” and this template’s own
-build process needed a second, adversarial pass to catch the gap between
-the two.</p>
-<h2 id="protocol-fault-injection-negative-controls">Protocol
-fault-injection negative controls</h2>
+<code>GaussianBelief</code> structural <code>Protocol</code> (sec. <a
+href="manuscript__02_type_architecture.html#sec:type-architecture">3</a>) declared its
+<code>mean</code>/<code>variance</code> members as plain mutable
+attributes, which a <code>frozen=True</code> dataclass can never satisfy
+under mypy –strict — so <code>Agent[BeliefState]</code>, the template’s
+own reference instantiation, failed <code>mypy --strict</code> at the
+one call site that matters, even while the <code>src/</code>-only gate
+reported zero errors (because <code>src/</code> never itself
+instantiates <code>Agent</code> with a concrete type argument). The fix
+was to declare <code>GaussianBelief.mean</code>/<code>.variance</code>
+as read-only <code>@property</code> members instead of plain attributes,
+and the good-fixture above is the permanent regression guard. This
+episode is recorded here rather than quietly fixed and forgotten because
+it is precisely the failure mode sec. <a
+href="manuscript__02_type_architecture.html#sec:type-architecture">3</a> warns about in the abstract: a green
+gate over an incomplete scan-set is not the same claim as “the type
+architecture works,” and this template’s own build process needed a
+second, adversarial pass to catch the gap between the two.</p>
+<h2 data-number="6.2"
+id="protocol-fault-injection-negative-controls"><span
+class="header-section-number">6.2</span> Protocol fault-injection
+negative controls</h2>
 <p><code>tests/network/test_bus.py</code> and
 <code>tests/network/test_handshake_over_bus.py</code> drive a real
 handshake through the in-process bus (<code>network/bus.py</code>) with
@@ -733,14 +819,14 @@ type-checked boundary. A deterministic-seed test
 confirms the same seed reproduces the identical fault sequence (ISC-22),
 which is what makes these fault-injected runs reproducible evidence
 rather than occasionally-flaky noise that happens to pass. Every
-phase-transition claim in <span class="citation"
-data-cites="sec:type-architecture">@sec:type-architecture</span> has a
-paired fault-injected test alongside its happy-path test (ISC-25 anti) —
-there is no protocol test in this suite that only exercises the
+phase-transition claim in sec. <a href="manuscript__02_type_architecture.html#sec:type-architecture">3</a>
+has a paired fault-injected test alongside its happy-path test (ISC-25
+anti) — there is no protocol test in this suite that only exercises the
 fault-free path.</p>
-<h2
-id="colony-convergence-a-real-stigmergic-mechanism-honestly-scoped">Colony
-convergence: a real stigmergic mechanism, honestly scoped</h2>
+<h2 data-number="6.3"
+id="colony-convergence-a-real-stigmergic-mechanism-honestly-scoped"><span
+class="header-section-number">6.3</span> Colony convergence: a real
+stigmergic mechanism, honestly scoped</h2>
 <p><code>tests/colony/test_colony_integration.py</code> runs three real
 <code>Agent</code> instances — each with its own on-disk SQLite file and
 its own protocol endpoint — through a colony tick loop over a shared
@@ -769,10 +855,10 @@ ticks and reaches <span class="math inline">\(1.0\)</span> by the final
 tick — computed from real per-agent state.</li>
 </ol>
 <figure id="fig:demo-convergence">
-<a class="figure-full-size-link" href="../figures/colony_demo_convergence.png" target="_blank" rel="noopener" aria-label="Open full-size figure, The deterministic demo colony’s real concentration_history"><img src="../figures/colony_demo_convergence.png"
+<a class="figure-full-size-link" href="../figures/colony_demo_convergence.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, The deterministic demo colony’s real concentration_history"><img src="../figures/colony_demo_convergence.png"
 alt="Two-panel line chart across 5 ticks: north changes from 2.94 to 14.12, south changes from 0.00 to 0.00; north&#x27;s share of total concentration changes from 1.00 to 1.00." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>The deterministic demo colony’s real
-<code>concentration_history</code>
+<figcaption>Figure 1: The deterministic demo colony’s
+real <code>concentration_history</code>
 (<code>src/template_formal/colony/demo.py::run_demo_colony</code>, 3
 agents, 2 locations, 5 ticks). Top: each location’s sensed pheromone
 concentration per tick — <code>south</code> never leaves zero because no
@@ -797,18 +883,17 @@ stochastic tie-break and would need to show consensus still forms
 despite that heterogeneity — that is future work relative to <em>this
 specific test</em>, but it is exactly the claim the next subsection
 earns with a real N=150 statistical test, not merely asserted here.</p>
-<h2
-id="colony-convergence-under-heterogeneity-a-genuinely-earned-statistical-result">Colony
-convergence under heterogeneity: a genuinely earned statistical
-result</h2>
+<h2 data-number="6.4"
+id="colony-convergence-under-heterogeneity-a-genuinely-earned-statistical-result"><span
+class="header-section-number">6.4</span> Colony convergence under
+heterogeneity: a genuinely earned statistical result</h2>
 <p><code>tests/colony/test_colony_convergence_statistics.py</code> is
 what turns the mechanism demonstration above into a <em>rate</em> claim
 under realistic variation, using <code>colony/experiment.py</code>’s
 <code>run_colony_trial</code> (heterogeneous per-agent preferences drawn
 from a seeded <code>random.Random</code>, plus seeded Gaussian sensing
-noise — see <span class="citation"
-data-cites="sec:type-architecture">@sec:type-architecture</span>’s
-module layout) and <code>colony/stats.py</code>’s closed-form
+noise — see sec. <a href="manuscript__02_type_architecture.html#sec:type-architecture">3</a>’s module layout)
+and <code>colony/stats.py</code>’s closed-form
 <code>wilson_score_interval</code>:</p>
 <p>The actual run settles this hypothesis: <strong>140/150 trials
 converged (rate <span class="math inline">\(=0.9333\)</span>), Wilson
@@ -831,19 +916,18 @@ significance test: it answers “does <em>this</em> configuration clear
 <span class="math inline">\(0.8\)</span>” honestly, but it does
 <strong>not</strong>, by itself, answer “how does the convergence rate
 behave as configuration parameters vary” — which is precisely the gap
-<span class="citation"
-data-cites="sec:results-discussion">@sec:results-discussion</span>’s
-“Eight pre-registered analyses” subsection below closes with a real
-parameter sweep across six independent decay values, run and reported
-without retuning any of them to hit a target. Two guards keep the
-single-point claim honest rather than vacuous: a negative control
-re-running the <em>original</em> fully-symmetric, zero-noise
-configuration through this same harness reproduces exact <span
-class="math inline">\(100\%\)</span> convergence (the “guaranteed by
-construction” claim above is a real, reproducible fact under the harness
-that also produces the <span class="math inline">\(&gt;0.8\)</span>
-claim, not a coincidence of two unrelated code paths), and a
-positive-control-that-can-fail — near-total pheromone evaporation (<span
+sec. <a href="#sec:results-discussion">6</a>’s “Eight pre-registered
+analyses” subsection below closes with a real parameter sweep across six
+independent decay values, run and reported without retuning any of them
+to hit a target. Two guards keep the single-point claim honest rather
+than vacuous: a negative control re-running the <em>original</em>
+fully-symmetric, zero-noise configuration through this same harness
+reproduces exact <span class="math inline">\(100\%\)</span> convergence
+(the “guaranteed by construction” claim above is a real, reproducible
+fact under the harness that also produces the <span
+class="math inline">\(&gt;0.8\)</span> claim, not a coincidence of two
+unrelated code paths), and a positive-control-that-can-fail — near-total
+pheromone evaporation (<span
 class="math inline">\(\text{decay}=0.97\)</span>) plus sensing noise
 (<span class="math inline">\(\sigma=4.0\)</span>) far exceeding the
 preference-mean signal — drives the Wilson upper bound well below <span
@@ -944,10 +1028,10 @@ result. Gated by
 <code>test_extreme_zero_deposit_pheromone_channel_still_contributes_under_severe_decay_and_noise</code>
 in <code>test_colony_experiments_extended.py</code>.</p>
 <figure id="fig:convergence-tick-distribution">
-<a class="figure-full-size-link" href="../figures/colony_convergence_tick_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Convergence-tick distribution from this template’s own demo statistics sweep"><img src="../figures/colony_convergence_tick_distribution.png"
+<a class="figure-full-size-link" href="../figures/colony_convergence_tick_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Convergence-tick distribution from this template’s own demo statistics sweep"><img src="../figures/colony_convergence_tick_distribution.png"
 alt="Histogram and empirical CDF summarize 37 of 40 converged trials, ranging from tick 0 to tick 29; 28 reached consensus at tick zero and the mean convergence tick is 4.1." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Convergence-tick distribution from this
-template’s own demo statistics sweep
+<figcaption>Figure 2: Convergence-tick distribution
+from this template’s own demo statistics sweep
 (<code>src/template_formal/colony/demo.py::run_statistics_sweep</code>,
 <span class="math inline">\(N=40\)</span> trials, same real,
 heterogeneous/noisy configuration as the <span
@@ -983,9 +1067,10 @@ rather than left invisible in test output alone; it is weak, noisy,
 exploratory evidence loosely consistent with (not proof of) the
 heterogeneity-sweep finding below that wider preference spread makes
 consensus harder, not a second confirmed result.</p>
-<h2
-id="eleven-pre-registered-analyses-across-three-experiment-families">Eleven
-pre-registered analyses across three experiment families</h2>
+<h2 data-number="6.5"
+id="eleven-pre-registered-analyses-across-three-experiment-families"><span
+class="header-section-number">6.5</span> Eleven pre-registered analyses
+across three experiment families</h2>
 <p>The N=150 statistical claim above answers one question — does the
 real mechanism converge reliably at <em>one</em> calibrated
 configuration — and deliberately leaves three experiment families open:
@@ -1002,9 +1087,10 @@ rather than one-off scripts — reported in
 assertions are pinned to the exact <code>successes</code> counts quoted
 below (every run is fully deterministic given its seed sequence, so
 these are not approximate).</p>
-<h3
-id="experiment-a-does-convergence-rate-vary-monotonically-with-decay">Experiment
-A — does convergence rate vary monotonically with decay?</h3>
+<h3 data-number="6.5.1"
+id="experiment-a-does-convergence-rate-vary-monotonically-with-decay"><span
+class="header-section-number">6.5.1</span> Experiment A — does
+convergence rate vary monotonically with decay?</h3>
 <p><strong>Real result</strong> (<code>n=60</code> independently-seeded
 trials per value, <code>seed_base=0</code>):</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
@@ -1105,10 +1191,9 @@ its own evidence, is that no single pairwise test carries the claim: the
 monotonically <em>rising</em> shape below the plateau, together with the
 cross-seed replication of the dip at seed bases <span
 class="math inline">\(1000\)</span> and <span
-class="math inline">\(5000\)</span> (<span class="citation"
-data-cites="sec:results-discussion">@sec:results-discussion</span>,
-“Honesty hedges” below), is where the actual evidentiary weight
-sits.</p>
+class="math inline">\(5000\)</span> (sec. <a
+href="#sec:results-discussion">6</a>, “Honesty hedges” below), is where
+the actual evidentiary weight sits.</p>
 <p><strong>Ordered-trend test (Cochran–Armitage), now added.</strong> A
 prior Forge cross-vendor pass named a formal trend test across the
 <em>full</em> ordered sweep (rather than one boundary-adjacent pairwise
@@ -1423,9 +1508,10 @@ a highly-separated table, so a regression back to an additive tolerance
 fails immediately rather than only surfacing as a silently wrong number
 several call-sites away in a manuscript quote — which is exactly how
 this one survived two prior audit rounds undetected.</p>
-<h3
-id="experiment-b-does-the-real-mechanism-beat-a-random-choice-baseline">Experiment
-B — does the real mechanism beat a random-choice baseline?</h3>
+<h3 data-number="6.5.2"
+id="experiment-b-does-the-real-mechanism-beat-a-random-choice-baseline"><span
+class="header-section-number">6.5.2</span> Experiment B — does the real
+mechanism beat a random-choice baseline?</h3>
 <p><strong>Real result</strong> (<span
 class="math inline">\(N=150\)</span> trials each, identical seed
 sequence <code>seed_base=0</code>, calibrated baseline configuration,
@@ -1580,9 +1666,10 @@ past. Gated by
 and
 <code>test_zero_deposit_collapse_relative_to_the_full_mechanism_implicates_the_deposit_channel_specifically</code>
 in <code>test_colony_experiments_extended.py</code>.</p>
-<h3
-id="experiment-c-does-convergence-rate-decrease-monotonically-with-heterogeneity-magnitude">Experiment
-C — does convergence rate decrease monotonically with heterogeneity
+<h3 data-number="6.5.3"
+id="experiment-c-does-convergence-rate-decrease-monotonically-with-heterogeneity-magnitude"><span
+class="header-section-number">6.5.3</span> Experiment C — does
+convergence rate decrease monotonically with heterogeneity
 magnitude?</h3>
 <p><strong>Real result</strong> (<code>n=60</code> per condition,
 <code>seed_base=0</code>):</p>
@@ -1776,8 +1863,10 @@ as future work, not silently resolved. Gated by
 and
 <code>test_wide_condition_clears_the_null_model_baseline_at_both_seed_bases</code>
 in <code>test_colony_experiments_extended.py</code>.</p>
-<h3 id="honesty-hedges-common-to-all-eleven-analyses">Honesty hedges
-common to all eleven analyses</h3>
+<h3 data-number="6.5.4"
+id="honesty-hedges-common-to-all-eleven-analyses"><span
+class="header-section-number">6.5.4</span> Honesty hedges common to all
+eleven analyses</h3>
 <p>All eleven analyses hold <code>num_agents=8</code>, two
 <code>locations</code>, and <code>num_ticks=30</code> fixed — none of
 the results above is evidence about convergence at other colony sizes,
@@ -1880,8 +1969,10 @@ full-versus-zero-deposit comparisons), not a multiple-testing search
 over many candidate pairs for the one that clears a threshold. A
 correction is the right tool for a different failure mode than the one
 this manuscript’s reporting practice actually exhibits.</p>
-<h2 id="the-optional-formal-side-spec-shipped-not-cut">The optional
-formal side-spec: shipped, not cut</h2>
+<h2 data-number="6.6"
+id="the-optional-formal-side-spec-shipped-not-cut"><span
+class="header-section-number">6.6</span> The optional formal side-spec:
+shipped, not cut</h2>
 <p>Per ISC-35/36, this template ships both a Lean 4 model
 (<code>formal/lean/AntProtocol.lean</code>) and a TLA+ specification
 (<code>formal/tla/AntProtocol.tla</code> + <code>AntProtocol.cfg</code>)
@@ -1901,11 +1992,12 @@ register from the rest of this paper’s claims — Lean/TLA+ model the
 implementation actually conforms to that design; no claim in this paper
 conflates a passing Lean/TLA+ check with a proof about the Python code
 in <code>src/</code>.</p>
-<h2
-id="formal-side-spec-expansion-what-grew-and-what-still-needs-wiring">Formal
-side-spec expansion: what grew, and what still needs wiring</h2>
+<h2 data-number="6.7"
+id="formal-side-spec-expansion-what-grew-and-what-still-needs-wiring"><span
+class="header-section-number">6.7</span> Formal side-spec expansion:
+what grew, and what still needs wiring</h2>
 <div class="theorem-box theorem">
-<p><strong>Theorem 1</strong> (Mechanically verified protocol
+<p><strong>Theorem 6</strong> (Mechanically verified protocol
 invariants). Three claims about the handshake protocol’s (not this
 template’s Python implementation, per the scoping note above) are
 machine-checked, zero-<code>sorry</code>, zero-extra-axiom results,
@@ -1989,8 +2081,8 @@ outgoing edges from the <code>ClosedSession</code> phase” in
 <code>cannot_reuse_consumed_token</code> (the precondition a second,
 un-reassigned <code>use</code> call would need is unsatisfiable — the
 first Lean counterpart to the runtime <code>SessionConsumedError</code>
-discipline the type system cannot close, per <span class="citation"
-data-cites="sec:type-architecture">@sec:type-architecture</span>), and
+discipline the type system cannot close, per sec. <a
+href="manuscript__02_type_architecture.html#sec:type-architecture">3</a>), and
 <code>no_direct_idle_to_established</code> — which <em>replaces</em> the
 prior <code>no_skip_to_established</code>, discarded because it reduced
 to a restatement of <code>established_requires_handshaking</code> via a
@@ -2076,8 +2168,9 @@ open — and, per the negative-control addition above, this section no
 longer merely asserts <code>NoFalseEstablishment</code> is non-vacuous,
 it demonstrates it the same way <code>tests/mypy_fixtures/</code>
 demonstrates the mypy oracle is non-vacuous.</p>
-<h2 id="threats-to-the-claims-honestly-stated">Threats to the claims,
-honestly stated</h2>
+<h2 data-number="6.8" id="threats-to-the-claims-honestly-stated"><span
+class="header-section-number">6.8</span> Threats to the claims, honestly
+stated</h2>
 <p>Nothing in this paper should be read as a claim that
 <code>mypy --strict</code> detects every illegal-state bug a determined
 adversary could construct in this codebase, nor that the fault-injection

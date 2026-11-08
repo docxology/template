@@ -22,8 +22,8 @@ from infrastructure.validation.publication.rendered_provenance import (
     validate_current_rendered_provenance,
 )
 
-METADATA_OBSERVATION_SCHEMA = "template-native-html-source-metadata-observation-v2"
-HTML_WITNESS_SCHEMA = "template-native-html-complete-source-observation-v3"
+METADATA_OBSERVATION_SCHEMA = "template-native-html-source-metadata-observation-v3"
+HTML_WITNESS_SCHEMA = "template-native-html-complete-source-observation-v4"
 METADATA_PURPOSE = "semantic-config-metadata-pandoc"
 
 
@@ -68,12 +68,12 @@ def html_metadata_plan(
 ) -> tuple[ArtifactSnapshot, dict[str, Any], dict[str, Any]] | None:
     """Bind original and selected config, plus the actual current hydration bridge.
 
-    YAML is deliberately absent from the body source plan and its occurrence
-    compiler. Section renders receive no config CLI metadata in WebRenderer.
+    Body and metadata observations both use the canonical global config context;
+    finalized split pages inherit that resolved document's head and metadata.
     """
     if artifact.format != "html":
         raise ValueError("HTML config metadata cannot belong to another format")
-    if artifact.id != "manuscript:html":
+    if artifact.id != "manuscript:html" and not (artifact.id.startswith("section:") and artifact.id.endswith(":html")):
         return None
     from infrastructure.rendering.web_renderer import WebRenderer
 

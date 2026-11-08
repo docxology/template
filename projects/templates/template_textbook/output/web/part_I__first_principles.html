@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>first_principles.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -717,13 +737,14 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_I_first_principles">First Principles</h1>
+<h1 data-number="8" id="sec:part_I_first_principles"><span
+class="header-section-number">8</span> First Principles</h1>
 <figure id="fig:part_I_first_principles">
-<a class="figure-full-size-link" href="../figures/logistic_growth.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A logistic growth curve for three growth rates, approaching the carrying capacity K = 100 ."><img src="../figures/logistic_growth.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/logistic_growth.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, A logistic growth curve for three growth rates, approaching the carrying capacity K = 100 ."><img src="../figures/logistic_growth.png" style="width:85.0%"
 alt="Three S-shaped logistic-growth curves approach the horizontal carrying-capacity line at 100; higher growth rates rise sooner." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>A logistic growth curve for three growth
-rates, approaching the carrying capacity <span class="math inline">\(K =
-100\)</span>. Produced deterministically by
+<figcaption>Figure 4: A logistic growth curve for
+three growth rates, approaching the carrying capacity <span
+class="math inline">\(K = 100\)</span>. Produced deterministically by
 <code>visualization.plots.plot_logistic_growth</code>.</figcaption>
 </figure>
 <!-- alt: Three S-shaped curves rising from a small initial value and levelling
@@ -739,7 +760,8 @@ assumptions, derivation, numerical example, lab, and question bank
 provide complementary ways to inspect the same relationship. Later
 chapters examine alternative models and limits.</p>
 </blockquote>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="8.1" id="learning-objectives-3"><span
+class="header-section-number">8.1</span> Learning Objectives</h2>
 <p>By the end of this chapter you should be able to:</p>
 <ol type="1">
 <li>Explain what it means to model a <a
@@ -757,7 +779,8 @@ href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium</strong></a>
 arithmetic by hand.</li>
 </ol>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="8.1.1" id="study-blueprint-3"><span
+class="header-section-number">8.1.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> A great deal of change in the world is
 captured by a handful of variables and a single rule relating their
@@ -767,18 +790,17 @@ href="manuscript__glossary.html#gl:system"><strong>system</strong></a>, <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
 href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the logistic law in <span
-class="citation"
-data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> the logistic law in eq. <a
+href="#eq:part_I_first_principles_model">5</a>.</li>
 <li><strong>Data skill:</strong> read an S-curve and estimate its
 carrying capacity by eye, then confirm numerically.</li>
 <li><strong>Common misconception to repair:</strong> “exponential” and
 “logistic” are not the same — unbounded growth is an early-time
 approximation, not the rule.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_I_first_principles">[@sec:lab_part_I_first_principles]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_I_first_principles">[@sec:q_part_I_first_principles]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_I__lab_first_principles.html#sec:lab_part_I_first_principles">22</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_I__q_first_principles.html#sec:q_part_I_first_principles">34</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.logistic_growth</code>.
 <!-- curriculum-scaffold-end --></li>
@@ -794,7 +816,8 @@ shape. The job of a first model is not to capture everything; it is to
 capture <em>that shape</em> with as few moving parts as possible.</p>
 </blockquote>
 <hr />
-<h2 id="from-a-system-to-a-model">From a system to a model</h2>
+<h2 data-number="8.2" id="from-a-system-to-a-model"><span
+class="header-section-number">8.2</span> From a system to a model</h2>
 <p>A <strong>model</strong> is a deliberate simplification. We choose a
 small number of <a href="manuscript__glossary.html#gl:state"><strong>state</strong></a> variables
 — here, a single quantity <span class="math inline">\(N(t)\)</span> —
@@ -810,23 +833,22 @@ class="math inline">\(K\)</span> are parameters. Confusing the two is
 the most common beginner error: if you find yourself “solving for <span
 class="math inline">\(K\)</span> over time,” you have mislabelled a
 parameter as a variable.</p>
-<h2 id="a-first-quantitative-law">A first quantitative law</h2>
+<h2 data-number="8.3" id="a-first-quantitative-law"><span
+class="header-section-number">8.3</span> A first quantitative law</h2>
 <p>Unbounded (exponential) growth assumes nothing ever pushes back. Some
 bounded systems can be approximated by a saturating model. One simple
 law that grows fast when small and levels off when large is the
-<strong>logistic</strong> equation, written as a rate of change in <span
-class="citation"
-data-cites="eq:part_I_first_principles_rate">[@eq:part_I_first_principles_rate]</span>
-and in closed form in <span class="citation"
-data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>:</p>
-<p><span class="math display">\[\frac{dN}{dt} = rN\left(1 -
-\frac{N}{K}\right)\]</span> {#eq:part_I_first_principles_rate}</p>
-<p><span class="math display">\[N(t) = \frac{K}{1 + \left(\dfrac{K -
-N_0}{N_0}\right) e^{-rt}}\]</span>
-{#eq:part_I_first_principles_model}</p>
-<p>Read <span class="citation"
-data-cites="eq:part_I_first_principles_rate">[@eq:part_I_first_principles_rate]</span>
-aloud: the rate of change is proportional to how much there is (<span
+<strong>logistic</strong> equation, written as a rate of change in
+eq. <a href="#eq:part_I_first_principles_rate">4</a> and in closed form
+in eq. <a href="#eq:part_I_first_principles_model">5</a>:</p>
+<p><span id="eq:part_I_first_principles_rate"><span
+class="math display">\[\frac{dN}{dt} = rN\left(1 -
+\frac{N}{K}\right)\qquad{(4)}\]</span></span></p>
+<p><span id="eq:part_I_first_principles_model"><span
+class="math display">\[N(t) = \frac{K}{1 + \left(\dfrac{K -
+N_0}{N_0}\right) e^{-rt}}\qquad{(5)}\]</span></span></p>
+<p>Read eq. <a href="#eq:part_I_first_principles_rate">4</a> aloud: the
+rate of change is proportional to how much there is (<span
 class="math inline">\(rN\)</span>) <em>times</em> how much room remains
 (<span class="math inline">\(1 - N/K\)</span>). When <span
 class="math inline">\(N\)</span> is small the second factor is near
@@ -834,11 +856,11 @@ class="math inline">\(N\)</span> is small the second factor is near
 as <span class="math inline">\(N\)</span> approaches <span
 class="math inline">\(K\)</span> the factor approaches <span
 class="math inline">\(0\)</span> and growth stalls. The parameters are
-collected in <span class="citation"
-data-cites="tbl:part_I_first_principles_parameters">[@tbl:part_I_first_principles_parameters]</span>.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Parameters of the logistic model. Variables change over time; parameters are held fixed while reasoning."><table id="tbl:part_I_first_principles_parameters" data-responsive-table="true">
-<caption>Parameters of the logistic model. Variables change over time;
-parameters are held fixed while reasoning.</caption>
+collected in tbl. <a
+href="#tbl:part_I_first_principles_parameters">4</a>.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 4: Parameters of the logistic model. Variables change over time; parameters are held fixed while reasoning."><table id="tbl:part_I_first_principles_parameters" data-responsive-table="true">
+<caption>Table 4: Parameters of the logistic model. Variables change
+over time; parameters are held fixed while reasoning.</caption>
 <thead>
 <tr>
 <th>Symbol</th>
@@ -874,18 +896,19 @@ parameters are held fixed while reasoning.</caption>
 </tr>
 </tbody>
 </table></div>
-<h2 id="worked-example">Worked example</h2>
+<h2 data-number="8.4" id="worked-example"><span
+class="header-section-number">8.4</span> Worked example</h2>
 <p>Take <span class="math inline">\(r = 0.8\)</span>, <span
 class="math inline">\(K = 100\)</span>, and <span
 class="math inline">\(N_0 = 5\)</span>. Rather than evaluate the
 exponential by hand, call the tested backbone:</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>, <span class="fl">10.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> models.logistic_growth(t, r<span class="op">=</span><span class="fl">0.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># N -&gt; [ 5.00, 20.68, 74.18, 99.37 ]</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>, <span class="fl">10.0</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> models.logistic_growth(t, r<span class="op">=</span><span class="fl">0.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># N -&gt; [ 5.00, 20.68, 74.18, 99.37 ]</span></span></code></pre></div>
 <p>The trajectory starts at <span class="math inline">\(N(0) =
 5.00\)</span>, reaches <span class="math inline">\(N(2) =
 20.68\)</span>, passes the steep middle near <span
@@ -893,33 +916,36 @@ class="math inline">\(t = 5\)</span> with <span
 class="math inline">\(N(5) = 74.18\)</span>, and by <span
 class="math inline">\(t = 10\)</span> has all but arrived at <span
 class="math inline">\(N(10) = 99.37\)</span> — within one part in a
-hundred of the carrying capacity. This is the S-curve plotted in <span
-class="citation"
-data-cites="fig:part_I_first_principles">[@fig:part_I_first_principles]</span>:
-an early near-exponential rise, an inflection, and a long approach to
-the asymptote.</p>
+hundred of the carrying capacity. This is the S-curve plotted in fig. <a
+href="#fig:part_I_first_principles">4</a>: an early near-exponential
+rise, an inflection, and a long approach to the asymptote.</p>
 <p>The long-run behaviour is exact, not approximate. Because <span
 class="math inline">\(r &gt; 0\)</span>, the term <span
 class="math inline">\(e^{-rt} \to 0\)</span>, so <span
 class="math inline">\(N(t) \to K\)</span>. The proof is one line and is
-recorded as Theorem 1 in <span class="citation"
-data-cites="sec:appendix_formalisms">[@sec:appendix_formalisms]</span>;
+recorded as Theorem 1 in sec. <a href="appendices__appendix_formalisms.html#sec:appendix_formalisms">46</a>;
 the same fact is asserted numerically by the test suite, so the prose
 and the code cannot silently disagree.</p>
-<h2 id="how-the-pieces-connect">How the pieces connect</h2>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Choose state variables</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Write a rate rule</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Solve or simulate</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>[<span class="vs">Predict long-run behaviour</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|compare to data|</span> <span class="dt">A</span></span></code></pre></div>
+<h2 data-number="8.5" id="how-the-pieces-connect"><span
+class="header-section-number">8.5</span> How the pieces connect</h2>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Choose state variables</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Write a rate rule</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Solve or simulate</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>[<span class="vs">Predict long-run behaviour</span>]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|compare to data|</span> <span class="dt">A</span></span></code></pre></div>
 <p>This loop — choose, write, solve, predict, compare — is the first
 principle the rest of the book elaborates. Box discusses scientific
-model adequacy and revision [box1976science]. May examines the
-complicated dynamics of simple discrete models [may1976simple]; that
-work also cautions against conflating a continuous rate law with a
-discrete recurrence that happens to share a name.</p>
-<h2 id="summary">Summary</h2>
+model adequacy and revision <span class="citation"
+data-cites="box1976science">(<a href="index.html#ref-box1976science"
+role="doc-biblioref">Box 1976</a>)</span>. May examines the complicated
+dynamics of simple discrete models <span class="citation"
+data-cites="may1976simple">(<a href="index.html#ref-may1976simple"
+role="doc-biblioref">May 1976</a>)</span>; that work also cautions
+against conflating a continuous rate law with a discrete recurrence that
+happens to share a name.</p>
+<h2 data-number="8.6" id="summary-3"><span
+class="header-section-number">8.6</span> Summary</h2>
 <p>A model trades completeness for clarity: a few <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a> variables and one rule. The
 logistic law adds a single idea — finite room — to exponential growth,
@@ -928,31 +954,34 @@ a stable <a href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium<
 the carrying capacity <span class="math inline">\(K\)</span>. Compute
 with the tested <code>logistic_growth</code> function so your worked
 numbers are reproducible and open to independent arithmetic checks.</p>
-<h2 id="key-terms">Key Terms</h2>
+<h2 data-number="8.7" id="key-terms-3"><span
+class="header-section-number">8.7</span> Key Terms</h2>
 <p><a href="manuscript__glossary.html#gl:system"><strong>system</strong></a>, <a
 href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
 href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
+<h2 data-number="8.8" id="further-reading-3"><span
+class="header-section-number">8.8</span> Further Reading</h2>
 <ul>
-<li><span class="citation"
-data-cites="box1976science">@box1976science</span> — scientific
-reasoning about the adequacy and revision of models; compare the
-usefulness of an approximation with its assumptions.</li>
-<li><span class="citation"
-data-cites="may1976simple">@may1976simple</span> — a primary analysis of
-complex behavior in simple discrete models; distinguish its recurrence
-dynamics from this continuous solution.</li>
+<li><span class="citation" data-cites="box1976science">Box (<a
+href="index.html#ref-box1976science" role="doc-biblioref">1976</a>)</span> —
+scientific reasoning about the adequacy and revision of models; compare
+the usefulness of an approximation with its assumptions.</li>
+<li><span class="citation" data-cites="may1976simple">May (<a
+href="index.html#ref-may1976simple" role="doc-biblioref">1976</a>)</span> — a
+primary analysis of complex behavior in simple discrete models;
+distinguish its recurrence dynamics from this continuous solution.</li>
 </ul>
-<h2 id="practice">Practice</h2>
+<h2 data-number="8.9" id="practice-3"><span
+class="header-section-number">8.9</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_I_first_principles">[@sec:lab_part_I_first_principles]</span>
-— measure an S-curve and estimate its parameters.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_I_first_principles">[@sec:q_part_I_first_principles]</span>
-— recall through synthesis.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_I__lab_first_principles.html#sec:lab_part_I_first_principles">22</a> — measure an S-curve and
+estimate its parameters.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_I__q_first_principles.html#sec:q_part_I_first_principles">34</a> — recall through
+synthesis.</li>
 </ul>
 </main>
 </body>

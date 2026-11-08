@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>08_methods_sheaf.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
+  <title>Active Inference Multi-Track Exemplar</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +246,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -717,9 +738,11 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:methods_sheaf">Sheaf composition</h1>
+<h1 data-number="8" id="sec:methods_sheaf"><span
+class="header-section-number">8</span> Sheaf composition</h1>
 <!-- sheaf-track:prose -->
-<h2 id="compose-contract">Compose contract</h2>
+<h2 data-number="8.1" id="compose-contract"><span
+class="header-section-number">8.1</span> Compose contract</h2>
 <p>Each manifest row in <code>manuscript/sheaf/manifest.yaml</code>
 binds fragment tracks from <code>manuscript/sheaf/tracks.yaml</code>. A
 track supplies a renderer, compose order, label, optional flag, general
@@ -727,20 +750,22 @@ paper role, and paper-specific use statement; the composer then flattens
 the binding set into one Markdown section for PDF and web output.</p>
 <p>The operational claim is auditable binding. Analytical, simulation,
 pymdp, visualization, Lean, GNN, ontology, scholarship, and optional
-media fragments attach to IMRAD rows under <span class="citation"
-data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>
-(<strong>P</strong> present, <strong>—</strong> unbound,
-<strong>M</strong> missing). This is an applied local-to-global
-consistency contract in the spirit of cellular sheaf and
-sheaf-signal-processing work [curry2014sheaves;
-robinson2014topological], instantiated here as a finite artifact gate
-rather than a cohomology claim.</p>
-<h2 id="coverage-and-figures">Coverage and figures</h2>
-<p><span class="citation"
-data-cites="fig:sheaf_layers_overview">[@fig:sheaf_layers_overview]</span>
-summarizes 34 fragment types and their IMRAD bindings. Generated tables
-below list every track definition and section×track binding at compose
-time. The visualization track is gated by
+media fragments attach to IMRAD rows under eq. <a
+href="#eq:coverage_cell">3</a> (<strong>P</strong> present,
+<strong>—</strong> unbound, <strong>M</strong> missing). This is an
+applied local-to-global consistency contract in the spirit of cellular
+sheaf and sheaf-signal-processing work <span class="citation"
+data-cites="curry2014sheaves robinson2014topological">(<a
+href="index.html#ref-curry2014sheaves" role="doc-biblioref">Curry 2014</a>; <a
+href="index.html#ref-robinson2014topological" role="doc-biblioref">Robinson
+2014</a>)</span>, instantiated here as a finite artifact gate rather
+than a cohomology claim.</p>
+<h2 data-number="8.2" id="coverage-and-figures"><span
+class="header-section-number">8.2</span> Coverage and figures</h2>
+<p>fig. <a href="#fig:sheaf_layers_overview">7</a> summarizes 34
+fragment types and their IMRAD bindings. Generated tables below list
+every track definition and section×track binding at compose time. The
+visualization track is gated by
 <code>output/reports/visualization_quality_audit.json</code>: 23 / 23
 registered figures render, 23 are source-mapped, and 23 have sufficient
 alt/caption metadata; the all-quality flag is <code>true</code>.</p>
@@ -771,18 +796,19 @@ level rather than as prose metadata.
 artifacts (<code>true</code>) and replays their typed predicates
 (<code>true</code>), yielding the promoted completeness flag
 <code>true</code>.</p>
-<h2 id="compose-commands">Compose commands</h2>
+<h2 data-number="8.3" id="compose-commands"><span
+class="header-section-number">8.3</span> Compose commands</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/compose_manuscript.py</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/compose_manuscript.py <span class="at">--validate-only</span> <span class="at">--strict</span></span></code></pre></div>
 <p>Each run emits <code>output/data/sheaf_coverage_matrix.json</code>
 and regenerates coverage artifacts. Partial compose
 (<code>--section</code>) is draft-only; the matrix always reflects the
-full manifest. Coverage totals appear on <span class="citation"
-data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span>; discussion
-scope is in <span class="citation"
-data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
-<h2 id="law-verification">Law verification</h2>
+full manifest. Coverage totals appear on sec. <a
+href="manuscript__00_00_sheaf_coverage.html#sec:sheaf_coverage">1</a>; discussion scope is in sec. <a
+href="manuscript__15_discussion_outlook.html#sec:discussion_outlook">13</a>.</p>
+<h2 data-number="8.4" id="law-verification"><span
+class="header-section-number">8.4</span> Law verification</h2>
 <p><code>--validate-only --strict</code> runs the structural gate before
 any fragment is glued. Beyond per-cell coverage, it invokes the
 sheaf-law oracle (<code>verify_sheaf_laws</code>,
@@ -804,19 +830,21 @@ about a shared symbol or measured claim. The visualization-quality audit
 is one of those restrictions, so a missing source map, missing
 statistical bridge source, missing hash, blank render, non-RGB render,
 undersized figure, or unbound section breaks the same semantic contract
-that checks statistics and theorem witnesses. <span class="citation"
-data-cites="fig:semantic_gluing_graph">[@fig:semantic_gluing_graph]</span>
-renders the configured producers, generated evidence artifacts, and
-validation consumers that read each shared symbol.</p>
+that checks statistics and theorem witnesses. fig. <a
+href="#fig:semantic_gluing_graph">8</a> renders the configured
+producers, generated evidence artifacts, and validation consumers that
+read each shared symbol.</p>
 <!-- sheaf-track:formalism -->
-<h3 id="base-poset-and-presheaf">Base poset and presheaf</h3>
+<h3 data-number="8.4.1" id="base-poset-and-presheaf"><span
+class="header-section-number">8.4.1</span> Base poset and presheaf</h3>
 <p>The manuscript is modelled as a coverage sheaf over a finite base
 poset. Let the <strong>base</strong> <span
 class="math inline">\(P\)</span> be the IMRAD blocks ordered as a
 chain,</p>
-<p><span class="math display">\[\mathsf{Introduction} \prec
-\mathsf{Methods} \prec \mathsf{Results} \prec \mathsf{Discussion} \prec
-\mathsf{Appendix},\]</span> {#eq:imrad_chain}</p>
+<p><span id="eq:imrad_chain"><span
+class="math display">\[\mathsf{Introduction} \prec \mathsf{Methods}
+\prec \mathsf{Results} \prec \mathsf{Discussion} \prec
+\mathsf{Appendix},\qquad{(2)}\]</span></span></p>
 <p>with, in each block, a <em>group</em> node above its <em>section</em>
 nodes (written <span class="math inline">\(G \sqsupseteq s\)</span>).
 <span class="math inline">\(P\)</span> is therefore a finite poset
@@ -844,8 +872,8 @@ map. Restriction along <span class="math inline">\(G \sqsupseteq
 s\)</span> is projection onto a section’s own bindings; group nodes
 carry the empty assignment and do not compose.</p>
 <p>The coverage cell is</p>
-<p><span class="math display">\[B(s,t) \in \{\mathrm{P}, \mathrm{—},
-\mathrm{M}\}\]</span> {#eq:coverage_cell}</p>
+<p><span id="eq:coverage_cell"><span class="math display">\[B(s,t) \in
+\{\mathrm{P}, \mathrm{—}, \mathrm{M}\}\qquad{(3)}\]</span></span></p>
 <p>derived from <span class="math inline">\(F_s(t)\)</span> and
 filesystem existence at compose time: <strong>P</strong> when a bound
 fragment exists, <strong>—</strong> when the track is unbound for that
@@ -854,17 +882,17 @@ regenerated matrix reports 95 present / 95 bound / 0 missing cells.
 Registry size: <span class="math inline">\(|\mathcal{T}| = 34\)</span>
 types across 17 IMRAD manifest rows (5 group rows, 12 composing
 sections).</p>
-<h3 id="verified-sheaf-laws">Verified sheaf laws</h3>
+<h3 data-number="8.4.2" id="verified-sheaf-laws"><span
+class="header-section-number">8.4.2</span> Verified sheaf laws</h3>
 <p>What makes this presheaf a <em>sheaf</em> — rather than a bare
 incidence table — is that the composer’s structural axioms are
 machine-checked. The oracle <code>verify_sheaf_laws</code>
 (<code>src/manuscript/sheaf/laws.py</code>) verifies 6 laws, and the
 regenerated build reports 6/6 satisfied:</p>
 <ol type="1">
-<li><strong>Poset.</strong> The IMRAD blocks form the chain of <span
-class="citation" data-cites="eq:imrad_chain">[@eq:imrad_chain]</span>;
-compose order is monotone in block rank and every composing section’s
-block carries a group row.</li>
+<li><strong>Poset.</strong> The IMRAD blocks form the chain of eq. <a
+href="#eq:imrad_chain">2</a>; compose order is monotone in block rank
+and every composing section’s block carries a group row.</li>
 <li><strong>Presheaf (functoriality).</strong> Every bound track lies in
 <span class="math inline">\(\mathcal{T}\)</span>; <span
 class="math inline">\(\pi\)</span> is a strict total order; and each
@@ -898,7 +926,8 @@ the law and is proven to be caught — so the gate binds the laws’
 <em>content</em>, not merely their shape. Under <code>--strict</code>,
 any violation is surfaced as an error-level manifest issue and aborts
 composition.</p>
-<h3 id="scope-what-is-and-is-not-claimed">Scope (what is and is not
+<h3 data-number="8.4.3" id="scope-what-is-and-is-not-claimed"><span
+class="header-section-number">8.4.3</span> Scope (what is and is not
 claimed)</h3>
 <p>These laws verify the sheaf <em>axioms</em> on a finite base poset.
 They do <strong>not</strong> compute sheaf <em>cohomology</em> (<span
@@ -915,55 +944,55 @@ a content-level audit over the same base, not an additional topological
 law.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:sheaf_layers_overview">
-<a class="figure-full-size-link" href="../figures/sheaf_layers_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Sheaf layers overview: registry stack"><img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
+<a class="figure-full-size-link" href="../figures/sheaf_layers_overview.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Sheaf layers overview: registry stack"><img src="../figures/sheaf_layers_overview.png" style="width:98.0%"
 data-fig-alt="Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks."
 alt="Two-panel overview of sheaf fragment layers. Left panel shows 34 composable track types in registry compose order with labels and renderer ids. Right panel shows the IMRAD section binding heatmap with black present, white absent, and gray missing cells across 17 manifest rows and 34 tracks." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Sheaf layers overview: registry stack
-(compose order, renderer ids) and IMRAD binding heatmap for 34 fragment
-types across 17 manifest rows (95 present / 95 bound / 0 missing),
-generated from
+<figcaption>Figure 7: Sheaf layers overview: registry
+stack (compose order, renderer ids) and IMRAD binding heatmap for 34
+fragment types across 17 manifest rows (95 present / 95 bound / 0
+missing), generated from
 <code>output/data/sheaf_coverage_matrix.json</code>.</figcaption>
 </figure>
 <figure id="fig:semantic_gluing_graph">
-<a class="figure-full-size-link" href="../figures/semantic_gluing_graph.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Semantic gluing graph: configured producers, generated evidence artifacts"><img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/semantic_gluing_graph.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, Semantic gluing graph: configured producers, generated evidence artifacts"><img src="../figures/semantic_gluing_graph.png" style="width:95.0%"
 data-fig-alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate."
 alt="Dependency diagram linking configured analysis scripts to generated evidence artifacts, manuscript consumers, and validation gates for the semantic sheaf gluing certificate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Semantic gluing graph: configured
-producers, generated evidence artifacts, and validation consumers for
-the multi-track sheaf certificate.</figcaption>
+<figcaption>Figure 8: Semantic gluing graph:
+configured producers, generated evidence artifacts, and validation
+consumers for the multi-track sheaf certificate.</figcaption>
 </figure>
 <figure id="fig:track_lane_promotion_map">
-<a class="figure-full-size-link" href="../figures/track_lane_promotion_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true."><img src="../figures/track_lane_promotion_map.png" style="width:98.0%"
+<a class="figure-full-size-link" href="../figures/track_lane_promotion_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 9, Track-lane promotion map: 32 pipeline-to-sheaf rows with complete promotion status true."><img src="../figures/track_lane_promotion_map.png" style="width:98.0%"
 data-fig-alt="Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track."
 alt="Two-panel matrix generated from track_lane_matrix.json. The left panel lists pipeline tracks against producer, artifact, manuscript consumer, typed claim, semantic restriction, validation gate, and negative control obligations. The right panel shows the sheaf fragment lanes bound to each pipeline track." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Track-lane promotion map: 32
+<figcaption>Figure 9: Track-lane promotion map: 32
 pipeline-to-sheaf rows with complete promotion status true. Left: seven
 promotion-rule obligations; right: sheaf fragment bindings.</figcaption>
 </figure>
 <figure id="fig:artifact_contract_map">
-<a class="figure-full-size-link" href="../figures/artifact_contract_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Artifact contract map: 86 generated artifact rows with complete contract status true"><img src="../figures/artifact_contract_map.png" style="width:98.0%"
+<a class="figure-full-size-link" href="../figures/artifact_contract_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, Artifact contract map: 86 generated artifact rows with complete contract status true"><img src="../figures/artifact_contract_map.png" style="width:98.0%"
 data-fig-alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status."
 alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Artifact contract map: 86 generated
-artifact rows with complete contract status true and copied-output
-parity complete true. Cycle rows are explicit in
+<figcaption>Figure 10: Artifact contract map: 86
+generated artifact rows with complete contract status true and
+copied-output parity complete true. Cycle rows are explicit in
 <code>output/data/artifact_contract_index.json</code>.</figcaption>
 </figure>
 <figure id="fig:scholarship_source_map">
-<a class="figure-full-size-link" href="../figures/scholarship_source_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Scholarship source map: 21 source rows across 21 method roles and 10 source families."><img src="../figures/scholarship_source_map.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/scholarship_source_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, Scholarship source map: 21 source rows across 21 method roles and 10 source families."><img src="../figures/scholarship_source_map.png" style="width:95.0%"
 data-fig-alt="Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts."
 alt="Five-column source map generated from the scholarship source matrix. Each row links a bibliography key to a DOI or URL locator, manuscript citation status, guarded scope boundary, method role, and generated evidence artifact; green borders mark rows rederived from bibliography entries, manuscript citations, registered tracks, bound manuscript sections, and existing artifacts." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Scholarship source map: 21 source rows
-across 21 method roles and 10 source families. Connected status: true;
-row evidence rederived: true.</figcaption>
+<figcaption>Figure 11: Scholarship source map: 21
+source rows across 21 method roles and 10 source families. Connected
+status: true; row evidence rederived: true.</figcaption>
 </figure>
 <figure id="fig:security_posture_map">
-<a class="figure-full-size-link" href="../figures/security_posture_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Security posture map: 9 controls, 7 enforced"><img src="../figures/security_posture_map.png" style="width:96.0%"
+<a class="figure-full-size-link" href="../figures/security_posture_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 12, Security posture map: 9 controls, 7 enforced"><img src="../figures/security_posture_map.png" style="width:96.0%"
 data-fig-alt="Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status."
 alt="Matrix generated from security_posture_audit.json. Rows are defensive controls such as public data boundary, offline reproducibility, hash integrity, release parity, claim traceability, formal boundary, secret scan, signed attestation, and zero-trust runtime boundary; columns show evidence, validator, negative-control, scoping, and overall status." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Security posture map: 9 controls, 7
-enforced and 2 scoped as deferred; secret findings: 0; high-risk gaps:
-0.</figcaption>
+<figcaption>Figure 12: Security posture map: 9
+controls, 7 enforced and 2 scoped as deferred; secret findings: 0;
+high-risk gaps: 0.</figcaption>
 </figure>
 <!-- sheaf-track:provenance -->
 <p>The <code>provenance</code> fragment makes artifact lineage a live
@@ -1032,14 +1061,17 @@ audit table for the same gate surface: 32 pipeline rows map to sheaf
 fragments, producer scripts, primary artifacts, validation gates, and
 manuscript consumers, with completion flag <code>true</code>.</p>
 <!-- sheaf-track:artifact_diffoscope -->
-<h3 id="artifact-diffoscope-track">Artifact diffoscope track</h3>
+<h3 data-number="8.4.4" id="artifact-diffoscope-track"><span
+class="header-section-number">8.4.4</span> Artifact diffoscope
+track</h3>
 <p>The <code>artifact_diffoscope</code> track compares saved provenance
 hashes against live artifact hashes at the artifact root JSONPath. Its
 proof artifact is <code>output/reports/artifact_diffoscope.json</code>:
 it currently records 43 comparison rows, with equality status
 <code>true</code>.</p>
 <!-- sheaf-track:artifact_license -->
-<h3 id="artifact-license-track">Artifact license track</h3>
+<h3 data-number="8.4.5" id="artifact-license-track"><span
+class="header-section-number">8.4.5</span> Artifact license track</h3>
 <p>The <code>artifact_license</code> track classifies generated and
 project-source artifacts under the public project license boundary. Its
 audit artifact is
@@ -1050,17 +1082,33 @@ records 86 rows, with license-safe status <code>true</code>.</p>
 method surface rather than decorative bibliography.
 <code>output/data/scholarship_source_matrix.json</code> records 21
 source rows across 21 method roles and 10 source families, including 3
-quantitative/statistical or visualization-quality method roles; <span
+quantitative/statistical or visualization-quality method roles; fig. <a
+href="#fig:scholarship_source_map">11</a> renders the resulting
+source-to-artifact map with 1 locator kinds. The row set connects
+foundational free-energy and active-inference references <span
 class="citation"
-data-cites="fig:scholarship_source_map">[@fig:scholarship_source_map]</span>
-renders the resulting source-to-artifact map with 1 locator kinds. The
-row set connects foundational free-energy and active-inference
-references [friston2010fep; buckley2017mathreview; dacosta2020discrete;
-parr2022active; smith2022tutorial], planning context
-[champion2021branching; nuijten2026efeplanning], implementation and
-notation anchors [pymdp2024; gnn2023], and applied sheaf/local-to-global
-sources [curry2014sheaves; robinson2014topological;
-bosca2026localglobal] to the exact artifact or method role they
+data-cites="friston2010fep buckley2017mathreview dacosta2020discrete parr2022active smith2022tutorial">(<a
+href="index.html#ref-friston2010fep" role="doc-biblioref">Friston 2010</a>; <a
+href="index.html#ref-buckley2017mathreview" role="doc-biblioref">Buckley et al.
+2017</a>; <a href="index.html#ref-dacosta2020discrete" role="doc-biblioref">Da
+Costa et al. 2020</a>; <a href="index.html#ref-parr2022active"
+role="doc-biblioref">Parr et al. 2022</a>; <a
+href="index.html#ref-smith2022tutorial" role="doc-biblioref">Smith et al.
+2022</a>)</span>, planning context <span class="citation"
+data-cites="champion2021branching nuijten2026efeplanning">(<a
+href="index.html#ref-champion2021branching" role="doc-biblioref">Champion et al.
+2021</a>; <a href="index.html#ref-nuijten2026efeplanning"
+role="doc-biblioref">Nuijten et al. 2026</a>)</span>, implementation and
+notation anchors <span class="citation"
+data-cites="pymdp2024 gnn2023">(<a href="index.html#ref-pymdp2024"
+role="doc-biblioref">Heins et al. 2022</a>; <a href="index.html#ref-gnn2023"
+role="doc-biblioref">Smékal and Friedman 2023</a>)</span>, and applied
+sheaf/local-to-global sources <span class="citation"
+data-cites="curry2014sheaves robinson2014topological bosca2026localglobal">(<a
+href="index.html#ref-curry2014sheaves" role="doc-biblioref">Curry 2014</a>; <a
+href="index.html#ref-robinson2014topological" role="doc-biblioref">Robinson
+2014</a>; <a href="index.html#ref-bosca2026localglobal" role="doc-biblioref">Bosca
+and Ghrist 2026</a>)</span> to the exact artifact or method role they
 support.</p>
 <p>The validation claim is deliberately narrow: every row must have a
 bibliography entry with a DOI or URL, a manuscript citation, registered
@@ -1110,7 +1158,8 @@ hydrated value, unresolved token, or missing resolved section becomes a
 validation failure before PDF or web outputs are accepted.</p>
 <!-- sheaf-track:layers -->
 <!-- sheaf-layers:registry -->
-<h2 id="sheaf-fragment-track-registry">Sheaf fragment track
+<h2 data-number="8.5" id="sheaf-fragment-track-registry"><span
+class="header-section-number">8.5</span> Sheaf fragment track
 registry</h2>
 <p>Compose order and renderer bindings from
 <code>manuscript/sheaf/tracks.yaml</code>.</p>
@@ -1472,14 +1521,14 @@ evidence.</td>
 </table></div>
 <p><strong>Track count:</strong> 34 registered fragment types.</p>
 <!-- sheaf-layers:binding-matrix -->
-<h2 id="imrad-binding-matrix">IMRAD binding matrix</h2>
+<h2 data-number="8.6" id="imrad-binding-matrix"><span
+class="header-section-number">8.6</span> IMRAD binding matrix</h2>
 <p>Compact section summary: <strong>P</strong> = present (bound and file
 exists); <strong>M</strong> = missing (bound, file absent). Every track
 not listed for a row is absent (not bound).</p>
 <p>The complete cell-level matrix is stored in
 <code>output/data/sheaf_coverage_matrix.json</code> and visualized in
-<span class="citation"
-data-cites="fig:sheaf_coverage_heatmap">[@fig:sheaf_coverage_heatmap]</span>.</p>
+fig. <a href="manuscript__00_00_sheaf_coverage.html#fig:sheaf_coverage_heatmap">1</a>.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
@@ -1645,7 +1694,8 @@ data-cites="fig:sheaf_coverage_heatmap">[@fig:sheaf_coverage_heatmap]</span>.</p
 </tbody>
 </table></div>
 <!-- sheaf-layers:section-status -->
-<h2 id="section-track-status">Section-track status</h2>
+<h2 data-number="8.7" id="section-track-status"><span
+class="header-section-number">8.7</span> Section-track status</h2>
 <p>Generated status for the current manuscript sheaf, summarized per
 composable section.</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
@@ -1769,7 +1819,8 @@ composable section.</p>
 <p><strong>Section status:</strong> 12 / 12 composable sections fully
 sheafed; 0 required bound fragments missing.</p>
 <!-- sheaf-layers:track-status -->
-<h2 id="track-status">Track status</h2>
+<h2 data-number="8.8" id="track-status"><span
+class="header-section-number">8.8</span> Track status</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 29%" />
@@ -2102,7 +2153,8 @@ sheafed; 0 required bound fragments missing.</p>
 </table></div>
 <p><strong>Status cells:</strong> 578 section-track cells.</p>
 <!-- sheaf-layers:render-log -->
-<h2 id="render-and-logging-summary">Render and logging summary</h2>
+<h2 data-number="8.9" id="render-and-logging-summary"><span
+class="header-section-number">8.9</span> Render and logging summary</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 20%" />
@@ -2181,7 +2233,8 @@ sheafed; 0 required bound fragments missing.</p>
 </table></div>
 <p><strong>Render events:</strong> 8.</p>
 <!-- sheaf-layers:evidence-crosswalk -->
-<h2 id="evidence-crosswalk">Evidence crosswalk</h2>
+<h2 data-number="8.10" id="evidence-crosswalk"><span
+class="header-section-number">8.10</span> Evidence crosswalk</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
@@ -2250,7 +2303,8 @@ sheafed; 0 required bound fragments missing.</p>
 </table></div>
 <p><strong>Claim rows:</strong> 97 typed evidence claims.</p>
 <!-- sheaf-layers:artifact-producers -->
-<h2 id="artifact-producer-graph">Artifact producer graph</h2>
+<h2 data-number="8.11" id="artifact-producer-graph"><span
+class="header-section-number">8.11</span> Artifact producer graph</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 25%" />
@@ -2727,7 +2781,9 @@ sheafed; 0 required bound fragments missing.</p>
 </table></div>
 <p><strong>Producer issues:</strong> 0.</p>
 <!-- sheaf-layers:semantic-restrictions -->
-<h2 id="semantic-gluing-restrictions">Semantic gluing restrictions</h2>
+<h2 data-number="8.12" id="semantic-gluing-restrictions"><span
+class="header-section-number">8.12</span> Semantic gluing
+restrictions</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
@@ -2839,7 +2895,8 @@ sheafed; 0 required bound fragments missing.</p>
 </tbody>
 </table></div>
 <!-- sheaf-layers:track-lane-matrix -->
-<h2 id="track-lane-matrix">Track-lane matrix</h2>
+<h2 data-number="8.13" id="track-lane-matrix"><span
+class="header-section-number">8.13</span> Track-lane matrix</h2>
 <p>Every pipeline row is shown below in canonical order. The
 source-owned full matrix in output/data/track_lane_matrix.json remains
 the authority for exact source paths, claim IDs, semantic-restriction
@@ -3193,7 +3250,8 @@ manuscript. Negative control: track lane matrix row only forgery.</td>
 <p><strong>Pipeline rows:</strong> 32 total; 31 required; every row
 shown.</p>
 <!-- sheaf-layers:track-improvement-scope -->
-<h2 id="track-improvement-scope">Track improvement scope</h2>
+<h2 data-number="8.14" id="track-improvement-scope"><span
+class="header-section-number">8.14</span> Track improvement scope</h2>
 <p>Every roadmap row is shown below in canonical order. The source-owned
 full matrix in output/data/track_improvement_scope.json remains the
 authority for exact priorities, scope text, gate or predicate IDs,

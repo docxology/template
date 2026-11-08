@@ -787,6 +787,7 @@ class="toc-section-number">7</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Research groups routinely need to pitch their work — to funders,
@@ -815,7 +816,9 @@ inspection.</p>
 <p><strong>Keywords:</strong> pitch deck, slide generation, reproducible
 research communication, meta-science infrastructure, token validation,
 PPTX, PDF rendering.</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>Every other public exemplar in this monorepo renders a manuscript:
@@ -870,7 +873,9 @@ guarantees (sec. <a href="#sec:reproducibility">5</a>) that let
 <code>uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py</code>
 produce the same six files, byte-for-byte, on any machine with this repo
 checked out.</p>
+
 <hr />
+
 <h1 data-number="3" id="sec:architecture"><span
 class="header-section-number">3</span> Deck Rendering Architecture</h1>
 <h2 data-number="3.1" id="content-model"><span
@@ -937,7 +942,9 @@ preserves every live name and all three original claims without
 shrinking presentation body text; executable tests derive the exact
 roster dynamically and bind each authored deck to its declared
 budget.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:validation"><span
 class="header-section-number">4</span> Content and Validation</h1>
 <h2 data-number="4.1" id="the-flagship-pitch"><span
@@ -994,7 +1001,9 @@ checked against every resolved slide across all three lengths as part of
 the same audit script, and — like the token check — is proven to fire on
 a deliberately cliché-laden sentence before the real content’s
 cleanliness is trusted.</p>
+
 <hr />
+
 <h1 data-number="5" id="sec:reproducibility"><span
 class="header-section-number">5</span> Reproducibility</h1>
 <p><code>scripts/20_render_decks.py</code> is deterministic: given the
@@ -1023,7 +1032,9 @@ and requires no LLM/Ollama stage — deck content is authored and
 token-resolved, not generated at render time by a model call, which
 keeps the artifact deterministic and the core pipeline
 Ollama-optional.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:methodology"><span
 class="header-section-number">6</span> Methodology</h1>
 <p>The deck is generated deterministically from a structured content
@@ -1078,12 +1089,15 @@ class="header-section-number">6.2</span> Validation</h2>
 cliché checks in one pass; <code>scripts/30_audit_diligence.py</code>
 enforces 100% fact-citation coverage across all three lengths.
 PowerPoint/PDF slide-count parity is verified for every render.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:references"><span
 class="header-section-number">7</span> References</h1>
 <div id="refs" role="list">
 
 </div>
+
 </main>
 </body>
 </html>

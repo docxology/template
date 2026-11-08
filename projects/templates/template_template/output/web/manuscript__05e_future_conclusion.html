@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05e_future_conclusion.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
+  <title>A template/ approach to Reproducible Generative
+Research</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +182,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -587,11 +739,16 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 id="future-directions">Future Directions</h2>
+<h2 data-number="5.7" id="future-directions"><span
+class="header-section-number">5.7</span> Future Directions</h2>
 <ol type="1">
 <li><strong>Supply-chain provenance</strong>: Integration with software
-supply chain frameworks such as in-toto [torresarias2019intoto] and SLSA
-(Supply-chain Levels for Software Artifacts) [openssf2023slsa] to
+supply chain frameworks such as in-toto <span class="citation"
+data-cites="torresarias2019intoto">(<a href="index.html#ref-torresarias2019intoto"
+role="doc-biblioref">Torres-Arias et al. 2019</a>)</span> and SLSA
+(Supply-chain Levels for Software Artifacts) <span class="citation"
+data-cites="openssf2023slsa">(<a href="index.html#ref-openssf2023slsa"
+role="doc-biblioref">Open Source Security Foundation 2023</a>)</span> to
 provide end-to-end attestation from source commit through build pipeline
 to published artifact. SLSA’s four graduated levels of build integrity
 (from basic provenance to hermetic, reproducible builds) provide a
@@ -614,9 +771,12 @@ assets and automated DOI registration via Zenodo.</li>
 Orchestrator pattern to R, Julia, and Rust projects, enabling polyglot
 research workflows within the Two-Layer Architecture.</li>
 <li><strong>Automated FAIR4RS assessment</strong>: Periodic self-scoring
-against FAIRsoft metrics [garijo2024fairsoft], with quality indicators
-(executability, documentation completeness, metadata richness) tracked
-as pipeline artifacts alongside test coverage and rendering status.</li>
+against FAIRsoft metrics <span class="citation"
+data-cites="garijo2024fairsoft">(<a href="index.html#ref-garijo2024fairsoft"
+role="doc-biblioref"><span class="nocase">Garijo et al.</span>
+2024</a>)</span>, with quality indicators (executability, documentation
+completeness, metadata richness) tracked as pipeline artifacts alongside
+test coverage and rendering status.</li>
 <li><strong>Knowledge graph integration</strong>: Connecting pipeline
 outputs to Active Inference Knowledge Base entries for automated
 meta-analysis and cross-project citation tracking.</li>
@@ -627,7 +787,9 @@ algorithmic logic and that <code>src/</code> modules do not import from
 <li><strong>Agentic research pipelines via MCP</strong>: The
 <code>SKILL.md</code> descriptors already define the interface contracts
 for each infrastructure module; the natural next step is to expose them
-as MCP server endpoints [anthropic2024mcp]. An MCP server wrapping
+as MCP server endpoints <span class="citation"
+data-cites="anthropic2024mcp">(<a href="index.html#ref-anthropic2024mcp"
+role="doc-biblioref">Anthropic 2024</a>)</span>. An MCP server wrapping
 <code>infrastructure.llm</code> would expose <code>query</code>,
 <code>review_manuscript</code>, and <code>translate_abstract</code> as
 protocol-native Tools; an MCP server wrapping
@@ -637,45 +799,58 @@ protocol-native Tools; an MCP server wrapping
 compose these Tools to execute the full pipeline—environment setup →
 test execution → analysis → rendering → validation → LLM review → DOI
 registration—without any human in the loop. This closes the loop opened
-by Lu et al.’s AI Scientist [lu2024aiscientist], which demonstrated
-automated hypothesis generation and experimental iteration but relied on
-ad hoc laboratory scaffolding. <code>template/</code>’s pipeline, fully
-exposed as MCP tools, provides that scaffolding in a reproducible,
-versioned, and certified form. Longer-term, the Agent2Agent (A2A)
-protocol [google2025a2a] enables heterogeneous specialist agents—a
-statistical analyst, a figure designer, a peer-review simulator—to
-coordinate via a shared, protocol-mediated workspace built on precisely
-the kind of modular, well-documented infrastructure that
-<code>template/</code> provides.</li>
+by Lu et al.’s AI Scientist <span class="citation"
+data-cites="lu2024aiscientist">(<a href="index.html#ref-lu2024aiscientist"
+role="doc-biblioref"><span class="nocase">Lu et al.</span>
+2024</a>)</span>, which demonstrated automated hypothesis generation and
+experimental iteration but relied on ad hoc laboratory scaffolding.
+<code>template/</code>’s pipeline, fully exposed as MCP tools, provides
+that scaffolding in a reproducible, versioned, and certified form.
+Longer-term, the Agent2Agent (A2A) protocol <span class="citation"
+data-cites="google2025a2a">(<a href="index.html#ref-google2025a2a"
+role="doc-biblioref">Google 2025</a>)</span> enables heterogeneous
+specialist agents—a statistical analyst, a figure designer, a
+peer-review simulator—to coordinate via a shared, protocol-mediated
+workspace built on precisely the kind of modular, well-documented
+infrastructure that <code>template/</code> provides.</li>
 <li><strong>Research Infrastructure as Code and software
 citation</strong>: The DevOps IaC paradigm, applied to research, means
 the entire manuscript pipeline is a version-controlled, reproducible
-artifact in its own right. Software Heritage [cosmo2020softwareheritage]
-provides persistent SWHIDs (Software Hash Identifiers) for source-code
-snapshots, enabling <code>template/</code> itself to be cited as a
-software artifact with a DOI-equivalent stable identifier. Combining
-this with Zenodo DOI registration (already supported by
-<code>infrastructure.publishing</code>) creates a full citation chain:
-the paper cites the data (DOI), the data provenance cites the pipeline
-(SWHID), and the pipeline cites the framework release (Zenodo DOI). This
-three-link citation chain operationalizes the Katz et
-al. [katz2021software] software citation principles at the
-infrastructure level.</li>
+artifact in its own right. Software Heritage <span class="citation"
+data-cites="cosmo2020softwareheritage">(<a
+href="index.html#ref-cosmo2020softwareheritage" role="doc-biblioref">Di Cosmo et
+al. 2020</a>)</span> provides persistent SWHIDs (Software Hash
+Identifiers) for source-code snapshots, enabling <code>template/</code>
+itself to be cited as a software artifact with a DOI-equivalent stable
+identifier. Combining this with Zenodo DOI registration (already
+supported by <code>infrastructure.publishing</code>) creates a full
+citation chain: the paper cites the data (DOI), the data provenance
+cites the pipeline (SWHID), and the pipeline cites the framework release
+(Zenodo DOI). This three-link citation chain operationalizes the Katz et
+al. <span class="citation" data-cites="katz2021software">(<a
+href="index.html#ref-katz2021software" role="doc-biblioref">Katz et al.
+2021</a>)</span> software citation principles at the infrastructure
+level.</li>
 </ol>
-<h2 id="conclusion">Conclusion</h2>
+<h2 data-number="5.8" id="conclusion"><span
+class="header-section-number">5.8</span> Conclusion</h2>
 <p><code>template/</code> demonstrates that high-integrity, reproducible
 research need not be onerous. By embedding provenance, testing, and
 documentation into the architecture itself—rather than layering them
 atop a fragmented workflow—the template transforms “best practices” from
-aspirational guidelines into enforced invariants [wilson2017good;
-sandve2013ten; lamprecht2020towards]. The Two-Layer Architecture ensures
-that infrastructure improvements propagate to all projects without
-coupling. The Zero-Mock policy ensures that tests <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">reflect
+aspirational guidelines into enforced invariants <span class="citation"
+data-cites="wilson2017good sandve2013ten lamprecht2020towards">(<a
+href="index.html#ref-wilson2017good" role="doc-biblioref">Wilson et al. 2017</a>;
+<a href="index.html#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
+2013</a>; <a href="index.html#ref-lamprecht2020towards"
+role="doc-biblioref">Lamprecht et al. 2020</a>)</span>. The Two-Layer
+Architecture ensures that infrastructure improvements propagate to all
+projects without coupling. The Zero-Mock policy ensures that tests <a
+href="manuscript__05a_zeromock_tradeoff.html#the-zero-mock-tradeoff">reflect
 reality</a>. The steganographic provenance layer ensures that published
 artifacts carry their own <a
-href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/07_security_provenance.md#security-and-provenance">authentication</a>.
-The <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/08f_appendix_matrix.md#appendix-matrix">comparative
+href="manuscript__07_security_provenance.html#security-and-provenance">authentication</a>.
+The <a href="manuscript__08f_appendix_matrix.html#appendix-matrix">comparative
 analysis</a> distinguishes native, partial, and absent support across
 its versioned capability inventory. The total comparison inventory
 includes capabilities that <code>template/</code> does not fully
@@ -687,18 +862,23 @@ existing tools.</p>
 commitment. It asserts that a research paper is not a static document
 but a build artifact—reproducible, verifiable, and traceable to the code
 that generated it. As Knuth observed, programs should be written for
-humans to read and only incidentally for machines to execute
-[knuth1984literate]. We extend this dictum: research manuscripts should
-be <em>built</em> for verification and only incidentally for reading. In
-an era of generative AI, AI-native research workspaces, and synthetic
+humans to read and only incidentally for machines to execute <span
+class="citation" data-cites="knuth1984literate">(<a
+href="index.html#ref-knuth1984literate" role="doc-biblioref">Knuth
+1984</a>)</span>. We extend this dictum: research manuscripts should be
+<em>built</em> for verification and only incidentally for reading. In an
+era of generative AI, AI-native research workspaces, and synthetic
 media—where the boundary between human-authored and machine-generated
-text grows increasingly indeterminate [gruenpeter2021research]—the
-provenance chain from source code to published PDF is not an
-administrative convenience. It is the epistemic ground on which
-scientific trust must be rebuilt. That this manuscript was itself built,
-tested, and watermarked by the pipeline it describes—its metrics
-computed from the repository it inhabits, its figures rendered by the
-code it documents—demonstrates one reproducible artifact path; broader
+text grows increasingly indeterminate <span class="citation"
+data-cites="gruenpeter2021research">(<a
+href="index.html#ref-gruenpeter2021research" role="doc-biblioref"><span
+class="nocase">Gruenpeter et al.</span> 2021</a>)</span>—the provenance
+chain from source code to published PDF is not an administrative
+convenience. It is the epistemic ground on which scientific trust must
+be rebuilt. That this manuscript was itself built, tested, and
+watermarked by the pipeline it describes—its metrics computed from the
+repository it inhabits, its figures rendered by the code it
+documents—demonstrates one reproducible artifact path; broader
 reliability claims require the declared checks and candidate-bound
 execution evidence.</p>
 </main>

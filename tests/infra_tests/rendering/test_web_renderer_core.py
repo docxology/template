@@ -9,26 +9,10 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering import web_renderer
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.web_renderer import WebRenderer
 
 from ._web_renderer_test_helpers import _make_renderer
-
-
-class TestWebRendererCore:
-    """Test core web renderer functionality."""
-
-    def test_module_imports(self):
-        """Test that module imports correctly."""
-        assert web_renderer is not None
-
-    def test_has_render_functions(self):
-        """Test that module has render functions."""
-        module_funcs = [
-            a for a in dir(web_renderer) if not a.startswith("_") and callable(getattr(web_renderer, a, None))
-        ]
-        assert len(module_funcs) > 0
 
 
 class TestHtmlRendering:
@@ -54,136 +38,20 @@ class TestHtmlRendering:
         assert result.parent == Path(renderer.config.web_dir)
 
 
-class TestWebRendererIntegration:
-    """Integration tests for web renderer."""
+@pytest.mark.parametrize("invalid", ["empty", "encoding", "missing"])
+def test_combined_invalid_manuscript_refuses_to_publish_html(tmp_path: Path, invalid: str) -> None:
+    """Invalid actual source files must not produce a successful HTML edition."""
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    source = manuscript / "01_section.md"
+    if invalid != "missing":
+        source.write_bytes(b"" if invalid == "empty" else b"\x80\x81\x82")
+    renderer = _make_renderer(tmp_path)
 
-    def test_full_render_workflow(self, tmp_path):
-        """Test complete rendering workflow."""
-        # Create test content
-        md = tmp_path / "doc.md"
-        md.write_text("# Document\n\n## Section\n\nContent here.")
+    with pytest.raises((RenderingError, OSError)):
+        renderer.render_combined([source], manuscript, "invalid-proof")
 
-        # Module should be importable
-        assert web_renderer is not None
-
-
-class TestCombineMarkdownFiles:
-    def test_single_file(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "intro.md"
-        md.write_text("# Introduction\n\nHello world.\n")
-        result = renderer._combine_markdown_files([md])
-        assert "# Introduction" in result
-        assert "Hello world." in result
-
-    def test_multiple_files(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        f1 = tmp_path / "01.md"
-        f2 = tmp_path / "02.md"
-        f1.write_text("# Section 1\n\nContent 1.\n")
-        f2.write_text("# Section 2\n\nContent 2.\n")
-        result = renderer._combine_markdown_files([f1, f2])
-        assert "Section 1" in result
-        assert "Section 2" in result
-        assert "---" in result  # Separator between sections
-
-    def test_strips_trailing_whitespace(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "test.md"
-        md.write_text("Content   \n\n\n")
-        result = renderer._combine_markdown_files([md])
-        assert not result.endswith("   \n\n\n")
-
-    def test_adds_newline_if_missing(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "test.md"
-        md.write_text("No trailing newline")
-        result = renderer._combine_markdown_files([md])
-        assert result.endswith("\n") or len(result.strip()) > 0
-
-    def test_empty_files_raises(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "empty.md"
-        md.write_text("")
-        with pytest.raises(RenderingError, match="empty"):
-            renderer._combine_markdown_files([md])
-
-    def test_bom_removal(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "bom.md"
-        md.write_text("\ufeff# With BOM\n\nContent.\n")
-        result = renderer._combine_markdown_files([md])
-        assert not result.startswith("\ufeff")
-
-    def test_unicode_error(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "bad.md"
-        md.write_bytes(b"\x80\x81\x82")
-        with pytest.raises(RenderingError, match="encoding"):
-            renderer._combine_markdown_files([md])
-
-    def test_missing_file(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        md = tmp_path / "nonexistent.md"
-        with pytest.raises(RenderingError):
-            renderer._combine_markdown_files([md])
-
-    def test_html_safe_markdown_preserves_raw_latex_visible_text(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        source = (
-            "NumPy `\\citep{harris-2020}`{=latex}, SciPy "
-            "`\\citep{virtanen-2020}`{=latex}; see "
-            "`\\hyperref[sec:pymdp_validation]{§16}`{=latex}. "
-            "`\\phantomsection\\label{thm:demo}`{=latex}**Theorem.**"
-        )
-
-        result = renderer._html_safe_markdown(source)
-
-        assert "NumPy [harris-2020], SciPy [virtanen-2020]" in result
-        assert "see §16." in result
-        assert "`\\citep" not in result
-        assert "`\\hyperref" not in result
-        assert "label{thm:demo}" not in result
-        assert "**Theorem.**" in result
-
-    def test_html_safe_markdown_normalizes_project_figure_paths(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        source = "![A](../output/figures/a.png)\n![B](output/figures/b.png)\n![C](../../output/figures/c.png)\n"
-
-        result = renderer._html_safe_markdown(source)
-
-        assert "../output/figures/" not in result
-        assert "../../output/figures/" not in result
-        assert "output/figures/" not in result
-        assert result.count("../figures/") == 3
-
-    def test_html_safe_markdown_preserves_pandoc_crossrefs(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        source = (
-            "See [@fig:coverage] and [@tbl:coverage] in [@sec:results]. "
-            "Bibliography [@smith2020; -@doe2021] remains readable."
-        )
-
-        result = renderer._html_safe_markdown(source)
-
-        assert "[@fig:coverage]" in result
-        assert "[@tbl:coverage]" in result
-        assert "[@sec:results]" in result
-        assert "[fig:coverage]" not in result
-        assert "[tbl:coverage]" not in result
-        assert "[sec:results]" not in result
-        assert "[smith2020; doe2021]" in result
-
-    def test_per_section_html_can_render_crossrefs_without_raw_markers(self, tmp_path):
-        renderer = _make_renderer(tmp_path)
-        source = "See [@fig:coverage] and [@sec:results]."
-
-        result = renderer._html_safe_markdown(source, preserve_crossrefs=False)
-
-        assert "[@fig:coverage]" not in result
-        assert "[@sec:results]" not in result
-        assert "[fig:coverage]" in result
-        assert "[sec:results]" in result
+    assert not list(Path(renderer.config.web_dir).glob("*.html"))
 
 
 @pytest.mark.parametrize("combined", [False, True])
@@ -254,20 +122,3 @@ def test_individual_render_preserves_existing_page_permissions(tmp_path: Path) -
 
     assert target.is_file()
     assert (target.stat().st_mode & 0o777) == 0o600
-
-
-def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
-    manuscript_dir = tmp_path / "manuscript"
-    manuscript_dir.mkdir()
-    (manuscript_dir / "config.yaml").write_text(
-        "paper:\n  title: Test\n  subtitle: Accessible summary\n"
-        "authors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n",
-        encoding="utf-8",
-    )
-
-    args = WebRenderer._pandoc_metadata_args(manuscript_dir)
-
-    assert "--metadata=linkReferences:true" in args
-    assert "--metadata=author:Ada Lovelace" in args
-    assert "--metadata=lang:en-GB" in args
-    assert "--metadata=description:Accessible summary" in args

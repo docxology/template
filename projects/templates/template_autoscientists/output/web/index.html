@@ -837,6 +837,7 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Recent work on <em>AutoScientists</em> <span class="citation"
@@ -877,7 +878,9 @@ component’s contribution, and the language-model proposer is a clean
 plug-in seam: a deterministic rule-based agent drives the reproducible
 figures, and a bounded local model proposer (served by Ollama) can be
 swapped in without touching the coordination loop.</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <h2 data-number="2.1" id="motivation"><span
@@ -968,7 +971,9 @@ and the per-mechanism ablation with the numbers our scripts actually
 produce (sec. <a href="#sec:results">4</a>), states the scope and limits
 of those claims (sec. <a href="#sec:scope">7</a>), and documents
 reproduction (sec. <a href="#sec:reproducibility">6</a>).</p>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>The testbed is a single coordination loop over a fixed budget of
@@ -1105,7 +1110,9 @@ budgets.</li>
 arms under equal ceilings. Its scoped local numerical results are
 separate from the deterministic manuscript figures and do not establish
 general scientific-agent superiority.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>All numbers below are produced by the analysis scripts in
@@ -1342,7 +1349,9 @@ unchanged.</li>
 ablatable, but do not by themselves change any measured quantity on this
 objective — a result we report rather than obscure.</li>
 </ol>
+
 <hr />
+
 <h1 data-number="5" id="sec:setup"><span
 class="header-section-number">5</span> Experimental Setup</h1>
 <h2 data-number="5.1" id="objective-and-budget"><span
@@ -1408,7 +1417,9 @@ class="header-section-number">5.4</span> Outputs</h2>
 configurations, and writes a figure plus a machine-readable summary. The
 numbers quoted in sec. <a href="#sec:results">4</a> are read directly
 from those JSON files.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:reproducibility"><span
 class="header-section-number">6</span> Reproducibility</h1>
 <p>Every figure and number in this manuscript is regenerable from a
@@ -1470,7 +1481,9 @@ and is covered by
 <code>tests/infra_tests/scientific/test_confirmation.py</code>. The
 project keeps its own standalone copy so the exemplar runs
 self-contained.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:scope"><span
 class="header-section-number">7</span> Scope and Related Work</h1>
 <h2 data-number="7.1" id="what-this-exemplar-claims"><span
@@ -1554,7 +1567,9 @@ emphasis on regenerable figures, fixed seeds, and a tested core follows
 the reproducible-research tradition <span class="citation"
 data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
 role="doc-biblioref">Peng 2011</a>)</span>.</p>
+
 <hr />
+
 <h1 data-number="8" id="sec:conclusion"><span
 class="header-section-number">8</span> Conclusion</h1>
 <p>This exemplar re-implements the AutoScientists coordination
@@ -1594,7 +1609,9 @@ it without touching the coordination loop. The honest-testbed framing is
 the contribution — a small, fully reproducible instrument for
 attributing coordination effects to mechanisms and for distinguishing
 real gains from noise.</p>
+
 <hr />
+
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
@@ -1609,6 +1626,7 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_autoscientists/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-cohen1988statistical" class="csl-entry" role="listitem">

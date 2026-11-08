@@ -92,7 +92,7 @@
           "file_count": 53,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "3.55"
+          "size_mb": "3.74"
         }
       },
       "file_counts": {
@@ -209,7 +209,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.55
+            "size_mb": 3.74
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 9.535432815551758
+      "total_size_mb": 9.72234058380127
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -258,7 +258,7 @@
         },
         "epub": {
           "files": 1,
-          "size_bytes": 1233398
+          "size_bytes": 1233489
         },
         "figures": {
           "files": 96,
@@ -278,12 +278,12 @@
         },
         "web": {
           "files": 53,
-          "size_bytes": 3724978
+          "size_bytes": 3920874
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 9998626
+      "total_size_bytes": 10194613
     }
   },
   "recommendations": [],
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-06T18:06:46Z",
+  "timestamp": "2026-11-08T02:57:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "9edfe4b93dc1dc1db416e3e5f70524031b8afad0ec48275d07f6cd2d98ae1b26",
+      "sha256": "f3d3e109377821906ce64c9a511f0c317fbd152c6f186fc2884e4c81d3779ca5",
       "size_bytes": 49396
     },
     "combined_manuscript": {
@@ -614,15 +614,15 @@
       },
       "output": {
         "file_count": 160,
-        "sha256": "de81e5e83f1973c398f53c8bc5c0fcefd5fb2b1a4c65e76bc7ac1d8659a57aa6"
+        "sha256": "474825eb5c2f7f6633a1f8e2b367d71759a469ee0de866bca2698a77a6df9e9e"
       },
       "source": {
         "file_count": 94,
         "sha256": "db667c4f77bc05c9b0f749c72f13d30b1d58d277a8d5acc24b53672fa475386f"
       },
       "stage": {
-        "file_count": 1614,
-        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+        "file_count": 1616,
+        "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
       }
     },
     "project": "templates/template_textbook",

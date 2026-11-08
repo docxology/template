@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_integration.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software" />
+  <title>Pools, Rules, and Tools: A Template-Integrated Resource
+Architecture</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +182,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -587,22 +739,21 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:integration">Integration: Unified Pipeline and Token
-Injection</h1>
-<h2 id="architecture-overview">Architecture Overview</h2>
-<p>The three resource layers described in <span class="citation"
-data-cites="sec:pools">@sec:pools</span>, <span class="citation"
-data-cites="sec:rules">@sec:rules</span>, and <span class="citation"
-data-cites="sec:tools">@sec:tools</span> are orchestrated by a single
-function in
+<h1 data-number="7" id="sec:integration"><span
+class="header-section-number">7</span> Integration: Unified Pipeline and
+Token Injection</h1>
+<h2 data-number="7.1" id="architecture-overview"><span
+class="header-section-number">7.1</span> Architecture Overview</h2>
+<p>The three resource layers described in sec. <a
+href="manuscript__03_pools.html#sec:pools">4</a>, sec. <a href="manuscript__04_rules.html#sec:rules">5</a>, and sec. <a
+href="manuscript__05_tools.html#sec:tools">6</a> are orchestrated by a single function in
 <code>src/template_pools_rules_tools/tools/integration.py</code>. The
 <code>run_integration_demo()</code> function calls all three subsystems
 in a defined order, collects their results into a structured dictionary,
 and writes summary counts to
 <code>output/data/manuscript_variables.json</code> for injection into
-this manuscript at render time. <span class="citation"
-data-cites="fig:architecture">@fig:architecture</span> illustrates the
-complete architecture.</p>
+this manuscript at render time. fig. <a href="manuscript__02_introduction.html#fig:architecture">1</a>
+illustrates the complete architecture.</p>
 <pre><code>run_integration_demo()
   ├── read_bibliography_fond()       → {&quot;manifest&quot;: ..., &quot;bibtex&quot;: ..., &quot;csv_rows&quot;: [...]}
   ├── read_contacts_fond()           → {&quot;manifest&quot;: ..., &quot;contacts&quot;: [...]}
@@ -615,7 +766,8 @@ complete architecture.</p>
 <code>rules</code>, <code>tools</code>, and <code>summary</code>. The
 <code>summary</code> sub-dict provides the counts that populate
 manuscript tokens.</p>
-<h2 id="manuscript-variable-tokens">Manuscript Variable Tokens</h2>
+<h2 data-number="7.2" id="manuscript-variable-tokens"><span
+class="header-section-number">7.2</span> Manuscript Variable Tokens</h2>
 <p>The token injection system bridges the integration pipeline and the
 manuscript prose. Tokens use double-brace syntax: <code>3</code> expands
 to the integer count of fonds successfully loaded during the most recent
@@ -624,16 +776,15 @@ integration run. Tokens are resolved by
 <code>output/data/manuscript_variables.json</code> and substitutes each
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
-<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Runtime integration counts from manuscript_variables.json."><img src="../figures/resource_counts.png" style="width:75.0%"
+<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Runtime integration counts from manuscript_variables.json."><img src="../figures/resource_counts.png" style="width:75.0%"
 alt="Bar chart comparing the runtime counts discovered for fonds, rules, and tools." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Runtime integration counts from
+<figcaption>Figure 5: Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
 and tools discovered during a single pipeline run.</figcaption>
 </figure>
 <p>The current <code>manuscript_variables.json</code> contains the
-following summary values (see <span class="citation"
-data-cites="fig:counts">@fig:counts</span> for a visual
-representation):</p>
+following summary values (see fig. <a href="#fig:counts">5</a> for a
+visual representation):</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
@@ -666,13 +817,15 @@ the pipeline results change — for example, because a new fond is added —
 re-running <code>scripts/03_generate_manuscript.py</code> updates the
 manuscript automatically, without manual editing. This property is
 central to reproducibility: the manuscript’s quantitative claims are
-always consistent with the code that generated them
-[Stodden2016enhancing].</p>
-<h2 id="methods-the-script-pipeline">Methods: The Script Pipeline</h2>
-<p>6 thin orchestration scripts govern the integration workflow (<span
-class="citation" data-cites="fig:pipeline">@fig:pipeline</span>, <span
-class="citation"
-data-cites="fig:pipelineflow">@fig:pipelineflow</span>):</p>
+always consistent with the code that generated them <span
+class="citation" data-cites="Stodden2016enhancing">(<a
+href="index.html#ref-Stodden2016enhancing" role="doc-biblioref">Stodden et al.
+2013</a>)</span>.</p>
+<h2 data-number="7.3" id="methods-the-script-pipeline"><span
+class="header-section-number">7.3</span> Methods: The Script
+Pipeline</h2>
+<p>6 thin orchestration scripts govern the integration workflow (fig. <a
+href="#fig:pipeline">7</a>, fig. <a href="#fig:pipelineflow">6</a>):</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 33%" />
@@ -704,9 +857,8 @@ data-cites="fig:pipelineflow">@fig:pipelineflow</span>):</p>
 </tr>
 <tr>
 <td><code>scripts/04_validate_strong_rules.py</code></td>
-<td>Semantic evaluation of strong-rule constraints (<span
-class="citation" data-cites="sec:rules">@sec:rules</span>) against this
-project’s own tree</td>
+<td>Semantic evaluation of strong-rule constraints (sec. <a
+href="manuscript__04_rules.html#sec:rules">5</a>) against this project’s own tree</td>
 <td>Console report, non-zero exit on violation</td>
 </tr>
 <tr>
@@ -723,31 +875,29 @@ into <code>output/manuscript/</code> immediately before rendering</td>
 </tbody>
 </table></div>
 <figure id="fig:pipelineflow">
-<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure, The 6-script pipeline from source validation through token hydration, ending at the…"><img src="../figures/pipeline_flow.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, The 6-script pipeline from source validation through token hydration, ending at the…"><img src="../figures/pipeline_flow.png" style="width:95.0%"
 alt="Left-to-right pipeline from source validation through integration, figure generation, variable hydration, and publication rendering." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>The 6-script pipeline from source
-validation through token hydration, ending at the combined-PDF render
-step.</figcaption>
+<figcaption>Figure 6: The 6-script pipeline from
+source validation through token hydration, ending at the combined-PDF
+render step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
-<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Integration status dashboard showing per-resource validation results."><img src="../figures/status_dashboard.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Integration status dashboard showing per-resource validation results."><img src="../figures/status_dashboard.png" style="width:85.0%"
 alt="Status dashboard showing pass, partial, or missing state for each resource category." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Integration status dashboard showing
-per-resource validation results. Green indicates ok, amber indicates
-partial, red indicates missing.</figcaption>
+<figcaption>Figure 7: Integration status dashboard
+showing per-resource validation results. Green indicates ok, amber
+indicates partial, red indicates missing.</figcaption>
 </figure>
-<p><span class="citation"
-data-cites="fig:pipelineflow">@fig:pipelineflow</span> traces this
-sequence left to right: source validation feeds the integration demo,
-whose summary feeds both the manuscript-variable token file and the
-strong-rule semantic evaluator; the figure-generation stage runs
-independently; and <code>z_generate_manuscript_variables.py</code> —
-invoked automatically by the rendering pipeline immediately before the
-PDF render step — is what actually substitutes every declared
-placeholder and writes the resolved manuscript that pandoc consumes.
-<span class="citation" data-cites="fig:pipeline">@fig:pipeline</span>
-shows the corresponding per-component pass/partial/missing status from
-the same run.</p>
+<p>fig. <a href="#fig:pipelineflow">6</a> traces this sequence left to
+right: source validation feeds the integration demo, whose summary feeds
+both the manuscript-variable token file and the strong-rule semantic
+evaluator; the figure-generation stage runs independently; and
+<code>z_generate_manuscript_variables.py</code> — invoked automatically
+by the rendering pipeline immediately before the PDF render step — is
+what actually substitutes every declared placeholder and writes the
+resolved manuscript that pandoc consumes. fig. <a
+href="#fig:pipeline">7</a> shows the corresponding per-component
+pass/partial/missing status from the same run.</p>
 <p>Each script imports all business logic from <code>src/</code> and
 stays free of computation of its own — even
 <code>01_validate_sources.py</code>, the largest entry point in this
@@ -756,11 +906,14 @@ around calls into
 <code>src/template_pools_rules_tools/tools/fonds_reader.py</code>,
 <code>src/template_pools_rules_tools/rules/rules_applier.py</code>, and
 <code>src/template_pools_rules_tools/tools/tools_invoker.py</code>. This
-thin-orchestrator pattern [Wilson2014best] ensures that all testable
-logic is in <code>src/</code> under the configured project coverage
-gate, while the scripts themselves remain readable without a dedicated
-test suite of their own.</p>
-<h2 id="resilience-design">Resilience Design</h2>
+thin-orchestrator pattern <span class="citation"
+data-cites="Wilson2014best">(<a href="index.html#ref-Wilson2014best"
+role="doc-biblioref">Wilson et al. 2014</a>)</span> ensures that all
+testable logic is in <code>src/</code> under the configured project
+coverage gate, while the scripts themselves remain readable without a
+dedicated test suite of their own.</p>
+<h2 data-number="7.4" id="resilience-design"><span
+class="header-section-number">7.4</span> Resilience Design</h2>
 <p>The integration layer enforces resilience at three levels,
 corresponding to the three failure modes a monorepo integration pipeline
 encounters:</p>
@@ -784,23 +937,26 @@ script paths, so the pipeline can report the defect without attempting
 to invoke a non-existent script.</p></li>
 </ol>
 <figure id="fig:resilience">
-<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size figure, The integration layer’s three-level resilience design: resource absence, schema malformation"><img src="../figures/resilience_layers.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, The integration layer’s three-level resilience design: resource absence, schema malformation"><img src="../figures/resilience_layers.png" style="width:85.0%"
 alt="Layered flow showing resource absence, malformed data, and missing scripts with bounded fallback responses." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>The integration layer’s three-level
-resilience design: resource absence, schema malformation, and script
-absence, each with its own graceful-degradation response.</figcaption>
+<figcaption>Figure 8: The integration layer’s
+three-level resilience design: resource absence, schema malformation,
+and script absence, each with its own graceful-degradation
+response.</figcaption>
 </figure>
 <p>This three-level resilience design reflects the principle that
 shared-resource pipelines should fail <em>informatively</em> rather than
 <em>catastrophically</em> — surfacing the cause of incompleteness in
-structured output that downstream consumers can act on [Taschuk2017ten].
-<span class="citation"
-data-cites="fig:resilience">@fig:resilience</span> presents the three
-levels as a single funnel: each level’s failure mode and
+structured output that downstream consumers can act on <span
+class="citation" data-cites="Taschuk2017ten">(<a
+href="index.html#ref-Taschuk2017ten" role="doc-biblioref">Taschuk and Wilson
+2017</a>)</span>. fig. <a href="#fig:resilience">8</a> presents the
+three levels as a single funnel: each level’s failure mode and
 graceful-degradation response, read top to bottom in the order a
 pipeline run actually encounters them (resource discovery happens before
 schema parsing, which happens before script-existence checks).</p>
-<h2 id="performance-and-overhead">Performance and Overhead</h2>
+<h2 data-number="7.5" id="performance-and-overhead"><span
+class="header-section-number">7.5</span> Performance and Overhead</h2>
 <p>The resilience design above trades a small, constant amount of I/O
 overhead for the ability to degrade gracefully. Each reader performs at
 most two filesystem existence checks
@@ -809,15 +965,15 @@ YAML parse uses <code>yaml.safe_load()</code> rather than a
 schema-validating parser — the module deliberately performs
 <em>structural</em> validation (parseable, expected top-level keys
 present) and leaves deep <em>semantic</em> validation to the dedicated
-<code>strong_rule_evaluator</code> module (<span class="citation"
-data-cites="sec:rules">@sec:rules</span>) rather than paying that cost
-on every discovery call. In practice,
-<code>scripts/02_run_integration.py</code> completes in well under a
-second on the exemplar’s small fond/rule/tool counts; the design does
-not attempt to optimise for repositories with thousands of fonds, since
-the target use case is a curated, human-reviewed set of shared resources
-rather than a large-scale data catalogue.</p>
-<h2 id="test-coverage">Test Coverage</h2>
+<code>strong_rule_evaluator</code> module (sec. <a
+href="manuscript__04_rules.html#sec:rules">5</a>) rather than paying that cost on every discovery
+call. In practice, <code>scripts/02_run_integration.py</code> completes
+in well under a second on the exemplar’s small fond/rule/tool counts;
+the design does not attempt to optimise for repositories with thousands
+of fonds, since the target use case is a curated, human-reviewed set of
+shared resources rather than a large-scale data catalogue.</p>
+<h2 data-number="7.6" id="test-coverage"><span
+class="header-section-number">7.6</span> Test Coverage</h2>
 <p>The 13 <code>src/</code> modules — including the readers,
 orchestrator, evaluator, figure modules, token generator,
 resource-schema validator, and type definitions — are covered by tests

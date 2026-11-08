@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03_results.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for source-owned lexical composition" />
+  <title>Template Madlib: Deterministic Token Injection for Conditional
+IMRAD Manuscripts</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -180,6 +183,71 @@
       vertical-align: middle;
     }
   </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -587,9 +655,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1
-id="results-provenance-density-and-resolved-manuscript-surface">Results:
-Provenance, Density, and Resolved Manuscript Surface</h1>
+<h1 data-number="4"
+id="results-provenance-density-and-resolved-manuscript-surface"><span
+class="header-section-number">4</span> Results: Provenance, Density, and
+Resolved Manuscript Surface</h1>
 <p>The generated plan enables 11 of 11 manuscript sections and fills 40
 token choice(s). Category density is adjectives: 2, artifacts: 8,
 audiences: 4, constraints: 3, failures: 3, measures: 6, methods: 1,
@@ -617,20 +686,25 @@ same explicit/default path inventory written to JSON; the pipeline,
 allocation, provenance, and gate figures are generated from the same
 token plan and QA schema.</p>
 <figure id="fig:token-density">
-<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Token category density"><img src="../figures/token_density.png" alt="10 horizontal bars encode selected token choices by lexicon category: methods: 1; adjectives: 2; constraints: 3; failures: 3; qualities: 3; audiences: 4; nouns: 5; verbs: 5; measures: 6; artifacts: 8. Counts come from the seeded token plan; they are not vocabulary-size or prose-quality scores." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Token category density</figcaption>
+<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Token category density"><img src="../figures/token_density.png"
+alt="10 horizontal bars encode selected token choices by lexicon category: methods: 1; adjectives: 2; constraints: 3; failures: 3; qualities: 3; audiences: 4; nouns: 5; verbs: 5; measures: 6; artifacts: 8. Counts come from the seeded token plan; they are not vocabulary-size or prose-quality scores." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 2: Token category
+density</figcaption>
 </figure>
 <figure id="fig:section-token-allocation">
-<a class="figure-full-size-link" href="../figures/section_token_allocation.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Section token allocation"><img src="../figures/section_token_allocation.png"
+<a class="figure-full-size-link" href="../figures/section_token_allocation.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Section token allocation"><img src="../figures/section_token_allocation.png"
 alt="11 horizontal bars encode selected token choices and section enablement: abstract: 3 (enabled); introduction: 8 (enabled); methods: 6 (enabled); results: 5 (enabled); discussion: 3 (enabled); configuration: 1 (enabled); evaluation: 5 (enabled); reproducibility: 2 (enabled); limitations: 3 (enabled); scope: 2 (enabled); authoring_contract: 2 (enabled). Muted rows are disabled; allocation counts do not measure prose quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Section token allocation</figcaption>
+<figcaption>Figure 3: Section token
+allocation</figcaption>
 </figure>
 <figure id="fig:provenance-trace-map">
-<a class="figure-full-size-link" href="../figures/provenance_trace_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Provenance trace map"><img src="../figures/provenance_trace_map.png"
+<a class="figure-full-size-link" href="../figures/provenance_trace_map.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Provenance trace map"><img src="../figures/provenance_trace_map.png"
 alt="Heatmap crossing 11 manuscript sections with 10 lexicon categories. 40 token choices occupy 22 nonzero cells; the largest cell count is 4 at introduction/nouns, introduction/verbs. Cell counts trace generated choices and do not validate the truth of substituted prose." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Provenance trace map</figcaption>
+<figcaption>Figure 4: Provenance trace
+map</figcaption>
 </figure>
-<h2 id="token-inventory">Token Inventory</h2>
+<h2 data-number="4.1" id="token-inventory"><span
+class="header-section-number">4.1</span> Token Inventory</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 20%" />
@@ -931,7 +1005,8 @@ alt="Heatmap crossing 11 manuscript sections with 10 lexicon categories. 40 toke
 </tr>
 </tbody>
 </table></div>
-<h2 id="provenance-matrix">Provenance Matrix</h2>
+<h2 data-number="4.2" id="provenance-matrix"><span
+class="header-section-number">4.2</span> Provenance Matrix</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 30%" />

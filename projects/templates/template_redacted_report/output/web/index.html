@@ -725,6 +725,7 @@ class="toc-section-number">5.1</span> Limitations</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This exemplar demonstrates a complete disclosure-control pipeline for
@@ -751,7 +752,9 @@ from the hashed ledger so neither artifact exposes narrative or source
 spans. This exemplar confirms that visual presentation choices remain
 orthogonal to the release gate: the same source-safe decisions drive
 every output variant.</p>
+
 <hr />
+
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>Disclosure control—the process of sanitizing classified or sensitive
@@ -935,7 +938,9 @@ freeing TPM2 resources. Without this patch, consecutive kmyth-seal
 invocations exhaust the swtpm transient object slots (typically three),
 causing “out of memory for object contexts” errors on the second
 seal.</p>
+
 <hr />
+
 <h1 data-number="4" id="results"><span
 class="header-section-number">4</span> Results</h1>
 <h2 data-number="4.1" id="fixture-release-packet"><span
@@ -1200,6 +1205,7 @@ thirty-two sidecars takes approximately thirty seconds.</li>
 <li>PDF password encryption is optional and uses AES-256; the password
 is not stored in the variant matrix.</li>
 </ul>
+
 </main>
 </body>
 </html>

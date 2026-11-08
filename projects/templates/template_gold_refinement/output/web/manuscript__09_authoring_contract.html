@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>09_authoring_contract.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="From Ore to Nine-Nines Purity via Mega-Madlib Token Injection" />
+  <title>Refinement of Gold: A Metallurgical Analogy for Scientific
+Manuscript Composition</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +247,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -652,8 +739,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:authoring_contract">Authoring Contract</h1>
-<h2 id="obligations">Obligations</h2>
+<h1 data-number="11" id="sec:authoring_contract"><span
+class="header-section-number">11</span> Authoring Contract</h1>
+<h2 data-number="11.1" id="obligations"><span
+class="header-section-number">11.1</span> Obligations</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 48%" />
@@ -718,25 +807,32 @@ authority from reproducibility standards.</p>
 ICMJE’s 2026 Recommendations include a dedicated section on artificial
 intelligence in publishing, and COPE’s authorship guidance states that
 AI tools cannot be listed as authors because they cannot accept
-responsibility for a manuscript [icmje2026recommendations; cope2023ai].
-A deterministic template is different from a generative AI system, but
-the obligation is parallel: tooling may assist composition and
-validation, while named human authors remain responsible for disclosure,
-accuracy, evidence boundaries, and final claims.</p>
+responsibility for a manuscript <span class="citation"
+data-cites="icmje2026recommendations cope2023ai">(<a
+href="index.html#ref-icmje2026recommendations" role="doc-biblioref">International
+Committee of Medical Journal Editors 2026</a>; <a href="index.html#ref-cope2023ai"
+role="doc-biblioref">Committee on Publication Ethics 2023</a>)</span>. A
+deterministic template is different from a generative AI system, but the
+obligation is parallel: tooling may assist composition and validation,
+while named human authors remain responsible for disclosure, accuracy,
+evidence boundaries, and final claims.</p>
 <p>Software citation closes the same accountability loop for executable
 materials. The code, template, and release that generated a manuscript
 should be treated as research products with credit, attribution,
-persistent identification, accessibility, and version specificity
-[smith2016softwarecitation]. A fork should therefore cite the release it
-used and record enough metadata for readers to distinguish “same
-template family” from “same executable object.”</p>
+persistent identification, accessibility, and version specificity <span
+class="citation" data-cites="smith2016softwarecitation">(<a
+href="index.html#ref-smith2016softwarecitation" role="doc-biblioref">Smith et al.
+2016</a>)</span>. A fork should therefore cite the release it used and
+record enough metadata for readers to distinguish “same template family”
+from “same executable object.”</p>
 <p>Security authorship has the same rule. Standards and guidance can
 shape the threat model, but they cannot be cited as proof that this
 manuscript is compliant or secure. Future Codex Security or Deep
 Security Scan reports should enter the manuscript only as generated
 artifacts with validator receipts, evidence-ledger alignment, and a
 clear boundary between findings, mitigations, and remaining scope.</p>
-<h2 id="fork-checklist">Fork checklist</h2>
+<h2 data-number="11.2" id="fork-checklist"><span
+class="header-section-number">11.2</span> Fork checklist</h2>
 <ol type="1">
 <li>Remap metallurgical stages to domain operations in
 <code>src/template_gold_refinement/refinery.py</code></li>
@@ -761,9 +857,9 @@ artifacts before making secure-by-design, supply-chain, or vulnerability
 findings claims</li>
 <li>Regenerate all outputs through the pipeline:</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/refinement_analysis.py</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/z_generate_manuscript_variables.py</span></code></pre></div>
 <ol start="11" type="1">
 <li>Do not hand-edit generated manuscript, PDFs, or figures</li>
 <li>If using reverse assay, preserve ordered-prefix semantics and

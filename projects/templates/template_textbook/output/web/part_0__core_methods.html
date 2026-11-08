@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>core_methods.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -717,13 +737,14 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_0_core_methods">Core Methods and Tools</h1>
+<h1 data-number="5" id="sec:part_0_core_methods"><span
+class="header-section-number">5</span> Core Methods and Tools</h1>
 <figure id="fig:part_0_core_methods">
-<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size figure, A deterministic synthetic scatter and its least-squares line"><img src="../figures/part_0_core_methods.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, A deterministic synthetic scatter and its least-squares line"><img src="../figures/part_0_core_methods.png" style="width:90.0%"
 alt="Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>A deterministic synthetic scatter and its
-least-squares line; visible residuals contrast with the exact arithmetic
-example.</figcaption>
+<figcaption>Figure 2: A deterministic synthetic
+scatter and its least-squares line; visible residuals contrast with the
+exact arithmetic example.</figcaption>
 </figure>
 <!-- alt: Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals. -->
 <!-- chapter-metadata-badge -->
@@ -732,7 +753,8 @@ example.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="5.0.1" id="study-blueprint-1"><span
+class="header-section-number">5.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> A reproducible method separates input
 custody, transformation, evaluation and communication.</li>
@@ -741,22 +763,23 @@ href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
 href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>, <a
 href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_0_core_methods_model">[@eq:part_0_core_methods_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_0_core_methods_model">2</a>.</li>
 <li><strong>Data skill:</strong> Record transformations and run an exact
 arithmetic control before analyzing unfamiliar data.</li>
 <li><strong>Common misconception to repair:</strong> Re-running a
 command successfully does not establish that its scientific input or
 interpretation is correct.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_core_methods">[@sec:lab_part_0_core_methods]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_core_methods">[@sec:q_part_0_core_methods]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_0__lab_core_methods.html#sec:lab_part_0_core_methods">20</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_0__q_core_methods.html#sec:q_part_0_core_methods">32</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.linear_fit</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="5.1" id="learning-objectives-1"><span
+class="header-section-number">5.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Trace an output back to its data and transformation.</li>
 <li>Use an exact synthetic case to verify a fitted-line
@@ -770,7 +793,8 @@ One silently removes a row; the other changes a unit. Their mathematics
 may be sound, but their methods are different. A useful workflow exposes
 both choices before either result appears in a figure.</p>
 </blockquote>
-<h2 id="make-the-transformation-explicit">Make the transformation
+<h2 data-number="5.2" id="make-the-transformation-explicit"><span
+class="header-section-number">5.2</span> Make the transformation
 explicit</h2>
 <p>Treat a method as a sequence of declared transformations, each with
 an input and an output. Reading a file, deciding which rows are
@@ -780,8 +804,9 @@ transformation need not give the same result as transforming before
 averaging. A workflow diagram is useful only when its arrows correspond
 to actual operations. Preserve the source file and express changes in
 code or an inspectable table instead of editing an unexplained copy.</p>
-<h2 id="design-a-control-with-a-known-answer">Design a control with a
-known answer</h2>
+<h2 data-number="5.3" id="design-a-control-with-a-known-answer"><span
+class="header-section-number">5.3</span> Design a control with a known
+answer</h2>
 <p>The exact four-point line in the worked example checks slope,
 intercept and predicted values. It is intentionally easier than a
 research dataset, because its role is to expose mistakes in computation.
@@ -791,8 +816,10 @@ control can use observations off the line and confirm that residuals are
 not all zero. These cases check different boundaries; many copies of the
 exact line would increase a test count without increasing the range of
 failures examined.</p>
-<h2 id="distinguish-verification-from-evaluation">Distinguish
-verification from evaluation</h2>
+<h2 data-number="5.4"
+id="distinguish-verification-from-evaluation"><span
+class="header-section-number">5.4</span> Distinguish verification from
+evaluation</h2>
 <p>Verification asks whether the implementation behaves as its contract
 says. Evaluation asks whether the resulting model is useful for the
 stated question. The exact line provides verification evidence. A
@@ -801,7 +828,9 @@ a residual pattern can provide evaluation evidence. A perfect result on
 data used to construct the example is not an independent evaluation.
 Name each kind of evidence so that a green test report is not mistaken
 for proof that a model describes the world.</p>
-<h2 id="keep-one-method-in-one-place">Keep one method in one place</h2>
+<h2 data-number="5.5" id="keep-one-method-in-one-place"><span
+class="header-section-number">5.5</span> Keep one method in one
+place</h2>
 <p>The computational backbone puts fitting in
 <code>textbook.models.linear_fit</code>. Chapters, labs and figure
 scripts call it rather than each maintaining another copy of the
@@ -809,25 +838,32 @@ formula. This reduces opportunities for two implementations to drift.
 The independent numeric assertions in the example still have a separate
 role: a single implementation needs an external expectation. Modular
 scientific software and executable checks are discussed by Wilson and
-colleagues [wilson2014best]; this book demonstrates those practices with
-small real computations instead of simulated test doubles.</p>
-<h2 id="publish-an-inspectable-method-record">Publish an inspectable
-method record</h2>
+colleagues <span class="citation" data-cites="wilson2014best">(<a
+href="index.html#ref-wilson2014best" role="doc-biblioref"><span
+class="nocase">Wilson et al.</span> 2014</a>)</span>; this book
+demonstrates those practices with small real computations instead of
+simulated test doubles.</p>
+<h2 data-number="5.6" id="publish-an-inspectable-method-record"><span
+class="header-section-number">5.6</span> Publish an inspectable method
+record</h2>
 <p>Record the original data identity, the transformation choices,
 software environment, parameters and command. Also record what failed or
 remained unverified. Sandve and colleagues give a primary account of
-computational reproducibility practices [sandve2013ten]. A complete
-record enables another person to repeat the procedure, but repeatability
-still does not validate an unreliable sensor or an inappropriate study
-design. Include the observation protocol and the model’s scope so that a
-precise execution record supports, rather than obscures, scientific
+computational reproducibility practices <span class="citation"
+data-cites="sandve2013ten">(<a href="index.html#ref-sandve2013ten"
+role="doc-biblioref">Sandve et al. 2013</a>)</span>. A complete record
+enables another person to repeat the procedure, but repeatability still
+does not validate an unreliable sensor or an inappropriate study design.
+Include the observation protocol and the model’s scope so that a precise
+execution record supports, rather than obscures, scientific
 judgment.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[\widehat y(x)=mx+b,\qquad
-(m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2\]</span>
-{#eq:part_0_core_methods_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_core_methods_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+<h2 data-number="5.7" id="a-worked-formalism-1"><span
+class="header-section-number">5.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_0_core_methods_model"><span
+class="math display">\[\widehat y(x)=mx+b,\qquad
+(m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2\qquad{(2)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 2: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_core_methods_parameters" data-responsive-table="true">
+<caption>Table 2: Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -865,43 +901,44 @@ input unit, the intercept is one output unit and every residual is zero,
 so the reported coefficient of determination is one. The exact fit is an
 arithmetic control for the implementation; it supplies no evidence about
 an unobserved real-world mechanism.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> linear_fit</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="fl">1.0</span>, <span class="fl">3.0</span>, <span class="fl">5.0</span>, <span class="fl">7.0</span>])</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> linear_fit(x, y)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(fit.slope, <span class="fl">2.0</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(fit.intercept, <span class="fl">1.0</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(fit.predict(x), y)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> linear_fit</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="fl">1.0</span>, <span class="fl">3.0</span>, <span class="fl">5.0</span>, <span class="fl">7.0</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> linear_fit(x, y)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(fit.slope, <span class="fl">2.0</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(fit.intercept, <span class="fl">1.0</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(fit.predict(x), y)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fit)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.linear_fit</code>. The assertions above are
 independent expectations for this designed example; the displayed figure
-in <span class="citation"
-data-cites="fig:part_0_core_methods">[@fig:part_0_core_methods]</span>
-is a deterministic illustration with its own explicitly stated inputs,
-not evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+in fig. <a href="#fig:part_0_core_methods">2</a> is a deterministic
+illustration with its own explicitly stated inputs, not evidence
+collected from the opening scenario.</p>
+<h2 data-number="5.8" id="assumptions-and-limits-1"><span
+class="header-section-number">5.8</span> Assumptions and Limits</h2>
 <p>Least squares here treats the input values as known and fits one
 straight line with equal observation weights. It does not model error in
 the inputs, dependence between observations or a changing variance. A
 large coefficient of determination is a statement about these fitted
 observations. Generalization requires additional data and an evaluation
 design appropriate to the question.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="5.9" id="summary-1"><span
+class="header-section-number">5.9</span> Summary</h2>
 <p>A reproducible method separates input custody, transformation,
 evaluation and communication. The worked example makes a narrow
 quantitative claim that can be checked with exact inputs and a tested
@@ -911,23 +948,30 @@ preserve the observation record and choose a comparison that can
 distinguish an arithmetic error from an inadequate model. Those habits
 make a result inspectable without expanding what its evidence
 establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
+<h2 data-number="5.10" id="key-terms-1"><span
+class="header-section-number">5.10</span> Key Terms</h2>
 <p><a href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
 href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>, <a
 href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Wilson and colleagues [wilson2014best] address scientific software
-practices; Sandve and colleagues [sandve2013ten] focus on preserving how
-results were produced.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="5.11" id="further-reading-1"><span
+class="header-section-number">5.11</span> Further Reading</h2>
+<p>Wilson and colleagues <span class="citation"
+data-cites="wilson2014best">(<a href="index.html#ref-wilson2014best"
+role="doc-biblioref"><span class="nocase">Wilson et al.</span>
+2014</a>)</span> address scientific software practices; Sandve and
+colleagues <span class="citation" data-cites="sandve2013ten">(<a
+href="index.html#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
+2013</a>)</span> focus on preserving how results were produced.</p>
+<h2 data-number="5.12" id="practice-1"><span
+class="header-section-number">5.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_core_methods">[@sec:lab_part_0_core_methods]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_core_methods">[@sec:q_part_0_core_methods]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_0__lab_core_methods.html#sec:lab_part_0_core_methods">20</a> — execute the worked
+computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_0__q_core_methods.html#sec:q_part_0_core_methods">32</a> — compare your reasoning with
+the supplied solutions.</li>
 </ul>
 </main>
 </body>

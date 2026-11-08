@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_methodology.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration" />
+  <title>Bounded AutoResearch for a Tiny Reproducible Machine-Learning
+Task</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +182,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -587,7 +674,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:methodology">Methodology</h1>
+<h1 data-number="3" id="sec:methodology"><span
+class="header-section-number">3</span> Methodology</h1>
 <p>The loop is implemented through the project source surface summarized
 by the validated run artifacts. The project scripts remain thin
 dispatchers; reusable behavior writes
@@ -596,7 +684,8 @@ dispatchers; reusable behavior writes
 <code>../figures/figure_registry.json</code>,
 <code>output/data/autoresearch_phase_ledger.json</code>, and
 <code>output/data/manuscript_variable_provenance.json</code>.</p>
-<h2 id="sec:task-data">Task And Data</h2>
+<h2 data-number="3.1" id="sec:task-data"><span
+class="header-section-number">3.1</span> Task And Data</h2>
 <p>The task is <code>small MNIST neural-network classification</code>.
 The default configuration loads <code>data/mnist_small.npz</code>, with
 provenance in <code>data/mnist_small_provenance.json</code>, and uses
@@ -607,22 +696,21 @@ The provenance artifact records upstream source-file hashes, the subset
 seed, class counts, and the compressed subset hash. The default pipeline
 never downloads data at runtime. The train and test splits contain
 <code>200</code> and <code>50</code> examples per class, respectively.
-The registered class-balance diagnostic is <span class="citation"
-data-cites="fig:mnist_class_balance">@fig:mnist_class_balance</span>,
-and the dataset contact sheet is <span class="citation"
-data-cites="fig:mnist_subset_contact_sheet">@fig:mnist_subset_contact_sheet</span>.</p>
+The registered class-balance diagnostic is fig. <a
+href="#fig:mnist_class_balance">1</a>, and the dataset contact sheet is
+fig. <a href="#fig:mnist_subset_contact_sheet">2</a>.</p>
 <figure id="fig:mnist_class_balance">
-<a class="figure-full-size-link" href="../figures/mnist_class_balance.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Train and test class counts from output/data/ml_class_balance.json"><img src="../figures/mnist_class_balance.png"
+<a class="figure-full-size-link" href="../figures/mnist_class_balance.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Train and test class counts from output/data/ml_class_balance.json"><img src="../figures/mnist_class_balance.png"
 alt="Grouped bar chart showing train and test example counts for each digit class." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Train and test class counts from
-output/data/ml_class_balance.json; the local fixture contains 2000 train
-and 500 test examples across 10 classes. Generation method: Grouped
-train/test class-count bars from the local MNIST fixture. Registry
-metadata records the generation method, source artifact, and claim
-boundary for validation.</figcaption>
+<figcaption>Figure 1: Train and test class counts
+from output/data/ml_class_balance.json; the local fixture contains 2000
+train and 500 test examples across 10 classes. Generation method:
+Grouped train/test class-count bars from the local MNIST fixture.
+Registry metadata records the generation method, source artifact, and
+claim boundary for validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Local fixture class-balance table from output/data/ml_class_balance.json ; counts describe the offline fixture used b…"><table id="tbl:class-balance" data-responsive-table="true">
-<caption>Local fixture class-balance table from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Local fixture class-balance table from output/data/ml_class_balance.json ; counts describe the offline fixtu…"><table id="tbl:class-balance" data-responsive-table="true">
+<caption>Table 1: Local fixture class-balance table from
 <code>output/data/ml_class_balance.json</code>; counts describe the
 offline fixture used by this run.</caption>
 <thead>
@@ -757,14 +845,15 @@ offline fixture used by this run.</caption>
 </tbody>
 </table></div>
 <figure id="fig:mnist_subset_contact_sheet">
-<a class="figure-full-size-link" href="../figures/mnist_subset_contact_sheet.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Deterministic class-balanced contact sheet"><img src="../figures/mnist_subset_contact_sheet.png"
+<a class="figure-full-size-link" href="../figures/mnist_subset_contact_sheet.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Deterministic class-balanced contact sheet"><img src="../figures/mnist_subset_contact_sheet.png"
 alt="Two-row grid with one local handwritten digit example for each class zero through nine." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Deterministic class-balanced contact
-sheet for MNIST handwritten digit database from data/mnist_small.npz and
-data/mnist_small_provenance.json; the figure documents the local subset
-used by the offline run. Generation method: Class-balanced contact sheet
-from fixed local MNIST arrays. Registry metadata records the generation
-method, source artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 2: Deterministic class-balanced
+contact sheet for MNIST handwritten digit database from
+data/mnist_small.npz and data/mnist_small_provenance.json; the figure
+documents the local subset used by the offline run. Generation method:
+Class-balanced contact sheet from fixed local MNIST arrays. Registry
+metadata records the generation method, source artifact, and claim
+boundary for validation.</figcaption>
 </figure>
 <p>The baseline is <code>nearest_centroid_baseline</code>
 (<code>nearest-centroid</code>). The bounded candidate set is configured
@@ -775,7 +864,8 @@ deferred proposal. The transformer-style candidate borrows the
 patch-token representation for comparison while staying inside the
 configured iteration budget. This is intentionally a small configured
 model, not a claim about full-scale image-transformer performance.</p>
-<h2 id="sec:bounded-loop">Bounded Loop</h2>
+<h2 data-number="3.2" id="sec:bounded-loop"><span
+class="header-section-number">3.2</span> Bounded Loop</h2>
 <p>The run follows <code>7</code> configured stages:</p>
 <ul>
 <li>Resolve the human-authored program, project topic, and research
@@ -840,7 +930,8 @@ generic-table exemptions. The local research-object manifest at
 project paths, hashes, the evidence registry, the source ledger, the
 schema manifest, and the manual approval state. It is deliberately named
 a local research-object manifest, not RO-Crate or SLSA compliance.</p>
-<h2 id="sec:safety-controls">Safety Controls</h2>
+<h2 data-number="3.3" id="sec:safety-controls"><span
+class="header-section-number">3.3</span> Safety Controls</h2>
 <p>The default autonomy level is <code>proposal_only</code>. The run
 ledger records <code>0</code> LLM calls and USD <code>0.00</code> cost.
 The edit allowlist is restricted to the public project source and
@@ -856,8 +947,9 @@ default local review state remains <code>false</code>.</p>
 for this exemplar because it models machine-produced plans, ledgers,
 reports, and manuscript variables as review inputs rather than
 autonomous approval.</p>
-<h2 id="sec:adversarial-supply-chain-controls">Adversarial And
-Supply-Chain Controls</h2>
+<h2 data-number="3.4" id="sec:adversarial-supply-chain-controls"><span
+class="header-section-number">3.4</span> Adversarial And Supply-Chain
+Controls</h2>
 <p>The security layer is configured as <code>local_deterministic</code>
 with network policy <code>default_offline</code>, integrity algorithm
 <code>sha256</code>, external signing <code>false</code>, and framework
@@ -872,25 +964,26 @@ are written to <code>output/data/autoresearch_threat_model.json</code>,
 <code>output/data/autoresearch_supply_chain_inventory.json</code>,
 <code>output/data/autoresearch_integrity_attestation.json</code>, and
 <code>output/reports/autoresearch_security_review.md</code>. The
-control-matrix figure is <span class="citation"
-data-cites="fig:autoresearch_security_control_matrix">@fig:autoresearch_security_control_matrix</span>.
-The table and figure are generated from the threat model and inventory,
-not manually maintained.</p>
+control-matrix figure is fig. <a
+href="#fig:autoresearch_security_control_matrix">3</a>. The table and
+figure are generated from the threat model and inventory, not manually
+maintained.</p>
 <figure id="fig:autoresearch_security_control_matrix">
-<a class="figure-full-size-link" href="../figures/autoresearch_security_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Local security-control matrix from output/data/autoresearch_threat_model.json"><img src="../figures/autoresearch_security_control_matrix.png"
+<a class="figure-full-size-link" href="../figures/autoresearch_security_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Local security-control matrix from output/data/autoresearch_threat_model.json"><img src="../figures/autoresearch_security_control_matrix.png"
 alt="Matrix of local security controls mapped to framework-inspired evidence surfaces and status." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Local security-control matrix from
-output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and
-ATT&amp;CK-inspired safeguards to deterministic evidence surfaces
-without claiming production security certification. Generation method:
-structured control matrix with separate control, evidence, framework,
-and status columns. Generation method: Structured control matrix from
-local threat-model controls. Registry metadata records the generation
-method, source artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 3: Local security-control matrix
+from output/data/autoresearch_threat_model.json; controls map NIST,
+SLSA, and ATT&amp;CK-inspired safeguards to deterministic evidence
+surfaces without claiming production security certification. Generation
+method: structured control matrix with separate control, evidence,
+framework, and status columns. Generation method: Structured control
+matrix from local threat-model controls. Registry metadata records the
+generation method, source artifact, and claim boundary for
+validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Local security artifacts generated for the bounded AutoResearch run."><table id="tbl:security-artifacts" data-responsive-table="true">
-<caption>Local security artifacts generated for the bounded AutoResearch
-run.</caption>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 2: Local security artifacts generated for the bounded AutoResearch run."><table id="tbl:security-artifacts" data-responsive-table="true">
+<caption>Table 2: Local security artifacts generated for the bounded
+AutoResearch run.</caption>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -942,8 +1035,8 @@ review</a></td>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Threat-model rows from output/data/autoresearch_threat_model.json ; ATT&amp;CK labels scope supply-chain compromise analo…"><table id="tbl:security-threat-model" data-responsive-table="true">
-<caption>Threat-model rows from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 3: Threat-model rows from output/data/autoresearch_threat_model.json ; ATT&amp;CK labels scope supply-chain comprom…"><table id="tbl:security-threat-model" data-responsive-table="true">
+<caption>Table 3: Threat-model rows from
 <code>output/data/autoresearch_threat_model.json</code>; ATT&amp;CK
 labels scope supply-chain compromise analogies.</caption>
 <colgroup>
@@ -1021,8 +1114,9 @@ generated…</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:positioning-autonomous-science">Positioning Against
-Autonomous Science Systems</h2>
+<h2 data-number="3.5" id="sec:positioning-autonomous-science"><span
+class="header-section-number">3.5</span> Positioning Against Autonomous
+Science Systems</h2>
 <p>The implementation should be read as a bounded local analogue of
 current AutoResearch trends, not as a miniature autonomous scientist.
 Artifact manifests, evidence registries, review gates, and manuscript
@@ -1030,7 +1124,8 @@ hydration provide machine-readable governance surfaces for one offline
 project run. They do not perform autonomous literature mining, proof
 search, live agent orchestration, runtime dataset expansion,
 self-modifying code search, or self-approval of publication claims.</p>
-<h2 id="sec:evidence-scoring">Evidence And Scoring</h2>
+<h2 data-number="3.6" id="sec:evidence-scoring"><span
+class="header-section-number">3.6</span> Evidence And Scoring</h2>
 <p>The experiment writes <code>output/data/ml_task_results.json</code>,
 <code>output/data/ml_candidate_ledger.json</code>,
 <code>output/data/ml_confusion_matrix.csv</code>,
@@ -1078,8 +1173,7 @@ for review. The reviewer-facing
 summarizes readiness versus publication approval, claim-evidence rows,
 source-ledger status, benchmark boundary issues, and security/integrity
 status without granting approval. The generated tables and figure blocks
-used in <span class="citation"
-data-cites="sec:results">@sec:results</span> are sourced through
+used in sec. <a href="manuscript__03_results.html#sec:results">4</a> are sourced through
 <code>output/data/manuscript_variable_provenance.json</code> and
 <code>output/data/manuscript_figure_blocks.json</code>, so captions,
 artifact tables, and run-derived result statements share the same
@@ -1088,8 +1182,8 @@ validated artifact base.</p>
 visualization: source artifact, generated file, rendering method, and
 claim boundary. The rendered method table below is generated from that
 registry rather than maintained manually.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Registry-backed figure methods from figure_registry.json ; full validation hooks, alt text, and claim boundaries rema…"><table id="tbl:figure-methods" data-responsive-table="true">
-<caption>Registry-backed figure methods from <a
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 4: Registry-backed figure methods from figure_registry.json ; full validation hooks, alt text, and claim bounda…"><table id="tbl:figure-methods" data-responsive-table="true">
+<caption>Table 4: Registry-backed figure methods from <a
 href="../figures/figure_registry.json"><code>figure_registry.json</code></a>;
 full validation hooks, alt text, and claim boundaries remain in the
 registry.</caption>
@@ -1109,24 +1203,21 @@ registry.</caption>
 </thead>
 <tbody>
 <tr>
-<td><span class="citation"
-data-cites="fig:autoresearch_candidate_lifecycle">@fig:autoresearch_candidate_lifecycle</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:autoresearch_candidate_lifecycle">12</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_candidate_ledger.json">candidate ledger</a></td>
 <td>Candidate lifecycle status-count bar chart.</td>
 <td>Lifecycle counts describe bounded orchestration, not autonomous
 approval.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:autoresearch_closure_flow">@fig:autoresearch_closure_flow</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:autoresearch_closure_flow">24</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/autoresearch_loop.json">loop</a></td>
 <td>File-backed process-flow diagram from final loop state.</td>
 <td>The workflow is file-backed and inspectable but not
 self-approving.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:autoresearch_integrity_chain">@fig:autoresearch_integrity_chain</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:autoresearch_integrity_chain">25</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/autoresearch_integrity_attestation.json">integrity
 attestation</a></td>
 <td>Local checksum attestation chain with checked, missing, and mismatch
@@ -1135,8 +1226,7 @@ counts.</td>
 externally signed provenance.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:autoresearch_security_control_matrix">@fig:autoresearch_security_control_matrix</span></td>
+<td>fig. <a href="#fig:autoresearch_security_control_matrix">3</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/autoresearch_threat_model.json">threat
 model</a></td>
 <td>Structured control matrix from local threat-model controls.</td>
@@ -1144,32 +1234,28 @@ model</a></td>
 security certification.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:autoresearch_stage_matrix">@fig:autoresearch_stage_matrix</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:autoresearch_stage_matrix">23</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/autoresearch_loop.json">loop</a></td>
 <td>Horizontal count summary from final loop metrics.</td>
 <td>Readiness artifacts summarize local validation only; publication
 approval is human.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_bootstrap_intervals">@fig:ml_bootstrap_intervals</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_bootstrap_intervals">19</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_bootstrap_intervals.json">bootstrap
 intervals</a></td>
 <td>Horizontal percentile-bootstrap interval plot.</td>
 <td>Bootstrap intervals summarize local test-set resampling only.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_calibration_reliability">@fig:ml_calibration_reliability</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_calibration_reliability">13</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_calibration_report.json">calibration
 report</a></td>
 <td>Reliability curve with confidence-bin support histogram.</td>
 <td>Calibration values describe the fixed local split only.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_candidate_rank_stability">@fig:ml_candidate_rank_stability</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_candidate_rank_stability">5</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_candidate_rank_stability.json">candidate rank
 stability</a></td>
 <td>Bootstrap top-rank frequency and mean-rank comparison.</td>
@@ -1177,8 +1263,7 @@ stability</a></td>
 model-selection certainty.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_candidate_scores">@fig:ml_candidate_scores</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_candidate_scores">4</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_candidate_intervals.json">candidate
 intervals</a></td>
 <td>Lollipop accuracy comparison with Wilson interval error bars and
@@ -1187,8 +1272,7 @@ direct labels.</td>
 candidates.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_classification_metrics_heatmap">@fig:ml_classification_metrics_heatmap</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_classification_metrics_heatmap">14</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_classification_diagnostics.json">class
 diagnostics</a></td>
 <td>Per-class precision, recall, and F1 heatmap.</td>
@@ -1196,24 +1280,21 @@ diagnostics</a></td>
 estimates.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_complexity_accuracy">@fig:ml_complexity_accuracy</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_complexity_accuracy">10</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_task_results.json">task results</a></td>
 <td>Log-parameter scatter plot against held-out accuracy.</td>
 <td>The plot compares this bounded candidate set and does not infer a
 scaling law.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_confusion_matrix">@fig:ml_confusion_matrix</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_confusion_matrix">6</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_confusion_matrix.csv">confusion matrix</a></td>
 <td>Row-normalized heatmap with cell counts and row percentages.</td>
 <td>Confusion counts diagnose this run only and do not imply
 full-dataset generalization.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_confusion_pairs">@fig:ml_confusion_pairs</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_confusion_pairs">15</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_classification_diagnostics.json">class
 diagnostics</a></td>
 <td>Ranked off-diagonal confusion-pair bars with true-class error
@@ -1222,8 +1303,7 @@ rates.</td>
 taxonomy.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_generalization_gap">@fig:ml_generalization_gap</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_generalization_gap">16</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_classification_diagnostics.json">class
 diagnostics</a></td>
 <td>Grouped train/test accuracy and loss bars by evaluated
@@ -1232,8 +1312,7 @@ candidate.</td>
 guarantees.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_learning_curves">@fig:ml_learning_curves</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_learning_curves">8</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_training_history.csv">training history</a></td>
 <td>Epoch-level held-out accuracy lines with accepted best-epoch
 marker.</td>
@@ -1241,16 +1320,14 @@ marker.</td>
 in general.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_paired_correctness">@fig:ml_paired_correctness</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_paired_correctness">20</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_paired_comparison.json">paired
 comparison</a></td>
 <td>Matched accepted-versus-baseline correctness heatmap.</td>
 <td>Matched comparison is limited to the fixed local test split.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_per_class_accuracy">@fig:ml_per_class_accuracy</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_per_class_accuracy">7</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_confusion_matrix.csv">confusion matrix</a></td>
 <td>Per-class accuracy bars computed from the confusion matrix
 diagonal.</td>
@@ -1258,8 +1335,7 @@ diagonal.</td>
 robustness.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_probability_margin_distribution">@fig:ml_probability_margin_distribution</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_probability_margin_distribution">18</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_probability_diagnostics.json">probability
 diagnostics</a></td>
 <td>Confidence and margin histograms split by correctness.</td>
@@ -1267,8 +1343,7 @@ diagnostics</a></td>
 split.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_probability_quality">@fig:ml_probability_quality</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_probability_quality">22</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_statistical_summary.json">statistical
 summary</a></td>
 <td>Brier score and negative-log-likelihood bar comparison.</td>
@@ -1276,8 +1351,7 @@ summary</a></td>
 candidates only.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_robustness_matrix">@fig:ml_robustness_matrix</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_robustness_matrix">17</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_robustness_report.json">robustness
 report</a></td>
 <td>Candidate-by-transform accuracy heatmap for deterministic
@@ -1286,8 +1360,7 @@ perturbations.</td>
 robustness.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_selective_accuracy">@fig:ml_selective_accuracy</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_selective_accuracy">21</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_statistical_summary.json">statistical
 summary</a></td>
 <td>Confidence-threshold coverage and selective-accuracy line
@@ -1296,8 +1369,7 @@ chart.</td>
 local split only.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:ml_training_dynamics">@fig:ml_training_dynamics</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:ml_training_dynamics">9</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_training_diagnostics.json">training
 diagnostics</a></td>
 <td>Final and best-epoch accuracy bars plus train-test gap bars.</td>
@@ -1305,8 +1377,7 @@ diagnostics</a></td>
 only.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:mnist_class_balance">@fig:mnist_class_balance</span></td>
+<td>fig. <a href="#fig:mnist_class_balance">1</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_class_balance.json">class balance</a></td>
 <td>Grouped train/test class-count bars from the local MNIST
 fixture.</td>
@@ -1314,8 +1385,7 @@ fixture.</td>
 statistics.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:mnist_error_examples">@fig:mnist_error_examples</span></td>
+<td>fig. <a href="manuscript__03_results.html#fig:mnist_error_examples">11</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/output/data/ml_error_examples.json">error examples</a></td>
 <td>Deterministic grid of the first accepted-candidate
 misclassifications.</td>
@@ -1323,8 +1393,7 @@ misclassifications.</td>
 taxonomy.</td>
 </tr>
 <tr>
-<td><span class="citation"
-data-cites="fig:mnist_subset_contact_sheet">@fig:mnist_subset_contact_sheet</span></td>
+<td>fig. <a href="#fig:mnist_subset_contact_sheet">2</a></td>
 <td><a href="https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project/data/mnist_small.npz">small</a></td>
 <td>Class-balanced contact sheet from fixed local MNIST arrays.</td>
 <td>The sheet illustrates the local fixed subset and is not a

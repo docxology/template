@@ -130,23 +130,23 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b24f7de4dc910a230b056ed48cf4f1276ab405377fe8c766cb9d46a3225aae51",
+      "sha256": "f9f6239d13290254da9c3cc7f933bfcb801109946899a8b8ae879e22e7edccb7",
       "size_bytes": 38514
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "2a7d3f9be4147608630441344da309e6f76956a22934578231f6c308155e86e5",
-      "size_bytes": 71837
+      "sha256": "53ab4749d54ddabeb637b4b2965227d369525732c9968640dd5aa4307bb7c424",
+      "size_bytes": 76689
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "4312946b7ae8ee4655076280f2961749d8f8f85ef05782597e8282567a1119b2",
-      "size_bytes": 4832
+      "sha256": "8f96883928ce65f20a4d34ef9eee7b1b79398dab035771b653b47ccb65605e22",
+      "size_bytes": 4839
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "f5e8fb1a645149e37701591dcb4a26c30f7fa8ab5119c55a3702713eacf26c64",
-      "size_bytes": 16491
+      "sha256": "85fab497e13c1d2170a3c470cf3c9b6992df72804f02007c4b461ba9af591324",
+      "size_bytes": 16490
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -157,15 +157,15 @@
     },
     "output": {
       "file_count": 127,
-      "sha256": "d3bf573e48e0a9181531798659ad709fc0378c63c69a5687e633d13e91ce58fd"
+      "sha256": "fe42548657a98bd2895c0f5a52c61a7ef5c00979e94538b2d122ad6f29ac23f9"
     },
     "source": {
       "file_count": 142,
       "sha256": "f4b72ef6e33d486ebd0c150da0c75edddf15a27a1592bc100b702622c74d1424"
     },
     "stage": {
-      "file_count": 1614,
-      "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+      "file_count": 1616,
+      "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
     }
   },
   "project": "templates/template_literature_meta_analysis",

@@ -2,7 +2,7 @@
 
 > Reference for the five output formats the rendering pipeline emits, the
 > `render.formats` config block, the per-format env-var toggles, and the
-> on-disk artefact layout.
+> on-disk artifact layout.
 >
 > Companion to [`../operational/logging/output-design.md`](../operational/logging/output-design.md)
 > (visual contract for terminal vs file output) and
@@ -73,17 +73,33 @@ than being treated as absent.
 - `<project>_combined.pdf` — the single canonical deliverable. Driven by the
   pandoc + xelatex pipeline; includes title page, TOC, bibliography, and all
   manuscript sections in order.
-- Auxiliary LaTeX artefacts (`.aux`, `.bbl`, `.tex`, `.log`) support debugging
+- Auxiliary LaTeX artifacts (`.aux`, `.bbl`, `.tex`, `.log`) support debugging
   and provenance inspection. Let the cleanup stage manage them; do not assume
   every tracked or release-bound artifact is disposable.
 
 ### HTML (`output/<qualified-project>/web/`)
 
-- `index.html` — the combined HTML manuscript.
-- One `<section>.html` per manuscript section, useful when previewing a
-  single section in isolation.
-- Figures and cross-references are processed with `pandoc-crossref` when it is
-  installed; the renderer logs a warning when the filter is unavailable.
+- `index.html` — the combined HTML manuscript with the whole-document table of
+  contents, citations, and reference numbering.
+- One `<section>.html` per manuscript section. Finalized pages share the combined
+  manuscript's global reference and footnote numbering, including references
+  across source files; they are not independently numbered documents.
+- Local reference destinations stay local. Unique remote destinations point to
+  the actual section filename; combined-only destinations point to `index.html`.
+  Unknown and ambiguous fragments remain visible rather than acquiring a guessed
+  destination. Explicit document, external, and asset links remain authored.
+- Figures, tables, equations, and section cross-references are processed with
+  `pandoc-crossref` when installed; the renderer logs a warning when the filter is
+  unavailable. Formalism resolution runs before cross-reference and bibliography
+  processing.
+
+Direct `WebRenderer.render(source)` calls produce isolated previews.
+`WebRenderer.render_combined(sources, manuscript_dir, project_name)` produces the
+combined index and creates or replaces every eligible split page in that complete
+source roster. Generated transmission bookends remain combined-only, matching the
+ordinary per-file pipeline. A preceding preview call is not required. Publish the
+finalized outputs, not the earlier previews.
+See [canonical manuscript semantics](../guides/manuscript-semantics.md#html-project-context).
 
 ### Slides (`output/<qualified-project>/slides/`)
 
@@ -166,7 +182,7 @@ Reveal.js is the accessibility-enhanced presentation surface: named slide
 regions, keyboard navigation, visible focus, high contrast, responsive tables,
 reduced-motion behavior, source-owned figure alternatives and long
 descriptions, and a persistent manuscript-reader link. Beamer uses the same
-frame plan and visible 28/20/16-point floors but remains an explicitly labelled
+frame plan and visible 28/20/16-point floors but remains an explicitly labeled
 untagged PDF derivative. These controls do not establish WCAG or PDF/UA
 conformance. Reveal core, theme, and plugin assets use one version-pinned CDN
 release, so the browser deck remains network-dependent and is not an offline or
@@ -196,6 +212,12 @@ Every slide-policy field also has an environment override: `SLIDES_PROFILE`,
 - `<project>_combined.epub` — the manuscript as an e-reader bundle (zip of
   XHTML + manifest + optional cover image).
 - Use the `cover_image` kwarg on the renderer call to bundle a cover.
+- Reflow preserves existing reader styles, colors, and content. Long prose and
+  identifiers wrap; wide code, tables, and MathML remain horizontally scrollable
+  instead of widening the reading surface. Body overflow is not hidden and the
+  reader's color scheme is not overridden.
+- Reflow runs before the effective-package UUID is computed, so package identity
+  covers the final styling.
 
 ### Cross-format bibliography contract
 
@@ -209,10 +231,12 @@ fail-closed handling prevents BibTeX and citeproc from silently selecting
 different definitions. The multi-bibliography
 `templates/template_search_project` exemplar exercises this contract.
 
-Per-section HTML previews remain intentionally separate: they render a single
-section and do not produce a combined bibliography. Slide decks resolve inline
-citations from the shared union but intentionally suppress the full references
-block in each section deck.
+Finalized project split pages inherit the combined manuscript's global reference
+and bibliography resolution; generated reference tails remain in the combined
+index and use real links from section pages. An isolated single-source HTML
+preview has no whole-manuscript context. Slide decks resolve inline citations
+from the shared union but intentionally suppress the full references block in
+each section deck.
 
 ## Cross-format dependency
 

@@ -95,7 +95,7 @@
           "file_count": 20,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.63"
+          "size_mb": "2.73"
         }
       },
       "file_counts": {
@@ -217,7 +217,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.63
+            "size_mb": 2.73
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.44312858581543
+      "total_size_mb": 17.53650665283203
     },
     "figures": {
       "files": 27,
@@ -262,16 +262,16 @@
         },
         "reports": {
           "files": 33,
-          "size_bytes": 449046
+          "size_bytes": 449053
         },
         "web": {
           "files": 20,
-          "size_bytes": 2761972
+          "size_bytes": 2859879
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18290446
+      "total_size_bytes": 18388360
     }
   },
   "recommendations": [],
@@ -282,22 +282,22 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-06T18:06:46Z",
+  "timestamp": "2026-11-08T02:57:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "88541ad7724e3913c9f6ce765c4f1df3cbbc2b164e257254e7bee2bf92b8fd2d",
+      "sha256": "9436fd7e3af755fe61b8192f19df75759cd1da7d5b223ff97f745b2be5ca2f43",
       "size_bytes": 54341
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "6cc9d50acf05486f92fb1dd952f73bab01e5da2f5375ad1fafd1dc6f64c1f081",
-      "size_bytes": 138147
+      "sha256": "96ad130998efe1ae7834aa9c4f26a620e92cce23927bd8f4460959c4689fbca8",
+      "size_bytes": 142303
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "89ac7b4c59cea00164897fff45c5016078c8545587da6a906745a545d0e7ae3a",
-      "size_bytes": 4180
+      "sha256": "c8ef1ba4327df5866e39cee7aa53556e77b95b6da81e8605c32dc8b821bb8a66",
+      "size_bytes": 4187
     },
     "consumed_manuscript": [
       {
@@ -416,15 +416,15 @@
       },
       "output": {
         "file_count": 178,
-        "sha256": "018ccca8e7bbc4ee4f0a536dacdd5cede02cc3c4d103610a6dcf834f3c4b7157"
+        "sha256": "48fe18ccd06f95d37ef24b7b79ef86dc0de513af179dce0a82934ac862734d59"
       },
       "source": {
         "file_count": 283,
         "sha256": "5238fc792ac2563532713448c8e6262c8f3fb84d9249a0ddad88f96fa1d625ac"
       },
       "stage": {
-        "file_count": 1614,
-        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
+        "file_count": 1616,
+        "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
       }
     },
     "project": "templates/template_active_inference",

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>structure_and_form.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -717,12 +737,13 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_I_structure_and_form">Structure and Form</h1>
+<h1 data-number="10" id="sec:part_I_structure_and_form"><span
+class="header-section-number">10</span> Structure and Form</h1>
 <figure id="fig:part_I_structure_and_form">
-<a class="figure-full-size-link" href="../figures/part_I_structure_and_form.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Dimensionless static response curves illustrate how shape"><img src="../figures/part_I_structure_and_form.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_I_structure_and_form.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Dimensionless static response curves illustrate how shape"><img src="../figures/part_I_structure_and_form.png" style="width:90.0%"
 alt="Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Dimensionless static response curves
-illustrate how shape and scale are distinct choices.</figcaption>
+<figcaption>Figure 6: Dimensionless static response
+curves illustrate how shape and scale are distinct choices.</figcaption>
 </figure>
 <!-- alt: Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical. -->
 <!-- chapter-metadata-badge -->
@@ -731,7 +752,8 @@ illustrate how shape and scale are distinct choices.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="10.0.1" id="study-blueprint-5"><span
+class="header-section-number">10.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> Representation exposes some relationships
 and suppresses others; retain the mapping back to original
@@ -741,21 +763,22 @@ href="manuscript__glossary.html#gl:network"><strong>network</strong></a>, <a
 href="manuscript__glossary.html#gl:boundary"><strong>boundary</strong></a>, <a
 href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_I_structure_and_form_model">[@eq:part_I_structure_and_form_model]</span>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_I_structure_and_form_model">7</a>.</li>
 <li><strong>Data skill:</strong> Preserve units, reference bounds and
 identifiers when transforming a representation.</li>
 <li><strong>Common misconception to repair:</strong> Equal normalized
 values do not imply equal original quantities or equal mechanisms.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_I_structure_and_form">[@sec:lab_part_I_structure_and_form]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_I_structure_and_form">[@sec:q_part_I_structure_and_form]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_I__lab_structure_and_form.html#sec:lab_part_I_structure_and_form">24</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_I__q_structure_and_form.html#sec:q_part_I_structure_and_form">36</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.normalize_unit_interval</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="10.1" id="learning-objectives-5"><span
+class="header-section-number">10.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Distinguish an interaction structure from the values placed on
 it.</li>
@@ -770,7 +793,9 @@ hundred units receives the same colors. The pattern is comparable, but
 the magnitude has disappeared. A useful representation keeps both the
 pattern and its reference scale available.</p>
 </blockquote>
-<h2 id="separate-structure-and-state">Separate structure and state</h2>
+<h2 data-number="10.2" id="separate-structure-and-state"><span
+class="header-section-number">10.2</span> Separate structure and
+state</h2>
 <p>A network describes elements and their relationships. Values on its
 nodes or edges describe a state or observation associated with that
 structure. A room adjacency network can stay fixed while temperatures
@@ -779,7 +804,8 @@ fixed. Mixing these two layers makes it difficult to state what a model
 predicts. Define the node identity, edge meaning and associated quantity
 separately. A drawing’s position or color is an encoding choice unless
 the study explicitly gives it a physical meaning.</p>
-<h2 id="a-transformation-is-a-model-choice">A transformation is a model
+<h2 data-number="10.3" id="a-transformation-is-a-model-choice"><span
+class="header-section-number">10.3</span> A transformation is a model
 choice</h2>
 <p>Min-max normalization uses the smallest and largest supplied
 observations as reference bounds. It preserves order for a collection
@@ -789,8 +815,9 @@ collection. It removes the original unit scale unless the bounds are
 retained. The worked example deliberately uses an exact evenly spaced
 collection so the transformation can be checked without relying on an
 intricate plotting routine or a fitted parameter.</p>
-<h2 id="degenerate-forms-need-explicit-rules">Degenerate forms need
-explicit rules</h2>
+<h2 data-number="10.4" id="degenerate-forms-need-explicit-rules"><span
+class="header-section-number">10.4</span> Degenerate forms need explicit
+rules</h2>
 <p>If all observations are equal, the range is zero. The ordinary
 fraction would divide by zero, so the tested helper chooses all zeros.
 This is an interface convention describing a degenerate case. It is not
@@ -799,7 +826,8 @@ measurement uncertainty exists. Document the convention in an output
 record. A downstream visualization can then distinguish a truly varying
 range from a constant collection instead of presenting identical colors
 as if they conveyed the same information.</p>
-<h2 id="compare-compatible-representations">Compare compatible
+<h2 data-number="10.5" id="compare-compatible-representations"><span
+class="header-section-number">10.5</span> Compare compatible
 representations</h2>
 <p>Two independently normalized buildings each fill the entire
 zero-to-one color range. Comparing their colors as absolute temperatures
@@ -810,21 +838,26 @@ automatically superior. The scientific question determines which
 information must survive. The static response figure similarly shows
 several shapes on a common scale: equal range and midpoint do not imply
 that the functions have the same shape.</p>
-<h2 id="keep-identifiers-through-the-pipeline">Keep identifiers through
-the pipeline</h2>
+<h2 data-number="10.6" id="keep-identifiers-through-the-pipeline"><span
+class="header-section-number">10.6</span> Keep identifiers through the
+pipeline</h2>
 <p>A transformed value needs a route back to its source observation.
 Carry the room identifier, original units and reference bounds alongside
 normalized values; never depend solely on display position. Explicit
-reusable metadata is part of the FAIR guidance [wilkinson2016fair].
-Here, that idea becomes a small data table rather than a claim that a
-pretty plot is reusable. The lab asks you to normalize two differently
-scaled collections and explain exactly which similarity the shared
-output establishes and which difference it conceals.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[z_i=\frac{x_i-\min_j x_j}{\max_j
-x_j-\min_j x_j}\]</span> {#eq:part_I_structure_and_form_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_structure_and_form_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+reusable metadata is part of the FAIR guidance <span class="citation"
+data-cites="wilkinson2016fair">(<a href="index.html#ref-wilkinson2016fair"
+role="doc-biblioref"><span class="nocase">Wilkinson et al.</span>
+2016</a>)</span>. Here, that idea becomes a small data table rather than
+a claim that a pretty plot is reusable. The lab asks you to normalize
+two differently scaled collections and explain exactly which similarity
+the shared output establishes and which difference it conceals.</p>
+<h2 data-number="10.7" id="a-worked-formalism-4"><span
+class="header-section-number">10.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_I_structure_and_form_model"><span
+class="math display">\[z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j
+x_j}\qquad{(7)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 6: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_structure_and_form_parameters" data-responsive-table="true">
+<caption>Table 6: Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -857,22 +890,22 @@ zero, one half and one. A constant collection has no nonzero range, so
 the tested function explicitly returns zeros. That convention prevents
 division by zero; it does not manufacture variation or an interpretable
 physical distance.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> normalize_unit_interval</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> normalize_unit_interval([<span class="fl">10.0</span>, <span class="fl">20.0</span>, <span class="fl">30.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(z, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>])</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(normalize_unit_interval([<span class="fl">7.0</span>, <span class="fl">7.0</span>]), [<span class="fl">0.0</span>, <span class="fl">0.0</span>])</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> normalize_unit_interval</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> normalize_unit_interval([<span class="fl">10.0</span>, <span class="fl">20.0</span>, <span class="fl">30.0</span>])</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(z, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>])</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(normalize_unit_interval([<span class="fl">7.0</span>, <span class="fl">7.0</span>]), [<span class="fl">0.0</span>, <span class="fl">0.0</span>])</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.normalize_unit_interval</code>. The assertions
 above are independent expectations for this designed example; the
-displayed figure in <span class="citation"
-data-cites="fig:part_I_structure_and_form">[@fig:part_I_structure_and_form]</span>
+displayed figure in fig. <a href="#fig:part_I_structure_and_form">6</a>
 is a deterministic illustration with its own explicitly stated inputs,
 not evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+<h2 data-number="10.8" id="assumptions-and-limits-4"><span
+class="header-section-number">10.8</span> Assumptions and Limits</h2>
 <p>Scaling changes representation, not the evidence that generated it.
 Bounds estimated from one dataset must not be silently recalculated when
 comparing it with another. The function normalizes one supplied
@@ -880,18 +913,19 @@ collection; fitting bounds on training data and applying them to future
 data requires a separately declared transformation. A visually neat
 scale can conceal these differences unless original units and bounds are
 retained.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="10.9" id="summary-5"><span
+class="header-section-number">10.9</span> Summary</h2>
 <p>Representation exposes some relationships and suppresses others;
 retain the mapping back to original quantities. The worked example makes
 a narrow quantitative claim that can be checked with exact inputs and a
@@ -900,23 +934,28 @@ quantities or equal mechanisms. State the assumptions, preserve the
 observation record and choose a comparison that can distinguish an
 arithmetic error from an inadequate model. Those habits make a result
 inspectable without expanding what its evidence establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
+<h2 data-number="10.10" id="key-terms-5"><span
+class="header-section-number">10.10</span> Key Terms</h2>
 <p><a href="manuscript__glossary.html#gl:network"><strong>network</strong></a>, <a
 href="manuscript__glossary.html#gl:boundary"><strong>boundary</strong></a>, <a
 href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
 href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Wilkinson and colleagues [wilkinson2016fair] describe metadata and
-reuse principles; consider which metadata makes a normalized value
-interpretable.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="10.11" id="further-reading-5"><span
+class="header-section-number">10.11</span> Further Reading</h2>
+<p>Wilkinson and colleagues <span class="citation"
+data-cites="wilkinson2016fair">(<a href="index.html#ref-wilkinson2016fair"
+role="doc-biblioref"><span class="nocase">Wilkinson et al.</span>
+2016</a>)</span> describe metadata and reuse principles; consider which
+metadata makes a normalized value interpretable.</p>
+<h2 data-number="10.12" id="practice-5"><span
+class="header-section-number">10.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_I_structure_and_form">[@sec:lab_part_I_structure_and_form]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_I_structure_and_form">[@sec:q_part_I_structure_and_form]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_I__lab_structure_and_form.html#sec:lab_part_I_structure_and_form">24</a> — execute the worked
+computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_I__q_structure_and_form.html#sec:q_part_I_structure_and_form">36</a> — compare your reasoning
+with the supplied solutions.</li>
 </ul>
 </main>
 </body>

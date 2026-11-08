@@ -1171,6 +1171,7 @@ Matrix</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <p><strong>State:</strong> unpublished / pending pairing</p>
 <p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
 URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
@@ -1240,7 +1241,9 @@ alt="Publication pairing flow" /><span class="figure-full-size-label" aria-hidde
 <p><strong>Stego:</strong> off | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
 <!-- BEGINNING OF TRANSMISSION -->
+
 <hr />
+
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>The reproducibility problem in computational research is partly
@@ -1309,7 +1312,9 @@ watermarked. A versioned comparative matrix situates
 reported in the Results section. Code is released under the Apache
 License 2.0 at <code>github.com/docxology/template</code>; the work
 remains open-ended.</p>
+
 <hr />
+
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <h2 data-number="2.1"
@@ -1793,7 +1798,9 @@ Provenance</a> describes the steganographic and cryptographic integrity
 layer. The <a
 href="manuscript__08a_appendix_pipeline.html#appendix-pipeline">Appendices</a> provide
 pipeline, configuration, and comparative references.</p>
+
 <hr />
+
 <h1 data-number="3" id="methods"><span
 class="header-section-number">3</span> Methods</h1>
 <p>The <code>template/</code> architecture is deliberately bifurcated
@@ -1953,7 +1960,9 @@ correct pattern lives in a testable <code>src/</code> module, is covered
 by the Zero-Mock test suite, and can be independently imported, tested,
 and reused—whereas the anti-pattern buries logic in a script that is
 invisible to coverage tools.</p>
+
 <hr />
+
 <h2 data-number="3.4" id="dag-pipeline-declared-by-pipeline.yaml"><span
 class="header-section-number">3.4</span> DAG Pipeline Declared by
 <code>pipeline.yaml</code></h2>
@@ -2077,7 +2086,9 @@ reproduction <strong>then</strong> invokes
 (<code>infrastructure.steganography</code>). Original PDFs stay
 immutable; hardened companions carry QR overlays plus hash manifests
 sidecars.</p>
+
 <hr />
+
 <h2 data-number="3.5"
 id="documentation-duality-and-ai-collaboration"><span
 class="header-section-number">3.5</span> Documentation Duality and AI
@@ -2248,7 +2259,9 @@ supply the tool-use layer, the declarative DAG of <code>17</code>
 <code>pipeline.yaml</code> stages (a default full run executes
 <code>10</code>) supplies the planning scaffold, and the per-criterion
 checkpoint system supplies the memory layer.</p>
+
 <hr />
+
 <h2 data-number="3.7"
 id="fair-alignment-and-research-infrastructure-as-code"><span
 class="header-section-number">3.7</span> FAIR Alignment and Research
@@ -2332,7 +2345,9 @@ dual-identifier citation chain: SWHID for source provenance, DOI for
 publication metadata <span class="citation"
 data-cites="katz2021software">(<a href="#ref-katz2021software"
 role="doc-biblioref">Katz et al. 2021</a>)</span>.</p>
+
 <hr />
+
 <h2 data-number="3.8" id="quality-assurance"><span
 class="header-section-number">3.8</span> Quality Assurance</h2>
 <h3 data-number="3.8.1" id="zero-mock-testing-policy"><span
@@ -2459,7 +2474,9 @@ and render-resolution values above are injected from
 <code>src/template_template/figures/viz_palette.py</code>, preventing
 prose and implementation from drifting even though visual accessibility
 still requires human inspection of rendered figures.</p>
+
 <hr />
+
 <h1 data-number="4" id="results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section reports repository facts produced by the meta-project’s
@@ -3036,7 +3053,9 @@ exercises the AutoResearch readiness planner
 <strong><code>template_search_project</code></strong> exercises
 literature-search workflows.</p></li>
 </ul>
+
 <hr />
+
 <h1 data-number="5" id="discussion"><span
 class="header-section-number">5</span> Discussion</h1>
 <h2 data-number="5.1" id="the-zero-mock-tradeoff"><span
@@ -3125,7 +3144,9 @@ ones. The key distinction is between <em>replacing</em> an external
 dependency (which mock objects do, hiding failures) and
 <em>skipping</em> a test when a dependency is absent (which markers do,
 preserving transparency).</p>
+
 <hr />
+
 <h2 data-number="5.2" id="scalability-from-1-to-n-projects"><span
 class="header-section-number">5.2</span> Scalability: From 1 to N
 Projects</h2>
@@ -3246,7 +3267,9 @@ project size: the same 31 modules, the same 17 declared pipeline stages,
 the same rendering and validation logic. The shared implementation does
 not grow with the project roster; execution time and output volume still
 grow with the work performed.</p>
+
 <hr />
+
 <h2 data-number="5.3" id="comparison-to-existing-tools"><span
 class="header-section-number">5.3</span> Comparison to Existing
 Tools</h2>
@@ -3366,7 +3389,9 @@ href="#ref-nust2017containerization" role="doc-biblioref">Nüst et al.
 environments; <code>template/</code> complements containerization by
 adding the testing enforcement, multi-project management, and provenance
 embedding layers that ERCs do not address.</p>
+
 <hr />
+
 <h2 data-number="5.4" id="the-ai-collaboration-model"><span
 class="header-section-number">5.4</span> The AI Collaboration Model</h2>
 <p>The <a
@@ -3473,7 +3498,9 @@ Overleaf’s Copilot features or OpenAI Prism’s GPT-5.2 context-aware
 editing. The <code>infrastructure.llm</code> module provides LLM review
 as a pipeline stage but not as an interactive writing environment.</li>
 </ul>
+
 <hr />
+
 <h2 data-number="5.7" id="future-directions"><span
 class="header-section-number">5.7</span> Future Directions</h2>
 <ol type="1">
@@ -3616,7 +3643,9 @@ repository it inhabits, its figures rendered by the code it
 documents—demonstrates one reproducible artifact path; broader
 reliability claims require the declared checks and candidate-bound
 execution evidence.</p>
+
 <hr />
+
 <h1 data-number="6" id="infrastructure-module-reference"><span
 class="header-section-number">6</span> Infrastructure Module
 Reference</h1>
@@ -4092,7 +4121,9 @@ richness) emphasized by FAIRsoft guidance <span class="citation"
 data-cites="garijo2024fairsoft">(<a href="#ref-garijo2024fairsoft"
 role="doc-biblioref"><span class="nocase">Garijo et al.</span>
 2024</a>)</span>.</p>
+
 <hr />
+
 <h1 data-number="7" id="security-and-provenance"><span
 class="header-section-number">7</span> Security and Provenance</h1>
 <p>Research integrity requires more than reproducibility; it requires
@@ -4358,7 +4389,9 @@ data-cites="katz2021software">(<a href="#ref-katz2021software"
 role="doc-biblioref">Katz et al. 2021</a>)</span> software citation
 principles’ requirement that software used in research be independently
 citable and permanently accessible.</p>
+
 <hr />
+
 <h1 data-number="8" id="appendices"><span
 class="header-section-number">8</span> Appendices</h1>
 <h2 data-number="8.1" id="appendix-pipeline"><span
@@ -4595,7 +4628,9 @@ separate Stage 07 script.</p>
 An allowed skip requires a fresh policy-bound reason receipt; it is not
 a successful execution. The executable DAG and its contracts remain
 authoritative.</p>
+
 <hr />
+
 <h2 data-number="8.2" id="appendix-config"><span
 class="header-section-number">8.2</span> Appendix: Configuration
 Reference</h2>
@@ -4655,7 +4690,9 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="
 <span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
 <span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_infra_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span>
 <span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_project_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span></code></pre></div>
+
 <hr />
+
 <h2 data-number="8.3" id="appendix-directory"><span
 class="header-section-number">8.3</span> Appendix: Repository Directory
 Structure</h2>
@@ -4687,7 +4724,9 @@ Structure</h2>
 <p>See <code>docs/_generated/active_projects.md</code> for regenerated
 slugs
 (<code>uv run python scripts/docgen/active_projects.py</code>).</p>
+
 <hr />
+
 <h2 data-number="8.4" id="appendix-exemplars"><span
 class="header-section-number">8.4</span> Appendix: Exemplar Project
 Summary</h2>
@@ -4771,7 +4810,9 @@ layout—<code>projects/templates/**</code> and
 <code>projects/archive/**</code> remain non-rendered—see root
 <code>CLAUDE.md</code> for invocation patterns
 (<code>resolve_project_root</code>).</p>
+
 <hr />
+
 <h2 data-number="8.5" id="appendix-docs"><span
 class="header-section-number">8.5</span> Appendix: Documentation
 Inventory</h2>
@@ -4853,7 +4894,9 @@ to whatever code they are editing; AI agents begin with root
 local contracts and available <code>SKILL.md</code> descriptors. The
 shared skill manifest supplies discovery; client-specific entrypoints
 reference the shared contracts.</p>
+
 <hr />
+
 <h2 data-number="8.6" id="appendix-matrix"><span
 class="header-section-number">8.6</span> Appendix: Comparative Tool
 Matrix</h2>
@@ -5085,7 +5128,9 @@ distributed compute. This matrix is a versioned manuscript snapshot, not
 a continuously updated product survey. A future refresh should re-check
 every external capability against current primary documentation before
 changing a cell.</p>
+
 <hr />
+
 <p><strong>Release:</strong> v2.0.0 · DOI
 <code>10.5281/zenodo.20419007</code> · SHA-256 <code>pending…</code> ·
 pairing pending</p>
@@ -5097,6 +5142,7 @@ style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-lab
 <p><strong>Prior:</strong> <code>v1.0.8</code> ·
 <code>10.5281/zenodo.20932076</code> · <code>b9bc5cf3…</code></p>
 <!-- END OF TRANSMISSION -->
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-allaire2024quarto" class="csl-entry" role="listitem">

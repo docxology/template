@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_infrastructure_modules.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
+  <title>A template/ approach to Reproducible Generative
+Research</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +182,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -587,7 +739,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="infrastructure-module-reference">Infrastructure Module
+<h1 data-number="6" id="infrastructure-module-reference"><span
+class="header-section-number">6</span> Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>31</code> <code>discover_infrastructure_modules(repo_root)</code>.
@@ -840,103 +993,111 @@ capture</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="alphabetical-summaries">Alphabetical summaries</h2>
+<h2 data-number="6.1" id="alphabetical-summaries"><span
+class="header-section-number">6.1</span> Alphabetical summaries</h2>
 <p>Below, <code>${module_*_python_file_count}</code> placeholders expand
 per subdirectory at render-time.</p>
-<h3
-id="infrastructure.autoresearch-11-files"><code>infrastructure.autoresearch</code>
-(11 files)</h3>
+<h3 data-number="6.1.1" id="infrastructure.autoresearch-11-files"><span
+class="header-section-number">6.1.1</span>
+<code>infrastructure.autoresearch</code> (11 files)</h3>
 <p>Readiness planner, validation CLI, and report models for
 AutoResearch-style project promotion
 (<code>infrastructure/autoresearch/</code>).</p>
-<h3
-id="infrastructure.benchmark-4-files"><code>infrastructure.benchmark</code>
-(4 files)</h3>
+<h3 data-number="6.1.2" id="infrastructure.benchmark-4-files"><span
+class="header-section-number">6.1.2</span>
+<code>infrastructure.benchmark</code> (4 files)</h3>
 <p>Template harness scoring and comparative gate helpers exercised in CI
 smoke paths.</p>
-<h3
-id="infrastructureconfig-non-package-subdirectory"><code>infrastructure/config</code>
-(non-package subdirectory)</h3>
+<h3 data-number="6.1.3"
+id="infrastructureconfig-non-package-subdirectory"><span
+class="header-section-number">6.1.3</span>
+<code>infrastructure/config</code> (non-package subdirectory)</h3>
 <p>Repository-wide YAML templates and secure manifests
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 id="infrastructure.core-201-files"><code>infrastructure.core</code>
-(201 files)</h3>
+<h3 data-number="6.1.4" id="infrastructure.core-201-files"><span
+class="header-section-number">6.1.4</span>
+<code>infrastructure.core</code> (201 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
-<h3
-id="infrastructure.doctor-14-files"><code>infrastructure.doctor</code>
-(14 files)</h3>
+<h3 data-number="6.1.5" id="infrastructure.doctor-14-files"><span
+class="header-section-number">6.1.5</span>
+<code>infrastructure.doctor</code> (14 files)</h3>
 <p>Checkout diagnose/fix/undo repairs for broken local workspace
 states.</p>
-<h3
-id="infrastructure.docker-0-files"><code>infrastructure.docker</code> (0
-files)</h3>
+<h3 data-number="6.1.6" id="infrastructure.docker-0-files"><span
+class="header-section-number">6.1.6</span>
+<code>infrastructure.docker</code> (0 files)</h3>
 <p>Pinned images / compose scaffolding for reproducible CI + remote
 builds.</p>
-<h3
-id="infrastructure.documentation-23-files"><code>infrastructure.documentation</code>
-(23 files)</h3>
+<h3 data-number="6.1.7" id="infrastructure.documentation-23-files"><span
+class="header-section-number">6.1.7</span>
+<code>infrastructure.documentation</code> (23 files)</h3>
 <p>Figure registries plus glossary tooling feeding manuscript
 automation.</p>
-<h3
-id="infrastructure.formal_contracts-5-files"><code>infrastructure.formal_contracts</code>
-(5 files)</h3>
+<h3 data-number="6.1.8"
+id="infrastructure.formal_contracts-5-files"><span
+class="header-section-number">6.1.8</span>
+<code>infrastructure.formal_contracts</code> (5 files)</h3>
 <p>Typed, machine-checkable manuscript contract layer: frozen block
 model, evidence-tier policies, monoidal composition, and a fail-closed
 checker with stable <code>FORMAL.*</code> diagnostics.</p>
-<h3 id="infrastructure.fonds-6-files"><code>infrastructure.fonds</code>
-(6 files)</h3>
+<h3 data-number="6.1.9" id="infrastructure.fonds-6-files"><span
+class="header-section-number">6.1.9</span>
+<code>infrastructure.fonds</code> (6 files)</h3>
 <p>Resource pool management for curated fonds (tracked reference
 datasets, bibliographic collections, and evidence corpora). Fonds mirror
 <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars and sidecar-linked private lifecycle
 folders.</p>
-<h3 id="infrastructure.llm-57-files"><code>infrastructure.llm</code> (57
-files)</h3>
+<h3 data-number="6.1.10" id="infrastructure.llm-57-files"><span
+class="header-section-number">6.1.10</span>
+<code>infrastructure.llm</code> (57 files)</h3>
 <p>Ollama integrations, sanitization adapters, templated reviewer flows.
 <strong>Literature ingestion now lives primarily in
 <code>search/literature</code> + citation helpers in
 <code>reference/</code>.</strong></p>
-<h3
-id="infrastructure.metadata-3-files"><code>infrastructure.metadata</code>
-(3 files)</h3>
+<h3 data-number="6.1.11" id="infrastructure.metadata-3-files"><span
+class="header-section-number">6.1.11</span>
+<code>infrastructure.metadata</code> (3 files)</h3>
 <p>Shared publication-metadata leaves: repository-URL normalization
 (<code>normalized_repository_url</code>) and ebook metadata package
 generation (ONIX, <code>metadata.json</code>, EPUB OPF). Consumed by
 publishing, rendering, documentation, and project layers; extracted from
 <code>publishing</code> by RENDERING-LAYERING-1 so renderers import it
 without an inverted publishing dependency.</p>
-<h3
-id="infrastructure.methods-10-files"><code>infrastructure.methods</code>
-(10 files)</h3>
+<h3 data-number="6.1.12" id="infrastructure.methods-10-files"><span
+class="header-section-number">6.1.12</span>
+<code>infrastructure.methods</code> (10 files)</h3>
 <p>Deterministic methods-orchestration contracts
 (<code>MethodStage</code>, <code>MethodsOrchestrationPlan</code>,
 <code>MethodsIssue</code>): builds and validates an ordered methods plan
 for a research project so the manuscript’s “Methods” track stays bound
 to executable stages.</p>
-<h3
-id="infrastructure.orchestration-14-files"><code>infrastructure.orchestration</code>
-(14 files)</h3>
+<h3 data-number="6.1.13"
+id="infrastructure.orchestration-14-files"><span
+class="header-section-number">6.1.13</span>
+<code>infrastructure.orchestration</code> (14 files)</h3>
 <p><code>python -m infrastructure.orchestration</code> exposes
 interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
-<h3
-id="infrastructure.project-117-files"><code>infrastructure.project</code>
-(117 files)</h3>
+<h3 data-number="6.1.14" id="infrastructure.project-117-files"><span
+class="header-section-number">6.1.14</span>
+<code>infrastructure.project</code> (117 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
-<h3 id="infrastructure.prose-9-files"><code>infrastructure.prose</code>
-(9 files)</h3>
+<h3 data-number="6.1.15" id="infrastructure.prose-9-files"><span
+class="header-section-number">6.1.15</span>
+<code>infrastructure.prose</code> (9 files)</h3>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
-<h3
-id="infrastructure.provenance-9-files"><code>infrastructure.provenance</code>
-(9 files)</h3>
+<h3 data-number="6.1.16" id="infrastructure.provenance-9-files"><span
+class="header-section-number">6.1.16</span>
+<code>infrastructure.provenance</code> (9 files)</h3>
 <p>Content-addressed provenance DAG. Records artifact lineage (which run
 produced which file, from which inputs) as a verifiable graph of
 artifact/run/source/claim nodes connected by
@@ -944,48 +1105,49 @@ produced/consumed/derived-from/supports/refutes edges. Includes a
 structured Review system with severity (blocking/major/minor/info) and
 verdict (refutes/supports). Features a CLI and pipeline integration
 hooks for automatic lineage recording after every stage.</p>
-<h3
-id="infrastructure.publishing-85-files"><code>infrastructure.publishing</code>
-(85 files)</h3>
+<h3 data-number="6.1.17" id="infrastructure.publishing-85-files"><span
+class="header-section-number">6.1.17</span>
+<code>infrastructure.publishing</code> (85 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
-<h3
-id="infrastructure.reference-16-files"><code>infrastructure.reference</code>
-(16 files)</h3>
+<h3 data-number="6.1.18" id="infrastructure.reference-16-files"><span
+class="header-section-number">6.1.18</span>
+<code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3
-id="infrastructure.rendering-120-files"><code>infrastructure.rendering</code>
-(120 files)</h3>
+<h3 data-number="6.1.19" id="infrastructure.rendering-120-files"><span
+class="header-section-number">6.1.19</span>
+<code>infrastructure.rendering</code> (120 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
-<h3
-id="infrastructure.reporting-411-files"><code>infrastructure.reporting</code>
-(411 files)</h3>
+<h3 data-number="6.1.20" id="infrastructure.reporting-411-files"><span
+class="header-section-number">6.1.20</span>
+<code>infrastructure.reporting</code> (411 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
-<h3
-id="infrastructure.research-3-files"><code>infrastructure.research</code>
-(3 files)</h3>
+<h3 data-number="6.1.21" id="infrastructure.research-3-files"><span
+class="header-section-number">6.1.21</span>
+<code>infrastructure.research</code> (3 files)</h3>
 <p>Seven-stage research workflow (SCOPE → LITERATURE → REASON → DESIGN →
 COMPUTE → SYNTHESIZE → WRITE) defined as typed ResearchStage data
 classes with explicit outputs, skills, and template commands per stage.
 Includes a full PRISMA-adapted literature review prompt and a research
 workflow prompt referencing template/ infrastructure commands.</p>
-<h3 id="infrastructure.rules-6-files"><code>infrastructure.rules</code>
-(6 files)</h3>
+<h3 data-number="6.1.22" id="infrastructure.rules-6-files"><span
+class="header-section-number">6.1.22</span>
+<code>infrastructure.rules</code> (6 files)</h3>
 <p>Governance rules layer for validating project lifecycle transitions,
 sidecar sync policies, and pipeline gate orchestration. Rules mirror
 <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars.</p>
-<h3
-id="infrastructure.scientific-4-files"><code>infrastructure.scientific</code>
-(4 files)</h3>
+<h3 data-number="6.1.23" id="infrastructure.scientific-4-files"><span
+class="header-section-number">6.1.23</span>
+<code>infrastructure.scientific</code> (4 files)</h3>
 <p>Stability probing, benchmarking hooks—consumed heavily by
 optimization exemplars (<code>template_code_project</code> scripts).</p>
-<h3
-id="infrastructure.search-77-files"><code>infrastructure.search</code>
-(77 files)</h3>
+<h3 data-number="6.1.24" id="infrastructure.search-77-files"><span
+class="header-section-number">6.1.24</span>
+<code>infrastructure.search</code> (77 files)</h3>
 <p>Two-tier search architecture: the <code>literature/</code> client
 stack (client.py, backends, caches) powers literature search with arXiv,
 Crossref, local, and Paperclip backends. <code>connectors/</code>
@@ -999,43 +1161,46 @@ offline USD/1k pricing reference in <code>monid/PRICING.md</code>.
 <code>deep_research/</code> dispatches long-horizon provider-neutral
 manuscript research (PAID, opt-in). The live registry, not this prose,
 is authoritative for connector count.</p>
-<h3 id="infrastructure.sia-10-files"><code>infrastructure.sia</code> (10
-files)</h3>
+<h3 data-number="6.1.25" id="infrastructure.sia-10-files"><span
+class="header-section-number">6.1.25</span>
+<code>infrastructure.sia</code> (10 files)</h3>
 <p>Generic Self-Improving-AI loop utilities: task-layout validation,
 execution harness, and metric capture reused by
 <code>template_sia</code> (fixture-replay by default).</p>
-<h3
-id="infrastructure.skills-8-files"><code>infrastructure.skills</code> (8
-files)</h3>
+<h3 data-number="6.1.26" id="infrastructure.skills-8-files"><span
+class="header-section-number">6.1.26</span>
+<code>infrastructure.skills</code> (8 files)</h3>
 <p>Discovers <code>SKILL.md</code> frontmatter →
 <code>.agents/skill_manifest.json</code>.</p>
-<h3
-id="infrastructure.steganography-13-files"><code>infrastructure.steganography</code>
-(13 files)</h3>
+<h3 data-number="6.1.27"
+id="infrastructure.steganography-13-files"><span
+class="header-section-number">6.1.27</span>
+<code>infrastructure.steganography</code> (13 files)</h3>
 <p>Watermark overlays, hashing companions triggered by secure pipeline
 path.</p>
-<h3 id="infrastructure.tools-6-files"><code>infrastructure.tools</code>
-(6 files)</h3>
+<h3 data-number="6.1.28" id="infrastructure.tools-6-files"><span
+class="header-section-number">6.1.28</span>
+<code>infrastructure.tools</code> (6 files)</h3>
 <p>Invocable tool definitions registered by resource-pool governance;
 tools mirror <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars.</p>
-<h3
-id="infrastructure.transmission-6-files"><code>infrastructure.transmission</code>
-(6 files)</h3>
+<h3 data-number="6.1.29" id="infrastructure.transmission-6-files"><span
+class="header-section-number">6.1.29</span>
+<code>infrastructure.transmission</code> (6 files)</h3>
 <p>Rendered-release transmission leaves: LaTeX single-page bookends
 (<code>transmission_bookends</code>), page-check validation for Stage 04
 (<code>transmission_page_check</code>), barcode strips, figure
 embedding, and shared models. Consumed by the publishing release
 workflow; regular package so the documentation module-reference guard
 resolves nested refs on disk.</p>
-<h3
-id="infrastructure.validation-87-files"><code>infrastructure.validation</code>
-(87 files)</h3>
+<h3 data-number="6.1.30" id="infrastructure.validation-87-files"><span
+class="header-section-number">6.1.30</span>
+<code>infrastructure.validation</code> (87 files)</h3>
 <p>Markdown + PDF + integrity CLIs underpinning Stage 04
 diagnostics.</p>
-<h3
-id="infrastructurelogrotate.d-0-files"><code>infrastructure/logrotate.d</code>
-(0 files)</h3>
+<h3 data-number="6.1.31" id="infrastructurelogrotate.d-0-files"><span
+class="header-section-number">6.1.31</span>
+<code>infrastructure/logrotate.d</code> (0 files)</h3>
 <p>Operational templates for deployments (documentation-first;
 intentionally minimal Python footprint).</p>
 <hr />
@@ -1045,7 +1210,10 @@ newly promoted modules automatically flow into manuscripts after
 <code>generate_manuscript_metrics.py</code>.</p>
 <p><strong>FAIR+RSE linkage:</strong> MCP-ready <code>SKILL.md</code>
 artefacts align with evaluator heuristics (executability + metadata
-richness) emphasized by FAIRsoft guidance [garijo2024fairsoft].</p>
+richness) emphasized by FAIRsoft guidance <span class="citation"
+data-cites="garijo2024fairsoft">(<a href="index.html#ref-garijo2024fairsoft"
+role="doc-biblioref"><span class="nocase">Garijo et al.</span>
+2024</a>)</span>.</p>
 </main>
 </body>
 </html>

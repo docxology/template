@@ -903,6 +903,7 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Exploratory data analysis (EDA) is the most common entry point in
@@ -933,7 +934,9 @@ explore fast in a cell, and the moment a computation matters, move it
 into the library behind a failing test — verified by a zero-mock suite
 and a structural notebook-binding check (sec. <a
 href="#sec:reproducibility">7</a>).</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>This <code>template_eda_notebook</code> serves as the
@@ -1023,7 +1026,9 @@ everything.</li>
 related literature so the exemplar is not mistaken for a general-purpose
 EDA toolkit.</li>
 </ul>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>This section maps each step of the exploratory analysis to the tested
@@ -1134,7 +1139,9 @@ preparer in <code>src/template_eda_notebook/eda/figures.py</code>:
 preparer and the key parameters (bin count, value range) so reviewers
 can navigate from the PDF to the code without inferring hidden
 defaults.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section presents the exploratory analysis of the shipped
@@ -1276,7 +1283,9 @@ manuscript — which is the architectural point of the exemplar. Because
 every number is produced by a tested function and regenerated on demand,
 the prose here describes structure and provenance rather than
 transcribing values that would drift the moment the data changed.</p>
+
 <hr />
+
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
 <p>This study demonstrated a complete, reproducible
@@ -1356,7 +1365,9 @@ pipeline produced the figures referenced in sec. <a
 href="#sec:results">4</a>, wrote
 <code>output/data/summary_statistics.csv</code>, and rendered this
 markdown together with <code>config.yaml</code> into PDF.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:experimental_setup"><span
 class="header-section-number">6</span> Experimental Setup</h1>
 <p>This section details the dataset, schema, and software environment
@@ -1488,7 +1499,9 @@ class="header-section-number">6.5</span> Relation to figures</h2>
 </table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility</h1>
 <p>This section explains how to regenerate every artifact in the study
@@ -1584,7 +1597,9 @@ and artifacts cannot disagree. The notebook itself is verified
 structurally by <code>tests/test_notebook.py</code>, which confirms it
 is valid nbformat, that its <code>from src</code> imports resolve to the
 library’s public surface, and that no cell defines its own logic.</p>
+
 <hr />
+
 <h1 data-number="8" id="sec:scope"><span
 class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
@@ -1654,7 +1669,9 @@ interactive widgets and dashboards are not part of the exemplar.</li>
 the reproducibility concerns — tested functions, a thin script, and a
 structurally verified notebook — remain visible rather than buried under
 analytical complexity.</p>
+
 <hr />
+
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
@@ -1669,6 +1686,7 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_eda_notebook/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-harris2020numpy" class="csl-entry" role="listitem">

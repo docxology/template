@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>lab_applied_models.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -652,22 +737,24 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:lab_part_III_applied_models">Lab — Applied Models</h1>
+<h1 data-number="28" id="sec:lab_part_III_applied_models"><span
+class="header-section-number">28</span> Lab — Applied Models</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
 <p>Guided lab · Materials: Python environment, notebook or terminal, and
 a written observation record</p>
 </blockquote>
-<h2 id="objectives">Objectives</h2>
+<h2 data-number="28.1" id="objectives-9"><span
+class="header-section-number">28.1</span> Objectives</h2>
 <p>Execute <code>textbook.models.saturating_response</code> with the
 declared inputs, compare its output with an independently worked
 expectation, and explain which part of the chapter’s claim the result
 checks. Compare model predictions at designed inputs that discriminate
 between families.</p>
-<h2 id="background">Background</h2>
-<p>Linked chapter: <span class="citation"
-data-cites="sec:part_III_applied_models">[@sec:part_III_applied_models]</span>.
-A calibration series covers only low inputs, where a straight line and a
+<h2 data-number="28.2" id="background-9"><span
+class="header-section-number">28.2</span> Background</h2>
+<p>Linked chapter: sec. <a href="part_III__applied_models.html#sec:part_III_applied_models">16</a>. A
+calibration series covers only low inputs, where a straight line and a
 saturating curve are almost indistinguishable. Both fit well, but they
 predict different outputs at higher inputs. The next useful observation
 is therefore not necessarily another low-input replicate: it may be a
@@ -676,15 +763,14 @@ below are instructional inputs. No experiment on people, organisms or
 services is being reported. The exercise checks mathematical behavior
 under the model’s assumptions rather than supplying evidence that the
 scenario is real.</p>
-<h2 id="procedure">Procedure</h2>
+<h2 data-number="28.3" id="procedure-9"><span
+class="header-section-number">28.3</span> Procedure</h2>
 <ol type="1">
-<li>Write the input quantities, units and assumptions from <span
-class="citation"
-data-cites="tbl:part_III_applied_models_parameters">[@tbl:part_III_applied_models_parameters]</span>.</li>
+<li>Write the input quantities, units and assumptions from tbl. <a
+href="part_III__applied_models.html#tbl:part_III_applied_models_parameters">10</a>.</li>
 <li>Before running code, predict one boundary value and one interior
-value using <span class="citation"
-data-cites="eq:part_III_applied_models_model">[@eq:part_III_applied_models_model]</span>.
-Keep the prediction even if it proves incorrect.</li>
+value using eq. <a href="part_III__applied_models.html#eq:part_III_applied_models_model">11</a>. Keep
+the prediction even if it proves incorrect.</li>
 <li>Run the workflow below in a fresh interpreter. Preserve the command
 and output.</li>
 <li>Change one allowed input or parameter and explain which qualitative
@@ -694,7 +780,8 @@ comparison.</li>
 contract; record whether it is rejected or handled by an explicit
 convention.</li>
 </ol>
-<h2 id="analysis">Analysis</h2>
+<h2 data-number="28.4" id="analysis-9"><span
+class="header-section-number">28.4</span> Analysis</h2>
 <p>With a maximum of one, half-saturation input of three and exponent
 two, the outputs at zero, three and six are zero, one half and four
 fifths. At the half-saturation input, the numerator and the other
@@ -706,21 +793,23 @@ arithmetic should lead you to inspect units, input order and the
 declared convention. Agreement on these synthetic inputs establishes a
 limited computational result; it does not establish the opening
 scenario’s observation rule or empirical adequacy.</p>
-<h2 id="computational-workflow">Computational Workflow</h2>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> saturating_response</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> saturating_response(x, maximum<span class="op">=</span><span class="fl">1.0</span>, half_saturation<span class="op">=</span><span class="fl">3.0</span>, hill<span class="op">=</span><span class="fl">2.0</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(y, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code></pre></div>
+<h2 data-number="28.5" id="computational-workflow-9"><span
+class="header-section-number">28.5</span> Computational Workflow</h2>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> saturating_response</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>])</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> saturating_response(x, maximum<span class="op">=</span><span class="fl">1.0</span>, half_saturation<span class="op">=</span><span class="fl">3.0</span>, hill<span class="op">=</span><span class="fl">2.0</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(y, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code></pre></div>
 <p>The code calls the shared model implementation and asserts
 independently known properties. Add the changed-input result to the same
 record without overwriting the first one. If an assertion fails,
 preserve the failing inputs and exception before changing the
 computation.</p>
-<h2 id="reflection">Reflection</h2>
+<h2 data-number="28.6" id="reflection-9"><span
+class="header-section-number">28.6</span> Reflection</h2>
 <ul>
 <li>How do a positive-slope line and a saturating response differ at
 large inputs? Explain your answer before consulting the question
@@ -730,7 +819,8 @@ bank.</li>
 needed to decide whether the model is useful for a real instance of the
 scenario?</li>
 </ul>
-<h2 id="worked-solution">Worked Solution</h2>
+<h2 data-number="28.7" id="worked-solution-9"><span
+class="header-section-number">28.7</span> Worked Solution</h2>
 <p>The line grows without bound; the response approaches a finite
 maximum. Range, observation rule, parameters, evaluation evidence,
 competing explanations and remaining uncertainty. The code’s assertions
