@@ -57,7 +57,7 @@ from infrastructure.documentation._coverage_snapshot_output import CoverageSnaps
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-11-07"
+EXEMPLAR_SNAPSHOT_DATE = "2026-11-08"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -159,20 +159,20 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "91.15 %"),
+    ExemplarSnapshot("template_active_inference", "91.17 %"),
     ExemplarSnapshot("template_advanced_literature_review", "94.04 %"),
     ExemplarSnapshot("template_autopoiesis", "91.43 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.49 %"),
     ExemplarSnapshot("template_autoscientists", "92.95 %"),
-    ExemplarSnapshot("template_code_project", "94.28 %"),
+    ExemplarSnapshot("template_code_project", "94.04 %"),
     ExemplarSnapshot("template_data_descriptor", "96.26 %"),
     ExemplarSnapshot("template_eda_notebook", "91.01 %"),
     ExemplarSnapshot("template_experiment_tree", "91.85 %"),
     ExemplarSnapshot("template_formal", "90.39 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.80 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.81 %"),
     ExemplarSnapshot("template_literature_meta_analysis", "95.48 %"),
     ExemplarSnapshot("template_madlib", "98.95 %"),
-    ExemplarSnapshot("template_methods_paper", "99.00 %"),
+    ExemplarSnapshot("template_methods_paper", "98.21 %"),
     ExemplarSnapshot("template_newspaper", "99.08 %"),
     ExemplarSnapshot("template_pitch_deck", "96.43 %"),
     ExemplarSnapshot("template_pools_rules_tools", "94.68 %"),
