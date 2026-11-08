@@ -836,15 +836,13 @@ jobs:
       - name: Install elan and the pinned Lean toolchain
         if: steps.lean-pin.outputs.file != ''
         timeout-minutes: 15
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPLATE_ELAN_DOWNLOAD_RETRIES: "0"
+          TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS: "0"
         run: |
           set -euxo pipefail
-          curl -sSf \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" \
-            | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          source scripts/shell/prepare_pinned_elan.sh
           "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "${{ steps.lean-pin.outputs.file }}")"
           java -version
 
@@ -1041,15 +1039,13 @@ jobs:
             lake-build-${{ runner.os }}-
 
       - name: Install elan (lean + lake)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPLATE_ELAN_DOWNLOAD_RETRIES: "0"
+          TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS: "0"
         run: |
           set -euxo pipefail
-          curl -sSf \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" \
-            | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          source scripts/shell/prepare_pinned_elan.sh
 
       - name: Pin Lean toolchain and warm Lake build
         working-directory: projects/fep_lean/lean
@@ -1552,14 +1548,13 @@ jobs:
 
       - name: Prepare the exact harmonized Lean toolchain
         timeout-minutes: 20
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPLATE_ELAN_DOWNLOAD_RETRIES: "0"
+          TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS: "120"
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --location --max-time 120 \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          source scripts/shell/prepare_pinned_elan.sh
           active_pin=$(cat projects/templates/template_active_inference/lean/lean-toolchain)
           formal_pin=$(cat projects/templates/template_formal/formal/lean/lean-toolchain)
           test -n "$active_pin" && test "$active_pin" = "$formal_pin"

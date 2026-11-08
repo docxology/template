@@ -32,6 +32,12 @@ matching tag identity and authenticated publication.
   API locators with explicit content negotiation and existing GitHub tokens
   scoped only to hosted acquisition. Preserve every artifact version, length,
   SHA-256, retry limit and deadline; keep qualified offline runners offline.
+- Pin the actual Elan 4.2.4 installer bytes through official immutable asset
+  APIs rather than a bootstrap script's mutable secondary `latest` download.
+  Share its preparation inside all existing caller clocks, preserve their Lean
+  declarations and curl limits, and clear acquisition tokens before execution.
+- Remove remaining incidental CSS-token assertions while retaining actual
+  renderer-owned full-resolution figure links and their destinations.
 - Describe the existing publication DOI as an immutable version identifier,
   preserving its preferred article citation without inventing a software-release
   DOI or changing any archival record.
