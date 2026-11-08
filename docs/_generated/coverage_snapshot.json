@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.03 %",
-      "source_hash": "c55d7d9c4d9d4d322a5ef7ef196cd57fddeeb1cb7f9fbdcc636b39f45adf4d5c"
+      "source_hash": "9ccbf8089c7202188ff6f93a8d621492735cee1ad1df5ce60d8e5d13555a31c1"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.04 %",
@@ -39,7 +39,7 @@
     },
     "template_formal": {
       "coverage_pct": "90.30 %",
-      "source_hash": "75fb7c53e444f7df7fd2e11fec30b0ef06460c8dbd46eb1db379b694bb537ec8"
+      "source_hash": "c71a5c6ece5ab142f980972d1ac9a69f30feb9888137e9cd759c4b96c0d59cbf"
     },
     "template_gold_refinement": {
       "coverage_pct": "92.80 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "f22cfef0fb681ad37cadc16398c6c404b04d84d9",
+  "source_commit": "a229153dc605cf193779944d1dfa1530b895a30d",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -111,7 +111,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "54c75c43d20c00b85c565b43f18281f56779628518481f81bfdf6e5c5e36560f",
+        "digest": "19320d8290c7e9f246424d0afacecd3fbf223f391397547291d56776d349a93d",
         "entries": [
           {
             "identity": "sha256",
@@ -157,7 +157,7 @@
           {
             "identity": "sha256",
             "path": "docs/guides/manuscript-semantics.md",
-            "sha256": "5d4a9fac94ed52cc97ed40d1f95b24c40ef50a105cafaa859081a80eb6fec663",
+            "sha256": "fa416c20ded9e8ceb40d2f7aa95686f442209f1bfebf1705d4e3de0858ef6cc6",
             "type": "file"
           },
           {
@@ -205,7 +205,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "c55d7d9c4d9d4d322a5ef7ef196cd57fddeeb1cb7f9fbdcc636b39f45adf4d5c",
+      "template_active_inference": "9ccbf8089c7202188ff6f93a8d621492735cee1ad1df5ce60d8e5d13555a31c1",
       "template_advanced_literature_review": "7f227f4d9c0c46c0272028be02efd779eb684df58e4587336b9d4ce716df71a5",
       "template_autopoiesis": "53d8ddca2ccb878605fcbb221a86b0d0b6db0c53650b2ac5e263b3d3edabb5b3",
       "template_autoresearch_project": "2dfcccc0aaff6c0f209970fad5b0f9c7fa800b05c9454cbc78056bd3c03e4c5b",
@@ -214,7 +214,7 @@
       "template_data_descriptor": "914b2e8ad090f95c7b53c7563c930130d6c2630a002035853473f5333bdf8d93",
       "template_eda_notebook": "ad7ba257308e9d7f812412643cc0ce1b180a32b7fb1c85b25f4441033ab48a91",
       "template_experiment_tree": "da065c5e2e17b98166993b280724a9ae7721cda1dfe7e19c6309b895b3950451",
-      "template_formal": "75fb7c53e444f7df7fd2e11fec30b0ef06460c8dbd46eb1db379b694bb537ec8",
+      "template_formal": "c71a5c6ece5ab142f980972d1ac9a69f30feb9888137e9cd759c4b96c0d59cbf",
       "template_gold_refinement": "b243459ffc45e706262362437dc6ea82238aed8beb1b4143d281c8af14e3d348",
       "template_literature_meta_analysis": "4f198d9f92fd93fcf80f08db7e6a21e36bb0452c36b8636979afd6ea359f53c5",
       "template_madlib": "75e5022a3ae33961db5a844947f6306c1b1cc42205a2661be99de3688853374d",

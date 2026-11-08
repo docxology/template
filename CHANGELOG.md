@@ -25,6 +25,10 @@ matching tag identity and authenticated publication.
 - Refresh exhaustive family classifications from all four original native
   collectors; verify exact native policy encoding and current Source admission
   without turning retired incidental cases into waived runtime evidence.
+- Refresh explicit review inputs for integrated global HTML and source-owned
+  parser consumers, preserving every unrelated lane and prerequisite definition.
+  Regenerate canonical coverage provenance and COUNTS only after all 25 genuine
+  measurements match current project inputs and external support.
 - Include genuine fixture setup in Root prerequisite review: complete-source
   clones require Git even when the eventual case body tests a refusal. Preserve
   genuinely pre-I/O refusal exceptions instead of widening their requirements.

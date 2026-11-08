@@ -16455,38 +16455,37 @@
     },
     {
       "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-      "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
+      "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
       "families": [
         "tests/infra_tests/publishing/test_publication_refresh.py::test_actual_candidate_commit_preserves_base_and_only_declared_generated_paths",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_actual_per_project_sequence_preserves_order_and_stops_after_first_refusal",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_actual_pitch_counts_reader_can_change_while_old_rendered_output_fingerprint_stays_unchanged",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_actual_rebind_refuses_changed_output_fingerprint_without_restamping",
+        "tests/infra_tests/publishing/test_publication_refresh.py::test_actual_source_inventory_excludes_authored_manuscripts",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_actual_unowned_or_incomplete_footprints_refuse",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_coordinated_run_keeps_actual_prepare_failure_terminal",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_coordinated_run_refuses_bad_workers_before_creating_any_evidence",
-        "tests/infra_tests/publishing/test_publication_refresh.py::test_current_provider_graph_and_publication_copies_derive_from_source",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_declared_provider_escape_and_cycle_refuse",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_dependent_analysis_refuses_missing_tracked_producer_or_input",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_dependent_analysis_refuses_omitted_or_reordered_canonical_consumers",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_dependent_analysis_refuses_private_or_unknown_subjects",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_version",
-        "tests/infra_tests/publishing/test_publication_refresh.py::test_generate_cli_default_matches_explicit_single_worker_before_missing_preparation",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_manifest_requires_tracked_real_compiler_and_fragments",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_manual_workflow_has_no_write_credential_and_requires_both_original_gates",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_original_binary_streams_and_child_exit_are_preserved",
+        "tests/infra_tests/publishing/test_publication_refresh.py::test_provider_order_and_generated_ownership_preserve_authored_sources",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_real_atomic_0600_publication_output_retains_git_100644",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_real_config_validator_refuses_stale_copy_then_accepts_exact_source_copy",
-        "tests/infra_tests/publishing/test_publication_refresh.py::test_real_source_inventory_and_mandatory_config_guard",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_accepts_only_existing_flat_report_updates",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_mode_tamper_refuses_reconstruction_and_dispatched_phase",
-        "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_plan_routes_every_canonical_project_to_actual_rebind_cli",
+        "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_ownership_excludes_analysis_and_compiled_manuscripts",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_refuses_actual_tracked_figure_compiled_or_nested_report_changes",
-        "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_workflow_mode_is_explicit_and_carried_to_every_phase",
+        "tests/infra_tests/publishing/test_publication_refresh.py::test_refresh_does_not_treat_missing_publication_copy_as_unchanged_output",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_refuses_stale_sha_or_version_before_generation",
         "tests/infra_tests/publishing/test_publication_refresh.py::test_unsafe_shared_account_workers_refuse_before_any_plan_or_producer"
       ],
-      "family_observations_sha256": "eea1ab9b39ca893a7dc95ed11ab72d793aa80591a998a7de93804cb40299da25",
+      "family_observations_sha256": "2f7a6e0fcac2ec9b56c9beffae262397f113092184e3fb2729189a8540ef8001",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -16516,187 +16515,172 @@
           "id": "tests/infra_tests/publishing/test_publication_refresh.py::test_manual_workflow_has_no_write_credential_and_requires_both_original_gates",
           "lane": "core",
           "obligations": []
-        },
-        {
-          "id": "tests/infra_tests/publishing/test_publication_refresh.py::test_rebind_only_workflow_mode_is_explicit_and_carried_to_every_phase",
-          "lane": "core",
-          "obligations": []
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 213
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 218
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 540
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 485
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 576
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 440
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 155
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 282
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 634
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 689
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 139
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 198
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 532
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 620
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
           "line": 521
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 469
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 423
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 723
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 160
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 190
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 287
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 299
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 579
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 264
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 634
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 335
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 136
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 348
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 203
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 357
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 477
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 417
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 565
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 425
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 466
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 374
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 436
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 403
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 195
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 452
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 304
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 182
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 269
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 702
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 340
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 80
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 353
         },
         {
           "path": "tests/infra_tests/publishing/test_publication_refresh.py",
-          "source_sha256": "5cc659d0fe9f8aaca787aa1962e6fc542ee8fd3ee113d6a225dda49dce0906fe",
-          "line": 64
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 362
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 400
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 408
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 368
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 386
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 187
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 647
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 77
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 61
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "source_sha256": "6be287f372720db0d1448fe49782cdafae80bdb4e80c9e3c81891f0e3d1b4a37",
           "line": 163
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "source_sha256": "6be287f372720db0d1448fe49782cdafae80bdb4e80c9e3c81891f0e3d1b4a37",
           "line": 169
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "source_sha256": "6be287f372720db0d1448fe49782cdafae80bdb4e80c9e3c81891f0e3d1b4a37",
           "line": 223
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "source_sha256": "6be287f372720db0d1448fe49782cdafae80bdb4e80c9e3c81891f0e3d1b4a37",
           "line": 250
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "source_sha256": "680293237409df15cccab64af96d73553f0a1b736189669933bb378134cb0341",
+          "source_sha256": "6be287f372720db0d1448fe49782cdafae80bdb4e80c9e3c81891f0e3d1b4a37",
           "line": 92
         },
         {
@@ -16723,6 +16707,11 @@
           "path": "infrastructure/validation/rendered_snapshot/_scan.py",
           "source_sha256": "842992b46306d57c75c0cba7f480e1830dca9ea3023e7860650d967ec0a25c02",
           "line": 350
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_publication_refresh.py",
+          "source_sha256": "62af28ca8663a0b1f788923e25fb041a6da8c9c5d9fbb476240a4032f5769313",
+          "line": 147
         }
       ]
     },
@@ -19435,7 +19424,7 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_formalism_filter.py",
-      "source_sha256": "03452884a83582e426a7f8652fbba55de9f6557b95562fa1ea1d9fd735fa6b95",
+      "source_sha256": "42485f5e7ef5b8ba6e56978731e01215cc980947fbfec811d9e6f8ff793e26e2",
       "families": [
         "tests/infra_tests/rendering/test_formalism_filter.py::test_a_declared_prefix_still_claims_its_own_undeclared_labels",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_bibliography_keys_that_resemble_a_kind_prefix_are_not_stolen",
@@ -19448,6 +19437,7 @@
         "tests/infra_tests/rendering/test_formalism_filter.py::test_duplicate_label_is_reported_on_stderr",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_duplicate_label_negative_control",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_marker_joins_the_first_paragraph_rather_than_standing_alone",
+        "tests/infra_tests/rendering/test_formalism_filter.py::test_missing_shipped_filter_refuses_a_broken_install",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_mixed_citation_group_is_partitioned",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_natbib_citep_negative_control",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_natbib_output_contains_no_citep_for_a_formalism_label",
@@ -19471,7 +19461,7 @@
         "tests/infra_tests/rendering/test_formalism_filter.py::test_undeclared_reference_survives_verbatim",
         "tests/infra_tests/rendering/test_formalism_filter.py::test_unnumbered_class_suppresses_the_counter"
       ],
-      "family_observations_sha256": "80b8e771a537b1c390a9116cd6e5ebe955e16751170479758a4f3ee6aaae7d2b",
+      "family_observations_sha256": "f3822107be1226feee1e3e04c9ad7d97de79cde533f4d4be786d2722deac691a",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -19495,44 +19485,38 @@
             "pandoc",
             "pandoc-crossref"
           ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_formalism_filter.py::test_missing_shipped_filter_refuses_a_broken_install",
+          "lane": "core",
+          "obligations": []
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_formalism_filter.py",
-          "source_sha256": "03452884a83582e426a7f8652fbba55de9f6557b95562fa1ea1d9fd735fa6b95",
+          "source_sha256": "42485f5e7ef5b8ba6e56978731e01215cc980947fbfec811d9e6f8ff793e26e2",
           "line": 1
-        }
-      ]
-    },
-    {
-      "path": "tests/infra_tests/rendering/test_formalism_wiring.py",
-      "source_sha256": "61980b9f150bb8e191c933d4303d53ca432344378444616087bf5ff72440933f",
-      "families": [
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_combined_docx_command_carries_the_filter",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_combined_epub_command_carries_the_filter",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_combined_html_command_carries_the_filter",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_combined_pdf_command_carries_the_filter",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_ebook_stage_command_carries_the_filter",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_filter_args_are_a_lua_filter_pair",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_filter_ships_with_the_repository",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_missing_filter_error_escapes_the_docx_and_epub_warning_handlers",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_missing_filter_raises_rather_than_degrading",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_ordering_assertion_rejects_a_command_missing_the_filter",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_ordering_assertion_rejects_a_filter_placed_after_citeproc",
-        "tests/infra_tests/rendering/test_formalism_wiring.py::test_ordering_assertion_rejects_a_filter_placed_after_crossref"
-      ],
-      "family_observations_sha256": "53f20b86113bac0cec04436d5dbcb37fc3ec4e57dd66affb7c9401752ee47fe9",
-      "decision": {
-        "lane": "core",
-        "obligations": []
-      },
-      "exceptions": [],
-      "evidence": [
+        },
         {
-          "path": "tests/infra_tests/rendering/test_formalism_wiring.py",
-          "source_sha256": "61980b9f150bb8e191c933d4303d53ca432344378444616087bf5ff72440933f",
-          "line": 1
+          "path": "tests/infra_tests/rendering/test_formalism_filter.py",
+          "source_sha256": "42485f5e7ef5b8ba6e56978731e01215cc980947fbfec811d9e6f8ff793e26e2",
+          "line": 32
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_formalism_filter.py",
+          "source_sha256": "42485f5e7ef5b8ba6e56978731e01215cc980947fbfec811d9e6f8ff793e26e2",
+          "line": 38
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_formalism_filter.py",
+          "source_sha256": "42485f5e7ef5b8ba6e56978731e01215cc980947fbfec811d9e6f8ff793e26e2",
+          "line": 370
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_formalism_filter.py",
+          "source_sha256": "42485f5e7ef5b8ba6e56978731e01215cc980947fbfec811d9e6f8ff793e26e2",
+          "line": 395
         }
       ]
     },
@@ -23746,29 +23730,53 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_web_assets.py",
-      "source_sha256": "bf49aa97be0b29194d9b541040b48073af7aadc016f51921b6f9783019a5169f",
+      "source_sha256": "5926985d1a80059927875dd9104713934cc8115e2c5d4156457efeafbab68658",
       "families": [
         "tests/infra_tests/rendering/test_web_assets.py::TestAssetHandling::test_render_preserves_local_image_reference",
         "tests/infra_tests/rendering/test_web_assets.py::test_figure_images_link_to_full_resolution_assets_idempotently",
         "tests/infra_tests/rendering/test_web_assets.py::test_full_size_figure_link_rejects_missing_context",
         "tests/infra_tests/rendering/test_web_assets.py::test_full_size_link_shortens_a_long_result_at_a_semantic_boundary",
         "tests/infra_tests/rendering/test_web_assets.py::test_full_size_link_uses_concise_caption_result_not_caption_metadata",
-        "tests/infra_tests/rendering/test_web_assets.py::test_individual_render_embeds_publication_css_and_full_resolution_figure_link",
-        "tests/infra_tests/rendering/test_web_assets.py::test_individual_render_output_names_include_parent_context",
+        "tests/infra_tests/rendering/test_web_assets.py::test_individual_render_links_the_full_resolution_figure",
         "tests/infra_tests/rendering/test_web_assets.py::test_numbered_figure_full_size_link_has_contextual_accessible_name",
         "tests/infra_tests/rendering/test_web_assets.py::test_responsive_variant_uses_mobile_sibling_when_present"
       ],
-      "family_observations_sha256": "074617406b447c6c8090ee7d1910f363939718d485495503f5476626c361ffb3",
+      "family_observations_sha256": "c66dcb169873680995da1059d339872ac44329d97e73e5f8e6461da9d39f57b8",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/rendering/test_web_assets.py::TestAssetHandling::test_render_preserves_local_image_reference",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_assets.py::test_individual_render_links_the_full_resolution_figure",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_web_assets.py",
-          "source_sha256": "bf49aa97be0b29194d9b541040b48073af7aadc016f51921b6f9783019a5169f",
+          "source_sha256": "5926985d1a80059927875dd9104713934cc8115e2c5d4156457efeafbab68658",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_assets.py",
+          "source_sha256": "5926985d1a80059927875dd9104713934cc8115e2c5d4156457efeafbab68658",
+          "line": 21
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_assets.py",
+          "source_sha256": "5926985d1a80059927875dd9104713934cc8115e2c5d4156457efeafbab68658",
+          "line": 142
         }
       ]
     },
@@ -23796,14 +23804,18 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_web_fragments.py",
-      "source_sha256": "39e1a8f1bd430ff93152efbd454a74451911038a2c577eb75095014538f6ff44",
+      "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
       "families": [
+        "tests/infra_tests/rendering/test_web_fragments.py::test_combined_only_call_produces_a_resolved_single_source_page_with_yaml_metadata",
+        "tests/infra_tests/rendering/test_web_fragments.py::test_finalized_pages_keep_generated_transmission_bookends_combined_only",
+        "tests/infra_tests/rendering/test_web_fragments.py::test_finalized_split_crossref_numbers_figures_tables_equations_and_sections_globally",
+        "tests/infra_tests/rendering/test_web_fragments.py::test_finalized_split_formalism_uses_global_numbers_and_preserves_citation_groups",
         "tests/infra_tests/rendering/test_web_fragments.py::test_fragment_resolution_quotes_document_names_and_preserves_markup",
         "tests/infra_tests/rendering/test_web_fragments.py::test_fragment_resolution_refuses_unsafe_produced_pages",
         "tests/infra_tests/rendering/test_web_fragments.py::test_normal_web_fragment_destinations_match_navigation_contract",
         "tests/infra_tests/rendering/test_web_fragments.py::test_normal_web_output_binds_only_real_cross_page_fragments"
       ],
-      "family_observations_sha256": "8e778297e3276e6018fd5bb6f67342ce6cc1aa45eb6574a4a0ee43eedd3046d6",
+      "family_observations_sha256": "be934c2e81f63c2d9eea111f3e39b3c075ec816fb5fcaacadca7e67d65ac3091",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -23822,43 +23834,88 @@
           "obligations": [
             "pandoc"
           ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_fragments.py::test_combined_only_call_produces_a_resolved_single_source_page_with_yaml_metadata",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_fragments.py::test_finalized_pages_keep_generated_transmission_bookends_combined_only",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_fragments.py::test_finalized_split_crossref_numbers_figures_tables_equations_and_sections_globally",
+          "lane": "core",
+          "obligations": [
+            "pandoc",
+            "pandoc-crossref"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_fragments.py::test_finalized_split_formalism_uses_global_numbers_and_preserves_citation_groups",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_web_fragments.py",
-          "source_sha256": "39e1a8f1bd430ff93152efbd454a74451911038a2c577eb75095014538f6ff44",
-          "line": 47
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 51
         },
         {
           "path": "tests/infra_tests/rendering/test_web_fragments.py",
-          "source_sha256": "39e1a8f1bd430ff93152efbd454a74451911038a2c577eb75095014538f6ff44",
-          "line": 131
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 135
         },
         {
           "path": "tests/infra_tests/rendering/test_web_fragments.py",
-          "source_sha256": "39e1a8f1bd430ff93152efbd454a74451911038a2c577eb75095014538f6ff44",
-          "line": 299
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 303
         },
         {
           "path": "tests/infra_tests/rendering/test_web_fragments.py",
-          "source_sha256": "39e1a8f1bd430ff93152efbd454a74451911038a2c577eb75095014538f6ff44",
-          "line": 319
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 323
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_fragments.py",
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 431
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_fragments.py",
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 553
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_fragments.py",
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 610
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_fragments.py",
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 640
         }
       ]
     },
     {
       "path": "tests/infra_tests/rendering/test_web_mathjax.py",
-      "source_sha256": "62feb41cf64ee11ac97fcf0f89b60de965c82ad6c8fabec466bfa5448c4cb0c6",
+      "source_sha256": "30075d53c841d3cd3e820c39085998326ef00fd5b873413bb1bdbbbe8b8682fb",
       "families": [
         "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_harden_mathjax_script_adds_sri_to_pinned_url",
-        "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_harden_mathjax_script_overwrites_wrong_sri_and_removes_duplicate_loader",
-        "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_harden_mathjax_script_removes_line_owned_attributes_without_whitespace_residue",
-        "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_harden_mathjax_script_replaces_untrusted_config_before_loader",
-        "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_mathjax_config",
-        "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_render_with_mathjax"
+        "tests/infra_tests/rendering/test_web_mathjax.py::TestMathJaxIntegration::test_harden_mathjax_script_overwrites_wrong_sri_and_removes_duplicate_loader"
       ],
-      "family_observations_sha256": "2850d934e63b868181399b9e71f8bc30d43c241ab85cc6ff83a7ab387e933864",
+      "family_observations_sha256": "cafe8fc3daade3b6514c87387fa8782e44d83ec1ddd6c2ab74749d1ad0344650",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -23867,8 +23924,18 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_web_mathjax.py",
-          "source_sha256": "62feb41cf64ee11ac97fcf0f89b60de965c82ad6c8fabec466bfa5448c4cb0c6",
+          "source_sha256": "30075d53c841d3cd3e820c39085998326ef00fd5b873413bb1bdbbbe8b8682fb",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_mathjax.py",
+          "source_sha256": "30075d53c841d3cd3e820c39085998326ef00fd5b873413bb1bdbbbe8b8682fb",
+          "line": 17
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_mathjax.py",
+          "source_sha256": "30075d53c841d3cd3e820c39085998326ef00fd5b873413bb1bdbbbe8b8682fb",
+          "line": 31
         }
       ]
     },
@@ -23899,29 +23966,19 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-      "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+      "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
       "families": [
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_adds_newline_if_missing",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_bom_removal",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_empty_files_raises",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_html_safe_markdown_preserves_pandoc_crossrefs",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_html_safe_markdown_preserves_raw_latex_visible_text",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_missing_file",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_multiple_files",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_per_section_html_can_render_crossrefs_without_raw_markers",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_single_file",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_strips_trailing_whitespace",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::TestCombineMarkdownFiles::test_unicode_error",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestHtmlRendering::test_render_html",
         "tests/infra_tests/rendering/test_web_renderer_core.py::TestHtmlRendering::test_render_html_uses_configured_web_dir",
+        "tests/infra_tests/rendering/test_web_renderer_core.py::test_combined_invalid_manuscript_refuses_to_publish_html",
+        "tests/infra_tests/rendering/test_web_renderer_core.py::test_distinct_sources_retain_their_own_published_pages",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_individual_render_preserves_existing_page_permissions",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_nested_manuscript_figures_keep_registry_identity_and_literal_paths",
-        "tests/infra_tests/rendering/test_web_renderer_core.py::test_pandoc_metadata_args_enable_linked_references",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_cleans_private_source_after_pandoc_failure",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_preserves_planted_temporary_symlink",
         "tests/infra_tests/rendering/test_web_renderer_core.py::test_render_source_io_failure_keeps_rendering_error_contract"
       ],
-      "family_observations_sha256": "53f53a045a43630c1805cc49426b87a5a09f88e665ec9ce8664cd212386a235d",
+      "family_observations_sha256": "5a1e9a7d2247199f1447167fd019f5f43d77df0db6dde8f04c29840c72b94aa3",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -23961,53 +24018,70 @@
           "obligations": [
             "pandoc"
           ]
+        },
+        {
+          "id": "tests/infra_tests/rendering/test_web_renderer_core.py::test_distinct_sources_retain_their_own_published_pages",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
           "line": 23
         },
         {
           "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
           "line": 34
         },
         {
+          "path": "tests/infra_tests/rendering/test_web_fragments.py",
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 610
+        },
+        {
           "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
+          "line": 122
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
+          "line": 179
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
+          "line": 203
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
+          "line": 215
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
+          "line": 230
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_fragments.py",
+          "source_sha256": "4d5490955aa390aab1391ed694e1e4be1767a25a89e4a32da2cc639aac12a3e6",
+          "line": 553
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
           "line": 44
         },
         {
           "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
-          "line": 151
-        },
-        {
-          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
-          "line": 208
-        },
-        {
-          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
-          "line": 232
-        },
-        {
-          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
-          "line": 244
-        },
-        {
-          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
-          "line": 259
-        },
-        {
-          "path": "tests/infra_tests/rendering/test_web_renderer_core.py",
-          "source_sha256": "3577cb4a848fc006e5509cd9057fa87c0aef696c846ae9bb893856f4d6b725d0",
-          "line": 278
+          "source_sha256": "e7fde8483c5f253460dd41b052d5e9f2622c5e531a0fdd07fa13d538c2d4a548",
+          "line": 67
         }
       ]
     },
@@ -25807,32 +25881,60 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_code_native_endpoints.py",
-      "source_sha256": "8ccd8e82fe4e5b24222ea2fe1a5cb4461d243dbe6e2a9a5a1bfd9fc6b8624119",
+      "source_sha256": "204f47e548bb3d53683f374349a83a4f9f7a213b71c62b51190655a5c8333acf",
       "families": [
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_changed_payload_binding_cannot_use_same_source_key_ordinal_endpoint",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_complete_literal_members_keep_code_and_nested_link_identity",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_complete_office_native_block_disagreements_cannot_grant_endpoint",
-        "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_complete_section_source_absence_does_not_invent_a_native_occurrence",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_domain_baseline_stays_while_only_projected_exact_native_location_closes",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_equal_numbers_select_actual_ast_block_without_native_text_search",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_filtered_own_source_is_separate_from_unfiltered_coverage_identity",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_multiblock_payload_keeps_all_ordered_literal_roles",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_reader_requires_both_original_and_fresh_current_native_occurrence",
+        "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_real_html_owned_inputs_drive_occurrences_and_section_absence",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_repeated_office_prose_retains_true_ordered_paths",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_unbound_ast_intervals_refuse",
         "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_whole_table_interval_requires_every_actual_literal_and_math_cell"
       ],
-      "family_observations_sha256": "8e177fd259b2d72da5bb38678bf29b77d63e448a447b39b3ff246a4d80bebbd8",
+      "family_observations_sha256": "f67abc562c9d6e678bea50f3d1012fc4c24592106bc37fd9c43c6ba8e05477c9",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/reporting/test_native_code_native_endpoints.py::test_real_html_owned_inputs_drive_occurrences_and_section_absence",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_code_native_endpoints.py",
-          "source_sha256": "8ccd8e82fe4e5b24222ea2fe1a5cb4461d243dbe6e2a9a5a1bfd9fc6b8624119",
+          "source_sha256": "204f47e548bb3d53683f374349a83a4f9f7a213b71c62b51190655a5c8333acf",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_code_native_endpoints.py",
+          "source_sha256": "204f47e548bb3d53683f374349a83a4f9f7a213b71c62b51190655a5c8333acf",
+          "line": 233
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_code_native_endpoints.py",
+          "source_sha256": "204f47e548bb3d53683f374349a83a4f9f7a213b71c62b51190655a5c8333acf",
+          "line": 267
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_code_native_endpoints.py",
+          "source_sha256": "204f47e548bb3d53683f374349a83a4f9f7a213b71c62b51190655a5c8333acf",
+          "line": 281
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_code_native_endpoints.py",
+          "source_sha256": "204f47e548bb3d53683f374349a83a4f9f7a213b71c62b51190655a5c8333acf",
+          "line": 305
         }
       ]
     },
@@ -26036,15 +26138,14 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
-      "source_sha256": "0305aafabb44321e8c10ea404bb04650f412a1633190a5f00c8e798f7c30adc0",
+      "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
       "families": [
-        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_combined_html_keeps_own_source_order_and_separator",
-        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_combined_html_preserves_citations_for_real_citeproc",
+        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_annotated_whole_html_context_preserves_real_reference_and_table_consumers",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_explicit_alt_override_does_not_acquire_alias_permission",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_figure_math_and_code_keep_existing_role_predicates",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_figure_short_caption_is_separate_unsupported_role",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_html_complete_table_carrier_preserves_actual_grid_and_payload_interval",
-        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_html_ordinal_bytes_retain_unicode_exact_payload_and_own_input_offsets",
+        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_html_ordinal_bytes_retain_unicode_payload_in_composed_parser_input",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_html_transform_inside_selected_payload_is_refused_without_a_span_adapter",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_malformed_modern_figure_cannot_supply_a_visible_caption",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_math_caption_alias_has_exact_attribute_string_and_distinct_visible_math",
@@ -26055,25 +26156,86 @@
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_modern_figure_semantics_keep_caption_math_and_rich_alt_obligation",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_nonalias_math_alternative_cannot_borrow_visible_caption_model",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_projected_alt_change_is_not_qualified_by_original_alias",
-        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_section_cannot_acquire_combined_inputs",
-        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_section_html_keeps_own_original_newlines",
-        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_section_html_uses_actual_citation_text_but_retains_crossrefs",
+        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_real_source_projection_retains_owned_definitions_and_global_reference_values",
+        "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_real_table_ordinals_follow_owned_projection_not_repeated_values",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_table_endpoint_uses_filtered_identity_and_retains_original_complete_roster",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_table_projection_cannot_borrow_raw_path_or_partial_native_cells",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_unknown_empty_or_rich_nonmodel_caption_alternatives_stay_obligated",
         "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_unknown_figure_descendant_is_not_silently_ignored"
       ],
-      "family_observations_sha256": "30871db925c7d1b875df2a6177b2719d7ec960d11f6c0384bee644f5e6fc4e3a",
+      "family_observations_sha256": "fb5c680ef8ace86fe86cb4b8fc25ba49d91711556a3420ed1725bc9ab472be15",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_annotated_whole_html_context_preserves_real_reference_and_table_consumers",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_real_source_projection_retains_owned_definitions_and_global_reference_values",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py::test_real_table_ordinals_follow_owned_projection_not_repeated_values",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
-          "source_sha256": "0305aafabb44321e8c10ea404bb04650f412a1633190a5f00c8e798f7c30adc0",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 59
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 72
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 88
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 169
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 215
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 261
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 270
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_html_hydration_ordinals.py",
+          "source_sha256": "47d1b15cebd2c96296ba7ed171c6eda8a23423ec1ff3400a88dcbead48a0f824",
+          "line": 446
         }
       ]
     },
@@ -28557,14 +28719,14 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
-      "source_sha256": "7cf53166d3c8d4cec5d2e85fddbe72889de54c197aac2d794515b7977c24d685",
+      "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
       "families": [
         "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py::test_actual_combined_producer_reconstructs_exact_bytes",
         "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py::test_legacy_algorithm_cannot_relabel_frontmatter_bytes",
         "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py::test_opt_in_algorithm_requires_actual_partition",
         "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py::test_unknown_algorithm_refuses"
       ],
-      "family_observations_sha256": "b795c7c07300d95ba64a5a5909afd2f58e105a35afd31f4099446b6ef6cbbfee",
+      "family_observations_sha256": "81e5b1360334ecd117a141c67f5036dd4d5e99f5869c99fe9b2b160530e6bb4a",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -28591,23 +28753,43 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
-          "source_sha256": "7cf53166d3c8d4cec5d2e85fddbe72889de54c197aac2d794515b7977c24d685",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
           "line": 18
         },
         {
           "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
-          "source_sha256": "7cf53166d3c8d4cec5d2e85fddbe72889de54c197aac2d794515b7977c24d685",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
           "line": 47
         },
         {
           "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
-          "source_sha256": "7cf53166d3c8d4cec5d2e85fddbe72889de54c197aac2d794515b7977c24d685",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
           "line": 53
         },
         {
           "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
-          "source_sha256": "7cf53166d3c8d4cec5d2e85fddbe72889de54c197aac2d794515b7977c24d685",
-          "line": 98
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
+          "line": 93
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
+          "line": 50
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
+          "line": 55
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
+          "line": 100
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction.py",
+          "source_sha256": "4f0040cd7f2a7c644f4fdf47284680c2ae5b3a521eff666ae74d3ac7a6bb6a83",
+          "line": 105
         }
       ]
     },
