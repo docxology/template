@@ -45,6 +45,11 @@ matching tag identity and authenticated publication.
 - Keep registered-report bibliography comments free of BibTeX entry sentinels;
   preserve every reference entry and compile the complete manuscript through
   the unchanged PDF and publication gates.
+- Capture genuine canonical artifact additions and retirements against frozen
+  base manifests and freshly validated public output inventories. Preserve
+  exact A/M/D bytes and native candidate trees, require every original
+  generation and all three strict gates, and keep unchanged-output rebinds
+  restricted to existing report updates.
 - Describe the existing publication DOI as an immutable version identifier,
   preserving its preferred article citation without inventing a software-release
   DOI or changing any archival record.

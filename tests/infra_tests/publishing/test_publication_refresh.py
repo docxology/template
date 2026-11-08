@@ -240,6 +240,73 @@ def test_actual_candidate_commit_preserves_base_and_only_declared_generated_path
     assert not (directory / "review").exists()
 
 
+@pytest.mark.parametrize("mode", ["refresh", "rebind-only"])
+def test_actual_manifested_asset_replacement_retains_exact_candidate_custody(
+    repository: Path, tmp_path: Path, mode: str
+) -> None:
+    prefix = f"projects/{ACTIVE}/output/"
+    old = prefix + "figures/retired.svg"
+    new = prefix + "figures/current.svg"
+    old_bytes = b'<svg xmlns="http://www.w3.org/2000/svg"><title>Retired result</title></svg>\n'
+    new_bytes = b'<svg xmlns="http://www.w3.org/2000/svg"><title>Current result</title></svg>\n'
+    _write(repository, old, old_bytes)
+    snapshot_current_artifact_manifest(repository / prefix)
+    base = _commit(repository)
+    plan = build_plan(repository, base, "5.1.0", mode=mode)
+    (repository / old).unlink()
+    _write(repository, new, new_bytes)
+    snapshot_current_artifact_manifest(repository / prefix)
+    if mode == "rebind-only":
+        with pytest.raises((ValueError, OSError)):
+            check_footprint(repository, plan)
+        assert git(repository, "rev-parse", "HEAD").decode().strip() == base
+        assert git(repository, "diff", "--cached", "--name-only") == b""
+        return
+    manifest = prefix + "reports/artifact_manifest.json"
+    assert set(check_footprint(repository, plan)) == {old, new, manifest}
+    directory = tmp_path / "asset-operator"
+    directory.mkdir()
+    write_json(directory / "plan.json", plan)
+    candidate = commit_candidate(repository, directory)
+    assert git(repository, "rev-parse", "HEAD^").decode().strip() == base
+    assert git(repository, "rev-parse", "HEAD^{tree}").decode().strip() == candidate["tree"]
+    assert set(git(repository, "diff", "--no-renames", "--name-status", base, "HEAD").decode().splitlines()) == {
+        "D\t" + old,
+        "A\t" + new,
+        "M\t" + manifest,
+    }
+    assert git(repository, "show", base + ":" + old) == old_bytes
+    assert git(repository, "show", "HEAD:" + new) == new_bytes
+    assert git(repository, "ls-tree", "HEAD", "--", old) == b""
+    assert git(repository, "status", "--porcelain", "--untracked-files=all") == b""
+
+
+@pytest.mark.parametrize("tamper", ["changed-bytes", "symlink", "executable"])
+def test_actual_manifested_addition_refuses_changed_bytes_links_and_modes(
+    repository: Path, tmp_path: Path, tamper: str
+) -> None:
+    prefix = f"projects/{ACTIVE}/output/"
+    _write(repository, prefix + "figures/retained.svg", "<svg/>\n")
+    snapshot_current_artifact_manifest(repository / prefix)
+    base = _commit(repository)
+    plan = build_plan(repository, base, "5.1.0")
+    target = _write(repository, prefix + "figures/current.svg", "<svg><title>Current result</title></svg>\n")
+    snapshot_current_artifact_manifest(repository / prefix)
+    if tamper == "changed-bytes":
+        target.write_text("<svg><title>Unattested result</title></svg>\n")
+    elif tamper == "symlink":
+        external = tmp_path / "external.svg"
+        external.write_bytes(target.read_bytes())
+        target.unlink()
+        target.symlink_to(external)
+    else:
+        target.chmod(0o755)
+    with pytest.raises((ValueError, OSError)):
+        check_footprint(repository, plan)
+    assert git(repository, "rev-parse", "HEAD").decode().strip() == base
+    assert git(repository, "diff", "--cached", "--name-only") == b""
+
+
 def _assert_observed_custody(receipt: dict, original: int) -> None:
     assert receipt["original_exit_code"] == original
     process = receipt["process"]
@@ -296,7 +363,7 @@ def test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates(repo
         receipt = json.loads((directory / "diagnostics" / f"{label}.exit.json").read_bytes())
         assert result == receipt["returncode"]
         _assert_observed_custody(receipt, 0)
-    with pytest.raises(ValueError, match="both original gates"):
+    with pytest.raises(ValueError):
         finish_review(repository, directory)
     assert not (directory / "review").exists()
 

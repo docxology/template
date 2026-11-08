@@ -47,28 +47,46 @@ outside Source; only the final successful payload admits a review upload.
 Original diagnostics remain available after a failed phase. Inputs are explicit
 CLI arguments; the account's runtime environment allowlist is unchanged.
 
-The v3 plan binds the one fixed dependent consumer, its actual canonical subject,
+The v4 plan binds the one fixed dependent consumer, its actual canonical subject,
 COUNTS/version input bytes and reviewed Stage 02/reader/compiler paths to the exact
 Source commit. The actual canonical Stage 02 selection is also bound and must
 include chart generation before deck rendering. Private or unknown subjects,
 missing producers and changed inputs
 refuse before generation. This declaration grants no additional output paths.
 
-Capture admits only the finite base-tracked canonical output inventory in mode
-100644. Flat numbered manuscript sections additionally require explicit
+Capture freezes the base-tracked canonical output inventory in mode 100644 and
+the immutable blob identities of its tracked canonical artifact manifests.
+Reconstructing that ownership does not reopen retired output paths. The clean
+initial plan still requires every base-owned file to be a real non-executable
+regular file. Flat numbered manuscript sections additionally require explicit
 compose-enabled targets in the tracked schema-2 sheaf manifest, tracked compiler
-sources and tracked authored fragment inputs. A numbered filename by itself
-grants no generated ownership. Authored/config/test/private paths, additions,
-deletions, symlinks, mode changes and unexpected untracked files are refused.
+sources and tracked authored fragment inputs; numbering alone grants nothing.
+
+Default refresh also captures genuine stable-output inventory transitions. A new
+path must occur in the freshly validated canonical artifact manifest of its own
+fixed public project. That manifest must match the complete current Git-shippable
+inventory, including file bytes and hashes. A retired path must have been both
+tracked and declared by the frozen base manifest, and must be absent from the
+current manifest and filesystem. A newly invented manifest cannot grant ownership.
+This permits renderer-owned filename changes without retaining obsolete aliases
+or dropping current pages from the candidate. Authored/config/test/private paths,
+undeclared additions or removals, symlinks, executable modes and all other
+unexpected untracked files remain refused. `rebind-only` grants no such
+additions or removals.
 
 The runner commits its generated candidate in the disposable checkout. Both
 existing strict all-public publication gates and the unchanged all-project
 exemplar-config guard then run on that committed tree.
-Only success of all three commands admits the review artifact: an exact full-index
-binary patch from the dispatched base, the base/result commits and trees, a
-changed-path/blob/SHA-256 manifest, original producer and gate bytes/exits, and
-checksums. Failures retain separately named diagnostics without an accepted
-review artifact.
+Only success of all three commands and every actual canonical generation command
+(including dependent Pitch analysis) admits the review artifact: an exact
+full-index binary patch from the dispatched base, the base/result commits and
+trees, a changed-path/blob/SHA-256 manifest, original producer and gate bytes/exits,
+and checksums. The v4 change records identify `A`, `M` and `D` explicitly;
+`before_blob` is null for additions, while `after_blob`, `sha256` and `bytes` are
+null for deletions. The binary patch disables rename collapsing so both sides
+remain explicit. `COMPLETE.json` records `all_committed_tree_gates_passed`; it is
+not release acceptance. Failures retain separately named diagnostics without an
+accepted review artifact.
 
 Review and integrate the exact retained patch through the ordinary PR path.
 Verify the integrated tree against the candidate tree; preserve the original
