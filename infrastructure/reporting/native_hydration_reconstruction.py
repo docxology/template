@@ -33,6 +33,7 @@ from infrastructure.rendering.manuscript_composition import COMPOSITION_RELATIVE
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.rendering.manuscript_hydration_replay import combine_held_manuscripts, require_shared_hydration
 from infrastructure.rendering._web_markdown_preprocess import html_safe_markdown
+from infrastructure.rendering._web_source_context import compose_web_source_context
 from infrastructure.reporting.native_format_joint_source import require_native_operation
 from infrastructure.reporting.native_selected_manuscript_transforms import (
     PROJECT_WRITERS,
@@ -125,6 +126,14 @@ def _combined_body(
             return html_safe_markdown(
                 compose_frontmatter(bodies, len(names), "\n---\n\n"), render_citations=False
             ).encode()
+        case "web-renderer-source-context-v2":
+            if names:
+                raise ValueError("plain web source context cannot label paper.frontmatter bytes")
+            return html_safe_markdown(compose_web_source_context(bodies), render_citations=False).encode()
+        case "web-renderer-paper-source-context-v2":
+            if not names:
+                raise ValueError("paper web source context requires its declared partition")
+            return html_safe_markdown(compose_web_source_context(bodies, len(names)), render_citations=False).encode()
         case "shared-paper-frontmatter-markdown-v1":
             if not names:
                 raise ValueError("paper.frontmatter shared composition requires its declared partition")

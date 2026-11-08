@@ -14,10 +14,13 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+import yaml
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.rendering._web_markdown_preprocess import html_safe_markdown
-from infrastructure.rendering.manuscript_hydration_replay import combine_held_manuscripts, require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import require_shared_hydration
+from infrastructure.rendering._paper_frontmatter import declared_frontmatter
+from infrastructure.rendering._web_source_context import compose_web_source_context
 from infrastructure.rendering.manuscript_ordinal_anchors import (
     annotate_manuscript_ordinals,
     require_complete_ordinal_ast_equivalence,
@@ -29,7 +32,14 @@ from infrastructure.reporting.native_format_acceptance_contracts import NativeAr
 from infrastructure.reporting.native_format_html_source_metadata import HTML_WITNESS_SCHEMA
 from infrastructure.reporting.native_format_joint_source import source_environment
 from infrastructure.reporting.native_format_semantic_original import original_source_bytes
-from infrastructure.reporting.native_format_semantic_source import semantic_source_plan
+from infrastructure.reporting.native_format_semantic_source import (
+    semantic_source_plan,
+    semantic_source_index,
+    semantic_owned_sources,
+    semantic_parser_options,
+    semantic_lua_filters,
+)
+from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 from infrastructure.reporting.native_hydration_reconstruction import observe_native_hydration_reconstruction
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
@@ -52,12 +62,41 @@ def _held(value: dict[str, Any], reader: SnapshotReader) -> ArtifactSnapshot:
     return snapshot
 
 
-def compose_html_ordinal_input(bodies: tuple[bytes, ...], *, combined: bool) -> bytes:
-    """Use the actual HTML writer transforms, without reopening manuscript paths."""
-    if not combined and len(bodies) != 1:
-        raise ValueError("a Source-selected HTML section requires exactly one complete input")
-    body = combine_held_manuscripts(bodies, separator="\n---\n\n") if combined else bodies[0]
-    return html_safe_markdown(body.decode(), render_citations=not combined, preserve_crossrefs=True).encode()
+def compose_html_ordinal_input(
+    bodies: tuple[bytes, ...],
+    *,
+    frontmatter_count: int = 0,
+    boundary_bodies: tuple[bytes, ...] | None = None,
+) -> bytes:
+    """Reuse canonical whole-context composition with stable ownership markers."""
+    return html_safe_markdown(
+        compose_web_source_context(bodies, frontmatter_count, boundary_bodies=boundary_bodies),
+        render_citations=False,
+    ).encode()
+
+
+def _frontmatter_count(reader: SnapshotReader, scope: str) -> int:
+    config = render_config_manuscript_dir(reader.root / "projects" / scope) / "config.yaml"
+    settings = (
+        yaml.safe_load(reader.read(config.relative_to(reader.root).as_posix()).content) if config.is_file() else None
+    )
+    return len(declared_frontmatter(settings))
+
+
+def _owned_occurrences(
+    sources: tuple[tuple[str, bytes], ...],
+    hydration: dict[str, Any],
+    reader: SnapshotReader,
+    source: NativeSourceContext,
+    scope: str,
+    artifact: NativeArtifact,
+) -> tuple[list[tuple[int, int, str, int, int, str]], list[dict[str, Any]]]:
+    selected, occurrences = _selected_occurrences(sources, hydration, reader, source)
+    index = semantic_source_index(reader.root, scope, artifact, sources)
+    owned = [
+        (site, token) for site, token in zip(selected, occurrences, strict=True) if index is None or site[0] == index
+    ]
+    return [site for site, _ in owned], [token for _, token in owned]
 
 
 def _selected_occurrences(
@@ -147,14 +186,15 @@ def _body_arguments(
     reader: SnapshotReader,
     runtime: CitationRuntime,
     source: NativeSourceContext,
+    *,
+    scope: str,
 ) -> tuple[list[str], list[Path], str | None]:
     """Authenticate original filter/bibliography operands against current Source."""
-    from infrastructure.rendering._pandoc_filters import formalism_filter_args
 
-    arguments = [str(markdown.path), *PARSER_ARGUMENTS]
+    arguments = [str(markdown.path), *semantic_parser_options(reader.root, scope)]
     inputs = [markdown.path]
     filters = body["filters"]
-    selected_filters = formalism_filter_args()[1::2]
+    selected_filters = semantic_lua_filters()
     if not isinstance(filters, list) or len(filters) != len(selected_filters):
         raise ValueError("HTML ordinal parser omitted a Source-selected Lua filter")
     sdk_root = Path(__file__).absolute().parents[2]
@@ -175,16 +215,6 @@ def _body_arguments(
         {"path": path, "sha256": hashlib.sha256(data).hexdigest()} for path, data in bibliographies
     ]:
         raise ValueError("HTML ordinal omitted/reordered Source bibliography inputs")
-    for index, (_, data) in enumerate(bibliographies):
-        bib = reader.read(
-            (markdown.path.parent / f"semantic-bibliography-{index}.bib").relative_to(reader.root).as_posix()
-        )
-        if bib.content != data:
-            raise ValueError("HTML ordinal consumed bibliography changed")
-        arguments.append(f"--bibliography={bib.path}")
-        inputs.append(bib.path)
-    if bibliographies:
-        arguments.extend(["--citeproc", "--metadata=link-citations:true"])
     nominated = (
         shutil.which("pandoc-crossref", path=runtime.env.get("PATH")) if body["crossref_filter"] is not None else None
     )
@@ -195,6 +225,16 @@ def _body_arguments(
         if nominated is None or specification["crossref"] != file_observation(Path(nominated).resolve(strict=True)):
             raise ValueError("HTML ordinal Crossref differs from the actual Source-selected executable")
         arguments.extend(["--filter", str(wrapper.path)])
+    for index, (_, data) in enumerate(bibliographies):
+        bib = reader.read(
+            (markdown.path.parent / f"semantic-bibliography-{index}.bib").relative_to(reader.root).as_posix()
+        )
+        if bib.content != data:
+            raise ValueError("HTML ordinal consumed bibliography changed")
+        arguments.append(f"--bibliography={bib.path}")
+        inputs.append(bib.path)
+    if bibliographies:
+        arguments.extend(["--citeproc", "--metadata=link-citations:true"])
     return arguments, inputs, nominated
 
 
@@ -247,7 +287,8 @@ def observe_html_hydration_ordinals(
     if not combined and not (artifact.id.startswith("section:") and artifact.id.endswith(":html")):
         raise ValueError("HTML ordinal requires its actual complete manuscript or Source-relative section")
     bodies = tuple(data for _, data in sources)
-    if compose_html_ordinal_input(bodies, combined=combined) != content:
+    frontmatter_count = _frontmatter_count(reader, scope)
+    if compose_html_ordinal_input(bodies, frontmatter_count=frontmatter_count) != content:
         raise ValueError("HTML ordinal own held input composition differs from the actual HTMLsafe writer")
     body = html_source["body"]
     body_cwd = (
@@ -256,17 +297,20 @@ def observe_html_hydration_ordinals(
         else reader.root
     )
     markdown, ast, original_tool, _ = _actual_parser(body, content, "semantic-pandoc", reader, owner, cwd=body_cwd)
-    arguments, inputs, crossref = _body_arguments(body, markdown, bibliographies, reader, runtime, source)
+    arguments, inputs, crossref = _body_arguments(body, markdown, bibliographies, reader, runtime, source, scope=scope)
     expected_env = {**runtime.env, **source_environment(source)} if crossref is not None else runtime.env
     if original_tool["command"][1:] != arguments or original_tool["environment_digest"] != canonical_digest(
         expected_env
     ):
         raise ValueError("HTML ordinal original parser changed exact Source-selected arguments/environment")
-    if crossref is not None and not combined:
-        raise ValueError("HTML section parser cannot acquire an unselected Crossref child")
     original = body["original_source"]
     raw_markdown, raw_ast, raw_tool, _ = _actual_parser(
-        original, original_source_bytes(sources), "semantic-original-pandoc", reader, owner, cwd=reader.root
+        original,
+        original_source_bytes(semantic_owned_sources(reader.root, scope, artifact, sources)),
+        "semantic-original-pandoc",
+        reader,
+        owner,
+        cwd=reader.root,
     )
     if (
         raw_tool["command"][1:] != [str(raw_markdown.path), *PARSER_ARGUMENTS]
@@ -274,7 +318,7 @@ def observe_html_hydration_ordinals(
         or any(raw_tool[key] != original_tool[key] for key in ("executable", "executable_sha256"))
     ):
         raise ValueError("HTML original source parser changed its actual unfiltered Source profile")
-    selected, occurrences = _selected_occurrences(sources, hydration, reader, source)
+    selected, occurrences = _owned_occurrences(sources, hydration, reader, source, scope, artifact)
     attempt: dict[str, Any] = {
         "scope": scope,
         "artifact_id": artifact.id,
@@ -296,7 +340,9 @@ def observe_html_hydration_ordinals(
     try:
         if selected:
             annotated_bodies, anchors = annotate_manuscript_ordinals(bodies, tuple(selected))
-            annotated = compose_html_ordinal_input(annotated_bodies, combined=combined)
+            annotated = compose_html_ordinal_input(
+                annotated_bodies, frontmatter_count=frontmatter_count, boundary_bodies=bodies
+            )
             ranges = require_unannotated_parser_bytes(annotated, markdown.content, anchors)
             local = runtime.freeze("html-ordinal-source.md", annotated)
             local_args = [str(local), *arguments[1:]]
@@ -323,7 +369,12 @@ def observe_html_hydration_ordinals(
             local_ast = runtime.freeze("html-ordinal-source.ast.json", result["stdout"].encode())
             positions = require_complete_ordinal_ast_equivalence(result["stdout"].encode(), ast.content, anchors)
             raw_content = original_source_bytes(
-                tuple((path, data) for (path, _), data in zip(sources, annotated_bodies, strict=True))
+                semantic_owned_sources(
+                    reader.root,
+                    scope,
+                    artifact,
+                    tuple((path, data) for (path, _), data in zip(sources, annotated_bodies, strict=True)),
+                )
             )
             raw_ranges = require_unannotated_parser_bytes(raw_content, raw_markdown.content, anchors)
             raw_local = runtime.freeze("html-ordinal-original.md", raw_content)
@@ -428,7 +479,7 @@ def replay_html_hydration_ordinals(
     content, sources, bibliographies = semantic_source_plan(reader.root, scope, artifact, reader)
     if [_binding(reader.read(path)) for path, _ in sources] != inputs:
         raise ValueError("HTML ordinal readback omitted/reordered own Source inputs")
-    selected, tokens = _selected_occurrences(sources, hydration, reader, operation.source)
+    selected, tokens = _owned_occurrences(sources, hydration, reader, operation.source, scope, artifact)
     body = html_source["body"]
     markdown, ast = _held(ordinal["actual_parser_input"], reader), _held(ordinal["actual_parser_ast"], reader)
     raw_markdown, raw_ast = (
@@ -437,7 +488,7 @@ def replay_html_hydration_ordinals(
     )
     if (
         markdown.content != content
-        or raw_markdown.content != original_source_bytes(sources)
+        or raw_markdown.content != original_source_bytes(semantic_owned_sources(reader.root, scope, artifact, sources))
         or _held(body["source"], reader) != markdown
         or _held(body["ast"], reader) != ast
         or _held(body["original_source"]["source"], reader) != raw_markdown
@@ -446,11 +497,13 @@ def replay_html_hydration_ordinals(
         or ordinal["actual_original_tool"] != body["original_source"]["tool"]["artifact"]
     ):
         raise ValueError("HTML ordinal readback changed its own filtered/original Source AST identity")
-    args = [str(producer_path(custody, reader.root, markdown.path)), *PARSER_ARGUMENTS]
+    args = [
+        str(producer_path(custody, reader.root, markdown.path)),
+        *semantic_parser_options(reader.root, scope),
+    ]
     filters = body["filters"]
-    from infrastructure.rendering._pandoc_filters import formalism_filter_args
 
-    selected_filters = formalism_filter_args()[1::2]
+    selected_filters = semantic_lua_filters()
     if not isinstance(filters, list) or len(filters) != len(selected_filters):
         raise ValueError("HTML ordinal readback changed the exact Source Lua roster")
     sdk_root = Path(__file__).absolute().parents[2]
@@ -469,6 +522,12 @@ def replay_html_hydration_ordinals(
         {"path": path, "sha256": hashlib.sha256(data).hexdigest()} for path, data in bibliographies
     ]:
         raise ValueError("HTML ordinal readback changed Source bibliography identity/order")
+    if body["crossref_filter"] is not None:
+        CrossrefFilterReaderOperation(
+            operation.source, body["crossref_filter"], reader, scope=scope, run_id=run_id, deadline=operation.deadline
+        ).replay()
+        wrapper = _held(parent_launcher_binding(parent_observation(body["crossref_filter"], reader)), reader)
+        args.extend(["--filter", str(producer_path(custody, reader.root, wrapper.path))])
     for index, (_, data) in enumerate(bibliographies):
         bib = reader.read(
             (markdown.path.parent / f"semantic-bibliography-{index}.bib").relative_to(reader.root).as_posix()
@@ -478,14 +537,6 @@ def replay_html_hydration_ordinals(
         args.append(f"--bibliography={producer_path(custody, reader.root, bib.path)}")
     if bibliographies:
         args.extend(["--citeproc", "--metadata=link-citations:true"])
-    if body["crossref_filter"] is not None:
-        CrossrefFilterReaderOperation(
-            operation.source, body["crossref_filter"], reader, scope=scope, run_id=run_id, deadline=operation.deadline
-        ).replay()
-        wrapper = _held(parent_launcher_binding(parent_observation(body["crossref_filter"], reader)), reader)
-        if artifact.id != "manuscript:html":
-            raise ValueError("HTML ordinal section readback acquired an unselected Crossref child")
-        args.extend(["--filter", str(producer_path(custody, reader.root, wrapper.path))])
     actual = _tool(ordinal["actual_parser_tool"], reader, run_id, "pandoc", "semantic-pandoc", args)
     raw_actual = _tool(
         ordinal["actual_original_tool"],
@@ -501,10 +552,18 @@ def replay_html_hydration_ordinals(
         if ordinal["occurrences"] or ordinal["tool_bindings"] or any(key.startswith("annotated_") for key in ordinal):
             raise ValueError("HTML ordinal absence claimed an unselected fresh parser")
     else:
-        bodies, anchors = annotate_manuscript_ordinals(tuple(data for _, data in sources), tuple(selected))
-        annotated = compose_html_ordinal_input(bodies, combined=artifact.id == "manuscript:html")
+        context_bodies = tuple(data for _, data in sources)
+        bodies, anchors = annotate_manuscript_ordinals(context_bodies, tuple(selected))
+        annotated = compose_html_ordinal_input(
+            bodies, frontmatter_count=_frontmatter_count(reader, scope), boundary_bodies=context_bodies
+        )
         raw_annotated = original_source_bytes(
-            tuple((path, data) for (path, _), data in zip(sources, bodies, strict=True))
+            semantic_owned_sources(
+                reader.root,
+                scope,
+                artifact,
+                tuple((path, data) for (path, _), data in zip(sources, bodies, strict=True)),
+            )
         )
         ranges = require_unannotated_parser_bytes(annotated, markdown.content, anchors)
         raw_ranges = require_unannotated_parser_bytes(raw_annotated, raw_markdown.content, anchors)
