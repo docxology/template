@@ -92,6 +92,9 @@ than being treated as absent.
   `pandoc-crossref` when installed; the renderer logs a warning when the filter is
   unavailable. Formalism resolution runs before cross-reference and bibliography
   processing.
+- Mathematical expressions retain their authored layout. Wide display and inline
+  math scroll locally instead of forcing automatic line breaks, overlapping
+  neighboring content, or relying on page-level clipping.
 
 Direct `WebRenderer.render(source)` calls produce isolated previews.
 `WebRenderer.render_combined(sources, manuscript_dir, project_name)` produces the

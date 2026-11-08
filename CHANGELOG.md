@@ -38,6 +38,10 @@ are excluded.
   Existing stylesheet bytes, reader color schemes, chapter content, and image
   bytes are preserved. Effective-package identity includes the added layout
   rules.
+- Preserve wide HTML mathematics on narrow viewports. MathJax expressions scroll
+  locally instead of overlapping through automatic line breaking or disappearing
+  behind page-level clipping. Authored TeX, fonts, and mathematical content remain
+  unchanged.
 
 These source corrections do not establish a new SDK release or adopt pending
 minor-release candidate work.

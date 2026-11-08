@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-0-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-0-start-->
 ```
 
 # Abstract
@@ -11,7 +11,7 @@ The committed seed is `431` and the current schema expands 22 slot rule(s) into 
 The result is not a claim that lexical substitution creates scholarship. It is a worked template for conditional manuscript assembly: section enablement, token provenance, figure registration, and unresolved-placeholder checks all become inspectable artifacts before the shared renderer produces PDF, HTML, and slides.
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-0-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-0-end-->
 ```
 
 
@@ -21,7 +21,7 @@ The result is not a claim that lexical substitution creates scholarship. It is a
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-1-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-1-start-->
 ```
 
 # Introduction: Lexicon as Data and Manuscript as Build Artifact
@@ -49,7 +49,7 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 | Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-1-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-1-end-->
 ```
 
 
@@ -59,7 +59,7 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-2-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-2-start-->
 ```
 
 # Methods: Source-Owned Token Injection and Conditional IMRAD Assembly
@@ -197,7 +197,7 @@ Fork migration closes the method. A downstream project should update config rows
 | R12 | Every fork migration note must name config, source, test, validator, pipeline, and claim-ledger obligations. |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-2-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-2-end-->
 ```
 
 
@@ -207,7 +207,7 @@ Fork migration closes the method. A downstream project should update config rows
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-3-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-3-start-->
 ```
 
 # Results: Provenance, Density, and Resolved Manuscript Surface
@@ -288,7 +288,7 @@ Visualization is enabled for configured_field_matrix, section_configuration_heat
 | Authoring Contract: Human Review and Forking Obligations | `AUTHORING_AUDIENCE`, `AUTHORING_QUALITY` | audiences, qualities |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-3-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-3-end-->
 ```
 
 
@@ -298,7 +298,7 @@ Visualization is enabled for configured_field_matrix, section_configuration_heat
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-4-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-4-start-->
 ```
 
 # Discussion: Accountability Boundaries for Generated Prose
@@ -310,7 +310,7 @@ The configured discussion moves are bound the scholarly claim, describe useful a
 The pattern scales only when authors preserve the same ownership boundary. Lexicons should be small enough to review, categories should be named for their manuscript function, and section switches should state what has been removed. When richer language is needed, the next layer should add domain-specific validators rather than relaxing provenance.
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-4-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-4-end-->
 ```
 
 
@@ -320,7 +320,7 @@ The pattern scales only when authors preserve the same ownership boundary. Lexic
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-5-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-5-start-->
 ```
 
 # Configuration: Schema-Controlled Lexicon, Slots, and Narrative Moves
@@ -535,7 +535,7 @@ The configured-field inventory separates 126 explicit YAML path(s) from 11 loade
 | `madlib.visualizations.token_injection_flow` | explicit | visualization | true |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-5-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-5-end-->
 ```
 
 
@@ -545,7 +545,7 @@ The configured-field inventory separates 126 explicit YAML path(s) from 11 loade
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-6-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-6-start-->
 ```
 
 # Evaluation: Gate Criteria, QA Probes, and Failure Discovery
@@ -592,7 +592,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | Fork migration sufficiency | Does the documentation tell forks which surfaces to change before adding domain claims? | README, STANDALONE, manuscript README, and Authoring Contract list config, source, test, validator, and claim-ledger obligations. | `README.md, STANDALONE.md, manuscript/README.md, and output/manuscript/10_authoring_contract.md` |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-6-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-6-end-->
 ```
 
 
@@ -602,7 +602,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-7-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-7-start-->
 ```
 
 # Reproducibility: Seeded Regeneration and Artifact Trace
@@ -614,14 +614,14 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
 - Config hash: `e41a1a82b6d3efcb`
-- Generated: `2026-11-08T02:57:53Z` (derived from `SOURCE_DATE_EPOCH`; an
+- Generated: `2026-11-08T06:08:09Z` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
 - Python: `3.14.10`
 - Platform: `Darwin arm64`
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-7-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-7-end-->
 ```
 
 
@@ -631,7 +631,7 @@ The copied root output is therefore a consequence of local source and config. Ge
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-8-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-8-start-->
 ```
 
 # Limitations: Non-Claims, Misuse Modes, and Human Review
@@ -661,7 +661,7 @@ The author remains responsible for theory, citations, reader expectations, and d
 | Fork migration ambiguity | A fork leaves authors unsure which exemplar surfaces must change for a domain-specific manuscript. | README, STANDALONE notes, manuscript README, and Authoring Contract review. | Document required config, source, test, claim-ledger, validator, and pipeline changes before making domain claims. |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-8-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-8-end-->
 ```
 
 
@@ -671,7 +671,7 @@ The author remains responsible for theory, citations, reader expectations, and d
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-9-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-9-start-->
 ```
 
 # Scope: Related Generators and Responsible Forking
@@ -683,7 +683,7 @@ The configured scope moves are distinguish generation from truth, limit publicat
 Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` record the declared repository and deposited identifiers when present, but those metadata do not turn the generated manuscript into empirical validation or reader-quality evidence.
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-9-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-9-end-->
 ```
 
 
@@ -693,7 +693,7 @@ Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, 
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-10-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-10-start-->
 ```
 
 # Authoring Contract: Human Review and Forking Obligations
@@ -718,7 +718,7 @@ The quality standard is claim humility. A fork that only changes words has not p
 | Write fork migration notes | Document config, source, test, validator, and claim-ledger changes required by a domain fork. | `README.md, STANDALONE.md, and data/claim_ledger.yaml` |
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-10-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-10-end-->
 ```
 
 
@@ -728,11 +728,11 @@ The quality standard is claim humility. A fork that only changes words has not p
 
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-11-start-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-11-start-->
 ```
 
 # References
 
 ```{=html}
-<!--template-web-source-8ebe3dd7e48ec82425f6dccc4f21b3ea8d13c47420460ddbf1ef13e0b02de557-11-end-->
+<!--template-web-source-9be200ca6bcda3f6f254a7c0d463898aa5184071ccd8df7b41d09242e8256d67-11-end-->
 ```
