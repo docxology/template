@@ -42,6 +42,9 @@ matching tag identity and authenticated publication.
   declarations and curl limits, and clear acquisition tokens before execution.
 - Remove remaining incidental CSS-token assertions while retaining actual
   renderer-owned full-resolution figure links and their destinations.
+- Keep registered-report bibliography comments free of BibTeX entry sentinels;
+  preserve every reference entry and compile the complete manuscript through
+  the unchanged PDF and publication gates.
 - Describe the existing publication DOI as an immutable version identifier,
   preserving its preferred article citation without inventing a software-release
   DOI or changing any archival record.
