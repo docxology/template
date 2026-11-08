@@ -43,6 +43,17 @@ matching tag identity and authenticated publication.
   existing dependency group in the interpreter that actually runs its tests.
   Build exact runtime sdists online with Source-locked backend tools and
   actual selected-minor nomination; retain fresh offline, no-build/hash consumers.
+- Run Linux infrastructure shards and the slow lane under the existing fresh
+  unprivileged execution account. Preserve selected-minor nomination for nested
+  `uv` consumers and locked exports, prepare admissible copied Active runtimes,
+  and transport original readiness and coverage bytes after same-UID export.
+- Balance infrastructure cases with `load --maxschedchunk=1` without changing
+  partitions, workers, clocks, exclusions or coverage floors. Require natural
+  failed completion after a worker crash instead of interrupting its controller.
+- Exercise evidence-class mutations on authentic owned Source copies with
+  initialized pinned submodules, never on the loaded SDK. Missing positive
+  fixture closure fails instead of silently skipping its controls; deliberate
+  unavailable-source refusals remain covered.
 - Derive original pytest worker identity from actual pytest configuration;
   inherited worker environment does not relabel a new serial controller.
 - Keep native process stream observations explicitly typed and distinct from

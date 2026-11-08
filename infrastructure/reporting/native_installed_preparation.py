@@ -51,13 +51,17 @@ _LOCATION_PROBE = (
 )
 
 
-def native_runtime_export_command(uv: Path, metadata_root: Path, requirements: Path) -> tuple[str, ...]:
-    """Export native execution defaults and explicit Active ML feature dependencies."""
+def native_runtime_export_command(
+    uv: Path, metadata_root: Path, requirements: Path, *, python: Path
+) -> tuple[str, ...]:
+    """Export locked native execution requirements for the nominated interpreter."""
     return (
         str(uv),
         "export",
         "--directory",
         str(metadata_root),
+        "--python",
+        str(python),
         "--locked",
         "--offline",
         "--group",
@@ -380,7 +384,10 @@ def prepare_native_installed_runtime(
     )
     installed_python = runtime / "bin/python"
     runtime_requirements = scratch / "runtime-requirements.txt"
-    run(native_runtime_export_command(uv, metadata.root, runtime_requirements), "runtime-lock")
+    run(
+        native_runtime_export_command(uv, metadata.root, runtime_requirements, python=installed_python),
+        "runtime-lock",
+    )
     # The nominated consumer can differ from the interpreter running this owner.
     interpreter = run(
         (

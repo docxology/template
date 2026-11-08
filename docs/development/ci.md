@@ -65,6 +65,28 @@ inherited `PYTEST_XDIST_WORKER` does not turn a fresh serial controller into a
 worker. The Active project cells and public-matrix interpreter include the
 existing `active-inference` group; default SDK installation is unchanged.
 
+Linux hardening infrastructure and its separate slow lane run under the existing
+[fresh execution-account profile](../../.github/actions/setup-ci-execution-user/README.md).
+Prepare tools, browser binaries and the copied Active environment before
+handoff. Invoke the selected `.venv/bin/python` directly and explicitly nominate
+it for nested `uv` consumers; the account's credential-filter allowlist is not
+expanded. Locked native exports likewise select their actual installed
+interpreter rather than inheriting `.python-version`.
+
+Infrastructure scheduling uses `load --maxschedchunk=1`: selected cases remain
+in their original file partition, but long native controls do not monopolize a
+whole-module worker queue. Worker crashes must return their genuine failed exit
+without an artificial controller interruption. Worker counts, marker selections,
+job and per-test clocks, explicit test-owned timeout markers and the 60% complete
+coverage union remain unchanged.
+
+Export Linux coverage under the same execution account, then always transport
+the original readiness bytes before artifact upload. The runner uploads from
+`TEMPLATE_CI_ARTIFACT_DIRECTORY`; macOS retains its original `output/readiness`
+paths. Partial diagnostics never establish complete selection or coverage.
+Keep evidence-class mutation fixtures separate from the loaded SDK and require
+their initialized pinned Source closure instead of accepting skipped controls.
+
 Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
 selected compiler controls also install the recommended TeX fonts and verify
 `pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract

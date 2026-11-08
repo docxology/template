@@ -746,7 +746,7 @@ def test_native_locked_export_retains_real_full_suite_execution_dependencies(tmp
     names = []
     for index, format_only in enumerate((False, True)):
         requirements = tmp_path / f"runtime-{index}.txt"
-        command = native_runtime_export_command(Path(uv), snapshot.root, requirements)
+        command = native_runtime_export_command(Path(uv), snapshot.root, requirements, python=Path(sys.executable))
         if format_only:
             command += ("--no-default-groups",)
         result = run_project_test_matrix(

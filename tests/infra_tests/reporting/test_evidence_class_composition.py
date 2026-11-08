@@ -7,10 +7,10 @@ measured invalidation asymmetry rather than asserting a restatement of it:
 * one exemplar's lock change stales exactly that exemplar;
 * a shared-implementation change stales every exemplar.
 
-They run against the real repository tree because the property under test is
-about real file custody, not a synthetic digest. Each control mutates one tracked
-file, observes, and restores the original bytes in a ``finally`` block, so a
-failure cannot leave the checkout dirty.
+They use authentic complete public Source in an owned fixture, never the loaded
+SDK checkout. Each control mutates one fixture file, observes the real custody
+decision, and restores its original bytes so later controls remain independent
+without invalidating another worker's loaded implementation.
 """
 
 from __future__ import annotations
@@ -36,43 +36,30 @@ from infrastructure.reporting.evidence_class import (
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_profile import _check_class_binding, required_profile
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from tests.infra_tests.project.test_public_reference import complete_reference as complete_reference
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
 
-
-def _require_stage_closure() -> str:
-    """Return the stage closure these controls measure, or skip with the reason.
-
-    These controls measure how a change moves the class digests of the real
-    tree, which requires a substantiable stage closure. On a checkout that
-    declares ``kmyth`` without initializing it, the closure is unavailable by
-    design and every scope-owned class refuses admission, so there is nothing
-    to measure. Initializing the submodule is the correct fix for a lane that
-    runs these; skipping here keeps a partial checkout from reporting a false
-    failure without hiding the class-binding controls, which assert the
-    refusal directly and need no closure.
-    """
-    resolved = stage_digest(REPO_ROOT)
-    if resolved is None:
-        pytest.skip(
-            "the stage closure is unavailable in this checkout"
-            f" ({unavailable_cause(REPO_ROOT)}); run"
-            " `git submodule update --init infrastructure/steganography/kmyth`"
-        )
+def _require_stage_closure(root: Path) -> str:
+    """Require complete owned Source instead of silently skipping its controls."""
+    resolved = stage_digest(root)
+    assert resolved is not None, (
+        "the owned complete public reference must substantiate its stage closure"
+        f" ({unavailable_cause(root)})"
+    )
     return resolved
 
 
-def _bindings() -> dict[str, tuple[str, tuple[str, ...]]]:
+def _bindings(root: Path) -> dict[str, tuple[str, tuple[str, ...]]]:
     """Return every required gate's class digest at the current tree."""
-    fingerprint = source_fingerprint(REPO_ROOT)
-    stage = _require_stage_closure()
-    requirements, faults = required_profile(REPO_ROOT, SnapshotReader(REPO_ROOT), fingerprint)
+    fingerprint = source_fingerprint(root)
+    stage = _require_stage_closure(root)
+    requirements, faults = required_profile(root, SnapshotReader(root), fingerprint)
     assert not faults, f"the source-owned profile must compile without faults: {faults}"
     assert requirements, "the source-owned profile must declare required gates"
     return {
         requirement.id: (
-            class_binding(requirement, REPO_ROOT, repository_fingerprint=fingerprint, stage=stage).digest,
-            class_binding(requirement, REPO_ROOT, repository_fingerprint=fingerprint, stage=stage).members,
+            class_binding(requirement, root, repository_fingerprint=fingerprint, stage=stage).digest,
+            class_binding(requirement, root, repository_fingerprint=fingerprint, stage=stage).members,
         )
         for requirement in requirements
     }
@@ -117,9 +104,9 @@ def _submodule_less() -> Iterator[Path]:
 
 
 @contextmanager
-def _mutated(relative: str, addition: str) -> Iterator[None]:
+def _mutated(root: Path, relative: str, addition: str) -> Iterator[None]:
     """Append to one tracked file and restore its exact bytes afterwards."""
-    path = REPO_ROOT / relative
+    path = root / relative
     original = path.read_bytes()
     path.write_bytes(original + addition.encode())
     try:
@@ -128,24 +115,26 @@ def _mutated(relative: str, addition: str) -> Iterator[None]:
         path.write_bytes(original)
 
 
-def _staled(before: dict[str, tuple[str, tuple[str, ...]]]) -> tuple[set[str], set[str]]:
+def _staled(root: Path, before: dict[str, tuple[str, tuple[str, ...]]]) -> tuple[set[str], set[str]]:
     """Return (all staled gate ids, staled exemplar scopes)."""
-    after = _bindings()
+    after = _bindings(root)
     staled = {gate for gate in before if after[gate][0] != before[gate][0]}
     scopes = {gate.split(":", 1)[0] for gate in staled if gate.startswith("templates/")}
     return staled, scopes
 
 
-def test_documentation_change_cannot_stale_any_exemplar_evidence() -> None:
+def test_documentation_change_cannot_stale_any_exemplar_evidence(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """Control 12: prose cannot move rendered bytes, so no exemplar stales.
 
-    This is the control that proves the fix fixed something. Before separable
-    classes, any documentation edit voided all 316 gates because every artifact
-    was compared against one repository-wide fingerprint.
+    Before separable classes, a documentation edit voided the complete profile
+    because every artifact was compared against one repository-wide fingerprint.
     """
-    before = _bindings()
-    with _mutated("docs/maintenance/release-boundary.md", "\n<!-- class probe -->\n"):
-        staled, scopes = _staled(before)
+    root = complete_reference[0]
+    before = _bindings(root)
+    with _mutated(root, "docs/maintenance/release-boundary.md", "\n<!-- class probe -->\n"):
+        staled, scopes = _staled(root, before)
     assert scopes == set(), f"a documentation edit staled exemplar evidence: {sorted(scopes)}"
     # Root-scope gates legitimately observe repository prose, so they may stale.
     assert all(gate.startswith("root") for gate in staled), (
@@ -154,13 +143,16 @@ def test_documentation_change_cannot_stale_any_exemplar_evidence() -> None:
     assert len(staled) < len(before), "a documentation edit must not stale the whole profile"
 
 
-def test_one_exemplar_lock_change_stales_exactly_that_exemplar() -> None:
+def test_one_exemplar_lock_change_stales_exactly_that_exemplar(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """Control 14: one exemplar's lock cannot reach another exemplar's evidence."""
+    root = complete_reference[0]
     target = "templates/template_sia"
     assert target in PUBLIC_PROJECT_NAMES
-    before = _bindings()
-    with _mutated(f"projects/{target}/uv.lock", "\n# class probe\n"):
-        staled, scopes = _staled(before)
+    before = _bindings(root)
+    with _mutated(root, f"projects/{target}/uv.lock", "\n# class probe\n"):
+        staled, scopes = _staled(root, before)
     assert scopes == {target}, f"one exemplar lock staled the wrong scopes: {sorted(scopes)}"
     # The released profile descends to this exemplar's publication gate; nothing else may move.
     moved = {gate for gate in staled if gate.startswith("templates/")}
@@ -168,33 +160,39 @@ def test_one_exemplar_lock_change_stales_exactly_that_exemplar() -> None:
     assert all(gate.startswith(f"{target}:") for gate in moved)
 
 
-def test_shared_implementation_change_stales_every_exemplar() -> None:
+def test_shared_implementation_change_stales_every_exemplar(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """Control 13: the stage closure is genuinely shared, and must stay shared.
 
     A stage edit must stale all 25 exemplars together. If this control fails,
     the composition rule has stopped binding the harness, which would be a real
     weakening rather than a simplification.
     """
-    before = _bindings()
-    with _mutated("infrastructure/reporting/readiness_receipts.py", "\n# class probe\n"):
-        staled, scopes = _staled(before)
+    root = complete_reference[0]
+    before = _bindings(root)
+    with _mutated(root, "infrastructure/reporting/readiness_receipts.py", "\n# class probe\n"):
+        staled, scopes = _staled(root, before)
     assert scopes == set(PUBLIC_PROJECT_NAMES), (
         f"a shared-implementation edit must stale all exemplars; staled: {sorted(scopes)}"
     )
     assert staled == set(before), "a stage change must stale the complete required profile"
 
 
-def test_stage_digest_is_not_cached_across_observations() -> None:
+def test_stage_digest_is_not_cached_across_observations(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """The stage closure must be re-observed, never memoized per process.
 
     A cached stage digest would accept stale evidence after a tree change, which
     is the exact failure this paradigm exists to prevent.
     """
-    _require_stage_closure()
-    before = stage_digest(REPO_ROOT)
-    with _mutated("infrastructure/reporting/readiness_receipts.py", "\n# cache probe\n"):
-        during = stage_digest(REPO_ROOT)
-    after = stage_digest(REPO_ROOT)
+    root = complete_reference[0]
+    _require_stage_closure(root)
+    before = stage_digest(root)
+    with _mutated(root, "infrastructure/reporting/readiness_receipts.py", "\n# cache probe\n"):
+        during = stage_digest(root)
+    after = stage_digest(root)
     assert during != before, "the stage digest did not observe a tracked implementation change"
     assert after == before, "the stage digest did not return to its original value after restore"
 
@@ -250,7 +248,9 @@ def test_unavailable_class_refuses_admission_at_the_gate() -> None:
             assert "submodule not checked out" in str(refusal.value), label
 
 
-def test_scope_owned_class_never_returns_the_universal_fingerprint() -> None:
+def test_scope_owned_class_never_returns_the_universal_fingerprint(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """The property: unavailability refuses, it never widens.
 
     This is stated directly rather than inferred from the member set, because
@@ -259,6 +259,7 @@ def test_scope_owned_class_never_returns_the_universal_fingerprint() -> None:
     kind must either produce its own three-member closure or raise; it must never
     return the universal digest under any checkout shape.
     """
+    root = complete_reference[0]
     scope_owned = SimpleNamespace(
         id="templates/probe:runtime",
         kind="runtime",
@@ -267,39 +268,42 @@ def test_scope_owned_class_never_returns_the_universal_fingerprint() -> None:
         deliverables_identity="b" * 64,
     )
     universal = ("repository_fingerprint",)
-    with _submodule_less() as root:
-        assert stage_digest(root) is None
+    with _submodule_less() as missing_root:
+        assert stage_digest(missing_root) is None
         for extra in ({}, {"stage": None}):
             with pytest.raises(ClassUnavailable):
-                class_binding(scope_owned, root, repository_fingerprint="f" * 64, **extra)
+                class_binding(scope_owned, missing_root, repository_fingerprint="f" * 64, **extra)
     # And in a complete tree it must produce its own closure, not the universal one.
-    _require_stage_closure()
-    binding = class_binding(scope_owned, REPO_ROOT, repository_fingerprint="f" * 64)
+    _require_stage_closure(root)
+    binding = class_binding(scope_owned, root, repository_fingerprint="f" * 64)
     assert binding.members == ("source_identity", "deliverables_identity", "stage")
     assert binding.members != universal
 
 
-def test_scope_owned_binding_names_its_members() -> None:
+def test_scope_owned_binding_names_its_members(complete_reference: tuple[Path, str, str]) -> None:
     """A narrowed gate must declare the sub-digests it binds, for auditability."""
-    before = _bindings()
+    root = complete_reference[0]
+    before = _bindings(root)
     members = {value[1] for value in before.values()}
     assert ("source_identity", "deliverables_identity", "stage") in members
     assert ("repository_fingerprint",) in members
 
 
 @pytest.mark.parametrize("kind", ["roster", "docs", "oracle", "root-case", "platform", "transfer"])
-def test_repo_spanning_kinds_are_never_narrowed(kind: str) -> None:
+def test_repo_spanning_kinds_are_never_narrowed(kind: str, complete_reference: tuple[Path, str, str]) -> None:
     """Repo-spanning gates keep the repository-wide digest."""
+    root = complete_reference[0]
     requirement = SimpleNamespace(
         id=f"root:{kind}", scope="root", kind=kind, source_identity="0" * 64, deliverables_identity=""
     )
-    binding = class_binding(requirement, REPO_ROOT, repository_fingerprint="f" * 64)
+    binding = class_binding(requirement, root, repository_fingerprint="f" * 64)
     assert binding.members == ("repository_fingerprint",)
     assert binding.digest == "f" * 64
 
 
-def test_unknown_kind_is_not_silently_narrowed() -> None:
+def test_unknown_kind_is_not_silently_narrowed(complete_reference: tuple[Path, str, str]) -> None:
     """An unrecognized kind must keep the strongest binding, never a guess."""
+    root = complete_reference[0]
     requirement = SimpleNamespace(
         id="root:mystery",
         scope="root",
@@ -307,5 +311,5 @@ def test_unknown_kind_is_not_silently_narrowed() -> None:
         source_identity="0" * 64,
         deliverables_identity="",
     )
-    binding = class_binding(requirement, REPO_ROOT, repository_fingerprint="a" * 64)
+    binding = class_binding(requirement, root, repository_fingerprint="a" * 64)
     assert binding.members == ("repository_fingerprint",)

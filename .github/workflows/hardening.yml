@@ -395,7 +395,8 @@ jobs:
           requirements = Path(sys.argv[1])
           uv = shutil.which("uv")
           assert uv is not None, "native runtime preparation requires uv"
-          subprocess.run(native_runtime_export_command(Path(uv), root, requirements), check=True)
+          command = native_runtime_export_command(Path(uv), root, requirements, python=Path(sys.executable))
+          subprocess.run(command, check=True)
           normalize_locked_dependency_export(
               root, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
           )
@@ -424,30 +425,70 @@ jobs:
 
       - uses: ./.github/actions/setup-acceptance-documents
 
+      - name: Prepare actual MathJax viewport browser tools
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          export PLAYWRIGHT_BROWSERS_PATH="$PWD/.tmp/playwright-browsers"
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
+
+      - uses: ./.github/actions/setup-ci-execution-user
+        if: runner.os == 'Linux'
+
       - name: Run infrastructure tests
         env:
-          COVERAGE_FILE: .coverage.infra
           # Coverage instrumentation is memory-intensive on macOS; keep that
           # runner deterministic while retaining wider auto-parallelism on Linux.
           TEMPLATE_CI_XDIST_WORKERS: ${{ matrix.os == 'macos-latest' && '2' || 'auto' }}
           # All four py3.14/Linux shards instrument real execution. The required
           # coverage-infra job merges their complete union and enforces 60%.
           INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04') && '--cov=infrastructure --cov-report= --cov-fail-under=0' || '' }}
-        # -n auto parallelizes across runner cores (pytest-xdist). Scope-based
-        # distribution keeps subprocess-heavy test modules together, avoiding
-        # intermittent worker replacement under work-stealing contention.
+        # Keep every selected case, but do not serialize long native controls on
+        # one worker or requeue completed scopes after a crash. The Linux payload
+        # uses a fresh UID and explicit runtime DATA, not the runner's environment.
         run: |
+          executor=()
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            executor=(.venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+              --state "$RUNNER_TEMP/template-ci-execution/state.json" --)
+          fi
           # shellcheck disable=SC2086  # INFRA_COV_FLAGS is intentionally word-split
-          uv run pytest tests/infra_tests/ \
+          "${executor[@]}" /usr/bin/env COVERAGE_FILE=.coverage.infra UV_PYTHON="$PWD/.venv/bin/python" .venv/bin/python -m pytest tests/infra_tests/ \
             -p infrastructure.core.testing.ci_infra_shard_plugin \
             --infra-ci-shard "${{ matrix.shard }}" \
             -n "$TEMPLATE_CI_XDIST_WORKERS" \
-            --dist loadscope \
+            --dist load --maxschedchunk=1 \
             --benchmark-disable \
             $INFRA_COV_FLAGS \
             --durations=10 \
             -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
             --timeout=120
+
+      - name: Verify completed MathJax equations across live viewport changes
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+            --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
+            /usr/bin/env NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
+            PLAYWRIGHT_BROWSERS_PATH="$PWD/.tmp/playwright-browsers" \
+            .tmp/playwright-node/node_modules/.bin/playwright test \
+            tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
+            --workers=1 --output=.tmp/mathjax-browser
+
+      - name: Export actual infrastructure coverage shard
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
+          .venv/bin/python scripts/gates/infra_ci_partition.py --export-shard "${{ matrix.shard }}"
+
+      - name: Export original Linux infrastructure readiness bytes
+        if: ${{ always() && runner.os == 'Linux' }}
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
 
       - name: Preserve partial infrastructure controller diagnostics
         if: ${{ always() }}
@@ -455,33 +496,14 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: output/readiness/ordinary-infra-ci/diagnostics/shard-${{ matrix.shard }}.json
+          path: ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/diagnostics/shard-${{ matrix.shard }}.json
           if-no-files-found: warn
-
-      # CI-PLAYWRIGHT-SCHEDULE-1: browser provisioning costs several minutes,
-      # so PR and push runs skip it; the MathJax live-viewport spec still runs
-      # on the weekly scheduled (and manually dispatched) lanes.
-      - name: Verify completed MathJax equations across live viewport changes
-        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
-        run: |
-          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-          npm ci --ignore-scripts --no-audit --no-fund
-          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
-          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
-          NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
-            .tmp/playwright-node/node_modules/.bin/playwright test \
-            tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
-            --workers=1 --output=.tmp/mathjax-browser
-
-      - name: Export actual infrastructure coverage shard
-        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'
-        run: uv run python scripts/gates/infra_ci_partition.py --export-shard "${{ matrix.shard }}"
 
       - name: Upload complete selection record
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-selection-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: output/readiness/ordinary-infra-ci/shard-${{ matrix.shard }}.json
+          path: ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/shard-${{ matrix.shard }}.json
           if-no-files-found: error
 
       - name: Upload actual infrastructure coverage shard
@@ -489,7 +511,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-coverage-shard-${{ matrix.shard }}
-          path: output/readiness/ordinary-infra-ci/coverage-data/infra-coverage-shard-${{ matrix.shard }}/
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/ordinary-infra-ci/coverage-data/infra-coverage-shard-${{ matrix.shard }}/
           if-no-files-found: error
 
   coverage-infra:
@@ -565,19 +587,32 @@ jobs:
 
       - name: Prepare the genuine locked Active coverage environment
         timeout-minutes: 10
-        run: uv sync --project projects/templates/template_active_inference --locked --extra dev --python .venv/bin/python
+        run: |
+          .venv/bin/python -m venv --copies --without-pip projects/templates/template_active_inference/.venv
+          uv sync --project projects/templates/template_active_inference --locked --extra dev --python .venv/bin/python
+
+      - uses: ./.github/actions/setup-ci-execution-user
 
       - name: Run slow-marked infrastructure tests
         run: >-
-          uv run pytest tests/infra_tests/
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
+          /usr/bin/env UV_PYTHON="$PWD/.venv/bin/python"
+          .venv/bin/python -m pytest tests/infra_tests/
           -m slow
           -p infrastructure.core.testing.ci_infra_shard_plugin
           --infra-ci-observer-only slow
           -n auto
-          --dist loadscope
+          --dist load --maxschedchunk=1
           --benchmark-disable
           --durations=10
           --timeout=1200
+
+      - name: Export original slow-lane readiness bytes
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
 
       - name: Preserve partial slow-lane controller diagnostics
         if: ${{ always() }}
@@ -585,7 +620,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-diagnostics-slow
-          path: output/readiness/ordinary-infra-ci/diagnostics/shard-slow.json
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/ordinary-infra-ci/diagnostics/shard-slow.json
           if-no-files-found: warn
 
 # ─────────────────────────────────────────────────────────────────────────────

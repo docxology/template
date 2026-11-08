@@ -488,6 +488,7 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     ),
     "infrastructure/reporting/native_tool_replay.py": (
         "tests/infra_tests/project/test_auxiliary_print_custody.py",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary.py",
         "tests/infra_tests/reporting/test_native_format_acceptance.py",
         "tests/infra_tests/reporting/test_native_portable_custody.py",
         "tests/infra_tests/reporting/test_native_tool_promotion_failure.py",

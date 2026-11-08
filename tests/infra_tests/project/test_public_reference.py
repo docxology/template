@@ -85,6 +85,7 @@ def complete_reference(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     # clone still contains and tracks it.
     _git(root, "add", "--all", "--force")
     _git(root, "commit", "--quiet", "-m", "Owned complete public source DATA fixture")
+    _git(root, "submodule", "init", "--", submodule)
     commit = _git(root, "rev-parse", "HEAD").decode().strip()
     assert RuntimeScope(root, "root").source_identity() == source
     return root, commit, source
@@ -112,6 +113,7 @@ def _clone_complete_reference(fixture: tuple[Path, str, str], destination: Path,
         link.path,
     )
     _git(destination / link.path, "checkout", "--quiet", "--detach", link.oid)
+    _git(destination, "submodule", "init", "--", link.path)
     # Git has no empty-directory objects. Preserve the actual public topology,
     # rather than inventing placeholders or weakening its separate Source check.
     for relative, kind, _ in _canonical_inventory(original):
