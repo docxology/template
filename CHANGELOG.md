@@ -24,6 +24,18 @@ with preserved own versions, provider declarations and third-party locks.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
+### Fixes carried forward from main
+
+- Apply generated project-test exclusions to the native pytest session's actual
+  marker vocabulary. Strict native projects no longer reject unused engine
+  marker names; declared and undeclared opt-in cases remain excluded as requested.
+  Explicit consumer expressions, native strictness, coverage floors, runtime
+  admission, and original failure outcomes remain unchanged. Receipts distinguish
+  requested policy from the effective native expression.
+- Resolve cross-section fragment links in split HTML using the actual produced
+  section roster and combined index. Keep valid local links local; retain unknown
+  and ambiguous targets as visible defects. Preserve fragment encoding, external
+  and asset links, authored content, and source IDs.
 
 ## [5.1.0] - 2026-11-06
 

@@ -47,28 +47,68 @@ from tests.infra_tests.documentation._counts_doc_helpers import (
 pytestmark = pytest.mark.timeout(30)
 
 
-def test_coverage_measurement_uses_bounded_release_profile() -> None:
-    """Coverage receipts must use the shared release selection and timeout policy."""
-    command = _coverage_measurement_command(Path("/tmp/project"))
-    marker = command[-1]
+@pytest.mark.timeout(90)
+def test_coverage_measurement_release_profile_executes_native_collection(tmp_path: Path) -> None:
+    """The real documentation consumer includes slow tests, but not live services."""
+    project = tmp_path / "native-coverage"
+    project.mkdir()
+    (project / ".venv").symlink_to(Path(sys.prefix), target_is_directory=True)
+    (project / "src").mkdir()
+    (project / "tests").mkdir()
+    (project / "src/native_module.py").write_text("def answer():\n return 7\n")
+    (project / "pyproject.toml").write_text(
+        '[project]\nname = "native-coverage"\nversion = "0.0.0"\nrequires-python = ">=3.14"\n'
+        "[tool.pytest.ini_options]\n"
+        'addopts = "-p pytest_cov.plugin --strict-markers -m native_other"\n'
+        'markers = ["native(payload): native signature", "native_other: native default", "slow: slow case"]\n'
+    )
+    (project / "tests/conftest.py").write_text(
+        "import sys\nfrom pathlib import Path\n"
+        "sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))\n"
+        "def pytest_configure(config):\n"
+        " config.addinivalue_line('markers', 'network(reason): native plugin service')\n"
+    )
+    (project / "tests/test_native.py").write_text(
+        "import pytest\nfrom native_module import answer\n"
+        "@pytest.mark.native(payload='signature')\n@pytest.mark.slow\n"
+        "def test_release_slow(pytestconfig):\n"
+        " assert answer() == 7\n"
+        " assert 'not slow' not in pytestconfig.option.markexpr\n"
+        " assert 'not network' in pytestconfig.option.markexpr\n"
+        "@pytest.mark.network(reason='service')\n"
+        "def test_service():\n pytest.fail('excluded service ran')\n"
+    )
+    environment = _coverage_measurement_environment(project / ".coverage")
+    environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    environment.pop("PYTEST_ADDOPTS", None)
+    environment.pop("PYTEST_PLUGINS", None)
+    # Prepare only this dependency-free fixture's genuine lock, offline; the
+    # measurement itself must consume the existing runtime without syncing it.
+    locked = subprocess.run(
+        ["uv", "lock", "--offline", "--no-python-downloads", "--python", sys.executable, "--project", str(project)],
+        env={**environment, "UV_LOCKED": "false"},
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+    assert locked.returncode == 0, locked.stdout + locked.stderr
+    result = subprocess.run(
+        _coverage_measurement_command(project),
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "1 passed, 1 deselected" in result.stdout
+    from coverage import Coverage
 
-    assert "not requires_ollama" in marker
-    assert "not long_running" in marker
-    assert "not bench" in marker
-    assert "not private_project" in marker
-    assert "not external_fixture" in marker
-    assert COVERAGE_MEASUREMENT_TIMEOUT_SECONDS == 1800
-    assert command[:8] == [
-        "uv",
-        "run",
-        "--locked",
-        "--no-sync",
-        "--offline",
-        "--no-python-downloads",
-        "--python",
-        "/tmp/project/.venv/bin/python",
-    ]
-    assert command[12:15] == ["/tmp/project/.venv/bin/python", "-m", "pytest"]
+    measured = Coverage(data_file=str(project / ".coverage"))
+    measured.load()
+    assert measured.report() == 100
 
 
 def test_active_coverage_measurement_selects_only_the_chunked_verifier() -> None:

@@ -425,6 +425,14 @@ def _run_project_tests_impl(
             },
         )
 
+    selection = resolve_test_profile(
+        profile,
+        include_slow=include_slow,
+        include_long_running=include_long_running,
+        include_ollama_tests=include_ollama_tests,
+        include_bench=include_bench,
+    )
+
     try:
         cmd = build_project_pytest_command(
             project_root,
@@ -435,6 +443,7 @@ def _run_project_tests_impl(
             ],
             interpreter=_selected,
             deadline=deadline,
+            generated_profile=selection,
         )
     except ProjectTestRuntimeError as exc:
         logger.error("Project provider-root discovery refused: %s", exc)
@@ -469,28 +478,7 @@ def _run_project_tests_impl(
     # to load or replacing an explicitly selected nondefault user destination.
     benchmark_store = project_root / "output/.pipeline/benchmarks"
     atomic_write_bytes_confined(project_root, benchmark_store / ".owner", b"template-project-benchmark-storage\n")
-    cmd.extend(
-        [
-            "-p",
-            "infrastructure.core.testing._pytest_runtime_controls",
-            f"--template-benchmark-storage={benchmark_store}",
-        ]
-    )
-    # Opt-in live LLM tests (``@pytest.mark.requires_ollama``) are excluded from
-    # the default project gate, matching both the infrastructure runner and the
-    # multi-project CI path (``--all-projects --public-projects``). They require a
-    # live Ollama daemon plus the ``llm`` dependency group and are run separately
-    # with ``--include-ollama-tests`` / ``pytest -m requires_ollama``.
-    selection = resolve_test_profile(
-        profile,
-        include_slow=include_slow,
-        include_long_running=include_long_running,
-        include_ollama_tests=include_ollama_tests,
-        include_bench=include_bench,
-    )
-    project_marker = build_profile_marker_expression(selection)
-    if project_marker:
-        cmd.extend(["-m", project_marker])
+    cmd.append(f"--template-benchmark-storage={benchmark_store}")
     cmd.extend(resolve_xdist_args(parallel))
     if quiet:
         cmd.extend(["-q"])

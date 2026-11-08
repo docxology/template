@@ -333,6 +333,10 @@ class WebRenderer:
 
         if layout.frontmatter:
             place_frontmatter_html(output_file, layout)
+        web_postprocess.resolve_split_page_fragments(
+            output_file,
+            tuple(self._output_file_for_source(source_file) for source_file in source_files),
+        )
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
         return output_file
 
