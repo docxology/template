@@ -20,7 +20,6 @@ from infrastructure.core.pipeline._stage_protocol import ANALYSIS_SCHEMA, SCHEMA
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_content_fingerprint, source_fingerprint
 from infrastructure.core.pipeline.hydration_recovery import (
     HydrationInputObservation,
-    HydrationInputUnavailable,
     canonical_hydration_artifact,
     observe_hydration_failure,
 )
@@ -187,7 +186,7 @@ def main() -> int:
                     else:
                         print(exc.code, file=sys.stderr)
                         original = 1
-                except HydrationInputUnavailable as error:
+                except FileNotFoundError as error:
                     traceback.print_exc()
                     original = 1
                     if hydration_artifact is not None:

@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from manuscript.refresh import ManuscriptRefreshPhase, refresh_manuscript_pipeline
-from manuscript.variables import RequiredAnalysisInputUnavailable, generate_variables
+from manuscript.variables import generate_variables
 from roadmap_tracks import run_semantic_fixed_point
 
 
@@ -28,22 +28,10 @@ def main(argv: list[str] | None = None) -> int:
 
     out = PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        variables = generate_variables(
-            PROJECT_ROOT,
-            require_analysis_outputs=not args.allow_draft,
-        )
-    except RequiredAnalysisInputUnavailable as error:
-        try:
-            from infrastructure.core.pipeline.hydration_recovery import HydrationInputUnavailable
-        except ImportError:
-            # A standalone installation may not have the pipeline SDK.
-            raise error from None
-
-        raise HydrationInputUnavailable(
-            error.path.relative_to(PROJECT_ROOT).as_posix(),
-            str(error),
-        ) from error
+    variables = generate_variables(
+        PROJECT_ROOT,
+        require_analysis_outputs=not args.allow_draft,
+    )
     if args.allow_draft:
         out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
         # Draft hydration should stay below the repo's per-test timeout and

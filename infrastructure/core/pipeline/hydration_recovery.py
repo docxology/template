@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import stat
+import sys
 from contextlib import ExitStack
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -18,13 +19,37 @@ HYDRATION_SCRIPT = "scripts/z_generate_manuscript_variables.py"
 HYDRATION_STAGE_KEY = f"hydration:{HYDRATION_SCRIPT}"
 HYDRATION_INPUT_UNAVAILABLE = "hydration-analysis-input-unavailable"
 
+@dataclass(frozen=True)
+class _HydrationPrerequisite:
+    artifact: str
+    owner_module: str
+    parsed_empty: bool = False
+
+
 _PREREQUISITES = {
-    "templates/template_active_inference": "output/data/parameter_sweep.csv",
-    "templates/template_code_project": "output/data/optimization_results.csv",
-    "templates/template_gold_refinement": "output/data/refinery_results.json",
-    "templates/template_methods_paper": "output/data/compiled_plans.json",
+    "templates/template_active_inference": _HydrationPrerequisite(
+        "output/data/parameter_sweep.csv", "manuscript.variables"
+    ),
+    "templates/template_code_project": _HydrationPrerequisite(
+        "output/data/optimization_results.csv", "template_code_project.core.manuscript_variables", parsed_empty=True
+    ),
+    "templates/template_gold_refinement": _HydrationPrerequisite(
+        "output/data/refinery_results.json", "template_gold_refinement.manuscript_variables"
+    ),
+    "templates/template_methods_paper": _HydrationPrerequisite(
+        "output/data/compiled_plans.json", "template_methods_paper.manuscript_variables", parsed_empty=True
+    ),
 }
-_PARSED_EMPTY = frozenset({"output/data/optimization_results.csv", "output/data/compiled_plans.json"})
+_PREREQUISITES_BY_ARTIFACT = {entry.artifact: entry for entry in _PREREQUISITES.values()}
+
+
+def _valid_empty_sha256(prerequisite: _HydrationPrerequisite, digest: object) -> bool:
+    return digest is None or (
+        prerequisite.parsed_empty
+        and isinstance(digest, str)
+        and len(digest) == 64
+        and all(character in "0123456789abcdef" for character in digest)
+    )
 
 
 def supports_hydration_recovery(scope: str) -> bool:
@@ -41,25 +66,8 @@ def canonical_hydration_artifact(repo: Path, project: Path, argv: object, stage_
         or not project.is_relative_to(root)
     ):
         return None
-    return _PREREQUISITES.get(project.relative_to(root).as_posix())
-
-
-class HydrationInputUnavailable(FileNotFoundError):
-    """The canonical script reached a declared unavailable analysis input."""
-
-    def __init__(self, artifact: str, message: str, *, empty_sha256: str | None = None) -> None:
-        if artifact not in _PREREQUISITES.values() or (
-            empty_sha256 is not None
-            and (
-                artifact not in _PARSED_EMPTY
-                or len(empty_sha256) != 64
-                or any(character not in "0123456789abcdef" for character in empty_sha256)
-            )
-        ):
-            raise ValueError("Unrecognized manuscript hydration prerequisite")
-        super().__init__(message)
-        self.artifact = artifact
-        self.empty_sha256 = empty_sha256
+    prerequisite = _PREREQUISITES.get(project.relative_to(root).as_posix())
+    return prerequisite.artifact if prerequisite is not None else None
 
 
 @dataclass(frozen=True)
@@ -117,7 +125,7 @@ def capture_hydration_input(
     project: Path, artifact: str, *, prepare_receipt_output: bool = False
 ) -> _InputSnapshot | None:
     """Observe a real bounded target or its absence through held directory descriptors."""
-    if artifact not in _PREREQUISITES.values():
+    if artifact not in _PREREQUISITES_BY_ARTIFACT:
         return None
     project = project.absolute()
     relative = Path(artifact)
@@ -195,13 +203,41 @@ class HydrationInputObservation:
         return {**self._snapshot.to_dict(), "state": self.state}
 
 
+def _matches_project_error(project: Path, prerequisite: _HydrationPrerequisite, error: FileNotFoundError) -> bool:
+    # The producer owns the missing/parsed-empty classification. Only its
+    # loaded, physically bound class may nominate the declared prerequisite.
+    module = sys.modules.get(prerequisite.owner_module)
+    if module is None or type(error).__module__ != prerequisite.owner_module:
+        return False
+    namespace = vars(module)
+    if type(error) is not namespace.get("RequiredAnalysisInputUnavailable"):
+        return False
+    project = project.absolute()
+    source = project / "src" / Path(*prerequisite.owner_module.split(".")).with_suffix(".py")
+    path = vars(error).get("path")
+    try:
+        return (
+            namespace.get("__file__") == str(source)
+            and source.is_file()
+            and source.resolve(strict=True) == source
+            and isinstance(path, Path)
+            and path == project / prerequisite.artifact
+        )
+    except (OSError, RuntimeError):
+        return False
+
+
 def observe_hydration_failure(
-    project: Path, artifact: str, initial: object, error: HydrationInputUnavailable
+    project: Path, artifact: str, initial: object, error: FileNotFoundError
 ) -> HydrationInputObservation | None:
-    if error.artifact != artifact:
+    prerequisite = _PREREQUISITES_BY_ARTIFACT.get(artifact)
+    if prerequisite is None or not _matches_project_error(project, prerequisite, error):
+        return None
+    empty_sha256 = vars(error).get("empty_sha256")
+    if not _valid_empty_sha256(prerequisite, empty_sha256):
         return None
     current = capture_hydration_input(project, artifact)
-    if current is not None and current.sha256 == error.empty_sha256 and current.follows(initial):
+    if current is not None and current.sha256 == empty_sha256 and current.follows(initial):
         return HydrationInputObservation(current)
     return None
 
@@ -213,7 +249,7 @@ def verify_hydration_observation(
     if current is None or not current.follows(initial):
         return None
     observation = HydrationInputObservation(current)
-    if observation.state == "parsed-empty" and artifact not in _PARSED_EMPTY:
+    if observation.state == "parsed-empty" and not _PREREQUISITES_BY_ARTIFACT[artifact].parsed_empty:
         return None
     return observation if _same_json(observation.to_dict(), reported) else None
 
