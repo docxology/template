@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.13" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <title>_combined_manuscript</title>
@@ -12,10 +12,7 @@
     */
     html {
       color: #1a1a1a;
-      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
-      background-color: light-dark(#fdfdfd, #1a1a1a);
-      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -40,16 +37,11 @@
     }
     @media print {
       html {
-        color-scheme: light only;
+        background-color: white;
       }
-      html, body, pre, code {
+      body {
         background-color: transparent;
-      }
-      body, a, a:visited, blockquote {
         color: black;
-      }
-      pre, code {
-        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -62,8 +54,11 @@
     p {
       margin: 1em 0;
     }
-    a, a:visited {
-      color: inherit;
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
     }
     img {
       max-width: 100%;
@@ -92,11 +87,8 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid;
-      border-color: #e6e6e6;
-      border-color: light-dark(#e6e6e6, #4c4c4c);
+      border-left: 2px solid #e6e6e6;
       color: #606060;
-      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -120,7 +112,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -137,11 +129,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
     }
     th {
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -278,6 +270,69 @@ window.MathJax.output = Object.assign({}, templateMathOutput, {
     inline: false,
     width: "100%",
     lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
   })
 });
 window.normalizeTemplateMathJaxAria = function () {
@@ -2009,7 +2064,8 @@ study record.</p>
 <h1 data-number="4" id="sec:part_0_orientation"><span
 class="header-section-number">4</span> Orientation to the Field</h1>
 <figure id="fig:part_0_orientation">
-<a class="figure-full-size-link" href="../figures/part_0_orientation.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_0_orientation.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_0_orientation.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_0_orientation.png"
+style="width:90.0%"
 alt="Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Deterministic logistic
 trajectories at three positive growth rates with common initial state
@@ -2124,8 +2180,8 @@ The lab translates that idea into a small record that another learner
 can inspect without knowing what its author intended.</p>
 <h2 data-number="4.7" id="a-worked-formalism"><span
 class="header-section-number">4.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_0_orientation_model"><span
-class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\qquad{(1)}\]</span></span></p>
+<p><span id="eq:part_0_orientation_model"><span class="math display">\[
+N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}} \qquad{(1)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_orientation_parameters" data-responsive-table="true">
 <caption>Table 1: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -2192,13 +2248,12 @@ It omits migration, changing resources and random shocks. A discrepancy
 can therefore reflect a failed assumption rather than a programming
 error. First inspect the units and initial value, then ask which omitted
 process could generate the observed discrepancy.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -2241,7 +2296,8 @@ the supplied solutions.</li>
 <h1 data-number="5" id="sec:part_0_core_methods"><span
 class="header-section-number">5</span> Core Methods and Tools</h1>
 <figure id="fig:part_0_core_methods">
-<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, A deterministic synthetic scatter and its least-squares line"><img src="../figures/part_0_core_methods.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, A deterministic synthetic scatter and its least-squares line"><img src="../figures/part_0_core_methods.png"
+style="width:90.0%"
 alt="Twenty-five synthetic points follow an increasing trend with a smooth oscillating deviation; a fitted straight line summarizes the trend while leaving visible positive and negative residuals." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: A deterministic synthetic
 scatter and its least-squares line; visible residuals contrast with the
@@ -2360,9 +2416,9 @@ execution record supports, rather than obscures, scientific
 judgment.</p>
 <h2 data-number="5.7" id="a-worked-formalism-1"><span
 class="header-section-number">5.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_0_core_methods_model"><span
-class="math display">\[\widehat y(x)=mx+b,\qquad
-(m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2\qquad{(2)}\]</span></span></p>
+<p><span id="eq:part_0_core_methods_model"><span class="math display">\[
+\widehat y(x)=mx+b,\qquad (m,b)=\arg\min_{a,c}\sum_i(y_i-ax_i-c)^2
+\qquad{(2)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 2: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_core_methods_parameters" data-responsive-table="true">
 <caption>Table 2: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -2427,13 +2483,12 @@ the inputs, dependence between observations or a changing variance. A
 large coefficient of determination is a statement about these fitted
 observations. Generalization requires additional data and an evaluation
 design appropriate to the question.</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -2598,8 +2653,9 @@ comparison makes the limits of a statistic observable.</p>
 <h2 data-number="6.7" id="a-worked-formalism-2"><span
 class="header-section-number">6.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_0_quantitative_foundations_model"><span
-class="math display">\[\mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
-\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}\qquad{(3)}\]</span></span></p>
+class="math display">\[ \mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
+\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}
+\qquad{(3)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 3: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_quantitative_foundations_parameters" data-responsive-table="true">
 <caption>Table 3: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -2669,13 +2725,12 @@ in a larger population. Missing, censored or dependent observations
 require an explicit handling rule before summary statistics become
 interpretable. Keep that rule with the input data rather than silently
 discarding awkward observations.</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -2854,11 +2909,11 @@ law that grows fast when small and levels off when large is the
 eq. <a href="#eq:part_I_first_principles_rate">4</a> and in closed form
 in eq. <a href="#eq:part_I_first_principles_model">5</a>:</p>
 <p><span id="eq:part_I_first_principles_rate"><span
-class="math display">\[\frac{dN}{dt} = rN\left(1 -
-\frac{N}{K}\right)\qquad{(4)}\]</span></span></p>
+class="math display">\[ \frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right)
+\qquad{(4)}\]</span></span></p>
 <p><span id="eq:part_I_first_principles_model"><span
-class="math display">\[N(t) = \frac{K}{1 + \left(\dfrac{K -
-N_0}{N_0}\right) e^{-rt}}\qquad{(5)}\]</span></span></p>
+class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
+N_0}{N_0}\right) e^{-rt}} \qquad{(5)}\]</span></span></p>
 <p>Read eq. <a href="#eq:part_I_first_principles_rate">4</a> aloud: the
 rate of change is proportional to how much there is (<span
 class="math inline">\(rN\)</span>) <em>times</em> how much room remains
@@ -2940,12 +2995,11 @@ the same fact is asserted numerically by the test suite, so the prose
 and the code cannot silently disagree.</p>
 <h2 data-number="8.5" id="how-the-pieces-connect"><span
 class="header-section-number">8.5</span> How the pieces connect</h2>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Choose state variables</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Write a rate rule</span>]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Solve or simulate</span>]</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>[<span class="vs">Predict long-run behaviour</span>]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|compare to data|</span> <span class="dt">A</span></span></code></pre></div>
+<pre class="mermaid"><code>graph TD
+  A[Choose state variables] --&gt; B[Write a rate rule]
+  B --&gt; C[Solve or simulate]
+  C --&gt; D[Predict long-run behaviour]
+  D --&gt;|compare to data| A</code></pre>
 <p>This loop — choose, write, solve, predict, compare — is the first
 principle the rest of the book elaborates. Box discusses scientific
 model adequacy and revision <span class="citation"
@@ -3001,7 +3055,8 @@ synthesis.</li>
 <h1 data-number="9" id="sec:part_I_building_blocks"><span
 class="header-section-number">9</span> Building Blocks</h1>
 <figure id="fig:part_I_building_blocks">
-<a class="figure-full-size-link" href="../figures/part_I_building_blocks.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Static saturating responses with a shared half-saturation input"><img src="../figures/part_I_building_blocks.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_I_building_blocks.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Static saturating responses with a shared half-saturation input"><img src="../figures/part_I_building_blocks.png"
+style="width:90.0%"
 alt="Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Static saturating responses
 with a shared half-saturation input and different shape
@@ -3116,7 +3171,8 @@ additional equation a time-dependent claim would require.</p>
 <h2 data-number="9.7" id="a-worked-formalism-3"><span
 class="header-section-number">9.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_I_building_blocks_model"><span
-class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\qquad{(6)}\]</span></span></p>
+class="math display">\[ y(x)=M\frac{x^h}{k^h+x^h}
+\qquad{(6)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 5: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_building_blocks_parameters" data-responsive-table="true">
 <caption>Table 5: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3178,13 +3234,12 @@ adaptation, delays, oscillation or memory. Different exponents describe
 different shapes but do not uniquely identify a physical mechanism.
 Interpret the parameters within the declared model rather than treating
 a fitted shape as a causal discovery.</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -3227,7 +3282,8 @@ with the supplied solutions.</li>
 <h1 data-number="10" id="sec:part_I_structure_and_form"><span
 class="header-section-number">10</span> Structure and Form</h1>
 <figure id="fig:part_I_structure_and_form">
-<a class="figure-full-size-link" href="../figures/part_I_structure_and_form.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Dimensionless static response curves illustrate how shape"><img src="../figures/part_I_structure_and_form.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_I_structure_and_form.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Dimensionless static response curves illustrate how shape"><img src="../figures/part_I_structure_and_form.png"
+style="width:90.0%"
 alt="Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Dimensionless static response
 curves illustrate how shape and scale are distinct choices.</figcaption>
@@ -3341,8 +3397,8 @@ the shared output establishes and which difference it conceals.</p>
 <h2 data-number="10.7" id="a-worked-formalism-4"><span
 class="header-section-number">10.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_I_structure_and_form_model"><span
-class="math display">\[z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j
-x_j}\qquad{(7)}\]</span></span></p>
+class="math display">\[ z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j x_j}
+\qquad{(7)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 6: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_structure_and_form_parameters" data-responsive-table="true">
 <caption>Table 6: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3400,13 +3456,12 @@ collection; fitting bounds on training data and applying them to future
 data requires a separately declared transformation. A visually neat
 scale can conceal these differences unless original units and bounds are
 retained.</p>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -3482,7 +3537,8 @@ study record.</p>
 <h1 data-number="12" id="sec:part_II_systems_overview"><span
 class="header-section-number">12</span> Systems Overview</h1>
 <figure id="fig:part_II_systems_overview">
-<a class="figure-full-size-link" href="../figures/part_II_systems_overview.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_II_systems_overview.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_II_systems_overview.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_II_systems_overview.png"
+style="width:90.0%"
 alt="Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Deterministic logistic
 trajectories at three positive growth rates with common initial state
@@ -3597,7 +3653,8 @@ before any larger feedback or interaction model is proposed.</p>
 <h2 data-number="12.7" id="a-worked-formalism-5"><span
 class="header-section-number">12.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_II_systems_overview_model"><span
-class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\qquad{(8)}\]</span></span></p>
+class="math display">\[ N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}
+\qquad{(8)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 7: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_systems_overview_parameters" data-responsive-table="true">
 <caption>Table 7: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3664,13 +3721,12 @@ It omits migration, changing resources and random shocks. A discrepancy
 can therefore reflect a failed assumption rather than a programming
 error. First inspect the units and initial value, then ask which omitted
 process could generate the observed discrepancy.</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -3831,8 +3887,8 @@ can be distinguished from a genuinely changed process.</p>
 <h2 data-number="13.7" id="a-worked-formalism-6"><span
 class="header-section-number">13.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_II_dynamics_and_change_model"><span
-class="math display">\[e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
-2}{\lambda}\qquad{(9)}\]</span></span></p>
+class="math display">\[ e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
+2}{\lambda} \qquad{(9)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 8: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_dynamics_and_change_parameters" data-responsive-table="true">
 <caption>Table 8: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -3896,13 +3952,12 @@ continuous, undelayed ideal controller with an unsaturated actuator. A
 changing rate, external input or measurement delay breaks the
 closed-form description. The function permits zero rate as a constant
 trajectory, but half-life requires a strictly positive rate.</p>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -4068,8 +4123,8 @@ establish that the original controller model was adequate.</p>
 <h2 data-number="14.7" id="a-worked-formalism-7"><span
 class="header-section-number">14.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_II_regulation_and_control_model"><span
-class="math display">\[e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
-2}{\lambda}\qquad{(10)}\]</span></span></p>
+class="math display">\[ e(t)=e_0e^{-\lambda t},\qquad t_{1/2}=\frac{\ln
+2}{\lambda} \qquad{(10)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 9: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_regulation_and_control_parameters" data-responsive-table="true">
 <caption>Table 9: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -4133,13 +4188,12 @@ continuous, undelayed ideal controller with an unsaturated actuator. A
 changing rate, external input or measurement delay breaks the
 closed-form description. The function permits zero rate as a constant
 trajectory, but half-life requires a strictly positive rate.</p>
-<div class="sourceCode" id="cb18"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -4216,7 +4270,8 @@ study record.</p>
 <h1 data-number="16" id="sec:part_III_applied_models"><span
 class="header-section-number">16</span> Applied Models</h1>
 <figure id="fig:part_III_applied_models">
-<a class="figure-full-size-link" href="../figures/part_III_applied_models.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, Static saturating responses with a shared half-saturation input"><img src="../figures/part_III_applied_models.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_III_applied_models.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, Static saturating responses with a shared half-saturation input"><img src="../figures/part_III_applied_models.png"
+style="width:90.0%"
 alt="Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 10: Static saturating responses
 with a shared half-saturation input and different shape
@@ -4333,7 +4388,8 @@ a real system remains an empirical task.</p>
 <h2 data-number="16.7" id="a-worked-formalism-8"><span
 class="header-section-number">16.7</span> A Worked Formalism</h2>
 <p><span id="eq:part_III_applied_models_model"><span
-class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\qquad{(11)}\]</span></span></p>
+class="math display">\[ y(x)=M\frac{x^h}{k^h+x^h}
+\qquad{(11)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 10: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_III_applied_models_parameters" data-responsive-table="true">
 <caption>Table 10: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -4395,13 +4451,12 @@ adaptation, delays, oscillation or memory. Different exponents describe
 different shapes but do not uniquely identify a physical mechanism.
 Interpret the parameters within the declared model rather than treating
 a fitted shape as a causal discovery.</p>
-<div class="sourceCode" id="cb20"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -4445,7 +4500,8 @@ with the supplied solutions.</li>
 <h1 data-number="17" id="sec:part_III_case_studies"><span
 class="header-section-number">17</span> Case Studies</h1>
 <figure id="fig:part_III_case_studies">
-<a class="figure-full-size-link" href="../figures/part_III_case_studies.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, Instructional fixture values with supplied error bars across the control, low-treatment"><img src="../figures/part_III_case_studies.png" style="width:75.0%"
+<a class="figure-full-size-link" href="../figures/part_III_case_studies.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, Instructional fixture values with supplied error bars across the control, low-treatment"><img src="../figures/part_III_case_studies.png"
+style="width:75.0%"
 alt="Six instructional fixture values increase across control, low-treatment, and high-treatment conditions; each point has a supplied error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 11: Instructional fixture values
 with supplied error bars across the control, low-treatment, and
@@ -4604,9 +4660,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a h
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.slope ≈ 1.375, fit.intercept ≈ 2.175, fit.r_squared ≈ 0.999</span></span></code></pre></div>
 <p>The fitted relationship in eq. <a
 href="#eq:part_III_case_studies_fit">12</a> is</p>
-<p><span id="eq:part_III_case_studies_fit"><span
-class="math display">\[\widehat{y}(d) = 1.375\,d +
-2.175\qquad{(12)}\]</span></span></p>
+<p><span id="eq:part_III_case_studies_fit"><span class="math display">\[
+\widehat{y}(d) = 1.375\,d + 2.175 \qquad{(12)}\]</span></span></p>
 <p>with <span class="math inline">\(R^2 = 0.999\)</span>. The slope says
 each dose step adds about <span class="math inline">\(1.4\)</span> units
 of response; the intercept, <span class="math inline">\(2.175\)</span>,
@@ -4626,13 +4681,12 @@ support. An alternative dose–response model could saturate (recall the
 saturating response in sec. <a href="#sec:appendix_math_review">45</a>);
 a straight line would overpredict if the system approached a ceiling.
 The fixture does not establish which mechanism applies.</p>
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">LR</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Raw measurements</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Group + average</span>]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Fit a trend</span>]</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>{<span class="vs">Within data range?</span>}</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|yes|</span> <span class="dt">E</span>[<span class="vs">Interpolate: defensible</span>]</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|no|</span> <span class="dt">F</span>[<span class="vs">Extrapolate: flag the risk</span>]</span></code></pre></div>
+<pre class="mermaid"><code>graph LR
+  A[Raw measurements] --&gt; B[Group + average]
+  B --&gt; C[Fit a trend]
+  C --&gt; D{Within data range?}
+  D --&gt;|yes| E[Interpolate: defensible]
+  D --&gt;|no| F[Extrapolate: flag the risk]</code></pre>
 <blockquote>
 <p><strong>Warning.</strong> A linear fit through three averaged points
 reports <span class="math inline">\(R^2 = 0.999\)</span>, but that
@@ -4691,7 +4745,8 @@ synthesis.</li>
 <h1 data-number="18" id="sec:part_III_frontiers"><span
 class="header-section-number">18</span> Frontiers and Open Problems</h1>
 <figure id="fig:part_III_frontiers">
-<a class="figure-full-size-link" href="../figures/part_III_frontiers.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 12, Dimensionless static response curves illustrate how shape"><img src="../figures/part_III_frontiers.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_III_frontiers.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 12, Dimensionless static response curves illustrate how shape"><img src="../figures/part_III_frontiers.png"
+style="width:90.0%"
 alt="Three response curves share the same output scale and midpoint but have different slopes near the midpoint; equal normalized range does not make the relationships identical." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 12: Dimensionless static response
 curves illustrate how shape and scale are distinct choices.</figcaption>
@@ -4812,9 +4867,9 @@ scientific question. That decision remains part of the authored research
 plan.</p>
 <h2 data-number="18.7" id="a-worked-formalism-9"><span
 class="header-section-number">18.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_III_frontiers_model"><span
-class="math display">\[z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j
-x_j}\qquad{(13)}\]</span></span></p>
+<p><span id="eq:part_III_frontiers_model"><span class="math display">\[
+z_i=\frac{x_i-\min_j x_j}{\max_j x_j-\min_j x_j}
+\qquad{(13)}\]</span></span></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 12: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_III_frontiers_parameters" data-responsive-table="true">
 <caption>Table 12: Quantities and conventions for this chapter’s worked
 example.</caption>
@@ -4872,13 +4927,12 @@ collection; fitting bounds on training data and applying them to future
 data requires a separately declared transformation. A visually neat
 scale can conceal these differences unless original units and bounds are
 retained.</p>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+  Q[Question and observation rule] --&gt; I[Declared inputs and units]
+  I --&gt; M[Tested model]
+  M --&gt; P[Predicted quantities]
+  P --&gt; C[Independent comparison]
+  C --&gt;|record a revision| Q</code></pre>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
@@ -7198,9 +7252,9 @@ class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
 satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
 K\)</span>.</p>
 </blockquote>
-<p><span id="eq:formalisms_logistic"><span class="math display">\[N(t) =
-\frac{K}{1 + A e^{-rt}}, \qquad A = \frac{K - N_0}{N_0}
-.\qquad{(14)}\]</span></span></p>
+<p><span id="eq:formalisms_logistic"><span class="math display">\[ N(t)
+= \frac{K}{1 + A e^{-rt}}, \qquad A = \frac{K - N_0}{N_0} .
+\qquad{(14)}\]</span></span></p>
 <p><em>Proof.</em> Because <span class="math inline">\(r &gt;
 0\)</span>, the term <span class="math inline">\(e^{-rt} \to 0\)</span>
 as <span class="math inline">\(t \to \infty\)</span>. Hence the
@@ -7261,12 +7315,14 @@ class="header-section-number">46.5</span> 5. A step-by-step
 derivation</h2>
 <p>For <span class="math inline">\(0&lt;N_0&lt;K\)</span>, separating
 variables in the logistic differential equation gives:</p>
-<p><span class="math display">\[\begin{aligned}
+<p><span class="math display">\[
+\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
 \int \frac{dN}{N(1 - N/K)} &amp;= \int r \, dt \\
 \ln\!\left(\frac{N}{K - N}\right) &amp;= rt + C \\
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
-\end{aligned}\]</span></p>
+\end{aligned}
+\]</span></p>
 <p>which recovers eq. <a href="#eq:formalisms_logistic">14</a>. The
 boundary case <span class="math inline">\(N_0=K\)</span> has the
 constant solution and is handled separately because the logarithm above
@@ -7279,12 +7335,10 @@ equations</h2>
 <p>A simple predator–prey system, with each equation individually
 referenceable (eq. <a href="#eq:formalisms_prey">15</a>, eq. <a
 href="#eq:formalisms_pred">16</a>):</p>
-<p><span id="eq:formalisms_prey"><span
-class="math display">\[\frac{dx}{dt} = \alpha x - \beta x
-y\qquad{(15)}\]</span></span></p>
-<p><span id="eq:formalisms_pred"><span
-class="math display">\[\frac{dy}{dt} = \delta x y - \gamma
-y\qquad{(16)}\]</span></span></p>
+<p><span id="eq:formalisms_prey"><span class="math display">\[
+\frac{dx}{dt} = \alpha x - \beta x y \qquad{(15)}\]</span></span></p>
+<p><span id="eq:formalisms_pred"><span class="math display">\[
+\frac{dy}{dt} = \delta x y - \gamma y \qquad{(16)}\]</span></span></p>
 <p>The vector-field figure style for such systems is demonstrated by the
 quiver plot in the format gallery (sec. <a
 href="#sec:appendix_format_gallery">47</a>).</p>
@@ -7527,20 +7581,23 @@ class="header-section-number">47.5</span> 5. Mathematics and units</h2>
 \ln 2 / \lambda\)</span>.</p>
 <p>A numbered display equation, cross-referenced as eq. <a
 href="#eq:gallery_logistic">17</a>:</p>
-<p><span id="eq:gallery_logistic"><span class="math display">\[N(t) =
-\frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right)
-e^{-rt}}\qquad{(17)}\]</span></span></p>
+<p><span id="eq:gallery_logistic"><span class="math display">\[ N(t) =
+\frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right) e^{-rt}}
+\qquad{(17)}\]</span></span></p>
 <p>Multi-line aligned derivation:</p>
-<p><span class="math display">\[\begin{aligned}
+<p><span class="math display">\[
+\begin{aligned}
 \frac{dN}{dt} &amp;= rN\left(1 - \frac{N}{K}\right) \\
               &amp;= rN - \frac{r}{K}N^2 .
-\end{aligned}\]</span></p>
+\end{aligned}
+\]</span></p>
 <p>A matrix and a piecewise definition:</p>
-<p><span class="math display">\[\mathbf{A} = \begin{bmatrix} a_{11}
-&amp; a_{12} \\ a_{21} &amp; a_{22} \end{bmatrix},
+<p><span class="math display">\[
+\mathbf{A} = \begin{bmatrix} a_{11} &amp; a_{12} \\ a_{21} &amp; a_{22}
+\end{bmatrix},
 \qquad
-f(x) = \begin{cases} 0 &amp; x &lt; 0 \\ 1 &amp; x \ge 0 .
-\end{cases}\]</span></p>
+f(x) = \begin{cases} 0 &amp; x &lt; 0 \\ 1 &amp; x \ge 0 . \end{cases}
+\]</span></p>
 <p>Physical quantities with units, written in math mode so they render
 in <strong>every</strong> target (PDF, HTML, slides): a rate of <span
 class="math inline">\(0.5\ \mathrm{s^{-1}}\)</span>, a length of <span
@@ -7555,7 +7612,8 @@ class="header-section-number">47.6</span> 6. Figures</h2>
 <p>A single figure with caption, label, and alt text, cross-referenced
 as fig. <a href="#fig:gallery_line">13</a>:</p>
 <figure id="fig:gallery_line">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 13, A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ."><img src="../figures/gallery/gallery_line.png" style="width:80.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 13, A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ."><img src="../figures/gallery/gallery_line.png"
+style="width:80.0%"
 alt="Three sinusoidal curves share one time axis, with progressively higher oscillation frequency." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 13: A multi-series line plot of
 three sine waves, produced by
@@ -7566,30 +7624,32 @@ three sine waves, produced by
 stacked):</p>
 <div data-layout-ncol="2">
 <figure id="fig:gallery_bar">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 14, Bar chart."><img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
-alt="A vertical bar chart compares several labeled categories, with bar height encoding each category&#x27;s value." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 14, Bar chart."><img src="../figures/gallery/gallery_bar.png"
+style="width:48.0%" alt="A vertical bar chart compares several labeled categories, with bar height encoding each category&#x27;s value." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 14: Bar chart.</figcaption>
 </figure>
 <figure id="fig:gallery_pie">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 15, Pie chart."><img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
-alt="A circular chart is divided into labeled slices whose angles encode category proportions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 15, Pie chart."><img src="../figures/gallery/gallery_pie.png"
+style="width:48.0%" alt="A circular chart is divided into labeled slices whose angles encode category proportions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 15: Pie chart.</figcaption>
 </figure>
 </div>
 <p>A multi-panel composite (fig. <a
 href="#fig:gallery_multipanel">16</a>):</p>
 <figure id="fig:gallery_multipanel">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, A 2×2 composite: line, scatter, bar, and histogram panels."><img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, A 2×2 composite: line, scatter, bar, and histogram panels."><img src="../figures/gallery/gallery_multipanel.png"
+style="width:85.0%"
 alt="A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 16: A 2×2 composite: line,
 scatter, bar, and histogram panels.</figcaption>
 </figure>
-<p>The full plot-type gallery lives in <code>../figures/gallery/</code>
-and includes: line, scatter-with-fit, bar, grouped bar, horizontal bar,
-histogram, box, violin, heatmap, contour, quiver field, step, stacked
-area, error bars, log-log, pie, annotated, and multi-panel. The chapters
-use the model curves and instructional error bars; the remaining plots
-demonstrate alternative presentations.</p>
+<p>The full plot-type gallery lives in
+<code>output/figures/gallery/</code> and includes: line,
+scatter-with-fit, bar, grouped bar, horizontal bar, histogram, box,
+violin, heatmap, contour, quiver field, step, stacked area, error bars,
+log-log, pie, annotated, and multi-panel. The chapters use the model
+curves and instructional error bars; the remaining plots demonstrate
+alternative presentations.</p>
 <hr />
 <h2 data-number="47.7" id="diagrams-mermaid"><span
 class="header-section-number">47.7</span> 7. Diagrams (Mermaid)</h2>
@@ -7598,39 +7658,34 @@ class="header-section-number">47.7</span> 7. Diagrams (Mermaid)</h2>
 absent). One worked example of each kind the builders in
 <code>src/mermaid/diagrams.py</code> support:</p>
 <p>Flowchart:</p>
-<div class="sourceCode" id="cb46"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">TD</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Inputs</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Model</span>]</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Predictions</span>]</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|revise|</span> <span class="dt">A</span></span></code></pre></div>
+<pre class="mermaid"><code>graph TD
+  A[Inputs] --&gt; B[Model]
+  B --&gt; C[Predictions]
+  C --&gt;|revise| A</code></pre>
 <p>Sequence:</p>
-<div class="sourceCode" id="cb47"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sequenceDiagram</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">participant</span><span class="vs"> Author</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="vs">  participant Engine</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="vs">  Author </span><span class="dt">-&gt;&gt;</span><span class="vs"> Engine</span><span class="dt">:</span><span class="vs"> edit config</span><span class="dt">.</span><span class="vs">yaml</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="vs">  Engine </span><span class="dt">--&gt;&gt;</span><span class="vs"> Author</span><span class="dt">:</span><span class="vs"> rendered PDF</span></span></code></pre></div>
+<pre class="mermaid"><code>sequenceDiagram
+  participant Author
+  participant Engine
+  Author -&gt;&gt; Engine: edit config.yaml
+  Engine --&gt;&gt; Author: rendered PDF</code></pre>
 <p>State:</p>
-<div class="sourceCode" id="cb48"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">stateDiagram-v2</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">[*]</span> <span class="pp">--&gt;</span> <span class="dt">Stub</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Stub</span> <span class="pp">--&gt;</span> <span class="dt">Drafted</span>:<span class="vs"> fill</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Drafted</span> <span class="pp">--&gt;</span> <span class="dt">Reviewed</span>:<span class="vs"> review</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Reviewed</span> <span class="pp">--&gt;</span> <span class="dt">[*]</span>:<span class="vs"> publish</span></span></code></pre></div>
+<pre class="mermaid"><code>stateDiagram-v2
+  [*] --&gt; Stub
+  Stub --&gt; Drafted: fill
+  Drafted --&gt; Reviewed: review
+  Reviewed --&gt; [*]: publish</code></pre>
 <p>Class:</p>
-<div class="sourceCode" id="cb49"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">classDiagram</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span><span class="dt"> ChapterRef {</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str part_id</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>str file</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">+</span>stem() str</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">}</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ChapterRef</span> <span class="pp">--&gt;</span> <span class="dt">TocEntry</span> :<span class="vs"> numbered as</span></span></code></pre></div>
+<pre class="mermaid"><code>classDiagram
+  class ChapterRef {
+    +str part_id
+    +str file
+    +stem() str
+  }
+  ChapterRef --&gt; TocEntry : numbered as</code></pre>
 <p>Entity-relationship:</p>
-<div class="sourceCode" id="cb50"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">erDiagram</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">PART</span> <span class="pp">||--o{</span> <span class="dt">CHAPTER</span> :<span class="vs"> contains</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">CHAPTER</span> <span class="pp">||--||</span> <span class="dt">LAB</span> :<span class="vs"> has</span></span></code></pre></div>
+<pre class="mermaid"><code>erDiagram
+  PART ||--o{ CHAPTER : contains
+  CHAPTER ||--|| LAB : has</code></pre>
 <p>Pie, Gantt, mindmap, timeline, quadrant, and user-journey diagrams
 are also supported — see <code>src/mermaid/diagram_specs.yaml</code> for
 a worked spec of each.</p>
@@ -7685,7 +7740,8 @@ class="header-section-number">47.10</span> 10. Media and data</h2>
 <p>Embedded raster image (any PNG/JPG works the same way as a
 figure):</p>
 <figure id="fig:gallery_media">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, A generated heatmap embedded as a raster image."><img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
+<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, A generated heatmap embedded as a raster image."><img src="../figures/gallery/gallery_heatmap.png"
+style="width:60.0%"
 alt="A rectangular heatmap uses a light-to-dark color scale to encode values across rows and columns." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 17: A generated heatmap embedded
 as a raster image.</figcaption>
@@ -7739,8 +7795,8 @@ a four-row excerpt appears below:</p>
 <p>The error-bar figure fig. <a href="#fig:gallery_errorbar">18</a>
 visualises this kind of data:</p>
 <figure id="fig:gallery_errorbar">
-<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 18, Means with standard-error bars."><img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
-alt="Six condition means rise from left to right; every point has a vertical standard-error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 18, Means with standard-error bars."><img src="../figures/gallery/gallery_errorbar.png"
+style="width:70.0%" alt="Six condition means rise from left to right; every point has a vertical standard-error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 18: Means with standard-error
 bars.</figcaption>
 </figure>

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03c_results_text_analytics.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Multi-Engine Retrieval, De-duplication, Embeddings, and Bibliometrics for a Single Search Term" />
+  <title>A Living Meta-Analysis of the Modafinil Literature</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +173,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -180,9 +266,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -274,8 +360,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -360,7 +446,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -617,10 +710,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -671,10 +772,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -703,10 +800,12 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="results-language-topics-and-embeddings">Results: Language,
-Topics, and Embeddings</h1>
-<h2 id="rq3-topical-and-linguistic-structure">RQ3: Topical and
-Linguistic Structure</h2>
+<h1 data-number="12" id="results-language-topics-and-embeddings"><span
+class="header-section-number">12</span> Results: Language, Topics, and
+Embeddings</h1>
+<h2 data-number="12.1" id="rq3-topical-and-linguistic-structure"><span
+class="header-section-number">12.1</span> RQ3: Topical and Linguistic
+Structure</h2>
 <p>Text analysis operates over titles, abstracts, and (when available)
 full text. A TF-IDF representation over a 500-feature vocabulary feeds
 non-negative matrix factorization, which extracts 5 latent topics
@@ -766,15 +865,16 @@ taxonomy, revealing connections that the explicit classification does
 not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
-<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Topic-term bar charts for Modafinil."><img src="../figures/topic_term_bars.png"
+<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 9, Topic-term bar charts for Modafinil."><img src="../figures/topic_term_bars.png"
 title="Topic-Term Weights"
 alt="Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up to ten leading terms on the vertical axis, and bar length represents that term&#x27;s weight in the topic." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Topic-term bar charts for Modafinil. Each
-panel shows the top weighted terms for one of 5 NMF topics, with bar
-length proportional to the topic-term weight in the <span
-class="math inline">\(\mathbf{H}\)</span> matrix.</figcaption>
+<figcaption>Figure 9: Topic-term bar charts for
+Modafinil. Each panel shows the top weighted terms for one of 5 NMF
+topics, with bar length proportional to the topic-term weight in the
+<span class="math inline">\(\mathbf{H}\)</span> matrix.</figcaption>
 </figure>
-<h2 id="document-embeddings">Document Embeddings</h2>
+<h2 data-number="12.2" id="document-embeddings"><span
+class="header-section-number">12.2</span> Document Embeddings</h2>
 <p>Offline deterministic embeddings (TF-IDF followed by truncated SVD)
 place every document in a shared 50-dimensional vector space. Embedding
 the same text twice yields identical vectors, so the derived similarity
@@ -782,37 +882,40 @@ matrix, nearest-neighbour lists, clusters, and two-dimensional
 projection are all reproducible.</p>
 <!-- FIGURE: pca_embeddings.png -->
 <figure id="fig:pca_embeddings">
-<a class="figure-full-size-link" href="../figures/pca_embeddings.png" target="_blank" rel="noopener" aria-label="Open full-size figure, PCA projection of document embeddings for Modafinil."><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
+<a class="figure-full-size-link" href="../figures/pca_embeddings.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, PCA projection of document embeddings for Modafinil."><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
 alt="Scatter plot projecting document TF-IDF vectors onto the first two principal components. Points are coloured by configured subfield, axes state explained variance, and arrows label the strongest well-separated term loadings." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>PCA projection of document embeddings for
-Modafinil. Each point represents one document projected onto the first
-two principal components of the TF-IDF/SVD embedding. Colours indicate
-subfield assignment, showing how the topical geography relates to the
-keyword taxonomy.</figcaption>
+<figcaption>Figure 10: PCA projection of document
+embeddings for Modafinil. Each point represents one document projected
+onto the first two principal components of the TF-IDF/SVD embedding.
+Colours indicate subfield assignment, showing how the topical geography
+relates to the keyword taxonomy.</figcaption>
 </figure>
 <!-- FIGURE: dendrogram.png -->
 <figure id="fig:dendrogram">
-<a class="figure-full-size-link" href="../figures/dendrogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Hierarchical clustering dendrogram of subfield TF-IDF centroids."><img src="../figures/dendrogram.png" title="Document Dendrogram"
+<a class="figure-full-size-link" href="../figures/dendrogram.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, Hierarchical clustering dendrogram of subfield TF-IDF centroids."><img src="../figures/dendrogram.png" title="Document Dendrogram"
 alt="Ward-linkage dendrogram clustering configured subfields by their mean TF-IDF vectors. Leaves name subfields, branch height gives Ward distance, and an inset reports the cophenetic correlation of the hierarchy." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Hierarchical clustering dendrogram of
-subfield TF-IDF centroids. Leaves are the configured subfields; the tree
-shows the similarity structure between subfield centroid
-vectors.</figcaption>
+<figcaption>Figure 11: Hierarchical clustering
+dendrogram of subfield TF-IDF centroids. Leaves are the configured
+subfields; the tree shows the similarity structure between subfield
+centroid vectors.</figcaption>
 </figure>
-<h2 id="term-analysis">Term Analysis</h2>
+<h2 data-number="12.3" id="term-analysis"><span
+class="header-section-number">12.3</span> Term Analysis</h2>
 <p>The TF-IDF term heatmap reveals which terms discriminate between
 subfields: terms with high between-subfield variance (rather than high
 global mean) are selected for display.</p>
 <!-- FIGURE: term_heatmap.png -->
 <figure id="fig:term_heatmap">
-<a class="figure-full-size-link" href="../figures/term_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Term heatmap for Modafinil."><img src="../figures/term_heatmap.png" title="Term Heatmap"
+<a class="figure-full-size-link" href="../figures/term_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 12, Term heatmap for Modafinil."><img src="../figures/term_heatmap.png" title="Term Heatmap"
 alt="Heatmap with configured subfields as rows and the twenty terms with greatest between-subfield variance as columns. Cell colour from pale yellow to dark red encodes the subfield&#x27;s mean TF-IDF weight for each term." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Term heatmap for Modafinil. Each cell
-shows the mean TF-IDF weight of a term within a subfield. Terms are
-selected by between-subfield variance to highlight discriminative
-vocabulary rather than globally frequent terms.</figcaption>
+<figcaption>Figure 12: Term heatmap for Modafinil.
+Each cell shows the mean TF-IDF weight of a term within a subfield.
+Terms are selected by between-subfield variance to highlight
+discriminative vocabulary rather than globally frequent
+terms.</figcaption>
 </figure>
-<h2 id="named-entity-analysis">Named Entity Analysis</h2>
+<h2 data-number="12.4" id="named-entity-analysis"><span
+class="header-section-number">12.4</span> Named Entity Analysis</h2>
 <p>Named entity extraction over the 1437 abstracts identified 30 unique
 entities. The most frequent entities reflect the clinical and
 pharmacological vocabulary of the modafinil literature.</p>
@@ -889,12 +992,12 @@ pharmacological vocabulary of the modafinil literature.</p>
 </table></div>
 <!-- FIGURE: entity_bar_chart.png -->
 <figure id="fig:entity_bar_chart">
-<a class="figure-full-size-link" href="../figures/entity_bar_chart.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Top named entities for Modafinil."><img src="../figures/entity_bar_chart.png" title="Named Entities"
+<a class="figure-full-size-link" href="../figures/entity_bar_chart.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 13, Top named entities for Modafinil."><img src="../figures/entity_bar_chart.png" title="Named Entities"
 alt="Descending horizontal bars rank up to twenty named entities extracted from abstracts. Entity labels appear on the vertical axis and bar length represents the number of extracted occurrences in the current corpus." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Top named entities for Modafinil. The
-horizontal bar chart shows the 20 most frequently extracted named
-entities from abstracts, revealing the dominant drugs, conditions, and
-concepts in the literature.</figcaption>
+<figcaption>Figure 13: Top named entities for
+Modafinil. The horizontal bar chart shows the 20 most frequently
+extracted named entities from abstracts, revealing the dominant drugs,
+conditions, and concepts in the literature.</figcaption>
 </figure>
 <p><strong>Table 5. Top keyphrases by TF-IDF score.</strong></p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
@@ -967,7 +1070,8 @@ concepts in the literature.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<h2 id="embedding-similarity-and-clustering">Embedding Similarity and
+<h2 data-number="12.5" id="embedding-similarity-and-clustering"><span
+class="header-section-number">12.5</span> Embedding Similarity and
 Clustering</h2>
 <p>The TF-IDF/SVD embeddings place every document in a 50-dimensional
 vector space. K-means clustering with <span class="math inline">\(k =
@@ -1043,30 +1147,31 @@ reveal the most closely related works in the corpus.</p>
 </table></div>
 <!-- FIGURE: similarity_heatmap.png -->
 <figure id="fig:similarity_heatmap">
-<a class="figure-full-size-link" href="../figures/similarity_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Document similarity for Modafinil."><img src="../figures/similarity_heatmap.png"
+<a class="figure-full-size-link" href="../figures/similarity_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 14, Document similarity for Modafinil."><img src="../figures/similarity_heatmap.png"
 title="Similar Document Pairs"
 alt="Ranked horizontal bars compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Document similarity for Modafinil. The
-horizontal bar chart shows the 15 most similar document pairs ranked by
-cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs
-share topical and lexical content.</figcaption>
+<figcaption>Figure 14: Document similarity for
+Modafinil. The horizontal bar chart shows the 15 most similar document
+pairs ranked by cosine similarity of their TF-IDF/SVD embeddings.
+High-similarity pairs share topical and lexical content.</figcaption>
 </figure>
 <!-- FIGURE: word_cloud.png -->
 <figure id="fig:word_cloud">
-<a class="figure-full-size-link" href="../figures/word_cloud.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Term cloud for Modafinil."><img src="../figures/word_cloud.png" title="Term Cloud"
+<a class="figure-full-size-link" href="../figures/word_cloud.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 15, Term cloud for Modafinil."><img src="../figures/word_cloud.png" title="Term Cloud"
 alt="Term cloud derived from topic-term weights: more heavily weighted corpus terms appear in larger type, with a fixed layout seed and a cividis colour scale; word position and colour do not encode additional quantities." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Term cloud for Modafinil. Term sizes are
-proportional to their topic-term weights from the discovered topics,
-providing a visual summary of the dominant vocabulary.</figcaption>
+<figcaption>Figure 15: Term cloud for Modafinil. Term
+sizes are proportional to their topic-term weights from the discovered
+topics, providing a visual summary of the dominant
+vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">
-<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Term co-occurrence matrix for Modafinil."><img src="../figures/cooccurrence_matrix.png"
+<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, Term co-occurrence matrix for Modafinil."><img src="../figures/cooccurrence_matrix.png"
 title="Term Co-occurrence"
 alt="Symmetric square matrix for the thirty most frequent document-level terms. Rows and columns list the same terms; increasingly dark blue cells indicate larger normalized within-document co-occurrence, with a zero diagonal." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Term co-occurrence matrix for Modafinil.
-Each cell shows the normalized co-occurrence frequency of two terms
-within the same document, revealing which concepts tend to appear
+<figcaption>Figure 16: Term co-occurrence matrix for
+Modafinil. Each cell shows the normalized co-occurrence frequency of two
+terms within the same document, revealing which concepts tend to appear
 together in the literature.</figcaption>
 </figure>
 <p>These embeddings support semantic retrieval over the corpus and the

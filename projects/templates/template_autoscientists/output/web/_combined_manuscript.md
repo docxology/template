@@ -150,7 +150,7 @@ All numbers below are produced by the analysis scripts in `scripts/` and written
 
 [@fig:comparison] plots the champion trajectory of the coordinated three-team configuration against the single-thread baseline over the shared $60$-experiment budget. The two curves track each other and converge to the same value.
 
-![Champion metric (higher is better) versus experiment index for coordinated teams (solid) and the single-thread baseline (dashed) under a matched experiment budget. Coordinated teams partition the same sequential budget as the baseline rather than adding parallel compute, so this is a robustness/efficiency comparison, not a speedup. Produced by `run_search_comparison.py`.](../figures/search_comparison.png){#fig:comparison}
+![Champion metric (higher is better) versus experiment index for coordinated teams (solid) and the single-thread baseline (dashed) under a matched experiment budget. Coordinated teams partition the same sequential budget as the baseline rather than adding parallel compute, so this is a robustness/efficiency comparison, not a speedup. Produced by `run_search_comparison.py`.](../output/figures/search_comparison.png){#fig:comparison}
 
 The summary in `output/data/search_comparison.json` reports the decisive quantities:
 
@@ -167,7 +167,7 @@ What the coordinated configuration *does* gain is **search hygiene**: it retires
 
 The testbed separates two distinct, independently measurable benefits — noise robustness and search hygiene — from the mechanisms that do not move the needle on this objective. [@fig:ablation] and [@fig:ablation_efficiency], drawn from `output/data/ablation.json`, switch off one mechanism at a time starting from the full coordinated configuration.
 
-![Reported versus clean (ground-truth) champion metric for the full configuration and each single-mechanism ablation. A reported-greater-than-clean gap is accepted noise. Removing noise-band confirmation inflates the gap roughly thirteenfold while the clean metric is unchanged. Produced by `run_ablation.py`.](../figures/ablation.png){#fig:ablation}
+![Reported versus clean (ground-truth) champion metric for the full configuration and each single-mechanism ablation. A reported-greater-than-clean gap is accepted noise. Removing noise-band confirmation inflates the gap roughly thirteenfold while the clean metric is unchanged. Produced by `run_ablation.py`.](../output/figures/ablation.png){#fig:ablation}
 
 | Configuration | Reported metric | Clean metric | Noise inflation | Experiments used | Redundant re-probes |
 | --- | --- | --- | --- | --- | --- |
@@ -181,7 +181,7 @@ The testbed separates two distinct, independently measurable benefits — noise 
 
 **The dead-end registry is the load-bearing mechanism for efficiency.** [@fig:ablation_efficiency] shows that removing it is the only ablation that changes the experiment budget profile: the registry-consulting proposer otherwise never re-probes a retired direction (redundant re-probes $= 0$) and halts at $36$ experiments once every direction is exhausted, while the no-registry configuration burns all $60$ experiments and wastes $36$ of them re-testing known dead ends. Crucially, this hygiene gain leaves the clean metric **unchanged** at $0.0000$ — the registry buys a leaner search, not a better answer.
 
-![Experiments used and redundant re-probes of retired directions per configuration. Only the dead-end-registry ablation changes the profile: without the registry the search wastes $36$ experiments re-exploring known-dead directions and never halts early. Produced by `run_ablation.py`.](../figures/ablation_efficiency.png){#fig:ablation_efficiency}
+![Experiments used and redundant re-probes of retired directions per configuration. Only the dead-end-registry ablation changes the profile: without the registry the search wastes $36$ experiments re-exploring known-dead directions and never halts early. Produced by `run_ablation.py`.](../output/figures/ablation_efficiency.png){#fig:ablation_efficiency}
 
 **Effect-size ranking and reorganization do not move any metric here.** Removing either leaves the reported metric, clean metric, experiments used, and redundant re-probes all unchanged. On this small, separable objective with a deterministic proposer, those two mechanisms reshape the *order* in which directions are tried without changing the destination, the noise, or the efficiency within the budget. We report this plainly rather than dressing it up: both are correctly implemented and independently tested, but their benefit is about exploration bookkeeping on harder or more deceptive landscapes, not about measurable gains on this testbed.
 
@@ -232,8 +232,8 @@ The rendered figures and the JSON summaries are produced with `DeterministicProp
 
 Two thin orchestrator scripts produce all results:
 
-- `scripts/run_search_comparison.py` → `../figures/search_comparison.png`, `output/data/search_comparison.json`.
-- `scripts/run_ablation.py` → `../figures/ablation.png`, `../figures/ablation_efficiency.png`, `output/data/ablation.json`.
+- `scripts/run_search_comparison.py` → `output/figures/search_comparison.png`, `output/data/search_comparison.json`.
+- `scripts/run_ablation.py` → `output/figures/ablation.png`, `output/figures/ablation_efficiency.png`, `output/data/ablation.json`.
 
 Each script imports all computation from `src/`, runs the configurations, and writes a figure plus a machine-readable summary. The numbers quoted in @sec:results are read directly from those JSON files.
 

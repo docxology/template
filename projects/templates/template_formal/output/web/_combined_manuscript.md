@@ -739,7 +739,7 @@ fact item 4 above states in prose. Bottom: `north`'s share of total
 concentration, constant at $1.0$ from tick 0 because *every* agent resolves
 the identical free-energy tie to `north` on the very first tick (item 1
 above) — this is the mechanism-demonstration run, presented honestly as
-"guaranteed by construction," not as emergence.](../figures/colony_demo_convergence.png){#fig:demo-convergence}
+"guaranteed by construction," not as emergence.](../output/figures/colony_demo_convergence.png){#fig:demo-convergence}
 
 What this test demonstrates is a genuine, correctly-wired positive-feedback
 mechanism operating on real per-agent state — the scaffolding a claim about
@@ -876,7 +876,7 @@ mean. Right: the same distribution as an empirical CDF. This demo figure
 is illustrative of the *shape* of the real distribution at a smaller,
 faster $N$ — the $N=150$ Wilson-interval numbers quoted above, not this
 $N=40$ run, are what the paper's statistical claim is
-bound to.](../figures/colony_convergence_tick_distribution.png){#fig:convergence-tick-distribution}
+bound to.](../output/figures/colony_convergence_tick_distribution.png){#fig:convergence-tick-distribution}
 
 A companion test
 (`test_colony_coordinator_never_touches_an_agents_internal_storage_or_protocol_handle`)

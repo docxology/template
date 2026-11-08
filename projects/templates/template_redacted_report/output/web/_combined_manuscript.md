@@ -44,7 +44,7 @@ This exemplar is limited to lawful redaction, declassification support, public-r
 
 The pipeline architecture consists of two layers. Layer one performs text-level disclosure control: each segment is audited against a public classification ceiling, redaction spans are validated for non-overlap, orphan decisions are flagged, and source-control coverage is enforced. Layer two applies visual redaction treatments, steganographic provenance overlays, and optional Kmyth TPM sidecar sealing.
 
-![Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual layer renders the 4x4 proof matrix with optional steganography and Kmyth TPM sidecars.](../figures/redaction_flow.png){#fig:redaction_flow}
+![Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual layer renders the 4x4 proof matrix with optional steganography and Kmyth TPM sidecars.](../output/figures/redaction_flow.png){#fig:redaction_flow}
 
 [@fig:redaction_flow] traces the full pipeline: typed fixture load, ceiling and span validation, source-control coverage and mosaic checks, the in-memory sanitized packet, the two text-free public projections, and the visual proof chain.
 
@@ -182,7 +182,7 @@ The development proof matrix produces sixteen base PDFs (four redaction styles Ã
 - Hash manifest filename and SHA-256.
 - Kmyth sidecar count and filenames (when Kmyth is available).
 
-![Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction decisions.](../figures/disclosure_control_matrix.png){#fig:disclosure_control_matrix}
+![Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction decisions.](../output/figures/disclosure_control_matrix.png){#fig:disclosure_control_matrix}
 
 [@fig:disclosure_control_matrix] renders the sixteen style-background combinations; only the visual token and the page background differ between cells.
 

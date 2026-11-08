@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_reproducibility.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="From Ore to Nine-Nines Purity via Mega-Madlib Token Injection" />
+  <title>Refinement of Gold: A Metallurgical Analogy for Scientific
+Manuscript Composition</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -236,7 +239,154 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -297,7 +447,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -554,10 +711,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -608,10 +773,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -640,35 +801,46 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:reproducibility">Reproducibility: Seeded Regeneration</h1>
+<h1 data-number="8" id="sec:reproducibility"><span
+class="header-section-number">8</span> Reproducibility: Seeded
+Regeneration</h1>
 <p>Reproduction requires identity, execution, and verification—not
 merely access to a PDF. Identity fixes the source revision,
 configuration hash, software release, and environment. Execution
 rebuilds analysis artifacts before manuscript hydration. Verification
 checks that registered claims, figures, references, and rendered formats
 agree with their source owners.</p>
-<h2 id="deterministic-regeneration">Deterministic regeneration</h2>
+<h2 data-number="8.1" id="deterministic-regeneration"><span
+class="header-section-number">8.1</span> Deterministic regeneration</h2>
 <p>The refinery pipeline is fully deterministic. Given the same
 <code>manuscript/config.yaml</code> and <code>src/</code> code, every
 run produces identical output. This is the local version of a
 reproducible computational research norm: the reader should be able to
 inspect the source, rerun the workflow, and recover the same derived
-artifacts [peng2011reproducible; sandve2013ten].</p>
+artifacts <span class="citation"
+data-cites="peng2011reproducible sandve2013ten">(<a
+href="index.html#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>; <a
+href="index.html#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
+2013</a>)</span>.</p>
 <p>Executable-publication scholarship sharpens that norm. Executable
 research compendia and executable papers treat an article as a package
 of narrative, code, data, environment, and rendered outputs rather than
-as a static document with detachable supplements [nuest2017erc;
-lasser2020executable]. The present exemplar is smaller and more
+as a static document with detachable supplements <span class="citation"
+data-cites="nuest2017erc lasser2020executable">(<a
+href="index.html#ref-nuest2017erc" role="doc-biblioref">Nüst et al. 2017</a>; <a
+href="index.html#ref-lasser2020executable" role="doc-biblioref">Lasser
+2020</a>)</span>. The present exemplar is smaller and more
 template-specific: it does not provide a universal executable-paper
 format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
 <li><strong>Config hash:</strong> a396bc74ae68b7f3</li>
-<li><strong>Generation timestamp:</strong> 2026-11-08T08:12:22Z</li>
+<li><strong>Generation timestamp:</strong> 2026-11-08T17:06:51Z</li>
 <li><strong>Python version:</strong> 3.14.10</li>
 </ul>
-<h2 id="artifact-inventory">Artifact inventory</h2>
+<h2 data-number="8.2" id="artifact-inventory"><span
+class="header-section-number">8.2</span> Artifact inventory</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <thead>
 <tr>
@@ -695,7 +867,8 @@ rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 </tr>
 </tbody>
 </table></div>
-<h2 id="regeneration-commands">Regeneration commands</h2>
+<h2 data-number="8.3" id="regeneration-commands"><span
+class="header-section-number">8.3</span> Regeneration commands</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the refinery analysis</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_gold_refinement/scripts/refinement_analysis.py</span>
@@ -711,7 +884,8 @@ generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted
 separately from substantive differences in source-owned values.</p>
-<h2 id="config-ownership">Config ownership</h2>
+<h2 data-number="8.4" id="config-ownership"><span
+class="header-section-number">8.4</span> Config ownership</h2>
 <p>All vocabulary, slots, section conditions, steganography toggles, and
 optional LLM review gates are declared in
 <code>manuscript/config.yaml</code> under <code>gold_refinement:</code>,
@@ -736,22 +910,26 @@ static illustration rather than a reproducible refinement pipeline.</p>
 <p>Metadata is part of that path, not administrative garnish. Work on
 reproducible computational metadata argues that data, tools, workflows,
 environments, and reports need machine-readable descriptors before
-re-execution and reuse can be automated reliably [chen2021metadata].
-Here, the evidence registry, token plan, figure registry, output
-statistics, and config hash are the local metadata stack. They make the
-object inspectable, but they remain descriptive: they identify what was
-generated and from where, not whether a domain conclusion is
-correct.</p>
+re-execution and reuse can be automated reliably <span class="citation"
+data-cites="chen2021metadata">(<a href="index.html#ref-chen2021metadata"
+role="doc-biblioref"><span class="nocase">Chen et al.</span>
+2021</a>)</span>. Here, the evidence registry, token plan, figure
+registry, output statistics, and config hash are the local metadata
+stack. They make the object inspectable, but they remain descriptive:
+they identify what was generated and from where, not whether a domain
+conclusion is correct.</p>
 <p>The same rule applies to visual polish. The figure registry is
 source-owned, every registered PNG now has a companion SVG, and
 <code>output/reports/figure_quality_report.json</code> records 12 PNG
 files, 12 SVG files, and 12 passing visual-quality checks for the
-current variable pass. A fork should treat <span class="citation"
-data-cites="tbl:figure_quality">[@tbl:figure_quality]</span> as the
-figure-layer analogue of the claim-support registry: it proves that the
-visuals are regenerated, present in both raster and vector forms,
-nonblank, and aligned with the registry before prose promotes them.</p>
-<h2 id="evidence-registry-separation">Evidence-registry separation</h2>
+current variable pass. A fork should treat tbl. <a
+href="manuscript__03_results.html#tbl:figure_quality">7</a> as the figure-layer analogue of the
+claim-support registry: it proves that the visuals are regenerated,
+present in both raster and vector forms, nonblank, and aligned with the
+registry before prose promotes them.</p>
+<h2 data-number="8.5" id="evidence-registry-separation"><span
+class="header-section-number">8.5</span> Evidence-registry
+separation</h2>
 <p>This exemplar now separates two evidence surfaces.
 <code>output/reports/claim_support_registry.json</code> is the
 project-local contribution-claim assay consumed by the dashboard and
@@ -760,17 +938,20 @@ is reserved for the shared template evidence validator, which registers
 numbers, citations, equations, sections, figures, tables, generated
 data, and claim-ledger facts. The split mirrors provenance standards:
 different entities can be generated by different activities and still
-belong to one accountable research object [moreau2013prov;
-belhajjame2015ontologies].</p>
-<p>The evidence-tier ladder in <span class="citation"
-data-cites="fig:evidence_tier_ladder">[@fig:evidence_tier_ladder]</span>
-is the reproducibility counterpart to that separation. It does not
-merely count files. It shows which tier owns each support surface, so a
-future fork can see whether a conclusion rests on config declarations,
-generated metrics, claim-ledger facts, bibliography records, or rendered
-artifacts. That distinction matters because only some tiers can support
-domain truth; others support reproducibility, formatting, or local
-consistency.</p>
+belong to one accountable research object <span class="citation"
+data-cites="moreau2013prov belhajjame2015ontologies">(<a
+href="index.html#ref-moreau2013prov" role="doc-biblioref"><span
+class="nocase">Moreau et al.</span> 2013</a>; <a
+href="index.html#ref-belhajjame2015ontologies" role="doc-biblioref"><span
+class="nocase">Belhajjame et al.</span> 2015</a>)</span>.</p>
+<p>The evidence-tier ladder in fig. <a
+href="manuscript__03_results.html#fig:evidence_tier_ladder">12</a> is the reproducibility
+counterpart to that separation. It does not merely count files. It shows
+which tier owns each support surface, so a future fork can see whether a
+conclusion rests on config declarations, generated metrics, claim-ledger
+facts, bibliography records, or rendered artifacts. That distinction
+matters because only some tiers can support domain truth; others support
+reproducibility, formatting, or local consistency.</p>
 </main>
 </body>
 </html>

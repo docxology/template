@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>08_evaluation.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="From Ore to Nine-Nines Purity via Mega-Madlib Token Injection" />
+  <title>Refinement of Gold: A Metallurgical Analogy for Scientific
+Manuscript Composition</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +174,219 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -232,7 +447,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -489,10 +711,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -543,10 +773,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -575,8 +801,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:evaluation">Quality Probes</h1>
-<h2 id="qa-probes">QA probes</h2>
+<h1 data-number="10" id="sec:evaluation"><span
+class="header-section-number">10</span> Quality Probes</h1>
+<h2 data-number="10.1" id="qa-probes"><span
+class="header-section-number">10.1</span> QA probes</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
@@ -688,7 +916,8 @@ establish presence, readability, provenance, and registry parity.
 more than those tests and artifacts support. Certification requires all
 applicable levels; a pass at one level cannot compensate for failure at
 another.</p>
-<h2 id="audit-rules">Audit rules</h2>
+<h2 data-number="10.2" id="audit-rules"><span
+class="header-section-number">10.2</span> Audit rules</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 31%" />
@@ -770,71 +999,94 @@ guidance unless generated scan artifacts exist</td>
 </tr>
 </tbody>
 </table></div>
-<p>The audit rules are summarized visually in <span class="citation"
-data-cites="fig:integrity_gate_matrix">[@fig:integrity_gate_matrix]</span>
-and algebraically in <span class="citation"
-data-cites="eq:integrity_vector">[@eq:integrity_vector]</span>. A failed
-audit rule should block certification language even if the PDF
-renders.</p>
+<p>The audit rules are summarized visually in fig. <a
+href="manuscript__03_results.html#fig:integrity_gate_matrix">7</a> and algebraically in eq. <a
+href="manuscript__02_methodology.html#eq:integrity_vector">5</a>. A failed audit rule should block
+certification language even if the PDF renders.</p>
 <p>Scholarship adds one more gate: citation validity and claim-boundary
 discipline. A source can support a relation, a practice, or a caution
 without supporting every attractive extrapolation from that source. The
 evaluation surface therefore treats analogy theory, reproducibility
 literature, provenance standards, and pre-1800 metallurgy references as
 boundary-setting evidence, not as decorations added after the pipeline
-already decided the claim [gentner1983structure; peng2011reproducible;
-wilkinson2016fair; biringuccio_pirotechnia_1540;
-agricola_de_re_metallica_1556; badcock_touchstone_1678;
-cramer_assaying_metals_1741]. A passing source review must preserve the
-distinction between historically documented assay/marking practices and
-this exemplar’s local software certification predicate.</p>
+already decided the claim <span class="citation"
+data-cites="gentner1983structure peng2011reproducible wilkinson2016fair biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 cramer_assaying_metals_1741">(<a
+href="index.html#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
+<a href="index.html#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>;
+<a href="index.html#ref-wilkinson2016fair" role="doc-biblioref"><span
+class="nocase">Wilkinson et al.</span> 2016</a>; <a
+href="index.html#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="index.html#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="index.html#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="index.html#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>. A passing source review must preserve the distinction
+between historically documented assay/marking practices and this
+exemplar’s local software certification predicate.</p>
 <p>The reporting-guideline literature keeps that gate modest. A passed
 checklist row certifies that a required reporting surface is present and
 traceable; it does not certify that the study behind the report is
-unbiased, sufficiently powered, or externally valid
-[equator_network_reporting_guidelines; vonelm2007strobe;
-percie_du_sert2020arrive]. The same rule governs the quality probes
+unbiased, sufficiently powered, or externally valid <span
+class="citation"
+data-cites="equator_network_reporting_guidelines vonelm2007strobe percie_du_sert2020arrive">(<a
+href="index.html#ref-equator_network_reporting_guidelines"
+role="doc-biblioref">EQUATOR Network 2026</a>; <a
+href="index.html#ref-vonelm2007strobe" role="doc-biblioref">Elm et al. 2007</a>;
+<a href="index.html#ref-percie_du_sert2020arrive" role="doc-biblioref">Percie du
+Sert et al. 2020</a>)</span>. The same rule governs the quality probes
 here. Passing them supports local claims about source ownership,
 artifact completeness, and reproducible rendering, not universal claims
 about manuscript quality.</p>
 <p>Executable-compendium scholarship adds a more operational evaluation
 target: can a reader identify the paper object, its source code, its
 generated artifacts, its metadata, and the software version needed to
-rebuild it [nuest2017erc; chen2021metadata; smith2016softwarecitation]?
-The current gates answer that question locally through variable
-hydration, artifact counts, evidence facts, figure registration, and
-PDF/HTML validation. They do not measure long-term preservation,
-cross-platform portability, reviewer workload, or reader comprehension;
-those would require separate empirical studies.</p>
+rebuild it <span class="citation"
+data-cites="nuest2017erc chen2021metadata smith2016softwarecitation">(<a
+href="index.html#ref-nuest2017erc" role="doc-biblioref">Nüst et al. 2017</a>; <a
+href="index.html#ref-chen2021metadata" role="doc-biblioref"><span
+class="nocase">Chen et al.</span> 2021</a>; <a
+href="index.html#ref-smith2016softwarecitation" role="doc-biblioref">Smith et al.
+2016</a>)</span>? The current gates answer that question locally through
+variable hydration, artifact counts, evidence facts, figure
+registration, and PDF/HTML validation. They do not measure long-term
+preservation, cross-platform portability, reviewer workload, or reader
+comprehension; those would require separate empirical studies.</p>
 <p>The adversarial assay adds a security-specific evaluation target: can
 a reader distinguish declared threat scope from actual scan evidence?
-<span class="citation"
-data-cites="tbl:security_assay">[@tbl:security_assay]</span> maps
-zero-trust, secure-development, supply-chain, SBOM, attack-path, and
+tbl. <a href="manuscript__03_results.html#tbl:security_assay">5</a> maps zero-trust,
+secure-development, supply-chain, SBOM, attack-path, and
 secure-by-design guidance to local evidence surfaces and validators
-[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
-sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
-cisa_secure_by_design]. The passing condition is bounded: the table must
-be complete and the prose must not claim compliance or Codex Security
+<span class="citation"
+data-cites="nist_sp800_207_zero_trust nist_sp800_218_ssdf slsa_v1_2 sigstore_docs mitre_attack cyclonedx_spec spdx_spec cisa_secure_by_design">(<a
+href="index.html#ref-nist_sp800_207_zero_trust" role="doc-biblioref">National
+Institute of Standards and Technology 2020</a>, <a
+href="index.html#ref-nist_sp800_218_ssdf" role="doc-biblioref">2022</a>; <a
+href="index.html#ref-slsa_v1_2" role="doc-biblioref">Open Source Security
+Foundation 2026</a>; <a href="index.html#ref-sigstore_docs"
+role="doc-biblioref">Sigstore 2026</a>; <a href="index.html#ref-mitre_attack"
+role="doc-biblioref">MITRE 2026</a>; <a href="index.html#ref-cyclonedx_spec"
+role="doc-biblioref">CycloneDX 2026</a>; <a href="index.html#ref-spdx_spec"
+role="doc-biblioref">SPDX 2026</a>; <a href="index.html#ref-cisa_secure_by_design"
+role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
+2026</a>)</span>. The passing condition is bounded: the table must be
+complete and the prose must not claim compliance or Codex Security
 findings unless future scan artifacts are generated and integrated.</p>
-<p>The risk model adds prioritization to the gate list. <span
-class="citation"
-data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>
-separates easy-to-detect implementation failures from severe boundary
-failures that need clearer ownership. This keeps the evaluation surface
-from becoming a checklist of equally weighted boxes: token coverage,
-citation validity, claim support, and render readiness all matter, but a
-high-severity low-detectability failure should shape the next source
-edit before cosmetic manuscript polish.</p>
+<p>The risk model adds prioritization to the gate list. fig. <a
+href="manuscript__03_results.html#fig:integrity_risk_matrix">11</a> separates easy-to-detect
+implementation failures from severe boundary failures that need clearer
+ownership. This keeps the evaluation surface from becoming a checklist
+of equally weighted boxes: token coverage, citation validity, claim
+support, and render readiness all matter, but a high-severity
+low-detectability failure should shape the next source edit before
+cosmetic manuscript polish.</p>
 <p>Figure review follows the same rule. File existence and nonblank
 pixels are necessary but not sufficient. The figure caption, encoding
 declaration, source data, and prose interpretation must describe the
 same measurement. This criterion specifically prohibits inferring a
-stagewise trend from a project-level aggregate, which is why <span
-class="citation"
-data-cites="fig:purity_claim_scatter">[@fig:purity_claim_scatter]</span>
-repeats one observed claim-support rate rather than inventing cumulative
-values.</p>
+stagewise trend from a project-level aggregate, which is why fig. <a
+href="manuscript__03_results.html#fig:purity_claim_scatter">5</a> repeats one observed
+claim-support rate rather than inventing cumulative values.</p>
 </main>
 </body>
 </html>

@@ -266,9 +266,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -360,8 +360,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -446,7 +446,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -703,10 +710,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -757,10 +772,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -964,6 +975,7 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This paper describes a small, tested <strong>domain language for
@@ -1021,12 +1033,14 @@ DSL is exercised by a zero-mock test suite under the repository’s
 configured project coverage gate, generates 18 artifacts (1 figures, 7
 data files, 10 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash <code>e8bbba50b298ba3f</code>, build
-timestamp <code>2026-11-08T08:12:22Z</code>) into sec. <a
+timestamp <code>2026-11-08T17:06:51Z</code>) into sec. <a
 href="#sec:reproducibility">7</a>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
 dimensional analysis</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>This <code>template_methods_paper</code> serves as the
@@ -1150,7 +1164,9 @@ everything.</li>
 related work so the exemplar is not mistaken for a general-purpose
 protocol-execution system.</li>
 </ul>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>The DSL is implemented as eight cooperating modules under
@@ -1329,7 +1345,9 @@ outright (<code>--cov-fail-under</code> enforces it).
 figure is tracked in <a
 href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
 </ol>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section reports the compiled plans for both worked example
@@ -1451,7 +1469,9 @@ architectural point of the exemplar. Because every number here is
 produced by a tested function and regenerated on demand, the prose
 describes structure and provenance rather than transcribing values that
 would drift the moment the example methods changed.</p>
+
 <hr />
+
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
 <p>This paper presented a small, tested domain language for specifying
@@ -1550,7 +1570,9 @@ methods, wrote <code>output/data/compiled_plans.json</code>,
 <code>output/reports/gate_report.json</code>, and
 <code>output/reports/trust_chain_report.json</code>, and rendered this
 markdown together with <code>config.yaml</code> into PDF.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:experimental_setup"><span
 class="header-section-number">6</span> Experimental Setup</h1>
 <p>This section details the controlled vocabulary, worked examples, and
@@ -1728,7 +1750,9 @@ class="header-section-number">6.6</span> Relation to results</h2>
 </table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility</h1>
 <p>This section explains how to regenerate every artifact in the study
@@ -1844,10 +1868,12 @@ validation. The manuscript intentionally does not hand-transcribe
 volatile values, so prose and artifacts cannot disagree. Configuration
 provenance is itself injected: <code>e8bbba50b298ba3f</code> is the
 SHA-256 of <code>manuscript/config.yaml</code> at build time, and
-<code>2026-11-08T08:12:22Z</code> records when the variables were
+<code>2026-11-08T17:06:51Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
+
 <hr />
+
 <h1 data-number="8" id="sec:scope"><span
 class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
@@ -1949,7 +1975,9 @@ exemplar does not implement durable storage for a real audit trail.</li>
 the reproducibility concerns — tested functions, a thin script, and
 generated-variable-injected prose — remain visible rather than buried
 under a compiler implementation at BPL’s full scale.</p>
+
 <hr />
+
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
@@ -1964,6 +1992,7 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_methods_paper/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-bpl2026" class="csl-entry" role="listitem">

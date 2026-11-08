@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-source-context-v2",
-  "binding_sha256": "48bb5a4aa378bb99070c835b1f8bdab000ad2392f383f268b8bb80745f562b3e",
+  "binding_sha256": "7b9af281101e3928b6fb20fec0f4be63daf9a11ffb03e7e5df2b4664ead4edba",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "5141dd7bac11242cfcfc96c003c771117be62de1ef14cdc4dfcc5a7ed23ec5c1",
-  "combined_size_bytes": 16754,
+  "combined_sha256": "6fdd02aaa47c67efea07641dd67a4e69db195e0bbdfa3fc750a3d5ce317460b3",
+  "combined_size_bytes": 16768,
   "input_root_kind": "source",
   "ordered_inputs": [
     {

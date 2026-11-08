@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 This paper describes a small, tested **domain language for specifying
@@ -49,15 +53,23 @@ repository's configured project coverage gate, generates 18 artifacts
 (1 figures, 7 data files,
 10 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `e8bbba50b298ba3f`, build timestamp
-`2026-11-08T08:12:22Z`) into [@sec:reproducibility].
+`2026-11-08T17:06:51Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-0-end-->
+```
 
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -154,11 +166,19 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 - **[@sec:scope]** states scope and related work so the exemplar is not
   mistaken for a general-purpose protocol-execution system.
 
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-2-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -301,11 +321,19 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
    tracked in
    [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-3-start-->
+```
 
 # Results {#sec:results}
 
@@ -395,11 +423,19 @@ by a tested function and regenerated on demand, the prose describes
 structure and provenance rather than transcribing values that would drift
 the moment the example methods changed.
 
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-4-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -483,11 +519,19 @@ The pipeline compiled both worked example methods, wrote
 `output/reports/trust_chain_report.json`, and rendered this markdown
 together with `config.yaml` into PDF.
 
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-5-start-->
+```
 
 # Experimental Setup {#sec:experimental_setup}
 
@@ -575,11 +619,19 @@ The typical analysis order is:
 This table is descriptive documentation only; it is not executed as code
 during the build.
 
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-6-start-->
+```
 
 # Reproducibility {#sec:reproducibility}
 
@@ -654,14 +706,22 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `e8bbba50b298ba3f` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-11-08T08:12:22Z` records when the variables were generated
+`2026-11-08T17:06:51Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-6-end-->
+```
 
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-7-start-->
+```
 
 # Scope, Related Work, and Positioning {#sec:scope}
 
@@ -743,11 +803,19 @@ reproducibility concerns — tested functions, a thin script, and
 generated-variable-injected prose — remain visible rather than buried under
 a compiler implementation at BPL's full scale.
 
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-8-start-->
+```
 
 # References {#sec:references}
 
@@ -758,4 +826,8 @@ To validate that `references.bib` is syntactically clean and contains the requir
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_methods_paper/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-ae46edae9f82d7426ad34c1234de16927622f3eb9cc22a83263d6b9634e736be-8-end-->
 ```

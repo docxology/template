@@ -238,7 +238,7 @@ figure and the summary table are produced by the
 [EDA analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py)
 (`scripts/eda_analysis.py`),
 which calls the tested figure-data preparers in `src/template_eda_notebook/eda/figures.py`. Running
-the script regenerates the figures under `../figures/` and the summary CSV
+the script regenerates the figures under `output/figures/` and the summary CSV
 under `output/data/`; the prose below describes what those artifacts show.
 
 ## Dataset and missingness
@@ -256,14 +256,14 @@ leaving a complete-case dataset for the analysis below.
 complete-case dataset, binned by `histogram_data()` and plotted by the analysis
 script.
 
-![Height distribution: bin counts produced by `histogram_data(frame, "height_cm", bins=10)` in `src/template_eda_notebook/eda/figures.py` and plotted as a bar chart by `scripts/eda_analysis.py`. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process.](../figures/height_histogram.png){#fig:height_histogram}
+![Height distribution: bin counts produced by `histogram_data(frame, "height_cm", bins=10)` in `src/template_eda_notebook/eda/figures.py` and plotted as a bar chart by `scripts/eda_analysis.py`. The bin counts sum to the number of complete-case rows; the shape is the roughly bell-shaped spread expected from the generating process.](../output/figures/height_histogram.png){#fig:height_histogram}
 
 ## Group composition
 
 [@fig:group_counts] reports how many complete-case rows fall in each group,
 computed by `group_count_data()` (labels sorted for deterministic output).
 
-![Rows per group: sorted category labels and aligned counts from `group_count_data()`. The three groups are of comparable, though not identical, size; the counts sum to the complete-case row total.](../figures/group_counts.png){#fig:group_counts}
+![Rows per group: sorted category labels and aligned counts from `group_count_data()`. The three groups are of comparable, though not identical, size; the counts sum to the complete-case row total.](../output/figures/group_counts.png){#fig:group_counts}
 
 ## Correlation structure
 
@@ -272,7 +272,7 @@ three numeric features, computed by `correlation_matrix()` and prepared for the
 heatmap by `correlation_heatmap_data()`. The diagonal is unity by construction
 and the matrix is symmetric.
 
-![Feature correlation heatmap: values from `correlation_heatmap_data()` (which wraps `correlation_matrix(method="pearson")`) rendered with a diverging colour map on the fixed range $[-1, 1]$. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two.](../figures/correlation_heatmap.png){#fig:correlation_heatmap}
+![Feature correlation heatmap: values from `correlation_heatmap_data()` (which wraps `correlation_matrix(method="pearson")`) rendered with a diverging colour map on the fixed range $[-1, 1]$. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two.](../output/figures/correlation_heatmap.png){#fig:correlation_heatmap}
 
 `strongest_pairs(matrix, top_n=3)` ranks the distinct feature pairs by absolute
 correlation while preserving sign. On the shipped data the dominant relationship
@@ -477,7 +477,7 @@ numeric features.
 The typical analysis order is:
 
 1. `scripts/eda_analysis.py` — loads and cleans the dataset, then writes
-   `../figures/*.png` and `output/data/summary_statistics.csv`, printing each
+   `output/figures/*.png` and `output/data/summary_statistics.csv`, printing each
    output path for manifest collection.
 2. PDF rendering reads `manuscript/*.md` and `config.yaml` so figure paths and
    prose match the analysis that just completed.

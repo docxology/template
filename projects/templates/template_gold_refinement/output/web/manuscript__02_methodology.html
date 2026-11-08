@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_methodology.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="From Ore to Nine-Nines Purity via Mega-Madlib Token Injection" />
+  <title>Refinement of Gold: A Metallurgical Analogy for Scientific
+Manuscript Composition</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +174,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -180,9 +267,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -274,8 +361,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -360,7 +447,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -617,10 +711,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -671,10 +773,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -703,8 +801,11 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:methodology">Methodology: The Refinery Pipeline</h1>
-<h2 id="research-design">Research design</h2>
+<h1 data-number="4" id="sec:methodology"><span
+class="header-section-number">4</span> Methodology: The Refinery
+Pipeline</h1>
+<h2 data-number="4.1" id="research-design"><span
+class="header-section-number">4.1</span> Research design</h2>
 <p>We conducted a deterministic, artifact-based methods demonstration.
 The research object is one executable manuscript compendium comprising
 authored configuration and Markdown, project source code, generated data
@@ -726,35 +827,57 @@ model, (2) a deterministic mega-madlib token plan, (3) source-owned
 formalisms and evidence registries, and (4) validation gates that
 constrain certification language. This separation follows
 research-compendium practice, in which narrative, code, data,
-environment, and outputs remain distinct but linked
-[marwick2018packaging]. It also follows executable-paper and notebook
+environment, and outputs remain distinct but linked <span
+class="citation" data-cites="marwick2018packaging">(<a
+href="index.html#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
+2018</a>)</span>. It also follows executable-paper and notebook
 traditions in coupling narrative to runnable analysis rather than
-copying results into prose [leisch2002sweave; rule2019jupyter]. The
-narrower contribution here is provenance at the token and claim levels;
-the workflow does not purport to validate scientific truth.</p>
-<h2 id="source-domain-construction-and-analogy-boundary">Source-domain
-construction and analogy boundary</h2>
+copying results into prose <span class="citation"
+data-cites="leisch2002sweave rule2019jupyter">(<a
+href="index.html#ref-leisch2002sweave" role="doc-biblioref">Leisch 2002</a>; <a
+href="index.html#ref-rule2019jupyter" role="doc-biblioref"><span
+class="nocase">Rule et al.</span> 2019</a>)</span>. The narrower
+contribution here is provenance at the token and claim levels; the
+workflow does not purport to validate scientific truth.</p>
+<h2 data-number="4.2"
+id="source-domain-construction-and-analogy-boundary"><span
+class="header-section-number">4.2</span> Source-domain construction and
+analogy boundary</h2>
 <p>Structured reporting guidelines provide the closest scholarly
 analogue for the gate layer, but they also set its limit. CONSORT,
 STROBE, PRISMA, ARRIVE, and the EQUATOR Network define field-specific
 reporting items so a manuscript can be inspected, appraised, and in some
-cases replicated more easily [schulz2010consort; vonelm2007strobe;
-page2021prisma; percie_du_sert2020arrive;
-equator_network_reporting_guidelines]. In this exemplar, token coverage,
-evidence registration, and render validation play a similar internal
-role: they make omissions visible and bind declarations to artifacts.
-They do not test whether an external study was designed well, executed
-correctly, or substantively true.</p>
+cases replicated more easily <span class="citation"
+data-cites="schulz2010consort vonelm2007strobe page2021prisma percie_du_sert2020arrive equator_network_reporting_guidelines">(<a
+href="index.html#ref-schulz2010consort" role="doc-biblioref">Schulz et al.
+2010</a>; <a href="index.html#ref-vonelm2007strobe" role="doc-biblioref">Elm et
+al. 2007</a>; <a href="index.html#ref-page2021prisma" role="doc-biblioref">Page et
+al. 2021</a>; <a href="index.html#ref-percie_du_sert2020arrive"
+role="doc-biblioref">Percie du Sert et al. 2020</a>; <a
+href="index.html#ref-equator_network_reporting_guidelines"
+role="doc-biblioref">EQUATOR Network 2026</a>)</span>. In this exemplar,
+token coverage, evidence registration, and render validation play a
+similar internal role: they make omissions visible and bind declarations
+to artifacts. They do not test whether an external study was designed
+well, executed correctly, or substantively true.</p>
 <p>The source domain was constructed from pre-1800 descriptions of
 extraction, smelting or refining, assay, parting/cupellation, fineness,
 and public marking. Pliny supplies extraction and touchstone context;
 Biringuccio and Agricola describe staged metallurgical operations;
 Badcock and the Goldsmiths’ Company chronology document standards,
 weights, statutes, and marks; and Cramer presents assay as a disciplined
-relation between theory and practice [pliny_natural_history_33;
-biringuccio_pirotechnia_1540; agricola_de_re_metallica_1556;
-badcock_touchstone_1678; goldsmiths_hallmarking_history;
-cramer_assaying_metals_1741].</p>
+relation between theory and practice <span class="citation"
+data-cites="pliny_natural_history_33 biringuccio_pirotechnia_1540 agricola_de_re_metallica_1556 badcock_touchstone_1678 goldsmiths_hallmarking_history cramer_assaying_metals_1741">(<a
+href="index.html#ref-pliny_natural_history_33" role="doc-biblioref">Pliny the
+Elder c. 77 CE</a>; <a href="index.html#ref-biringuccio_pirotechnia_1540"
+role="doc-biblioref">Biringuccio 1540</a>; <a
+href="index.html#ref-agricola_de_re_metallica_1556" role="doc-biblioref">Agricola
+1556</a>; <a href="index.html#ref-badcock_touchstone_1678" role="doc-biblioref">W.
+B. (William Badcock) 1678</a>; <a
+href="index.html#ref-goldsmiths_hallmarking_history" role="doc-biblioref">The
+Goldsmiths’ Company Assay Office 2026</a>; <a
+href="index.html#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>)</span>.</p>
 <p>We normalized these historically plural practices into a five-stage
 relational model. The inclusion criterion was functional relevance to
 one of five target-domain operations: acquiring draft material, removing
@@ -764,9 +887,14 @@ refinement relation needed by the target workflow; it is not evidence
 that every historical workshop used this sequence or modern chemical
 theory. The analogy therefore transfers relations among separation,
 test, refinement, and marking—not regulatory authority, material
-equivalence, or empirical measures of prose quality
-[gentner1983structure; hesse1966models].</p>
-<h2 id="inputs-and-source-ownership">Inputs and source ownership</h2>
+equivalence, or empirical measures of prose quality <span
+class="citation" data-cites="gentner1983structure hesse1966models">(<a
+href="index.html#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
+<a href="index.html#ref-hesse1966models" role="doc-biblioref">Hesse
+1966</a>)</span>.</p>
+<h2 data-number="4.3" id="inputs-and-source-ownership"><span
+class="header-section-number">4.3</span> Inputs and source
+ownership</h2>
 <p>The run begins from three authored inputs:
 <code>manuscript/config.yaml</code>, the Markdown section shells in
 <code>manuscript/</code>, and executable functions in <code>src/</code>.
@@ -783,7 +911,8 @@ then resolves variables into disposable Markdown. This ownership rule
 prevents a reported number or selected phrase from being corrected only
 in the rendered paper while its computational source remains
 unchanged.</p>
-<h2 id="stage-definitions">Stage definitions</h2>
+<h2 data-number="4.4" id="stage-definitions"><span
+class="header-section-number">4.4</span> Stage definitions</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 5%" />
@@ -839,7 +968,8 @@ unchanged.</p>
 </tr>
 </tbody>
 </table></div>
-<h2 id="refinery-model-and-purity-measure">Refinery model and purity
+<h2 data-number="4.5" id="refinery-model-and-purity-measure"><span
+class="header-section-number">4.5</span> Refinery model and purity
 measure</h2>
 <p>The purity sequence across all stages is: 0.100000, 0.375000,
 0.750000, 0.916700, 0.999000, 1.000000</p>
@@ -866,21 +996,19 @@ p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
 the shortest ordered prefix whose terminal output reaches a requested
 purity. Prefix restriction is essential: later stages depend on earlier
 states and cannot be selected as an unordered set. The full progression
-is reported in <span class="citation"
-data-cites="fig:purity_progression">[@fig:purity_progression]</span>
-(see <span class="citation"
-data-cites="sec:results">[@sec:results]</span>). Because the values are
-constructed, the analysis is descriptive and deterministic; no
-uncertainty interval or significance test is appropriate.</p>
-<h2 id="formalism-registry">Formalism registry</h2>
+is reported in fig. <a href="manuscript__03_results.html#fig:purity_progression">1</a> (see sec. <a
+href="manuscript__03_results.html#sec:results">5</a>). Because the values are constructed, the
+analysis is descriptive and deterministic; no uncertainty interval or
+significance test is appropriate.</p>
+<h2 data-number="4.6" id="formalism-registry"><span
+class="header-section-number">4.6</span> Formalism registry</h2>
 <p>The formal layer is generated from
 <code>src/template_gold_refinement/formalisms.py</code>, not
-hand-numbered prose. <span class="citation"
-data-cites="tbl:formalism_registry">[@tbl:formalism_registry]</span>
-lists the source evidence for each equation, and the equation blocks
-below are auto-numbered by the renderer.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Source-owned formalism registry."><table id="tbl:formalism_registry" data-responsive-table="true">
-<caption>Source-owned formalism registry.</caption>
+hand-numbered prose. tbl. <a href="#tbl:formalism_registry">1</a> lists
+the source evidence for each equation, and the equation blocks below are
+auto-numbered by the renderer.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Source-owned formalism registry."><table id="tbl:formalism_registry" data-responsive-table="true">
+<caption>Table 1: Source-owned formalism registry.</caption>
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 33%" />
@@ -899,118 +1027,112 @@ below are auto-numbered by the renderer.</p>
 <tr>
 <td>F1</td>
 <td>Purity functional</td>
-<td><span class="citation"
-data-cites="eq:purity_functional">[@eq:purity_functional]</span></td>
+<td>eq. <a href="#eq:purity_functional">1</a></td>
 <td><code>src/template_gold_refinement/purity.py::format_purity</code></td>
 </tr>
 <tr>
 <td>F2</td>
 <td>Monotone refinement</td>
-<td><span class="citation"
-data-cites="eq:monotone_refinery">[@eq:monotone_refinery]</span></td>
+<td>eq. <a href="#eq:monotone_refinery">2</a></td>
 <td><code>src/template_gold_refinement/purity.py::assert_monotone_increase</code></td>
 </tr>
 <tr>
 <td>F3</td>
 <td>Token-selection digest</td>
-<td><span class="citation"
-data-cites="eq:token_digest">[@eq:token_digest]</span></td>
+<td>eq. <a href="#eq:token_digest">3</a></td>
 <td><code>src/template_gold_refinement/composition.py::_choose_value</code></td>
 </tr>
 <tr>
 <td>F4</td>
 <td>Claim-support fraction</td>
-<td><span class="citation"
-data-cites="eq:claim_support">[@eq:claim_support]</span></td>
+<td>eq. <a href="#eq:claim_support">4</a></td>
 <td><code>src/template_gold_refinement/evidence.py::EvidenceRegistry.support_rate</code></td>
 </tr>
 <tr>
 <td>F5</td>
 <td>Integrity vector</td>
-<td><span class="citation"
-data-cites="eq:integrity_vector">[@eq:integrity_vector]</span></td>
+<td>eq. <a href="#eq:integrity_vector">5</a></td>
 <td><code>manuscript/config.yaml#gold_refinement.audit_rules</code></td>
 </tr>
 <tr>
 <td>F6</td>
 <td>Certification predicate</td>
-<td><span class="citation"
-data-cites="eq:certification_predicate">[@eq:certification_predicate]</span></td>
+<td>eq. <a href="#eq:certification_predicate">6</a></td>
 <td><code>src/template_gold_refinement/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
 </tr>
 <tr>
 <td>F7</td>
 <td>Adversarial assay</td>
-<td><span class="citation"
-data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span></td>
+<td>eq. <a href="#eq:adversarial_assay">7</a></td>
 <td><code>src/template_gold_refinement/security_assay.py::build_security_assay</code></td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>F1: Purity functional.</strong> Manuscript purity is treated
 as a bounded fraction mapped to a reader-facing grade.</p>
-<p><span class="math display">\[
+<p><span id="eq:purity_functional"><span class="math display">\[
 \pi(s) \in [0, 1], \qquad g(s) = \operatorname{karat}(\pi(s))
-\]</span> {#eq:purity_functional}</p>
+\qquad{(1)}\]</span></span></p>
 <p>The value is descriptive: it summarizes local validation state rather
 than external quality. Source:
 <code>src/template_gold_refinement/purity.py::format_purity</code>.</p>
 <p><strong>F2: Monotone refinement.</strong> A valid refinery run
 requires every stage to improve the previous purity state.</p>
-<p><span class="math display">\[
+<p><span id="eq:monotone_refinery"><span class="math display">\[
 \pi_0 &lt; \pi_1 &lt; \cdots &lt; \pi_n
-\]</span> {#eq:monotone_refinery}</p>
+\qquad{(2)}\]</span></span></p>
 <p>The test suite rejects equal or decreasing stage outputs. Source:
 <code>src/template_gold_refinement/purity.py::assert_monotone_increase</code>.</p>
 <p><strong>F3: Token-selection digest.</strong> Every mega-madlib token
 is selected from config-owned inventory by a deterministic digest.</p>
-<p><span class="math display">\[
+<p><span id="eq:token_digest"><span class="math display">\[
 i = \operatorname{int}(\operatorname{SHA256}(seed \Vert slot \Vert
 category \Vert ordinal \Vert inventory)_{0:12}, 16) \bmod \lvert
 inventory \rvert
-\]</span> {#eq:token_digest}</p>
+\qquad{(3)}\]</span></span></p>
 <p>Changing the seed or inventory changes the plan; replaying both
 reproduces it. Source:
 <code>src/template_gold_refinement/composition.py::_choose_value</code>.</p>
 <p><strong>F4: Claim-support fraction.</strong> Contribution claims are
 assayed by counting supported local evidence pointers.</p>
-<p><span class="math display">\[
+<p><span id="eq:claim_support"><span class="math display">\[
 \sigma = \frac{\lvert\{c \in C : supported(c)\}\rvert}{\lvert C \rvert}
-\]</span> {#eq:claim_support}</p>
+\qquad{(4)}\]</span></span></p>
 <p>The numerator and denominator come from the project-local
 claim-support registry. Source:
 <code>src/template_gold_refinement/evidence.py::EvidenceRegistry.support_rate</code>.</p>
 <p><strong>F5: Integrity vector.</strong> Scientific integrity is
 represented as a vector of gate outcomes rather than one scalar
 badge.</p>
-<p><span class="math display">\[
+<p><span id="eq:integrity_vector"><span class="math display">\[
 \mathbf{v} = (v_{tokens}, v_{figures}, v_{claims}, v_{render},
 v_{references}, v_{security})
-\]</span> {#eq:integrity_vector}</p>
+\qquad{(5)}\]</span></span></p>
 <p>A publication claim is only as strong as the weakest required gate.
 Source:
 <code>manuscript/config.yaml#gold_refinement.audit_rules</code>.</p>
 <p><strong>F6: Certification predicate.</strong> Certification is a
 predicate over final purity and validation readiness.</p>
-<p><span class="math display">\[
+<p><span id="eq:certification_predicate"><span class="math display">\[
 \operatorname{certified}(r) \iff \pi_{final}(r) \geq 0.999999999 \land
 gates(r)
-\]</span> {#eq:certification_predicate}</p>
+\qquad{(6)}\]</span></span></p>
 <p>The predicate binds the nine-nines metaphor to the actual validation
 chain. Source:
 <code>src/template_gold_refinement/refinery.py::RefineryResult.is_nine_nines_certified</code>.</p>
 <p><strong>F7: Adversarial assay.</strong> Certification requires an
 explicit adversarial and supply-chain scope, not only ordinary gate
 success.</p>
-<p><span class="math display">\[
+<p><span id="eq:adversarial_assay"><span class="math display">\[
 \operatorname{certified}_{adv}(r) \iff \operatorname{certified}(r) \land
 \forall a \in A_r:\ threat(a) \land standard(a) \land evidence(a) \land
 validator(a) \land boundary(a)
-\]</span> {#eq:adversarial_assay}</p>
+\qquad{(7)}\]</span></span></p>
 <p>The adversarial assay defines scope and evidence requirements; it is
 not proof of compliance or live scan findings. Source:
 <code>src/template_gold_refinement/security_assay.py::build_security_assay</code>.</p>
-<h2 id="deterministic-token-composition">Deterministic token
+<h2 data-number="4.7" id="deterministic-token-composition"><span
+class="header-section-number">4.7</span> Deterministic token
 composition</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
@@ -1033,11 +1155,11 @@ category, section, ordinal, and configuration path. This record permits
 exact replay and source tracing but does not imply that the selected
 synonym is semantically superior. Selected metallurgical terms are
 assaying, parting, and smelting; selected manuscript terms are evidence
-and evidence. <span class="citation"
-data-cites="eq:token_digest">[@eq:token_digest]</span> formalizes the
-rule, while evidence validation, figure registry check, and citation
+and evidence. eq. <a href="#eq:token_digest">3</a> formalizes the rule,
+while evidence validation, figure registry check, and citation
 validation name the corresponding validation surfaces.</p>
-<h2 id="config-owned-lexicon">Config-owned lexicon</h2>
+<h2 data-number="4.8" id="config-owned-lexicon"><span
+class="header-section-number">4.8</span> Config-owned lexicon</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 40%" />
@@ -1094,13 +1216,21 @@ validation name the corresponding validation surfaces.</p>
 </tr>
 </tbody>
 </table></div>
-<h2 id="derived-grading-vocabulary">Derived grading vocabulary</h2>
+<h2 data-number="4.9" id="derived-grading-vocabulary"><span
+class="header-section-number">4.9</span> Derived grading vocabulary</h2>
 <p>Karat grades map purity fractions to a gold-fineness vocabulary used
 here as an analogy surface. The pre-1800 evidence supports fineness as a
 regulated testing and marking problem, but not the modern nine-nines
-target used by this local software predicate [badcock_touchstone_1678;
-goldsmiths_hallmarking_history; cramer_assaying_metals_1741;
-marsden_house_2006; lbma_good_delivery_rules]:</p>
+target used by this local software predicate <span class="citation"
+data-cites="badcock_touchstone_1678 goldsmiths_hallmarking_history cramer_assaying_metals_1741 marsden_house_2006 lbma_good_delivery_rules">(<a
+href="index.html#ref-badcock_touchstone_1678" role="doc-biblioref">W. B. (William
+Badcock) 1678</a>; <a href="index.html#ref-goldsmiths_hallmarking_history"
+role="doc-biblioref">The Goldsmiths’ Company Assay Office 2026</a>; <a
+href="index.html#ref-cramer_assaying_metals_1741" role="doc-biblioref">Cramer
+1741</a>; <a href="index.html#ref-marsden_house_2006" role="doc-biblioref">Marsden
+and House 2006</a>; <a href="index.html#ref-lbma_good_delivery_rules"
+role="doc-biblioref">London Bullion Market Association
+2026</a>)</span>:</p>
 <ul>
 <li>9K = 37.5% (ore stage)</li>
 <li>18K = 75.0% (smelting stage)</li>
@@ -1113,10 +1243,10 @@ assigns the highest configured grade whose threshold does not exceed the
 stage purity. The nine-nines label is a deliberately stringent local
 predicate. It is neither a continuous measure of manuscript quality nor
 an assertion about a universal gold-market threshold. The grading chart
-appears in <span class="citation"
-data-cites="fig:karat_grading">[@fig:karat_grading]</span> (see <span
-class="citation" data-cites="sec:results">[@sec:results]</span>).</p>
-<h2 id="execution-procedure">Execution procedure</h2>
+appears in fig. <a href="manuscript__03_results.html#fig:karat_grading">2</a> (see sec. <a
+href="manuscript__03_results.html#sec:results">5</a>).</p>
+<h2 data-number="4.10" id="execution-procedure"><span
+class="header-section-number">4.10</span> Execution procedure</h2>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 15%" />
@@ -1218,51 +1348,54 @@ predicates and gates pass.</li>
 guard for each step. A fork that modifies a stage or claim must update
 its source definition, generated variables, visualizations, and
 validators together.</p>
-<h2 id="traceability-and-artifact-lineage">Traceability and artifact
+<h2 data-number="4.11" id="traceability-and-artifact-lineage"><span
+class="header-section-number">4.11</span> Traceability and artifact
 lineage</h2>
-<p>The implementation circuit shown in <span class="citation"
-data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
-is the method’s wiring diagram. It distinguishes three ownership layers.
-First, authored sources own intent: config declares vocabulary and
-claims, <code>src/</code> owns computation, and the claim ledger
-registers evidence facts. Second, generated artifacts own observation:
-token plans, figures, resolved Markdown, reports, and dashboards are
-rebuilt rather than edited. Third, template gates own permission to
-promote the manuscript: unresolved tokens, unsupported facts, missing
-citations, broken references, and invalid PDFs block certification. This
-is the manuscript analogue of provenance-aware workflow design:
-entities, activities, agents, and generated outputs are kept traceable
-so readers can assess reliability rather than infer it from polished
-prose [moreau2013prov; belhajjame2015ontologies].</p>
+<p>The implementation circuit shown in fig. <a
+href="manuscript__03_results.html#fig:implementation_circuit">9</a> is the method’s wiring diagram.
+It distinguishes three ownership layers. First, authored sources own
+intent: config declares vocabulary and claims, <code>src/</code> owns
+computation, and the claim ledger registers evidence facts. Second,
+generated artifacts own observation: token plans, figures, resolved
+Markdown, reports, and dashboards are rebuilt rather than edited. Third,
+template gates own permission to promote the manuscript: unresolved
+tokens, unsupported facts, missing citations, broken references, and
+invalid PDFs block certification. This is the manuscript analogue of
+provenance-aware workflow design: entities, activities, agents, and
+generated outputs are kept traceable so readers can assess reliability
+rather than infer it from polished prose <span class="citation"
+data-cites="moreau2013prov belhajjame2015ontologies">(<a
+href="index.html#ref-moreau2013prov" role="doc-biblioref"><span
+class="nocase">Moreau et al.</span> 2013</a>; <a
+href="index.html#ref-belhajjame2015ontologies" role="doc-biblioref"><span
+class="nocase">Belhajjame et al.</span> 2015</a>)</span>.</p>
 <p>This split keeps the gold metaphor honest. A fork is allowed to
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
 consequences.</p>
-<h2 id="evaluation-and-acceptance-criteria">Evaluation and acceptance
+<h2 data-number="4.12" id="evaluation-and-acceptance-criteria"><span
+class="header-section-number">4.12</span> Evaluation and acceptance
 criteria</h2>
 <p>Evaluation is criterion-based rather than comparative. The run is
 assessed against predeclared local invariants: complete token hydration,
 valid stage ordering and monotonicity, registered claim support,
 resolvable citations and cross-references, registry-aligned figures,
-successful rendering, and explicit security-claim boundaries. <span
-class="citation"
-data-cites="eq:integrity_vector">[@eq:integrity_vector]</span> retains
-these outcomes as a vector so one strong surface cannot compensate for a
-failed required gate. <span class="citation"
-data-cites="eq:claim_support">[@eq:claim_support]</span> reports the
-proportion of locally registered contribution claims with resolvable
-evidence pointers; it does not score the truth or importance of those
-claims.</p>
-<p>The terminal predicate in <span class="citation"
-data-cites="eq:certification_predicate">[@eq:certification_predicate]</span>
-requires the configured final purity threshold and successful required
-gates. Consequently, “certified” means internally consistent and
-reproducibly generated under this project’s declared rules. It does not
-mean peer reviewed, externally replicated, historically authoritative,
-secure, or compliant with a reporting standard. Detailed probes and
-audit rules are reported in <span class="citation"
-data-cites="sec:evaluation">[@sec:evaluation]</span>.</p>
-<h3 id="adversarial-assay">Adversarial assay</h3>
+successful rendering, and explicit security-claim boundaries. eq. <a
+href="#eq:integrity_vector">5</a> retains these outcomes as a vector so
+one strong surface cannot compensate for a failed required gate. eq. <a
+href="#eq:claim_support">4</a> reports the proportion of locally
+registered contribution claims with resolvable evidence pointers; it
+does not score the truth or importance of those claims.</p>
+<p>The terminal predicate in eq. <a
+href="#eq:certification_predicate">6</a> requires the configured final
+purity threshold and successful required gates. Consequently,
+“certified” means internally consistent and reproducibly generated under
+this project’s declared rules. It does not mean peer reviewed,
+externally replicated, historically authoritative, secure, or compliant
+with a reporting standard. Detailed probes and audit rules are reported
+in sec. <a href="manuscript__08_evaluation.html#sec:evaluation">10</a>.</p>
+<h3 data-number="4.12.1" id="adversarial-assay"><span
+class="header-section-number">4.12.1</span> Adversarial assay</h3>
 <p>The implementation trace handles accidental drift: missing tokens,
 unsupported claims, malformed citations, stale figures, or broken
 renders. A security assay adds a different question: could the
@@ -1270,30 +1403,39 @@ manuscript sound certified while omitting threat scope, supply-chain
 provenance, or scan evidence? The assay therefore treats zero trust,
 secure software development, supply-chain provenance, attack-path
 modeling, SBOM standards, and secure-by-design guidance as
-boundary-setting standards rather than proof of compliance
-[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
-sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
-cisa_secure_by_design].</p>
+boundary-setting standards rather than proof of compliance <span
+class="citation"
+data-cites="nist_sp800_207_zero_trust nist_sp800_218_ssdf slsa_v1_2 sigstore_docs mitre_attack cyclonedx_spec spdx_spec cisa_secure_by_design">(<a
+href="index.html#ref-nist_sp800_207_zero_trust" role="doc-biblioref">National
+Institute of Standards and Technology 2020</a>, <a
+href="index.html#ref-nist_sp800_218_ssdf" role="doc-biblioref">2022</a>; <a
+href="index.html#ref-slsa_v1_2" role="doc-biblioref">Open Source Security
+Foundation 2026</a>; <a href="index.html#ref-sigstore_docs"
+role="doc-biblioref">Sigstore 2026</a>; <a href="index.html#ref-mitre_attack"
+role="doc-biblioref">MITRE 2026</a>; <a href="index.html#ref-cyclonedx_spec"
+role="doc-biblioref">CycloneDX 2026</a>; <a href="index.html#ref-spdx_spec"
+role="doc-biblioref">SPDX 2026</a>; <a href="index.html#ref-cisa_secure_by_design"
+role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
+2026</a>)</span>.</p>
 <p>The assay is implemented as source-owned rows in
 <code>gold_refinement.security_assay</code> and generated records from
 <code>src/template_gold_refinement/security_assay.py</code>. Each row
 must name a threat, standard or guidance source, local evidence surface,
-validator, and claim boundary, as specified by <span class="citation"
-data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span> and
-reported in <span class="citation"
-data-cites="tbl:security_assay">[@tbl:security_assay]</span>. This study
-did not run Codex Security or Deep Security Scan and reports no
-vulnerability findings. Completeness of the assay schema therefore
-supports scope disclosure, not security compliance — the assay checks
-only that named threats carry local evidence surfaces and validator
-rows; it does not certify an absence of vulnerabilities (negative
-control: removing a row’s evidence surface fails schema validation
-rather than being scored as secure). A row missing any required element
-is rejected at load time rather than rendered as partial assurance. An
-assay with zero configured rows reports that no security-scope claim
-should be made — absence of evidence is rendered as “not configured”,
-never as assurance.</p>
-<h3 id="scientific-integrity-risk-model">Scientific-integrity risk
+validator, and claim boundary, as specified by eq. <a
+href="#eq:adversarial_assay">7</a> and reported in tbl. <a
+href="manuscript__03_results.html#tbl:security_assay">5</a>. This study did not run Codex Security
+or Deep Security Scan and reports no vulnerability findings.
+Completeness of the assay schema therefore supports scope disclosure,
+not security compliance — the assay checks only that named threats carry
+local evidence surfaces and validator rows; it does not certify an
+absence of vulnerabilities (negative control: removing a row’s evidence
+surface fails schema validation rather than being scored as secure). A
+row missing any required element is rejected at load time rather than
+rendered as partial assurance. An assay with zero configured rows
+reports that no security-scope claim should be made — absence of
+evidence is rendered as “not configured”, never as assurance.</p>
+<h3 data-number="4.12.2" id="scientific-integrity-risk-model"><span
+class="header-section-number">4.12.2</span> Scientific-integrity risk
 model</h3>
 <p>The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
@@ -1302,8 +1444,9 @@ owner, and validator so the manuscript can distinguish “the analogy is
 vivid” from “the claim is backed by a regenerable check.” The current
 pass reports 9 integrity dimensions; highest residual risk is I4
 (Analogy boundary) at 15.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Source-owned scientific-integrity dimensions."><table id="tbl:integrity_dimensions" data-responsive-table="true">
-<caption>Source-owned scientific-integrity dimensions.</caption>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 2: Source-owned scientific-integrity dimensions."><table id="tbl:integrity_dimensions" data-responsive-table="true">
+<caption>Table 2: Source-owned scientific-integrity
+dimensions.</caption>
 <colgroup>
 <col style="width: 8%" />
 <col style="width: 22%" />
@@ -1394,8 +1537,8 @@ not fitted to incident data, validated against external judgments, or
 designed for comparison across projects. Its sole use is to identify
 where this exemplar—or a fork—needs stronger ownership, evidence, or
 validation before expanding a claim.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Integrity dimensions by owning surface."><table id="tbl:integrity_owners" data-responsive-table="true">
-<caption>Integrity dimensions by owning surface.</caption>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 3: Integrity dimensions by owning surface."><table id="tbl:integrity_owners" data-responsive-table="true">
+<caption>Table 3: Integrity dimensions by owning surface.</caption>
 <thead>
 <tr>
 <th>Owner</th>
@@ -1446,7 +1589,8 @@ support rates, and figure labels belong to regenerated reports and
 registries; the manuscript consumes them through variables. Authored
 prose may interpret those values, but it should not silently restate
 them as hand-maintained facts.</p>
-<h3 id="multi-objective-purity">Multi-objective purity</h3>
+<h3 data-number="4.12.3" id="multi-objective-purity"><span
+class="header-section-number">4.12.3</span> Multi-objective purity</h3>
 <p>Scalar stage purity is retained only as the state variable of the
 refinery analogy.
 <code>src/template_gold_refinement/purity.py::PurityVector</code>
@@ -1458,8 +1602,10 @@ perfect render or terminal stage value from numerically compensating for
 unsupported claims or missing provenance. Weighting these dimensions
 would require an external validation study and is outside the present
 design.</p>
-<h2 id="reproducibility-and-validity-safeguards">Reproducibility and
-validity safeguards</h2>
+<h2 data-number="4.13"
+id="reproducibility-and-validity-safeguards"><span
+class="header-section-number">4.13</span> Reproducibility and validity
+safeguards</h2>
 <p>Determinism is assessed by exact replay from the same ordered
 configuration and source revision. Provenance is assessed by the
 existence of a path from each reported token, claim, equation, and
@@ -1467,8 +1613,7 @@ figure to an owning source and generated record. Negative controls in
 the test suite exercise malformed configuration and invalid refinery
 states; figure checks assess file presence, registry parity, dimensions,
 nonblank content, and color variance. Environment and regeneration
-details are given in <span class="citation"
-data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
+details are given in sec. <a href="manuscript__06_reproducibility.html#sec:reproducibility">8</a>.</p>
 <p>Four validity limits govern interpretation. First, <strong>construct
 validity</strong> is limited because purity is a designed workflow
 state, not a validated measure of writing quality. Second,

@@ -208,7 +208,7 @@ The artifact is produced by a deterministic, three-step chain that the
 repository pipeline runs as Stage-02 analysis scripts, in lexicographic order:
 `00_preflight.py` confirms the dependencies import and the edition loads and
 validates; `10_generate_figures.py` writes the halftone scenes and charts to
-`../figures/`; and `20_render_newspaper.py` renders the twelve pages to
+`output/figures/`; and `20_render_newspaper.py` renders the twelve pages to
 `output/pdf/the-triplicate.pdf` and emits a machine-readable render report
 (`output/data/render_report.json`) plus a human summary. The render is
 deterministic — the canvas is opened in ReportLab's `invariant` mode and the

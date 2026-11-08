@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.13" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
@@ -14,10 +14,7 @@ Coordination</title>
     */
     html {
       color: #1a1a1a;
-      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
-      background-color: light-dark(#fdfdfd, #1a1a1a);
-      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -42,16 +39,11 @@ Coordination</title>
     }
     @media print {
       html {
-        color-scheme: light only;
+        background-color: white;
       }
-      html, body, pre, code {
+      body {
         background-color: transparent;
-      }
-      body, a, a:visited, blockquote {
         color: black;
-      }
-      pre, code {
-        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -64,8 +56,11 @@ Coordination</title>
     p {
       margin: 1em 0;
     }
-    a, a:visited {
-      color: inherit;
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
     }
     img {
       max-width: 100%;
@@ -94,11 +89,8 @@ Coordination</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid;
-      border-color: #e6e6e6;
-      border-color: light-dark(#e6e6e6, #4c4c4c);
+      border-left: 2px solid #e6e6e6;
       color: #606060;
-      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -122,7 +114,7 @@ Coordination</title>
     }
     hr {
       border: none;
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -139,11 +131,11 @@ Coordination</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
     }
     th {
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -280,6 +272,69 @@ window.MathJax.output = Object.assign({}, templateMathOutput, {
     inline: false,
     width: "100%",
     lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
   })
 });
 window.normalizeTemplateMathJaxAria = function () {
@@ -800,11 +855,11 @@ class="header-section-number">5.4</span> Outputs</h2>
 <p>Two thin orchestrator scripts produce all results:</p>
 <ul>
 <li><code>scripts/run_search_comparison.py</code> →
-<code>../figures/search_comparison.png</code>,
+<code>output/figures/search_comparison.png</code>,
 <code>output/data/search_comparison.json</code>.</li>
 <li><code>scripts/run_ablation.py</code> →
-<code>../figures/ablation.png</code>,
-<code>../figures/ablation_efficiency.png</code>,
+<code>output/figures/ablation.png</code>,
+<code>output/figures/ablation_efficiency.png</code>,
 <code>output/data/ablation.json</code>.</li>
 </ul>
 <p>Each script imports all computation from <code>src/</code>, runs the

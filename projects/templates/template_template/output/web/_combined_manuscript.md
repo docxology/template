@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-0-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-0-start-->
 ```
 
 ```{=latex}
@@ -59,7 +59,7 @@ Structured manifest: `../data/transmission_manifest.json`
 <!-- BEGINNING OF TRANSMISSION -->
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-0-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-0-end-->
 ```
 
 
@@ -69,7 +69,7 @@ Structured manifest: `../data/transmission_manifest.json`
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-1-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-1-start-->
 ```
 
 # Abstract
@@ -79,7 +79,7 @@ The reproducibility problem in computational research is partly structural: rese
 The generated public exemplar roster (`templates/template_active_inference`, `templates/template_advanced_literature_review`, `templates/template_autopoiesis`, `templates/template_autoresearch_project`, `templates/template_autoscientists`, `templates/template_code_project`, `templates/template_data_descriptor`, `templates/template_eda_notebook`, `templates/template_experiment_tree`, `templates/template_formal`, `templates/template_gold_refinement`, `templates/template_literature_meta_analysis`, `templates/template_madlib`, `templates/template_methods_paper`, `templates/template_newspaper`, `templates/template_pitch_deck`, `templates/template_pools_rules_tools`, `templates/template_prose_project`, `templates/template_redacted_report`, `templates/template_registered_report`, `templates/template_search_project`, `templates/template_sia`, `templates/template_storybook`, `templates/template_template`, `templates/template_textbook`) supplies heterogeneous control-positive layouts, including optimization (`template_code_project`, 258 discovered tests), prose (`template_prose_project`, 165 discovered tests), and AutoResearch readiness (`template_autoresearch_project`, 318 discovered tests). Each declares the same 90% project-source floor and consumes the shared pipeline without project-to-project imports. This manuscript adds a reflexive artifact: `template_template` (158 discovered tests) follows the same analysis and render path while injecting repository counters and figures from live introspection. The result is a self-documenting build whose quantitative repository claims are generated artifacts, whose manuscript claims are checked against an evidence registry, and whose output can be validated and optionally watermarked. A versioned comparative matrix situates `template/` against peer tools across the capabilities reported in the Results section. Code is released under the Apache License 2.0 at `github.com/docxology/template`; the work remains open-ended.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-1-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-1-end-->
 ```
 
 
@@ -89,7 +89,7 @@ The generated public exemplar roster (`templates/template_active_inference`, `te
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-2-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-2-start-->
 ```
 
 # Introduction
@@ -182,7 +182,7 @@ This paper is itself a product of the template it describes. The metrics populat
 The [Methods](03a_architecture.md#methods) describe the Two-Layer Architecture, Thin Orchestrator pattern, pipeline stages, and AI collaboration model. [Results](04_results.md#results) present quantitative metrics from multi-project execution, coverage analysis, and steganographic benchmarks. The [Discussion](05a_zeromock_tradeoff.md#the-zero-mock-tradeoff) addresses the Zero-Mock tradeoff, scalability implications, a detailed tool comparison, and future directions. The [Infrastructure Module Reference](06_infrastructure_modules.md#infrastructure-module-reference) provides detailed documentation for all 31 subdirectories. [Security and Provenance](07_security_provenance.md#security-and-provenance) describes the steganographic and cryptographic integrity layer. The [Appendices](08a_appendix_pipeline.md#appendix-pipeline) provide pipeline, configuration, and comparative references.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-2-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-2-end-->
 ```
 
 
@@ -192,7 +192,7 @@ The [Methods](03a_architecture.md#methods) describe the Two-Layer Architecture, 
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-3-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-3-start-->
 ```
 
 # Methods
@@ -257,7 +257,7 @@ result = calculate_average([1, 2, 3])  # ← scripts wire, never compute
 The critical property is that `calculate_average` in the correct pattern lives in a testable `src/` module, is covered by the Zero-Mock test suite, and can be independently imported, tested, and reused—whereas the anti-pattern buries logic in a script that is invisible to coverage tools.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-3-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-3-end-->
 ```
 
 
@@ -267,7 +267,7 @@ The critical property is that `calculate_average` in the correct pattern lives i
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-4-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-4-start-->
 ```
 
 ## DAG Pipeline Declared by `pipeline.yaml`
@@ -317,7 +317,7 @@ Selecting **`d` alone** after a passing multi-project run exits immediately once
 Executes Python `secure` path: standard pipeline artefact reproduction **then** invokes `run_secure_pipeline` for steganographic PDF hardening (`infrastructure.steganography`). Original PDFs stay immutable; hardened companions carry QR overlays plus hash manifests sidecars.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-4-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-4-end-->
 ```
 
 
@@ -327,7 +327,7 @@ Executes Python `secure` path: standard pipeline artefact reproduction **then** 
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-5-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-5-start-->
 ```
 
 ## Documentation Duality and AI Collaboration {#documentation-duality-and-ai-collaboration}
@@ -384,7 +384,7 @@ The opt-in `infrastructure.mcp_server` exposes the existing operation catalog, p
 An agent can inspect these catalogs and choose supported operations while retaining the pipeline's declared dependencies and acceptance gates. Discovery alone does not establish successful execution or publication. The `SKILL.md` files parallel Voyager's skill library [@wang2023voyager]—Voyager's agent accumulates a growing library of executable Minecraft skills represented as JavaScript functions; `template/`'s agent accumulates a curated library of research pipeline skills represented as YAML-frontmattered `SKILL.md` files. In both cases, the skill representation is machine-readable, version-controlled, and self-describing. Wang et al.'s LLM agent survey [@wang2024llmagents] identifies tool use, planning, and memory as the three fundamental capabilities of autonomous agents; Yao et al.'s ReAct framework [@yao2023react] demonstrates that interleaving reasoning traces with tool actions dramatically improves agent reliability in interactive settings. The `template/` skill architecture maps cleanly onto these three capabilities: the `SKILL.md` descriptors supply the tool-use layer, the declarative DAG of `17` `pipeline.yaml` stages (a default full run executes `10`) supplies the planning scaffold, and the per-criterion checkpoint system supplies the memory layer.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-5-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-5-end-->
 ```
 
 
@@ -394,7 +394,7 @@ An agent can inspect these catalogs and choose supported operations while retain
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-6-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-6-start-->
 ```
 
 ## FAIR Alignment and Research Infrastructure as Code
@@ -420,7 +420,7 @@ Every component of the research pipeline—the test suite, the analysis scripts,
 Software Heritage [@cosmo2020softwareheritage] provides persistent SWHIDs (Software Hash Identifiers) for source code snapshots, enabling stable citation of any specific version of `template/` as a discrete software artifact—closing the loop from research infrastructure to citable scientific contribution. Combined with Zenodo DOI registration (supported by `infrastructure.publishing`), this creates a dual-identifier citation chain: SWHID for source provenance, DOI for publication metadata [@katz2021software].
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-6-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-6-end-->
 ```
 
 
@@ -430,7 +430,7 @@ Software Heritage [@cosmo2020softwareheritage] provides persistent SWHIDs (Softw
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-7-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-7-start-->
 ```
 
 ## Quality Assurance
@@ -483,7 +483,7 @@ All generated figures must meet accessibility requirements:
 The `tests/figures/test_architecture_viz.py` suite verifies that each real figure generator writes a non-empty PNG and that the comparative matrix has its declared shape and value domain. The font and render-resolution values above are injected from `src/template_template/figures/viz_palette.py`, preventing prose and implementation from drifting even though visual accessibility still requires human inspection of rendered figures.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-7-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-7-end-->
 ```
 
 
@@ -493,7 +493,7 @@ The `tests/figures/test_architecture_viz.py` suite verifies that each real figur
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-8-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-8-start-->
 ```
 
 # Results
@@ -639,7 +639,7 @@ The comparative feature matrix below summarizes the Appendix F capability matrix
 - **`template_autoresearch_project`** exercises the AutoResearch readiness planner (`infrastructure/autoresearch/`). **`template_search_project`** exercises literature-search workflows.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-8-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-8-end-->
 ```
 
 
@@ -649,7 +649,7 @@ The comparative feature matrix below summarizes the Appendix F capability matrix
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-9-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-9-start-->
 ```
 
 # Discussion
@@ -675,7 +675,7 @@ The template enforces zero-mock compliance at three levels:
 However, the policy requires careful management of external dependencies. Tests requiring Ollama (the local LLM backend) use `@pytest.mark.requires_ollama` and are skipped in environments where the service is unavailable. Tests requiring network access use `@pytest.mark.network`. This marker system preserves the Zero-Mock principle while acknowledging that not all environments provide all services, especially computationally intensive ones. The key distinction is between *replacing* an external dependency (which mock objects do, hiding failures) and *skipping* a test when a dependency is absent (which markers do, preserving transparency).
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-9-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-9-end-->
 ```
 
 
@@ -685,7 +685,7 @@ However, the policy requires careful management of external dependencies. Tests 
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-10-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-10-start-->
 ```
 
 ## Scalability: From 1 to N Projects
@@ -722,7 +722,7 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 The infrastructure overhead per project is constant regardless of project size: the same 31 modules, the same 17 declared pipeline stages, the same rendering and validation logic. The shared implementation does not grow with the project roster; execution time and output volume still grow with the work performed.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-10-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-10-end-->
 ```
 
 
@@ -732,7 +732,7 @@ The infrastructure overhead per project is constant regardless of project size: 
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-11-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-11-start-->
 ```
 
 ## Comparison to Existing Tools
@@ -750,7 +750,7 @@ Since the FAIR4RS principles were published [@barker2022fair4rs], the community 
 In Gentleman and Temple Lang's terminology [@gentleman2007research], `template/` is a *research compendium* scaled to the repository level—bundling not just one study's code and data but N studies, with shared infrastructure, automated testing, and embedded provenance. Nüst et al.'s executable research compendium (ERC) [@nust2017containerization] extends this vision with containerized reproduction environments; `template/` complements containerization by adding the testing enforcement, multi-project management, and provenance embedding layers that ERCs do not address.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-11-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-11-end-->
 ```
 
 
@@ -760,7 +760,7 @@ In Gentleman and Temple Lang's terminology [@gentleman2007research], `template/`
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-12-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-12-start-->
 ```
 
 ## The AI Collaboration Model
@@ -792,7 +792,7 @@ The Thin Orchestrator pattern imposes a cognitive overhead on researchers accust
 - **AI-native writing tools**: `template/` does not include an integrated AI writing assistant comparable to Overleaf's Copilot features or OpenAI Prism's GPT-5.2 context-aware editing. The `infrastructure.llm` module provides LLM review as a pipeline stage but not as an interactive writing environment.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-12-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-12-end-->
 ```
 
 
@@ -802,7 +802,7 @@ The Thin Orchestrator pattern imposes a cognitive overhead on researchers accust
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-13-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-13-start-->
 ```
 
 ## Future Directions
@@ -825,7 +825,7 @@ The Thin Orchestrator pattern imposes a cognitive overhead on researchers accust
 The template is not merely a build tool; it is an epistemological commitment. It asserts that a research paper is not a static document but a build artifact—reproducible, verifiable, and traceable to the code that generated it. As Knuth observed, programs should be written for humans to read and only incidentally for machines to execute [@knuth1984literate]. We extend this dictum: research manuscripts should be *built* for verification and only incidentally for reading. In an era of generative AI, AI-native research workspaces, and synthetic media—where the boundary between human-authored and machine-generated text grows increasingly indeterminate [@gruenpeter2021research]—the provenance chain from source code to published PDF is not an administrative convenience. It is the epistemic ground on which scientific trust must be rebuilt. That this manuscript was itself built, tested, and watermarked by the pipeline it describes—its metrics computed from the repository it inhabits, its figures rendered by the code it documents—demonstrates one reproducible artifact path; broader reliability claims require the declared checks and candidate-bound execution evidence.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-13-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-13-end-->
 ```
 
 
@@ -835,7 +835,7 @@ The template is not merely a build tool; it is an epistemological commitment. It
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-14-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-14-start-->
 ```
 
 # Infrastructure Module Reference
@@ -1019,7 +1019,7 @@ Operational templates for deployments (documentation-first; intentionally minima
 **FAIR+RSE linkage:** MCP-ready `SKILL.md` artefacts align with evaluator heuristics (executability + metadata richness) emphasized by FAIRsoft guidance [@garijo2024fairsoft].
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-14-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-14-end-->
 ```
 
 
@@ -1029,7 +1029,7 @@ Operational templates for deployments (documentation-first; intentionally minima
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-15-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-15-start-->
 ```
 
 # Security and Provenance
@@ -1133,7 +1133,7 @@ The steganographic layer supports the FAIR for Research Software (FAIR4RS) princ
 Software Heritage [@cosmo2020softwareheritage] complements this picture at the source-code level: by archiving the `template/` repository and assigning a reproducible SWHID (Software Hash Identifier) to each commit, Software Heritage makes the pipeline itself—not just its output—a citable, persistent digital artifact. A published SWHID alongside the PDF DOI creates a complete, two-artifact citation record: the paper's content is versioned via DOI; the code that generated it is versioned via SWHID. This combination satisfies the Katz et al. [@katz2021software] software citation principles' requirement that software used in research be independently citable and permanently accessible.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-15-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-15-end-->
 ```
 
 
@@ -1143,7 +1143,7 @@ Software Heritage [@cosmo2020softwareheritage] complements this picture at the s
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-16-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-16-start-->
 ```
 
 # Appendices
@@ -1197,7 +1197,7 @@ Software Heritage [@cosmo2020softwareheritage] complements this picture at the s
 Opt-in stages also prevent completion when invoked and unsuccessful. An allowed skip requires a fresh policy-bound reason receipt; it is not a successful execution. The executable DAG and its contracts remain authoritative.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-16-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-16-end-->
 ```
 
 
@@ -1207,7 +1207,7 @@ Opt-in stages also prevent completion when invoked and unsuccessful. An allowed 
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-17-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-17-start-->
 ```
 
 ## Appendix: Configuration Reference {#appendix-config}
@@ -1276,7 +1276,7 @@ testing:
 ```
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-17-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-17-end-->
 ```
 
 
@@ -1286,7 +1286,7 @@ testing:
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-18-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-18-start-->
 ```
 
 ## Appendix: Repository Directory Structure {#appendix-directory}
@@ -1321,7 +1321,7 @@ template/
 See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python scripts/docgen/active_projects.py`).
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-18-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-18-end-->
 ```
 
 
@@ -1331,7 +1331,7 @@ See `docs/_generated/active_projects.md` for regenerated slugs (`uv run python s
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-19-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-19-start-->
 ```
 
 ## Appendix: Exemplar Project Summary {#appendix-exemplars}
@@ -1352,7 +1352,7 @@ The full public exemplar roster is: `templates/template_active_inference`, `temp
 **Meta manuscript location:** introspective study lives in `projects/templates/template_template/` beside the public exemplar set. Discovery now follows the typed `projects/` layout—`projects/templates/**` and `projects/active/**` are discovered/rendered, while `projects/working/**`, `projects/ongoing/**`, and `projects/archive/**` remain non-rendered—see root `CLAUDE.md` for invocation patterns (`resolve_project_root`).
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-19-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-19-end-->
 ```
 
 
@@ -1362,7 +1362,7 @@ The full public exemplar roster is: `templates/template_active_inference`, `temp
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-20-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-20-start-->
 ```
 
 ## Appendix: Documentation Inventory {#appendix-docs}
@@ -1387,7 +1387,7 @@ The `docs/` subdirectories cover: `core/` (essential docs), `guides/` (progressi
 Every count in this appendix is injected from live repository introspection rather than hand-maintained: `385` counts every Markdown file beneath `docs/` recursively, `20` counts its first-level subdirectories, and `22` counts the workflow subdirectories that each carry a `SKILL.md` descriptor. This is the same discipline the manuscript argues for throughout—a hand-typed documentation total silently rots as the tree grows, whereas a token re-resolves on every render. A reader onboarding to the repository should start at `docs/core/`, follow the graduated `docs/guides/` skill ladder, and consult the per-directory `AGENTS.md`/`README.md` pair nearest to whatever code they are editing; AI agents begin with root `AGENTS.md` and `.agents/AGENTS.md`, then read local contracts and available `SKILL.md` descriptors. The shared skill manifest supplies discovery; client-specific entrypoints reference the shared contracts.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-20-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-20-end-->
 ```
 
 
@@ -1397,7 +1397,7 @@ Every count in this appendix is injected from live repository introspection rath
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-21-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-21-start-->
 ```
 
 ## Appendix: Comparative Tool Matrix {#appendix-matrix}
@@ -1433,7 +1433,7 @@ See the [comparative feature matrix in the Results section](04_results.md#compar
 This matrix is a versioned manuscript snapshot, not a continuously updated product survey. A future refresh should re-check every external capability against current primary documentation before changing a cell.
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-21-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-21-end-->
 ```
 
 
@@ -1443,7 +1443,7 @@ This matrix is a versioned manuscript snapshot, not a continuously updated produ
 
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-22-start-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-22-start-->
 ```
 
 ```{=latex}
@@ -1474,5 +1474,5 @@ This matrix is a versioned manuscript snapshot, not a continuously updated produ
 <!-- END OF TRANSMISSION -->
 
 ```{=html}
-<!--template-web-source-ab6ede4160400a09fedbadb4dc517d25209ea13b4aaf99867e82517a6955e953-22-end-->
+<!--template-web-source-ed94eae5760a3bfc9328dc45c0f4c07479f24099dd5a56dcfb9d30efab4217cb-22-end-->
 ```

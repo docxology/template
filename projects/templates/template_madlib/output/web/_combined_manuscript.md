@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-0-start-->
+```
+
 # Abstract
 
 This exemplar asks whether a reviewable pipeline can hydrate a complete IMRAD manuscript from configuration-owned lexical data while preserving an audit trail that remains readable before and after rendering. The project deliberately keeps playful Mad Lib mechanics inside a serious reproducibility contract: the manuscript shell names large placeholders, the config declares allowable language, and the source code decides what text is emitted.
@@ -6,11 +10,19 @@ The committed seed is `431` and the current schema expands 22 slot rule(s) into 
 
 The result is not a claim that lexical substitution creates scholarship. It is a worked template for conditional manuscript assembly: section enablement, token provenance, figure registration, and unresolved-placeholder checks all become inspectable artifacts before the shared renderer produces PDF, HTML, and slides.
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-1-start-->
+```
 
 # Introduction: Lexicon as Data and Manuscript as Build Artifact
 
@@ -36,11 +48,19 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 | A generated-method exemplar can make review handoff auditable when the review packet includes source config, data artifacts, figures, validation results, and copy statistics. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
 | Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-2-start-->
+```
 
 # Methods: Source-Owned Token Injection and Conditional IMRAD Assembly
 
@@ -176,11 +196,19 @@ Fork migration closes the method. A downstream project should update config rows
 | R11 | Every review handoff must include generated data, reports, figures, validation results, and copy statistics alongside PDF or HTML. |
 | R12 | Every fork migration note must name config, source, test, validator, pipeline, and claim-ledger obligations. |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-3-start-->
+```
 
 # Results: Provenance, Density, and Resolved Manuscript Surface
 
@@ -259,11 +287,19 @@ Visualization is enabled for configured_field_matrix, section_configuration_heat
 | Scope: Related Generators and Responsible Forking | `SCOPE_CONSTRAINT`, `SCOPE_AUDIENCE` | audiences, constraints |
 | Authoring Contract: Human Review and Forking Obligations | `AUTHORING_AUDIENCE`, `AUTHORING_QUALITY` | audiences, qualities |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-4-start-->
+```
 
 # Discussion: Accountability Boundaries for Generated Prose
 
@@ -273,11 +309,19 @@ The configured discussion moves are bound the scholarly claim, describe useful a
 
 The pattern scales only when authors preserve the same ownership boundary. Lexicons should be small enough to review, categories should be named for their manuscript function, and section switches should state what has been removed. When richer language is needed, the next layer should add domain-specific validators rather than relaxing provenance.
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-5-start-->
+```
 
 # Configuration: Schema-Controlled Lexicon, Slots, and Narrative Moves
 
@@ -490,11 +534,19 @@ The configured-field inventory separates 126 explicit YAML path(s) from 11 loade
 | `madlib.visualizations.section_token_allocation` | explicit | visualization | true |
 | `madlib.visualizations.token_injection_flow` | explicit | visualization | true |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-6-start-->
+```
 
 # Evaluation: Gate Criteria, QA Probes, and Failure Discovery
 
@@ -539,11 +591,19 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | Review packet completeness | Can a reviewer inspect every output surface needed to audit the method? | Copied outputs include manuscript, web, slides, figures, data, reports, validation, and copy statistics. | `output/templates/template_madlib and output/reports/output_statistics.json` |
 | Fork migration sufficiency | Does the documentation tell forks which surfaces to change before adding domain claims? | README, STANDALONE, manuscript README, and Authoring Contract list config, source, test, validator, and claim-ledger obligations. | `README.md, STANDALONE.md, manuscript/README.md, and output/manuscript/10_authoring_contract.md` |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-7-start-->
+```
 
 # Reproducibility: Seeded Regeneration and Artifact Trace
 
@@ -554,17 +614,25 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
 - Config hash: `2b7844ce7bd7da5c`
-- Generated: `2026-11-08T08:12:22Z` (derived from `SOURCE_DATE_EPOCH`; an
+- Generated: `2026-11-08T17:06:51Z` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
 - Python: `3.14.10`
 - Platform: `Linux x86_64`
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-7-end-->
+```
 
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-8-start-->
+```
 
 # Limitations: Non-Claims, Misuse Modes, and Human Review
 
@@ -592,11 +660,19 @@ The author remains responsible for theory, citations, reader expectations, and d
 | Review packet incompleteness | A reviewer receives PDF or HTML without the data, reports, figures, validation output, or copy statistics needed to inspect the method. | Stage 05 output statistics and copied-output validation. | Regenerate Stages 02-05 and include the full copied output surface in review. |
 | Fork migration ambiguity | A fork leaves authors unsure which exemplar surfaces must change for a domain-specific manuscript. | README, STANDALONE notes, manuscript README, and Authoring Contract review. | Document required config, source, test, claim-ledger, validator, and pipeline changes before making domain claims. |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-8-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-9-start-->
+```
 
 # Scope: Related Generators and Responsible Forking
 
@@ -606,11 +682,19 @@ The configured scope moves are distinguish generation from truth, limit publicat
 
 Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` record the declared repository and deposited identifiers when present, but those metadata do not turn the generated manuscript into empirical validation or reader-quality evidence.
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-9-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-10-start-->
+```
 
 # Authoring Contract: Human Review and Forking Obligations
 
@@ -633,10 +717,22 @@ The quality standard is claim humility. A fork that only changes words has not p
 | Assemble reviewer packet | Provide hydrated manuscript, rendered outputs, figures, data, reports, validation report, and output statistics together. | `output/templates/template_madlib` |
 | Write fork migration notes | Document config, source, test, validator, and claim-ledger changes required by a domain fork. | `README.md, STANDALONE.md, and data/claim_ledger.yaml` |
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-10-end-->
+```
+
 
 
 ---
 
 
 
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-11-start-->
+```
+
 # References
+
+```{=html}
+<!--template-web-source-456c3e640d34f4cfdc13226e0df3d792661e9e227dc281bd9129b3d4fd7f67fd-11-end-->
+```
