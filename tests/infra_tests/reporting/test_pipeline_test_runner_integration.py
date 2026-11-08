@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from textwrap import dedent
 
@@ -240,3 +241,72 @@ def test_generic_source_custody_postcheck_preserves_actual_nonzero(repo_root: Pa
     assert results["original_exit_code"] == actual_exit
     assert results["exit_code"] == 1
     assert "return 9" in (project / "src" / "demo_mod.py").read_text()
+
+
+@pytest.mark.parametrize(
+    "case",
+    ["native-signature", "plugin-opt-in", "undeclared-opt-in", "annotation-typo", "assertion", "coverage"],
+)
+@pytest.mark.timeout(120)
+def test_generic_native_profile_preserves_selection_and_failures(repo_root: Path, case: str) -> None:
+    project = repo_root / "projects" / "active" / "demo"
+    strict = case != "undeclared-opt-in"
+    addopts = "--strict-markers -m native_other" if strict else "-m native_other"
+    (project / "pyproject.toml").write_text(
+        "[tool.pytest.ini_options]\n"
+        f"addopts = {json.dumps(addopts)}\n"
+        'markers = ["native(payload): native signature", "native_other: project default"]\n'
+        "[tool.coverage.report]\nfail_under = 90\n"
+    )
+    conftest = project / "tests" / "conftest.py"
+    with conftest.open("a") as stream:
+        if case == "plugin-opt-in":
+            stream.write(
+                "\ndef pytest_configure(config):\n"
+                " config.addinivalue_line('markers', 'slow(reason): registered by native plugin')\n"
+            )
+        stream.write(
+            "\nimport json\n"
+            "def pytest_sessionfinish(session):\n"
+            " config = session.config\n"
+            " record = {'expression': config.option.markexpr, 'markers': config.getini('markers')}\n"
+            " (Path(__file__).parent.parent / 'output/native-selection.json').write_text(json.dumps(record))\n"
+        )
+    body = (
+        "import pytest\nfrom demo_mod import answer\n"
+        "@pytest.mark.native(payload='native signature is accepted')\n"
+        "def test_native():\n"
+        f" assert answer() == {8 if case == 'assertion' else 7}\n"
+    )
+    if case == "plugin-opt-in":
+        body += "@pytest.mark.slow(reason='opt in')\ndef test_opt_in():\n pytest.fail('excluded body ran')\n"
+    elif case == "undeclared-opt-in":
+        body += (
+            "@pytest.mark.slow\ndef test_slow():\n pytest.fail('undeclared slow ran')\n"
+            "@pytest.mark.network\ndef test_service():\n pytest.fail('undeclared service ran')\n"
+        )
+    elif case == "annotation-typo":
+        body += "@pytest.mark.native_typo\ndef test_typo():\n pass\n"
+    elif case == "coverage":
+        with (project / "src" / "demo_mod.py").open("a") as stream:
+            stream.write("\ndef uncovered():\n return 1\n")
+    (project / "tests" / "test_demo.py").write_text(body)
+
+    code, results = run_project_tests(repo_root, "active/demo")
+    if case in {"annotation-typo", "assertion", "coverage"}:
+        assert code != 0
+        assert results["original_exit_code"] != 0
+    else:
+        assert code == 0
+        assert results["passed"] == 1
+        actual = json.loads((project / "output/native-selection.json").read_text())
+        assert "native_other" not in actual["expression"]
+        if case in {"plugin-opt-in", "undeclared-opt-in"}:
+            assert "not slow" in actual["expression"]
+        if case == "undeclared-opt-in":
+            assert "not network" in actual["expression"]
+        else:
+            registered = {row.split(":", 1)[0].split("(", 1)[0].strip() for row in actual["markers"]}
+            selected_names = {part.removeprefix("not ") for part in actual["expression"].split(" and ") if part}
+            assert selected_names <= registered
+            assert "native_typo" not in registered

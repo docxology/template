@@ -64,7 +64,7 @@
           "file_count": 1,
           "largest_file": "template_sia_combined.pdf",
           "largest_file_path": "pdf/template_sia_combined.pdf",
-          "size_mb": "0.21"
+          "size_mb": "0.19"
         },
         "release": {
           "exists": true,
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 0.21
+            "size_mb": 0.19
           },
           "data": {
             "exists": true,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.21
+            "size_mb": 0.19
           },
           "release": {
             "exists": true,
@@ -243,7 +243,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.389873504638672
+      "total_size_mb": 2.3712778091430664
     },
     "figures": {
       "files": 5,
@@ -252,7 +252,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.21340179443359375
+      "size_mb": 0.19480609893798828
     },
     "stable_inventory": {
       "categories": {
@@ -270,7 +270,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 223768
+          "size_bytes": 204269
         },
         "release": {
           "files": 2,
@@ -291,7 +291,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 47,
-      "total_size_bytes": 2505964
+      "total_size_bytes": 2486465
     }
   },
   "recommendations": [],
@@ -302,12 +302,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-04T23:39:23Z",
+  "timestamp": "2026-11-06T18:06:46Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "275a0ebf6de18d3967ec1676cfc9cfb924dfcbf32f0913def0748fb4924d34d4",
-      "size_bytes": 15248
+      "sha256": "4a22611970111a4ecc791543d7ce7e57706875f9fc4d8d18d570745f1853c365",
+      "size_bytes": 14073
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -360,19 +360,19 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "db730e156dcb37f0762e4b84bbf4b73518970d644182cbe25376ddcc33bdb129"
+        "sha256": "e8384aeaacad0976b480afa671ebef0006e091a231a814bb7038fb50dbe95c4d"
       },
       "output": {
         "file_count": 47,
-        "sha256": "8053bfcb4d40b2ce613045bc1d2845f0c6163888bf854d7acf70e9f7660b176b"
+        "sha256": "8fd85dbc8fd9c85ff9acbdffa482bb1b40bf2fc235c962cea146ef718d47f348"
       },
       "source": {
         "file_count": 56,
         "sha256": "4120062e7c70f56ce1ef67e3f334f8894fa0f0fb05c01baa13eb6ca370d5467e"
       },
       "stage": {
-        "file_count": 1726,
-        "sha256": "78f433b909dc8f296b91f6f671b9f57dc0d460756267e1b2488b09d1bb4d6428"
+        "file_count": 1614,
+        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
       }
     },
     "project": "templates/template_sia",

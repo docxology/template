@@ -417,10 +417,10 @@ def run_per_project_pytest(
             Default: ``".coverage.project"``.
         fail_under: Minimum combined coverage percentage required by the
             final ``coverage report`` gate.
-        marker_expr: ``pytest -m`` expression. ``None`` uses
-            :data:`DEFAULT_MARKER_EXPR` (the deterministic lane excluding live
-            services, timing tests, and benchmark aliases). Pass ``""`` to
-            omit ``-m`` (collect all markers).
+        marker_expr: Explicit native ``pytest -m`` expression, kept unchanged.
+            ``None`` uses the resolved engine profile, intersected with each
+            native collection's declared/observed marks. Pass ``""`` to omit
+            the engine filter (native pytest ``addopts`` still apply).
         timeout: Per-test ``--timeout`` value forwarded to pytest.
         parallel: Opt-in pytest-xdist worker count (``"auto"`` or a positive
             integer). ``None`` falls back to the ``PYTEST_XDIST_WORKERS`` env
@@ -484,17 +484,19 @@ def run_per_project_pytest(
             )
         return 0 if allow_empty else 1
 
+    generated_profile = None
     resolved_markers = marker_expr
     if resolved_markers is None:
-        resolved_markers = build_profile_marker_expression(
-            resolve_test_profile(
-                profile,
-                include_slow=include_slow,
-                include_long_running=include_long_running,
-                include_ollama_tests=include_ollama_tests,
-                include_bench=include_bench,
-            )
+        generated_profile = resolve_test_profile(
+            profile,
+            include_slow=include_slow,
+            include_long_running=include_long_running,
+            include_ollama_tests=include_ollama_tests,
+            include_bench=include_bench,
         )
+        # Retain the complete requested policy in matrix identity/receipts;
+        # each real pytest config resolves its own effective native expression.
+        resolved_markers = build_profile_marker_expression(generated_profile)
     elif resolved_markers == "":
         resolved_markers = None
 
@@ -545,10 +547,11 @@ def run_per_project_pytest(
                 project_root,
                 tests_dir,
                 is_first=(index == 0),
-                marker_expr=resolved_markers,
+                marker_expr=resolved_markers if generated_profile is None else None,
                 timeout=timeout,
                 parallel=parallel,
                 fail_under=project_floor,
+                generated_profile=generated_profile,
             )
         )
         specs.append(

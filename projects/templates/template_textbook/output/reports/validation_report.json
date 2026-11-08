@@ -61,7 +61,7 @@
           "file_count": 1,
           "largest_file": "template_textbook_combined.pdf",
           "largest_file_path": "pdf/template_textbook_combined.pdf",
-          "size_mb": "1.84"
+          "size_mb": "1.47"
         },
         "release": {
           "exists": true,
@@ -117,7 +117,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 1.84
+            "size_mb": 1.47
           },
           "data": {
             "exists": true,
@@ -171,7 +171,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.84
+            "size_mb": 1.47
           },
           "release": {
             "exists": true,
@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 9.905265808105469
+      "total_size_mb": 9.535432815551758
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -244,7 +244,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.842081069946289
+      "size_mb": 1.469411849975586
     },
     "stable_inventory": {
       "categories": {
@@ -254,7 +254,7 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 1138231
+          "size_bytes": 1138230
         },
         "epub": {
           "files": 1,
@@ -266,7 +266,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1931562
+          "size_bytes": 1540790
         },
         "release": {
           "files": 2,
@@ -278,12 +278,12 @@
         },
         "web": {
           "files": 53,
-          "size_bytes": 3722003
+          "size_bytes": 3724978
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 10386424
+      "total_size_bytes": 9998626
     }
   },
   "recommendations": [],
@@ -294,12 +294,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-04T23:39:23Z",
+  "timestamp": "2026-11-06T18:06:46Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "bcb87f2ab04ce103afadee58cffd614e12ccbd301812064d8f05bf226be045b6",
-      "size_bytes": 53396
+      "sha256": "9edfe4b93dc1dc1db416e3e5f70524031b8afad0ec48275d07f6cd2d98ae1b26",
+      "size_bytes": 49396
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -610,19 +610,19 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "9053ff3fd0d9a0237b165e1f42d569cbd7b95e80bee128c8eab95a54338861f7"
+        "sha256": "35e866524da39de80fe7ffad42b9bc94f201393e4d0b460bc6606e131756eb26"
       },
       "output": {
         "file_count": 160,
-        "sha256": "8c81498dc775a88ebd7b2b3f01a475c670258cda878a17ab7a1d303e9dbb8f9a"
+        "sha256": "de81e5e83f1973c398f53c8bc5c0fcefd5fb2b1a4c65e76bc7ac1d8659a57aa6"
       },
       "source": {
         "file_count": 94,
         "sha256": "db667c4f77bc05c9b0f749c72f13d30b1d58d277a8d5acc24b53672fa475386f"
       },
       "stage": {
-        "file_count": 1726,
-        "sha256": "78f433b909dc8f296b91f6f671b9f57dc0d460756267e1b2488b09d1bb4d6428"
+        "file_count": 1614,
+        "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
       }
     },
     "project": "templates/template_textbook",
