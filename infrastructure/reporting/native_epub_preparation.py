@@ -4,17 +4,18 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import os
 from pathlib import Path, PurePosixPath
 import shutil
 import stat
+import tempfile
 import urllib.request
-from http.client import HTTPMessage, HTTPResponse
+from http.client import HTTPException, HTTPMessage, HTTPResponse
 from typing import IO, cast
 from urllib.parse import urlsplit
 import zipfile
 
 URL = "https://github.com/w3c/epubcheck/releases/download/v5.4.0/epubcheck-5.4.0.zip"
+API_URL = "https://api.github.com/repos/w3c/epubcheck/releases/assets/565327111"
 SIZE = 33_093_170
 SHA256 = "33350c61038e71dfb3d45a76aed04bf5481e6d5500cb780f6e98db8bbd15a28c"
 MAX_EXPANDED = 64 * 1024 * 1024
@@ -90,31 +91,46 @@ def _download_response(request: urllib.request.Request) -> HTTPResponse:
     return cast(HTTPResponse, opener.open(request, timeout=60))
 
 
+def _download_archive(request: urllib.request.Request, archive: Path) -> None:
+    """Stream and verify one candidate against the pinned release bytes."""
+    digest = hashlib.sha256()
+    size = 0
+    with _download_response(request) as response, archive.open("xb") as output:
+        if not response.geturl().startswith("https://"):
+            raise ValueError("EPUBCheck download left HTTPS")
+        while chunk := response.read(1024 * 1024):
+            size += len(chunk)
+            if size > SIZE:
+                raise ValueError("EPUBCheck download exceeds exact release size")
+            digest.update(chunk)
+            output.write(chunk)
+    if size != SIZE or digest.hexdigest() != SHA256:
+        raise ValueError("EPUBCheck official release size/digest mismatch")
+
+
 def prepare(destination: Path) -> Path:
-    """Download exact authenticated release bytes; never execute downloaded code."""
+    """Download the pinned EPUBCheck bundle from its official release routes."""
     destination = destination.absolute()
     if destination.exists() or destination.is_symlink():
         raise ValueError("EPUBCheck preparation requires a fresh destination")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    archive = destination.parent / f".{destination.name}.{os.getpid()}.zip"
-    digest = hashlib.sha256()
-    size = 0
-    try:
-        request = urllib.request.Request(URL, headers={"User-Agent": "template-native-preparation"})
-        with _download_response(request) as response, archive.open("xb") as output:
-            if not response.geturl().startswith("https://"):
-                raise ValueError("EPUBCheck download left HTTPS")
-            while chunk := response.read(1024 * 1024):
-                size += len(chunk)
-                if size > SIZE:
-                    raise ValueError("EPUBCheck download exceeds exact release size")
-                digest.update(chunk)
-                output.write(chunk)
-        if size != SIZE or digest.hexdigest() != SHA256:
-            raise ValueError("EPUBCheck official release size/digest mismatch")
-        return extract_bundle(archive, destination)
-    finally:
-        archive.unlink(missing_ok=True)
+    headers = {
+        "User-Agent": "template-native-preparation",
+        "Accept": "application/octet-stream",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    failures = []
+    with tempfile.TemporaryDirectory(prefix=f".{destination.name}.", dir=destination.parent) as scratch:
+        for name, url in (("asset-api", API_URL), ("release-url", URL)):
+            archive = Path(scratch) / f"{name}.zip"
+            request = urllib.request.Request(url, headers=headers)
+            try:
+                _download_archive(request, archive)
+            except (HTTPException, OSError) as error:
+                failures.append(f"{name} ({type(error).__name__})")
+            else:
+                return extract_bundle(archive, destination)
+    raise ValueError("EPUBCheck verified download failed via " + ", ".join(failures))
 
 
 def main() -> None:
