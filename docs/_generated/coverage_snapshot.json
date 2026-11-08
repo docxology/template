@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.16 %",
-      "source_hash": "7f47cf4565c9ecb512fff9aa8333dddeb1578399b8af1af51049e8c9603ae638"
+      "source_hash": "f556e8a473a5867a22610dce843d7997f40350266da2cf2e0e32e42f2e74400b"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.04 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "7a60c659416cad744afa907b1ab2fbf4b9ea55fb",
+  "source_commit": "65ab216daa2d9880b1df734d9c4def064b748773",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -111,7 +111,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "dea4e7474fb08e156770c89d875c4624f8df470df315e9f980ed12c6b9e0d78c",
+        "digest": "3f81d74b13f417c96eb9c8f4f45fae68edd81053b10145b110358f16024ae18c",
         "entries": [
           {
             "identity": "sha256",
@@ -157,7 +157,7 @@
           {
             "identity": "sha256",
             "path": "docs/guides/manuscript-semantics.md",
-            "sha256": "5d4a9fac94ed52cc97ed40d1f95b24c40ef50a105cafaa859081a80eb6fec663",
+            "sha256": "0853646c1c4349b36d50ee73954cb380769133aa3b54ec0462e2578b615876ff",
             "type": "file"
           },
           {
@@ -205,7 +205,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "7f47cf4565c9ecb512fff9aa8333dddeb1578399b8af1af51049e8c9603ae638",
+      "template_active_inference": "f556e8a473a5867a22610dce843d7997f40350266da2cf2e0e32e42f2e74400b",
       "template_advanced_literature_review": "d864474b876043e68a124790e4830b4ea8b3a993364434f120aa69752bded44a",
       "template_autopoiesis": "a21f9678b1a68737915b19f23de0e677ed18d9d305a7e35fb11545077dfc5899",
       "template_autoresearch_project": "2866c19c1fbc2780c08431e7ba3c747f3ec45ba9f11c17a683638264e00f3b2e",
