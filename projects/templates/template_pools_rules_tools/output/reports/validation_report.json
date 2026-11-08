@@ -104,7 +104,7 @@
           "file_count": 12,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.24"
+          "size_mb": "2.29"
         }
       },
       "file_counts": {
@@ -237,7 +237,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.24
+            "size_mb": 2.29
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.91030216217041
+      "total_size_mb": 7.96292781829834
     },
     "figures": {
       "files": 10,
@@ -282,7 +282,7 @@
         },
         "reports": {
           "files": 4,
-          "size_bytes": 8951
+          "size_bytes": 8958
         },
         "root": {
           "files": 1,
@@ -294,12 +294,12 @@
         },
         "web": {
           "files": 12,
-          "size_bytes": 2350826
+          "size_bytes": 2406001
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 60,
-      "total_size_bytes": 8294553
+      "total_size_bytes": 8349735
     }
   },
   "recommendations": [],
@@ -310,22 +310,22 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T05:36:36Z",
+  "timestamp": "2026-11-08T11:03:37Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "daa32b3abb59401a69eef048d237658cefff4e3ec4990961b20fc3586c72f4f8",
+      "sha256": "b63266bcf1058271dd31f2a658f84463adc422aa62581ac6fc61ebb105f03a45",
       "size_bytes": 19627
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "b02292d7646e34fb0f18e6197503d14d67720c41045d1f8987a77ff7be396c89",
-      "size_bytes": 60698
+      "sha256": "0c7bef7c011e143575bf356707a550e355a3fe138f1f49383383a9a6e4947e50",
+      "size_bytes": 62538
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "fbe77fea8a1b3c148e3c60e6136ff255419d49b31f00212dfd39976890fdba7b",
-      "size_bytes": 2116
+      "sha256": "c62f321eac2fd2f5842dd3518c4b1d87ba52d1ec372ace4ab6352d28c41e4dd1",
+      "size_bytes": 2123
     },
     "consumed_manuscript": [
       {
@@ -384,15 +384,15 @@
       },
       "output": {
         "file_count": 60,
-        "sha256": "7ae489a1e17335135b3428a2d345a099059b9923c707339220180c4e492ae602"
+        "sha256": "0c091e878cea50e76e4f44a135439a511c1c12699a652f6994c750b440ff0ac1"
       },
       "source": {
         "file_count": 51,
         "sha256": "ef590270c743c586ba3acab9ea34212360abbacf03ed71d48887f1938968f7b0"
       },
       "stage": {
-        "file_count": 1755,
-        "sha256": "5ceb60045cfbb85a1d9fcd666efe03024de3fcfcc25347e75ff8173b15d3f8b8"
+        "file_count": 1758,
+        "sha256": "67c3928df74b369c44b9f8c380b359b8d31616f66ca530d9467d7fe0cf174fde"
       }
     },
     "project": "templates/template_pools_rules_tools",

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03_results.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration" />
+  <title>Bounded AutoResearch for a Tiny Reproducible Machine-Learning
+Task</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +174,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -232,7 +319,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -250,8 +344,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -264,8 +356,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -493,10 +583,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -547,10 +645,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -579,8 +673,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:results">Results</h1>
-<h2 id="sec:candidate-outcome">Candidate Outcome</h2>
+<h1 data-number="4" id="sec:results"><span
+class="header-section-number">4</span> Results</h1>
+<h2 data-number="4.1" id="sec:candidate-outcome"><span
+class="header-section-number">4.1</span> Candidate Outcome</h2>
 <p>The generated loop selected <code>exp-mlp-tanh-64</code>
 (<code>One-hidden-layer tanh MLP</code>, <code>MLP</code>) after
 evaluating <code>4</code> candidate(s) from a proposed set of
@@ -600,30 +696,22 @@ execution, and selected-candidate recording. Rank-stability diagnostics
 report that the selected candidate is top ranked in <code>72.5%</code>
 of deterministic bootstrap resamples, with runner-up
 <code>exp-mlp-relu-32</code>. The candidate score figure is registered
-as <span class="citation"
-data-cites="fig:ml_candidate_scores">@fig:ml_candidate_scores</span>,
-the confusion matrix as <span class="citation"
-data-cites="fig:ml_confusion_matrix">@fig:ml_confusion_matrix</span>,
-the per-class diagnostic as <span class="citation"
-data-cites="fig:ml_per_class_accuracy">@fig:ml_per_class_accuracy</span>,
-the learning curves as <span class="citation"
-data-cites="fig:ml_learning_curves">@fig:ml_learning_curves</span>, the
-complexity diagnostic as <span class="citation"
-data-cites="fig:ml_complexity_accuracy">@fig:ml_complexity_accuracy</span>,
-the selected-candidate error examples as <span class="citation"
-data-cites="fig:mnist_error_examples">@fig:mnist_error_examples</span>,
-the candidate lifecycle diagnostic as <span class="citation"
-data-cites="fig:autoresearch_candidate_lifecycle">@fig:autoresearch_candidate_lifecycle</span>,
-rank stability as <span class="citation"
-data-cites="fig:ml_candidate_rank_stability">@fig:ml_candidate_rank_stability</span>,
-the training-dynamics diagnostic as <span class="citation"
-data-cites="fig:ml_training_dynamics">@fig:ml_training_dynamics</span>,
-the final readiness matrix as <span class="citation"
-data-cites="fig:autoresearch_stage_matrix">@fig:autoresearch_stage_matrix</span>,
-and the process closure as <span class="citation"
-data-cites="fig:autoresearch_closure_flow">@fig:autoresearch_closure_flow</span>.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Candidate accuracy intervals from output/data/ml_candidate_intervals.json ; intervals describe the fixed local test s…"><table id="tbl:candidate-intervals" data-responsive-table="true">
-<caption>Candidate accuracy intervals from
+as fig. <a href="#fig:ml_candidate_scores">4</a>, the confusion matrix
+as fig. <a href="#fig:ml_confusion_matrix">6</a>, the per-class
+diagnostic as fig. <a href="#fig:ml_per_class_accuracy">7</a>, the
+learning curves as fig. <a href="#fig:ml_learning_curves">8</a>, the
+complexity diagnostic as fig. <a
+href="#fig:ml_complexity_accuracy">10</a>, the selected-candidate error
+examples as fig. <a href="#fig:mnist_error_examples">11</a>, the
+candidate lifecycle diagnostic as fig. <a
+href="#fig:autoresearch_candidate_lifecycle">12</a>, rank stability as
+fig. <a href="#fig:ml_candidate_rank_stability">5</a>, the
+training-dynamics diagnostic as fig. <a
+href="#fig:ml_training_dynamics">9</a>, the final readiness matrix as
+fig. <a href="#fig:autoresearch_stage_matrix">23</a>, and the process
+closure as fig. <a href="#fig:autoresearch_closure_flow">24</a>.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 5: Candidate accuracy intervals from output/data/ml_candidate_intervals.json ; intervals describe the fixed loc…"><table id="tbl:candidate-intervals" data-responsive-table="true">
+<caption>Table 5: Candidate accuracy intervals from
 <code>output/data/ml_candidate_intervals.json</code>; intervals describe
 the fixed local test split.</caption>
 <thead>
@@ -673,8 +761,8 @@ the fixed local test split.</caption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Candidate rank-stability table from output/data/ml_candidate_rank_stability.json ; frequencies are deterministic loca…"><table id="tbl:candidate-rank-stability" data-responsive-table="true">
-<caption>Candidate rank-stability table from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 6: Candidate rank-stability table from output/data/ml_candidate_rank_stability.json ; frequencies are determini…"><table id="tbl:candidate-rank-stability" data-responsive-table="true">
+<caption>Table 6: Candidate rank-stability table from
 <code>output/data/ml_candidate_rank_stability.json</code>; frequencies
 are deterministic local bootstrap summaries.</caption>
 <colgroup>
@@ -724,12 +812,13 @@ are deterministic local bootstrap summaries.</caption>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:run-derived-figures">Run-Derived Figures</h2>
+<h2 data-number="4.2" id="sec:run-derived-figures"><span
+class="header-section-number">4.2</span> Run-Derived Figures</h2>
 <figure id="fig:ml_candidate_scores">
-<a class="figure-full-size-link" href="../figures/ml_candidate_scores.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Held-out accuracy with Wilson intervals"><img src="../figures/ml_candidate_scores.png"
+<a class="figure-full-size-link" href="../figures/ml_candidate_scores.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Held-out accuracy with Wilson intervals"><img src="../figures/ml_candidate_scores.png"
 alt="Lollipop chart comparing baseline and evaluated candidate accuracies with Wilson interval error bars." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Held-out accuracy with Wilson intervals
-for the baseline and evaluated candidates from
+<figcaption>Figure 4: Held-out accuracy with Wilson
+intervals for the baseline and evaluated candidates from
 output/data/ml_candidate_intervals.json; accepted candidate
 exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed
 subset, with deferred proposals kept in the candidate ledger. Generation
@@ -738,9 +827,9 @@ direct labels. Registry metadata records the generation method, source
 artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_candidate_rank_stability">
-<a class="figure-full-size-link" href="../figures/ml_candidate_rank_stability.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json"><img src="../figures/ml_candidate_rank_stability.png"
+<a class="figure-full-size-link" href="../figures/ml_candidate_rank_stability.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json"><img src="../figures/ml_candidate_rank_stability.png"
 alt="Two-panel chart of candidate top-rank frequency and mean rank under deterministic bootstrap resampling." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Rank-stability summary for
+<figcaption>Figure 5: Rank-stability summary for
 exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json;
 deterministic local bootstrap resampling shows how often each evaluated
 candidate ranks first under the fixed test split. Generation method:
@@ -749,43 +838,45 @@ records the generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <figure id="fig:ml_confusion_matrix">
-<a class="figure-full-size-link" href="../figures/ml_confusion_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit…"><img src="../figures/ml_confusion_matrix.png"
+<a class="figure-full-size-link" href="../figures/ml_confusion_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 6, Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit…"><img src="../figures/ml_confusion_matrix.png"
 alt="Ten-by-ten confusion matrix for the accepted candidate on the local test split." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Accepted-candidate confusion matrix for
-exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test
-split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses
-the selected run, not general full-dataset performance. Generation
-method: Row-normalized heatmap with cell counts and row percentages.
-Registry metadata records the generation method, source artifact, and
-claim boundary for validation.</figcaption>
+<figcaption>Figure 6: Accepted-candidate confusion
+matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database
+test split, sourced from output/data/ml_confusion_matrix.csv; it
+diagnoses the selected run, not general full-dataset performance.
+Generation method: Row-normalized heatmap with cell counts and row
+percentages. Registry metadata records the generation method, source
+artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_per_class_accuracy">
-<a class="figure-full-size-link" href="../figures/ml_per_class_accuracy.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv"><img src="../figures/ml_per_class_accuracy.png"
+<a class="figure-full-size-link" href="../figures/ml_per_class_accuracy.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv"><img src="../figures/ml_per_class_accuracy.png"
 alt="Bar chart of accepted-candidate accuracy for each true digit class." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Per-class accuracy for exp-mlp-tanh-64,
-computed from output/data/ml_confusion_matrix.csv; variation across
-digits is a run diagnostic for the fixed local test split. Generation
-method: Per-class accuracy bars computed from the confusion matrix
-diagonal. Registry metadata records the generation method, source
-artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 7: Per-class accuracy for
+exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv;
+variation across digits is a run diagnostic for the fixed local test
+split. Generation method: Per-class accuracy bars computed from the
+confusion matrix diagonal. Registry metadata records the generation
+method, source artifact, and claim boundary for validation.</figcaption>
 </figure>
-<h2 id="sec:training-error-diagnostics">Training And Error
+<h2 data-number="4.3" id="sec:training-error-diagnostics"><span
+class="header-section-number">4.3</span> Training And Error
 Diagnostics</h2>
 <figure id="fig:ml_learning_curves">
-<a class="figure-full-size-link" href="../figures/ml_learning_curves.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Epoch-level held-out accuracy curves"><img src="../figures/ml_learning_curves.png"
+<a class="figure-full-size-link" href="../figures/ml_learning_curves.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 8, Epoch-level held-out accuracy curves"><img src="../figures/ml_learning_curves.png"
 alt="Line chart of held-out accuracy by epoch for each evaluated candidate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Epoch-level held-out accuracy curves for
-evaluated candidates from output/data/ml_training_history.csv; the
-accepted curve is visually emphasized for exp-mlp-tanh-64. Generation
-method: Epoch-level held-out accuracy lines with accepted best-epoch
-marker. Registry metadata records the generation method, source
-artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 8: Epoch-level held-out accuracy
+curves for evaluated candidates from
+output/data/ml_training_history.csv; the accepted curve is visually
+emphasized for exp-mlp-tanh-64. Generation method: Epoch-level held-out
+accuracy lines with accepted best-epoch marker. Registry metadata
+records the generation method, source artifact, and claim boundary for
+validation.</figcaption>
 </figure>
 <figure id="fig:ml_training_dynamics">
-<a class="figure-full-size-link" href="../figures/ml_training_dynamics.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Configured-training dynamics for evaluated candidates from…"><img src="../figures/ml_training_dynamics.png"
+<a class="figure-full-size-link" href="../figures/ml_training_dynamics.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 9, Configured-training dynamics for evaluated candidates from…"><img src="../figures/ml_training_dynamics.png"
 alt="Two-panel chart showing final versus best held-out accuracy and train-test accuracy gaps by candidate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Configured-training dynamics for
-evaluated candidates from output/data/ml_training_diagnostics.json;
+<figcaption>Figure 9: Configured-training dynamics
+for evaluated candidates from output/data/ml_training_diagnostics.json;
 exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test
 gaps remain bounded to the local run. Generation method: Final and
 best-epoch accuracy bars plus train-test gap bars. Registry metadata
@@ -793,10 +884,10 @@ records the generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <figure id="fig:ml_complexity_accuracy">
-<a class="figure-full-size-link" href="../figures/ml_complexity_accuracy.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Parameter-count versus held-out accuracy"><img src="../figures/ml_complexity_accuracy.png"
+<a class="figure-full-size-link" href="../figures/ml_complexity_accuracy.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 10, Parameter-count versus held-out accuracy"><img src="../figures/ml_complexity_accuracy.png"
 alt="Scatter plot comparing parameter count and held-out accuracy." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Parameter-count versus held-out accuracy
-for the baseline and evaluated candidates from
+<figcaption>Figure 10: Parameter-count versus
+held-out accuracy for the baseline and evaluated candidates from
 output/data/ml_task_results.json; the accepted candidate is highlighted
 without claiming a general scaling law. Generation method: Log-parameter
 scatter plot against held-out accuracy. Registry metadata records the
@@ -804,20 +895,21 @@ generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <figure id="fig:mnist_error_examples">
-<a class="figure-full-size-link" href="../figures/mnist_error_examples.png" target="_blank" rel="noopener" aria-label="Open full-size figure, First accepted-candidate error examples"><img src="../figures/mnist_error_examples.png"
+<a class="figure-full-size-link" href="../figures/mnist_error_examples.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, First accepted-candidate error examples"><img src="../figures/mnist_error_examples.png"
 alt="Grid of accepted-candidate misclassified test examples with true and predicted labels." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>First accepted-candidate error examples
-for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and
-data/mnist_small.npz; these images support qualitative diagnosis only.
-Generation method: Deterministic grid of the first accepted-candidate
-misclassifications. Registry metadata records the generation method,
-source artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 11: First accepted-candidate error
+examples for exp-mlp-tanh-64, sourced from
+output/data/ml_error_examples.json and data/mnist_small.npz; these
+images support qualitative diagnosis only. Generation method:
+Deterministic grid of the first accepted-candidate misclassifications.
+Registry metadata records the generation method, source artifact, and
+claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:autoresearch_candidate_lifecycle">
-<a class="figure-full-size-link" href="../figures/autoresearch_candidate_lifecycle.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5…"><img src="../figures/autoresearch_candidate_lifecycle.png"
+<a class="figure-full-size-link" href="../figures/autoresearch_candidate_lifecycle.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 12, Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5…"><img src="../figures/autoresearch_candidate_lifecycle.png"
 alt="Bar chart of proposed, evaluated, accepted, rejected, and deferred candidate counts." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Candidate lifecycle ledger from
-output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed
+<figcaption>Figure 12: Candidate lifecycle ledger
+from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed
 candidates, with deferred proposals kept visible instead of executed
 automatically. Generation method: Candidate lifecycle status-count bar
 chart. Registry metadata records the generation method, source artifact,
@@ -828,8 +920,8 @@ final learning rate is <code>0.144</code>, its train-loss reduction is
 <code>4.161</code>, and its final train-test accuracy gap is
 <code>7.0%</code>. These values come from the configured training
 diagnostics rather than from a manually maintained result summary.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Configured-training diagnostics from output/data/ml_training_diagnostics.json ."><table id="tbl:training-diagnostics" data-responsive-table="true">
-<caption>Configured-training diagnostics from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 7: Configured-training diagnostics from output/data/ml_training_diagnostics.json ."><table id="tbl:training-diagnostics" data-responsive-table="true">
+<caption>Table 7: Configured-training diagnostics from
 <code>output/data/ml_training_diagnostics.json</code>.</caption>
 <colgroup>
 <col style="width: 12%" />
@@ -896,7 +988,8 @@ diagnostics rather than from a manually maintained result summary.</p>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:diagnostic-analysis">Diagnostic Analysis</h2>
+<h2 data-number="4.4" id="sec:diagnostic-analysis"><span
+class="header-section-number">4.4</span> Diagnostic Analysis</h2>
 <p>The selected candidate macro F1 is <code>89.4%</code>, with a
 held-out accuracy interval of <code>86.4% to 91.8%</code>. Probability
 diagnostics report expected calibration error <code>2.9%</code> and
@@ -905,51 +998,51 @@ pair is <code>4 -&gt; 9 (4)</code>, and the minimum selected-candidate
 accuracy across deterministic robustness transforms is
 <code>80.0%</code>. These values are descriptive diagnostics for the
 validated local run, not external benchmark claims.</p>
-<h3 id="sec:classification-error-structure">Classification And Error
+<h3 data-number="4.4.1" id="sec:classification-error-structure"><span
+class="header-section-number">4.4.1</span> Classification And Error
 Structure</h3>
 <p>The class-level and error-pattern diagnostics are intentionally
-visual-first: <span class="citation"
-data-cites="fig:ml_calibration_reliability">@fig:ml_calibration_reliability</span>
-checks confidence calibration, <span class="citation"
-data-cites="fig:ml_classification_metrics_heatmap">@fig:ml_classification_metrics_heatmap</span>
-separates precision, recall, and F1 by digit, and <span class="citation"
-data-cites="fig:ml_confusion_pairs">@fig:ml_confusion_pairs</span> ranks
-the non-diagonal confusions that most shape the selected-candidate error
-profile. The accompanying tables preserve the same values for audit and
-downstream comparison.</p>
+visual-first: fig. <a href="#fig:ml_calibration_reliability">13</a>
+checks confidence calibration, fig. <a
+href="#fig:ml_classification_metrics_heatmap">14</a> separates
+precision, recall, and F1 by digit, and fig. <a
+href="#fig:ml_confusion_pairs">15</a> ranks the non-diagonal confusions
+that most shape the selected-candidate error profile. The accompanying
+tables preserve the same values for audit and downstream comparison.</p>
 <figure id="fig:ml_calibration_reliability">
-<a class="figure-full-size-link" href="../figures/ml_calibration_reliability.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json"><img src="../figures/ml_calibration_reliability.png"
+<a class="figure-full-size-link" href="../figures/ml_calibration_reliability.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 13, Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json"><img src="../figures/ml_calibration_reliability.png"
 alt="Reliability curve with accepted-candidate confidence-bin counts." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Reliability curve for exp-mlp-tanh-64
-from output/data/ml_calibration_report.json; expected calibration error
-and bin counts summarize the accepted candidate on the fixed local test
-split. Generation method: Reliability curve with confidence-bin support
-histogram. Registry metadata records the generation method, source
-artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 13: Reliability curve for
+exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected
+calibration error and bin counts summarize the accepted candidate on the
+fixed local test split. Generation method: Reliability curve with
+confidence-bin support histogram. Registry metadata records the
+generation method, source artifact, and claim boundary for
+validation.</figcaption>
 </figure>
 <figure id="fig:ml_classification_metrics_heatmap">
-<a class="figure-full-size-link" href="../figures/ml_classification_metrics_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from…"><img src="../figures/ml_classification_metrics_heatmap.png"
+<a class="figure-full-size-link" href="../figures/ml_classification_metrics_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 14, Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from…"><img src="../figures/ml_classification_metrics_heatmap.png"
 alt="Heatmap of per-class precision, recall, and F1 for the accepted candidate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Per-class precision, recall, and F1 for
-exp-mlp-tanh-64, sourced from
+<figcaption>Figure 14: Per-class precision, recall,
+and F1 for exp-mlp-tanh-64, sourced from
 output/data/ml_classification_diagnostics.json; metrics are scoped to
 the local test split. Generation method: Per-class precision, recall,
 and F1 heatmap. Registry metadata records the generation method, source
 artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_confusion_pairs">
-<a class="figure-full-size-link" href="../figures/ml_confusion_pairs.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from…"><img src="../figures/ml_confusion_pairs.png"
+<a class="figure-full-size-link" href="../figures/ml_confusion_pairs.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 15, Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from…"><img src="../figures/ml_confusion_pairs.png"
 alt="Horizontal bar chart of the most frequent non-diagonal confusion pairs." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Top non-diagonal confusion pairs for
-exp-mlp-tanh-64, sourced from
+<figcaption>Figure 15: Top non-diagonal confusion
+pairs for exp-mlp-tanh-64, sourced from
 output/data/ml_classification_diagnostics.json; the bars highlight which
 local digit pairs account for accepted-candidate errors. Generation
 method: Ranked off-diagonal confusion-pair bars with true-class error
 rates. Registry metadata records the generation method, source artifact,
 and claim boundary for validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Accepted-candidate class diagnostics from output/data/ml_classification_diagnostics.json ."><table id="tbl:classification-diagnostics" data-responsive-table="true">
-<caption>Accepted-candidate class diagnostics from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 8: Accepted-candidate class diagnostics from output/data/ml_classification_diagnostics.json ."><table id="tbl:classification-diagnostics" data-responsive-table="true">
+<caption>Table 8: Accepted-candidate class diagnostics from
 <code>output/data/ml_classification_diagnostics.json</code>.</caption>
 <thead>
 <tr>
@@ -1033,8 +1126,8 @@ and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Calibration bins from output/data/ml_calibration_report.json ."><table id="tbl:calibration-bins" data-responsive-table="true">
-<caption>Calibration bins from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 9: Calibration bins from output/data/ml_calibration_report.json ."><table id="tbl:calibration-bins" data-responsive-table="true">
+<caption>Table 9: Calibration bins from
 <code>output/data/ml_calibration_report.json</code>.</caption>
 <thead>
 <tr>
@@ -1118,8 +1211,8 @@ and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Calibration-bin Wilson intervals from output/data/ml_calibration_bin_intervals.json ; empty bins are reported explici…"><table id="tbl:calibration-bin-intervals" data-responsive-table="true">
-<caption>Calibration-bin Wilson intervals from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 10: Calibration-bin Wilson intervals from output/data/ml_calibration_bin_intervals.json ; empty bins are report…"><table id="tbl:calibration-bin-intervals" data-responsive-table="true">
+<caption>Table 10: Calibration-bin Wilson intervals from
 <code>output/data/ml_calibration_bin_intervals.json</code>; empty bins
 are reported explicitly.</caption>
 <thead>
@@ -1215,8 +1308,8 @@ are reported explicitly.</caption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Top non-diagonal confusion pairs from output/data/ml_classification_diagnostics.json ."><table id="tbl:confusion-pairs" data-responsive-table="true">
-<caption>Top non-diagonal confusion pairs from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 11: Top non-diagonal confusion pairs from output/data/ml_classification_diagnostics.json ."><table id="tbl:confusion-pairs" data-responsive-table="true">
+<caption>Table 11: Top non-diagonal confusion pairs from
 <code>output/data/ml_classification_diagnostics.json</code>.</caption>
 <thead>
 <tr>
@@ -1278,8 +1371,10 @@ are reported explicitly.</caption>
 </tr>
 </tbody>
 </table></div>
-<h3 id="sec:uncertainty-generalization-perturbation">Uncertainty,
-Generalization, And Perturbation</h3>
+<h3 data-number="4.4.2"
+id="sec:uncertainty-generalization-perturbation"><span
+class="header-section-number">4.4.2</span> Uncertainty, Generalization,
+And Perturbation</h3>
 <p>Additional uncertainty and matched-comparison diagnostics report
 bootstrap accuracy interval <code>86.4% to 92.0%</code>, bootstrap
 macro-F1 interval <code>86.5% to 91.9%</code>, paired net accuracy gain
@@ -1289,24 +1384,20 @@ correct-prediction confidence <code>90.9%</code>, mean error confidence
 prediction(s). These diagnostics are generated from the fixed local test
 split and are reported as run evidence, not as population-level
 certification.</p>
-<p><span class="citation"
-data-cites="fig:ml_generalization_gap">@fig:ml_generalization_gap</span>
-compares train and test behavior, <span class="citation"
-data-cites="fig:ml_robustness_matrix">@fig:ml_robustness_matrix</span>
-shows deterministic no-retrain perturbation results, <span
-class="citation"
-data-cites="fig:ml_probability_margin_distribution">@fig:ml_probability_margin_distribution</span>
-summarizes confidence and margin distributions, <span class="citation"
-data-cites="fig:ml_bootstrap_intervals">@fig:ml_bootstrap_intervals</span>
-shows local resampling intervals, and <span class="citation"
-data-cites="fig:ml_paired_correctness">@fig:ml_paired_correctness</span>
-exposes the matched selected-versus-baseline correctness table used by
-the paired comparison.</p>
+<p>fig. <a href="#fig:ml_generalization_gap">16</a> compares train and
+test behavior, fig. <a href="#fig:ml_robustness_matrix">17</a> shows
+deterministic no-retrain perturbation results, fig. <a
+href="#fig:ml_probability_margin_distribution">18</a> summarizes
+confidence and margin distributions, fig. <a
+href="#fig:ml_bootstrap_intervals">19</a> shows local resampling
+intervals, and fig. <a href="#fig:ml_paired_correctness">20</a> exposes
+the matched selected-versus-baseline correctness table used by the
+paired comparison.</p>
 <figure id="fig:ml_generalization_gap">
-<a class="figure-full-size-link" href="../figures/ml_generalization_gap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Train/test accuracy and loss for evaluated candidates from…"><img src="../figures/ml_generalization_gap.png"
+<a class="figure-full-size-link" href="../figures/ml_generalization_gap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 16, Train/test accuracy and loss for evaluated candidates from…"><img src="../figures/ml_generalization_gap.png"
 alt="Grouped bars comparing train and test accuracy and loss by candidate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Train/test accuracy and loss for
-evaluated candidates from
+<figcaption>Figure 16: Train/test accuracy and loss
+for evaluated candidates from
 output/data/ml_classification_diagnostics.json; the plot exposes local
 generalization gaps without claiming full-dataset behavior. Generation
 method: Grouped train/test accuracy and loss bars by evaluated
@@ -1314,10 +1405,10 @@ candidate. Registry metadata records the generation method, source
 artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_robustness_matrix">
-<a class="figure-full-size-link" href="../figures/ml_robustness_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Accuracy for evaluated candidates under identity, one-pixel shifts"><img src="../figures/ml_robustness_matrix.png"
+<a class="figure-full-size-link" href="../figures/ml_robustness_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 17, Accuracy for evaluated candidates under identity, one-pixel shifts"><img src="../figures/ml_robustness_matrix.png"
 alt="Heatmap of candidate accuracy under identity, shift, and low-contrast transforms." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Accuracy for evaluated candidates under
-identity, one-pixel shifts, and low contrast from
+<figcaption>Figure 17: Accuracy for evaluated
+candidates under identity, one-pixel shifts, and low contrast from
 output/data/ml_robustness_report.json; the deterministic transforms
 provide a bounded smoke test only. Generation method:
 Candidate-by-transform accuracy heatmap for deterministic perturbations.
@@ -1325,10 +1416,10 @@ Registry metadata records the generation method, source artifact, and
 claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_probability_margin_distribution">
-<a class="figure-full-size-link" href="../figures/ml_probability_margin_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Confidence and prediction-margin histograms"><img src="../figures/ml_probability_margin_distribution.png"
+<a class="figure-full-size-link" href="../figures/ml_probability_margin_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 18, Confidence and prediction-margin histograms"><img src="../figures/ml_probability_margin_distribution.png"
 alt="Two histograms of accepted-candidate confidence and prediction margin by correctness." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Confidence and prediction-margin
-histograms for exp-mlp-tanh-64 from
+<figcaption>Figure 18: Confidence and
+prediction-margin histograms for exp-mlp-tanh-64 from
 output/data/ml_probability_diagnostics.json; the figure separates
 correct and incorrect local test predictions. Generation method:
 Confidence and margin histograms split by correctness. Registry metadata
@@ -1336,10 +1427,10 @@ records the generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <figure id="fig:ml_bootstrap_intervals">
-<a class="figure-full-size-link" href="../figures/ml_bootstrap_intervals.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Deterministic percentile-bootstrap intervals"><img src="../figures/ml_bootstrap_intervals.png"
+<a class="figure-full-size-link" href="../figures/ml_bootstrap_intervals.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 19, Deterministic percentile-bootstrap intervals"><img src="../figures/ml_bootstrap_intervals.png"
 alt="Horizontal interval chart for accepted-candidate accuracy and macro F1." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Deterministic percentile-bootstrap
-intervals for exp-mlp-tanh-64 from
+<figcaption>Figure 19: Deterministic
+percentile-bootstrap intervals for exp-mlp-tanh-64 from
 output/data/ml_bootstrap_intervals.json; the intervals summarize local
 sampling variation for accuracy and macro F1. Generation method:
 Horizontal percentile-bootstrap interval plot. Registry metadata records
@@ -1347,17 +1438,17 @@ the generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <figure id="fig:ml_paired_correctness">
-<a class="figure-full-size-link" href="../figures/ml_paired_correctness.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Matched correctness comparison between exp-mlp-tanh-64"><img src="../figures/ml_paired_correctness.png"
+<a class="figure-full-size-link" href="../figures/ml_paired_correctness.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 20, Matched correctness comparison between exp-mlp-tanh-64"><img src="../figures/ml_paired_correctness.png"
 alt="Two-by-two heatmap of baseline and accepted-candidate correctness on matched examples." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Matched correctness comparison between
-exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from
+<figcaption>Figure 20: Matched correctness comparison
+between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from
 output/data/ml_paired_comparison.json; discordant cells support the
 paired test summary. Generation method: Matched accepted-versus-baseline
 correctness heatmap. Registry metadata records the generation method,
 source artifact, and claim boundary for validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Deterministic no-retrain robustness smoke test from output/data/ml_robustness_report.json ."><table id="tbl:robustness-scores" data-responsive-table="true">
-<caption>Deterministic no-retrain robustness smoke test from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 12: Deterministic no-retrain robustness smoke test from output/data/ml_robustness_report.json ."><table id="tbl:robustness-scores" data-responsive-table="true">
+<caption>Table 12: Deterministic no-retrain robustness smoke test from
 <code>output/data/ml_robustness_report.json</code>.</caption>
 <thead>
 <tr>
@@ -1466,8 +1557,8 @@ source artifact, and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Accepted-candidate probability diagnostics from output/data/ml_probability_diagnostics.json ."><table id="tbl:probability-diagnostics" data-responsive-table="true">
-<caption>Accepted-candidate probability diagnostics from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 13: Accepted-candidate probability diagnostics from output/data/ml_probability_diagnostics.json ."><table id="tbl:probability-diagnostics" data-responsive-table="true">
+<caption>Table 13: Accepted-candidate probability diagnostics from
 <code>output/data/ml_probability_diagnostics.json</code>.</caption>
 <thead>
 <tr>
@@ -1506,8 +1597,8 @@ source artifact, and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Deterministic percentile-bootstrap intervals from output/data/ml_bootstrap_intervals.json ."><table id="tbl:bootstrap-intervals" data-responsive-table="true">
-<caption>Deterministic percentile-bootstrap intervals from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 14: Deterministic percentile-bootstrap intervals from output/data/ml_bootstrap_intervals.json ."><table id="tbl:bootstrap-intervals" data-responsive-table="true">
+<caption>Table 14: Deterministic percentile-bootstrap intervals from
 <code>output/data/ml_bootstrap_intervals.json</code>.</caption>
 <thead>
 <tr>
@@ -1535,9 +1626,9 @@ source artifact, and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Accepted-candidate versus baseline paired comparison from output/data/ml_paired_comparison.json ."><table id="tbl:paired-comparison" data-responsive-table="true">
-<caption>Accepted-candidate versus baseline paired comparison from
-<code>output/data/ml_paired_comparison.json</code>.</caption>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 15: Accepted-candidate versus baseline paired comparison from output/data/ml_paired_comparison.json ."><table id="tbl:paired-comparison" data-responsive-table="true">
+<caption>Table 15: Accepted-candidate versus baseline paired comparison
+from <code>output/data/ml_paired_comparison.json</code>.</caption>
 <thead>
 <tr>
 <th>Matched comparison statistic</th>
@@ -1575,48 +1666,49 @@ source artifact, and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<h3 id="sec:probability-quality-selective-prediction">Probability
-Quality And Selective Prediction</h3>
+<h3 data-number="4.4.3"
+id="sec:probability-quality-selective-prediction"><span
+class="header-section-number">4.4.3</span> Probability Quality And
+Selective Prediction</h3>
 <p>Probability-quality diagnostics report Brier score
 <code>0.161</code>, negative log likelihood <code>0.361</code>, top-2
 accuracy <code>95.6%</code>, and Cohen kappa <code>0.882</code> for the
 selected candidate. At the highest configured confidence threshold,
 retained coverage is <code>67.8%</code> and selective accuracy is
 <code>98.2%</code>.</p>
-<p>The selective-prediction view in <span class="citation"
-data-cites="fig:ml_selective_accuracy">@fig:ml_selective_accuracy</span>
-reports the configured confidence-threshold trade-off: retaining fewer
-predictions can raise selective accuracy, but the coverage table keeps
-that trade-off explicit. The candidate probability-quality comparison in
-<span class="citation"
-data-cites="fig:ml_probability_quality">@fig:ml_probability_quality</span>
-keeps accuracy separate from proper-score behavior, so the selected
-candidate is not treated as automatically best on every diagnostic
-axis.</p>
+<p>The selective-prediction view in fig. <a
+href="#fig:ml_selective_accuracy">21</a> reports the configured
+confidence-threshold trade-off: retaining fewer predictions can raise
+selective accuracy, but the coverage table keeps that trade-off
+explicit. The candidate probability-quality comparison in fig. <a
+href="#fig:ml_probability_quality">22</a> keeps accuracy separate from
+proper-score behavior, so the selected candidate is not treated as
+automatically best on every diagnostic axis.</p>
 <figure id="fig:ml_selective_accuracy">
-<a class="figure-full-size-link" href="../figures/ml_selective_accuracy.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json"><img src="../figures/ml_selective_accuracy.png"
+<a class="figure-full-size-link" href="../figures/ml_selective_accuracy.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 21, Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json"><img src="../figures/ml_selective_accuracy.png"
 alt="Line chart comparing coverage, selective accuracy, and overall accuracy by confidence threshold." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Confidence-threshold trade-off for
-exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot
-compares retained coverage, selective accuracy, and the unthresholded
-accepted-candidate accuracy on the fixed local split. Generation method:
-Confidence-threshold coverage and selective-accuracy line chart.
-Registry metadata records the generation method, source artifact, and
-claim boundary for validation.</figcaption>
+<figcaption>Figure 21: Confidence-threshold trade-off
+for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the
+plot compares retained coverage, selective accuracy, and the
+unthresholded accepted-candidate accuracy on the fixed local split.
+Generation method: Confidence-threshold coverage and selective-accuracy
+line chart. Registry metadata records the generation method, source
+artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_probability_quality">
-<a class="figure-full-size-link" href="../figures/ml_probability_quality.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Brier score and negative log likelihood"><img src="../figures/ml_probability_quality.png"
+<a class="figure-full-size-link" href="../figures/ml_probability_quality.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 22, Brier score and negative log likelihood"><img src="../figures/ml_probability_quality.png"
 alt="Paired horizontal bar charts of Brier score and negative log likelihood with the accepted candidate highlighted." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Brier score and negative log likelihood
-for evaluated candidates from output/data/ml_statistical_summary.json;
-lower values indicate better probability quality within the configured
-local run, and the accepted candidate is highlighted. Generation method:
-Brier score and negative-log-likelihood bar comparison. Registry
-metadata records the generation method, source artifact, and claim
-boundary for validation.</figcaption>
+<figcaption>Figure 22: Brier score and negative log
+likelihood for evaluated candidates from
+output/data/ml_statistical_summary.json; lower values indicate better
+probability quality within the configured local run, and the accepted
+candidate is highlighted. Generation method: Brier score and
+negative-log-likelihood bar comparison. Registry metadata records the
+generation method, source artifact, and claim boundary for
+validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Accepted-candidate statistical summary from output/data/ml_statistical_summary.json ."><table id="tbl:statistical-summary" data-responsive-table="true">
-<caption>Accepted-candidate statistical summary from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 16: Accepted-candidate statistical summary from output/data/ml_statistical_summary.json ."><table id="tbl:statistical-summary" data-responsive-table="true">
+<caption>Table 16: Accepted-candidate statistical summary from
 <code>output/data/ml_statistical_summary.json</code>.</caption>
 <thead>
 <tr>
@@ -1659,8 +1751,8 @@ boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Selective-accuracy threshold table from output/data/ml_statistical_summary.json ."><table id="tbl:selective-accuracy" data-responsive-table="true">
-<caption>Selective-accuracy threshold table from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 17: Selective-accuracy threshold table from output/data/ml_statistical_summary.json ."><table id="tbl:selective-accuracy" data-responsive-table="true">
+<caption>Table 17: Selective-accuracy threshold table from
 <code>output/data/ml_statistical_summary.json</code>.</caption>
 <colgroup>
 <col style="width: 20%" />
@@ -1716,8 +1808,8 @@ boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Candidate probability-quality table from output/data/ml_statistical_summary.json ."><table id="tbl:probability-quality" style="width:100%;" data-responsive-table="true">
-<caption>Candidate probability-quality table from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 18: Candidate probability-quality table from output/data/ml_statistical_summary.json ."><table id="tbl:probability-quality" style="width:100%;" data-responsive-table="true">
+<caption>Table 18: Candidate probability-quality table from
 <code>output/data/ml_statistical_summary.json</code>.</caption>
 <colgroup>
 <col style="width: 16%" />
@@ -1772,9 +1864,10 @@ boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:candidate-ledger">Candidate Ledger</h2>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Candidate lifecycle ledger from output/data/ml_candidate_ledger.json ."><table id="tbl:ml-candidate-ledger" data-responsive-table="true">
-<caption>Candidate lifecycle ledger from
+<h2 data-number="4.5" id="sec:candidate-ledger"><span
+class="header-section-number">4.5</span> Candidate Ledger</h2>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 19: Candidate lifecycle ledger from output/data/ml_candidate_ledger.json ."><table id="tbl:ml-candidate-ledger" data-responsive-table="true">
+<caption>Table 19: Candidate lifecycle ledger from
 <code>output/data/ml_candidate_ledger.json</code>.</caption>
 <colgroup>
 <col style="width: 20%" />
@@ -1843,8 +1936,8 @@ interval, probability quality, parameter count, and deterministic
 tie-break context for each evaluated candidate. The diagnostic-boundary
 table states what each generated surface supports and what it does not
 support.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Candidate-selection audit from output/data/ml_candidate_selection_audit.json ; the objective metric ranks candidates,…"><table id="tbl:candidate-selection-audit" data-responsive-table="true">
-<caption>Candidate-selection audit from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 20: Candidate-selection audit from output/data/ml_candidate_selection_audit.json ; the objective metric ranks c…"><table id="tbl:candidate-selection-audit" data-responsive-table="true">
+<caption>Table 20: Candidate-selection audit from
 <code>output/data/ml_candidate_selection_audit.json</code>; the
 objective metric ranks candidates, while probability diagnostics and
 parameter counts audit the chosen tie-break context.</caption>
@@ -1913,8 +2006,8 @@ parameter counts audit the chosen tie-break context.</caption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Diagnostic claim-boundary table from output/data/ml_diagnostic_boundary.json ."><table id="tbl:diagnostic-boundary" data-responsive-table="true">
-<caption>Diagnostic claim-boundary table from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 21: Diagnostic claim-boundary table from output/data/ml_diagnostic_boundary.json ."><table id="tbl:diagnostic-boundary" data-responsive-table="true">
+<caption>Table 21: Diagnostic claim-boundary table from
 <code>output/data/ml_diagnostic_boundary.json</code>.</caption>
 <colgroup>
 <col style="width: 20%" />
@@ -1979,7 +2072,8 @@ detection</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:readiness-review-artifacts">Readiness And Review
+<h2 data-number="4.6" id="sec:readiness-review-artifacts"><span
+class="header-section-number">4.6</span> Readiness And Review
 Artifacts</h2>
 <p>The broader AutoResearch run writes the reproducibility, benchmark,
 review, and manuscript-hydration surfaces summarized below. The schema
@@ -1990,10 +2084,10 @@ The phase ledger records <code>3</code> settlement pass(es), while the
 figure-quality report covers <code>25</code> registered figure(s) with
 validity <code>false</code>.</p>
 <figure id="fig:autoresearch_stage_matrix">
-<a class="figure-full-size-link" href="../figures/autoresearch_stage_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Validated AutoResearch run with 7 stages, 6 supported claims"><img src="../figures/autoresearch_stage_matrix.png"
+<a class="figure-full-size-link" href="../figures/autoresearch_stage_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 23, Validated AutoResearch run with 7 stages, 6 supported claims"><img src="../figures/autoresearch_stage_matrix.png"
 alt="Horizontal bar chart showing configured stages, supported claims, and required artifacts." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Validated AutoResearch run with 7 stages,
-6 supported claims, and 78 required artifacts from
+<figcaption>Figure 23: Validated AutoResearch run
+with 7 stages, 6 supported claims, and 78 required artifacts from
 output/data/autoresearch_loop.json; the count summarizes readiness
 artifacts, not human approval. Generation method: Horizontal count
 summary from final loop metrics. Registry metadata records the
@@ -2001,17 +2095,18 @@ generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <figure id="fig:autoresearch_closure_flow">
-<a class="figure-full-size-link" href="../figures/autoresearch_closure_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure, File-backed AutoResearch closure from program through review, with 6 supported claims"><img src="../figures/autoresearch_closure_flow.png"
+<a class="figure-full-size-link" href="../figures/autoresearch_closure_flow.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 24, File-backed AutoResearch closure from program through review, with 6 supported claims"><img src="../figures/autoresearch_closure_flow.png"
 alt="Flow diagram linking program, proposals, evaluation, ledgers, claims, manuscript, readiness, and review." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>File-backed AutoResearch closure from
-program through review, with 6 supported claims and readiness passed;
-review remains a deferred human decision and the provenance path remains
-inspectable. Generation method: File-backed process-flow diagram from
-final loop state. Registry metadata records the generation method,
-source artifact, and claim boundary for validation.</figcaption>
+<figcaption>Figure 24: File-backed AutoResearch
+closure from program through review, with 6 supported claims and
+readiness passed; review remains a deferred human decision and the
+provenance path remains inspectable. Generation method: File-backed
+process-flow diagram from final loop state. Registry metadata records
+the generation method, source artifact, and claim boundary for
+validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Reviewed upstream analysis and evidence paths from output/reports/artifact_manifest.json ; unreviewed paths are omitt…"><table id="tbl:autoresearch-loop" data-responsive-table="true">
-<caption>Reviewed upstream analysis and evidence paths from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 22: Reviewed upstream analysis and evidence paths from output/reports/artifact_manifest.json ; unreviewed paths…"><table id="tbl:autoresearch-loop" data-responsive-table="true">
+<caption>Table 22: Reviewed upstream analysis and evidence paths from
 <code>output/reports/artifact_manifest.json</code>; unreviewed paths are
 omitted, and that terminal manifest remains the complete byte
 authority.</caption>
@@ -2348,8 +2443,8 @@ authority.</caption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Review-gate decisions from output/data/review_decisions.json ."><table id="tbl:review-gates" data-responsive-table="true">
-<caption>Review-gate decisions from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 23: Review-gate decisions from output/data/review_decisions.json ."><table id="tbl:review-gates" data-responsive-table="true">
+<caption>Table 23: Review-gate decisions from
 <code>output/data/review_decisions.json</code>.</caption>
 <colgroup>
 <col style="width: 25%" />
@@ -2382,8 +2477,8 @@ readiness is not approval.</td>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Benchmark grading table from output/data/benchmark_scores.json ."><table id="tbl:benchmark-scores" data-responsive-table="true">
-<caption>Benchmark grading table from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 24: Benchmark grading table from output/data/benchmark_scores.json ."><table id="tbl:benchmark-scores" data-responsive-table="true">
+<caption>Table 24: Benchmark grading table from
 <code>output/data/benchmark_scores.json</code>.</caption>
 <colgroup>
 <col style="width: 25%" />
@@ -2414,8 +2509,8 @@ readiness is not approval.</td>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Deterministic phase ledger from output/data/autoresearch_phase_ledger.json ; settlement order is not an autonomy claim."><table id="tbl:phase-ledger" data-responsive-table="true">
-<caption>Deterministic phase ledger from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 25: Deterministic phase ledger from output/data/autoresearch_phase_ledger.json ; settlement order is not an aut…"><table id="tbl:phase-ledger" data-responsive-table="true">
+<caption>Table 25: Deterministic phase ledger from
 <code>output/data/autoresearch_phase_ledger.json</code>; settlement
 order is not an autonomy claim.</caption>
 <colgroup>
@@ -2549,8 +2644,8 @@ order is not an autonomy claim.</caption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Figure-quality checks from output/data/figure_quality_report.json ; 25 registered figure(s) were checked."><table id="tbl:figure-quality" data-responsive-table="true">
-<caption>Figure-quality checks from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 26: Figure-quality checks from output/data/figure_quality_report.json ; 25 registered figure(s) were checked."><table id="tbl:figure-quality" data-responsive-table="true">
+<caption>Table 26: Figure-quality checks from
 <code>output/data/figure_quality_report.json</code>; 25 registered
 figure(s) were checked.</caption>
 <colgroup>
@@ -2747,30 +2842,29 @@ figure(s) were checked.</caption>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:security-readiness-integrity">Security Readiness And
+<h2 data-number="4.7" id="sec:security-readiness-integrity"><span
+class="header-section-number">4.7</span> Security Readiness And
 Integrity Evidence</h2>
 <p>The local security profile reports attestation status
 <code>passed</code> after checking <code>80</code> file record(s), with
 <code>0</code> missing record(s) and <code>0</code> checksum
 mismatch(es). The inventory contains <code>14</code> input record(s) and
 <code>69</code> generated-artifact record(s). The integrity-chain figure
-is <span class="citation"
-data-cites="fig:autoresearch_integrity_chain">@fig:autoresearch_integrity_chain</span>.
-These values support local artifact-integrity claims only; they do not
-claim external signing, production SLSA compliance, or runtime security
-monitoring.</p>
+is fig. <a href="#fig:autoresearch_integrity_chain">25</a>. These values
+support local artifact-integrity claims only; they do not claim external
+signing, production SLSA compliance, or runtime security monitoring.</p>
 <figure id="fig:autoresearch_integrity_chain">
-<a class="figure-full-size-link" href="../figures/autoresearch_integrity_chain.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Local integrity chain from output/data/autoresearch_integrity_attestation.json"><img src="../figures/autoresearch_integrity_chain.png"
+<a class="figure-full-size-link" href="../figures/autoresearch_integrity_chain.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 25, Local integrity chain from output/data/autoresearch_integrity_attestation.json"><img src="../figures/autoresearch_integrity_chain.png"
 alt="Process-chain diagram and bar chart summarizing checked, missing, and mismatched local artifact records." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Local integrity chain from
+<figcaption>Figure 25: Local integrity chain from
 output/data/autoresearch_integrity_attestation.json; checksums summarize
 the observed run artifacts and remain unsigned local evidence.
 Generation method: Local checksum attestation chain with checked,
 missing, and mismatch counts. Registry metadata records the generation
 method, source artifact, and claim boundary for validation.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Integrity-attestation summary from output/data/autoresearch_integrity_attestation.json ."><table id="tbl:security-integrity" data-responsive-table="true">
-<caption>Integrity-attestation summary from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 27: Integrity-attestation summary from output/data/autoresearch_integrity_attestation.json ."><table id="tbl:security-integrity" data-responsive-table="true">
+<caption>Table 27: Integrity-attestation summary from
 <code>output/data/autoresearch_integrity_attestation.json</code>.</caption>
 <thead>
 <tr>
@@ -2805,7 +2899,8 @@ method, source artifact, and claim boundary for validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<h2 id="sec:manuscript-hydration-provenance">Manuscript Hydration
+<h2 data-number="4.8" id="sec:manuscript-hydration-provenance"><span
+class="header-section-number">4.8</span> Manuscript Hydration
 Provenance</h2>
 <p>The final run supports <code>6</code> manuscript-facing claim(s) and
 checks <code>78</code> required artifact(s). The rendered manuscript
@@ -2814,8 +2909,8 @@ and results track the latest analysis run rather than hard-coded counts.
 The final readiness status is <code>passed</code>; generated review
 decisions are recorded as deferred for human review rather than as
 self-approval.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Variable provenance summary from output/data/manuscript_variable_provenance.json ."><table id="tbl:variable-provenance" data-responsive-table="true">
-<caption>Variable provenance summary from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 28: Variable provenance summary from output/data/manuscript_variable_provenance.json ."><table id="tbl:variable-provenance" data-responsive-table="true">
+<caption>Table 28: Variable provenance summary from
 <code>output/data/manuscript_variable_provenance.json</code>.</caption>
 <thead>
 <tr>

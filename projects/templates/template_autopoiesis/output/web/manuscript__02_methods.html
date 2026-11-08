@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_methods.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
+  <title>Autopoietic Project Generation</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -236,7 +238,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -297,7 +383,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -315,8 +408,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -329,8 +420,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -558,10 +647,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -612,10 +709,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -644,8 +737,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 id="methods">Methods</h2>
-<h3 id="the-ae-generation-spine">The A→E generation spine</h3>
+<h2 data-number="3" id="methods"><span
+class="header-section-number">3</span> Methods</h2>
+<h3 data-number="3.1" id="the-ae-generation-spine"><span
+class="header-section-number">3.1</span> The A→E generation spine</h3>
 <p>Generation proceeds through five stages, each implemented as a pure
 function in its own module
 (<code>src/template_autopoiesis/core/grammar.py</code>,
@@ -661,8 +756,9 @@ output.</p>
     B --&gt; C[Materialize Child]
     C --&gt; D[Verify Integrity]
     D --&gt; E[Seal + QR]</code></pre>
-<h3 id="stage-a-grammar-loading-and-validation">Stage A — Grammar
-loading and validation</h3>
+<h3 data-number="3.2" id="stage-a-grammar-loading-and-validation"><span
+class="header-section-number">3.2</span> Stage A — Grammar loading and
+validation</h3>
 <p><code>load_grammar(project_root)</code> reads
 <code>manuscript/config.yaml</code>, extracts the
 <code>autopoiesis:</code> block, and hands it to
@@ -705,7 +801,8 @@ objects, the tuple of <code>deps</code>, and an optional
 <code>source_path</code> (excluded from equality/hash comparison so two
 grammars loaded from different files but with identical content still
 compare equal).</p>
-<h3 id="reserved-slots-vs.-effective-slots">Reserved slots vs. effective
+<h3 data-number="3.3" id="reserved-slots-vs.-effective-slots"><span
+class="header-section-number">3.3</span> Reserved slots vs. effective
 slots</h3>
 <p>Not every slot in the grammar contributes to what this paper calls
 the <em>effective product size</em>. <code>RESERVED_SLOTS</code> is a
@@ -752,18 +849,19 @@ is not one of the five <code>KNOWN_DOMAINS</code>), leaving every other
 slot — reserved or effective — untouched. This is how the pipeline can
 materialize “one child per domain” deterministically without re-deriving
 the whole grammar.</p>
-<h3 id="stage-b-deterministic-spec-expansion">Stage B — Deterministic
-spec expansion</h3>
+<h3 data-number="3.4" id="stage-b-deterministic-spec-expansion"><span
+class="header-section-number">3.4</span> Stage B — Deterministic spec
+expansion</h3>
 <p><code>expand(grammar, seed=None)</code> walks
 <code>grammar.slots</code> in declaration order and, for each slot,
 computes an index into that slot’s options via
 <code>_digest_index</code>:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _digest_index(seed, slot_name, ordinal, options):</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> <span class="ss">f&quot;</span><span class="sc">{</span>seed<span class="sc">}</span><span class="ch">\x1f</span><span class="sc">{</span>slot_name<span class="sc">}</span><span class="ch">\x1f</span><span class="sc">{</span>ordinal<span class="sc">}</span><span class="ch">\x1f</span><span class="sc">{</span><span class="st">&#39;,&#39;</span><span class="sc">.</span>join(options)<span class="sc">}</span><span class="ss">&quot;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    digest <span class="op">=</span> hashlib.sha256(key.encode()).digest()</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> <span class="bu">int</span>.from_bytes(digest[:<span class="dv">8</span>], <span class="st">&quot;big&quot;</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> value <span class="op">%</span> <span class="bu">len</span>(options)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _digest_index(seed, slot_name, ordinal, options):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> <span class="ss">f&quot;</span><span class="sc">{</span>seed<span class="sc">}</span><span class="ch">\x1f</span><span class="sc">{</span>slot_name<span class="sc">}</span><span class="ch">\x1f</span><span class="sc">{</span>ordinal<span class="sc">}</span><span class="ch">\x1f</span><span class="sc">{</span><span class="st">&#39;,&#39;</span><span class="sc">.</span>join(options)<span class="sc">}</span><span class="ss">&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    digest <span class="op">=</span> hashlib.sha256(key.encode()).digest()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    value <span class="op">=</span> <span class="bu">int</span>.from_bytes(digest[:<span class="dv">8</span>], <span class="st">&quot;big&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> value <span class="op">%</span> <span class="bu">len</span>(options)</span></code></pre></div>
 <p>Four inputs — the seed, the slot’s own name, its ordinal position in
 the slot list, and the full joined option string — are concatenated with
 an ASCII unit-separator (<code>\x1f</code>) between fields and hashed
@@ -816,8 +914,10 @@ rather than sampling, it walks the full <code>itertools.product</code>
 over every slot’s options (reserved slots included) and returns one
 plain dict per cell, giving direct access to the entire nominal product
 space for exhaustive audits.</p>
-<h3 id="stage-c-materialization-into-a-runnable-child-tree">Stage C —
-Materialization into a runnable child tree</h3>
+<h3 data-number="3.5"
+id="stage-c-materialization-into-a-runnable-child-tree"><span
+class="header-section-number">3.5</span> Stage C — Materialization into
+a runnable child tree</h3>
 <p><code>materialize(spec, out_root, template_root, clean=False)</code>
 turns a resolved <code>Spec</code> into an actual directory of files on
 disk. The child’s directory name is derived deterministically by
@@ -889,7 +989,8 @@ version (<code>"autopoiesis/provenance/1"</code>), the full
 <code>spec.to_dict()</code>, the computed tree hash, and the sorted list
 of every written relative path — the single artifact Stage D re-derives
 from.</p>
-<h3 id="stage-d-verification">Stage D — Verification</h3>
+<h3 data-number="3.6" id="stage-d-verification"><span
+class="header-section-number">3.6</span> Stage D — Verification</h3>
 <p><code>verify_child(child_root)</code> (implemented in
 <code>src/template_autopoiesis/gates/verify.py</code>, not
 <code>materialize.py</code>) loads <code>provenance.json</code>, reads
@@ -911,7 +1012,8 @@ a diff. <code>verify_child_full</code> extends this with a
 <code>schema_version_correct</code> check against
 <code>materialize.PROVENANCE_SCHEMA_VERSION</code>, catching provenance
 written by a different schema generation of the tool.</p>
-<h3 id="stage-e-sealing">Stage E — Sealing</h3>
+<h3 data-number="3.7" id="stage-e-sealing"><span
+class="header-section-number">3.7</span> Stage E — Sealing</h3>
 <p><code>sealing.py</code> provides the payload and image layer for
 embedding a tamper-evident summary alongside a generated child.
 <code>build_payload(spec_hash, tree_hash, seed)</code> serializes a
@@ -929,17 +1031,21 @@ tests — do not require an optional dependency to be installed.
 <code>spec_hash</code> field, mirroring the same
 <code>CheckResult</code>/<code>CheckReport</code> pattern used in Stage
 D rather than introducing a parallel reporting shape.</p>
-<h3 id="property-based-invariants">Property-based invariants</h3>
+<h3 data-number="3.8" id="property-based-invariants"><span
+class="header-section-number">3.8</span> Property-based invariants</h3>
 <p>Beyond the fixed example-based tests enumerated in the Honesty
 Contract’s ground-truth table (§4),
 <code>tests/gates/test_property_invariants.py</code> exercises the
 expansion and materialization functions against Hypothesis-generated
-inputs using the property-based testing paradigm
-[claessen2000quickcheck; maciver2019hypothesis]: rather than asserting
-fixed input/output pairs, these tests assert invariants that must hold
-across a swept range of seeds — <code>product_size</code> equals the
-literal product of every slot’s option count regardless of seed;
-<code>effective_product_size</code> does not exceed
+inputs using the property-based testing paradigm <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="index.html#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="index.html#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span>: rather than
+asserting fixed input/output pairs, these tests assert invariants that
+must hold across a swept range of seeds — <code>product_size</code>
+equals the literal product of every slot’s option count regardless of
+seed; <code>effective_product_size</code> does not exceed
 <code>product_size</code>; two grammars parsed from the same block
 produce the same <code>grammar_hash</code>; <code>expand()</code> called
 twice with the same seed produces the same <code>spec_hash</code> for
@@ -958,14 +1064,17 @@ under this project’s <code>dev</code> optional-dependency group in
 <code>pytest-cov</code> — it is imported unconditionally at the top of
 <code>test_property_invariants.py</code>, so it is a real (if dev-only)
 dependency of this test module, not a soft, try/except guarded one.</p>
-<h3 id="reproducibility-framing">Reproducibility framing</h3>
+<h3 data-number="3.9" id="reproducibility-framing"><span
+class="header-section-number">3.9</span> Reproducibility framing</h3>
 <p>The tree-hash construction used at both Stage C and Stage D
 deliberately mirrors the general goal of reproducible software builds
-[reproducible_builds]: a build (here, a materialize call) is
-reproducible exactly when independent re-derivations from the same
-inputs — grammar, seed, template source — produce byte-identical output,
-and that identity is checked by content hash rather than by trusting the
-process that produced it. The tree hash’s construction — sort every
+<span class="citation" data-cites="reproducible_builds">(<a
+href="index.html#ref-reproducible_builds" role="doc-biblioref">Lamb and Zacchiroli
+2022</a>)</span>: a build (here, a materialize call) is reproducible
+exactly when independent re-derivations from the same inputs — grammar,
+seed, template source — produce byte-identical output, and that identity
+is checked by content hash rather than by trusting the process that
+produced it. The tree hash’s construction — sort every
 <code>(path, content)</code> pair lexicographically, join as
 <code>"path:content"</code>, and take one SHA-256 of the concatenation —
 is a flat, single-level structure, not a binary hash tree.
@@ -973,10 +1082,12 @@ is a flat, single-level structure, not a binary hash tree.
 exposes a genuine binary <code>merkle_root()</code> (pairwise
 concatenate-and-hash up the tree, duplicating the final odd node when a
 level has odd cardinality), in the spirit of the hash-tree provenance
-idea introduced for digital signatures [merkle_tree_provenance]. As of
-this writing <code>merkle_root()</code> is a standalone,
-independently-tested utility: <code>integrity_profile</code> is declared
-as a reserved grammar slot (options <code>sha256</code>,
+idea introduced for digital signatures <span class="citation"
+data-cites="merkle_tree_provenance">(<a
+href="index.html#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span>. As of this writing <code>merkle_root()</code> is a
+standalone, independently-tested utility: <code>integrity_profile</code>
+is declared as a reserved grammar slot (options <code>sha256</code>,
 <code>merkle</code> in this project’s own <code>config.yaml</code>;
 <code>SYNTAX.md</code> documents a longer illustrative option list
 including <code>merkle_kmyth</code>), but neither

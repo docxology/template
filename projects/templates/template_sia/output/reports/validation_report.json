@@ -102,7 +102,7 @@
           "file_count": 10,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "1.99"
+          "size_mb": "2.01"
         }
       },
       "file_counts": {
@@ -233,7 +233,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.99
+            "size_mb": 2.01
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -243,7 +243,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.38759708404541
+      "total_size_mb": 2.4085769653320312
     },
     "figures": {
       "files": 5,
@@ -278,7 +278,7 @@
         },
         "reports": {
           "files": 5,
-          "size_bytes": 11489
+          "size_bytes": 11496
         },
         "runs": {
           "files": 13,
@@ -286,12 +286,12 @@
         },
         "web": {
           "files": 10,
-          "size_bytes": 2089038
+          "size_bytes": 2111030
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 47,
-      "total_size_bytes": 2503577
+      "total_size_bytes": 2525576
     }
   },
   "recommendations": [],
@@ -302,22 +302,22 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T05:36:36Z",
+  "timestamp": "2026-11-08T11:03:37Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "ef86db87ab8ffb243f92080141062ee615daebd1d92d67231dbb5ae45e769a0f",
+      "sha256": "9fa71643f4013dcc2b1c3d63b02cc534885dda05558dbaf6cd829dbf36f36b9f",
       "size_bytes": 15248
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "033ca54f3a4fd8caf8fd231f24c9e36796696b10116a3151d59174323f78d7ed",
-      "size_bytes": 5535
+      "sha256": "67380e1842f02ddbcc446482f0c39ac669d361b2693a77270e27c478c154eaad",
+      "size_bytes": 6915
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "85a891a3827cb68442d1cfa02daef620bb9d2894a5de62a457f4ea661be233f3",
-      "size_bytes": 1719
+      "sha256": "dd1b1c6817f2a97bca7b9a2dcded40c6ba9940f5ece353360dfb8e9b0e4e8f47",
+      "size_bytes": 1726
     },
     "consumed_manuscript": [
       {
@@ -364,15 +364,15 @@
       },
       "output": {
         "file_count": 47,
-        "sha256": "ca51f3b6e0003a7685e3ad5c609b03ad34024303913f8d44d3b48fa0371143ce"
+        "sha256": "e59ae521516e8f71181947452cda4b76b8b5a975175c706254adba0e80bb0d44"
       },
       "source": {
         "file_count": 56,
         "sha256": "4120062e7c70f56ce1ef67e3f334f8894fa0f0fb05c01baa13eb6ca370d5467e"
       },
       "stage": {
-        "file_count": 1755,
-        "sha256": "5ceb60045cfbb85a1d9fcd666efe03024de3fcfcc25347e75ff8173b15d3f8b8"
+        "file_count": 1758,
+        "sha256": "67c3928df74b369c44b9f8c380b359b8d31616f66ca530d9467d7fe0cf174fde"
       }
     },
     "project": "templates/template_sia",

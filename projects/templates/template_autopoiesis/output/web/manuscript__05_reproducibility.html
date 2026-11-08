@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_reproducibility.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
+  <title>Autopoietic Project Generation</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -236,7 +238,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -297,7 +383,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -315,8 +408,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -329,8 +420,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -558,10 +647,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -612,10 +709,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -644,7 +737,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 id="reproducibility">Reproducibility</h2>
+<h2 data-number="6" id="reproducibility"><span
+class="header-section-number">6</span> Reproducibility</h2>
 <p>Reproducibility is not a claim this manuscript makes about itself; it
 is a property the code enforces on every run. Every number that appears
 below the Determinism heading — a1f3e428cf1fb3e3, 42, 578, 91.88 — is a
@@ -659,14 +753,17 @@ handoff, the standalone path executes pytest. No hardcoded numeric
 fallback is accepted: if that subprocess cannot be parsed,
 <code>measure_test_summary</code> returns the string
 <code>"pending"</code> for both the test count and the coverage
-percentage rather than a plausible-looking number [reproducible_builds].
-This design choice is a direct consequence of an earlier failure mode in
-this project — a manuscript draft that stated fixed test and coverage
-values in prose instead of through the token pipeline. A number that
-cannot be traced back to a specific function call in <code>src/</code>
-is, for the purposes of this project, not a number this manuscript is
-permitted to assert.</p>
-<h3 id="determinism-guarantee">Determinism guarantee</h3>
+percentage rather than a plausible-looking number <span class="citation"
+data-cites="reproducible_builds">(<a href="index.html#ref-reproducible_builds"
+role="doc-biblioref">Lamb and Zacchiroli 2022</a>)</span>. This design
+choice is a direct consequence of an earlier failure mode in this
+project — a manuscript draft that stated fixed test and coverage values
+in prose instead of through the token pipeline. A number that cannot be
+traced back to a specific function call in <code>src/</code> is, for the
+purposes of this project, not a number this manuscript is permitted to
+assert.</p>
+<h3 data-number="6.1" id="determinism-guarantee"><span
+class="header-section-number">6.1</span> Determinism guarantee</h3>
 <p>Given the same <code>manuscript/config.yaml</code> grammar definition
 (grammar hash <code>a1f3e428cf1fb3e3</code>), the same seed
 (<code>42</code>), and the same <code>template_autopoiesis</code> source
@@ -722,7 +819,8 @@ derived seed, so a batch of <code>count</code> children is itself
 deterministic — the same <code>base_seed</code> and <code>count</code>
 yield the same sequence of child seeds on every invocation, hence the
 same sequence of children.</p>
-<h3 id="the-seal.json-provenance-mechanism">The seal.json provenance
+<h3 data-number="6.2" id="the-seal.json-provenance-mechanism"><span
+class="header-section-number">6.2</span> The seal.json provenance
 mechanism</h3>
 <p>Materialization and sealing are deliberately two separate steps, and
 the second one is optional. <code>materialize()</code> writes a
@@ -765,8 +863,9 @@ separate check
 (<code>src/template_autopoiesis/gates/verify.py::verify_seal()</code>)
 invoked only when a caller explicitly asks whether a seal exists,
 parses, and carries a <code>spec_hash</code>.</p>
-<h3 id="sha-256-vs.-merkle-integrity-profiles">SHA-256 vs. Merkle
-integrity profiles</h3>
+<h3 data-number="6.3" id="sha-256-vs.-merkle-integrity-profiles"><span
+class="header-section-number">6.3</span> SHA-256 vs. Merkle integrity
+profiles</h3>
 <p><code>src/template_autopoiesis/gates/integrity.py</code> provides two
 distinct ways of turning a collection of hashes into one summary digest,
 and the project does not conflate them:</p>
@@ -780,15 +879,16 @@ cheap to compute and cheap to verify, but a single changed file forces a
 full recompute over every path to detect <em>which</em> file changed —
 the digest itself carries no positional structure.</li>
 <li><strong><code>merkle_root()</code></strong> builds a binary Merkle
-tree [merkle_tree_provenance] over an <em>ordered</em> list of hex
-digests: each level pairwise-concatenates adjacent nodes and hashes the
-concatenation, duplicating an unpaired trailing node before hashing it
-with itself, until one root remains (the empty list is defined as the
-SHA-256 of the empty string, not a magic sentinel). Because the tree is
-addressable node-by-node, a Merkle profile supports proving that one
-specific file’s hash is part of the committed set without re-hashing
-every other file — a property the flat tree-hash profile does not
-have.</li>
+tree <span class="citation" data-cites="merkle_tree_provenance">(<a
+href="index.html#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
+1988</a>)</span> over an <em>ordered</em> list of hex digests: each
+level pairwise-concatenates adjacent nodes and hashes the concatenation,
+duplicating an unpaired trailing node before hashing it with itself,
+until one root remains (the empty list is defined as the SHA-256 of the
+empty string, not a magic sentinel). Because the tree is addressable
+node-by-node, a Merkle profile supports proving that one specific file’s
+hash is part of the committed set without re-hashing every other file —
+a property the flat tree-hash profile does not have.</li>
 </ul>
 <p>Both are exercised in this codebase, but at present the
 materialize/verify path in
@@ -803,19 +903,21 @@ provenance for <code>provenance.json</code> today — that would be
 exactly the kind of prose-outruns-code gap this project’s honesty checks
 exist to catch
 (<code>src/template_autopoiesis/core/honesty.py</code>).</p>
-<h3 id="recompute-verify-workflow">Recompute / verify workflow</h3>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Expand the grammar into a resolved spec (pure function of seed + config)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/autopoiesis.py expand <span class="at">--seed</span> 42 <span class="at">--output</span> output/spec.json</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Materialize the spec into a runnable child project + provenance.json</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/autopoiesis.py materialize <span class="at">--seed</span> 42 <span class="at">--out-root</span> output/children</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Recompute the tree hash from the live files and compare to provenance.json</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/autopoiesis.py verify output/children/<span class="op">&lt;</span>child_name<span class="op">&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. (optional) Seal the child — writes seal.json next to provenance.json</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/seal_child.py output/children/<span class="op">&lt;</span>child_name<span class="op">&gt;</span></span></code></pre></div>
+<h3 data-number="6.4" id="recompute-verify-workflow"><span
+class="header-section-number">6.4</span> Recompute / verify
+workflow</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Expand the grammar into a resolved spec (pure function of seed + config)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/autopoiesis.py expand <span class="at">--seed</span> 42 <span class="at">--output</span> output/spec.json</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Materialize the spec into a runnable child project + provenance.json</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/autopoiesis.py materialize <span class="at">--seed</span> 42 <span class="at">--out-root</span> output/children</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Recompute the tree hash from the live files and compare to provenance.json</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/autopoiesis.py verify output/children/<span class="op">&lt;</span>child_name<span class="op">&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. (optional) Seal the child — writes seal.json next to provenance.json</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/seal_child.py output/children/<span class="op">&lt;</span>child_name<span class="op">&gt;</span></span></code></pre></div>
 <p><code>verify</code>
 (<code>src/template_autopoiesis/core/cli.py::cmd_verify</code> →
 <code>src/template_autopoiesis/gates/verify.py::verify_child_full()</code>)
@@ -838,18 +940,22 @@ reported by step 3; this is the operational meaning of “deterministic”
 for this project, and it is exactly what a reviewer or a downstream user
 can check for themselves without trusting any claim made in this
 document.</p>
-<h3 id="toolchain">Toolchain</h3>
+<h3 data-number="6.5" id="toolchain"><span
+class="header-section-number">6.5</span> Toolchain</h3>
 <ul>
 <li>Python ≥ 3.10</li>
 <li><code>numpy</code>, <code>matplotlib</code>, <code>pyyaml</code>
 (runtime)</li>
 <li><code>pytest</code>, <code>pytest-cov</code> (test)</li>
-<li><code>hypothesis</code> [claessen2000quickcheck;
-maciver2019hypothesis] (declared under this project’s <code>dev</code>
-optional-dependency group in <code>pyproject.toml</code>, but imported
-unconditionally at the top of <code>test_property_invariants.py</code> —
-a real dependency of that test module, not a soft, try/except-guarded
-one; see Methods)</li>
+<li><code>hypothesis</code> <span class="citation"
+data-cites="claessen2000quickcheck maciver2019hypothesis">(<a
+href="index.html#ref-claessen2000quickcheck" role="doc-biblioref">Claessen and
+Hughes 2000</a>; <a href="index.html#ref-maciver2019hypothesis"
+role="doc-biblioref">MacIver et al. 2019</a>)</span> (declared under
+this project’s <code>dev</code> optional-dependency group in
+<code>pyproject.toml</code>, but imported unconditionally at the top of
+<code>test_property_invariants.py</code> — a real dependency of that
+test module, not a soft, try/except-guarded one; see Methods)</li>
 <li><code>qrcode</code>, <code>pillow</code> (optional —
 <code>src/template_autopoiesis/gates/sealing.py</code>’s QR/barcode
 payload encoding degrades to a deterministic stub when unavailable;
@@ -872,11 +978,12 @@ but manuscript rendering to PDF still requires the parent repository’s
 materialized tree is documented as within-platform only (same Python
 interpreter, same OS) rather than an unconditional cross-platform
 guarantee.</p>
-<h3 id="build-command">Build command</h3>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autopoiesis/tests/ <span class="dt">\</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov</span><span class="op">=</span>projects/templates/template_autopoiesis/src <span class="dt">\</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov-fail-under</span><span class="op">=</span>90</span></code></pre></div>
+<h3 data-number="6.6" id="build-command"><span
+class="header-section-number">6.6</span> Build command</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autopoiesis/tests/ <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov</span><span class="op">=</span>projects/templates/template_autopoiesis/src <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov-fail-under</span><span class="op">=</span>90</span></code></pre></div>
 <p>This command family uses branch instrumentation, explicitly selected
 by <code>measure_test_summary()</code> and enabled in this project’s own
 coverage configuration. The reported percentage combines statements and

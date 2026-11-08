@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>07_deep_search.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A configurable pipeline from query → references.bib → LLM-driven reading report" />
+  <title>Reproducible Literature Synthesis with infrastructure/search
+and infrastructure/reference</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -236,7 +239,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -297,7 +384,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -315,8 +409,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -329,8 +421,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -558,10 +648,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -612,10 +710,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -644,7 +738,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:deep_search">Deep Search</h1>
+<h1 data-number="8" id="sec:deep_search"><span
+class="header-section-number">8</span> Deep Search</h1>
 <p>The deep-search workflow extends the standard literature pipeline
 along three axes: <strong>breadth</strong> (multi-keyword fan-out),
 <strong>depth</strong> (full enrichment of every paper, abstract + PDF
@@ -652,7 +747,8 @@ fulltext), and <strong>archival quality</strong> (per-paper
 multi-section LLM reading notes saved as standalone markdown). It is
 invoked from the same configuration file but a separate orchestrator
 script.</p>
-<h2 id="configuration">Configuration</h2>
+<h2 data-number="8.1" id="configuration"><span
+class="header-section-number">8.1</span> Configuration</h2>
 <p>The <code>deep_search:</code> block in
 <code>manuscript/config.yaml</code> controls the run. The most-used
 knobs:</p>
@@ -680,11 +776,12 @@ case rather than emitting empty rows.</li>
 <li><code>write_unified_bibtex</code> / <code>unified_bibtex_path</code>
 — when <code>true</code>, a deduplicated, collision-suffixed BibTeX file
 is written under <code>manuscript/references_deep.bib</code> so it can
-be cited from the manuscript via Pandoc <code>[key]</code> syntax
+be cited from the manuscript via Pandoc <code>[@key]</code> syntax
 exactly the same way as the hand-curated
 <code>references.bib</code>.</li>
 </ul>
-<h2 id="pipeline-shape">Pipeline shape</h2>
+<h2 data-number="8.2" id="pipeline-shape"><span
+class="header-section-number">8.2</span> Pipeline shape</h2>
 <p>The deep-search pipeline reads
 <code>project_config.deep_search</code> from
 <code>manuscript/config.yaml</code>, runs one <code>SearchQuery</code>
@@ -728,7 +825,8 @@ in this subsection illustrates the same flow.</p>
     class SEARCH,CLIENT,ENRICH,KEYS,KR,AGG proc
     class LLM,SKIP llm
     class NOTE,BIB,AJSON,AMD out</code></pre>
-<h2 id="llm-prompt">LLM prompt</h2>
+<h2 data-number="8.3" id="llm-prompt"><span
+class="header-section-number">8.3</span> LLM prompt</h2>
 <p>The deep-search prompt is richer than the standard
 <code>synthesis.PROMPT_PER_PAPER</code>. It produces a self-contained
 reading note suitable for archival without re-reading the paper:</p>
@@ -761,7 +859,8 @@ reading-note text; runtime callers wrap an
 stack is unreachable, callers pass <code>None</code> and the per-paper
 synthesis stage is skipped entirely — no placeholder text is ever
 written into the archive.</p>
-<h2 id="on-disk-layout">On-disk layout</h2>
+<h2 data-number="8.4" id="on-disk-layout-1"><span
+class="header-section-number">8.4</span> On-disk layout</h2>
 <p>A successful deep-search run writes the following artefacts (paths
 shown relative to the project root); a Mermaid tree in this subsection
 depicts the same hierarchy:</p>
@@ -803,7 +902,8 @@ deduplicated unified BibTeX file.</li>
     class P,OUT,KW1,KW2,KW3,KW1_PP d
     class AGG,AMD,RS,KW1_P,KW1_R f
     class BIB bib</code></pre>
-<h2 id="determinism">Determinism</h2>
+<h2 data-number="8.5" id="determinism"><span
+class="header-section-number">8.5</span> Determinism</h2>
 <p>Three caches make this workflow replayable:</p>
 <ol type="1">
 <li><code>SearchCache</code>
@@ -818,7 +918,8 @@ temperature (<code>0.0</code>).</li>
 </ol>
 <p>Commit any subset of these caches to version control to freeze a
 run.</p>
-<h2 id="paperclip-backend">Paperclip backend</h2>
+<h2 data-number="8.6" id="paperclip-backend"><span
+class="header-section-number">8.6</span> Paperclip backend</h2>
 <p>The <a href="https://paperclip.gxl.ai">Paperclip backend</a> is
 opt-in. Enable it by:</p>
 <ol type="1">
@@ -844,27 +945,28 @@ migration) is captured into <code>SearchResult.errors[paperclip]</code>
 and the run continues. See
 <code>output/deep_search/&lt;keyword&gt;/papers.json</code> and the
 aggregate <code>run_summary.json</code> for the recorded errors.</p>
-<h2 id="cli">CLI</h2>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with everything from config.yaml (assumes project_config.deep_search.enabled: true)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Force-enable without touching config.yaml</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Override keyword list at the command line</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--keyword</span> <span class="st">&quot;convex optimization&quot;</span> <span class="at">--keyword</span> <span class="st">&quot;stochastic gradient descent&quot;</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip LLM stage even when config enables it</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-llm</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bypass cache (writes still happen)</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-cache</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Local-corpus mode (offline · CI-friendly)</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--corpus</span> projects/templates/template_search_project/data/corpus.json</span></code></pre></div>
+<h2 data-number="8.7" id="cli"><span
+class="header-section-number">8.7</span> CLI</h2>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with everything from config.yaml (assumes project_config.deep_search.enabled: true)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Force-enable without touching config.yaml</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Override keyword list at the command line</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--keyword</span> <span class="st">&quot;convex optimization&quot;</span> <span class="at">--keyword</span> <span class="st">&quot;stochastic gradient descent&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip LLM stage even when config enables it</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-llm</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Bypass cache (writes still happen)</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="at">--enable</span> <span class="at">--no-cache</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Local-corpus mode (offline · CI-friendly)</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_search_project/scripts/run_deep_search.py <span class="dt">\</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">--enable</span> <span class="at">--corpus</span> projects/templates/template_search_project/data/corpus.json</span></code></pre></div>
 </main>
 </body>
 </html>

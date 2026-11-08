@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-0-start-->
+```
+
 ```{=latex}
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -54,11 +58,19 @@ Structured manifest: `../data/transmission_manifest.json`
 
 <!-- BEGINNING OF TRANSMISSION -->
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-1-start-->
+```
 
 # Sheaf Track Coverage {#sec:sheaf_coverage}
 
@@ -108,11 +120,19 @@ This page summarizes which **sheaf fragment tracks** are bound for each IMRAD ro
 
 Appendix row `16_appendix_full_sheaf.md` binds 33 fragment track types as a composability proof (registry defines 34 types; optional `layers` is methods-only).
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-2-start-->
+```
 
 # Abstract {#sec:abstract}
 
@@ -122,11 +142,19 @@ We study a minimal Active Inference stack on toy models: a Bernoulli–Ising ana
 
 [@sec:results_invariants] records 12 / 12 invariant checks passed. SI planning horizon: 2 steps. Sweep RMSE 0 nats bounds analytical–empirical agreement on the coupling grid.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-3-start-->
+```
 
 ```{=latex}
 \phantomsection
@@ -148,11 +176,19 @@ Three **scientific tracks** (analytical, pymdp, sheaf composition) map onto 34 *
 
 The pymdp track follows the [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference) [@pymdp2024] with a minimal T-maze and planning horizon `policy_len = 2`. Other sections cite [@sec:methods_pymdp] instead of repeating that reference.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-4-start-->
+```
 
 # Contributions {#sec:intro_contributions}
 
@@ -189,11 +225,19 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 \end{samepage}
 ```
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-5-start-->
+```
 
 ```{=latex}
 \phantomsection
@@ -268,11 +312,19 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 \end{samepage}
 ```
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-6-start-->
+```
 
 # pymdp simulation harness {#sec:methods_pymdp}
 
@@ -332,11 +384,19 @@ See `gnn/si_tmaze.gnn.md` for a GNN view of the T-maze hidden state, observation
 \end{samepage}
 ```
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-7-start-->
+```
 
 # Lean formalization boundary {#sec:methods_lean}
 
@@ -375,11 +435,19 @@ metadata into `output/data/proof_extraction_index.json`. The index currently
 contains 12 extracted theorem rows, with
 constructive-token status `true`.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-8-start-->
+```
 
 # Sheaf composition {#sec:methods_sheaf}
 
@@ -975,11 +1043,19 @@ Every roadmap row is shown below in canonical order. The source-owned full matri
 
 **Improvement rows:** 39 total; 32 live / 2 optional / 5 blocked; every row shown.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-8-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-9-start-->
+```
 
 ```{=latex}
 \phantomsection
@@ -1009,11 +1085,19 @@ Both estimators are deterministic (no sampling, no RNG) and are evaluated on the
 
 *Reproduced from [@fig:ising_mi_curve]. Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.*
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-9-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-10-start-->
+```
 
 # Free-energy decomposition {#sec:results_free_energy}
 
@@ -1027,11 +1111,19 @@ Saturation MI (grid maximum on the measured $\lambda$ sweep): 0.6031 nats.
 
 ![Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points 21); relative to the entangled prior, the same posterior has identically zero free energy.](../figures/free_energy_curve.png){#fig:free_energy_curve width=90% fig-alt="Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. The entangled-prior free energy is identically zero, so this plotted comparison isolates mean-field prior mismatch. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value."}
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-10-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-11-start-->
+```
 
 # T-maze active-inference rollout {#sec:results_si_tmaze}
 
@@ -1071,11 +1163,19 @@ Rollout trace: `output/data/si_tmaze_trace.json`. JSONL run log: `output/logs/py
 
 ![Discrete action index over time for the pymdp T-maze rollout (policy length 2).](../figures/si_tmaze_actions.png){#fig:si_tmaze_actions width=90% fig-alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps."}
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-11-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-12-start-->
+```
 
 # Validation invariants {#sec:results_invariants}
 
@@ -1135,11 +1235,19 @@ matrix artifact is `output/data/causal_ablation_matrix.json`: it currently
 records 36 cells, with complete-grid status
 `true`.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-12-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-13-start-->
+```
 
 ```{=latex}
 \phantomsection
@@ -1213,11 +1321,19 @@ validation, semantic, and bundle artifacts. Its evidence artifact is
 3 rows, with source-backed status
 `true`.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-13-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-14-start-->
+```
 
 ```{=latex}
 \phantomsection
@@ -1583,11 +1699,19 @@ same boundary. It records 8 attestation rows for
 validation, release bundle hash, license audit, semantic certificate, and
 blocked-scope status, with all-attested flag `true`.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-14-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-15-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -1597,21 +1721,37 @@ The T-maze harness runs in `state_inference` mode with config hash `133a13df72cf
 
 The exemplar therefore sits at a narrow intersection: finite discrete active inference on POMDP-like toy models [@dacosta2020discrete; @friston2021sophisticated; @dacosta2023reward], sheaf-style local-to-global checks for publication artifacts [@curry2014sheaves; @robinson2014topological], and GNN notation as an interop layer [@gnn2023].
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-15-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-16-start-->
+```
 
 # References
 
 See `manuscript/references.bib` for bibliography entries cited in the composed sections.
 
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-16-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-17-start-->
+```
 
 ```{=latex}
 % transmission-end-bookend
@@ -1639,3 +1779,7 @@ See `manuscript/references.bib` for bibliography entries cited in the composed s
 
 
 <!-- END OF TRANSMISSION -->
+
+```{=html}
+<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-17-end-->
+```

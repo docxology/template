@@ -38,7 +38,7 @@
     [
       "template_textbook",
       299,
-      96.17
+      96.06
     ],
     [
       "template_storybook",
@@ -76,19 +76,19 @@
       94.04
     ],
     [
-      "template_sia",
-      130,
-      93.11
-    ],
-    [
       "template_autoscientists",
       191,
-      92.95
+      93.39
     ],
     [
       "template_gold_refinement",
       337,
       92.81
+    ],
+    [
+      "template_sia",
+      130,
+      92.72
     ],
     [
       "template_search_project",
@@ -113,7 +113,7 @@
     [
       "template_active_inference",
       992,
-      91.17
+      91.16
     ],
     [
       "template_eda_notebook",
@@ -123,7 +123,7 @@
     [
       "template_formal",
       380,
-      90.39
+      90.3
     ]
   ],
   "infrastructure_python": [
@@ -137,7 +137,7 @@
     ],
     [
       "rendering",
-      126
+      128
     ],
     [
       "project",

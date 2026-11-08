@@ -39,7 +39,7 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.14.10
 - **NumPy**: 2.5.4
 - **Platform**: Linux x86_64
-- **Generated**: 2026-11-08T05:36:36Z
+- **Generated**: 2026-11-08T11:03:37Z
 
 ## Pipeline ordering
 

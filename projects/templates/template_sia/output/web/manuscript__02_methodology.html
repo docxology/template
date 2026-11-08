@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>02_methodology.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Meta → Target → Feedback loops with public/private task splits" />
+  <title>Self-Improvement Agent Harness: A Deterministic SIA
+Exemplar</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +174,26 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -180,9 +202,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -211,8 +233,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -297,7 +319,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -315,8 +344,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -329,8 +356,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -558,10 +583,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -612,10 +645,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -644,8 +673,10 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:methodology">Methodology</h1>
-<h2 id="sia-loop">SIA loop</h2>
+<h1 data-number="3" id="sec:methodology"><span
+class="header-section-number">3</span> Methodology</h1>
+<h2 data-number="3.1" id="sia-loop"><span
+class="header-section-number">3.1</span> SIA loop</h2>
 <p>The harness implements a three-agent cycle:</p>
 <ol type="1">
 <li><strong>Meta</strong> — proposes or seeds a target agent for
@@ -657,17 +688,18 @@ proposes improvements for generation <span
 class="math inline">\(n+1\)</span>.</li>
 </ol>
 <figure id="fig:sia-loop-topology">
-<a class="figure-full-size-link" href="../figures/sia_loop_topology.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Meta → Target → Feedback loop topology"><img src="../figures/sia_loop_topology.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/sia_loop_topology.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Meta → Target → Feedback loop topology"><img src="../figures/sia_loop_topology.png" style="width:90.0%"
 alt="Three labeled boxes form a directed cycle from Meta to Target to Feedback and back to Meta, depicting the harness control flow." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Meta → Target → Feedback loop topology
-for the SIA harness, generated programmatically by
+<figcaption>Figure 1: Meta → Target → Feedback loop
+topology for the SIA harness, generated programmatically by
 <code>write_sia_loop_topology</code>.</figcaption>
 </figure>
 <p>Artifacts land under <code>output/runs/run_{id}/gen_{n}/</code> with
 <code>target_agent.py</code>, <code>agent_execution.json</code>,
 optional <code>improvement.md</code>, and canonical
 <code>results.json</code>.</p>
-<h2 id="task-layout">Task layout</h2>
+<h2 data-number="3.2" id="task-layout"><span
+class="header-section-number">3.2</span> Task layout</h2>
 <p>Each task exposes:</p>
 <ul>
 <li><code>data/public/</code> — agent-visible instructions and data
@@ -680,23 +712,25 @@ baseline.</li>
 </ul>
 <p>The exemplar task <code>mini_classify</code> is a threshold
 classifier on a single feature column.</p>
-<h2 id="determinism-contract">Determinism contract</h2>
+<h2 data-number="3.3" id="determinism-contract"><span
+class="header-section-number">3.3</span> Determinism contract</h2>
 <p>When <code>sia.live: false</code> (default), generations replay
 recorded fixtures from <code>src/fixtures/recorded_generations/</code>.
 CI never executes generated agent code or calls external LLM APIs.</p>
 <p>Pass <code>--live-sia</code> to <code>scripts/run_sia_loop.py</code>
 for bounded subprocess execution and optional Ollama feedback when a
 model is configured.</p>
-<h2 id="per-generation-metric-overview">Per-generation metric
+<h2 data-number="3.4" id="per-generation-metric-overview"><span
+class="header-section-number">3.4</span> Per-generation metric
 overview</h2>
 <p>The heatmap below provides a compact overview of per-generation
 accuracy and sample count, enabling at-a-glance comparison across
 runs.</p>
 <figure id="fig:sia-generation-heatmap">
-<a class="figure-full-size-link" href="../figures/sia_generation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Per-generation metric heatmap showing accuracy and sample count across SIA generations."><img src="../figures/sia_generation_heatmap.png" style="width:80.0%"
+<a class="figure-full-size-link" href="../figures/sia_generation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Per-generation metric heatmap showing accuracy and sample count across SIA generations."><img src="../figures/sia_generation_heatmap.png" style="width:80.0%"
 alt="A two-row heatmap compares accuracy and sample count across 3 generation(s); metric values range from 100.0% to 100.0%, and sample counts range from 6 to 6." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Per-generation metric heatmap showing
-accuracy and sample count across SIA generations.</figcaption>
+<figcaption>Figure 2: Per-generation metric heatmap
+showing accuracy and sample count across SIA generations.</figcaption>
 </figure>
 </main>
 </body>

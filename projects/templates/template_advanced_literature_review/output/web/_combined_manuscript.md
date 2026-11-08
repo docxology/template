@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-0-start-->
+```
+
 # Abstract
 
 We specify a reproducible advanced literature-review workflow for rapidly changing
@@ -30,11 +34,19 @@ leaving domain claims subject to source-backed review.
 
 **Keywords:** exoplanet atmospheres, literature review pipeline, systematic-review reporting, multi-phase search, LLM filtering, James Webb Space Telescope, atmospheric composition, transit spectroscopy, bibliometrics, cross-validation
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-1-start-->
+```
 
 # Introduction
 
@@ -81,11 +93,19 @@ Every generated number in the rendered manuscript must come from an artifact lis
 the manifest and be traceable to the relevant method stage. Missing, stale, or
 misclassified evidence is a release finding, not a value to be filled by hand.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-2-start-->
+```
 
 # Methods Overview
 
@@ -140,11 +160,19 @@ subfield taxonomy. `domain_profile.yaml` owns package and gate expectations;
 `experiment_plan.yaml` records the review design; `data/claim_ledger.yaml` records the
 provenance tier and fixture/synthetic status of manuscript-facing claims.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-3-start-->
+```
 
 # Retrieval and De-duplication
 
@@ -218,11 +246,19 @@ case-insensitively; an empty keyword list is treated as no filter to avoid silen
 wiping the corpus. A year filter then excludes papers published before the configured
 start year (2000).
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-4-start-->
+```
 
 # Full Text, Language, and Embeddings
 
@@ -278,11 +314,19 @@ a PCA two-dimensional projection ((Figure pca embeddings)) that maps the topical
 geography of the literature, and a hierarchical clustering dendrogram
 ((Figure dendrogram)) that reveals the similarity structure of the document collection.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-5-start-->
+```
 
 # Bibliometric and Temporal Analysis
 
@@ -328,11 +372,19 @@ The random seed is fixed at 42 for reproducibility. The reporting follows establ
 systematic-review practice [@page2021prisma], with every figure and statistic traceable to
 a committed artifact.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-6-start-->
+```
 
 # Optional Knowledge-Graph Layer
 
@@ -383,11 +435,19 @@ scope, come from configuration and are reported regardless of whether scoring ha
 
 The hypotheses explored in this instance are: H1 JWST Atmospheric Characterization; H2 Molecular Diversity Detection; H3 Cross-Method Consistency; H4 Theoretical-Observational Agreement.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-7-start-->
+```
 
 # Visualization and Manuscript Injection
 
@@ -438,11 +498,19 @@ artifacts, including:
 6. `assertion_summary.json`: assertion counts and directions
 7. `hypothesis_scores.json`: per-hypothesis evidence scores
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-8-start-->
+```
 
 # Multi-Phase Search Strategy and Results
 
@@ -559,11 +627,19 @@ enabled for specific phases or applied across the entire corpus. When enabled,
 they use a local Ollama LLM instance for cost-effective, privacy-preserving
 content classification.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-8-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-9-start-->
+```
 
 # Results: Hypotheses and Evidence
 
@@ -599,11 +675,19 @@ These are review questions, not conclusions. Claim-level interpretation requires
 claim ledger, source tier, freshness, and domain review. A fixture run can test schema,
 phase linkage, and serializer behavior, but cannot establish any of these hypotheses.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-9-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-10-start-->
+```
 
 # Results: Field Overview
 
@@ -745,11 +829,19 @@ the retained corpus and should not be generalized to citation behavior in the fi
 <!-- FIGURE: author_productivity.png -->
 ![Author productivity for Exoplanet Atmospheres. The horizontal bar chart shows authors with the most retained records; names and counts depend on source coverage and deduplication.](../figures/author_productivity.png "Author Productivity"){#fig:author_productivity}
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-10-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-11-start-->
+```
 
 # Results: Subfield Structure
 
@@ -777,11 +869,19 @@ synthetic in the evidence registry.
 | Jwst Instruments | 11 | 15.7% |
 | Theoretical Modeling | 10 | 14.3% |
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-11-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-12-start-->
+```
 
 # Results: Language, Topics, and Embeddings
 
@@ -905,11 +1005,19 @@ reveal the most closely related works in the corpus.
 These embeddings support semantic retrieval over the corpus and the visual map of the
 literature's topical geography.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-12-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-13-start-->
+```
 
 # Results: Citation Network
 
@@ -1013,11 +1121,19 @@ the retained graph. Removing one may alter connectivity, but that graph operatio
 not by itself establish that the paper is a review or methodological bridge in the
 scientific field. Source-type and content review are required for that interpretation.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-13-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-14-start-->
+```
 
 # Results: Reproducibility Assessment
 
@@ -1060,11 +1176,19 @@ pipeline, or reference steps that were never themselves described). The two axes
 reported separately in Table 8 precisely so a low composite score can be diagnosed
 rather than treated as a single undifferentiated verdict.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-14-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-15-start-->
+```
 
 # Multi-Phase Results and Cross-Phase Analysis
 
@@ -1125,11 +1249,19 @@ papers successfully scored. This analysis examines the computational workflow
 transparency of each paper, evaluating source data availability, method
 documentation, experimental reproducibility, and output accessibility.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-15-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-16-start-->
+```
 
 # Discussion
 
@@ -1170,11 +1302,19 @@ pending and fixture-derived states rather than silently promoting demonstration 
 These limitations are represented as method-stage and review-required findings so a
 publication decision can distinguish deterministic failures from editorial judgment.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-16-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-17-start-->
+```
 
 # Conclusion
 
@@ -1197,11 +1337,19 @@ registries, and validation reports. A second clean run should match under the
 repository’s canonical normalized-diff rules. Any unexplained difference is a release
 finding. No generated output should be edited by hand.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-17-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-18-start-->
+```
 
 # Appendix A: Tooling and Reproduction
 
@@ -1306,11 +1454,19 @@ The Meta project's suite verifies their complete source, while Advanced's
 consumer contracts verify phase-aware integration. Installed acceptance binds
 the genuine provider wheel separately from Advanced's project wheel.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-18-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-19-start-->
+```
 
 # Appendix B: Technical Notes
 
@@ -1400,11 +1556,19 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 | `cross_phase_analysis.json` | 01 / 03 | Phase membership, overlap, citation sufficiency, and explicit hypothesis-score claim boundary |
 | `fulltext_assessment.json` | 06 | Abstract/OA/PDF coverage report |
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-19-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-20-start-->
+```
 
 # Appendix C: Accessibility and Provenance
 
@@ -1457,11 +1621,19 @@ The default corpus is synthetic and labelled as such; the manuscript does not pr
 fixture-derived numbers as empirical findings about exoplanet atmospheres. Live findings
 require a real retrieval run with regenerated artifacts and source-level provenance.
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-20-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-21-start-->
+```
 
 # Glossary
 
@@ -1479,11 +1651,19 @@ require a real retrieval run with regenerated artifacts and source-level provena
 | **CAGR** | Compound annual growth rate of publication volume (6.76\% for this corpus). |
 | **Living literature review** | A synthesis that can be re-executed as the field evolves, with every number regenerable. |
 
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-21-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-22-start-->
+```
 
 # References
 
@@ -1505,3 +1685,7 @@ References management notes:
 * When adding a new citation, run the integrity sweep documented in `AGENTS.md`
   to confirm a 1:1 match between cited keys and bibliography entries.
 -->
+
+```{=html}
+<!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-22-end-->
+```

@@ -266,9 +266,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -297,8 +297,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -383,7 +383,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -401,8 +408,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -415,8 +420,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -644,10 +647,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -698,10 +709,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -993,6 +1000,7 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <p><strong>State:</strong> unpublished / pending pairing</p>
 <p><strong>Pairing:</strong> pending — unresolved: - ✗ GitHub release
 URL: <code>pending</code> - ✗ PDF SHA-256: <code>pending</code></p>
@@ -1062,7 +1070,9 @@ alt="Publication pairing flow" /><span class="figure-full-size-label" aria-hidde
 <p><strong>Stego:</strong> on | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
 <!-- BEGINNING OF TRANSMISSION -->
+
 <hr />
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This paper presents a convergence study of <strong>fixed-step
@@ -1112,7 +1122,9 @@ for the configured <span class="math inline">\((A,b)\)</span>.</p>
 <p><strong>Keywords:</strong> optimization algorithms, gradient descent,
 convergence analysis, numerical methods, mathematical programming,
 reproducible research, infrastructure automation</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>This <code>template_code_project</code> serves as the foundational
@@ -1256,7 +1268,9 @@ divergent choices (<span class="math inline">\(\alpha \geq 2\)</span> in
 1D) visible in both plots and CSV rows without requiring trust-region or
 line-search fixes—those extensions are left to future work (sec. <a
 href="#sec:scope">8</a>).</p>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>This section describes the implementation methodology, explicitly
@@ -1476,7 +1490,9 @@ the <code>preamble.md</code> configuration. This is ingested directly by
 and BibTeX citations. This automated approach ensures an unbreakable
 chain of custody from raw algorithmic execution to the final rendered
 manuscript.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section presents the experimental results from the gradient
@@ -2015,7 +2031,9 @@ outputs through the declared configuration and variable injection.</p>
 <p>Successful generation and reference resolution establish this
 artifact path for the tested candidate; they do not establish absolute
 renderer reliability or replace visual inspection of its output.</p>
+
 <hr />
+
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
 <p>This study demonstrated a complete computational research pipeline
@@ -2138,7 +2156,9 @@ together with <code>config.yaml</code> into PDF through
 <code>template_code_project</code> tree remains the canonical reference
 for how algorithm code, analysis scripts, variable injection, and
 manuscript stay synchronized across rebuilds.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:experimental_setup"><span
 class="header-section-number">6</span> Experimental Setup</h1>
 <p>This section details the complete experimental configuration used to
@@ -2206,7 +2226,7 @@ class="header-section-number">6.5</span> Computational Environment</h2>
 <li><strong>Python</strong>: 3.14.10</li>
 <li><strong>NumPy</strong>: 2.5.4</li>
 <li><strong>Platform</strong>: Linux x86_64</li>
-<li><strong>Generated</strong>: 2026-11-08T05:36:36Z</li>
+<li><strong>Generated</strong>: 2026-11-08T11:03:37Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2276,7 +2296,9 @@ class="math inline">\(10^{-10}\)</span></td>
 </table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility
 Certification</h1>
@@ -2419,7 +2441,9 @@ time (timestamps, hashes, versions)</li>
 re-running the pipeline will automatically update every corresponding
 claim in this document. No manual transcription is required or
 permitted.</p>
+
 <hr />
+
 <h1 data-number="8" id="sec:scope"><span
 class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
@@ -2501,7 +2525,9 @@ only; no interval or arbitrary-precision analysis.</li>
 that infrastructure concerns—tests, logging, figure registration, and
 PDF cross-references—remain visible rather than buried under algorithmic
 complexity.</p>
+
 <hr />
+
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
@@ -2516,7 +2542,9 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_code_project/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <hr />
+
 <p><strong>Release:</strong> v3.0.0 · DOI
 <code>10.5281/zenodo.20417136</code> · SHA-256 <code>pending…</code> ·
 pairing pending</p>
@@ -2527,6 +2555,7 @@ style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-lab
 </figure>
 <p><strong>Prior:</strong> <em>No prior releases.</em></p>
 <!-- END OF TRANSMISSION -->
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-bertsekas1999nonlinear" class="csl-entry" role="listitem">

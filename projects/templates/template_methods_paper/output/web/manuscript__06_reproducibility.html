@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>06_reproducibility.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL" />
+  <title>A Domain Language for Specifying Controlled Methods</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -236,7 +238,91 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -297,7 +383,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -315,8 +408,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -329,8 +420,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -558,10 +647,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -612,10 +709,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -644,13 +737,16 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:reproducibility">Reproducibility</h1>
+<h1 data-number="7" id="sec:reproducibility"><span
+class="header-section-number">7</span> Reproducibility</h1>
 <p>This section explains how to regenerate every artifact in the study
 from a clean checkout. The exemplar’s reproducibility guarantee is
 structural: each result is produced by a tested function and a thin
 script, then injected into the manuscript by generated-variable
 substitution — never transcribed by hand.</p>
-<h2 id="how-to-regenerate-everything">How to regenerate everything</h2>
+<h2 data-number="7.1" id="how-to-regenerate-everything"><span
+class="header-section-number">7.1</span> How to regenerate
+everything</h2>
 <p>From the repository root:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Run the analysis (compiles methods, exports artifacts, writes figure + reports)</span></span>
@@ -668,7 +764,9 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>Or, end to end via the orchestrated pipeline:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/runner/execute_pipeline.py <span class="at">--project</span> templates/template_methods_paper <span class="at">--mode</span> core</span></code></pre></div>
-<h2 id="generated-artifact-registry">Generated artifact registry</h2>
+<h2 data-number="7.2" id="generated-artifact-registry"><span
+class="header-section-number">7.2</span> Generated artifact
+registry</h2>
 <p>The analysis script writes the following artifacts under
 <code>projects/templates/template_methods_paper/output/</code>:</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
@@ -726,7 +824,8 @@ demonstration chain</td>
 </table></div>
 <p>The <code>output/</code> tree is disposable and regenerated on every
 run; it is not the source of truth.</p>
-<h2 id="determinism">Determinism</h2>
+<h2 data-number="7.3" id="determinism-1"><span
+class="header-section-number">7.3</span> Determinism</h2>
 <ul>
 <li><code>compile_method()</code> is deterministic by construction: the
 plan hash is computed from a canonical, sort-keys JSON payload over
@@ -742,17 +841,18 @@ recompiles every example method twice at manuscript-build time and
 compares hashes live, so this guarantee is checked on every build, not
 merely asserted once in a test.</li>
 </ul>
-<h2 id="verification-no-hand-transcribed-numbers">Verification (no
+<h2 data-number="7.4"
+id="verification-no-hand-transcribed-numbers"><span
+class="header-section-number">7.4</span> Verification (no
 hand-transcribed numbers)</h2>
-<p>Every quantitative claim in <span class="citation"
-data-cites="sec:results">[@sec:results]</span> is either a generated
-variable sourced from a live analysis output or registered in
-<code>data/claim_ledger.yaml</code> for evidence-registry validation.
-The manuscript intentionally does not hand-transcribe volatile values,
-so prose and artifacts cannot disagree. Configuration provenance is
-itself injected: <code>0bfa8a91262ffb45</code> is the SHA-256 of
-<code>manuscript/config.yaml</code> at build time, and
-<code>2026-11-08T05:36:36Z</code> records when the variables were
+<p>Every quantitative claim in sec. <a href="manuscript__03_results.html#sec:results">4</a> is
+either a generated variable sourced from a live analysis output or
+registered in <code>data/claim_ledger.yaml</code> for evidence-registry
+validation. The manuscript intentionally does not hand-transcribe
+volatile values, so prose and artifacts cannot disagree. Configuration
+provenance is itself injected: <code>0bfa8a91262ffb45</code> is the
+SHA-256 of <code>manuscript/config.yaml</code> at build time, and
+<code>2026-11-08T11:03:37Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 </main>

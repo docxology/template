@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>07_security_provenance.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
+  <title>A template/ approach to Reproducible Generative
+Research</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,7 +174,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -232,7 +384,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -250,8 +409,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -264,8 +421,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -493,10 +648,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -547,10 +710,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -579,22 +738,28 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="security-and-provenance">Security and Provenance</h1>
+<h1 data-number="7" id="security-and-provenance"><span
+class="header-section-number">7</span> Security and Provenance</h1>
 <p>Research integrity requires more than reproducibility; it requires
 verifiable authorship. In an era of generative AI, automated scraping,
 and synthetic media, the ability to prove that a document was produced
 by a specific pipeline at a specific time is a critical defense against
-fabrication and misattribution. The W3C PROV data model
-[moreau2013provdm] establishes a formal vocabulary for expressing
+fabrication and misattribution. The W3C PROV data model <span
+class="citation" data-cites="moreau2013provdm">(<a
+href="index.html#ref-moreau2013provdm" role="doc-biblioref">Moreau and Missier
+2013</a>)</span> establishes a formal vocabulary for expressing
 provenance records—entities, activities, and agents connected by
 derivation, generation, and attribution relations. Digital watermarking,
-pioneered by Cox et al. [cox1997secure] for multimedia integrity
-verification, provides the foundational signal-processing theory for
-embedding imperceptible provenance markers within artifacts.
+pioneered by Cox et al. <span class="citation"
+data-cites="cox1997secure">(<a href="index.html#ref-cox1997secure"
+role="doc-biblioref">Cox et al. 1997</a>)</span> for multimedia
+integrity verification, provides the foundational signal-processing
+theory for embedding imperceptible provenance markers within artifacts.
 <code>template/</code> implements a domain-specific provenance layer
 that embeds these relations directly into the PDF artifact itself, using
 four complementary steganographic and cryptographic mechanisms.</p>
-<h2 id="threat-model">Threat Model</h2>
+<h2 data-number="7.1" id="threat-model"><span
+class="header-section-number">7.1</span> Threat Model</h2>
 <p>The steganography subsystem defends against three classes of
 threats:</p>
 <ol type="1">
@@ -610,10 +775,12 @@ produced a document they did not author. The build timestamp, commit
 hash, and pipeline metadata embedded in the watermark provide a
 verifiable chain of custody.</li>
 </ol>
-<h2 id="steganographic-layers">Steganographic Layers</h2>
+<h2 data-number="7.2" id="steganographic-layers"><span
+class="header-section-number">7.2</span> Steganographic Layers</h2>
 <p>The system applies four complementary layers of provenance
 information:</p>
-<h3 id="layer-1-pdf-metadata-injection">Layer 1: PDF Metadata
+<h3 data-number="7.2.1" id="layer-1-pdf-metadata-injection"><span
+class="header-section-number">7.2.1</span> Layer 1: PDF Metadata
 Injection</h3>
 <p>The <code>inject_pdf_metadata</code> function writes structured
 metadata into both the PDF Info dictionary and an XMP (Extensible
@@ -637,7 +804,8 @@ digest (e.g. <code>/Hash_SHA256</code>)</li>
 <li>An embedded <code>stego_manifest.json</code> attachment carrying the
 document id, digests, title, and git commit</li>
 </ul>
-<h3 id="layer-2-cryptographic-hashing">Layer 2: Cryptographic
+<h3 data-number="7.2.2" id="layer-2-cryptographic-hashing"><span
+class="header-section-number">7.2.2</span> Layer 2: Cryptographic
 Hashing</h3>
 <p>Before watermarking, SHA-256 (and SHA-512 when configured) digests of
 the original PDF are computed and stored in:</p>
@@ -650,8 +818,10 @@ e.g. <code>output/pdf/&lt;name&gt;_combined.hashes.json</code>)</li>
 </ul>
 <p>This enables post-hoc verification: anyone with the manifest can
 verify that the PDF has not been modified since rendering.</p>
-<h3 id="layer-3-alpha-channel-overlay-footer-and-invisible-text">Layer
-3: Alpha-Channel Overlay, Footer, and Invisible Text</h3>
+<h3 data-number="7.2.3"
+id="layer-3-alpha-channel-overlay-footer-and-invisible-text"><span
+class="header-section-number">7.2.3</span> Layer 3: Alpha-Channel
+Overlay, Footer, and Invisible Text</h3>
 <p>A semi-transparent overlay is merged onto every page of the hardened
 PDF:</p>
 <ul>
@@ -674,7 +844,8 @@ the PDF metadata and the hash manifest rather than in the visible
 watermark text itself. Together these fields allow a verifier to
 reconstruct—from the hardened PDF alone—which version of the code, at
 which moment in time, produced the document.</p>
-<h3 id="layer-4-qr-and-barcode-injection">Layer 4: QR and Barcode
+<h3 data-number="7.2.4" id="layer-4-qr-and-barcode-injection"><span
+class="header-section-number">7.2.4</span> Layer 4: QR and Barcode
 Injection</h3>
 <p>When barcodes are enabled, a bottom-of-page barcode strip (QR code +
 Code128 label) is merged onto <strong>every</strong> page, encoding the
@@ -684,7 +855,8 @@ document identifier and page number
 in place of the text watermark. Both are configurable via the
 <code>steganography:</code> block in <code>manuscript/config.yaml</code>
 (or the repo-level <code>secure_config.yaml</code> defaults).</p>
-<h2 id="the-secure_run.sh-orchestrator">The <code>secure_run.sh</code>
+<h2 data-number="7.3" id="the-secure_run.sh-orchestrator"><span
+class="header-section-number">7.3</span> The <code>secure_run.sh</code>
 Orchestrator</h2>
 <p>The steganographic pipeline is orchestrated by
 <code>secure_run.sh</code>, a Bash script that wraps the standard
@@ -701,13 +873,15 @@ injection.</li>
 </ol>
 <p>The orchestrator processes either a single specified project or all
 discovered projects sequentially.</p>
-<h2 id="tamper-detection">Tamper Detection</h2>
+<h2 data-number="7.4" id="tamper-detection"><span
+class="header-section-number">7.4</span> Tamper Detection</h2>
 <p>Verification is performed by comparing the stored SHA-256 hash
 against a freshly computed hash of the distributed PDF. Any
 modification—even a single bit flip—produces a hash mismatch. The
 alpha-channel overlay provides a secondary, visual verification channel
 that does not require access to the original hash.</p>
-<h2 id="limitations">Limitations</h2>
+<h2 data-number="7.5" id="limitations-1"><span
+class="header-section-number">7.5</span> Limitations</h2>
 <ul>
 <li>Alpha-channel overlays are stripped by some PDF optimization tools
 (e.g., <code>qpdf --optimize</code>).</li>
@@ -732,20 +906,26 @@ implemented; steps (1) and (4) are the primary remaining gaps. A future
 <code>infrastructure.provenance</code> module would close both gaps
 automatically.</li>
 </ul>
-<h2 id="relationship-to-software-supply-chain-integrity">Relationship to
-Software Supply Chain Integrity</h2>
+<h2 data-number="7.6"
+id="relationship-to-software-supply-chain-integrity"><span
+class="header-section-number">7.6</span> Relationship to Software Supply
+Chain Integrity</h2>
 <p>The steganographic provenance layer operates at the <em>document
 level</em>—it certifies the integrity of a specific PDF artifact. A
 complementary concern is <em>build-level</em> provenance: certifying
 that the pipeline itself was executed with verified source code and
-dependencies. Frameworks such as in-toto [torresarias2019intoto] and
-SLSA (Supply-chain Levels for Software Artifacts) address this concern
-by defining attestation chains from source commit through build steps to
+dependencies. Frameworks such as in-toto <span class="citation"
+data-cites="torresarias2019intoto">(<a href="index.html#ref-torresarias2019intoto"
+role="doc-biblioref">Torres-Arias et al. 2019</a>)</span> and SLSA
+(Supply-chain Levels for Software Artifacts) address this concern by
+defining attestation chains from source commit through build steps to
 final artifact. The NTIA’s minimum elements for a Software Bill of
-Materials (SBOM) [ntia2021sbom] further standardize the enumeration of
-software components and dependencies—essential for establishing the
-provenance lineage of build environments. SLSA defines four graduated
-levels of build integrity:</p>
+Materials (SBOM) <span class="citation" data-cites="ntia2021sbom">(<a
+href="index.html#ref-ntia2021sbom" role="doc-biblioref">National
+Telecommunications and Information Administration 2021</a>)</span>
+further standardize the enumeration of software components and
+dependencies—essential for establishing the provenance lineage of build
+environments. SLSA defines four graduated levels of build integrity:</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
 <col style="width: 27%" />
@@ -788,29 +968,39 @@ watermarks, creating a two-layer provenance model: in-toto attests that
 the build pipeline was executed with the claimed source code, while the
 steganographic layer attests that the PDF was produced by that pipeline
 at a specific time.</p>
-<h2
-id="relationship-to-fair-and-formal-provenance-standards">Relationship
-to FAIR and Formal Provenance Standards</h2>
+<h2 data-number="7.7"
+id="relationship-to-fair-and-formal-provenance-standards"><span
+class="header-section-number">7.7</span> Relationship to FAIR and Formal
+Provenance Standards</h2>
 <p>The steganographic layer supports the FAIR for Research Software
-(FAIR4RS) principles [barker2022fair4rs] at the artifact level. PDFs
-carry embedded metadata (Findability) in standardized XMP format
-(Interoperability). The SHA-256 hash manifest enables persistent
+(FAIR4RS) principles <span class="citation"
+data-cites="barker2022fair4rs">(<a href="index.html#ref-barker2022fair4rs"
+role="doc-biblioref">Barker et al. 2022</a>)</span> at the artifact
+level. PDFs carry embedded metadata (Findability) in standardized XMP
+format (Interoperability). The SHA-256 hash manifest enables persistent
 integrity verification (a prerequisite for Reusability). The
 Documentation Duality standard ensures that the software producing the
-artifact is inspectable and well-documented (satisfying FAIRsoft
-[garijo2024fairsoft] metadata and documentation indicators). Full
-PROV-compliant provenance traces—capturing the derivation chain from
-source data through analysis scripts to rendered PDF—are a natural
-extension and a primary target for future development.</p>
-<p>Software Heritage [cosmo2020softwareheritage] complements this
-picture at the source-code level: by archiving the
-<code>template/</code> repository and assigning a reproducible SWHID
-(Software Hash Identifier) to each commit, Software Heritage makes the
-pipeline itself—not just its output—a citable, persistent digital
-artifact. A published SWHID alongside the PDF DOI creates a complete,
-two-artifact citation record: the paper’s content is versioned via DOI;
-the code that generated it is versioned via SWHID. This combination
-satisfies the Katz et al. [katz2021software] software citation
+artifact is inspectable and well-documented (satisfying FAIRsoft <span
+class="citation" data-cites="garijo2024fairsoft">(<a
+href="index.html#ref-garijo2024fairsoft" role="doc-biblioref"><span
+class="nocase">Garijo et al.</span> 2024</a>)</span> metadata and
+documentation indicators). Full PROV-compliant provenance
+traces—capturing the derivation chain from source data through analysis
+scripts to rendered PDF—are a natural extension and a primary target for
+future development.</p>
+<p>Software Heritage <span class="citation"
+data-cites="cosmo2020softwareheritage">(<a
+href="index.html#ref-cosmo2020softwareheritage" role="doc-biblioref">Di Cosmo et
+al. 2020</a>)</span> complements this picture at the source-code level:
+by archiving the <code>template/</code> repository and assigning a
+reproducible SWHID (Software Hash Identifier) to each commit, Software
+Heritage makes the pipeline itself—not just its output—a citable,
+persistent digital artifact. A published SWHID alongside the PDF DOI
+creates a complete, two-artifact citation record: the paper’s content is
+versioned via DOI; the code that generated it is versioned via SWHID.
+This combination satisfies the Katz et al. <span class="citation"
+data-cites="katz2021software">(<a href="index.html#ref-katz2021software"
+role="doc-biblioref">Katz et al. 2021</a>)</span> software citation
 principles’ requirement that software used in research be independently
 citable and permanently accessible.</p>
 </main>
