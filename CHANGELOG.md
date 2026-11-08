@@ -28,6 +28,10 @@ matching tag identity and authenticated publication.
 - Include genuine fixture setup in Root prerequisite review: complete-source
   clones require Git even when the eventual case body tests a refusal. Preserve
   genuinely pre-I/O refusal exceptions instead of widening their requirements.
+- Acquire pinned TLC and both Ollama runtimes through official immutable asset
+  API locators with explicit content negotiation and existing GitHub tokens
+  scoped only to hosted acquisition. Preserve every artifact version, length,
+  SHA-256, retry limit and deadline; keep qualified offline runners offline.
 - Describe the existing publication DOI as an immutable version identifier,
   preserving its preferred article citation without inventing a software-release
   DOI or changing any archival record.

@@ -17,10 +17,12 @@ silently-republished release asset would run unverified).
 [`template_formal.tool_acceptance`](../src/template_formal/tool_acceptance.py);
 [`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh) delegates to it.
 
-- Explicit `--acquire` fetches the fixed stable `v1.7.4` release URL, never `latest`
-  or the rolling `v1.8.0` pre-release. Its official asset 184694200 is 2,274,532
-  bytes, from commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`; the tag label
-  does not establish version or integrity.
+- Explicit `--acquire` fetches the fixed stable `v1.7.4` artifact through its
+  official immutable asset API, with `Accept: application/octet-stream`, never
+  `latest`, a browser-download fallback or the rolling `v1.8.0` pre-release.
+  Official asset 184694200 is 2,274,532 bytes, from commit
+  `5a47802b5c391f59ecdd44117981f4ff8c0656ba`; the tag label does not establish
+  version or integrity.
 - The single source-owned `TLC_URL`/`TLC_BYTES`/`TLC_SHA256` tuple binds SHA-256
   `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`
   independently matched through the release download and the asset API on
@@ -33,6 +35,10 @@ silently-republished release asset would run unverified).
 - `TEMPLATE_FORMAL_TLC_JAR` can select an authenticated external provider when
   the local cache is absent. Tool bytes and scratch state remain outside
   authored source and exports. The compiled jar is never committed.
+- Hosted shell preparation uses the existing GitHub token only in its acquisition
+  step, never as an exported model/SDK/case-worker input. HTTPS-only redirects
+  retain normal cross-origin authorization stripping. Successful acquisition
+  grants neither model-check acceptance nor independent upstream build trust.
 
 The 2026-10-08 observation bound the previous asset 614143604. That historical
 asset's metadata returned HTTP 404 on 2026-10-13 UTC, and its digest does not

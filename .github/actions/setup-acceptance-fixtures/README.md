@@ -21,6 +21,13 @@ shell before acquisition. Both preparation routes authenticate the complete
 selected size and SHA-256 before exporting `TEMPLATE_FORMAL_TLC_JAR` from owned
 external storage. Tool bytes are not authored source.
 
+The primary locator is the official immutable GitHub asset API, requested with
+`Accept: application/octet-stream`, not the browser release-download route.
+Hosted shell acquisition uses the existing GitHub token only in that step;
+it is never exported through `GITHUB_ENV` to the SDK or case workers. HTTPS-only
+redirects retain curl's normal cross-origin authorization stripping. The API
+route changes transport, not the selected artifact, integrity pins or deadlines.
+
 The current tuple was independently matched to stable official asset 184694200
 (`v1.7.4`, unchanged since 2024-08-08) on 2026-10-13 UTC: 2,274,532 bytes from
 commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The rolling `v1.8.0`
