@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-0-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-0-start-->
 ```
 
 <!-- transmission:begin -->
@@ -11,7 +11,7 @@ part of the rendered object and carries no claim beyond ordering and payload
 completeness.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-0-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-0-end-->
 ```
 
 
@@ -21,7 +21,7 @@ completeness.
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-1-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-1-start-->
 ```
 
 # Abstract {#sec:abstract}
@@ -37,7 +37,7 @@ The contribution is also formalized: 7 equation-backed formalisms define purity,
 **Keywords:** gold refining, manuscript composition, mega-madlib, token injection, scientific purity, assaying, karat grading, security assay, supply-chain provenance
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-1-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-1-end-->
 ```
 
 
@@ -47,7 +47,7 @@ The contribution is also formalized: 7 equation-backed formalisms define purity,
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-2-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-2-start-->
 ```
 
 # Introduction: Ore to Nine-Nines {#sec:introduction}
@@ -89,7 +89,7 @@ The metaphor becomes operational only when every transformation has an implement
 Is the analogy load-bearing or rhetorical? We assert it is **both**: it frames the methods paper (rhetorical) and operationalizes each stage against real infrastructure (load-bearing). Analogy theory gives the discipline for that claim: preserve relational structure, declare negative analogies, and do not transfer unsupported source-domain properties into the target domain [@gentner1983structure; @hesse1966models; @holyoak_thagard_1995]. The open question is not whether to use the analogy, but where the mapping breaks - a question the discussion addresses.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-2-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-2-end-->
 ```
 
 
@@ -99,7 +99,7 @@ Is the analogy load-bearing or rhetorical? We assert it is **both**: it frames t
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-3-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-3-start-->
 ```
 
 # Methodology: The Refinery Pipeline {#sec:methodology}
@@ -347,7 +347,7 @@ Determinism is assessed by exact replay from the same ordered configuration and 
 Four validity limits govern interpretation. First, **construct validity** is limited because purity is a designed workflow state, not a validated measure of writing quality. Second, **external validity** is limited to this exemplar until other domains implement their own mappings and validators. Third, **historical validity** is bounded by the normalized analogy and should not be read as a universal account of metallurgical practice. Fourth, **criterion validity** is local: passing gates demonstrates source ownership and internal consistency, not correctness of domain claims. These limits are part of the method's acceptance rule, not qualifications added after results are known.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-3-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-3-end-->
 ```
 
 
@@ -357,7 +357,7 @@ Four validity limits govern interpretation. First, **construct validity** is lim
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-4-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-4-start-->
 ```
 
 # Results: Purity Progression and Karat Grading {#sec:results}
@@ -713,7 +713,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-4-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-4-end-->
 ```
 
 
@@ -723,7 +723,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-5-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-5-start-->
 ```
 
 # Discussion: Load-Bearing vs Rhetorical Analogy {#sec:discussion}
@@ -794,7 +794,7 @@ Open-science standards push in the same direction. The TOP Guidelines and UNESCO
 Security guidance adds an adversarial version of the same brake. Zero trust, secure development, supply-chain provenance, signing, SBOM, attack-path, and secure-by-design frameworks are useful because they ask who or what should not be trusted by default [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design]. In this manuscript they do not certify security. They make overclaiming harder: a security claim must point to [@tbl:security_assay], and a real scan claim must point to scan artifacts that this pass does not produce.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-5-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-5-end-->
 ```
 
 
@@ -804,7 +804,7 @@ Security guidance adds an adversarial version of the same brake. Zero trust, sec
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-6-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-6-start-->
 ```
 
 # Conclusion: Certification and Forking {#sec:conclusion}
@@ -838,7 +838,7 @@ That contract is the paper's central contribution. It demonstrates how an analog
 The added integrity model makes the same claim in a stricter form: every high-value visual or formal statement should have an owner, an evidence tier, and a validator. Without those three surfaces, the right outcome is not a more polished metaphor; it is a narrower claim. This keeps the final certification claim aligned with reproducible-research norms: the artifact is stronger when it can be regenerated and audited, but still bounded by the evidence its sources actually contain [@sandve2013ten; @marwick2018packaging].
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-6-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-6-end-->
 ```
 
 
@@ -848,7 +848,7 @@ The added integrity model makes the same claim in a stricter form: every high-va
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-7-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-7-start-->
 ```
 
 # Reproducibility: Seeded Regeneration {#sec:reproducibility}
@@ -863,7 +863,7 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 
 - **Seed:** 431
 - **Config hash:** c1c2f7b7ef684580
-- **Generation timestamp:** 2026-11-08T11:03:37Z
+- **Generation timestamp:** 2026-11-08T14:52:57Z
 - **Python version:** 3.14.10
 
 ## Artifact inventory
@@ -911,7 +911,7 @@ This exemplar now separates two evidence surfaces. `output/reports/claim_support
 The evidence-tier ladder in [@fig:evidence_tier_ladder] is the reproducibility counterpart to that separation. It does not merely count files. It shows which tier owns each support surface, so a future fork can see whether a conclusion rests on config declarations, generated metrics, claim-ledger facts, bibliography records, or rendered artifacts. That distinction matters because only some tiers can support domain truth; others support reproducibility, formatting, or local consistency.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-7-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-7-end-->
 ```
 
 
@@ -921,7 +921,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] is the reproducibility c
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-8-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-8-start-->
 ```
 
 # Scope: Related Work and Limitations {#sec:scope}
@@ -975,7 +975,7 @@ The adversarial assay is similarly local. It records 5 rows that make security s
 The software improvements in this version do not remove these limitations. Enforced continuity proves that the configured stages connect; reverse assay proves only that a prefix reaches a declared numerical target; and `PurityVector` prevents accidental compensatory averaging. None establishes that the chosen targets, dimensions, or stage meanings are externally valid.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-8-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-8-end-->
 ```
 
 
@@ -985,7 +985,7 @@ The software improvements in this version do not remove these limitations. Enfor
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-9-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-9-start-->
 ```
 
 # Quality Probes {#sec:evaluation}
@@ -1038,7 +1038,7 @@ The risk model adds prioritization to the gate list. [@fig:integrity_risk_matrix
 Figure review follows the same rule. File existence and nonblank pixels are necessary but not sufficient. The figure caption, encoding declaration, source data, and prose interpretation must describe the same measurement. This criterion specifically prohibits inferring a stagewise trend from a project-level aggregate, which is why [@fig:purity_claim_scatter] repeats one observed claim-support rate rather than inventing cumulative values.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-9-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-9-end-->
 ```
 
 
@@ -1048,7 +1048,7 @@ Figure review follows the same rule. File existence and nonblank pixels are nece
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-10-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-10-start-->
 ```
 
 # Authoring Contract {#sec:authoring_contract}
@@ -1104,7 +1104,7 @@ The same rule applies to the adversarial assay. If a fork cannot name the threat
 Visualization authorship is equally accountable. A technically valid image can still mislead through an unsupported axis, aggregation, annotation, or caption. Every figure change must therefore update its `FigureSpec`, source data declaration, tests, manuscript interpretation, and regenerated PNG/SVG pair as one reviewable unit.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-10-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-10-end-->
 ```
 
 
@@ -1114,7 +1114,7 @@ Visualization authorship is equally accountable. A technically valid image can s
 
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-11-start-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-11-start-->
 ```
 
 <!-- transmission:end -->
@@ -1126,5 +1126,5 @@ must retain both bookends so a copied or truncated transmission cannot appear
 complete by filename alone.
 
 ```{=html}
-<!--template-web-source-158106edef23082f0f684878f1c2404954bf37bdcf6fef828af04042f6d50312-11-end-->
+<!--template-web-source-13335b2d85982bffb8c3be930b4c85fba001d5f4a92023e929184746d7b0cb03-11-end-->
 ```

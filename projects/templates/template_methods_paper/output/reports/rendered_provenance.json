@@ -2,7 +2,7 @@
   "consumed_manuscript": [
     {
       "rendered_path": "output/manuscript/00_abstract.md",
-      "rendered_sha256": "8f4d018516fec706c4109cd13dea2858ffaa7f24751c16414a7facb92c83e6ec",
+      "rendered_sha256": "48590922b939e3c5038c2b0bd4a7c14120afc5229b62539fd1150fd3e24c4727",
       "source_path": "manuscript/00_abstract.md",
       "source_sha256": "c76252b9ea8cb20930cf809fad2acad5ee3136a59e1de9159b82e4a8e31dbc75"
     },
@@ -38,7 +38,7 @@
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "3c9f2ed6f84111cc5bf626fdb5e597e081055cccf4c763e1c69a352d46b9eaa8",
+      "rendered_sha256": "59150182f88cb02f072cfdbb42e1195a2ba226fb0baf9a5d2e75949a95c85c1c",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "477ac975265d44649496479d2ac588b792d4ac4667eab1b15f6f96a1aa5e603a"
     },
@@ -58,22 +58,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a3e516752ef4ce9a519587ab65bd467e7fd525b76377fd582a05f558834b1277",
+      "sha256": "ef758aa3a6d3e63b1382f383156f96bbb853014e3c8443009ed590e2f57080df",
       "size_bytes": 19905
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "27e3d02e5d4544f3b98a30f2252dd3244c5f7dd3c0ea2786926b04c8c780f1b5",
+      "sha256": "ee66dcaac0c27001a0c094b44c702529201171d3ef4361eede5cb6651282d5da",
       "size_bytes": 39361
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "31dd836fbb94d4462750274af165ca5c43cfa4369790bf7e18bd7203fead0c95",
+      "sha256": "4d6783c92241fe96726ab11055895d392de8095c80cadc309f5414d1d3d165a1",
       "size_bytes": 2347
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "c20b86b65cca38586d274e4bed880772d14fb86a2688bd43fe5277ab6f1bb567",
+      "sha256": "6c221bb6cc2dc094abaf400df811e510ba8a30f8799014a7c293603c16967280",
       "size_bytes": 12874
     }
   },
@@ -85,7 +85,7 @@
     },
     "output": {
       "file_count": 61,
-      "sha256": "f6fb46cefa5824db573a4f14c560d780a54f527546bd2e2740305ee796cf556e"
+      "sha256": "275b48f14bf982a5d34b321143d21be1d072cc795eb3f9dd7b6998a7e23ca0ea"
     },
     "source": {
       "file_count": 36,
