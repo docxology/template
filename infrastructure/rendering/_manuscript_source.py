@@ -272,8 +272,8 @@ def _clean_stale_web_artifacts(manager: RenderManager) -> None:
     """Remove generated web artifacts before deciding whether HTML will render.
 
     Only removes files this renderer itself produces (the combined
-    ``index.html`` and per-section ``{parent}__{stem}.html`` pages, per
-    ``WebRenderer._output_file_for_source``) plus renderer-owned publish
+    ``index.html`` and parent-prefixed section pages with optional Source digests,
+    per ``WebRenderer._output_file_for_source``) plus renderer-owned publish
     targets (``.<stem>.<hex>.html.tmp``), the shared combined markdown, and
     the favicon — a blanket ``*.html`` glob would also delete unrelated
     hand-authored web artifacts (e.g. a project's own ``dashboard.html``)

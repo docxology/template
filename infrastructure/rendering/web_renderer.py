@@ -1,5 +1,6 @@
 """Web/HTML rendering module."""
 
+import hashlib
 import os
 import re
 import secrets
@@ -140,14 +141,23 @@ class WebRenderer:
                 ) from e
 
     def _output_file_for_source(self, source_file: Path) -> Path:
-        """Return a collision-resistant HTML path for an individual section."""
+        """Bind nested and sanitized section names to their complete Source path."""
         output_dir = Path(self.config.web_dir)
-        parent_name = source_file.parent.name
-        if parent_name and parent_name not in {".", ""}:
-            raw_stem = f"{parent_name}__{source_file.stem}"
-        else:
-            raw_stem = source_file.stem
-        safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", raw_stem).strip("-._") or source_file.stem
+        source = Path(os.path.abspath(source_file))
+        manuscript = Path(os.path.abspath(self.config.manuscript_dir))
+        try:
+            identity = source.relative_to(manuscript)
+            nested = len(identity.parts) > 1
+        except ValueError:
+            identity = source
+            nested = True
+        parent_name = source.parent.name
+        raw_stem = f"{parent_name}__{source.stem}" if parent_name else source.stem
+        safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", raw_stem).strip("-._") or "section"
+        if nested or safe_stem != raw_stem:
+            # The reserved separator cannot occur in an unhashed safe name.
+            digest = hashlib.sha256(identity.as_posix().encode("utf-8")).hexdigest()
+            safe_stem = f"{safe_stem[:160]}~{digest}"
         return output_dir / f"{safe_stem}.html"
 
     def render_combined(

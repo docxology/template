@@ -630,8 +630,8 @@ def selected_value_lineage_residuals(
     """Reconcile exact baseline location refusals after complete native closure.
 
     The finite Code domain's original residual remains in its checked return.
-    Only this artifact's actual checked Original/Current roles or own complete
-    Source-input absence can close that exact source/key/ordinal at projection.
+    Only this artifact's actual checked Original/Current roles or complete
+    artifact-owned Source-input absence can close that exact source/key/ordinal at projection.
     All origin/domain/style/scientific/control/pairing/history failures remain.
     """
     if not native_qualified:
@@ -646,7 +646,9 @@ def selected_value_lineage_residuals(
         if len(matches) != 1:
             raise ValueError("selected native closure omitted/repeated the actual artifact")
         row = matches[0]
-        selected_inputs = {binding["path"] for binding in row["source_inputs"]}
+        owned_inputs = {binding["path"]: binding for binding in row["source_inputs"]}
+        if len(owned_inputs) != len(row["source_inputs"]):
+            raise ValueError("selected native closure repeated an artifact-owned Source input")
         phase_closed = set()
         for occurrence in value["selected_occurrences"]:
             identity = _identity(occurrence)
@@ -656,10 +658,12 @@ def selected_value_lineage_residuals(
             actual = [item for item in row["occurrences"] if _identity(item["hydration"]) == identity]
             if len(actual) > 1 or actual and actual[0]["hydration"] != occurrence:
                 raise ValueError("selected native endpoint changed/repeated its exact Source/key/ordinal")
-            if occurrence["consumed"]["path"] not in selected_inputs:
+            if occurrence["consumed"]["path"] not in owned_inputs:
                 if actual:
                     raise ValueError("selected native Source absence contains a foreign occurrence")
                 phase_closed.add(reason)
+            elif occurrence["consumed"] != owned_inputs[occurrence["consumed"]["path"]]:
+                raise ValueError("selected native closure changed its exact owned Source input body")
             elif actual and actual[0]["roles"] and not actual[0]["residuals"]:
                 phase_closed.add(reason)
             elif actual:

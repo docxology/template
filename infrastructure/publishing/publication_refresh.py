@@ -167,7 +167,7 @@ def _require_single_worker(jobs: int) -> None:
 
 
 def generate(root: Path, directory: Path, jobs: int) -> int:
-    """Refresh tracked publication copies; revalidate the unchanged complement."""
+    """Run each frozen project's actual refresh or explicit rebind command chain."""
     _require_single_worker(jobs)
     plan = _source_plan(root, directory)
     prepared = json.loads((directory / "prepared.json").read_bytes())

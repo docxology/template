@@ -18,7 +18,7 @@ async function settleMath(page) {
 function prepareMathPage(file, html, local = false) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, html);
-  const code = "from pathlib import Path; import sys; from infrastructure.rendering._web_assets import harden_mathjax_script, install_local_mathjax_assets, embed_favicon, write_favicon_file; from infrastructure.rendering.web_renderer import WebRenderer; target = Path(sys.argv[1]); harden_mathjax_script(target); embed_favicon(target); write_favicon_file(target.parent); WebRenderer._embed_css(target); install_local_mathjax_assets(target, repo_root=Path.cwd()) if sys.argv[2] == 'local' else None";
+  const code = "from pathlib import Path; import sys; from infrastructure.rendering._web_assets import harden_mathjax_script, install_local_mathjax_assets, embed_favicon, write_favicon_file; from infrastructure.rendering.web_renderer import WebRenderer; target = Path(sys.argv[1]); harden_mathjax_script(target); harden_mathjax_script(target); embed_favicon(target); write_favicon_file(target.parent); WebRenderer._embed_css(target); install_local_mathjax_assets(target, repo_root=Path.cwd()) if sys.argv[2] == 'local' else None";
   const result = spawnSync("uv", ["run", "--locked", "python", "-c", code, file, local ? "local" : "cdn"], { encoding: "utf8" });
   expect(result.status, result.stdout + result.stderr).toBe(0);
 }
@@ -53,7 +53,9 @@ test("wide math retains its complete content through local scrolling after viewp
   const file = testInfo.outputPath("math-reflow.html");
   fs.mkdirSync(testInfo.outputDir, { recursive: true });
   const html = String.raw`<!doctype html><html lang="en"><head><meta charset="utf-8">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
+    <script>window.templateAuthoredMathFixtureRan = true;</script>
+    <script data-template-mathjax-config="stale">window.templateStaleMathFixtureRan = true; window.MathJax = {startup: {typeset: false}};</script>
+    <script nonce="authored-proof" type="text/javascript" defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
     </head><body><h1>Equation reflow</h1><p><span class="math display">\[
     u_{n+1}=a_1x_1+a_2x_2+a_3x_3+a_4x_4+a_5x_5+a_6x_6+a_7x_7+a_8x_8
     \qquad{(17)}\]</span></p><p>Inline
@@ -63,6 +65,17 @@ test("wide math retains its complete content through local scrolling after viewp
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(pathToFileURL(file).href, { waitUntil: "domcontentloaded" });
   await settleMath(page);
+  expect(await page.evaluate(() => ({
+    authored: window.templateAuthoredMathFixtureRan,
+    stale: typeof window.templateStaleMathFixtureRan,
+    loaders: [...document.scripts]
+      .filter((script) => script.src.includes("mathjax@4.0.0/tex-chtml.js"))
+      .map((script) => ({ nonce: script.nonce, type: script.type, defer: script.defer })),
+  }))).toEqual({
+    authored: true,
+    stale: "undefined",
+    loaders: [{ nonce: "authored-proof", type: "text/javascript", defer: true }],
+  });
   const source = await page.evaluate(() => MathJax.startup.document.getMathItemsWithin(document.body).map((item) => item.math));
   expect(source).toHaveLength(2);
   for (const width of [640, 320, 1440, 320]) {

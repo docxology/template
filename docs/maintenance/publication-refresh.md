@@ -12,15 +12,15 @@ The Source-owned controller is
 `infrastructure.publishing.publication_refresh`; path custody is in
 `publication_refresh_custody`, and `release_provider_graph` supplies the same
 current metadata graph used by coordinated version planning. The controller
-derives the rerender roster from the canonical projects whose
-`output/manuscript/config.yaml` is already tracked. It renders and validates
-those projects with the existing `rendered_refresh` producer. One reviewed
-semantic consumer, `templates/template_pitch_deck`, additionally reads COUNTS and
-version facts during canonical Stage 02; default refresh runs that genuine stage
-before its existing non-rebind refresh. The remaining canonical projects revalidate
-their unchanged output bytes. Current Source therefore has fifteen tracked
-publication-copy projects, Pitch analysis/refresh, and nine unchanged rebinds. The roster is not a fixed
-list of fifteen names. Provider dependencies finish before their consumers,
+regenerates every canonical public project with the existing `rendered_refresh`
+producer. A tracked `output/manuscript/config.yaml` identifies a materialized
+publication copy, not whether that project's rendered products depend on the
+current renderer. Projects without that copy must also acquire current global
+HTML semantics, mathematics and applicable EPUB styling through real generation.
+One reviewed semantic consumer, `templates/template_pitch_deck`, additionally
+reads COUNTS and version facts during canonical Stage 02; default refresh runs
+that genuine stage before its non-rebind refresh. There is no implicit
+unchanged-output complement. Provider dependencies finish before their consumers,
 with exactly one project worker per wave. The shared execution account uses
 strict same-UID process observation: concurrent project producers can appear in
 each other's final census, so both `run` and `generate` refuse `--jobs` values
@@ -79,13 +79,13 @@ publication validation and exact-SHA required acceptance remain the separate
 
 ## Coverage import and unchanged-output rebind
 
-The default mode remains `refresh`: regenerate tracked publication copies, run
-the genuine dependent Pitch analysis/refresh, and revalidate the unchanged
-complement. A coverage import changes semantic Pitch inputs as well as the shared
-stage fingerprint. Regenerate those dependent outputs before using `rebind-only`;
-unchanged output bytes alone cannot prove that displayed measurements are current. The requested mode is frozen in the Source-derived plan,
-preparation and generation records, checked against the dispatch on every phase,
-and retained in the review manifest.
+The default mode is `refresh`: regenerate all canonical public projects and run
+the genuine dependent Pitch analysis before its refresh. A coverage import
+changes semantic Pitch inputs as well as the shared stage fingerprint.
+Regenerate those outputs before using `rebind-only`; unchanged bytes alone do not
+prove current displayed measurements or renderer behavior. The requested mode is
+frozen in the Source-derived plan, preparation and generation records, checked
+against the dispatch on every phase, and retained in the review manifest.
 
 In `rebind-only`, all canonical projects use the actual existing
 `rebind_project` path through `refresh_rendered_provenance.py --rebind`.
@@ -104,9 +104,9 @@ Use this sequence after final metadata and genuine publication generation settle
    project input hash still matches C; retain the original measurements.
 3. Commit the imported literals and provenance as D. Preserve the original C
    measurements and compare every project/support identity with C.
-4. Produce dependent publication candidate Q through the actual Source-owned
-   analysis/refresh chain. The default hosted refresh includes Pitch's genuine
-   Stage 02 before refresh, the fifteen publication copies, and nine rebinds.
+4. Produce publication candidate Q through the actual complete Source-owned
+   regeneration chain. Default refresh regenerates every canonical public project
+   and includes Pitch's genuine Stage 02 before its rendering.
    Check its complete footprint and strict committed-tree gates. If any project
    source, compiled manuscript or measured support input changes, remeasure that
    affected input after it settles; never keep a mismatched C identity.

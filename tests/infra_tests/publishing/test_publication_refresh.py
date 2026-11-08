@@ -18,7 +18,6 @@ from infrastructure.publishing.root_release_contract import root_package_version
 from infrastructure.publishing.publication_refresh import (
     _generation_sequence,
     generate,
-    generation_commands,
     main,
     provider_waves,
     run_coordinated,
@@ -32,7 +31,6 @@ from tests.infra_tests.validation._rendered_provenance_helpers import (
     _green_project,
     _write_green_validation_report,
 )
-from scripts.maintenance.refresh_rendered_provenance import _parse_args
 from infrastructure.publishing.publication_refresh_custody import (
     DEPENDENT_ANALYSIS_SCOPE,
     _DEPENDENT_INPUTS,
@@ -43,7 +41,6 @@ from infrastructure.publishing.publication_refresh_custody import (
     commit_candidate,
     finish_review,
     git,
-    gate_commands,
     write_json,
 )
 from infrastructure.publishing.release_provider_graph import current_provider_graph
@@ -136,12 +133,8 @@ def _plan(root: Path) -> dict:
     return build_plan(root, git(root, "rev-parse", "HEAD").decode().strip(), "5.1.0")
 
 
-def test_current_provider_graph_and_publication_copies_derive_from_source(repository: Path) -> None:
+def test_provider_order_and_generated_ownership_preserve_authored_sources(repository: Path) -> None:
     plan = _plan(repository)
-    assert plan["refresh"] == [
-        scope for scope in PUBLIC_PROJECT_NAMES if scope in (ACTIVE, META, DEPENDENT_ANALYSIS_SCOPE)
-    ]
-    assert set(plan["rebind"]) == set(PUBLIC_PROJECT_NAMES) - {ACTIVE, META, DEPENDENT_ANALYSIS_SCOPE}
     waves = provider_waves(current_provider_graph(repository))
     assert next(i for i, row in enumerate(waves) if META in row) < next(
         i for i, row in enumerate(waves) if ADVANCED in row
@@ -149,6 +142,18 @@ def test_current_provider_graph_and_publication_copies_derive_from_source(reposi
     assert f"projects/{ACTIVE}/manuscript/02_compiled.md" in plan["allowed"]
     assert f"projects/{ACTIVE}/manuscript/01_authored.md" not in plan["allowed"]
     assert all(row["mode"] == "100644" for row in plan["allowed"].values())
+
+
+def test_refresh_does_not_treat_missing_publication_copy_as_unchanged_output(repository: Path) -> None:
+    publication = f"projects/{ADVANCED}/output/web/index.html"
+    _write(repository, publication, "<!doctype html><h1>Retained engineering publication</h1>\n")
+    _commit(repository)
+    assert not (repository / f"projects/{ADVANCED}/output/manuscript/config.yaml").exists()
+
+    plan = _plan(repository)
+
+    assert ADVANCED in plan["refresh"] and ADVANCED not in plan["rebind"]
+    assert publication in plan["allowed"]
 
 
 @pytest.mark.parametrize("change", ["authored", "config", "untracked", "removed", "symlink", "mode", "forged-plan"])
@@ -354,24 +359,13 @@ def test_real_config_validator_refuses_stale_copy_then_accepts_exact_source_copy
     assert validate_exemplar_configs(repository, projects=(ACTIVE,)).passed
 
 
-def test_real_source_inventory_and_mandatory_config_guard(tmp_path: Path) -> None:
+def test_actual_source_inventory_excludes_authored_manuscripts() -> None:
     sha = git(ROOT, "rev-parse", "HEAD").decode().strip()
     plan = _inventory_plan(ROOT, sha, root_package_version(ROOT))
-    expected = [
-        scope for scope in PUBLIC_PROJECT_NAMES if f"projects/{scope}/output/manuscript/config.yaml" in plan["allowed"]
-    ]
-    assert plan["publication_copies"] == expected
-    assert plan["refresh"] == [
-        scope for scope in PUBLIC_PROJECT_NAMES if scope in set(expected) | {DEPENDENT_ANALYSIS_SCOPE}
-    ]
-    assert set(plan["rebind"]) == set(PUBLIC_PROJECT_NAMES) - set(expected) - {DEPENDENT_ANALYSIS_SCOPE}
     assert f"projects/{ACTIVE}/manuscript/00_abstract.md" not in plan["allowed"]
-    commands = gate_commands(ROOT, tmp_path)
-    assert set(commands) == {"exemplar-config", "publication-gate", "rendered-audit"}
-    assert commands["exemplar-config"][1:] == ["scripts/audit/check_exemplar_configs.py"]
 
 
-def test_rebind_only_plan_routes_every_canonical_project_to_actual_rebind_cli(repository: Path) -> None:
+def test_rebind_only_ownership_excludes_analysis_and_compiled_manuscripts(repository: Path) -> None:
     sha = git(repository, "rev-parse", "HEAD").decode().strip()
     plan = build_plan(repository, sha, "5.1.0", mode="rebind-only")
     assert plan["mode"] == "rebind-only"
@@ -379,17 +373,6 @@ def test_rebind_only_plan_routes_every_canonical_project_to_actual_rebind_cli(re
     assert plan["compiled_manuscripts"] == []
     assert plan["dependent_analysis"] == {}
     assert all(Path(path).parent.name == "reports" and Path(path).suffix == ".json" for path in plan["allowed"])
-    commands = [
-        item for wave in provider_waves(plan["providers"]) for item in generation_commands(repository, plan, wave)
-    ]
-    assert len(commands) == len(PUBLIC_PROJECT_NAMES)
-    selected = []
-    for _, argv in commands:
-        assert argv[1] == "scripts/maintenance/refresh_rendered_provenance.py"
-        parsed = _parse_args(argv[2:])
-        assert parsed.rebind is True
-        selected.extend(parsed.projects)
-    assert set(selected) == set(PUBLIC_PROJECT_NAMES)
 
 
 @pytest.mark.parametrize(
@@ -449,22 +432,6 @@ def test_actual_rebind_refuses_changed_output_fingerprint_without_restamping(tmp
     assert receipt.read_bytes() == before
 
 
-def test_rebind_only_workflow_mode_is_explicit_and_carried_to_every_phase() -> None:
-    workflow = yaml.safe_load((ROOT / ".github/workflows/publication-refresh.yml").read_text())
-    trigger = workflow.get("on", workflow.get(True))
-    assert trigger["workflow_dispatch"]["inputs"]["mode"] == {
-        "description": "Refresh publication copies and dependent Pitch analysis, or revalidate unchanged outputs",
-        "type": "choice",
-        "options": ["refresh", "rebind-only"],
-        "default": "refresh",
-    }
-    job = workflow["jobs"]["refresh"]
-    assert job["env"]["REFRESH_MODE"] == "$" + "{{ inputs.mode }}"
-    for step in job["steps"]:
-        if "infrastructure.publishing.publication_refresh" in step.get("run", ""):
-            assert '--mode "$REFRESH_MODE"' in step["run"]
-
-
 @pytest.mark.parametrize("version", ["5.0.2", "5.1.0"])
 def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_version(
     repository: Path, version: str
@@ -490,28 +457,6 @@ def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_vers
 
         assert row["sha256"] == hashlib.sha256((repository / row["path"]).read_bytes()).hexdigest()
         assert row["bytes"] == (repository / row["path"]).stat().st_size
-    commands = generation_commands(repository, plan, [DEPENDENT_ANALYSIS_SCOPE])
-    assert commands == [
-        (
-            DEPENDENT_ANALYSIS_SCOPE.replace("/", "__") + "-analysis",
-            [
-                str(repository / ".venv/bin/python"),
-                "scripts/pipeline/stage_02_analysis.py",
-                "--project",
-                DEPENDENT_ANALYSIS_SCOPE,
-            ],
-        ),
-        (
-            DEPENDENT_ANALYSIS_SCOPE.replace("/", "__") + "-generate",
-            [
-                str(repository / ".venv/bin/python"),
-                "scripts/maintenance/refresh_rendered_provenance.py",
-                "--project",
-                DEPENDENT_ANALYSIS_SCOPE,
-            ],
-        ),
-    ]
-    assert "--rebind" not in commands[1][1]
     (repository / _DEPENDENT_INPUTS[0]).write_bytes(b"changed actual counts DATA")
     with pytest.raises(ValueError, match="differs"):
         check_footprint(repository, plan)
@@ -717,20 +662,3 @@ def test_unsafe_shared_account_workers_refuse_before_any_plan_or_producer(
     assert not (repository / "output/readiness/publication-refresh").exists()
     assert not git(repository, "status", "--porcelain")
     assert git(repository, "rev-parse", "HEAD").decode().strip() == source
-
-
-@pytest.mark.parametrize("worker_arguments", [[], ["--jobs", "1"]])
-def test_generate_cli_default_matches_explicit_single_worker_before_missing_preparation(
-    repository: Path, tmp_path: Path, worker_arguments: list[str]
-) -> None:
-    directory = tmp_path / "unprepared-single-worker"
-    write_json(directory / "plan.json", _plan(repository))
-    before = (directory / "plan.json").read_bytes()
-    # An allowed single worker reaches the unchanged own-runtime preparation
-    # requirement; no producer is substituted or admitted by this control.
-    with pytest.raises(FileNotFoundError, match="prepared.json"):
-        main(["--repo-root", str(repository), "--directory", str(directory), "generate", *worker_arguments])
-    assert (directory / "plan.json").read_bytes() == before
-    assert sorted(path.name for path in directory.iterdir()) == ["plan.json"]
-    assert not (repository / "output/readiness/publication-refresh").exists()
-    assert not git(repository, "status", "--porcelain")

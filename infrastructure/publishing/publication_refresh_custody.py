@@ -182,7 +182,7 @@ def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refr
             blob_mode, kind, oid = header.decode().split()
             tracked[encoded_path.decode()] = {"mode": blob_mode, "kind": kind, "blob": oid}
     allowed = {}
-    refresh = []
+    refresh = list(PUBLIC_PROJECT_NAMES) if mode == "refresh" else []
     publication_copies = []
     dependent_analysis = _dependent_analysis(root, tracked, mode)
     compiled_manuscripts: list[str] = []
@@ -191,8 +191,6 @@ def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refr
         config = prefix + "output/manuscript/config.yaml"
         if mode == "refresh" and config in tracked:
             publication_copies.append(scope)
-        if mode == "refresh" and (config in tracked or scope in dependent_analysis):
-            refresh.append(scope)
         compiled = set(_compiled(root, scope, tracked)) if mode == "refresh" else set()
         compiled_manuscripts.extend(compiled)
         for path, record in tracked.items():
@@ -204,8 +202,8 @@ def _inventory_plan(root: Path, source_sha: str, version: str, mode: str = "refr
                     raise ValueError(f"canonical generated evidence must be a tracked regular file: {path}")
                 _regular(root, path)
                 allowed[path] = record
-    if (mode == "refresh" and not refresh) or not allowed:
-        raise ValueError("canonical tracked publication-copy inventory is missing")
+    if not allowed:
+        raise ValueError("canonical tracked publication output inventory is missing")
     graph = current_provider_graph(root)
     return {
         "schema_version": SCHEMA,

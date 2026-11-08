@@ -220,6 +220,23 @@ These independent main corrections are included in this candidate. Their origina
 integration did not publish a new SDK release or approve the minor-release
 preparation; the exact-source release gates above remain required.
 
+Additional integration corrections:
+
+- Keep distinct nested or sanitized manuscript sources in separate HTML pages.
+  Disambiguation binds the complete Source path; ordinary flat safe names remain
+  stable. Actual isolated previews and globally finalized split links preserve
+  each source's content instead of silently overwriting a sibling page.
+- Separate split-HTML Code ownership from complete parser context throughout
+  capture, portable replay and absence closure. Derive selected Table contract
+  identities from the same genuine projected AST pair while retaining full and
+  original parser identities, complete-cell checks and native residuals.
+- Regenerate every canonical public project in the default publication refresh.
+  A tracked materialized config no longer excludes rendered products from
+  genuine generation. Explicit unchanged-output rebinding retains its strict
+  report-only ownership and unchanged-byte refusal boundary.
+- Retire obsolete helper, argv, wording and incidental-default pins; retain real
+  invalid-input, source-ownership, repeated-value and rendered-page regressions.
+
 ## [5.0.2] - 2026-11-04
 
 See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root
