@@ -6,14 +6,14 @@
       99.08
     ],
     [
-      "template_methods_paper",
-      94,
-      99.0
-    ],
-    [
       "template_madlib",
       198,
       98.95
+    ],
+    [
+      "template_methods_paper",
+      94,
+      98.21
     ],
     [
       "template_redacted_report",
@@ -66,13 +66,13 @@
       94.68
     ],
     [
-      "template_code_project",
-      296,
-      94.28
-    ],
-    [
       "template_advanced_literature_review",
       163,
+      94.04
+    ],
+    [
+      "template_code_project",
+      296,
       94.04
     ],
     [
@@ -88,7 +88,7 @@
     [
       "template_gold_refinement",
       337,
-      92.8
+      92.81
     ],
     [
       "template_search_project",
@@ -113,7 +113,7 @@
     [
       "template_active_inference",
       992,
-      91.15
+      91.17
     ],
     [
       "template_eda_notebook",

@@ -231,7 +231,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.531055450439453
+      "total_size_mb": 5.531054496765137
     },
     "figures": {
       "files": 10,
@@ -240,7 +240,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.9738063812255859
+      "size_mb": 0.9738073348999023
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1021110
+          "size_bytes": 1021111
         },
         "release": {
           "files": 2,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 1123322
+          "size_bytes": 1123320
         },
         "web": {
           "files": 16,
@@ -279,7 +279,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 68,
-      "total_size_bytes": 5799732
+      "total_size_bytes": 5799731
     }
   },
   "recommendations": [],
@@ -290,21 +290,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T00:42:12Z",
+  "timestamp": "2026-11-08T02:56:22Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "29133a59444bf836eafe117d5787e7e33fab2eb5d1004822d442c0cc2e11fa31",
+      "sha256": "dfbbba7547debae3c983893161652c87a3b0632c645d4dd97fef32fc0e5492c3",
       "size_bytes": 22233
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "fd7ab2841431821380e0ddc9cbaed8c2502f5dceb04e93aa21f34be50b2da528",
+      "sha256": "abafc558b34feb8559b31e162e6044754793e639b4ec88c823aa34c6338aae48",
       "size_bytes": 73016
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "90471d7140c686bbf8b6c3bdb86436980363e31ef7ccadfe922a89e6c816901e",
+      "sha256": "0ce9611b2677504881cc02ffabf428ba085e9841b1bd8f67c518da328737675d",
       "size_bytes": 2928
     },
     "consumed_manuscript": [
@@ -352,7 +352,7 @@
       },
       {
         "rendered_path": "output/manuscript/07_reproducibility.md",
-        "rendered_sha256": "881101a0bdbc7cdede04ba3cf72c971fd52efe0a32d4f8f945678e82c1dc457e",
+        "rendered_sha256": "962b3c92bf893c6bee744094d65429eed5e38e718f2eed2297465257eb122348",
         "source_path": "manuscript/07_reproducibility.md",
         "source_sha256": "c159af59625c5aa2a96f227a6face4df46caca09df75437fd7df4676b871cbfa"
       },
@@ -388,7 +388,7 @@
       },
       "output": {
         "file_count": 68,
-        "sha256": "09329f41b63c1cd2aeb1b87a88bd55beed4eea8dda1a5218bce3527eab2cecea"
+        "sha256": "dc0872eba7a96beb762bec634dd98e6655aa529567b974acd6fef64c21337579"
       },
       "source": {
         "file_count": 42,
@@ -396,7 +396,7 @@
       },
       "stage": {
         "file_count": 1755,
-        "sha256": "6f7841e614182793a248f7461be286b40fccfb8f4193ddd0a161f7b674e2e27e"
+        "sha256": "d2f7980e2e71d33423b577866d72796e41db78a3ff1b416bab7ef5481aea132b"
       }
     },
     "project": "templates/template_madlib",

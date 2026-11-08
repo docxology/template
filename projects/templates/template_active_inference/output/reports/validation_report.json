@@ -14,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 48,
-      "size_mb": 2.817342758178711
+      "size_mb": 2.817361831665039
     },
     "detailed_validation": {
       "directories": {
@@ -47,7 +47,7 @@
           "file_count": 27,
           "largest_file": "sheaf_layers_overview.png",
           "largest_file_path": "figures/sheaf_layers_overview.png",
-          "size_mb": "3.70"
+          "size_mb": "3.69"
         },
         "llm": {
           "exists": false,
@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_active_inference_combined.pdf",
           "largest_file_path": "pdf/template_active_inference_combined.pdf",
-          "size_mb": "3.92"
+          "size_mb": "3.91"
         },
         "reports": {
           "exists": true,
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 3.92
+            "size_mb": 3.91
           },
           "data": {
             "exists": true,
@@ -157,7 +157,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.7
+            "size_mb": 3.69
           },
           "llm": {
             "exists": false,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.92
+            "size_mb": 3.91
           },
           "reports": {
             "exists": true,
@@ -227,16 +227,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.55945110321045
+      "total_size_mb": 17.547886848449707
     },
     "figures": {
       "files": 27,
-      "size_mb": 3.6972551345825195
+      "size_mb": 3.69451904296875
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 3.9169063568115234
+      "size_mb": 3.9135684967041016
     },
     "stable_inventory": {
       "categories": {
@@ -246,11 +246,11 @@
         },
         "data": {
           "files": 48,
-          "size_bytes": 2954198
+          "size_bytes": 2954218
         },
         "figures": {
           "files": 27,
-          "size_bytes": 3876853
+          "size_bytes": 3873984
         },
         "manuscript": {
           "files": 21,
@@ -258,20 +258,20 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 4107174
+          "size_bytes": 4103674
         },
         "reports": {
           "files": 33,
-          "size_bytes": 449046
+          "size_bytes": 449044
         },
         "web": {
           "files": 20,
-          "size_bytes": 2761972
+          "size_bytes": 2756197
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18412419
+      "total_size_bytes": 18400293
     }
   },
   "recommendations": [],
@@ -282,12 +282,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T01:32:39Z",
+  "timestamp": "2026-11-08T02:56:22Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "641fd66640908b1441993c89fd602f581e446d823ad7d0a5abb2eeecb4ac09e9",
-      "size_bytes": 58791
+      "sha256": "347de1368310b2d1bf2c3f95893692d61d89f9fc1cdc4e9800ac26afc79da026",
+      "size_bytes": 58790
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -416,7 +416,7 @@
       },
       "output": {
         "file_count": 178,
-        "sha256": "66a88cfc368470520a8dafec35c909d5add4756aff22ac9f99151dc1c7afe21d"
+        "sha256": "1d7a03382afa947fa2812fbaae0726e981c4272646a0ee91a36e702d87fb5bd6"
       },
       "source": {
         "file_count": 283,
@@ -424,7 +424,7 @@
       },
       "stage": {
         "file_count": 1755,
-        "sha256": "6f7841e614182793a248f7461be286b40fccfb8f4193ddd0a161f7b674e2e27e"
+        "sha256": "d2f7980e2e71d33423b577866d72796e41db78a3ff1b416bab7ef5481aea132b"
       }
     },
     "project": "templates/template_active_inference",

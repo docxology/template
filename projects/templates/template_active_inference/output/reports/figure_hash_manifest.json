@@ -133,7 +133,7 @@
       "content_sha256": "d80e985892f37dd1ab5708bfb10d6721fbed055ba8f8bd48525d62a9c99b45e2",
       "fresh": true,
       "path": "output/figures/si_belief_trajectory.gif",
-      "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599",
       "size_bytes": 7058
     },
     {
@@ -172,18 +172,18 @@
       "size_bytes": 184985
     },
     {
-      "content_sha256": "3edf1f9c793ff97dffeceae439cd51d4ca3c6844005f93f69851f926d8c4475f",
+      "content_sha256": "dd726b50c35e84af7f3c1ba7df8b3299a3167353c5967746333efba72d8b793b",
       "fresh": true,
       "path": "output/figures/transmission_integrity_strip.png",
-      "sha256": "5e25a09d9468e517c24a0b67c25f4023f93026e84de1da11d5562d940bc84473",
-      "size_bytes": 17367
+      "sha256": "349eeadd47e44e43d5c938dc35ac9307cd6f3e72bfd3ef6df10aebbe56153720",
+      "size_bytes": 17713
     },
     {
-      "content_sha256": "c2b04423b3cc8bded4206533acb348a01176ed9423b2518c2c8db8377b2d6f1a",
+      "content_sha256": "5056162184c8ed0e291e88be3cab7e53e2552a26c3f31b63c953ad820aec1c13",
       "fresh": true,
       "path": "output/figures/transmission_pairing.png",
-      "sha256": "7a62bfb1f16ddad1c450854243516a3c359d57077b9f611c6b80d3c17f7e284f",
-      "size_bytes": 10573
+      "sha256": "9436f89fb5a2d2f836b88f1ea7b6d9b890d205e4f0f0108c8d94ce42e4af3110",
+      "size_bytes": 7358
     }
   ],
   "schema": "template_active_inference.figure_hash_manifest.v2"

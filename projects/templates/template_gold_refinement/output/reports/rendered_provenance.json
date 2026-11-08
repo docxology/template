@@ -44,7 +44,7 @@
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "326f57b2f540fc52119901b5708490e7ba249451162e0f0506b5db78671fd170",
+      "rendered_sha256": "722f2d96d80c63fbfdad7130a3fa20f4cd290a2507841cca2dd11ece3153c84b",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "9160d7cf011ca7feb015ae49daa17536ef93d6bf359e887d27dc357499d4d0dc"
     },
@@ -76,22 +76,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "fb53406252fde8df7be4bc824b0a3e0d6fbc6967abec7a53f5eef527b5f4e987",
+      "sha256": "9b3eed7b249dde198d131bce24079fbbd1d5505361fd8aabbb5505f89e3ec80b",
       "size_bytes": 24134
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "33625f21bb97aff4fa42d8128a9897bcd890b14e45cbfa35db04a05c4bd80e5d",
+      "sha256": "4f0aa93bd980be8a1128ff086a69811e4dcb4a46c466cfa8c540154da99b57c0",
       "size_bytes": 104082
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "ef715ba6d7dc02764c3be25ee8f2ef07fc96be4c081eba29a082eea51328967e",
+      "sha256": "d3f62b40b3000c0bd08943ef3a9d39de7d274eedf3cd1549add7fecf813e8e9f",
       "size_bytes": 2935
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "70dff05821a842edcdcb12232f2a44f681c08d1fc82b1a0cd4bf769cd3ea183f",
+      "sha256": "440260b16d04225542807faf910ec900f3e73ed054924093fcb71482674539d9",
       "size_bytes": 13003
     }
   },
@@ -103,7 +103,7 @@
     },
     "output": {
       "file_count": 74,
-      "sha256": "34a7a6f885791a3d57db99d42d46870e55321a5ade8a1c9ac22f1cf6051c5c83"
+      "sha256": "38b1f9b8d833c41580c7c324306dffa38896537d8666950f661f84b702f64b78"
     },
     "source": {
       "file_count": 46,
@@ -111,7 +111,7 @@
     },
     "stage": {
       "file_count": 1755,
-      "sha256": "6f7841e614182793a248f7461be286b40fccfb8f4193ddd0a161f7b674e2e27e"
+      "sha256": "d2f7980e2e71d33423b577866d72796e41db78a3ff1b416bab7ef5481aea132b"
     }
   },
   "project": "templates/template_gold_refinement",
