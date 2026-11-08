@@ -8,7 +8,10 @@ from __future__ import annotations
 
 import html
 import re
+from collections import Counter
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import quote, unquote
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._figure_alt_registry import (
@@ -57,6 +60,131 @@ from infrastructure.rendering._web_links import (
     rewrite_repository_links as rewrite_repository_links,
     deployed_web_link_issues as deployed_web_link_issues,
 )
+
+# Tokenize whole attributes so an authored value containing `` href=...`` is
+# never mistaken for the anchor's actual navigation attribute.
+_HTML_ATTRIBUTE_TOKEN_RE = re.compile(r"""(?P<name>[^\s"'<>/=]+)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?""")
+# The URL fragment percent-encode set excludes these printable ASCII bytes.
+_FRAGMENT_URL_SAFE = "!#$%&'()*+,-./:;=?@[\\]^_{|}~"
+
+
+class _FragmentDocument(HTMLParser):
+    """Inventory real elements without rewriting authored markup or script text."""
+
+    def __init__(self, content: str) -> None:
+        super().__init__(convert_charrefs=True)
+        self.identifiers: Counter[str] = Counter()
+        self.named_anchors: Counter[str] = Counter()
+        self.anchors: list[tuple[int, str, str]] = []
+        self._template_depth = 0
+        self._line_starts = [0]
+        self._line_starts.extend(match.end() for match in re.finditer("\n", content))
+        self.feed(content)
+        self.close()
+        # IDs take precedence over legacy names within each document.
+        self.destinations = dict(self.named_anchors)
+        self.destinations.update(self.identifiers)
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        in_template = self._template_depth > 0
+        if tag == "template":
+            self._template_depth += 1
+        if in_template:
+            return
+        attributes = dict(reversed(attrs))
+        identifier = attributes.get("id")
+        if identifier is not None:
+            self.identifiers[identifier] += 1
+        name = attributes.get("name")
+        if tag == "a" and name is not None:
+            self.named_anchors[name] += 1
+        href = attributes.get("href")
+        if tag == "a" and href is not None:
+            start_tag = self.get_starttag_text()
+            if start_tag is None:
+                raise RenderingError("Rendered anchor has no original start tag")
+            line, column = self.getpos()
+            self.anchors.append((self._line_starts[line - 1] + column, start_tag, href))
+
+    # HTML ignores the self-closing flag on template (and other nonvoid HTML
+    # elements). Do not let HTMLParser synthesize an end tag for <template/>.
+    handle_startendtag = handle_starttag
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "template" and self._template_depth:
+            self._template_depth -= 1
+
+
+def resolve_split_page_fragments(combined_file: Path, section_files: tuple[Path, ...]) -> None:
+    """Bind nonlocal pure fragments only to definitions in the produced edition.
+
+    Section definitions take precedence over their duplicate in the combined
+    edition. Multiple section definitions are ambiguous, not an excuse to send
+    readers to the first matching destination in index.html. Unknown links stay visible.
+    """
+    root = combined_file.parent.resolve(strict=True)
+    pages: dict[Path, tuple[str, _FragmentDocument]] = {}
+    for page in dict.fromkeys((combined_file, *section_files)):
+        if page.is_symlink():
+            raise RenderingError(f"Rendered fragment page is unsafe: {page}")
+        if not page.exists() and page != combined_file:
+            continue
+        try:
+            resolved = page.resolve(strict=True)
+            relative = resolved.relative_to(root)
+        except (OSError, ValueError) as exc:
+            raise RenderingError(f"Rendered fragment page leaves output/web: {page}") from exc
+        if len(relative.parts) != 1 or not resolved.is_file():
+            raise RenderingError(f"Rendered fragment page is unsafe: {page}")
+        content = page.read_text(encoding="utf-8")
+        pages[page] = (content, _FragmentDocument(content))
+
+    combined = pages[combined_file][1]
+    definitions: dict[str, list[Path]] = {}
+    for page, (_, document) in pages.items():
+        if page != combined_file:
+            for identifier, count in document.destinations.items():
+                definitions.setdefault(identifier, []).extend([page] * count)
+
+    for page, (content, document) in pages.items():
+        if page == combined_file:
+            continue
+        replacements: list[tuple[int, int, str]] = []
+        for offset, tag, href in document.anchors:
+            if not href.startswith("#") or len(href) == 1:
+                continue
+            fragment = quote(href[1:], safe=_FRAGMENT_URL_SAFE)
+            decoded = unquote(fragment)
+            # Browser navigation tries literal IDs/names before UTF-8 decoding,
+            # then falls back to an ASCII-case-insensitive implicit page top.
+            # Any working local destination wins over cross-page definitions.
+            if fragment in document.destinations or decoded in document.destinations or decoded.lower() == "top":
+                continue
+            target = None
+            for identifier in dict.fromkeys((fragment, decoded)):
+                candidates = definitions.get(identifier, [])
+                if candidates:
+                    if len(candidates) == 1:
+                        target = candidates[0]
+                    break
+                combined_count = combined.destinations.get(identifier, 0)
+                if combined_count:
+                    if combined_count == 1:
+                        target = combined_file
+                    break
+            if target is None:
+                continue
+            # Only the document component is new. Preserve the authored fragment
+            # encoding, and escape the whole URL for its HTML attribute context.
+            replacement = _quoted_relative_path(Path(target.name)) + href
+            for attribute in _HTML_ATTRIBUTE_TOKEN_RE.finditer(tag, 2):
+                if attribute.group("name").lower() == "href":
+                    updated_attribute = _replace_html_attribute(attribute.group(0), "href", replacement)
+                    replacements.append((offset + attribute.start(), offset + attribute.end(), updated_attribute))
+                    break
+        for start, end, replacement in reversed(replacements):
+            content = content[:start] + replacement + content[end:]
+        write_if_changed(page, content)
 
 
 def normalize_figure_paths(content: str) -> str:

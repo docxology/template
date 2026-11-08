@@ -317,20 +317,39 @@ def normalize_pytest_args_for_project(project_root: Path, pytest_args: list[str]
 
 
 def build_project_pytest_command(
-    project_root: Path, pytest_args: list[str], *, interpreter: Path | None = None, deadline: float | None = None
+    project_root: Path,
+    pytest_args: list[str],
+    *,
+    interpreter: Path | None = None,
+    deadline: float | None = None,
+    generated_profile: TestProfileSpec | None = None,
 ) -> list[str]:
     """Build Python-module argv for one existing prepared project interpreter.
 
     Execution adapters independently admit its exact runner versions. This
     builder bounds provider discovery in that selected interpreter and never
     installs dependencies or falls back from a broken venv.
+
+    Only ``generated_profile`` is eligible for native marker intersection.
+    Expressions already supplied in ``pytest_args`` remain raw pytest policy.
+    The shared plugin does not alter selection without that generated option.
     """
     selected = select_project_test_python(project_root) if interpreter is None else interpreter
+    options = ["-p", "infrastructure.core.testing._pytest_runtime_controls"]
+    if generated_profile is not None:
+        expression = build_profile_marker_expression(generated_profile)
+        options.extend(
+            f"--template-profile-exclude={clause.removeprefix('not ')}"
+            for clause in (expression or "").split(" and ")
+            if clause
+        )
+    option_end = pytest_args.index("--") if "--" in pytest_args else len(pytest_args)
+    arguments = [*pytest_args[:option_end], *options, *pytest_args[option_end:]]
     return list(
         build_audited_project_test_command(
             project_root,
             selected,
-            tuple(normalize_pytest_args_for_project(project_root, pytest_args)),
+            tuple(normalize_pytest_args_for_project(project_root, arguments)),
             module="pytest",
             deadline=deadline,
         )
@@ -347,6 +366,7 @@ def build_union_pytest_command(
     timeout: int,
     parallel: str | int | None = None,
     fail_under: int | None = None,
+    generated_profile: TestProfileSpec | None = None,
 ) -> list[str]:
     """Build argv for one project in a multi-project combined-coverage run.
 
@@ -375,14 +395,14 @@ def build_union_pytest_command(
         f"--timeout={timeout}",
         "--durations=10",
     ]
-    if marker_expr:
+    if marker_expr is not None:
         pytest_args.extend(["-m", marker_expr])
     if fail_under is not None:
         pytest_args.append(f"--cov-fail-under={fail_under}")
     if not is_first:
         pytest_args.append("--cov-append")
     pytest_args.extend(resolve_xdist_args(parallel))
-    return build_project_pytest_command(resolved_root, pytest_args)
+    return build_project_pytest_command(resolved_root, pytest_args, generated_profile=generated_profile)
 
 
 def project_has_test_files(project_root: Path) -> bool:

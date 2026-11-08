@@ -370,20 +370,6 @@ def test_project_has_test_files_detects_modules(tmp_path: Path) -> None:
     assert project_has_test_files(project)
 
 
-def test_build_project_pytest_command_uses_existing_python_without_acquisition(tmp_path: Path) -> None:
-    import sys
-
-    project = tmp_path / "project"
-    project.mkdir()
-    (project / "pyproject.toml").write_text('[project]\nname="demo"\n')
-    args = [str(project / "tests"), "--cov=src", "--timeout=120"]
-    cmd = build_project_pytest_command(project, args)
-    assert cmd[:4] == [str(Path(sys.executable).absolute()), "-I", "-B", "-c"]
-    assert "runpy.run_module('pytest'" in cmd[4]
-    # The audited entry appends --assert=plain so held plugin source runs unrewritten.
-    assert cmd[5:] == ["tests", "--cov=src", "--timeout=120", "--assert=plain"]
-
-
 def test_build_project_pytest_command_does_not_fall_back_from_missing_venv(tmp_path: Path) -> None:
     from infrastructure.core.testing.project_test_runtime import ProjectTestRuntimeError
 

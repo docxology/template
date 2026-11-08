@@ -24,7 +24,7 @@ from types import MappingProxyType
 
 from infrastructure.core.execution_boundary import BoundedSubprocessResult
 from infrastructure.core.testing.pytest_orchestration import (
-    build_profile_marker_expression,
+    build_project_pytest_command,
     resolve_test_profile,
 )
 from infrastructure.core.runtime.environment import get_subprocess_env
@@ -202,21 +202,15 @@ def _coverage_measurement_command(
         arguments[arguments.index("python")] = python
         return [*prefix, *arguments]
 
-    profile = resolve_test_profile("release")
-    marker_expression = build_profile_marker_expression(profile)
-    command = [
+    return [
         *prefix,
-        python,
-        "-m",
-        "pytest",
-        "tests/",
-        "--cov=src",
-        "--cov-report=",
-        "-q",
+        *build_project_pytest_command(
+            project_dir,
+            ["tests/", "--cov=src", "--cov-report=", "-q"],
+            interpreter=Path(python),
+            generated_profile=resolve_test_profile("release"),
+        ),
     ]
-    if marker_expression:
-        command.extend(["-m", marker_expression])
-    return command
 
 
 def _coverage_report_command(

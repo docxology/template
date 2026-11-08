@@ -281,6 +281,33 @@ escapes, and links into private `projects/`, `fonds/`, `rules/`, or `tools/`
 trees fail closed. Combined public-checkout renders also scan renderer-owned
 pages for remaining local anchors that leave the deployed web directory.
 
+After the combined edition is produced, a separate fragment pass inventories
+actual document-tree IDs and named anchors in that index and the section pages
+selected by its source roster. A pure `#fragment` that already has a local
+browser destination stays local, including named anchors and the implicit
+case-insensitive `#top` destination. Literal fragment spelling is tried before
+percent-decoding for both local preservation and cross-page lookup (including
+colon-bearing and Unicode IDs).
+Otherwise, one unambiguous section definition becomes a relative
+`section.html#fragment` link; a definition present only in the combined index
+becomes `index.html#fragment`. Duplicate section definitions are not resolved
+by blindly choosing the index or a decoded alternative, and missing or unbound
+targets remain unchanged and observable. Unrelated stale HTML files are not
+definition candidates. Template descendants are inert: their IDs and named
+anchors cannot become destinations, and their hrefs are not rewritten.
+Nested templates and HTML's ignored self-closing flag on `<template/>` retain
+that boundary; the outer template element itself can still be a destination.
+This pass also runs for isolated/private renders, without enabling public
+repository rewriting. It preserves authored fragment spelling, quotes document
+names, and leaves IDs, prose, external URLs, non-fragment links, images, script
+literals, and comments untouched. Regression coverage in
+`tests/infra_tests/rendering/test_web_fragments.py` compares real Pandoc section
+and combined DOM hrefs with explicit destination contracts, including inert
+template contents, rather than copying the resolver's lookup algorithm.
+Actual browser `:target`, named-anchor selection, and top scrolling remain
+separate surface checks on those produced pages; the renderer suite does not
+launch or manage a Chrome/CDP process.
+
 Renders from isolated or private paths skip the public-repository rewrite, so
 private source paths are never projected into the public repository URL. The
 source-aware behavior is covered by

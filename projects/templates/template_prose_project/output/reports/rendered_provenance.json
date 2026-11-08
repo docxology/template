@@ -64,42 +64,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "6149aec397bd5c6ce8a12c82691d2797287d3f401ec3ba8e10e4fad414627cb5",
-      "size_bytes": 18980
+      "sha256": "6b782ecd0a1346ea4497f3d6d90a17848f16435b2ab25657ffe8c5ea71ba517e",
+      "size_bytes": 17532
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "255f17e80cd7ba1b34c04aee345ab7ce24efa3e223eefbe2243a446aa01f40b8",
-      "size_bytes": 22645
+      "sha256": "025303767772c1594d8a71d370af537a5b5897275dfb08a8444d1933df0d752c",
+      "size_bytes": 22605
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "a410ffc7e666e5a74cbb81d10ff4a835cba755373fa450008c920af6e75f9ee4",
+      "sha256": "c642ee77f5f5b43b68fa3f17172e84564ca63e182a09593de9c7b15965919710",
       "size_bytes": 2542
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "6dba6c1b1bd97dced452ec414e21d3d3be1f2988370a360b2a6090f218da7d92",
-      "size_bytes": 12429
+      "sha256": "8642a5a40835dc843ab080497a4d55ad0fcb4a73c7949aef1087c9dea1614eb1",
+      "size_bytes": 12431
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 16,
-      "sha256": "ba5846c69b13d9078bf6edfd8e0c83cfd5b763421c900a09f70f041358b9b996"
+      "sha256": "32095ad18e939bbf9192d8d678d033725c746d4910a248f8bba939068e2a8cf8"
     },
     "output": {
       "file_count": 58,
-      "sha256": "0fb3a0774e981e2cb1202ddc0277c4a9f87a8fce9aadc0c5637cf625bd84648e"
+      "sha256": "f08a468992b9425bb7129ed6c79fdce029e8f1799ec98697774f4f93f8d358f0"
     },
     "source": {
       "file_count": 33,
       "sha256": "eaa708e89003d874928577c8b9d54f3af135b8927cf0ce5d1224d31254155b8b"
     },
     "stage": {
-      "file_count": 1744,
-      "sha256": "f57fa2f5f8c773b5b0637f4593f3037462bc26599d98aca3a734100e0d7cdf79"
+      "file_count": 1614,
+      "sha256": "4bbe01016d1bc1b4540d2bb466e56e9c6d657a91ef0843ba962360a7d3165ff6"
     }
   },
   "project": "templates/template_prose_project",

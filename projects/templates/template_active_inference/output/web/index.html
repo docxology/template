@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
@@ -13,7 +13,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -38,11 +41,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -55,11 +63,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -88,8 +93,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -113,7 +121,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -130,11 +138,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -1288,9 +1296,9 @@ href="#ref-gershman2019fepbrain" role="doc-biblioref">Gershman
 merged invariant report records 12 / 12 passing checks.</p>
 <!-- sheaf-track:formalism -->
 <p>The entangled joint over binary policies satisfies</p>
-<p><span id="eq:entangled_joint"><span class="math display">\[
-q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda J(\pi)),
-\qquad{(1)}\]</span></span></p>
+<p><span id="eq:entangled_joint"><span
+class="math display">\[q_\lambda(\pi) \propto E(\pi)\,\exp(\lambda
+J(\pi)),\qquad{(1)}\]</span></span></p>
 <p>with symmetric Ising coupling <span class="math inline">\(J\)</span>
 and deformation parameter <span class="math inline">\(\lambda\)</span>.
 Let <span
@@ -1302,9 +1310,8 @@ class="math inline">\(H_b(p)=-p\log p-(1-p)\log(1-p)\)</span> in nats,
 the joint entropy is <span class="math inline">\(H(q_\lambda)=\log 2 +
 H_b(\sigma(\lambda))\)</span> while each marginal contributes <span
 class="math inline">\(\log 2\)</span>, so the mutual information is</p>
-<p><span class="math display">\[
-I(\lambda)=\sum_k H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),
-\]</span></p>
+<p><span class="math display">\[I(\lambda)=\sum_k
+H(q_k)-H(q_\lambda)=\log 2 - H_b(\sigma(\lambda)),\]</span></p>
 <p>vanishing at <span class="math inline">\(\lambda=0\)</span> (<span
 class="math inline">\(\sigma=\tfrac12\)</span>, independent streams) and
 saturating at <span class="math inline">\(\log 2\)</span> as <span
@@ -1653,10 +1660,10 @@ class="header-section-number">8.4.1</span> Base poset and presheaf</h3>
 poset. Let the <strong>base</strong> <span
 class="math inline">\(P\)</span> be the IMRAD blocks ordered as a
 chain,</p>
-<p><span id="eq:imrad_chain"><span class="math display">\[
-\mathsf{Introduction} \prec \mathsf{Methods} \prec \mathsf{Results}
-\prec \mathsf{Discussion} \prec \mathsf{Appendix},
-\qquad{(2)}\]</span></span></p>
+<p><span id="eq:imrad_chain"><span
+class="math display">\[\mathsf{Introduction} \prec \mathsf{Methods}
+\prec \mathsf{Results} \prec \mathsf{Discussion} \prec
+\mathsf{Appendix},\qquad{(2)}\]</span></span></p>
 <p>with, in each block, a <em>group</em> node above its <em>section</em>
 nodes (written <span class="math inline">\(G \sqsupseteq s\)</span>).
 <span class="math inline">\(P\)</span> is therefore a finite poset
@@ -1684,9 +1691,8 @@ map. Restriction along <span class="math inline">\(G \sqsupseteq
 s\)</span> is projection onto a section’s own bindings; group nodes
 carry the empty assignment and do not compose.</p>
 <p>The coverage cell is</p>
-<p><span id="eq:coverage_cell"><span class="math display">\[
-B(s,t) \in \{\mathrm{P}, \mathrm{—}, \mathrm{M}\}
-\qquad{(3)}\]</span></span></p>
+<p><span id="eq:coverage_cell"><span class="math display">\[B(s,t) \in
+\{\mathrm{P}, \mathrm{—}, \mathrm{M}\}\qquad{(3)}\]</span></span></p>
 <p>derived from <span class="math inline">\(F_s(t)\)</span> and
 filesystem existence at compose time: <strong>P</strong> when a bound
 fragment exists, <strong>—</strong> when the track is unbound for that
@@ -1976,7 +1982,7 @@ class="header-section-number">8.5</span> Sheaf fragment track
 registry</h2>
 <p>Compose order and renderer bindings from
 <code>manuscript/sheaf/tracks.yaml</code>.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 13%" />
@@ -4866,9 +4872,9 @@ Generated renderers such as <code>section_figures</code> and markdown
 renderers pass through the same <code>resolve_track_body()</code>
 dispatch, so the appendix exercises the common compose interface rather
 than a bespoke appendix path.</p>
-<p><span id="eq:appendix_track_count"><span class="math display">\[
-|\mathcal{T}_{\mathrm{Full}}| = 33
-\qquad{(4)}\]</span></span></p>
+<p><span id="eq:appendix_track_count"><span
+class="math display">\[|\mathcal{T}_{\mathrm{Full}}| =
+33\qquad{(4)}\]</span></span></p>
 <p>The fragment registry defines 34 composable track types; optional
 <code>layers</code> is bound on the methods sheaf section only. Optional
 <code>animation</code> is bound in this appendix proof; the
@@ -5340,7 +5346,7 @@ href="https://doi.org/10.1016/j.jmp.2020.102447">https://doi.org/10.1016/j.jmp.2
 </div>
 <div id="ref-dacosta2023reward" class="csl-entry" role="listitem">
 Da Costa, Lancelot, Noor Sajid, Thomas Parr, Karl Friston, and Ryan
-Smith. 2023. <span>“Reward Maximization Through Discrete Active
+Smith. 2023. <span>“Reward Maximization through Discrete Active
 Inference.”</span> <em>Neural Computation</em> 35 (5): 807–52. <a
 href="https://doi.org/10.1162/neco_a_01574">https://doi.org/10.1162/neco_a_01574</a>.
 </div>
@@ -5371,7 +5377,7 @@ href="https://doi.org/10.21105/joss.04098">https://doi.org/10.21105/joss.04098</
 <div id="ref-hodson2023sophisticatedlearning" class="csl-entry"
 role="listitem">
 Hodson, Rowan, Bruce Bassett, Charel van Hoof, et al. 2023.
-<em>Sophisticated Learning: A Novel Algorithm for Active Learning During
+<em>Sophisticated Learning: A Novel Algorithm for Active Learning during
 Model-Based Planning</em>. <a
 href="https://doi.org/10.48550/arXiv.2308.08029">https://doi.org/10.48550/arXiv.2308.08029</a>.
 </div>

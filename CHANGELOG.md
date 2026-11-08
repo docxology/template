@@ -180,6 +180,20 @@ matching tag identity and authenticated publication.
 - Resolve rendering-package exports lazily so shared discovery and bibliography
   readers remain usable from validation without initializing format providers
   or introducing import cycles.
+- Apply generated project-test exclusions to the native pytest session's actual
+  marker vocabulary. Strict native projects no longer reject unused engine
+  marker names; declared and undeclared opt-in cases remain excluded as requested.
+  Explicit consumer expressions, native strictness, coverage floors, runtime
+  admission, and original failure outcomes remain unchanged. Receipts distinguish
+  requested policy from the effective native expression.
+- Resolve cross-section fragment links in split HTML using the actual produced
+  section roster and combined index. Keep valid local links local; retain unknown
+  and ambiguous targets as visible defects. Preserve fragment encoding, external
+  and asset links, authored content, and source IDs.
+
+These independent main corrections are included in this candidate. Their original
+integration did not publish a new SDK release or approve the minor-release
+preparation; the exact-source release gates above remain required.
 
 ## [5.0.2] - 2026-11-04
 

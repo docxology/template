@@ -237,7 +237,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 | Schema intake | `manuscript/config.yaml` | Load and validate `gold_refinement` block | `GoldRefinementConfig` | config schema tests |
 | Refinery execution | `GoldRefinementConfig` | Run five refinery stages with monotone purity | `RefineryResult` | monotone purity test |
 | Token planning | `GoldRefinementConfig` | Expand slots into deterministic token choices | `TokenPlan` | seed-stability tests |
-| Figure generation | `RefineryResult` and `TokenPlan` | Generate purity progression, karat grading, and token density figures | `output/figures/*.png` | nonblank figure tests |
+| Figure generation | `RefineryResult` and `TokenPlan` | Generate purity progression, karat grading, and token density figures | `../figures/*.png` | nonblank figure tests |
 | Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | `tests/test_integrity.py` |
 | Security assay | `gold_refinement.security_assay` | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | `tests/test_security_assay.py` |
 | Manuscript hydration | manuscript shells and `manuscript_variables.json` | Resolve `{{TOKEN}}` placeholders into `output/manuscript/` | hydrated Markdown manuscript | unresolved-token scan |
@@ -764,7 +764,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: a396bc74ae68b7f3
+- Config hash: d0ff752e43a25fed
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
 - Claim-support status: 9/9 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -802,8 +802,8 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** a396bc74ae68b7f3
-- **Generation timestamp:** 2026-11-08T02:22:14Z
+- **Config hash:** d0ff752e43a25fed
+- **Generation timestamp:** 2026-11-06T18:06:46Z
 - **Python version:** 3.14.10
 
 ## Artifact inventory
@@ -828,7 +828,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --mode core
 ```
 
-A reproduction report should record command exit status, the source revision, `a396bc74ae68b7f3`, Python 3.14.10, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `d0ff752e43a25fed`, Python 3.14.10, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -836,7 +836,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/template_gold_refinement/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `a396bc74ae68b7f3`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `d0ff752e43a25fed`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
@@ -921,7 +921,7 @@ The software improvements in this version do not remove these limitations. Enfor
 | Monotone purity | Does purity increase strictly across all refinery stages? | `assert_monotone_increase` passes on the purity sequence. | `src/template_gold_refinement/refinery.py` and `output/data/refinery_results.json` |
 | Token provenance | Can every selected token be traced to a category, section, value, and config key? | The token plan contains one row for each generated token. | `output/reports/token_plan.json` |
 | Karat grade correctness | Does each stage map to the correct karat grade? | `karat_for_purity` returns the expected grade for each stage. | `src/template_gold_refinement/purity.py` |
-| Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | `src/template_gold_refinement/integrity.py` and `output/figures/integrity_risk_matrix.png` |
+| Integrity risk visibility | Can the manuscript identify high-severity integrity failures and the validator or artifact that detects them? | The integrity risk model emits dimensions, owners, residual risk scores, and evidence-tier rows. | `src/template_gold_refinement/integrity.py` and `../figures/integrity_risk_matrix.png` |
 | Scholarship boundary | Do pre-1800 metallurgy references support the analogy, reproducibility, provenance, and source-domain framing without being used as evidence for universal manuscript-quality claims? | The scope, discussion, and evaluation sections cite historically bounded metallurgy scholarship while keeping certification local to source-owned gates. | `manuscript/references.bib` and `manuscript/07_scope.md` |
 | Reporting-guideline completeness | Does the manuscript distinguish checklist-style completeness from methodological validity? | The methods, scope, discussion, and evaluation sections cite reporting-guideline scholarship while explicitly limiting what the local gates prove. | `manuscript/02_methodology.md`, `manuscript/04_discussion.md`, `manuscript/07_scope.md`, and `manuscript/08_evaluation.md` |
 | Executable-compendium identity | Can a reader identify the executable package, metadata stack, software release, and generated artifacts needed to rebuild the manuscript? | The reproducibility, scope, evaluation, and authoring-contract sections cite executable-publication and software-citation scholarship while keeping preservation and portability claims bounded. | `manuscript/06_reproducibility.md`, `manuscript/07_scope.md`, `manuscript/08_evaluation.md`, `manuscript/09_authoring_contract.md`, `output/reports/evidence_registry.json`, and `output/reports/output_statistics.json` |

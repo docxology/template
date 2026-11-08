@@ -9,10 +9,17 @@ union that cannot inherit the enclosing test process's ``COVERAGE_FILE``.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 
+from infrastructure.core.testing.pytest_observations import DIRECTORY_ENV, NONCE_ENV, ROOT_ENV
+from infrastructure.core.testing.pytest_profiles import (
+    TestProfileName,
+    build_profile_marker_expression,
+    resolve_test_profile,
+)
 from infrastructure.core.testing.test_runner import (
     DEFAULT_COVERAGE_FILE,
     _contains_tests,
@@ -258,3 +265,82 @@ def test_empty_tests_directory_is_not_runnable(synthetic_repo: Path) -> None:
 
 def test_allow_empty_requires_explicit_opt_in(synthetic_repo: Path) -> None:
     assert run_per_project_pytest(synthetic_repo, projects=[], fail_under=100, allow_empty=True) == 0
+
+
+@pytest.mark.parametrize("profile", ["quick", "release", "exhaustive"])
+def test_matrix_generated_profile_resolves_native_markers(
+    synthetic_repo: Path, profile: TestProfileName, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _write_project(synthetic_repo, "native")
+    project = synthetic_repo / "projects/native"
+    (project / "pyproject.toml").write_text(
+        "[tool.pytest.ini_options]\n"
+        'addopts = "--strict-markers -m native_other"\n'
+        'markers = ["native(payload): signature", "native_other: native default", "slow: opt in"]\n'
+    )
+    with (project / "tests/conftest.py").open("a") as stream:
+        stream.write(
+            "\nimport json\n"
+            "def pytest_configure(config):\n"
+            " config.addinivalue_line('markers', 'network(reason): native plugin service')\n"
+            "def pytest_sessionfinish(session):\n"
+            " (Path(__file__).parent.parent / 'selection.json').write_text(json.dumps({\n"
+            "  'expression': session.config.option.markexpr,\n"
+            "  'markers': session.config.getini('markers')}))\n"
+        )
+    with (project / "tests/test_basic.py").open("a") as stream:
+        stream.write(
+            "\nimport pytest\n"
+            "@pytest.mark.native(payload='signature')\n"
+            "@pytest.mark.slow\n"
+            "def test_native_slow():\n assert value() == 42\n"
+            "@pytest.mark.network(reason='service')\n"
+            "def test_native_service():\n pytest.fail('excluded service ran')\n"
+        )
+    observations = synthetic_repo / "actual-pytest-receipts"
+    monkeypatch.setenv("PYTEST_PLUGINS", "infrastructure.core.testing.pytest_receipt")
+    monkeypatch.setenv(DIRECTORY_ENV, str(observations))
+    monkeypatch.setenv(NONCE_ENV, f"native-{profile}")
+    monkeypatch.setenv(ROOT_ENV, str(project))
+
+    assert (
+        run_per_project_pytest(
+            synthetic_repo,
+            projects=["native"],
+            profile=profile,
+            fail_under=1,
+            timeout=60,
+            receipt_path=synthetic_repo / "matrix-receipt.json",
+        )
+        == 0
+    )
+    actual = json.loads((project / "selection.json").read_text())
+    assert "not network" in actual["expression"]
+    assert ("not slow" in actual["expression"]) is (profile == "quick")
+    assert "native_other" not in actual["expression"]
+    registered = {row.split(":", 1)[0].split("(", 1)[0].strip() for row in actual["markers"]}
+    assert {part.removeprefix("not ") for part in actual["expression"].split(" and ")} <= registered
+    assert "requires_docker" not in registered
+    receipt = json.loads(next(observations.glob("execution-*.json")).read_text())
+    assert receipt["selection_profile"]["marker_expression"] == actual["expression"]
+    assert len(receipt["selected"]) == (1 if profile == "quick" else 2)
+    assert any(node.endswith("::test_native_service") for node in receipt["deselected"])
+    matrix = json.loads((synthetic_repo / "matrix-receipt.json").read_text())
+    assert matrix["marker_expression"] == build_profile_marker_expression(resolve_test_profile(profile))
+    assert "not requires_docker" in matrix["marker_expression"]
+    assert "not requires_docker" not in receipt["selection_profile"]["marker_expression"]
+
+
+@pytest.mark.parametrize("expression", ["native", "unknown_native_expression"])
+def test_matrix_explicit_marker_expression_remains_native_policy(synthetic_repo: Path, expression: str) -> None:
+    _write_project(synthetic_repo, "native")
+    project = synthetic_repo / "projects/native"
+    (project / "pyproject.toml").write_text(
+        "[tool.pytest.ini_options]\n"
+        'addopts = "--strict-markers -m native_other"\n'
+        'markers = ["native: explicit selection", "native_other: native default"]\n'
+    )
+    with (project / "tests/test_basic.py").open("a") as stream:
+        stream.write("\nimport pytest\n@pytest.mark.native\ndef test_explicit_native():\n assert value() == 42\n")
+    code = run_per_project_pytest(synthetic_repo, projects=["native"], marker_expr=expression, fail_under=1, timeout=60)
+    assert (code == 0) is (expression == "native")

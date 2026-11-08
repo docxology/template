@@ -29,7 +29,7 @@ probes, and test-selection planning. Re-homed from the flat
 | `ci_execution_user.py` | Explicit hosted Linux account preparation, unprivileged original-command execution and byte-identical readiness transport; strict process observation remains unchanged. |
 | `pytest_receipt.py`, `pytest_observations.py` | Explicitly enabled nonce-bound original pytest collection/outcome records and independent readback. |
 | `project_test_measurement.py` | Compose a complete original serial Stage-01 branch-aware combined coverage measurement into the same pipeline, using the original producer hash carried by the stage worker. |
-| `_pytest_runtime_controls.py` | Private default-only benchmark storage relocation; absent/disabled plugins and explicit user destinations retain their behavior. |
+| `_pytest_runtime_controls.py` | Private native-collection profile exclusions and default-only benchmark storage relocation; no marker registration or user-expression rewriting. |
 | `ci_infra_partition.py` | Source-declared complete ordinary-CI case partition, balanced heavy parameter inventories and selection admission. |
 | `ci_infra_shard_plugin.py` | Explicit pytest/xdist collection partition, actual completion accounting and bounded diagnostics-only controller records. |
 | `ci_infra_coverage.py` | Confined shard transfer checks and the complete ≥60% branch-coverage union. |
@@ -43,14 +43,38 @@ for test-execution machinery, not for every module a test touches.
 
 Ordinary project tests use an existing selected interpreter and validate its exact runner stack without installing packages. A nominated project `.venv` uses unique core runner versions from its confined `uv.lock`; core packages absent from that lock keep the exact workspace supplement requirement. Missing version values, ambiguous pins or malformed lock content refuse admission, and explicit extra requirements cannot override a conflicting runner pin. Without a project lock, or for the caller runtime, the exact workspace stack remains authoritative. Explicit environment preparation is separate. A nominated unusable project `.venv` blocks with exit 75; malformed declarations use exit 2 and real deadline/interruption outcomes remain 124/130.
 
-The generic project runner nominates confined benchmark storage under
-`output/.pipeline/benchmarks` and explicitly loads the private runtime-control
-plugin. Its first configure hook replaces only pytest-benchmark's unchanged
+The shared audited project command loads the private runtime-control plugin.
+The generic project runner also nominates confined benchmark storage under
+`output/.pipeline/benchmarks`. Its first configure hook replaces only pytest-benchmark's unchanged
 `file://./.benchmarks` default, before the benchmark session initializes. This
 prevents plugin startup from creating a new Source directory even when benchmark
 cases are deselected. An absent or disabled plugin needs no benchmark-specific
 option, explicit nondefault user storage is respected, and test selection,
 workloads, coverage, deadlines and receipt behavior are unchanged.
+
+Generated project profiles (single project, matrix and documentation coverage)
+carry canonical negative exclusions through private `--template-profile-exclude`
+options, not an arbitrary `-m` expression. Before pytest's own marker filtering,
+the plugin intersects that ordered policy with actual configured marker names
+(including plugin registrations and signature-style declarations) and marks
+observed on collected items. Unused undeclared names cannot break native
+pytest 9 strict expressions; non-strict undeclared opt-in marks remain excluded.
+No markers are registered on the project's behalf. Native annotation typos and
+explicit user `marker_expr` expressions retain pytest's own strictness and exit
+status. The generated policy still supersedes project `addopts -m`; explicit
+invocation expressions remain raw `-m` overrides even when composed with a
+generated profile. Detection uses pytest's configured argument parser, including
+attached/clustered short options, empty expressions and the end-of-options
+separator. Private plugin/profile options are inserted before `--`, leaving
+following collection paths positional. Collection-only calls, plugin-only use
+and source-declared custom verifiers acquire no generated selection policy.
+
+Matrix `marker_expression`, cache identity and lane `resource_limits.test_selection`
+describe the **requested marker policy**, not a claimed per-project observation.
+The effective native expression is the actual `config.option.markexpr`, recorded
+by the child `pytest_receipt` when enabled. Coverage floors, provider/runtime
+admission, deadlines, zero-test guards and original measurement selection
+accounting remain enforced.
 
 The hosted Linux execution profile is prepared after dependencies and tools,
 before source custody. It preserves global process visibility, original command
@@ -69,7 +93,7 @@ executed. Missing observations, overlap, substituted profiles and failed or
 incomplete selected outcomes still fail. The full Root release profile and
 coverage floors are unchanged.
 
-Manual hardening partitions its existing marker-filtered infrastructure collection into four disjoint module shards for each existing OS/runtime pair. The plugin is explicitly enabled only by that invocation and by the manual slow lane's `--infra-ci-observer-only slow` mode, which records the same bounded controller diagnostics without partition, selection or completion admission; nested pytest commands retain their declared semantics. Both modes write `output/readiness/ordinary-infra-ci/diagnostics/shard-<lane>.json` as diagnostics-only DATA (declared public test families, member hashes, phases, failures and worker loss; no parameter values, private paths or failure bodies) that the hosted jobs retain as `infra-diagnostics-*` artifacts; it cannot grant selection, coverage or acceptance. Selection receipts bind infrastructure, scripts, tests and CI configuration bytes, and preserve actual pytest failure codes. These are ordinary CI records, not the complete Root release acceptance profile. The required `coverage-infra` job validates all four Python 3.14/Linux receipts and coverage hashes, merges actual arcs into an isolated temporary data file and enforces the existing 60% floor before Codecov upload. An invalid shard invocation or partition refusal exits 2 (pytest's usage error is 4); because pytest's interrupted session also exits 2, every refusal prints its diagnostic (collection refusals from xdist workers reach the controller summary) and leaves no complete shard receipt, so neither a refusal nor an interruption can export coverage.
+Manual hardening partitions its existing marker-filtered infrastructure collection into four disjoint case shards for each existing OS/runtime pair. Ordinary modules retain their stable whole-module assignment; every parameter in the three declared expensive native guard modules is balanced over those same shards. The plugin is explicitly enabled only by that invocation and by the manual slow lane's `--infra-ci-observer-only slow` mode, which records the same bounded controller diagnostics without partition, selection or completion admission; nested pytest commands retain their declared semantics. Both modes write `output/readiness/ordinary-infra-ci/diagnostics/shard-<lane>.json` as diagnostics-only DATA (declared public test families, member hashes, phases, failures and worker loss; no parameter values, private paths or failure bodies) that the hosted jobs retain as `infra-diagnostics-*` artifacts; it cannot grant selection, coverage or acceptance. Selection receipts bind infrastructure, scripts, tests and CI configuration bytes, and preserve actual pytest failure codes. These are ordinary CI records, not the complete Root release acceptance profile. The required `coverage-infra` job validates all four Python 3.14/Linux receipts and coverage hashes, merges actual arcs into an isolated temporary data file and enforces the existing 60% floor before Codecov upload. An invalid shard invocation or partition refusal exits 2 (pytest's usage error is 4); because pytest's interrupted session also exits 2, every refusal prints its diagnostic (collection refusals from xdist workers reach the controller summary) and leaves no complete shard receipt, so neither a refusal nor an interruption can export coverage.
 
 Public Root and project runtime workers create private fixture scratch outside
 Source, ancestor Git checkouts and the selected runtime. Only the actual worker
