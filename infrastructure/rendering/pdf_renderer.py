@@ -122,13 +122,14 @@ class PDFRenderer:
         Raises:
             RenderingError: If Pandoc rendering fails
         """
+        profile = self.config.security()
+        if profile.untrusted:
+            raise RenderingError("Untrusted PDF rendering requires an operating-system filesystem sandbox")
+
         output_dir = Path(self.config.pdf_dir)
         output_file = output_dir / (output_name or f"{source_file.stem}.pdf")
-        profile = self.config.security()
         profile.validate_output(output_file)
         profile.validate_source(source_file)
-        if profile.untrusted and output_file.parent != output_dir:
-            profile.validate_output_tree(output_file.parent, allow_missing_root=True)
         profile.prepare_output_directory(output_dir)
 
         # Build resource paths to help pandoc find figures

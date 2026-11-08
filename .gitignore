@@ -270,6 +270,7 @@ projects/templates/*/output/pdf/_latex_stdout.log
 # exemplar directories themselves are intentionally tracked.
 projects/templates/*/output/.checkpoints/
 projects/templates/*/output/.pipeline/
+.steganography-ownership/
 # Matplotlib's atomic PNG normalization leaves hidden temporary payloads if a
 # render is interrupted; these are never portable publication evidence.
 projects/templates/*/output/**/.*.png

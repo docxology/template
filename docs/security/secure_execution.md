@@ -86,12 +86,18 @@ STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh \
 ```
 
 Secure runs skip legacy filenames containing `_steganography`. For a custom
-`output_suffix`, the source manifest records the secure PDF name and its SHA-256.
-A repeat run uses that record to recognize and replace its own previous output.
-An ordinary source may end in the same suffix. An existing destination without
-matching evidence causes the project run to fail before processing its PDFs.
-This includes earlier custom outputs without the new manifest fields and
-outputs created with manifest writing disabled.
+`output_suffix`, the publisher keeps private ownership receipts in the
+`.steganography-ownership` directory beside its PDFs. Repeat runs use the
+receipt to verify and replace the previous output. The publishing account
+must own the PDF directory. If group or other users can write there, the PDF
+directory must be sticky. Keep the receipt directory at mode `0700` and its
+regular single-link receipts at `0600`, with ACLs restricted to the publishing
+account. Export selected PDFs and public hash manifests for portable checksum
+evidence. An ordinary source may end in the same suffix. An existing destination
+without a matching private receipt, or an existing receipt with unsafe
+permissions, prevents publication. Earlier custom outputs need a fresh
+destination to establish private ownership. Publication is atomic per file.
+An interruption between files can require operator recovery before a rerun.
 
 Trade-offs and internals: [steganography.md § Deterministic mode](steganography.md#deterministic-mode).
 

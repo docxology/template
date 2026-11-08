@@ -4,8 +4,11 @@ Covers ``get_translation_languages``, ``get_review_types`` defaults and
 filtering, and ``get_testing_config`` resolution against real YAML configs.
 """
 
+import pytest
+
 from infrastructure.core.config.loader import ResolvedTestingConfig
-from infrastructure.core.config.queries import get_testing_config, get_translation_languages
+from infrastructure.core.config.queries import get_review_types, get_testing_config, get_translation_languages
+from tests._support.projects import make_project
 
 
 class TestGetTranslationLanguages:
@@ -358,3 +361,34 @@ testing:
             project_coverage_threshold=90,
         )
         assert result == expected
+
+
+def test_review_queries_keep_exact_project_config(tmp_path):
+    repo = tmp_path / "repo"
+    flat = make_project(repo, with_manuscript=True)
+    active = make_project(repo, "active/template_test", with_manuscript=True)
+    external = make_project(tmp_path / "external", with_manuscript=True)
+    for project, language, review in (
+        (flat, "de", "quality_review"),
+        (active, "es", "methodology_review"),
+        (external, "zh-Hant", "improvement_suggestions"),
+    ):
+        (project / "manuscript/config.yaml").write_text(
+            f"llm:\n  translations: {{enabled: true, languages: [{language}]}}\n  reviews: {{types: [{review}]}}\n",
+            encoding="utf-8",
+        )
+
+    # General queries retain the active-first discovery contract.
+    assert get_translation_languages(repo, "template_test") == ["es"]
+    assert get_translation_languages(repo, "template_test", project_dir=flat) == ["de"]
+    assert get_review_types(repo, "template_test", project_dir=flat) == ["quality_review"]
+    assert get_translation_languages(repo, "template_test", project_dir=external) == ["zh-Hant"]
+    assert get_review_types(repo, "template_test", project_dir=external) == ["improvement_suggestions"]
+
+    config = flat / "manuscript/config.yaml"
+    config.unlink()
+    assert get_translation_languages(repo, "template_test", project_dir=flat) == []
+    assert get_review_types(repo, "template_test", project_dir=flat) == ["executive_summary"]
+    config.symlink_to(active / "manuscript/config.yaml")
+    with pytest.raises(OSError):
+        get_translation_languages(repo, "template_test", project_dir=flat)

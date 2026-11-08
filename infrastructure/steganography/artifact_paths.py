@@ -4,9 +4,12 @@ import hashlib
 import json
 import os
 import stat
+from collections.abc import Iterator
+from contextlib import contextmanager, suppress
+from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.core.files.secure_write import HeldDirectory, hold_confined_directory, read_bytes_confined
 
 
 DEFAULT_OUTPUT_SUFFIX = "_steganography"
@@ -50,23 +53,93 @@ def secure_file_sha256(path: Path) -> str:
     return digest
 
 
-def owned_secure_pdf_sha256(source: Path, output: Path) -> str | None:
-    """Identify a custom output by the exact bytes named in its source manifest."""
+_OWNERSHIP_DIRECTORY = ".steganography-ownership"
 
-    manifest = hash_manifest_path(source)
+
+def _require_private_directory(info: os.stat_result, directory: Path) -> None:
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) != 0o700:
+        raise ValueError(f"Custom secure PDF receipts require a publisher-owned private directory: {directory}")
+
+
+def is_private_ownership_receipt(info: os.stat_result) -> bool:
+    return (
+        stat.S_ISREG(info.st_mode)
+        and info.st_nlink == 1
+        and info.st_uid == os.geteuid()
+        and stat.S_IMODE(info.st_mode) == 0o600
+    )
+
+
+def _ownership_directory(output: Path, *, create: bool = False) -> tuple[Path, tuple[int, int]]:
+    """Admit a publisher-private directory beside its custom PDF."""
+
+    parent = output.parent.resolve(strict=True)
+    parent_info = parent.stat()
+    if parent_info.st_uid != os.geteuid() or (parent_info.st_mode & 0o022 and not parent_info.st_mode & stat.S_ISVTX):
+        raise ValueError(f"Custom secure PDF receipts require a publisher-controlled PDF directory: {parent}")
+    directory = parent / _OWNERSHIP_DIRECTORY
+    with hold_confined_directory(
+        parent, Path(), expected_root_identity=(parent_info.st_dev, parent_info.st_ino)
+    ) as held:
+        if create:
+            with suppress(FileExistsError):
+                os.mkdir(directory.name, mode=0o700, dir_fd=held.descriptor)
+        info = os.stat(directory.name, dir_fd=held.descriptor, follow_symlinks=False)
+        _require_private_directory(info, directory)
+        if not held.matches_path():
+            raise ValueError(f"Custom secure PDF directory changed during ownership admission: {parent}")
+        return directory, (info.st_dev, info.st_ino)
+
+
+def _ownership_receipt_name(output: Path) -> str:
+    return hashlib.sha256(os.fsencode(output.name)).hexdigest() + ".json"
+
+
+def _source_identity(source: Path, output: Path) -> str:
+    return os.path.relpath(source.resolve(), output.parent.resolve(strict=True))
+
+
+@dataclass(frozen=True)
+class SecurePdfOwnership:
+    target: Path
+    directory_identity: tuple[int, int]
+    contents: bytes
+
+
+def prepare_secure_pdf_ownership(source: Path, output: Path, digest: str) -> SecurePdfOwnership:
+    """Bind the private receipt and its parent before publication."""
+
+    directory, identity = _ownership_directory(output, create=True)
+    payload = {"source": _source_identity(source, output), "output": output.name, "sha256": digest}
+    return SecurePdfOwnership(directory / _ownership_receipt_name(output), identity, json.dumps(payload).encode())
+
+
+@contextmanager
+def hold_secure_pdf_ownership(ownership: SecurePdfOwnership) -> Iterator[HeldDirectory]:
+    directory = ownership.target.parent
+    with hold_confined_directory(directory, Path(), expected_root_identity=ownership.directory_identity) as held:
+        _require_private_directory(os.fstat(held.descriptor), directory)
+        yield held
+
+
+def owned_secure_pdf_sha256(source: Path, output: Path) -> str | None:
+    """Verify a custom PDF against the publisher's private receipt."""
+
     try:
-        directory = manifest.parent.resolve()
-        receipt = json.loads(read_bytes_confined(directory, directory / manifest.name, max_bytes=64 * 1024))
-        if (
-            isinstance(receipt, dict)
-            and receipt.get("source_file") == source.name
-            and receipt.get("steganography_applied") == "true"
-            and receipt.get("secure_pdf") == output.name
-        ):
+        directory, identity = _ownership_directory(output)
+        target = directory / _ownership_receipt_name(output)
+        info = target.lstat()
+        if not is_private_ownership_receipt(info):
+            return None
+        receipt = json.loads(
+            read_bytes_confined(directory, target, max_bytes=16 * 1024, expected_root_identity=identity)
+        )
+        expected_source = _source_identity(source, output)
+        if isinstance(receipt, dict) and receipt.get("source") == expected_source:
             digest = secure_file_sha256(output)
-            if receipt.get("secure_pdf_sha256") == digest:
+            if receipt == {"source": expected_source, "output": output.name, "sha256": digest}:
                 return digest
-    except (OSError, ValueError):
+    except (OSError, ValueError, RecursionError):
         pass
     return None
 

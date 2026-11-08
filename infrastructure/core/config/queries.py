@@ -10,18 +10,43 @@ from __future__ import annotations
 import os
 from collections.abc import Mapping
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import cast
 
-from infrastructure.core.config.loader import ResolvedTestingConfig, find_config_file, load_config
+from infrastructure.core.config.loader import YAML_AVAILABLE, find_config_file, load_config, validate_config_keys
+from infrastructure.core.config.schema import ManuscriptConfig, ResolvedTestingConfig
+from infrastructure.core.files.secure_write import read_text_confined
 from infrastructure.core.logging.utils import get_logger
-
-if TYPE_CHECKING:
-    from infrastructure.core.config.loader import ResolvedTestingConfig
 
 logger = get_logger(__name__)
 
 
-def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> list[str]:
+def _load_review_config(repo_root: Path | str, project_name: str, project_dir: Path | None) -> ManuscriptConfig | None:
+    if project_dir is None:
+        path = find_config_file(repo_root, project_name)
+        return load_config(path) if path else None
+    if not YAML_AVAILABLE:
+        return None
+
+    import yaml
+
+    root = project_dir.resolve(strict=True)
+    path = root / "manuscript" / "config.yaml"
+    try:
+        config = yaml.safe_load(read_text_confined(root, path))
+    except FileNotFoundError:
+        return None
+    except (PermissionError, yaml.YAMLError) as exc:
+        logger.warning("Could not read review configuration %s: %s", path, exc)
+        return None
+    if not isinstance(config, dict):
+        return None
+    validate_config_keys(config, path, project_name=root.name)
+    return cast(ManuscriptConfig, config)
+
+
+def get_translation_languages(
+    repo_root: Path | str, project_name: str = "project", *, project_dir: Path | None = None
+) -> list[str]:
     """Get list of enabled translation languages from config.
 
     Reads the llm.translations section from config.yaml and returns
@@ -30,13 +55,13 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
     Args:
         repo_root: Root directory of the repository
         project_name: Name of the project (default: "project")
+        project_dir: Use only this selected project directory when supplied.
 
     Returns:
         List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
         are enabled, empty list otherwise
     """
-    config_path = find_config_file(repo_root, project_name)
-    config = load_config(config_path) if config_path else None
+    config = _load_review_config(repo_root, project_name, project_dir)
     if not config:
         return []
 
@@ -52,7 +77,9 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
     return languages if isinstance(languages, list) else []
 
 
-def get_review_types(repo_root: Path | str, project_name: str = "project") -> list[str]:
+def get_review_types(
+    repo_root: Path | str, project_name: str = "project", *, project_dir: Path | None = None
+) -> list[str]:
     """Get list of enabled review types from config.
 
     Reads the llm.reviews section from config.yaml and returns
@@ -61,6 +88,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> li
     Args:
         repo_root: Root directory of the repository
         project_name: Name of the project (default: "project")
+        project_dir: Use only this selected project directory when supplied.
 
     Returns:
         List of review type codes (e.g., ['executive_summary']) if reviews
@@ -74,8 +102,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> li
         "improvement_suggestions",
     ]
 
-    config_path = find_config_file(repo_root, project_name)
-    config = load_config(config_path) if config_path else None
+    config = _load_review_config(repo_root, project_name, project_dir)
     if not config:
         return ["executive_summary"]
 

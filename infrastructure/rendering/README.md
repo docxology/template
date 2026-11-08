@@ -712,17 +712,23 @@ primitives. This process profile is separate from the accessible composer's
 AST, TeX, and raster preflights; callers handling external material should use
 both boundaries rather than treating either one as a complete content sandbox.
 
-The Stage 3 orchestrator accepts `untrusted` for an HTML-only build from
-prepared Markdown. Use `--skip-manuscript-hydration` and an existing
-temporary root that contains the project's `output/` directory. Stage 3
-skips project hydration, transmission generation, and LaTeX probes in this
-profile. Linked or special files in the output tree cause an early refusal.
-Direct TeX compilation through `PDFRenderer.render()` can separately use
-the untrusted profile with XeLaTeX or pdfLaTeX. Compiler and recovery passes
-run in the admitted output directory with shell escape disabled and a
-credential-free environment. Untrusted deterministic TeX requires an
-explicit `SOURCE_DATE_EPOCH`. The direct combined PDF renderer requires
-the `trusted-local` profile and checks it before creating output.
+The Stage 3 orchestrator accepts `untrusted` for scriptless HTML from
+prepared top-level Markdown. Use `--skip-manuscript-hydration` and an existing
+temporary root that contains the project's `output/` directory. The project
+slot and temporary root must have real directory components. The reader
+admits bounded, unlinked Markdown, `config.yaml`, and optional local BibTeX
+files through the selected manuscript directory. It validates the parsed
+document and each generated page before replacing HTML. Basic formatting,
+mathematics, citations, and safe links are supported. This profile refuses
+raw markup, images, authored attribute values, and document metadata beyond
+title, subtitle, author, date, and language. It emits HTML previews without
+running hydration or writing native publication evidence. Direct untrusted
+web rendering uses the configured manuscript directory for a single file
+and the explicit manuscript directory for a combined render.
+
+Untrusted PDF and TeX require an operating-system filesystem sandbox. The
+direct renderers refuse that profile before reading a document or changing
+outputs. Use the trusted profile for documents and compiler inputs you control.
 
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via

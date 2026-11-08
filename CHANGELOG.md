@@ -17,8 +17,10 @@ with preserved own versions, provider declarations and third-party locks.
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report
   validation and archive readback under their owning contracts.
-- Check untrusted rendering destinations before cleanup or writes. Preserve
-  secure-PDF provenance and custom-suffix idempotence across repeated runs.
+- Render confined prepared Markdown as scriptless HTML for untrusted inputs.
+  Bind live review configuration and generated filenames to the selected project.
+- Preserve secure-PDF provenance across repeated runs using publisher-owned
+  custom-suffix receipts.
 - Build Active Inference certificate and crosswalk output from a single ledger
   projection and regenerate its method inventory.
 - Measure current release-profile coverage, regenerate dependent publication

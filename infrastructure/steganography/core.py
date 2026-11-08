@@ -17,6 +17,7 @@ from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.steganography.artifact_paths import (
     hash_manifest_path,
     owned_secure_pdf_sha256,
+    prepare_secure_pdf_ownership,
     secure_file_sha256,
     secure_pdf_path,
 )
@@ -187,11 +188,9 @@ class SteganographyProcessor:
 
             # No public artifact is changed until all required producers succeed.
             artifact_evidence = None
-            if manifest_path and self.protect_output:
-                artifact_evidence = {
-                    "secure_pdf": output_pdf.name,
-                    "secure_pdf_sha256": secure_file_sha256(working_pdf),
-                }
+            if self.protect_output:
+                secure_digest = secure_file_sha256(working_pdf)
+                artifact_evidence = {"secure_pdf": output_pdf.name, "secure_pdf_sha256": secure_digest}
             staged_manifest = (
                 self._step_manifest(input_pdf, ctx, directory / "manifest.json", artifact_evidence=artifact_evidence)
                 if manifest_path
@@ -214,11 +213,17 @@ class SteganographyProcessor:
                     target = destination.with_name(destination.name + config.kmyth_output_suffix)
                     artifacts[target] = sealed
                     sealed_destinations.add(target)
+            ownership = (
+                prepare_secure_pdf_ownership(input_pdf, output_pdf, artifact_evidence["secure_pdf_sha256"])
+                if artifact_evidence is not None
+                else None
+            )
             publish_artifacts(
                 artifacts,
                 source=input_pdf,
                 no_overwrite=sealed_destinations if not config.kmyth_overwrite else None,
                 expected_pdf=expected_pdf,
+                ownership=ownership,
             )
         logger.info("Steganography PDF written: %s", output_pdf.name)
         return output_pdf

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import re
 import stat
 import subprocess
 from pathlib import Path
@@ -19,6 +18,7 @@ from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering import RenderManager
+from infrastructure.rendering.config import _unresolved_config_tokens
 from infrastructure.rendering.latex_validation import ValidationReport, validate_preamble_packages
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 
@@ -67,17 +67,6 @@ GENERATED_ORDERING_MARKER = "# Generated manuscript ordering"
 PROJECT_RESOLVED_MARKER = "# Project-resolved config"
 """Explicit opt-in marker: this injected config is the project's own artifact."""
 
-# ``{{UPPER_SNAKE}}`` is the canonical project hydration token, the same shape
-# as :data:`infrastructure.rendering.manuscript_injection._TOKEN_RE`.
-_CONFIG_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
-
-# A token inside a backtick code span is prose *about* the token syntax, not a
-# hydration target — ``template_gold_refinement``'s config documents "Resolve
-# `{{TOKEN}}` placeholders into output/manuscript/". Those spans are stripped
-# before scanning so documenting the contract can never fail a render. Same
-# rationale as ``manuscript_injection.EXCLUDED_DOC_FILENAMES`` for markdown.
-_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
-
 
 def has_generated_manuscript_ordering(config_path: Path) -> bool:
     """Return True when an injected config owns generated manuscript ordering."""
@@ -89,13 +78,12 @@ def has_generated_manuscript_ordering(config_path: Path) -> bool:
 def unresolved_config_tokens(config_path: Path) -> list[str]:
     """Return the sorted unique ``{{UPPER_SNAKE}}`` tokens still present in *config_path*.
 
-    Backtick code spans are stripped first (see :data:`_CODE_SPAN_RE`), so a
+    Backtick code spans are stripped first (see :func:`_unresolved_config_tokens`), so a
     config that *documents* the token syntax reports no unresolved tokens.
     """
     if not config_path.is_file():
         return []
-    text = _CODE_SPAN_RE.sub("", config_path.read_text(encoding="utf-8"))
-    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+    return _unresolved_config_tokens(config_path.read_text(encoding="utf-8"))
 
 
 def is_project_resolved(config_path: Path, source_config_path: Path | None = None) -> bool:

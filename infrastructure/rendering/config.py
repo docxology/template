@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
@@ -341,6 +342,24 @@ class RenderingConfig:
             name=self.security_profile,
             temp_root=Path(self.untrusted_temp_root) if self.untrusted_temp_root else None,
         )
+
+
+# ``{{UPPER_SNAKE}}`` is the canonical project hydration token, the same shape
+# as :data:`infrastructure.rendering.manuscript_injection._TOKEN_RE`.
+_CONFIG_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+
+# A token inside a backtick code span is prose *about* the token syntax, not a
+# hydration target — ``template_gold_refinement``'s config documents "Resolve
+# `{{TOKEN}}` placeholders into output/manuscript/". Those spans are stripped
+# before scanning so documenting the contract can never fail a render. Same
+# rationale as ``manuscript_injection.EXCLUDED_DOC_FILENAMES`` for markdown.
+_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
+
+
+def _unresolved_config_tokens(content: str) -> list[str]:
+    """List unresolved hydration tokens in an already admitted config body."""
+    text = _CODE_SPAN_RE.sub("", content)
+    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
 
 
 def render_config_manuscript_dir(project_root: Path) -> Path:

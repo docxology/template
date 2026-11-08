@@ -72,7 +72,7 @@ class TestSaveReviewOutputs:
         [
             {"executive_summary": "Summary content here.", "quality_review": "Quality review content."},
             {"executive_summary": "Content"},
-            {"translation_zh": "Chinese translation content"},
+            {"translation_zh-Hant": "Chinese translation content"},
             {"executive_summary": "Executive content", "quality_review": "Quality content"},
             {"summary": "Content"},
         ],
@@ -102,7 +102,7 @@ class TestSaveSingleReview:
         [
             ("executive_summary", "Review content here."),
             ("quality_review", "The review text."),
-            ("translation_zh", "Chinese content"),
+            ("translation_zh-Hant", "Chinese content"),
             ("test", "content"),
         ],
     )
@@ -263,3 +263,41 @@ class TestGenerateReviewSummaryFromReviewSaving:
         )
         (tmp_path / "summary.md").write_text("content")
         generate_review_summary(reviews, tmp_path, metrics)
+
+
+@pytest.mark.parametrize("name", ("../sentinel", r"translation_de\file", "translation_en:stream"))
+def test_review_writers_refuse_nonportable_paths(tmp_path, name):
+    output = tmp_path / "review"
+    with pytest.raises(ValueError, match="safe filename"):
+        save_single_review(name, "body", output, "model", ReviewMetrics())
+    assert not save_review_outputs({name: "body"}, output, "model", Path("paper.pdf"), SessionMetrics())
+    assert not output.exists()
+    assert not (tmp_path / "sentinel.md").exists()
+
+
+def test_review_writers_confine_project_output(tmp_path):
+    project = tmp_path / "project"
+    outside = tmp_path / "other-project"
+    project.mkdir()
+    outside.mkdir()
+    (project / "output").symlink_to(outside, target_is_directory=True)
+    output = project / "output/llm"
+
+    with pytest.raises(ValueError, match="symlink"):
+        save_single_review("translation_de", "body", output, "model", ReviewMetrics(), project_dir=project)
+    assert not save_review_outputs(
+        {"translation_de": "body"}, output, "model", Path("paper.pdf"), SessionMetrics(), project_dir=project
+    )
+    assert list(outside.iterdir()) == []
+
+
+def test_review_write_preserves_unrelated_temporary_symlink(tmp_path):
+    sentinel = tmp_path / "sentinel.txt"
+    sentinel.write_text("original", encoding="utf-8")
+    output = tmp_path / "review"
+    output.mkdir()
+    (output / "translation_de.md.tmp").symlink_to(sentinel)
+
+    path = save_single_review("translation_de", "body", output, "model", ReviewMetrics())
+    assert "body" in path.read_text(encoding="utf-8")
+    assert sentinel.read_text(encoding="utf-8") == "original"
