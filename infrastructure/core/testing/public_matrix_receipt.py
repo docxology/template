@@ -74,7 +74,9 @@ class PublicMatrixReceipt:
 
     ``roster_revision`` is the git commit SHA or ``"unknown"``.
     ``profile`` is the test profile name (``"quick"``, ``"release"``, etc.).
-    ``marker_expression`` is the ``pytest -m`` expression, or ``None``.
+    ``marker_expression`` is the requested marker policy, or ``None``; generated
+    exclusions are resolved per native collection, not claimed as observations.
+    Actual effective selection belongs to the child ``pytest_receipt``.
     ``worker_info`` describes the concurrency model used.
     """
 
@@ -441,7 +443,7 @@ def write_public_matrix_receipt(
                     else str(parallel or "serial"),
                     "test_selection": json.dumps(list(spec.declared_command))
                     if getattr(spec, "declared_command", None) is not None
-                    else str(marker_expr or "all collected tests"),
+                    else f"requested marker policy: {marker_expr or 'all collected tests'}",
                 },
             )
         )

@@ -7,6 +7,24 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
+## [Unreleased]
+
+### Fixed
+
+- Apply generated project-test exclusions to the native pytest session's actual
+  marker vocabulary. Strict native projects no longer reject unused engine
+  marker names; declared and undeclared opt-in cases remain excluded as requested.
+  Explicit consumer expressions, native strictness, coverage floors, runtime
+  admission, and original failure outcomes remain unchanged. Receipts distinguish
+  requested policy from the effective native expression.
+- Resolve cross-section fragment links in split HTML using the actual produced
+  section roster and combined index. Keep valid local links local; retain unknown
+  and ambiguous targets as visible defects. Preserve fragment encoding, external
+  and asset links, authored content, and source IDs.
+
+These source corrections do not establish a new SDK release or adopt pending
+minor-release candidate work.
+
 ## [5.0.2] - 2026-11-04
 
 See the [5.0.2 release notes](docs/releases/v5.0.2.md). This release moves the root
