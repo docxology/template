@@ -1,34 +1,34 @@
 {
-  "decoded_bytes": 7034141,
-  "decoded_sha256": "2f66d64a8b91b1668db3abcc6072528126a4001740412e418b7d3108bdd66fd8",
+  "decoded_bytes": 6990766,
+  "decoded_sha256": "c5393bb38e00e46aa3bad2e4827ecf8e04ed0ad8a990dc94feffcfa68370055a",
   "encoding": "canonical-json-zlib-9-base64-parts",
   "parts": [
     {
       "bytes": 262216,
       "ordinal": 0,
-      "sha256": "a624ad395dbcefe6f0c89399d1f32c3b9b50241dbef8782838ceee37d19ac7a6"
+      "sha256": "43e7b53d4961db4f20866cd9ab7f45cee890509bc11ab5b8556f4a847f4278d5"
     },
     {
       "bytes": 262216,
       "ordinal": 1,
-      "sha256": "644ba79d1f3c5b86ac3d67052d39d52c24e59899ab7207b0d513659221124648"
+      "sha256": "22680e9c367bd75a669de48a7d4f31474ffe1a882d4703e7e5fabece33bd4008"
     },
     {
       "bytes": 262216,
       "ordinal": 2,
-      "sha256": "cdb60051d61b370465db9d72d931fb51d692a3420d14f01e7bfd19f8392d1726"
+      "sha256": "d24aa2e1a0c3d04166b084addeec44a987b5472979833feef8d69478c86a0f66"
     },
     {
       "bytes": 262216,
       "ordinal": 3,
-      "sha256": "fd81809c3c365d6e208031968d1fec821f55319688fe1acaf45cd4f1869d1621"
+      "sha256": "77eda8f788145d9d6b035d42ec8497e33cbeb1a042acf3baecc2971294d1fa00"
     },
     {
-      "bytes": 250912,
+      "bytes": 247544,
       "ordinal": 4,
-      "sha256": "17360253c0249f1e47b9ba23cb366a317fa5d794ba71d9f145e2d6918c632f33"
+      "sha256": "4394f0bbad24f5be52c6e03909b21e23add882e01ec73ce13e9e5ca74780df2c"
     }
   ],
-  "policy_sha256": "2f66d64a8b91b1668db3abcc6072528126a4001740412e418b7d3108bdd66fd8",
+  "policy_sha256": "c5393bb38e00e46aa3bad2e4827ecf8e04ed0ad8a990dc94feffcfa68370055a",
   "schema_version": "template-root-policy-encoding-v1"
 }
