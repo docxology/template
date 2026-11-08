@@ -240,7 +240,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.9738073348999023
+      "size_mb": 0.9738063812255859
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1021111
+          "size_bytes": 1021110
         },
         "release": {
           "files": 2,
@@ -270,7 +270,7 @@
         },
         "slides": {
           "files": 12,
-          "size_bytes": 1123320
+          "size_bytes": 1123321
         },
         "web": {
           "files": 16,
@@ -290,21 +290,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T02:56:22Z",
+  "timestamp": "2026-11-08T05:36:36Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "dfbbba7547debae3c983893161652c87a3b0632c645d4dd97fef32fc0e5492c3",
+      "sha256": "a875797531298ff828d5786761e37835c9287cd2a022f3af3ab3a4861ddd61e4",
       "size_bytes": 22233
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "abafc558b34feb8559b31e162e6044754793e639b4ec88c823aa34c6338aae48",
+      "sha256": "5f1ea86757822b2980fb7aaa0be8200c936f1727388e67a9a30ee4dc7c3a85ec",
       "size_bytes": 73016
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "0ce9611b2677504881cc02ffabf428ba085e9841b1bd8f67c518da328737675d",
+      "sha256": "74deace5dafc3f8cc31404a2803c9d9328490e39986faee8637811fef2c76a37",
       "size_bytes": 2928
     },
     "consumed_manuscript": [
@@ -352,7 +352,7 @@
       },
       {
         "rendered_path": "output/manuscript/07_reproducibility.md",
-        "rendered_sha256": "962b3c92bf893c6bee744094d65429eed5e38e718f2eed2297465257eb122348",
+        "rendered_sha256": "347b002ad421774c16f1b177fd55613297f40acc96cbd492344636b18c6af6d5",
         "source_path": "manuscript/07_reproducibility.md",
         "source_sha256": "c159af59625c5aa2a96f227a6face4df46caca09df75437fd7df4676b871cbfa"
       },
@@ -388,7 +388,7 @@
       },
       "output": {
         "file_count": 68,
-        "sha256": "dc0872eba7a96beb762bec634dd98e6655aa529567b974acd6fef64c21337579"
+        "sha256": "c2a517a9906f6c6eca716efb8d8e4ccfeb2b1d1abc402c62783b8938b9fa2ae0"
       },
       "source": {
         "file_count": 42,
@@ -396,7 +396,7 @@
       },
       "stage": {
         "file_count": 1755,
-        "sha256": "d2f7980e2e71d33423b577866d72796e41db78a3ff1b416bab7ef5481aea132b"
+        "sha256": "5ceb60045cfbb85a1d9fcd666efe03024de3fcfcc25347e75ff8173b15d3f8b8"
       }
     },
     "project": "templates/template_madlib",

@@ -295,16 +295,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 9.111157417297363
+      "total_size_mb": 9.111651420593262
     },
     "figures": {
       "files": 13,
-      "size_mb": 0.527256965637207
+      "size_mb": 0.5275859832763672
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 1.0731563568115234
+      "size_mb": 1.0733213424682617
     },
     "stable_inventory": {
       "categories": {
@@ -322,7 +322,7 @@
         },
         "figures": {
           "files": 13,
-          "size_bytes": 552869
+          "size_bytes": 553214
         },
         "manuscript": {
           "files": 18,
@@ -330,7 +330,7 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 1125286
+          "size_bytes": 1125459
         },
         "reports": {
           "files": 6,
@@ -359,7 +359,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 391,
-      "total_size_bytes": 9553741
+      "total_size_bytes": 9554259
     }
   },
   "recommendations": [],
@@ -370,11 +370,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T02:56:22Z",
+  "timestamp": "2026-11-08T05:36:36Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "327ed080654e8b0aaa14388a269beff457a9459042536a0d8e290a154b026424",
+      "sha256": "5b1150359875df29b7f68d551552ddc14def8e39942d82c07ab7d187232c6fcf",
       "size_bytes": 141050
     },
     "combined_manuscript": {
@@ -456,7 +456,7 @@
       },
       "output": {
         "file_count": 391,
-        "sha256": "4a6825ba7f5503127b3e42ba6366af0a1330302b225e4a08be6c59bd55a2dad8"
+        "sha256": "b59bb1f968c6e862a737f804701e4ede635d58fc395aeab133ee6e1d7a0f7286"
       },
       "source": {
         "file_count": 56,
@@ -464,7 +464,7 @@
       },
       "stage": {
         "file_count": 1755,
-        "sha256": "d2f7980e2e71d33423b577866d72796e41db78a3ff1b416bab7ef5481aea132b"
+        "sha256": "5ceb60045cfbb85a1d9fcd666efe03024de3fcfcc25347e75ff8173b15d3f8b8"
       }
     },
     "project": "templates/template_search_project",
