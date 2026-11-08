@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 7.721986770629883
+      "total_size_mb": 7.722989082336426
     },
     "figures": {
       "files": 10,
@@ -256,7 +256,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.1393852233886719
+      "size_mb": 1.1393861770629883
     },
     "stable_inventory": {
       "categories": {
@@ -278,7 +278,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1194732
+          "size_bytes": 1194733
         },
         "reports": {
           "files": 4,
@@ -290,16 +290,16 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 1321104
+          "size_bytes": 1321083
         },
         "web": {
           "files": 12,
-          "size_bytes": 2407951
+          "size_bytes": 2409022
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 60,
-      "total_size_bytes": 8097090
+      "total_size_bytes": 8098141
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T02:57:53Z",
+  "timestamp": "2026-11-08T06:08:09Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "83b397b1b3c40ed59efe514591bcceb1a6109c304d32797ba89fefe65ef4f0d0",
+      "sha256": "f379a0e49fa835a18be55cb4dc3c8b9f600b3546814a407a173944a98637888f",
       "size_bytes": 18127
     },
     "combined_manuscript": {
@@ -384,7 +384,7 @@
       },
       "output": {
         "file_count": 60,
-        "sha256": "14b4bc0989422d94155163e0ef40c83f766c7cf827368cf8cfb7958dd4999bef"
+        "sha256": "62276a6f1559855dd0f36b546e49b6691ca4f9e24cc9e900db17dfcdf0d29720"
       },
       "source": {
         "file_count": 51,
@@ -392,7 +392,7 @@
       },
       "stage": {
         "file_count": 1616,
-        "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
+        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
       }
     },
     "project": "templates/template_pools_rules_tools",

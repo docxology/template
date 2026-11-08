@@ -83,7 +83,7 @@
           "file_count": 10,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.00"
+          "size_mb": "2.01"
         }
       },
       "file_counts": {
@@ -191,7 +191,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.0
+            "size_mb": 2.01
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -203,7 +203,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.843101501464844
+      "total_size_mb": 5.84389591217041
     },
     "figures": {
       "files": 15,
@@ -238,12 +238,12 @@
         },
         "web": {
           "files": 10,
-          "size_bytes": 2101878
+          "size_bytes": 2102711
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 38,
-      "total_size_bytes": 6126936
+      "total_size_bytes": 6127769
     }
   },
   "recommendations": [],
@@ -254,11 +254,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T02:57:53Z",
+  "timestamp": "2026-11-08T06:08:09Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4d406a5bdb7f94793487aeba310718908e329316bfbf5a45561900fc2b4630c5",
+      "sha256": "238cac0160dc14b5171d957e1325b14da8974d0a3c4199708d1ee7fc1106f2f7",
       "size_bytes": 11716
     },
     "combined_manuscript": {
@@ -316,7 +316,7 @@
       },
       "output": {
         "file_count": 38,
-        "sha256": "e272d7aaffe638123852f0bf4bef13c162e54e6f67b9f2f6abc462e0815e5e59"
+        "sha256": "abbfeed55250cf170ce97b930de616e9153cce50c47211f3234df74fa000ad63"
       },
       "source": {
         "file_count": 35,
@@ -324,7 +324,7 @@
       },
       "stage": {
         "file_count": 1616,
-        "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
+        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
       }
     },
     "project": "templates/template_storybook",

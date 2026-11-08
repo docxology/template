@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.53650665283203
+      "total_size_mb": 17.538436889648438
     },
     "figures": {
       "files": 27,
@@ -236,7 +236,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 3.800583839416504
+      "size_mb": 3.8005847930908203
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 3985201
+          "size_bytes": 3985202
         },
         "reports": {
           "files": 33,
@@ -266,12 +266,12 @@
         },
         "web": {
           "files": 20,
-          "size_bytes": 2859879
+          "size_bytes": 2861902
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18388360
+      "total_size_bytes": 18390384
     }
   },
   "recommendations": [],
@@ -282,11 +282,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T02:57:53Z",
+  "timestamp": "2026-11-08T06:08:09Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "9436fd7e3af755fe61b8192f19df75759cd1da7d5b223ff97f745b2be5ca2f43",
+      "sha256": "95f376cffe43e17e1d9425129b5a22a5329f4c85164378ef311ce3b5017dd771",
       "size_bytes": 54341
     },
     "combined_manuscript": {
@@ -416,7 +416,7 @@
       },
       "output": {
         "file_count": 178,
-        "sha256": "48fe18ccd06f95d37ef24b7b79ef86dc0de513af179dce0a82934ac862734d59"
+        "sha256": "eb806c2bf443aee66a6e29fd54f2b100073bf1b20a0accc57fcf182f7c44e80f"
       },
       "source": {
         "file_count": 283,
@@ -424,7 +424,7 @@
       },
       "stage": {
         "file_count": 1616,
-        "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
+        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
       }
     },
     "project": "templates/template_active_inference",

@@ -211,7 +211,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.6072139739990234
+      "total_size_mb": 2.6083526611328125
     },
     "figures": {
       "files": 4,
@@ -220,7 +220,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.2547903060913086
+      "size_mb": 0.2547941207885742
     },
     "stable_inventory": {
       "categories": {
@@ -234,7 +234,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 267167
+          "size_bytes": 267171
         },
         "release": {
           "files": 2,
@@ -246,12 +246,12 @@
         },
         "web": {
           "files": 13,
-          "size_bytes": 2296981
+          "size_bytes": 2298171
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 26,
-      "total_size_bytes": 2733862
+      "total_size_bytes": 2735056
     }
   },
   "recommendations": [],
@@ -262,11 +262,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T02:57:53Z",
+  "timestamp": "2026-11-08T06:08:09Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b638a1b03a59f423c45fce7ed5e1576059af2b9d71a90b837c7f7e34df682ff2",
+      "sha256": "2c2f1146f11b440f43967ac7a128de0ee935f8cb673572f8010a21b76b91b6c7",
       "size_bytes": 7865
     },
     "combined_manuscript": {
@@ -342,7 +342,7 @@
       },
       "output": {
         "file_count": 26,
-        "sha256": "e8da267eb9a76ae46774f6b5744b413cc9ecccf5391828d834ec70881f69d14f"
+        "sha256": "918cacdce2d496aab1121b0d99205853805c7e38a36ea27d5c018bfa9dfcb2ea"
       },
       "source": {
         "file_count": 40,
@@ -350,7 +350,7 @@
       },
       "stage": {
         "file_count": 1616,
-        "sha256": "a27c2774aa49ee3dd6a9ff334e0fd27f1368fa4df1b1b934439baf596fc89281"
+        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
       }
     },
     "project": "templates/template_autoscientists",
