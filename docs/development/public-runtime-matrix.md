@@ -63,7 +63,7 @@ PY
 )
 export P4_META_PROVIDER_WHEEL
 
-for interpreter in "$P4_PYTHON312" "$P4_PYTHON313" "$P4_PYTHON314"; do
+for interpreter in "$P4_PYTHON314" "$P4_PYTHON315"; do
   uv pip install --offline --no-config --no-deps --reinstall \
     --python "$interpreter" "$P4_META_PROVIDER_WHEEL"
 done
