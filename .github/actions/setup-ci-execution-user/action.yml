@@ -21,7 +21,7 @@ runs:
         esac
         echo "TEMPLATE_CI_ARTIFACT_DIRECTORY=$RUNNER_TEMP/template-ci-execution/artifacts" >> "$GITHUB_ENV"
         if ! command -v setfacl >/dev/null; then
-          sudo apt-get install -y --no-install-recommends acl
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends acl
         fi
         execution_args=(prepare --state "$RUNNER_TEMP/template-ci-execution/state.json")
         if [ "$EXECUTION_DOCKER" = true ]; then execution_args+=(--docker); fi

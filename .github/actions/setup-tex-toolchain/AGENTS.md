@@ -15,6 +15,8 @@ Cached `xelatex`/`bibtex` provisioning for the slow and rehearsal lanes. See
   and extra packages stay in the calling job.
 - `ci.yml`'s TeX steps are intentionally separate: different package sets and
   different probes, so folding them in here would erase which lane prepares what.
+- Preserve the 60-second APT HTTP(S) connection/data-idle acquisition bounds;
+  they do not shorten the calling job's total installation or execution budget.
 
 ## Editing
 

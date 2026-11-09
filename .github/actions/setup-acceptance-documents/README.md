@@ -17,6 +17,13 @@ package trust, package selection and execution limits remain unchanged.
 Unexpected files or source declarations stop preparation. This changes the
 preferred transport route; its effect on transfer time requires actual execution.
 
+APT update and install commands use 60-second HTTP and HTTPS connection/data-idle
+timeouts, matching the native readiness acquisition bound. A stalled preferred
+mirror must return control to APT rather than consume the entire workflow.
+The approved mirror order, fallback URLs, signature checks, package selections,
+retry settings and overall job budgets are unchanged. This is not a
+60-second total installation limit or an acceptance result.
+
 Fixed release archives are admitted by
 exact byte length and SHA-256 before extraction or execution. Preparation
 failures block the observation; they cannot certify an acceptance gate.

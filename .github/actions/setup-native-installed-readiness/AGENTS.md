@@ -10,8 +10,9 @@ after this action's own `uv sync` it derives the extra cache scopes from
 share one predicate. Never resolve those scopes in a workflow step instead: the
 interpreter does not exist before this action, and hosted run 41952164694 lost all
 25 cells to `.venv/bin/python: No such file or directory` (exit 127) that way.
-`project-scopes` remains as an explicit override and defaults to empty, which keeps
-Root-only warming for callers that install nothing else. This action has no acceptance outputs. Java and EPUBCheck
+Nonempty `project-scopes` explicitly overrides that selection. With no override,
+empty `matrix-cell` derives the full public roster; a selected cell includes its
+local provider closure. Root is always warmed. This action has no acceptance outputs. Java and EPUBCheck
 nominations are exported as `TEMPLATE_NATIVE_JAVA` and
 `TEMPLATE_NATIVE_EPUBCHECK` for the caller's explicit tool arguments.
 

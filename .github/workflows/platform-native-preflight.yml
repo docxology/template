@@ -221,7 +221,7 @@ jobs:
       - name: Prepare source-locked browser math dependencies
         run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
       - name: Prepare the declared Java launcher
-        run: sudo apt-get install -y --no-install-recommends default-jre-headless
+        run: sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends default-jre-headless
       - uses: ./.github/actions/setup-acceptance-model
       - uses: ./.github/actions/setup-ci-execution-user
         with:

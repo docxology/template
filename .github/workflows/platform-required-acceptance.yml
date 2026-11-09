@@ -197,7 +197,7 @@ jobs:
           for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
           done
-          sudo apt-get install -y --no-install-recommends default-jre-headless
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends default-jre-headless
           java -version
       - name: Warm exact locked offline wheel dependencies for every scope and minor
         timeout-minutes: 30
@@ -457,7 +457,7 @@ jobs:
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
           done
       - name: Prepare the declared Java launcher
-        run: sudo apt-get install -y --no-install-recommends default-jre-headless
+        run: sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends default-jre-headless
       - name: Prepare the exact immutable SIA sandbox image
         if: matrix.docker
         timeout-minutes: 10

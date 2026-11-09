@@ -27,6 +27,12 @@ matching tag identity and authenticated publication.
   checks and original clocks. This removes duplicate I/O, not a deadline gate.
 - Install the source-suite Meta provider into both declared Python 3.14/3.15
   environments; remove stale 3.12/3.13 documentation variables and loop.
+- Bound release-path APT HTTP(S) connections and idle transfers to the existing
+  native 60-second acquisition convention. Preserve approved mirror priorities,
+  signed repositories, package selections, retry settings and total job budgets.
+- Correct native readiness cache-scope guidance: Root is always warmed; explicit
+  project scopes override selection, otherwise a selected cell includes its
+  local providers and no selected cell derives the complete public roster.
 - Retire obsolete workflow-source and rendered filename/log-copy assertions
   rather than pinning their replacements; preserve archive-policy boundaries
   and substantive rendering/error consumers.
