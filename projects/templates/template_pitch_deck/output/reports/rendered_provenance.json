@@ -61,7 +61,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9d31426b52e0488e7948f76c77ada7c3dceb11c270c9dae66e58de3157c4a9b9",
+      "sha256": "59a9de236e922e904bde333d259d846de5d4b1de487294cf545b9f93649a7675",
       "size_bytes": 11648
     }
   },
@@ -69,7 +69,7 @@
   "fingerprints": {
     "config": {
       "file_count": 22,
-      "sha256": "59968d41e978f9dd0d9fa09c47a26d85917d92a4afc87f293cb6529d2854b03d"
+      "sha256": "666d3f079d2068cdb899de4bcce323880497777e30e5ed117af89ed86aea6364"
     },
     "output": {
       "file_count": 163,
@@ -81,7 +81,7 @@
     },
     "stage": {
       "file_count": 1759,
-      "sha256": "36c326a1428050f1b27c421e88fc3b832580a70c86e4b8dbaed48cc789677e31"
+      "sha256": "1e25e1afa69eeec4492b3e6f102da920e672dafa79fd23e1ece6e8958dfa9b4c"
     }
   },
   "project": "templates/template_pitch_deck",

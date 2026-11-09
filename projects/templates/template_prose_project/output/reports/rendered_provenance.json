@@ -79,7 +79,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "6f1bd7433a923945f18e5ef54e7cb7f704c5637695155121b1f0eb633c11b784",
+      "sha256": "11d21791b5323cc94b45a3cc6cdb87d99eeb280d31fa388a0b4caa3426dadaa4",
       "size_bytes": 12428
     }
   },
@@ -87,7 +87,7 @@
   "fingerprints": {
     "config": {
       "file_count": 16,
-      "sha256": "a0f1aa7fbf8fad6b47971520f2f39ed763826800d11a9db100ac056ccf986ed0"
+      "sha256": "dc0bcdc98673c64e98c3cff0523b3e0215c2744804f9e7ff82eec5a084ccbf5f"
     },
     "output": {
       "file_count": 58,
@@ -99,7 +99,7 @@
     },
     "stage": {
       "file_count": 1759,
-      "sha256": "36c326a1428050f1b27c421e88fc3b832580a70c86e4b8dbaed48cc789677e31"
+      "sha256": "1e25e1afa69eeec4492b3e6f102da920e672dafa79fd23e1ece6e8958dfa9b4c"
     }
   },
   "project": "templates/template_prose_project",
