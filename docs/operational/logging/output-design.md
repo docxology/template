@@ -82,6 +82,20 @@ Summary generation consumes the resolved expected stages and typed outcomes unde
 the remaining whole-run deadline. Public documentation must not receive local
 private project names from runtime discovery.
 
+Compact CLI status uses `format_multi_project_outcome_lines` for core,
+standalone serial and parallel invocations. It retains the complete first
+failing stage diagnostic; a shared-infrastructure abort also prints its failed
+stage diagnostics rather than hiding them behind the aggregate failure.
+Diagnostics are complete by default. API callers can explicitly set
+`hint_max_chars` for a deliberately compact view; CLI entry points do not cap
+them. Typed completion, original child exits, custody refusal 75 and whole-run
+deadlines are unchanged.
+
+Full worker streams remain in
+`projects/<qualified-name>/output/logs/multi_project_worker.log`, or
+`output/.pipeline/shared_infrastructure/projects/<qualified-name>/logs/multi_project_worker.log`
+for the shared gate. These are runtime evidence, not publication or acceptance.
+
 ## Reference: per-project stages
 
 Per-project trace from one successful project in the same run. The leading

@@ -13,8 +13,8 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
     MultiProjectResult,
+    format_multi_project_outcome_lines,
 )
-from infrastructure.core.pipeline.multi_project_support import validated_run_for_rows
 from infrastructure.core.pipeline.multi_project_parallel import (
     ParallelRunResult,
     run_projects_in_parallel,
@@ -78,12 +78,10 @@ def execute_multi_project_parallel(
             result.shared_infrastructure_exit_code,
             result.shared_infrastructure_result,
         )
+        _log_project_status(aggregate, projects)
         report_exit = _write_summary_reports(aggregate, projects, repo_root, deadline=deadline)
         exit_code = _combined_exit(result.exit_code, report_exit)
         if exit_code != 0:
-            logger.error("Failed projects:")
-            for name in result.failed:
-                logger.error("  - %s", name)
             return exit_code
 
         log_success("🎉 All projects completed successfully!", logger)
@@ -102,25 +100,10 @@ def execute_multi_project_parallel(
         return 1
 
 
-def _log_project_status(result: object) -> None:
-    project_results = getattr(result, "project_results", None)
-    if not project_results:
-        return
-    logger.info("Project Status:")
-    if not isinstance(project_results, dict):
-        logger.warning("  ⚠ project_results format unexpected")
-        return
-    for raw_name, proj_result in sorted(project_results.items(), key=lambda item: str(item[0])):
-        proj_name = str(raw_name)
-        if isinstance(proj_result, list) and proj_result:
-            contracts = getattr(result, "run_results", {})
-            run = validated_run_for_rows(proj_result, contracts.get(proj_name))
-            all_success = run is not None and run.complete
-            duration = sum(float(getattr(stage, "duration", 0.0)) for stage in proj_result)
-            status = "✅" if all_success else "❌"
-            logger.info(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
-        else:
-            logger.info(f"  ❓ {proj_name}: Unknown status")
+def _log_project_status(result: MultiProjectResult, projects: list[ProjectInfo]) -> None:
+    emit = logger.info if result.exit_code == 0 else logger.error
+    for line in format_multi_project_outcome_lines(projects, result):
+        emit("%s", line)
 
 
 def _combined_exit(*codes: int) -> int:
@@ -139,20 +122,6 @@ def _write_summary_reports(
     except (OSError, ValueError, TypeError, KeyError) as exc:
         logger.error("Aggregate reporting failed: %s", exc)
         return 1
-
-
-def _failed_project_names(result: object) -> list[str]:
-    project_results = getattr(result, "project_results", None)
-    contracts = getattr(result, "run_results", {})
-    fallback = tuple(project_results) if isinstance(project_results, dict) else ()
-    expected = getattr(result, "expected_projects", fallback)
-    failures = []
-    for name in expected:
-        rows = project_results.get(name) if isinstance(project_results, dict) else None
-        run = validated_run_for_rows(rows, contracts.get(name))
-        if run is None or not run.complete:
-            failures.append(name)
-    return failures
 
 
 def execute_multi_project(
@@ -208,7 +177,7 @@ def execute_multi_project(
             )
             logger.info(f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)")
 
-        _log_project_status(result)
+        _log_project_status(result, projects)
         report_exit = _write_summary_reports(result, projects, repo_root, deadline=deadline)
         exit_code = _combined_exit(result.exit_code, report_exit)
 
@@ -216,9 +185,6 @@ def execute_multi_project(
             log_success("🎉 All projects completed successfully!", logger)
             return 0
 
-        logger.error("❌ Some projects failed")
-        for proj_name in _failed_project_names(result):
-            logger.error(f"     - {proj_name}")
         return exit_code
 
     except KeyboardInterrupt:

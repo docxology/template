@@ -169,9 +169,14 @@ def test_genuine_source_wheel_single_guard(
             observed.inspect(wheel.name, raw + b"Owned invalid wheel bytes", deadline)
         observed.assert_single_complete_guard(deadline)
     else:
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError) as refusal:
             observed.inspect(wheel.name, raw, deadline)
-        assert observed.mutated, "The actual nominated production return boundary was not reached"
+        if not observed.mutated:
+            raise AssertionError(
+                "The actual nominated production return boundary was not reached; "
+                f"events={observed.events!r}, git_returns={observed.git_returns}, "
+                f"guards={len(observed.guard_frames)}, remaining_seconds={deadline - time.monotonic():.3f}"
+            ) from refusal.value
         assert len(observed.guard_frames) == 1
         if control == "current-after-final-git":
             assert observed.git_returns == 3

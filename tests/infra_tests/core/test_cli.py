@@ -156,6 +156,73 @@ class TestCLISubprocess:
             ["templates/beta:infra", "templates/beta:analysis"] if infra_exit == 0 else ["templates/beta:infra"]
         )
 
+    @pytest.mark.parametrize("mutation_stage", ["shared", "project"])
+    def test_cli_frozen_source_refusal_retains_complete_diagnostics(self, tmp_path: Path, mutation_stage: str) -> None:
+        from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
+
+        scaffold_pipeline(tmp_path, ("templates/alpha", "templates/beta"))
+        marker = b"\n# Actual frozen Source control.\n"
+        if mutation_stage == "project":
+            target = tmp_path / "projects/templates/beta/src/__init__.py"
+            script = tmp_path / "scripts/stage.py"
+            script.write_text(
+                script.read_text()
+                + "\nif step == 'analysis':\n"
+                + "    target = Path('projects') / project / 'src' / '__init__.py'\n"
+                + f"    target.write_bytes(target.read_bytes() + {marker!r})\n"
+            )
+        else:
+            target = tmp_path / "scripts/pipeline/stage_01_test.py"
+            body = target.read_text()
+            assert body.count("sys.exit(0)\n") == 1
+            target.write_text(
+                body.replace(
+                    "sys.exit(0)\n",
+                    "target = Path(__file__)\n"
+                    + f"target.write_bytes(target.read_bytes() + {marker!r})\n"
+                    + "sys.exit(0)\n",
+                )
+            )
+        original = target.read_bytes()
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "infrastructure.core.cli",
+                "multi-project",
+                "--projects",
+                "templates/beta",
+                "--repo-root",
+                str(tmp_path),
+            ],
+            capture_output=True,
+            text=True,
+            env={**os.environ, "SOURCE_DATE_EPOCH": "0"},
+            timeout=110,
+        )
+        sys.stdout.write(result.stdout)
+        sys.stderr.write(result.stderr)
+        assert result.returncode == 75
+        assert target.read_bytes() == original + marker
+        assert (tmp_path / "process_order.log").read_text().splitlines() == (
+            ["templates/beta:infra", "templates/beta:analysis"]
+            if mutation_stage == "project"
+            else ["templates/beta:infra"]
+        )
+        encoded = next(
+            line.split("fingerprint_diagnostics=", 1)[1]
+            for line in result.stdout.splitlines()
+            if "fingerprint_diagnostics=" in line
+        )
+        diagnostic, _ = json.JSONDecoder().raw_decode(encoded)
+        assert diagnostic["expected_total"] != diagnostic["observed_total"]
+        digests = [
+            diagnostic["expected_total"],
+            diagnostic["observed_total"],
+            *(diagnostic["components"][name] for name in ("source", "python", "tools")),
+        ]
+        assert all(len(digest) == 64 and set(digest) <= set("0123456789abcdef") for digest in digests)
+
     def test_cli_inventory_command(self):
         """Test inventory command execution via CLI."""
         with tempfile.TemporaryDirectory() as tmp_dir:

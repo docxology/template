@@ -22,6 +22,19 @@ matching tag identity and authenticated publication.
   original refusal, leaf exit and aggregation semantics without exposing paths.
   Preserve complete child streams on unexpected shared-CLI test exits so
   genuine mismatch diagnostics survive assertion-representation clipping.
+- Preserve full typed failure diagnostics in compact multi-project status,
+  including shared-infrastructure aborts; use the same formatter in core,
+  standalone serial and parallel CLI consumers. Make complete diagnostics the
+  default while retaining explicit formatter caps for caller-requested summaries.
+  Remove duplicate ad hoc status helpers, not custody guards.
+- Cover genuine shared/project Source changes through the actual CLI: retain
+  refusal 75, complete expected/observed/component identities, once-only shared
+  execution and selected-project boundaries. Retire obsolete formatter echoes
+  and not-throw reporting checks instead of pinning replacement wording.
+- Retain the original early Source-wheel refusal as the direct cause when a
+  genuine mutation control cannot reach its nominated boundary, with actual
+  guard events, Git-return count and remaining-clock context. Preserve the
+  positive pass, real mutation checks and every original custody boundary.
 - Read each citation frozen input once for its fresh checked post-tool record;
   retain all pre-tool, final-use, executable, process, producer and callback
   checks and original clocks. This removes duplicate I/O, not a deadline gate.
