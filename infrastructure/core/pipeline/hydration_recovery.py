@@ -19,6 +19,7 @@ HYDRATION_SCRIPT = "scripts/z_generate_manuscript_variables.py"
 HYDRATION_STAGE_KEY = f"hydration:{HYDRATION_SCRIPT}"
 HYDRATION_INPUT_UNAVAILABLE = "hydration-analysis-input-unavailable"
 
+
 @dataclass(frozen=True)
 class _HydrationPrerequisite:
     artifact: str
