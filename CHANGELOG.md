@@ -40,12 +40,14 @@ matching tag identity and authenticated publication.
   originals on both supported Python minors and host families. Keep policy
   authoring separate from runtime and release acceptance.
 - Refresh exhaustive family classifications from all four original native
-  collectors; verify exact native policy encoding and current Source admission
-  without turning retired incidental cases into waived runtime evidence.
+  collectors after removing incidental assertions; verify complete current
+  Source inputs, exact encoding and every full plan before literal installation.
+  Keep native metadata/readback separate from executed runtime evidence.
 - Refresh explicit review inputs for integrated global HTML and source-owned
   parser consumers, preserving every unrelated lane and prerequisite definition.
-  Regenerate canonical coverage provenance and COUNTS only after all 25 genuine
-  measurements match current project inputs and external support.
+  Requalify the numeric coverage baseline against current inputs and external
+  support: remeasure changed inputs, preserve other original producers/dates,
+  and rewrite COUNTS only when its actual live-fact rendering changes.
 - Include genuine fixture setup in Root prerequisite review: complete-source
   clones require Git even when the eventual case body tests a refusal. Preserve
   genuinely pre-I/O refusal exceptions instead of widening their requirements.
