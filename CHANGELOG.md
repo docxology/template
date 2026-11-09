@@ -11,7 +11,8 @@ are excluded.
 
 See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor
 preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
-preserving exemplar own versions and third-party locks. The release ceremony requires exact-source acceptance,
+preserving exemplar own versions; third-party dependency changes are qualified
+separately. The release ceremony requires exact-source acceptance,
 matching tag identity and authenticated publication.
 
 - Derive each guardian package identity from its same fresh verified Source
@@ -40,6 +41,11 @@ matching tag identity and authenticated publication.
   checks and original clocks. This removes duplicate I/O, not a deadline gate.
 - Install the source-suite Meta provider into both declared Python 3.14/3.15
   environments; remove stale 3.12/3.13 documentation variables and loop.
+- Repair Active Inference's Python 3.15 lock with upstream PyMDP 1.0.5 and
+  JAX/JAXlib 0.11.1, retaining the `jaxlib>=0.11.1` wheel-compatibility floor,
+  unrelated locked package versions and Main's coverage 7.17.2. Exercise real
+  Bayes/posterior/finite-EFE contracts and the simulation CLI on both tested
+  minors; remove the obsolete exact-version assertion instead of repinning it.
 - Bound release-path APT HTTP(S) connections and idle transfers to the existing
   native 60-second acquisition convention. Preserve approved mirror priorities,
   signed repositories, package selections, retry settings and total job budgets.

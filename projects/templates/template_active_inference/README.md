@@ -90,6 +90,20 @@ Standalone repositories are publication mirrors for source, DOI metadata, and
 tracked rendered artifacts. Use the monorepo above when you need the full shared
 infrastructure, pipeline stages, or cross-template validation.
 
+### Python and dependency compatibility
+
+This project requires Python >=3.14 and tests Python 3.14/3.15. Its lock uses
+PyMDP 1.0.5 with JAX/JAXlib 0.11.1. PyMDP 1.0.4 caps JAX/JAXlib below 0.11.1,
+and the resulting jaxlib 0.11.0 lock cannot install on the tested Python 3.15
+environment. Keep the direct `jaxlib>=0.11.1` wheel-compatibility floor rather
+than disabling the declared Python 3.15 gate.
+
+Dependency changes need the independent Bayes, normalized-policy and finite-EFE
+contracts in [`tests/test_pymdp_api_contract.py`](tests/test_pymdp_api_contract.py)
+and the real simulation CLI on both tested minors. Package-version metadata
+alone is not runtime compatibility evidence; these checks do not establish
+scientific effectiveness.
+
 ## Why sheaf composition?
 
 The problem: N tracks evolve independently (an analyst edits the closed-form

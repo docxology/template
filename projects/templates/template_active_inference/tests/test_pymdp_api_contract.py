@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from importlib.metadata import version
 from pathlib import Path
 
 import numpy as np
@@ -20,7 +19,6 @@ from simulation.tmaze_model import build_tmaze_generative_model
 def test_actual_filter_matches_independent_bayes_with_column_model_prior(
     project_root: Path, prior: list[float]
 ) -> None:
-    assert version("inferactively-pymdp") == "1.0.3"
     config = load_pymdp_config(project_root)
     model = build_tmaze_generative_model(config)
     model["D"] = [np.asarray(prior, dtype=np.float64).reshape(2, 1)]
