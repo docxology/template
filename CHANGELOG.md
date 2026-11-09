@@ -26,7 +26,7 @@ matching tag identity and authenticated publication.
   retain all pre-tool, final-use, executable, process, producer and callback
   checks and original clocks. This removes duplicate I/O, not a deadline gate.
 - Install the source-suite Meta provider into both declared Python 3.14/3.15
-  environments; remove the stale 3.12/3.13 documentation loop.
+  environments; remove stale 3.12/3.13 documentation variables and loop.
 - Retire obsolete workflow-source and rendered filename/log-copy assertions
   rather than pinning their replacements; preserve archive-policy boundaries
   and substantive rendering/error consumers.
