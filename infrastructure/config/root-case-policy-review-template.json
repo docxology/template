@@ -1219,7 +1219,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_multi_project_cli.py",
-      "source_sha256": "d8f1ca12c72a72d788d5453277ff53aa03ecc5c691acec1f3cc8c6c105f700b0",
+      "source_sha256": "772f01f49508fce66d3f89faaae3ab7f4e714db47fbf7631b881db87db9c54cf",
       "families": [
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_all_flags_combined",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_live_mode",
@@ -1230,34 +1230,15 @@
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_removed_report_flag_is_rejected",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_resume_flag",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_skip_infra_flag",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_all_failure_returns_all_names",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_all_success_returns_empty",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_empty_dict_returns_empty",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_empty_list_values_are_failures",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_empty_result_returns_empty",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_missing_project_results_attribute",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_mixed_success_failure",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_non_dict_project_results",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestFailedProjectNames::test_none_project_results",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestLogProjectStatus::test_dict_with_stage_lists_does_not_crash",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestLogProjectStatus::test_empty_list_value_logged_as_unknown",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestLogProjectStatus::test_empty_result_does_not_crash",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestLogProjectStatus::test_non_dict_project_results_does_not_crash",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestLogProjectStatus::test_non_list_value_logged_as_unknown",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestLogProjectStatus::test_none_project_results_does_not_crash",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_default_core_with_shared_stage",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_empty_projects_dir_returns_one",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_empty_repo_returns_one",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_parallel_empty_repo_returns_one",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_parallel_with_scaffolded_project",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_removed_report_flag_is_invocation_error",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_skip_infra_flag",
-        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_with_scaffolded_project",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_cli_actual_qualified_completion_and_summary",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_expired_aggregate_reporting_refuses_before_launch",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_invalid_run_budget_before_discovery"
       ],
-      "family_observations_sha256": "65d860792862aee35e99c4a15dbb5ea3f5b2ac1f34ea6fb41228a234ef981278",
+      "family_observations_sha256": "01e6d025165afceb3714eaa1545e9cf9ae85ab8fbd57d0a32717a201f1feb183",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1266,7 +1247,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_multi_project_cli.py",
-          "source_sha256": "d8f1ca12c72a72d788d5453277ff53aa03ecc5c691acec1f3cc8c6c105f700b0",
+          "source_sha256": "772f01f49508fce66d3f89faaae3ab7f4e714db47fbf7631b881db87db9c54cf",
           "line": 1
         }
       ]
@@ -3014,9 +2995,10 @@
     },
     {
       "path": "tests/infra_tests/core/test_cli.py",
-      "source_sha256": "d2c7a02cc61f803a58d3e1479ff651b3d7b86f38c2aae37a3c75ee1d593cb451",
+      "source_sha256": "7684516b047df53d6a3a98b3f46a4147c756a0ed294a504bdf584404a2c01b5a",
       "families": [
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_discover_command",
+        "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_inventory_command",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_multi_shared_verification_and_project_selection",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_pipeline_real_mode_selection",
@@ -3040,7 +3022,7 @@
         "tests/infra_tests/core/test_cli.py::TestMainFunctionFromCoreCli::test_discover_command_runs",
         "tests/infra_tests/core/test_cli.py::TestMainFunctionFromCoreCli::test_no_command_returns_1"
       ],
-      "family_observations_sha256": "5ac418f32501d9bd2ceee3abcc7be1a9fed14338e978ad56bf8aaa350ff6ffc3",
+      "family_observations_sha256": "39a4408c4a6750e32b9ff125c1c53a71ecb7105b2b170c05085fb235cb5db916",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -3049,7 +3031,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_cli.py",
-          "source_sha256": "d2c7a02cc61f803a58d3e1479ff651b3d7b86f38c2aae37a3c75ee1d593cb451",
+          "source_sha256": "7684516b047df53d6a3a98b3f46a4147c756a0ed294a504bdf584404a2c01b5a",
           "line": 1
         }
       ]
@@ -4897,17 +4879,11 @@
     },
     {
       "path": "tests/infra_tests/core/test_multi_project_outcome_format.py",
-      "source_sha256": "6bca79673bc8ae1fd5d931e68fa009385cb62587072c4869174273a4bee05f85",
+      "source_sha256": "00f546047a0585dd127208e9acb6f851a394535a0c31865620d8220fe51e374d",
       "families": [
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_all_succeeded_lists_names",
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_empty_stage_list_maps_to_exception_message",
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_failed_stage_includes_name_and_hint",
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_infra_aborted_single_message",
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_missing_project_key_in_results",
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_success_flag_without_completed_contract_is_not_reported_as_succeeded",
-        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_truncates_long_error_message"
+        "tests/infra_tests/core/test_multi_project_outcome_format.py::test_success_flag_without_completed_contract_is_not_reported_as_succeeded"
       ],
-      "family_observations_sha256": "9f5f31af06874553341059de392e944a19dd332d1287b4b91b0c8c358f4c799e",
+      "family_observations_sha256": "e7622fa5f843ca3f04213cf7c8847ee7ff75f44e4936747a6589ca26035dbe19",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -4916,7 +4892,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_multi_project_outcome_format.py",
-          "source_sha256": "6bca79673bc8ae1fd5d931e68fa009385cb62587072c4869174273a4bee05f85",
+          "source_sha256": "00f546047a0585dd127208e9acb6f851a394535a0c31865620d8220fe51e374d",
           "line": 1
         }
       ]
@@ -28187,11 +28163,11 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
-      "source_sha256": "7d3c5908dfb52a7738895da3449783a1af819b0e07b22d864155da4d95fdc9d5",
+      "source_sha256": "d80064e638cd1991eb2b2ac34754f609da1e343763f37338673ff45eec54c599",
       "families": [
         "tests/infra_tests/reporting/test_native_source_wheel_guard.py::test_genuine_source_wheel_single_guard"
       ],
-      "family_observations_sha256": "05c9ab213482693f30acf2977557564f1e7ba6acde069ba753aef2d8e6debbae",
+      "family_observations_sha256": "603c1c35c965f56584074fc660d01650adf4944ad94fc3f44420eb1ca265567d",
       "decision": {
         "lane": "external-fixture",
         "obligations": [
@@ -28202,7 +28178,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
-          "source_sha256": "7d3c5908dfb52a7738895da3449783a1af819b0e07b22d864155da4d95fdc9d5",
+          "source_sha256": "d80064e638cd1991eb2b2ac34754f609da1e343763f37338673ff45eec54c599",
           "line": 1
         }
       ]
