@@ -13,7 +13,7 @@
   ],
   "construction_count": 4,
   "inference_step_count": 10,
-  "known_warning_count": 4,
+  "known_warning_count": 0,
   "ok": true,
   "phase_count": 20,
   "phase_rows": [
@@ -54,10 +54,10 @@
       "phase": "fallback"
     },
     {
-      "category": "UserWarning",
+      "category": "none",
       "context": "si_tmaze:state_inference:h2:s0",
       "known": true,
-      "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do.",
+      "message": "no warnings captured",
       "ok": true,
       "phase": "warning"
     },
@@ -98,10 +98,10 @@
       "phase": "fallback"
     },
     {
-      "category": "UserWarning",
+      "category": "none",
       "context": "si_tmaze:policy_inference:h2:s0",
       "known": true,
-      "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do.",
+      "message": "no warnings captured",
       "ok": true,
       "phase": "warning"
     },
@@ -142,10 +142,10 @@
       "phase": "fallback"
     },
     {
-      "category": "UserWarning",
+      "category": "none",
       "context": "si_tmaze:state_inference:h3:s0",
       "known": true,
-      "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do.",
+      "message": "no warnings captured",
       "ok": true,
       "phase": "warning"
     },
@@ -186,10 +186,10 @@
       "phase": "fallback"
     },
     {
-      "category": "UserWarning",
+      "category": "none",
       "context": "si_tmaze:policy_inference:h3:s0",
       "known": true,
-      "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do.",
+      "message": "no warnings captured",
       "ok": true,
       "phase": "warning"
     }
@@ -215,21 +215,15 @@
       "context": "si_tmaze:state_inference:h2:s0",
       "inference_mode": "state_inference",
       "inference_step_count": 2,
-      "known_warning_count": 1,
-      "known_warnings": [
-        {
-          "category": "UserWarning",
-          "known": true,
-          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
-        }
-      ],
+      "known_warning_count": 0,
+      "known_warnings": [],
       "policy_fallback_count": 0,
       "policy_fallback_reasons": [],
       "policy_posterior_available_count": 0,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
-        "inferactively_pymdp": "1.0.3",
+        "inferactively_pymdp": "1.0.5",
         "jax": "uv.lock Python-marker selection",
         "jaxlib": "uv.lock Python-marker selection"
       }
@@ -244,21 +238,15 @@
       "context": "si_tmaze:policy_inference:h2:s0",
       "inference_mode": "policy_inference",
       "inference_step_count": 2,
-      "known_warning_count": 1,
-      "known_warnings": [
-        {
-          "category": "UserWarning",
-          "known": true,
-          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
-        }
-      ],
+      "known_warning_count": 0,
+      "known_warnings": [],
       "policy_fallback_count": 0,
       "policy_fallback_reasons": [],
       "policy_posterior_available_count": 2,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
-        "inferactively_pymdp": "1.0.3",
+        "inferactively_pymdp": "1.0.5",
         "jax": "uv.lock Python-marker selection",
         "jaxlib": "uv.lock Python-marker selection"
       }
@@ -273,21 +261,15 @@
       "context": "si_tmaze:state_inference:h3:s0",
       "inference_mode": "state_inference",
       "inference_step_count": 3,
-      "known_warning_count": 1,
-      "known_warnings": [
-        {
-          "category": "UserWarning",
-          "known": true,
-          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
-        }
-      ],
+      "known_warning_count": 0,
+      "known_warnings": [],
       "policy_fallback_count": 0,
       "policy_fallback_reasons": [],
       "policy_posterior_available_count": 0,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
-        "inferactively_pymdp": "1.0.3",
+        "inferactively_pymdp": "1.0.5",
         "jax": "uv.lock Python-marker selection",
         "jaxlib": "uv.lock Python-marker selection"
       }
@@ -302,21 +284,15 @@
       "context": "si_tmaze:policy_inference:h3:s0",
       "inference_mode": "policy_inference",
       "inference_step_count": 3,
-      "known_warning_count": 1,
-      "known_warnings": [
-        {
-          "category": "UserWarning",
-          "known": true,
-          "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
-        }
-      ],
+      "known_warning_count": 0,
+      "known_warnings": [],
       "policy_fallback_count": 0,
       "policy_fallback_reasons": [],
       "policy_posterior_available_count": 3,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
-        "inferactively_pymdp": "1.0.3",
+        "inferactively_pymdp": "1.0.5",
         "jax": "uv.lock Python-marker selection",
         "jaxlib": "uv.lock Python-marker selection"
       }
@@ -332,7 +308,7 @@
   "schema": "template_active_inference.pymdp_runtime_diagnostics.v1",
   "unexpected_warning_count": 0,
   "versions": {
-    "inferactively_pymdp": "1.0.3",
+    "inferactively_pymdp": "1.0.5",
     "jax": "uv.lock Python-marker selection",
     "jaxlib": "uv.lock Python-marker selection"
   }

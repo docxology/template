@@ -130,7 +130,7 @@
         "output/data/si_policy_comparison.json": "cad28a0c1ce049a74b076ab1c85e8ca3b21a2ea15df9dc73357515193da14ea7",
         "output/data/si_tmaze_summary.json": "0b8b6c9864e49024b7538f5ff0ea53feda929902b102f57941f5a94aa7c530e2",
         "output/data/si_tmaze_trace.json": "ce49b6703e820510726a9539dfdba13bcbd168801448446be6018bf8b69a6e04",
-        "output/reports/pymdp_runtime_diagnostics.json": "bf52490ad056949e023ece3af251b36adbc948f2f1b21bbb1c9c62f16f863069",
+        "output/reports/pymdp_runtime_diagnostics.json": "b13ed3a673d51b315af086b109d88f90aaacba43b7339c20115eff6302644eba",
         "output/reports/si_invariants.json": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
         "output/reports/si_tmaze_run_report.json": "ed140aad44e9850357fd39419f7ac77c64e4f8cbb9117823ffe0142609b39683"
       },
@@ -380,17 +380,17 @@
         "output/data/cross_track_symbol_table.json": "073ecb18c31dc50a75ef95d9a88c05ea3851bbd35a6cb288a5c5abaa921df3e7",
         "output/data/figure_source_map.json": "bb112a24f0f2bb0a05a653baa81bc133df6d67e5f4516c325f2e1fcbfe990224",
         "output/data/manuscript_evidence_tables.json": "d375b3ed509999f4066fda36acde5c47d4213e711579464beeb47cb4fbfb3ea6",
-        "output/data/manuscript_token_provenance.json": "0c27562e37d65464bea14e03938b664b3898dfd81909008c4738d8b4220c18cb",
+        "output/data/manuscript_token_provenance.json": "f8a0ef383dcdaefceba6a2934e257096cf58b9e69b31f398fddfa0384a1d2212",
         "output/data/statistical_visualization_bridge.json": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
         "output/data/validation_gate_index.json": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
-        "output/reports/artifact_diffoscope.json": "dc9d6c4cf63363d2be465f03bd3ca624a9f402a58bea6425559f2e7a1898c0f3",
+        "output/reports/artifact_diffoscope.json": "97f06b394268c991e2f69a2bcc28dcbecfc74393cc85a37857960ec74c94e249",
         "output/reports/artifact_license_audit.json": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
         "output/reports/claim_evidence_audit.json": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
         "output/reports/figure_hash_manifest.json": "5e69728ed3599d1a670f94ca8bdd2581bb3abf687b045b9067889e7f9d1d0623",
         "output/reports/producer_completeness.json": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
         "output/reports/release_notes_evidence.json": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
         "output/reports/scope_boundary_audit.json": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
-        "output/reports/stale_artifact_report.json": "f005a0f8ed93d00f8ee9eb67301ff91e724cf6aa8624eba0440aa0b0828f5c24",
+        "output/reports/stale_artifact_report.json": "6959538cb1348a1526fa84a6066e68b1c390e7a72017828aca07f0bff38feb92",
         "output/reports/visualization_quality_audit.json": "fc84a469565972c0cf7d51b6ed842e67d395cbcc8004d3d1de7ac8f0f04fa172"
       },
       "producer_script": "generate_integration_audit.py",
@@ -474,8 +474,8 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "1839c89efc0a5046d07e453c7fba32032af8f81a3520bf4bcf0abc922bc58c79",
-        "output/reports/release_bundle_manifest.json": "af64d24a1eab97944a7a431739c77c07eba66d99efb7e60484fd24fc10606a0e",
+        "output/reports/release_attestation.json": "41fafc15022e5c3eed8cbbae9541d56675ccd316fe4aabfee65029504cd92aab",
+        "output/reports/release_bundle_manifest.json": "025bb60ac26601594ddefefdb3e9fd01e1d94830539d82825b328ebf13dea28e",
         "output/reports/security_posture_audit.json": "7082a59ad4a0c14df5cbcda44d83ca5e511ea9c61f8366a4c5ae0f8e0b6bc373",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
       },
@@ -500,7 +500,7 @@
       "matched": true,
       "output_hashes": {
         "output/figures/figure_registry.json": "61962843e4889cf756648252d3a0d05f0f7f1baf23845779345c2c6d5a7d72b3",
-        "output/reports/manuscript_staleness_report.json": "4152a2c2517cb7ac493167bf9e5609b23d16fd39d50ea05f52eebd3cf72082f4"
+        "output/reports/manuscript_staleness_report.json": "be22001b0a85a027bf70774b9a8ffa5f1d3b855ac62e95c13227b1e4cb7d8e1c"
       },
       "producer_script": "z_generate_manuscript_variables.py",
       "replay_method": "artifact_fingerprint"
