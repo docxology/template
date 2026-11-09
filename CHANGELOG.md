@@ -46,6 +46,10 @@ matching tag identity and authenticated publication.
   unrelated locked package versions and Main's coverage 7.17.2. Exercise real
   Bayes/posterior/finite-EFE contracts and the simulation CLI on both tested
   minors; remove the obsolete exact-version assertion instead of repinning it.
+- Remove Active Inference's incidental requirement that upstream emit a known
+  JAX warning. Retain the real unexpected-warning rejection control on both
+  tested minors and migrate its validation-spine binding; warning policy is
+  unchanged.
 - Bound release-path APT HTTP(S) connections and idle transfers to the existing
   native 60-second acquisition convention. Preserve approved mirror priorities,
   signed repositories, package selections, retry settings and total job budgets.

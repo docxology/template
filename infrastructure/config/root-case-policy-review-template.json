@@ -2423,7 +2423,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
-      "source_sha256": "fc66d16b53c18fdb4d350675e03a05b0efd6cb50adabc4f8435067071318905d",
+      "source_sha256": "36358a465f85eeac9071dd6c7f2a6442098e56825841cc670267ddfa7463cbda",
       "families": [
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_abrupt_caller_exit_still_cleans_descendant_and_own_cache",
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_changed_loaded_source_is_typed_refusal_before_private_startup",
@@ -2435,7 +2435,7 @@
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_ready_unarmed_guardian_close_reaps_and_removes_cache",
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_source_change_still_cleans_detached_child_and_refuses_success"
       ],
-      "family_observations_sha256": "1baa165dc7a0a8d4e8ff5f9162237f24891680773b6ac8a802c8dfae66d7b461",
+      "family_observations_sha256": "8a4ace4ff7aaed05b3d731c65d24c45437fef9f97792d85f632d6288e08d759e",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2444,7 +2444,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
-          "source_sha256": "fc66d16b53c18fdb4d350675e03a05b0efd6cb50adabc4f8435067071318905d",
+          "source_sha256": "36358a465f85eeac9071dd6c7f2a6442098e56825841cc670267ddfa7463cbda",
           "line": 1
         }
       ]
