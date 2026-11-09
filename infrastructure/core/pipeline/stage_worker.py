@@ -16,7 +16,11 @@ from infrastructure.core.analysis_data_custody import capture_analysis_data, req
 from infrastructure.core.analysis_read_custody import observe_stage_analysis_reads
 from infrastructure.core.analysis_write_custody import observe_stage_analysis_writes
 from infrastructure.core.implementation_custody import source_file_digest, verify_fresh_module_bytecode
-from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint, source_content_fingerprint
+from infrastructure.core.pipeline.fingerprints import (
+    canonical_digest,
+    source_content_fingerprint,
+    source_fingerprint_components,
+)
 from infrastructure.core.pipeline._stage_protocol import SCHEMA, ANALYSIS_SCHEMA
 from infrastructure.core.runtime.python_binding import admit_current_analysis_runtime
 from infrastructure.core.pipeline.stage_admission import validate_stage_admission
@@ -84,8 +88,27 @@ def main() -> int:
                 != payload["source_content_digest"]
             ):
                 raise ValueError("Consumed analysis source differs from its admitted content")
-        elif source_fingerprint(repo, project, definition_path=definition) != payload["source_digest"]:
-            raise ValueError("Consumed source differs from the resolved execution plan")
+        else:
+            components = source_fingerprint_components(repo, project, definition_path=definition)
+            observed_total = canonical_digest(components)
+            expected_total = payload["source_digest"]
+            if observed_total != expected_total:
+                expected_label = (
+                    expected_total
+                    if isinstance(expected_total, str)
+                    and len(expected_total) == 64
+                    and all(char in "0123456789abcdef" for char in expected_total)
+                    else "<invalid-sha256>"
+                )
+                diagnostics = {
+                    "expected_total": expected_label,
+                    "observed_total": observed_total,
+                    "components": {key: canonical_digest(components[key]) for key in ("source", "python", "tools")},
+                }
+                raise ValueError(
+                    "Consumed source differs from the resolved execution plan; fingerprint_diagnostics="
+                    + json.dumps(diagnostics, sort_keys=True, separators=(",", ":"))
+                )
         admission = payload.get("stage_admission")
         if admission is not None:
             if any(

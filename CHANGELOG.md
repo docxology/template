@@ -14,6 +14,21 @@ preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
 preserving exemplar own versions and third-party locks. The release ceremony requires exact-source acceptance,
 matching tag identity and authenticated publication.
 
+- Derive each guardian package identity from its same fresh verified Source
+  census, removing an immediate duplicate tree walk while preserving separate
+  parent-startup/child-READY/child-DONE observations and all custody checks.
+- Retain bounded expected/observed Source identities and source/Python/tool
+  component digests when a stage refuses a frozen-plan mismatch. Preserve the
+  original refusal, leaf exit and aggregation semantics without exposing paths.
+  Preserve complete child streams on unexpected shared-CLI test exits so
+  genuine mismatch diagnostics survive assertion-representation clipping.
+- Read each citation frozen input once for its fresh checked post-tool record;
+  retain all pre-tool, final-use, executable, process, producer and callback
+  checks and original clocks. This removes duplicate I/O, not a deadline gate.
+- Retire obsolete workflow-source and rendered filename/log-copy assertions
+  rather than pinning their replacements; preserve archive-policy boundaries
+  and substantive rendering/error consumers.
+
 - Bind each ARL capability projection to one invocation's original audited
   producer, retaining the first verdict even on failure. Separately authenticate
   and read a downloaded same-Source carrier with the full original reader.

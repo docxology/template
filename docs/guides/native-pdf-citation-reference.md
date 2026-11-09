@@ -45,6 +45,13 @@ execution and checked afterward; a changed or expanded final dependency set
 refuses acceptance. Original executable and consumed-input before/after
 observations and actual process records are preserved.
 
+Each post-tool frozen-input observation is read once, checked against its frozen
+binding and retained as the actual after-record, not replaced with expected
+rows. Inputs remain independently checked before each tool and after producer
+retention/callbacks, before return. Executable, generated-input, process and
+artifact checks stay separate. All observation and retention work consumes the
+original caller/tool clocks; eliminating duplicate reads does not extend them.
+
 [native_pdf_citation_replay.py](../../infrastructure/reporting/native_pdf_citation_replay.py)
 regenerates the reference on the current reader from independently reconstructed
 source inputs. It checks original actual tool outcomes and retained dependency

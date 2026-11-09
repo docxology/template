@@ -146,6 +146,10 @@ class TestCLISubprocess:
             # this bounds only the test's wait (CI lanes pass --timeout=120).
             timeout=110,
         )
+        if result.returncode != expected_code:
+            # Pytest clips assertion tuple repr; retain the real child diagnostics.
+            sys.stdout.write(result.stdout)
+            sys.stderr.write(result.stderr)
         assert result.returncode == expected_code, (result.stdout, result.stderr)
         rows = (tmp_path / "process_order.log").read_text().splitlines()
         assert rows == (
