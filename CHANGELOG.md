@@ -50,6 +50,12 @@ matching tag identity and authenticated publication.
   JAX warning. Retain the real unexpected-warning rejection control on both
   tested minors and migrate its validation-spine binding; warning policy is
   unchanged.
+- Refresh the authored Active Inference method reference through its canonical
+  producer. Retain real source/script coverage, read-only current/stale CLI
+  checks, no-mutation and writer-idempotence controls on both tested minors;
+  retire incidental format, count-floor and documentation-wording assertions.
+  Document regeneration before Source freeze and the existing future-only
+  eight-column backlog contract without introducing a second task format.
 - Bound release-path APT HTTP(S) connections and idle transfers to the existing
   native 60-second acquisition convention. Preserve approved mirror priorities,
   signed repositories, package selections, retry settings and total job budgets.

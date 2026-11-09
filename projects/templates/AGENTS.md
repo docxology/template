@@ -71,9 +71,16 @@ Every exemplar also carries these agent-facing surfaces:
   `template_active_inference` → `["pymdp", "lean"]`). The SDK pin
   (`research-project-template==<root version>` plus its `[tool.uv.sources]`
   entry) must resolve against the same root version.
-- `TODO.md` is future-only: current validation evidence first, then integrity
-  gaps, configurable-surface gaps, documentation/signpost gaps,
-  test/validator gaps, and an ordered improvement ladder.
+- `TODO.md` is future-only under the existing
+  [`backlog.py`](../../infrastructure/documentation/backlog.py) contract. Use its
+  eight columns: ID, status, size, dependency, next action / unblock condition,
+  proving artifact, acceptance command, and negative control.
+  Keep `Minor upcoming`, `Medium upcoming`, and `Major upcoming` sections;
+  active rows are Minor or Medium only, with `open`, `partial`,
+  `blocked-external`, or `blocked-tool` status. Completed validation receipts
+  belong in existing dated records such as
+  [`exemplar-backlog-history.md`](../../docs/maintenance/exemplar-backlog-history.md),
+  not a current-evidence section or improvement ladder in the active backlog.
 - `manuscript/config.yaml` is the live source of truth for manuscript metadata,
   thresholds, paths, structural toggles, and project-specific controls.
 - `manuscript/config.yaml.example` is the fork template. Keep it

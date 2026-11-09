@@ -310,12 +310,17 @@ and cannot be promoted by the deterministic fixture checks alone.
 
 Every Python `def` and `class` under `src/` and `scripts/` is documented in the
 generated reference [`docs/reference/method-inventory.md`](docs/reference/method-inventory.md).
-Regenerate it after method, script, or module changes, then check it before
-reporting verification status:
+During Source authoring, regenerate it after method, script, or module changes,
+then check and commit the reference before freezing inputs for verification:
 
 ```bash
+uv run python scripts/generate_method_inventory.py
 uv run python scripts/generate_method_inventory.py --check
 ```
+
+The `--check` command is read-only and must reject stale committed references.
+A later full-verification producer does not substitute for authored freshness;
+do not regenerate before a failing test merely to conceal the original failure.
 
 ## Documentation verification
 
