@@ -121,11 +121,11 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **1831** project-scope infrastructure tests collected and **1362** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage baseline dated 2026-11-08, rebound after changed-input measurements; coverage values use the shared `release` test profile):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage baseline dated 2026-11-09, rebound after changed-input measurements; coverage values use the shared `release` test profile):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 992 | 91.03 % |
+| `template_active_inference` | 990 | 91.03 % |
 | `template_advanced_literature_review` | 163 | 94.04 % |
 | `template_autopoiesis` | 579 | 91.43 % |
 | `template_autoresearch_project` | 398 | 96.49 % |
@@ -137,7 +137,7 @@ Result: **1831** project-scope infrastructure tests collected and **1362** publi
 | `template_formal` | 380 | 90.30 % |
 | `template_gold_refinement` | 337 | 92.80 % |
 | `template_literature_meta_analysis` | 1261 | 95.48 % |
-| `template_madlib` | 198 | 98.95 % |
+| `template_madlib` | 198 | 99.11 % |
 | `template_methods_paper` | 94 | 99.00 % |
 | `template_newspaper` | 156 | 99.08 % |
 | `template_pitch_deck` | 162 | 96.43 % |

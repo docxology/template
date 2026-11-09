@@ -57,7 +57,7 @@ from infrastructure.documentation._coverage_snapshot_output import CoverageSnaps
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 5
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-coverage-inputs-v3"
-EXEMPLAR_SNAPSHOT_DATE = "2026-11-08"
+EXEMPLAR_SNAPSHOT_DATE = "2026-11-09"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 _ACTIVE_COVERAGE_PROJECT = "template_active_inference"
 
@@ -171,7 +171,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_formal", "90.30 %"),
     ExemplarSnapshot("template_gold_refinement", "92.80 %"),
     ExemplarSnapshot("template_literature_meta_analysis", "95.48 %"),
-    ExemplarSnapshot("template_madlib", "98.95 %"),
+    ExemplarSnapshot("template_madlib", "99.11 %"),
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
     ExemplarSnapshot("template_newspaper", "99.08 %"),
     ExemplarSnapshot("template_pitch_deck", "96.43 %"),

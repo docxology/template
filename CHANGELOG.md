@@ -56,6 +56,13 @@ matching tag identity and authenticated publication.
   retire incidental format, count-floor and documentation-wording assertions.
   Document regeneration before Source freeze and the existing future-only
   eight-column backlog contract without introducing a second task format.
+- Refresh canonical public coverage literals from the complete original
+  release-profile cohort and retain its actual completion date, source-input
+  hashes, measurement support, individual job logs and primary archives before
+  generating current provenance and count documentation. Never relabel a failed
+  attempt or reuse its measurements as a fresh cohort.
+- Align infrastructure workflow guidance with its actual single-case load
+  scheduler; retain worker counts, selection, deadlines and coverage gates.
 - Bound release-path APT HTTP(S) connections and idle transfers to the existing
   native 60-second acquisition convention. Preserve approved mirror priorities,
   signed repositories, package selections, retry settings and total job budgets.
