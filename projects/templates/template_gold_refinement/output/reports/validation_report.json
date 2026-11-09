@@ -302,21 +302,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T23:37:30Z",
+  "timestamp": "2026-11-09T03:57:46Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "3aedf316ebf5c01f316a578b6f663e7fb6f5a364fb24cbb295f5b159f171d339",
+      "sha256": "d0a9d300c558a4cd45c88ab8cff951bcc814f26fe3359adb2511c81a781a92eb",
       "size_bytes": 24134
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "7451e41be6a9d2b6ecb6639fb70be5f37cd993f4b9ddd45905fed12a2d28df2b",
+      "sha256": "05014525a37ef56d17d665f2583bfb18ab4094efc2aa8d793303e9e2bd68d0e8",
       "size_bytes": 106846
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "81ed6bb273f6bcdbb700a93da9a7b793b9838e5121de71e1f4fcabb144263ac7",
+      "sha256": "254c2e044e240a2dee8145479efefd0a34cad1cff1ce2be28e526a447fdf4880",
       "size_bytes": 2942
     },
     "consumed_manuscript": [
@@ -364,7 +364,7 @@
       },
       {
         "rendered_path": "output/manuscript/06_reproducibility.md",
-        "rendered_sha256": "45261bb00731352ca3f900dbedb242c32f75a281ee54983255c65871d8f36d2b",
+        "rendered_sha256": "dee55dd516433ca025a6de1c5f08cb20ca881d26126caa33490e84f64ac48611",
         "source_path": "manuscript/06_reproducibility.md",
         "source_sha256": "9160d7cf011ca7feb015ae49daa17536ef93d6bf359e887d27dc357499d4d0dc"
       },
@@ -400,7 +400,7 @@
       },
       "output": {
         "file_count": 74,
-        "sha256": "e1db783b732932a0d061a251805ab7b04e63bc382e13408b4ea70f01a0746438"
+        "sha256": "f819aba6b793ffdf16a2401fd9fb1fdebecc969ff13966c08a11d7fd8e964465"
       },
       "source": {
         "file_count": 46,
@@ -408,7 +408,7 @@
       },
       "stage": {
         "file_count": 1759,
-        "sha256": "a2a3a0f2390030587a7cae1a7c77d85437fdb28119dd4bb6b024a686af8b5116"
+        "sha256": "36c326a1428050f1b27c421e88fc3b832580a70c86e4b8dbaed48cc789677e31"
       }
     },
     "project": "templates/template_gold_refinement",
