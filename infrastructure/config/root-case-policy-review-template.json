@@ -3014,7 +3014,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_cli.py",
-      "source_sha256": "735e71dbdc94a5546f779f1fbfd03f7a0fed221e89e252da98040c4785886f30",
+      "source_sha256": "d2c7a02cc61f803a58d3e1479ff651b3d7b86f38c2aae37a3c75ee1d593cb451",
       "families": [
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_discover_command",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_inventory_command",
@@ -3040,7 +3040,7 @@
         "tests/infra_tests/core/test_cli.py::TestMainFunctionFromCoreCli::test_discover_command_runs",
         "tests/infra_tests/core/test_cli.py::TestMainFunctionFromCoreCli::test_no_command_returns_1"
       ],
-      "family_observations_sha256": "3dbc2f5cd903a659a7efdba5936f28d09b285f9f4483c1ef7031cd075ff47de9",
+      "family_observations_sha256": "5ac418f32501d9bd2ceee3abcc7be1a9fed14338e978ad56bf8aaa350ff6ffc3",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -3049,7 +3049,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_cli.py",
-          "source_sha256": "735e71dbdc94a5546f779f1fbfd03f7a0fed221e89e252da98040c4785886f30",
+          "source_sha256": "d2c7a02cc61f803a58d3e1479ff651b3d7b86f38c2aae37a3c75ee1d593cb451",
           "line": 1
         }
       ]
@@ -22333,7 +22333,7 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_rendering_cli.py",
-      "source_sha256": "51e1631ab3d5bf6b2410903170c1f5a2d5d5179ed6abd1da76a2fb86d9eba0ae",
+      "source_sha256": "f3824b0ae14cd6fa88099781af64599d3686e7d4f3bf6f972910d2803f78b1c1",
       "families": [
         "tests/infra_tests/rendering/test_rendering_cli.py::TestCliModuleStructure::test_imports_render_manager",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestCliModuleStructure::test_module_has_command_functions",
@@ -22356,13 +22356,12 @@
         "tests/infra_tests/rendering/test_rendering_cli.py::TestRenderSlidesCommand::test_render_slides_default_format",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestRenderSlidesCommand::test_render_slides_nonexistent_source",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestRenderSlidesCommand::test_render_slides_revealjs",
-        "tests/infra_tests/rendering/test_rendering_cli.py::TestRenderWebCommand::test_render_web_basic",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestRenderWebCommand::test_render_web_nonexistent_source",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestSchemaSubcommand::test_existing_subcommand_still_parses",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestSchemaSubcommand::test_schema_returns_zero_and_emits_valid_json",
         "tests/infra_tests/rendering/test_rendering_cli.py::TestSchemaSubcommand::test_schema_subcommand_via_subprocess"
       ],
-      "family_observations_sha256": "bf7fad91b387c2f805241d869b2cac4c8961dc64d776ee6884ecdfc8eb6d201f",
+      "family_observations_sha256": "6b2ca727e45a2d6c211acd7703e64fc4278f3da608351cebe6af5b21fccb3936",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -22371,7 +22370,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_rendering_cli.py",
-          "source_sha256": "51e1631ab3d5bf6b2410903170c1f5a2d5d5179ed6abd1da76a2fb86d9eba0ae",
+          "source_sha256": "f3824b0ae14cd6fa88099781af64599d3686e7d4f3bf6f972910d2803f78b1c1",
           "line": 1
         }
       ]
@@ -33355,15 +33354,11 @@
     },
     {
       "path": "tests/infra_tests/test_quality_gate_parity.py",
-      "source_sha256": "007ff4f904871ee74d27bde74d3aba1b7828f5c9d6ed5665500dcb53c13bfb6d",
+      "source_sha256": "eb167d16f3111bd871d5d35b43d4edc7b94ac141a078f97a4f26f8d905659b03",
       "families": [
-        "tests/infra_tests/test_quality_gate_parity.py::test_ci_public_matrix_uses_current_stage_cli_contract",
-        "tests/infra_tests/test_quality_gate_parity.py::test_ci_workflow_carries_cross_surface_gates",
-        "tests/infra_tests/test_quality_gate_parity.py::test_health_registry_carries_cross_surface_gates",
-        "tests/infra_tests/test_quality_gate_parity.py::test_large_file_hook_allows_only_named_public_arxiv_archives",
-        "tests/infra_tests/test_quality_gate_parity.py::test_pre_push_carries_cross_surface_gates"
+        "tests/infra_tests/test_quality_gate_parity.py::test_large_file_hook_allows_only_named_public_arxiv_archives"
       ],
-      "family_observations_sha256": "2be67ebfdb353eab40d6511be18e78b1727feeb64da58a1b3e37e0ad5d70fa4e",
+      "family_observations_sha256": "24ce14816119c6a09e7ad51f378d1784d8388d3e874db42bd843f86b111d88c9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -33372,7 +33367,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/test_quality_gate_parity.py",
-          "source_sha256": "007ff4f904871ee74d27bde74d3aba1b7828f5c9d6ed5665500dcb53c13bfb6d",
+          "source_sha256": "eb167d16f3111bd871d5d35b43d4edc7b94ac141a078f97a4f26f8d905659b03",
           "line": 1
         }
       ]
