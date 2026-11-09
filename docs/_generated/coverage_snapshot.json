@@ -1,5 +1,5 @@
 {
-  "measured_at": "2026-11-08",
+  "measured_at": "2026-11-09",
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.16 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "65ab216daa2d9880b1df734d9c4def064b748773",
+  "source_commit": "9491213de076c44446d33a9c116e52edae8c7a95",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
