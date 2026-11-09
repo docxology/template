@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import signal
 import subprocess
 import sys
 from pathlib import Path
@@ -234,25 +233,19 @@ child = subprocess.Popen([sys.executable,'-I','-c',root_code,child_code],
                          env=dict(os.environ,TEMPLATE_BOUNDED_RUN_IDS=token),
                          stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True)
 guardian.arm(root_pid=child.pid,run_token=token)
-print(json.dumps({'cache':str(Path(guardian.cache.name).resolve()),'root_pid':child.pid}),flush=True)
+print(json.dumps({'cache':str(Path(guardian.cache.name).resolve())}),flush=True)
 os._exit(0)
 """,
     )
     import time
 
     cache = Path(result["cache"])
-    try:
-        deadline = time.monotonic() + 10
-        while cache.exists() and time.monotonic() < deadline:
-            time.sleep(0.02)
-        assert not cache.exists(), "orphan guardian did not remove its owned bytecode scratch"
-        time.sleep(1.6)
-        assert not (tmp_path / "dead-caller-detached-leak").exists()
-    finally:
-        try:
-            os.kill(result["root_pid"], signal.SIGKILL)
-        except ProcessLookupError:
-            pass
+    deadline = time.monotonic() + 10
+    while cache.exists() and time.monotonic() < deadline:
+        time.sleep(0.02)
+    assert not cache.exists(), "orphan guardian did not remove its owned bytecode scratch"
+    time.sleep(1.6)
+    assert not (tmp_path / "dead-caller-detached-leak").exists()
 
 
 def test_expired_deadline_refuses_startup_without_creating_guardian_scratch(tmp_path: Path) -> None:
