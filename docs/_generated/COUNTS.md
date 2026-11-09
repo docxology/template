@@ -137,7 +137,7 @@ Result: **1831** project-scope infrastructure tests collected and **1359** publi
 | `template_formal` | 380 | 90.30 % |
 | `template_gold_refinement` | 337 | 92.81 % |
 | `template_literature_meta_analysis` | 1261 | 95.48 % |
-| `template_madlib` | 198 | 98.95 % |
+| `template_madlib` | 198 | 99.11 % |
 | `template_methods_paper` | 94 | 98.21 % |
 | `template_newspaper` | 156 | 99.08 % |
 | `template_pitch_deck` | 162 | 96.43 % |
