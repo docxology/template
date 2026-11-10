@@ -272,7 +272,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-10T10:20:33Z",
+  "timestamp": "2026-11-10T17:21:55Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
