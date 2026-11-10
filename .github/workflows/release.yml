@@ -263,20 +263,29 @@ jobs:
             --verify --repo-root "$RELEASE_ROOT" --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" \
             --installed-receipt "$INSTALLED_RECEIPT"
 
-      - name: Create GitHub Release
+      - name: Create a new GitHub Release only
         id: publish
-        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
-        with:
-          tag_name: ${{ steps.tag.outputs.name }}
-          name: "Research Project Template ${{ steps.tag.outputs.name }}"
-          body_path: ${{ steps.changelog.outputs.file }}
-          draft: false
-          prerelease: ${{ contains(steps.tag.outputs.name, '-rc') || contains(steps.tag.outputs.name, '-beta') || contains(steps.tag.outputs.name, '-alpha') }}
-          # Omit generate_release_notes — avoids duplicating narrative vs body_path excerpt.
-          generate_release_notes: false
-          files: |
-            ${{ steps.release_inputs.outputs.root }}/dist/*
-            ${{ steps.release_inputs.outputs.root }}/docs/releases/template-${{ steps.tag.outputs.name }}-overview.png
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.name }}
+          SOURCE_COMMIT: ${{ steps.tag_checkout.outputs.source_commit }}
+          RELEASE_NOTES: ${{ steps.changelog.outputs.file }}
+          RELEASE_ROOT: ${{ steps.release_inputs.outputs.root }}
+        run: |
+          set -euo pipefail
+          # Refuse existing releases, including drafts, rather than updating them.
+          gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            | jq -se 'all(.[][]; .tag_name != env.TAG)'
+          prerelease_args=()
+          case "$TAG" in
+            *-rc*|*-beta*|*-alpha*) prerelease_args=(--prerelease) ;;
+          esac
+          # --verify-tag forbids implicit tag creation; no edit or upload --clobber.
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
+            --target "$SOURCE_COMMIT" --title "Research Project Template $TAG" \
+            --notes-file "$RELEASE_NOTES" "${prerelease_args[@]}" \
+            "$RELEASE_ROOT"/dist/* \
+            "$RELEASE_ROOT/docs/releases/template-$TAG-overview.png"
 
       - name: Verify retrieved release assets
         id: retrieved_assets

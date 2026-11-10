@@ -208,13 +208,13 @@ For root 4+, the release body uses `docs/releases/<tag>.md` for its actual tag
 (see the [release-note index](../../docs/releases/README.md)) and appends
 the accepted commit, hosted run and receipt SHA256. Assets are the admitted
 installed wheel, exact final source distribution, tag-selected overview PNG and
-byte manifest; retrieved asset hashes must match. Earlier major tags retain the
-git-log excerpt. The workflow uses
-`softprops/action-gh-release@v3.0.3` with `generate_release_notes: false`.
+byte manifest; retrieved asset hashes must match. Publication creates a new
+release with authored notes, not automatic notes or an upsert: existing releases,
+including drafts, are refused before `gh release create --verify-tag`.
 Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
-The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
-[release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
+The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) uses the Node 24 JavaScript action runtime.
+Release publication uses the GitHub CLI rather than a JavaScript release action.
 The JavaScript action runtime is independent of the Node 24 document toolchain selected by
 [`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
 GitHub-hosted runners satisfy the documented runtime requirement; self-hosted

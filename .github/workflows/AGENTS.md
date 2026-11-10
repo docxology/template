@@ -330,7 +330,7 @@ Triggers only on `workflow_dispatch` with an explicit existing tag. Dispatches s
 5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
 7. Selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings
-8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
+8. Refuses existing releases, including drafts, then uses `gh release create --verify-tag` with authored notes and the admitted distributions, tag-selected overview PNG and byte manifest; no release upsert, asset replacement or implicit tag creation
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 
 The candidate [`platform-required-acceptance.yml`](platform-required-acceptance.yml)
@@ -340,8 +340,8 @@ exact-source bundle can supply the root 4+ handoff. Implementation presence or
 a dated version heading is not proof of successful acceptance, integration into
 `main`, or publication. Ordinary CI and partial/static results cannot replace it.
 
-The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
-[release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
+The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) uses the Node 24 JavaScript action runtime.
+Release publication uses the GitHub CLI rather than a JavaScript release action.
 The JavaScript action runtime is independent of the Node 24 document toolchain selected by
 [`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
 GitHub-hosted runners satisfy the documented runtime requirement; self-hosted

@@ -189,8 +189,9 @@ and uploads only a passed complete exact-source bundle. Ordinary CI artifacts
 cannot authorize publication. Release metadata and notes must be frozen before
 that acceptance run; preparing those files does not establish publication.
 
-The workflow uses `softprops/action-gh-release@v3.0.3`, with generated notes off,
-and reads the exact `docs/releases/<tag>.md` file. It adds accepted-commit,
+The workflow refuses existing releases, including drafts, and uses
+`gh release create --verify-tag` with authored `docs/releases/<tag>.md` notes,
+not automatic notes or asset replacement. It adds accepted-commit,
 hosted-run, artifact, and receipt-hash bindings, publishes the admitted wheel,
 source distribution, overview PNG, and byte manifest, then verifies downloaded
 asset hashes. Publication and downloaded-byte verification have separate outcomes.

@@ -15,6 +15,11 @@ preserving exemplar own versions; third-party dependency changes are qualified
 separately. The release ceremony requires exact-source acceptance,
 matching tag identity and authenticated publication.
 
+- Make SDK GitHub publication create-only: refuse existing releases, including
+  drafts, and require the verified existing tag without release upserts or
+  asset replacement. Preserve original acceptance, exact admitted assets and
+  retrieved-byte verification.
+
 - Derive each guardian package identity from its same fresh verified Source
   census, removing an immediate duplicate tree walk while preserving separate
   parent-startup/child-READY/child-DONE observations and all custody checks.
