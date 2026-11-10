@@ -11,15 +11,19 @@ from __future__ import annotations
 import base64
 import hashlib
 import io
+import json
 import os
 import re
 import stat
 import sys
 import time
 import zipfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from types import MappingProxyType
 from typing import Any
+from weakref import ref
 
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
@@ -36,6 +40,7 @@ from infrastructure.project._hosted_protocol import (
     collect_artifact_pages,
 )
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
+from infrastructure.project.public_root_case_contract import _artifact
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
 SCHEMA = "template-public-hosted-origin-v2"
@@ -66,6 +71,53 @@ class HostedOriginIdentity:
     repository: str
     run_id: int
     artifact_id: int
+
+
+class HostedRootAuthorization:
+    """Authorize portable Root closures within one physical snapshot's lifetime."""
+
+    def __init__(self, reader: SnapshotReader) -> None:
+        self._reader = ref(reader)
+        self._origins: dict[str, HostedOriginIdentity] = {}
+        self.observed: Mapping[str, HostedOriginIdentity] = MappingProxyType(self._origins)
+
+    def authorize(self, reader: SnapshotReader, bindings: list[dict[str, str]]) -> HostedOriginIdentity:
+        """Recheck held bytes on a hit and verify the complete original closure on a miss."""
+        if self._reader() is not reader:
+            raise ValueError("hosted authorization requires its original snapshot reader")
+        context = reader.hosted_origin
+        if not isinstance(context, HostedReadbackContext):
+            raise ValueError("portable Root needs authenticated external hosted handoff context")
+        _artifact(reader, context.manifest_binding)
+        if not reader.unchanged():
+            raise ValueError("portable original closure changed before hosted authentication")
+        key = hashlib.sha256(
+            json.dumps(
+                {
+                    "bindings": bindings,
+                    "manifest": context.manifest_binding,
+                    "repository": context.repository,
+                    "run_id": context.run_id,
+                    "head_sha": context.head_sha,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+        ).hexdigest()
+        origin = self._origins.get(key)
+        if origin is None:
+            origin = authorize_root_evidence(
+                reader,
+                bindings,
+                manifest_binding=context.manifest_binding,
+                repository=context.repository,
+                run_id=context.run_id,
+                head_sha=context.head_sha,
+            )
+            if not reader.unchanged():
+                raise ValueError("portable hosted origin changed during original archive authentication")
+            self._origins[key] = origin
+        return origin
 
 
 def _metadata(

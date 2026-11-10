@@ -12,8 +12,6 @@ from pathlib import Path
 from typing import Any
 import re
 import sys
-import hashlib
-import json
 
 from infrastructure.core.implementation_custody import (
     capture_implementation_custody,
@@ -29,7 +27,6 @@ from infrastructure.project.public_root_case_contract import (
     _fresh_prefix,
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
-from infrastructure.project.public_hosted_origin import HostedReadbackContext
 
 SCHEMA = "template-root-portable-observation-v1"
 
@@ -178,7 +175,6 @@ def _verify_portable_implementation(reader: SnapshotReader, original_files: dict
 
 def read_portable_runtime(reader: SnapshotReader, proof_binding: object, bundle_binding: object) -> dict[str, Any]:
     """Verify trusted hosted origin, then independently reconstruct original evidence."""
-    from infrastructure.project.public_hosted_origin import authorize_root_evidence
     from infrastructure.project.public_root_runtime_readback import read_runtime_cohort
 
     proof = _json(_artifact(reader, proof_binding))
@@ -193,39 +189,7 @@ def read_portable_runtime(reader: SnapshotReader, proof_binding: object, bundle_
     if not isinstance(proof_binding, dict) or not isinstance(bundle_binding, dict):
         raise ValueError("portable Root requires exact original bound observations")
     bindings = evidence_bindings(reader, [proof_binding, bundle_binding])
-    expected = reader.hosted_origin
-    if not isinstance(expected, HostedReadbackContext):
-        raise ValueError("portable Root needs authenticated external hosted handoff context")
-    # Hold the manifest even on cache hits; a context cannot point at absent or changed bytes.
-    _artifact(reader, expected.manifest_binding)
-    if not reader.unchanged():
-        raise ValueError("portable original closure changed before hosted authentication")
-    authorization_key = hashlib.sha256(
-        json.dumps(
-            {
-                "bindings": bindings,
-                "manifest": expected.manifest_binding,
-                "repository": expected.repository,
-                "run_id": expected.run_id,
-                "head_sha": expected.head_sha,
-            },
-            sort_keys=True,
-            separators=(",", ":"),
-        ).encode()
-    ).hexdigest()
-    origin = reader.hosted_origin_authorizations.get(authorization_key)
-    if origin is None:
-        origin = authorize_root_evidence(
-            reader,
-            bindings,
-            manifest_binding=expected.manifest_binding,
-            repository=expected.repository,
-            run_id=expected.run_id,
-            head_sha=expected.head_sha,
-        )
-        if not reader.unchanged():
-            raise ValueError("portable hosted origin changed during original archive authentication")
-        reader.hosted_origin_authorizations[authorization_key] = origin
+    origin = reader.hosted_root_authorization.authorize(reader, bindings)
     raw = proof["before"]
     names = {
         "root",

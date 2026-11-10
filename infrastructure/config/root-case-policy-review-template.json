@@ -13602,8 +13602,8 @@
         },
         {
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 85,
-          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
+          "line": 86,
+          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
         }
       ]
     },
@@ -24169,13 +24169,13 @@
         },
         {
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 85,
-          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
+          "line": 86,
+          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
         },
         {
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 99,
-          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
+          "line": 100,
+          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
         }
       ]
     },
@@ -29579,13 +29579,13 @@
         },
         {
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 85,
-          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
+          "line": 86,
+          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
         },
         {
           "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 99,
-          "source_sha256": "c2b349d8cb1e8dd0a720426414a4ce69d6bbc4cf357a2c82ab13349245a054a0"
+          "line": 100,
+          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
         }
       ]
     },
