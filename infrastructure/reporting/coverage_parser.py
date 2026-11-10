@@ -18,6 +18,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.config.queries import get_testing_config
 
 from .coverage_json_parser import read_coverage_total
+from .pytest_output_parser import parse_console_coverage
 
 
 class FailedTestInfo(TypedDict, total=False):
@@ -264,17 +265,10 @@ def extract_coverage_percentage(stdout_text: str, coverage_json_paths: list[Path
         logger.info(f"✓ Found coverage: {percent:.1f}%")
         return True, percent
 
-    from .pytest_output_parser import _strip_ansi
-
-    clean_text = _strip_ansi(stdout_text)
-    match = re.search(r"(?im)^[ \t]*TOTAL[ \t]+(?:\d+[ \t]+){2,4}(\d+(?:\.\d+)?)%(?=[ \t\r]|$)", clean_text)
-    if not match:
-        match = re.search(r"(?im)(?:^[ \t]*coverage:|\btotal[ \t]+coverage:)[ \t]*(\d+(?:\.\d+)?)%", clean_text)
-    if match:
-        percent = float(match.group(1))
-        if 0 <= percent <= 100:
-            logger.info(f"✓ Found coverage from console: {percent:.1f}%")
-            return True, percent
+    percent = parse_console_coverage(stdout_text)
+    if percent is not None:
+        logger.info(f"✓ Found coverage from console: {percent:.1f}%")
+        return True, percent
     return False, None
 
 

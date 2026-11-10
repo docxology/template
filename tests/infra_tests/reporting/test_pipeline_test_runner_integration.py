@@ -108,6 +108,10 @@ def test_run_infrastructure_tests_pipeline_smoke_real_subprocess(tmp_path: Path)
     (tmp_path / "projects").mkdir()
     _write_minimal_project(tmp_path, "demo")
     _seed_pipeline_smoke_paths(tmp_path)
+    (tmp_path / "tests/infra_tests/conftest.py").write_text(
+        "def pytest_sessionstart(session):\n    print('worker used 97.25% memory', flush=True)\n",
+        encoding="utf-8",
+    )
     exit_code, results = run_infrastructure_tests(
         tmp_path,
         project_name="demo",
@@ -115,8 +119,9 @@ def test_run_infrastructure_tests_pipeline_smoke_real_subprocess(tmp_path: Path)
         scope="pipeline-smoke",
         strict=True,
     )
-    assert exit_code == 0
-    assert results.get("failed", 0) == 0
+    assert exit_code == results["original_exit_code"] == 0
+    assert results["passed"] > 0 and results["failed"] == 0
+    assert "coverage_percent" not in results
 
 
 @pytest.mark.timeout(120)

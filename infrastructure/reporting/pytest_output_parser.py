@@ -16,6 +16,19 @@ def _strip_ansi(text: str) -> str:
     return _ANSI_ESCAPE_RE.sub("", text)
 
 
+def parse_console_coverage(stdout: str) -> float | None:
+    """Read a recognized pytest coverage total from stdout."""
+    clean_text = _strip_ansi(stdout)
+    match = re.search(r"(?im)^[ \t]*TOTAL[ \t]+(?:\d+[ \t]+){2,4}(\d+(?:\.\d+)?)%(?=[ \t\r]|$)", clean_text)
+    if not match:
+        match = re.search(r"(?im)(?:^[ \t]*coverage:|\btotal[ \t]+coverage:)[ \t]*(\d+(?:\.\d+)?)%", clean_text)
+    if match:
+        percent = float(match.group(1))
+        if 0 <= percent <= 100:
+            return percent
+    return None
+
+
 def pytest_failure_diagnostic(stdout: str, stderr: str) -> str:
     """Retain at most 20 captured lines and 8192 characters from a failed child."""
     return "".join((stdout + "\n" + stderr).splitlines(keepends=True)[-20:])[-8192:].strip()
@@ -130,15 +143,8 @@ def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, A
     # Count warnings
     results["warnings"] = stdout.count(" warning") + stderr.count(" warning")
 
-    # Parse coverage if present (works in both verbose and quiet modes)
-    # Look for TOTAL line first, then fall back to any percentage
-    total_match = re.search(r"TOTAL\s+.*?\s+(\d+\.\d+)%", stdout)
-    if total_match:
-        results["coverage_percent"] = float(total_match.group(1))
-    else:
-        # Fallback to any percentage (for smaller test runs)
-        coverage_match = re.search(r"(\d+\.\d+)%", stdout)
-        if coverage_match:
-            results["coverage_percent"] = float(coverage_match.group(1))
+    coverage = parse_console_coverage(stdout)
+    if coverage is not None:
+        results["coverage_percent"] = coverage
 
     return results
