@@ -150,9 +150,11 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: required-source-root-${{ runner.os }}-${{ matrix.python }}
+          # Anchor ZIP paths at readiness, then include only this cell's original.
           path: |
             ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/
-            !${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/auxiliary-darwin/**
+            !${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/**
+            ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/root-${{ matrix.host }}-${{ matrix.python }}/
           if-no-files-found: error
           retention-days: 1
       - name: Retain original designated macOS auxiliary audit

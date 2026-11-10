@@ -15,7 +15,11 @@ import sys
 import hashlib
 import json
 
-from infrastructure.core.implementation_custody import capture_implementation_custody, source_file_digest
+from infrastructure.core.implementation_custody import (
+    capture_implementation_custody,
+    source_file_digest,
+    source_file_manifest,
+)
 from infrastructure.project.public_acceptance_evidence import bootstrap_command, runtime_identity
 from infrastructure.project.public_root_case_contract import (
     _artifact,
@@ -149,6 +153,29 @@ def evidence_bindings(reader: SnapshotReader, roots: list[dict[str, str]]) -> li
     return [{"path": path, "sha256": digest} for path, digest in sorted(found.items())]
 
 
+def _verify_portable_implementation(reader: SnapshotReader, original_files: dict[str, str]) -> None:
+    """Match the authored Root inventory and the actual installed SDK independently."""
+    current = capture_implementation_custody()
+    authored = current["files"]
+    if current["binding_kind"] == "installed-distribution":
+        package = {
+            f"infrastructure/{path}": digest
+            for path, digest in source_file_manifest(
+                reader.root / "infrastructure", frozenset({".py"}), deadline=reader.operation_deadline
+            ).items()
+        }
+        if package != current["files"]:
+            raise ValueError("portable installed SDK inventory differs from the current authored Root")
+        scripts = source_file_manifest(reader.root / "scripts", frozenset({".py"}), deadline=reader.operation_deadline)
+        authored = {
+            **package,
+            **{f"scripts/{path}": digest for path, digest in scripts.items()},
+            **{name: reader.read(name).sha256 for name in ("pyproject.toml", "uv.lock", ".python-version")},
+        }
+    if original_files != authored:
+        raise ValueError("portable implementation inventory differs from current exact authored source")
+
+
 def read_portable_runtime(reader: SnapshotReader, proof_binding: object, bundle_binding: object) -> dict[str, Any]:
     """Verify trusted hosted origin, then independently reconstruct original evidence."""
     from infrastructure.project.public_hosted_origin import authorize_root_evidence
@@ -240,9 +267,7 @@ def read_portable_runtime(reader: SnapshotReader, proof_binding: object, bundle_
         or not isinstance(implementation.get("files"), dict)
     ):
         raise ValueError("portable Root requires original audited checkout implementation")
-    current_implementation = capture_implementation_custody()
-    if implementation["files"] != current_implementation["files"]:
-        raise ValueError("portable implementation inventory differs from current exact loaded SDK source")
+    _verify_portable_implementation(reader, implementation["files"])
     if not isinstance(raw["provider_files"], dict) or any(
         not isinstance(key, str) or not isinstance(value, str) or re.fullmatch("[0-9a-f]{64}", value) is None
         for key, value in raw["provider_files"].items()
