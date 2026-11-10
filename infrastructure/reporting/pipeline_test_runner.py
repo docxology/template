@@ -98,6 +98,7 @@ def _build_infrastructure_suite_config(
         streaming_subprocess=True,
         coverage_cleanup_scope_dir=None,
         coverage_cleanup_recursive=False,
+        coverage_enabled=scope == "full",
     )
 
 
@@ -243,9 +244,9 @@ def run_infrastructure_tests(
             TestSuiteResults, {"exit_code": exc.exit_code, "original_exit_code": exc.original_exit_code}
         )
 
-    # Admission and command construction precede mutation of existing evidence.
-    # Root-only cleanup preserves concurrently running lifecycle projects.
-    clean_coverage_files(repo_root, recursive=False)
+    # Full coverage owns Root-only cleanup after command admission.
+    if full_scope:
+        clean_coverage_files(repo_root, recursive=False)
 
     if discovery_preflight_enabled(env=env):
         log_discovered_tests(
@@ -667,7 +668,7 @@ def execute_test_pipeline(
             project_results,
             repo_root,
             include_coverage_details=not project_blocked,
-            include_infrastructure_coverage=run_infra,
+            include_infrastructure_coverage=run_infra and infra_scope == "full",
             project_root=resolve_project_root(repo_root, project_name),
         )
         output_dir = project_test_report_directory(resolve_project_root(repo_root, project_name))
