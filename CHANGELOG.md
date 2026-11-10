@@ -11,7 +11,10 @@ are excluded.
 
 See the [5.2.0 candidate notes](docs/releases/v5.2.0.md). This minor preparation
 coordinates the Root SDK and all 25 canonical exemplar compatibility bindings
-with preserved own versions, provider declarations and third-party locks.
+with preserved own versions and provider declarations. Exemplar-owned dependency
+locks retain their project-specific pins; the reviewed refresh records the
+changed tzdata and Active Inference JAX/jaxlib entries in the owning project
+locks.
 
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.

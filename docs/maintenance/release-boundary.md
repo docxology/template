@@ -2,8 +2,10 @@
 
 The root package metadata declares the **5.2.0** candidate. This explicit minor
 preparation coordinates the Root SDK and all 25 canonical exemplar compatibility
-bindings while preserving exemplar own versions, published identifiers, provider
-declarations and third-party locks. The [5.2.0 notes](../releases/v5.2.0.md) describe
+bindings while preserving exemplar own versions, published identifiers and
+provider declarations. Dependency locks remain project-owned; the reviewed
+refresh records the changed tzdata and Active Inference JAX/jaxlib entries in
+those project locks. The [5.2.0 notes](../releases/v5.2.0.md) describe
 its Source behavior and pending qualification. The
 [5.1.0 notes](../releases/v5.1.0.md) describe the preceding candidate.
 
