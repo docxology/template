@@ -60,10 +60,22 @@ def test_transport_cell_must_be_one_bare_declared_public_exemplar(kind: str, cel
 def test_checked_in_shard_uploads_match_source_transport_limit() -> None:
     action_path = Path(__file__).resolve().parents[3] / ".github/actions/upload-readiness-shards/action.yml"
     steps = yaml.safe_load(action_path.read_bytes())["runs"]["steps"]
-    primary = steps[1]
-    assert primary["name"] == "Upload exact primary index"
+    plan, primary = steps[:2]
+    assert plan["id"] == "plan"
     upload_action = primary["uses"]
     assert re.fullmatch(r"actions/upload-artifact@[0-9a-f]{40}", upload_action)
+    assert type(primary["with"]["compression-level"]) is int
+    assert primary == {
+        "name": "Upload exact primary index",
+        "uses": upload_action,
+        "with": {
+            "name": "${{ steps.plan.outputs.primary_name }}",
+            "path": "${{ inputs.directory }}/index/${{ steps.plan.outputs.index_filename }}",
+            "if-no-files-found": "error",
+            "retention-days": "${{ inputs.retention-days }}",
+            "compression-level": 0,
+        },
+    }
     assert len(steps[2:]) == MAX_SHARDS
     for index, step in enumerate(steps[2:]):
         ordinal = f"{index:04d}"
