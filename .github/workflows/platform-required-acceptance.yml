@@ -767,7 +767,7 @@ jobs:
           retention-days: 30
 
   complete:
-    needs: [root-original, common-original, auxiliary-original, native-plan, native-original-cell]
+    needs: [root-original, common-original, auxiliary-original, native-original, native-plan, native-original-cell]
     if: always() && !cancelled()
     runs-on: ubuntu-24.04
     timeout-minutes: 300

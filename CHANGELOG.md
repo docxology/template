@@ -19,6 +19,11 @@ matching tag identity and authenticated publication.
   drafts, and require the verified existing tag without release upserts or
   asset replacement. Preserve original acceptance, exact admitted assets and
   retrieved-byte verification.
+- Require the complete original hosted acceptance triple in GitHub publication;
+  remove the unsupported composed-only workflow input while retaining
+  standalone composed-evidence validation.
+- Wait for the selected original native acceptance producer before final
+  collection, preserving both lanes, the complete-roster guards and clocks.
 
 - Match hardcoded test totals as integer tokens, not components of dotted
   versions or decimals. Keep real totals blocking strict documentation drift
@@ -37,6 +42,9 @@ matching tag identity and authenticated publication.
   explicitly bind real Git-dependent tracked/untracked documentation checks.
   Refresh complete family/member/fixture bindings for the three real
   crash-recovery cleanup callers after fresh Linux/macOS census collection.
+  Install the lossless authored literal policy after all four complete original
+  plans and the canonical encoding roundtrip agree; runtime acceptance remains
+  separate.
 
 - Replace retained numeric-PID fallback cleanup in crash-recovery tests with
   inherited fixture-owned run identities and live owned Popen cleanup. Keep
