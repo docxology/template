@@ -310,7 +310,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-09T08:35:41Z",
+  "timestamp": "2026-11-09T23:46:58Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -380,7 +380,7 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "8fa024e98016072aa78a59c4bc1113ce3ffc24d18f52bbb84b0395199d86a1f7"
+        "sha256": "c5b9612816390b8f07885785271b17506f29f76a54ab19af4692ab7096c3e24c"
       },
       "output": {
         "file_count": 60,
@@ -392,7 +392,7 @@
       },
       "stage": {
         "file_count": 1747,
-        "sha256": "e696e0eadfe36f305baf62adc70a9a317f1f1d4ac18edb6aad62f35f6edb6657"
+        "sha256": "66d9a1615678fa7a3ffde3f70a2a16d59dda0f2c7e1bda6cf3f995ef44e403a8"
       }
     },
     "project": "templates/template_pools_rules_tools",
