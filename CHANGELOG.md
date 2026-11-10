@@ -32,6 +32,10 @@ matching tag identity and authenticated publication.
   Keep existing deadlines and fail-closed resume; document bound checkpoint
   eligibility, retained progress and deliberate separate fresh execution.
 
+- Requalify complete Root case-policy review inputs against every supported
+  native target before policy authorship. Preserve declared obligations and
+  explicitly bind real Git-dependent tracked/untracked documentation checks.
+
 - Derive each guardian package identity from its same fresh verified Source
   census, removing an immediate duplicate tree walk while preserving separate
   parent-startup/child-READY/child-DONE observations and all custody checks.

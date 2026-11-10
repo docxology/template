@@ -11032,7 +11032,7 @@
     },
     {
       "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-      "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
+      "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
       "families": [
         "tests/infra_tests/orchestration/test_pipeline_runner.py::test_child_exit_two_cannot_report_complete",
         "tests/infra_tests/orchestration/test_pipeline_runner.py::test_cli_all_project_incremental_refuses_before_project_execution",
@@ -11047,7 +11047,7 @@
         "tests/infra_tests/orchestration/test_pipeline_runner.py::test_runner_rejects_traversal_before_creating_logs",
         "tests/infra_tests/orchestration/test_pipeline_runner.py::test_skip_infra_uses_selected_expected_set"
       ],
-      "family_observations_sha256": "68dc6e5628a0cc3567e7e308048e044146fae02d50f4c66bd0c5f3c2a0822b77",
+      "family_observations_sha256": "3a8e4f2077359466aaf54bd51b2e11cfa2a580dcb50c48ba4f89e0cd4ed88be0",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -11056,68 +11056,48 @@
       "evidence": [
         {
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 44
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 15
         },
         {
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 154
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 135
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
           "line": 18
         },
         {
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 28
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 44
         },
         {
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 67
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 61
         },
         {
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 51
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 89
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 58
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 74
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 81
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
-          "line": 36
-        },
-        {
-          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
-          "source_sha256": "208dd22a1796d7b9ee619d99754f7566fa5f2770041855613239166201df9dfd",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
           "line": 96
+        },
+        {
+          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 100
+        },
+        {
+          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 121
+        },
+        {
+          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 152
+        },
+        {
+          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 172
         },
         {
           "path": "tests/infra_tests/orchestration/_pipeline_fixture.py",
@@ -17279,7 +17259,7 @@
     },
     {
       "path": "tests/infra_tests/publishing/test_release_acceptance.py",
-      "source_sha256": "9d5c0712f2e347a481423b235901f596868a0f94f2db7a792c08a02047b73183",
+      "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
       "families": [
         "tests/infra_tests/publishing/test_release_acceptance.py::test_admitted_archive_preserves_exact_public_evidence_bytes",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_api_archive_digest_and_size_refuse_before_extraction",
@@ -17293,15 +17273,13 @@
         "tests/infra_tests/publishing/test_release_acceptance.py::test_linked_archive_members_and_existing_evidence_refuse",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_noncanonical_ids_refuse_endpoint_construction",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_platform_five_root_accepts_the_explicit_handoff",
-        "tests/infra_tests/publishing/test_release_acceptance.py::test_release_workflow_passes_external_api_context_to_candidate",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_unsafe_archive_members_refuse_before_any_write",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_unsupported_root_contract_cannot_waive_handoff",
-        "tests/infra_tests/publishing/test_release_acceptance.py::test_workflow_cannot_create_root_4_release_before_required_acceptance",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_wrong_or_expired_artifact_refuses",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_wrong_or_unsuccessful_run_refuses",
         "tests/infra_tests/publishing/test_release_acceptance.py::test_wrong_receipt_hash_revision_and_actual_checkout_refuse"
       ],
-      "family_observations_sha256": "215c9c5301aac1abaec1cd56a0b1389851eccdfbbd5e054e7ee231348494c0ee",
+      "family_observations_sha256": "dda3f675114aa6586686cbbed4c205d6934334235f983cb90070f5cc2d79b97a",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -17360,8 +17338,83 @@
       "evidence": [
         {
           "path": "tests/infra_tests/publishing/test_release_acceptance.py",
-          "source_sha256": "9d5c0712f2e347a481423b235901f596868a0f94f2db7a792c08a02047b73183",
-          "line": 95
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 1
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 29
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 39
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 68
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 94
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 100
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 109
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 117
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 191
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 229
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 245
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 282
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 310
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 326
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 333
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_release_acceptance.py",
+          "source_sha256": "4d9be32eeefb985b0de203af3ec00e2ae8ed3970bc2406b917ea9a20d8ed1c2e",
+          "line": 340
         }
       ]
     },
@@ -17577,35 +17630,6 @@
       ]
     },
     {
-      "path": "tests/infra_tests/publishing/test_release_workflow_shapes.py",
-      "source_sha256": "04ca360b72e06c233ddbfad6503f500f8e2cf9c72b84f8c0cdc86f076e62d466",
-      "families": [
-        "tests/infra_tests/publishing/test_release_workflow_shapes.py::test_handoff_step_passes_both_shapes_to_one_admission",
-        "tests/infra_tests/publishing/test_release_workflow_shapes.py::test_handoff_step_runs_before_publication",
-        "tests/infra_tests/publishing/test_release_workflow_shapes.py::test_no_input_can_skip_acceptance",
-        "tests/infra_tests/publishing/test_release_workflow_shapes.py::test_publish_step_still_succeeds_only_after_the_gate",
-        "tests/infra_tests/publishing/test_release_workflow_shapes.py::test_workflow_declares_both_evidence_shapes"
-      ],
-      "family_observations_sha256": "9c89a7dc444ea5af5b28cb3729bbf0077c0697cc1e795b1a28ccf1533cd2254c",
-      "decision": {
-        "lane": "core",
-        "obligations": []
-      },
-      "exceptions": [],
-      "evidence": [
-        {
-          "path": "tests/infra_tests/publishing/test_release_workflow_shapes.py",
-          "source_sha256": "04ca360b72e06c233ddbfad6503f500f8e2cf9c72b84f8c0cdc86f076e62d466",
-          "line": 1
-        },
-        {
-          "path": "tests/infra_tests/publishing/test_release_workflow_shapes.py",
-          "source_sha256": "04ca360b72e06c233ddbfad6503f500f8e2cf9c72b84f8c0cdc86f076e62d466",
-          "line": 18
-        }
-      ]
-    },
-    {
       "path": "tests/infra_tests/publishing/test_release_workflow_zenodo.py",
       "source_sha256": "b74c8a6f9c220898d8cd1b8ef0f8c51a3e11faf6108b1d4a763e1ed2e0c39ad5",
       "families": [
@@ -17773,25 +17797,21 @@
     },
     {
       "path": "tests/infra_tests/publishing/test_root_release_contract.py",
-      "source_sha256": "57a552a748c6e2ab0c513c6e0553cbf880e526448a917f119c40d069af51c008",
+      "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
       "families": [
         "tests/infra_tests/publishing/test_root_release_contract.py::test_cli_fails_closed_for_exemplar_shaped_tag",
-        "tests/infra_tests/publishing/test_root_release_contract.py::test_cli_reports_matching_root_version",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_current_source_versions_agree",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_intended_unreleased_version_does_not_authorize_tag",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_release_publication_inputs_require_exact_handoff",
-        "tests/infra_tests/publishing/test_root_release_contract.py::test_release_requires_handoff_and_uses_exact_reader_runtime",
-        "tests/infra_tests/publishing/test_root_release_contract.py::test_release_serializes_selected_tag_across_trigger_refs",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_retired_runtime_constant_and_arbitrary_code_are_refused",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_root_package_version_rejects_missing_project_version",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_root_release_rejects_missing_changelog_heading",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_root_release_tag_must_exactly_match_package_version",
-        "tests/infra_tests/publishing/test_root_release_contract.py::test_root_release_workflow_invokes_version_contract",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_runtime_and_package_version_drift_blocks_release",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_runtime_version_is_read_without_executing_source",
         "tests/infra_tests/publishing/test_root_release_contract.py::test_wrong_distribution_provider_is_refused"
       ],
-      "family_observations_sha256": "116022bd45390b4ca8ac75f36e1eeb66bb5bdcb609e4ac89bd66fc4828b6eba3",
+      "family_observations_sha256": "276993db0c7c38d9bebe0c59b8d5946c61a6ef6a4b858987e98ece7608c55886",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -17808,8 +17828,93 @@
       "evidence": [
         {
           "path": "tests/infra_tests/publishing/test_root_release_contract.py",
-          "source_sha256": "57a552a748c6e2ab0c513c6e0553cbf880e526448a917f119c40d069af51c008",
-          "line": 43
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 1
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 21
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 37
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 45
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 52
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 61
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 65
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 68
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 75
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 83
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 98
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 105
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 113
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 123
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 134
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 142
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 151
+        },
+        {
+          "path": "tests/infra_tests/publishing/test_root_release_contract.py",
+          "source_sha256": "327c31d7cb1312f4c02e6225fc4fae8b9bb0769a01492904a64dba4e5696c64e",
+          "line": 178
         }
       ]
     },
@@ -33035,7 +33140,7 @@
     },
     {
       "path": "tests/infra_tests/test_check_template_drift_publication.py",
-      "source_sha256": "4bdd0b0955241ef5a281b4fecc008dabc8bfc0c181366b0741ba4a8f692588da",
+      "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
       "families": [
         "tests/infra_tests/test_check_template_drift_publication.py::test_docs_hardcoded_counts_exempts_the_explicit_backlog_history_file",
         "tests/infra_tests/test_check_template_drift_publication.py::test_docs_hardcoded_counts_flags_bare_test_total",
@@ -33068,17 +33173,77 @@
         "tests/infra_tests/test_check_template_drift_publication.py::test_publishing_status_block_skips_project_without_config",
         "tests/infra_tests/test_check_template_drift_publication.py::test_publishing_status_block_skips_project_without_readme"
       ],
-      "family_observations_sha256": "0c10e6f5d2a3cc69cbe0c03a595f6e8813fa9c6f882af564f617fed1bd7f7fc0",
+      "family_observations_sha256": "169d41b6a91811bee608eba89fa99e68994ec097df394bbd4d86027f39897941",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/test_check_template_drift_publication.py::test_docs_hardcoded_counts_exempts_the_explicit_backlog_history_file",
+          "lane": "core",
+          "obligations": [
+            "git"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/test_check_template_drift_publication.py::test_docs_hardcoded_counts_ignores_untracked_dirs_in_git_repo",
+          "lane": "core",
+          "obligations": [
+            "git"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/test_check_template_drift_publication.py",
-          "source_sha256": "4bdd0b0955241ef5a281b4fecc008dabc8bfc0c181366b0741ba4a8f692588da",
-          "line": 1
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 48
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 74
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 228
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 361
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 459
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 462
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 565
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 566
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 610
+        },
+        {
+          "path": "tests/infra_tests/test_check_template_drift_publication.py",
+          "source_sha256": "4c7978028ce396720d7d2f49774f73f1aa02014e9031dc1e8a28636d0fc70361",
+          "line": 618
         }
       ]
     },
