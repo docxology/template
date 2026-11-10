@@ -19,6 +19,8 @@ from infrastructure.core.implementation_custody import (
     verify_implementation_custody,
 )
 from infrastructure.core.pipeline.multi_project import MultiProjectResult
+from infrastructure.core.pipeline.outcomes import RunResult
+from infrastructure.core.pipeline.worker_transport import stage_results_to_payload
 from infrastructure.project.project_info import ProjectInfo
 
 SCHEMA = "template-multi-project-summary/1"
@@ -34,39 +36,36 @@ def _summary_bootstrap(implementation: Path) -> str:
     )
 
 
+def _run_claim(run: RunResult) -> dict:
+    return {
+        "expected_stage_keys": run.expected_stage_keys,
+        "outcomes": [outcome.to_dict() for outcome in run.outcomes],
+    }
+
+
 def _stable(result: MultiProjectResult) -> dict:
-    """Serialize the summary request without changing either consumed shape.
-
-    The worker consumes two different shapes and the producer must emit both
-    exactly:
-
-    * **Stage rows** (``project_results[*]`` and
-      ``shared_infrastructure_result.stage_results``) carry a nested ``outcome``
-      mapping that must contain *every* ``StageOutcome`` field, because
-      ``results_from_payload`` reconstructs the type from it by field set. Here
-      ``asdict`` is required, and it is why the rule is not "never asdict".
-    * **A ``RunResult.outcomes`` list** is compared against
-      ``StageOutcome.to_dict()``, which intentionally omits an unset
-      ``condition``. Letting ``asdict`` produce it emitted ``condition: null``
-      for untyped outcomes and the worker refused the whole aggregate.
-
-    So ``asdict`` stays for the stage rows, and only the two ``outcomes`` lists
-    are rewritten through ``to_dict()`` -- the one shape whose contract is
-    ``to_dict`` rather than the dataclass field set.
-    """
-    serialized = asdict(result)
-    for name, run in result.run_results.items():
-        serialized["run_results"][name]["outcomes"] = [outcome.to_dict() for outcome in run.outcomes]
-    shared = serialized.get("shared_infrastructure_result")
-    if (
-        shared is not None
-        and isinstance(shared.get("run_result"), dict)
-        and result.shared_infrastructure_result is not None
-    ):
-        shared["run_result"]["outcomes"] = [
-            outcome.to_dict() for outcome in result.shared_infrastructure_result.run_result.outcomes
-        ]
-    return serialized
+    """Keep the aggregate request stable across in-memory result changes."""
+    shared = result.shared_infrastructure_result
+    return {
+        "project_results": {
+            name: stage_results_to_payload(rows) for name, rows in result.project_results.items()
+        },
+        "infra_test_duration": result.infra_test_duration,
+        "total_duration": result.total_duration,
+        "successful_projects": result.successful_projects,
+        "failed_projects": result.failed_projects,
+        "expected_projects": result.expected_projects,
+        "run_results": {name: _run_claim(run) for name, run in result.run_results.items()},
+        "shared_infrastructure_exit_code": result.shared_infrastructure_exit_code,
+        "shared_infrastructure_result": (
+            {
+                "stage_results": stage_results_to_payload(shared.stage_results),
+                "run_result": _run_claim(shared.run_result),
+            }
+            if shared is not None
+            else None
+        ),
+    }
 
 
 def write_summary_reports(

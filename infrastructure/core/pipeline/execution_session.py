@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import time
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from infrastructure.core.files.project_lock import project_output_lock
@@ -11,7 +12,7 @@ from infrastructure.core.pipeline.execution_custody import execution_guard_resul
 from infrastructure.core.pipeline.execution_records import write_execution_record
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.report_finalization import finalize_execution_reports
-from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -26,6 +27,35 @@ def compose_run_deadline(budget: float, supplied: float | None) -> float:
             raise ValueError("Supervising run deadline must be finite")
         deadline = min(deadline, supplied)
     return deadline
+
+
+@dataclass(frozen=True)
+class PreparedPipelineRun:
+    """Keep the immutable selected plan and original preflight deadline together."""
+
+    plan: ExecutionPlan
+    deadline: float
+
+    def expired(self) -> bool:
+        """Check the original deadline at the caller's preflight boundary."""
+        return time.monotonic() >= self.deadline
+
+
+def prepare_pipeline_run(
+    config: PipelineConfig,
+    *,
+    deadline_monotonic: float | None = None,
+    skip_clean: bool | None = None,
+    target_stage: str | None = None,
+) -> PreparedPipelineRun:
+    """Resolve the selected plan before creating runtime or log resources."""
+    from infrastructure.core.pipeline.plan import compile_execution_plan
+
+    deadline = deadline_monotonic
+    if deadline is None:
+        deadline = compose_run_deadline(config.run_timeout_seconds, None)
+    plan = compile_execution_plan(config, skip_clean=skip_clean, target_stage=target_stage)
+    return PreparedPipelineRun(plan, deadline)
 
 
 def execute_resolved_plan(
@@ -97,4 +127,9 @@ def execute_resolved_plan(
         ]
 
 
-__all__ = ["compose_run_deadline", "execute_resolved_plan"]
+__all__ = [
+    "PreparedPipelineRun",
+    "compose_run_deadline",
+    "execute_resolved_plan",
+    "prepare_pipeline_run",
+]

@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-import time
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.executor import PipelineExecutor
-from infrastructure.core.pipeline.plan import compile_execution_plan
+from infrastructure.core.pipeline.execution_session import prepare_pipeline_run
 from infrastructure.core.pipeline.types import PipelineConfig
 
 logger = get_logger(__name__)
@@ -32,12 +31,11 @@ def execute_single_stage(
             run_timeout_seconds=run_timeout_seconds,
             pipeline_path=Path(pipeline_path) if pipeline_path else None,
         )
-        deadline = time.monotonic() + config.run_timeout_seconds
-        plan = compile_execution_plan(config, skip_clean=True, target_stage=stage)
-        if time.monotonic() >= deadline:
+        prepared = prepare_pipeline_run(config, skip_clean=True, target_stage=stage)
+        if prepared.expired():
             raise TimeoutError("Stage deadline expired during plan preflight")
         executor = PipelineExecutor(config)
-        results = executor.execute_plan(plan, deadline_monotonic=deadline)
+        results = executor.execute_plan(prepared.plan, deadline_monotonic=prepared.deadline)
         return executor.run_result(results).exit_code
     except ValueError as exc:
         logger.error("Invalid stage invocation: %s", exc)

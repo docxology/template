@@ -143,6 +143,28 @@ def _generation_sequence(
     return 0
 
 
+def _run_generation_wave(
+    root: Path,
+    directory: Path,
+    sequences: list[list[tuple[str, list[str]]]],
+    environment: Mapping[str, str],
+) -> bool:
+    """Finish every admitted sequence and report the first execution error."""
+    failed = False
+    first_error: BaseException | None = None
+    for commands in sequences:
+        try:
+            code = _generation_sequence(root, directory, commands, environment=environment)
+        except BaseException as error:
+            if first_error is None:
+                first_error = error
+        else:
+            failed |= code != 0
+    if first_error is not None:
+        raise first_error
+    return failed
+
+
 def _require_single_worker(jobs: int) -> None:
     """Keep peer producers outside the shared execution-account census."""
     if type(jobs) is not int or jobs != 1:
@@ -174,21 +196,13 @@ def _generate(root: Path, directory: Path, jobs: int) -> tuple[int, dict[str, st
     }
     waves = provider_waves(plan["providers"])
     for wave in waves:
-        with ThreadPoolExecutor(max_workers=jobs) as pool:
-            futures = [
-                pool.submit(
-                    _generation_sequence,
-                    root,
-                    directory,
-                    generation_commands(root, plan, [scope]),
-                    environment=environment,
-                )
-                for scope in wave
-                if scope != "root"
-            ]
-            codes = [future.result() for future in futures]
-        if any(codes):
-            return 1, environment
+        sequences = [generation_commands(root, plan, [scope]) for scope in wave if scope != "root"]
+        if sequences:
+            # The producer owns its child deadline even when the caller is interrupted.
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                failed = pool.submit(_run_generation_wave, root, directory, sequences, environment).result()
+            if failed:
+                return 1, environment
         check_footprint(root, plan)
     write_json(
         directory / "generated.json",

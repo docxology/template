@@ -57,6 +57,14 @@ class ProcessingContext:
     source_file_size: int
 
 
+@dataclass(frozen=True)
+class _KmythArtifact:
+    """A requested sealing role and its admitted publication destination."""
+
+    role: str
+    destination: Path | None
+
+
 class SteganographyProcessor:
     """Orchestrates steganographic PDF post-processing.
 
@@ -124,11 +132,14 @@ class SteganographyProcessor:
 
         manifest_path = hash_manifest_path(input_pdf) if config.hashing_enabled and config.manifest_enabled else None
         destinations = [output_pdf, *([manifest_path] if manifest_path is not None else [])]
+        seal_artifacts: list[_KmythArtifact] = []
         if config.kmyth_enabled:
-            for artifact in config.kmyth_seal_artifacts:
-                target = output_pdf if artifact == "pdf" else manifest_path
-                if target is not None:
-                    destinations.append(target.with_name(target.name + config.kmyth_output_suffix))
+            for role in config.kmyth_seal_artifacts:
+                target = output_pdf if role == "pdf" else manifest_path
+                sealed = target.with_name(target.name + config.kmyth_output_suffix) if target is not None else None
+                seal_artifacts.append(_KmythArtifact(role, sealed))
+                if sealed is not None:
+                    destinations.append(sealed)
         validate_destinations(input_pdf, destinations)
         expected_pdf = None
         if self.protect_output:
@@ -143,16 +154,15 @@ class SteganographyProcessor:
 
         if config.kmyth_enabled and not config.kmyth_overwrite:
             selected = []
-            for artifact in config.kmyth_seal_artifacts:
-                target = output_pdf if artifact == "pdf" else manifest_path
-                sealed = target.with_name(target.name + config.kmyth_output_suffix) if target is not None else None
+            for artifact in seal_artifacts:
+                sealed = artifact.destination
                 if sealed is not None and sealed.exists():
                     if config.kmyth_required:
                         raise FileExistsError(sealed)
                     logger.warning("Kmyth sidecar already exists; preserving %s", sealed.name)
                 else:
                     selected.append(artifact)
-            config.kmyth_seal_artifacts = selected
+            seal_artifacts = selected
 
         logger.info("Steganography processing %s → %s", input_pdf.name, output_pdf.name)
         with tempfile.TemporaryDirectory(prefix=".steganography-", dir=output_pdf.parent) as temporary:
@@ -201,16 +211,10 @@ class SteganographyProcessor:
                 artifacts[manifest_path] = staged_manifest
             sealed_destinations: set[Path] = set()
             if config.kmyth_enabled:
-                for sealed in self._step_kmyth(working_pdf, staged_manifest, config):
-                    original = (
-                        working_pdf if sealed.name == working_pdf.name + config.kmyth_output_suffix else staged_manifest
-                    )
-                    if original is None:
-                        raise ValueError("Kmyth returned an unselected artifact")
-                    destination = output_pdf if original == working_pdf else manifest_path
-                    if destination is None:
+                for artifact, sealed in self._seal_kmyth_artifacts(working_pdf, staged_manifest, config, seal_artifacts):
+                    target = artifact.destination
+                    if target is None:
                         raise ValueError("Kmyth returned an artifact without a destination")
-                    target = destination.with_name(destination.name + config.kmyth_output_suffix)
                     artifacts[target] = sealed
                     sealed_destinations.add(target)
             ownership = (
@@ -457,7 +461,19 @@ class SteganographyProcessor:
     def _step_kmyth(
         self, output_pdf: Path, manifest_path: Path | None, config: SteganographyConfig | None = None
     ) -> list[Path]:
-        """Seal configured artifacts with Kmyth when explicitly enabled."""
+        """Seal the selected files and return the sidecar paths in configuration order."""
+        config = config or SteganographyConfig.from_dict(asdict(self.config))
+        selection = [_KmythArtifact(role, None) for role in config.kmyth_seal_artifacts]
+        return [sealed for _, sealed in self._seal_kmyth_artifacts(output_pdf, manifest_path, config, selection)]
+
+    @staticmethod
+    def _seal_kmyth_artifacts(
+        output_pdf: Path,
+        manifest_path: Path | None,
+        config: SteganographyConfig,
+        selection: list[_KmythArtifact],
+    ) -> list[tuple[_KmythArtifact, Path]]:
+        """Seal staged sources and keep their publication roles attached."""
         from infrastructure.steganography.kmyth_adapter import (
             KmythCommandError,
             KmythSealOptions,
@@ -466,14 +482,13 @@ class SteganographyProcessor:
             validate_kmyth_installation,
         )
 
-        config = config or SteganographyConfig.from_dict(asdict(self.config))
-        targets: list[Path] = []
-        for artifact in config.kmyth_seal_artifacts:
-            if artifact == "pdf":
-                targets.append(output_pdf)
-            elif artifact == "hash_manifest":
+        targets: list[tuple[_KmythArtifact, Path]] = []
+        for artifact in selection:
+            if artifact.role == "pdf":
+                targets.append((artifact, output_pdf))
+            elif artifact.role == "hash_manifest":
                 if manifest_path is not None and manifest_path.exists():
-                    targets.append(manifest_path)
+                    targets.append((artifact, manifest_path))
                 else:
                     logger.warning(
                         "Kmyth requested hash_manifest sealing, but no hash manifest exists. "
@@ -495,17 +510,17 @@ class SteganographyProcessor:
             logger.warning("Kmyth sealing skipped: %s", availability.summary())
             return []
 
-        sealed: list[Path] = []
-        for target in targets:
+        sealed: list[tuple[_KmythArtifact, Path]] = []
+        for artifact, target in targets:
             try:
-                sealed.append(seal_file_with_kmyth(target, options=options))
+                sealed.append((artifact, seal_file_with_kmyth(target, options=options)))
             except (KmythCommandError, KmythUnavailableError, FileExistsError, FileNotFoundError) as exc:
                 if config.kmyth_required:
                     raise
                 logger.warning("Kmyth sealing skipped for %s: %s", target.name, exc)
                 return sealed
 
-        logger.info("║  ✓ Kmyth TPM sidecars written: %s", ", ".join(path.name for path in sealed))
+        logger.info("║  ✓ Kmyth TPM sidecars written: %s", ", ".join(path.name for _, path in sealed))
         return sealed
 
 

@@ -7,7 +7,6 @@ Thin orchestrator over PipelineExecutor, post-run reporting, and HITL CLI.
 from __future__ import annotations
 
 import sys
-import time
 from pathlib import Path
 
 repo_root = Path(__file__).resolve().parents[2]
@@ -16,7 +15,7 @@ if str(repo_root) not in sys.path:
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.pipeline.plan import compile_execution_plan
+from infrastructure.core.pipeline.execution_session import prepare_pipeline_run
 from infrastructure.core.pipeline.hitl_cli import PipelineArgs, handle_hitl_command
 from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.single_stage import execute_single_stage
@@ -58,13 +57,12 @@ def execute_pipeline(
             incremental=IncrementalConfig(enabled=incremental),
             pipeline_path=pipeline_path,
         )
-        deadline = time.monotonic() + config.run_timeout_seconds
-        plan = compile_execution_plan(config)
-        if time.monotonic() >= deadline:
+        prepared = prepare_pipeline_run(config)
+        if prepared.expired():
             raise TimeoutError("Pipeline deadline expired during plan preflight")
         executor = PipelineExecutor(config)
         execution_started = True
-        results = executor.execute_plan(plan, deadline_monotonic=deadline)
+        results = executor.execute_plan(prepared.plan, deadline_monotonic=prepared.deadline)
         if not results:
             logger.error("Pipeline produced no stage results; refusing an empty success")
             return 1
