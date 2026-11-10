@@ -2281,7 +2281,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_analysis_launch.py",
-      "source_sha256": "01da7414a3d4f966531bf7b61b5a4b61b3cf70cc416981839cd7bf0d4ea8da8f",
+      "source_sha256": "91117c8474d7fda306f271aa6c443e7f59628ea75da4ff61ba6f2b927389c15e",
       "families": [
         "tests/infra_tests/core/test_analysis_launch.py::test_actual_analysis_ignores_timestamp_valid_domain_cache",
         "tests/infra_tests/core/test_analysis_launch.py::test_actual_leaf_exit_and_source_runtime_evidence",
@@ -2301,7 +2301,7 @@
         "tests/infra_tests/core/test_analysis_launch.py::test_supervisor_timeout_is_distinct_from_leaf_exit124",
         "tests/infra_tests/core/test_analysis_launch.py::test_unbound_os_exit_zero_cannot_complete"
       ],
-      "family_observations_sha256": "3f2bd69f27fcbb8c19d2e38e44622427159ed7a94f33d5d5da586c6fcc650329",
+      "family_observations_sha256": "f30204f1c3a43e6af935816591dd16f93eaeaa3bfb23e7225c650bc98c1384b6",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2310,7 +2310,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_analysis_launch.py",
-          "source_sha256": "01da7414a3d4f966531bf7b61b5a4b61b3cf70cc416981839cd7bf0d4ea8da8f",
+          "source_sha256": "91117c8474d7fda306f271aa6c443e7f59628ea75da4ff61ba6f2b927389c15e",
           "line": 1
         }
       ]
@@ -3730,7 +3730,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_execution_boundary.py",
-      "source_sha256": "955ebdecfcc31db011f1c18c8bd930a71d812666537e3d7bd5733b61449e548b",
+      "source_sha256": "391e0e8f6ae994e96957e8154fa2206ef3339ac5c564e7121f5bc77098d37ecf",
       "families": [
         "tests/infra_tests/core/test_execution_boundary.py::TestBuildBoundedEnv::test_explicit_allowlist_keeps_named_secret",
         "tests/infra_tests/core/test_execution_boundary.py::TestBuildBoundedEnv::test_passthrough_keeps_var",
@@ -3751,7 +3751,7 @@
         "tests/infra_tests/core/test_execution_boundary.py::TestValidateHookRoot::test_hook_inside_root_is_returned",
         "tests/infra_tests/core/test_execution_boundary.py::TestValidateHookRoot::test_traversal_outside_root_is_rejected"
       ],
-      "family_observations_sha256": "1eee4a7b79c37e073dfd17eff0e82589b5bb8a9efd93511b081d172ca3879ddd",
+      "family_observations_sha256": "8ff731dba9ac9767ab92e46db9cc056de76e7c449bc6661a98d44b717775288d",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -3760,7 +3760,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_execution_boundary.py",
-          "source_sha256": "955ebdecfcc31db011f1c18c8bd930a71d812666537e3d7bd5733b61449e548b",
+          "source_sha256": "391e0e8f6ae994e96957e8154fa2206ef3339ac5c564e7121f5bc77098d37ecf",
           "line": 1
         }
       ]
@@ -4099,7 +4099,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_guardian_startup_budget.py",
-      "source_sha256": "b2e21d2f1f734aefbddf7cefd95d1a34554adccae8195415f8173c5a30130dab",
+      "source_sha256": "b95d3e9037894dc3a666069c83067fa6e85029d664b6c504b99bfc1a75a31558",
       "families": [
         "tests/infra_tests/core/test_guardian_startup_budget.py::test_actual_boundary_short_budget_refuses_before_command",
         "tests/infra_tests/core/test_guardian_startup_budget.py::test_actual_child_original_code_survives_phase_budget",
@@ -4116,7 +4116,7 @@
         "tests/infra_tests/core/test_guardian_startup_budget.py::test_slow_ready_real_pipe_obeys_phase_and_original_deadline",
         "tests/infra_tests/core/test_guardian_startup_budget.py::test_stream_invalid_budget_refuses_before_executable"
       ],
-      "family_observations_sha256": "640426bfe0c675fe25244c4a18b4f149563ca92bf86f584e07f2fa966bbce457",
+      "family_observations_sha256": "c5b9a785f1d467e5faebeb5814f5d7f99b22c7a87651992a2c79834fcc5d220d",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -4125,7 +4125,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_guardian_startup_budget.py",
-          "source_sha256": "b2e21d2f1f734aefbddf7cefd95d1a34554adccae8195415f8173c5a30130dab",
+          "source_sha256": "b95d3e9037894dc3a666069c83067fa6e85029d664b6c504b99bfc1a75a31558",
           "line": 1
         }
       ]

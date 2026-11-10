@@ -35,6 +35,8 @@ matching tag identity and authenticated publication.
 - Requalify complete Root case-policy review inputs against every supported
   native target before policy authorship. Preserve declared obligations and
   explicitly bind real Git-dependent tracked/untracked documentation checks.
+  Refresh complete family/member/fixture bindings for the three real
+  crash-recovery cleanup callers after fresh Linux/macOS census collection.
 
 - Replace retained numeric-PID fallback cleanup in crash-recovery tests with
   inherited fixture-owned run identities and live owned Popen cleanup. Keep
