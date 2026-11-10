@@ -12,17 +12,25 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def format_coverage_status(coverage_pct: float, threshold: float) -> str:
+def format_coverage_value(coverage_pct: float | None) -> str:
+    """Display a measured percentage or the absence of a measurement."""
+    return "N/A" if coverage_pct is None else f"{coverage_pct:.1f}%"
+
+
+def format_coverage_status(coverage_pct: float | None, threshold: float) -> str:
     """Format coverage percentage with visual indicators and threshold context."""
+    value = format_coverage_value(coverage_pct)
+    if coverage_pct is None:
+        return value
     if coverage_pct >= threshold:
-        return f"\u2713 {coverage_pct:.1f}% (meets {threshold}% threshold)"
+        return f"\u2713 {value} (meets {threshold}% threshold)"
     gap = threshold - coverage_pct
     if coverage_pct >= threshold * 0.9:
-        return f"\U0001f7e1 {coverage_pct:.1f}% (close to {threshold}% threshold, {gap:.1f}% gap)"
+        return f"\U0001f7e1 {value} (close to {threshold}% threshold, {gap:.1f}% gap)"
     elif coverage_pct >= threshold * 0.8:
-        return f"\u26a0\ufe0f {coverage_pct:.1f}% (below {threshold}% threshold by {gap:.1f}%)"
+        return f"\u26a0\ufe0f {value} (below {threshold}% threshold by {gap:.1f}%)"
     else:
-        return f"\u274c {coverage_pct:.1f}% (significantly below {threshold}% threshold by {gap:.1f}%)"
+        return f"\u274c {value} (significantly below {threshold}% threshold by {gap:.1f}%)"
 
 
 def analyze_coverage_gaps(
@@ -30,9 +38,9 @@ def analyze_coverage_gaps(
 ) -> list[str]:
     """Analyze coverage gaps and return actionable improvement suggestions."""
     suggestions = []
-    coverage = results.get("coverage_percent", 0)
+    coverage = results.get("coverage_percent")
 
-    if coverage < threshold:
+    if coverage is not None and coverage < threshold:
         gap = threshold - coverage
         suggestions.append(f"\U0001f4ca {test_type} coverage is {gap:.1f}% below threshold")
 
@@ -144,7 +152,8 @@ def format_failure_suggestions(
             f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long"
         )
         suggestions.append(
-            f"    - Run project tests only: python3 scripts/pipeline/stage_01_test.py --project {project_name} --project-only"
+            "    - Run project tests only: python3 scripts/pipeline/stage_01_test.py "
+            f"--project {project_name} --project-only"
         )
         suggestions.append(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
 

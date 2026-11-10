@@ -464,7 +464,7 @@ class TestReportResults:
         report = {}
         report_results(0, 1, infra_results, project_results, report, "myproject")
 
-    def test_infra_skipped(self):
+    def test_infra_skipped(self, caplog):
         """Test report when infra tests were not run."""
         infra_results: dict = {}
         project_results = {
@@ -475,7 +475,11 @@ class TestReportResults:
             "execution_phases": {"call": 3.0},
         }
         report = {}
-        report_results(0, 0, infra_results, project_results, report, "myproject")
+        with caplog.at_level(logging.INFO):
+            report_results(0, 0, infra_results, project_results, report, "myproject")
+            report_results(0, 1, infra_results, {"failed": 1, "total": 1}, report, "myproject")
+        assert caplog.text.count("Infrastructure: ⏭ SKIPPED") == 2
+        assert "Infrastructure: ✓ PASSED (0/0" not in caplog.text
 
     def test_collection_errors(self):
         """Test report with collection errors."""
@@ -517,24 +521,28 @@ class TestReportResults:
         report = {}
         report_results(1, 1, infra_results, project_results, report, "myproject")
 
-    def test_success_no_duration(self):
-        """Test success report with zero-duration phases."""
+    def test_success_no_duration(self, caplog):
+        """Absent coverage and a measured zero display distinctly without duration."""
         infra_results = {
             "passed": 5,
             "total": 5,
             "failed": 0,
-            "coverage_percent": 100.0,
             "execution_phases": {},
         }
         project_results = {
             "passed": 5,
             "total": 5,
             "failed": 0,
-            "coverage_percent": 100.0,
+            "coverage_percent": 0.0,
             "execution_phases": {},
         }
         report = {}
-        report_results(0, 0, infra_results, project_results, report, "myproject")
+        with caplog.at_level(logging.INFO):
+            report_results(0, 0, infra_results, project_results, report, "myproject")
+        assert "Coverage:      Infrastructure: N/A | Project: 0.0%" in caplog.text
+        assert "Infrastructure coverage is" not in caplog.text
+        assert "Project coverage is 90.0% below threshold" in caplog.text
+        assert "Duration:" not in caplog.text
 
 
 class TestReportInfraOnlyResults:
