@@ -211,7 +211,9 @@ class SteganographyProcessor:
                 artifacts[manifest_path] = staged_manifest
             sealed_destinations: set[Path] = set()
             if config.kmyth_enabled:
-                for artifact, sealed in self._seal_kmyth_artifacts(working_pdf, staged_manifest, config, seal_artifacts):
+                for artifact, sealed in self._seal_kmyth_artifacts(
+                    working_pdf, staged_manifest, config, seal_artifacts
+                ):
                     target = artifact.destination
                     if target is None:
                         raise ValueError("Kmyth returned an artifact without a destination")

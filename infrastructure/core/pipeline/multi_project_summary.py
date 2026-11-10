@@ -47,9 +47,7 @@ def _stable(result: MultiProjectResult) -> dict:
     """Keep the aggregate request stable across in-memory result changes."""
     shared = result.shared_infrastructure_result
     return {
-        "project_results": {
-            name: stage_results_to_payload(rows) for name, rows in result.project_results.items()
-        },
+        "project_results": {name: stage_results_to_payload(rows) for name, rows in result.project_results.items()},
         "infra_test_duration": result.infra_test_duration,
         "total_duration": result.total_duration,
         "successful_projects": result.successful_projects,
