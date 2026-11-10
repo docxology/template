@@ -330,7 +330,7 @@ jobs:
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }}, shard ${{ matrix.shard }})"
     runs-on: ${{ matrix.os }}
-    timeout-minutes: ${{ matrix.os == 'ubuntu-24.04' && 110 || 90 }}
+    timeout-minutes: 90
     needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read

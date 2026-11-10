@@ -166,6 +166,9 @@ observations alone do not establish complete execution or a universal speedup.
 | Module | Role |
 | --- | --- |
 | `native_analysis_boundary_replay.py` | Reconstruct retained analysis boundaries under genuine native custody. |
+| `multi_project_readback.py` | Validated per-project and shared-run readback for multi-project reporting, preserving requested project order. |
+| `native_analysis_current.py` | Fresh Current analysis execution through the complete native core controller using admitted Source, held Git root and live producer scope. |
+| `readiness_artifact_graph.py` | Walk bounded exact readiness artifact references from a snapshot, checking digest bindings and preserving strict public/native payload labels. |
 | `native_analysis_read_replay.py` | Reconstruct every authenticated actual read/write event from held Source bytes. |
 | `native_analysis_semantic_compare.py` | Compare complete authenticated analysis graphs across physical executions. |
 | `native_analysis_stage_replay.py` | Bind an analysis leaf to the one genuinely authenticated fixed stage chain. |

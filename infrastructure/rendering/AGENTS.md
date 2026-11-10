@@ -83,6 +83,7 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
 | `office_diagram_layout.py` | Complete the already declared original-diagram DOCX 4.2-inch height cap. |
 | `office_mermaid_projection.py` | Project successful source-owned Mermaid figures into native Office images. |
 | `office_native_projection.py` | Source-owned native Office equation and bookend layout projection. |
+| `output_validation.py` | Shared read-only output-format checks for rendering and publication gates, including combined HTML and expected slide artifacts. |
 
 ## Boundaries
 

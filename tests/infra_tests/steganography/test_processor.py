@@ -145,8 +145,9 @@ def test_missing_pdf_with_nonprivate_receipt_refuses_publication(tmp_path: Path)
     assert processor.process(source) == output
 
 
-def test_private_receipt_publication_rolls_back_when_directory_is_substituted(tmp_path: Path, monkeypatch):
-    import os
+def test_private_receipt_publication_rolls_back_when_directory_is_substituted(tmp_path: Path):
+    import subprocess
+    import sys
 
     source = _plain_pdf(tmp_path / "source.pdf")
     processor = _metadata_processor()
@@ -163,17 +164,62 @@ def test_private_receipt_publication_rolls_back_when_directory_is_substituted(tm
     replacement.mkdir()
     sentinel = replacement / receipt.name
     sentinel.write_bytes(b"unrelated existing receipt")
-    original_replace = os.replace
 
-    def substitute_directory(source, destination, **kwargs):
-        if destination == receipt.name and not moved.exists():
-            owner.rename(moved)
-            owner.symlink_to(replacement, target_is_directory=True)
-        return original_replace(source, destination, **kwargs)
+    # Inject the real filesystem race at the os.rename audit boundary in an
+    # isolated child. The directory is moved immediately before the receipt
+    # rename; no production callable is replaced.
+    child = r'''
+import os
+import sys
+from pathlib import Path
 
-    monkeypatch.setattr(os, "replace", substitute_directory)
-    with pytest.raises(ValueError, match="Private ownership directory changed during publication"):
-        processor.process(source)
+source, owner, moved, replacement = map(Path, sys.argv[1:5])
+receipt_name = sys.argv[5]
+sys.path.insert(0, os.getcwd())
+
+
+def substitute_directory(event, args):
+    if event == "os.rename" and args[1] == receipt_name and not moved.exists():
+        owner.rename(moved)
+        owner.symlink_to(replacement, target_is_directory=True)
+
+
+sys.addaudithook(substitute_directory)
+from infrastructure.steganography.config import SteganographyConfig
+from infrastructure.steganography.core import SteganographyProcessor
+
+processor = SteganographyProcessor(
+    SteganographyConfig(
+        enabled=True,
+        overlays_enabled=False,
+        barcodes_enabled=False,
+        metadata_enabled=True,
+        hashing_enabled=True,
+    )
+)
+processor.config.output_suffix = "_private"
+processor.protect_output = True
+try:
+    processor.process(source)
+except ValueError as error:
+    if "Private ownership directory changed during publication" in str(error):
+        print("EXPECTED_ROLLBACK", flush=True)
+        raise SystemExit(0)
+    raise
+raise SystemExit("expected private-directory substitution failure was not raised")
+'''
+    completed = subprocess.run(
+        [sys.executable, "-B", "-c", child, str(source), str(owner), str(moved), str(replacement), receipt.name],
+        cwd=Path(__file__).resolve().parents[3],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert completed.stdout.strip() == "EXPECTED_ROLLBACK"
     assert output.read_bytes() == prior_pdf
     assert (moved / receipt.name).read_bytes() == prior_receipt
     assert manifest.read_bytes() == prior_manifest
