@@ -11,6 +11,7 @@ from infrastructure.core.logging.utils import get_logger, log_header, log_succes
 from infrastructure.reporting.coverage_analysis import (
     analyze_coverage_gaps,
     format_coverage_status,
+    format_coverage_value,
     format_failure_suggestions,
 )
 
@@ -64,7 +65,7 @@ def _report_suite_success(
     """Log success details for a test suite."""
     passed = results.get("passed", 0)
     skipped = results.get("skipped", 0)
-    coverage = results.get("coverage_percent", 0)
+    coverage = results.get("coverage_percent")
     warnings = results.get("warnings", 0)
     logger.info("%s Results:", suite_name)
     logger.info("  ✓ Passed: %s", passed)
@@ -73,9 +74,8 @@ def _report_suite_success(
     if warnings > 0:
         logger.info("  ⚠ Warnings: %s", warnings)
     logger.info("  📊 Coverage: %s", format_coverage_status(coverage, threshold))
-    if coverage < threshold:
-        for suggestion in analyze_coverage_gaps(results, threshold, suite_name, report):
-            logger.info("    %s", suggestion)
+    for suggestion in analyze_coverage_gaps(results, threshold, suite_name, report):
+        logger.info("    %s", suggestion)
     phases = results.get("execution_phases", {})
     if phases:
         logger.info("  ⏱ Duration: %s", _format_duration(sum(phases.values())))
@@ -127,44 +127,35 @@ def report_results(
 
     infra_passed = infra_results.get("passed", 0)
     infra_total = infra_results.get("total", 0)
-    infra_coverage = infra_results.get("coverage_percent", 0)
+    infra_coverage = format_coverage_value(infra_results.get("coverage_percent") if infra_was_run else None)
 
     project_passed = project_results.get("passed", 0)
     project_total = project_results.get("total", 0)
-    project_coverage = project_results.get("coverage_percent", 0)
+    project_coverage = format_coverage_value(project_results.get("coverage_percent"))
 
     total_passed = infra_passed + project_passed
     total_tests = infra_total + project_total
     overall_success = project_exit == 0
 
-    if overall_success:
-        if not infra_was_run:
-            logger.info(
-                "Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)"
-            )
-        elif infra_exit == 0:
-            logger.info(
-                "Infrastructure: ✓ PASSED (%s/%s tests, %.1f%% coverage)",
-                infra_passed,
-                infra_total,
-                infra_coverage,
-            )
-        else:
-            infra_failed = infra_results.get("failed", 0)
-            logger.info("Infrastructure: ⚠ WARNING (%s test(s) failed, but continuing)", infra_failed)
+    if not infra_was_run:
+        logger.info("Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)")
+    elif infra_exit == 0:
+        logger.info("Infrastructure: ✓ PASSED (%s/%s tests, %s coverage)", infra_passed, infra_total, infra_coverage)
+    elif overall_success:
+        logger.info("Infrastructure: ⚠ WARNING (%s test(s) failed, but continuing)", infra_results.get("failed", 0))
+    else:
+        logger.info("Infrastructure: ✗ FAILED (%s test(s) failed)", infra_results.get("failed", 0))
 
+    if overall_success:
         logger.info(
-            "Project:       ✓ PASSED (%s/%s tests, %.1f%% coverage)",
+            "Project:       ✓ PASSED (%s/%s tests, %s coverage)",
             project_passed,
             project_total,
             project_coverage,
         )
         logger.info("-" * TABLE_WIDTH)
         logger.info("Total:         ✓ PASSED (%s/%s tests)", total_passed, total_tests)
-        if infra_was_run:
-            logger.info("Coverage:      Infrastructure: %.1f%% | Project: %.1f%%", infra_coverage, project_coverage)
-        else:
-            logger.info("Coverage:      Infrastructure: N/A | Project: %.1f%%", project_coverage)
+        logger.info("Coverage:      Infrastructure: %s | Project: %s", infra_coverage, project_coverage)
 
         infra_duration = sum(infra_results.get("execution_phases", {}).values())
         project_duration = sum(project_results.get("execution_phases", {}).values())
@@ -175,17 +166,6 @@ def report_results(
         logger.info("=" * BANNER_WIDTH)
         log_success("All tests passed - ready for analysis", logger)
     else:
-        if infra_exit == 0:
-            logger.info(
-                "Infrastructure: ✓ PASSED (%s/%s tests, %.1f%% coverage)",
-                infra_passed,
-                infra_total,
-                infra_coverage,
-            )
-        else:
-            infra_failed = infra_results.get("failed", 0)
-            logger.info("Infrastructure: ✗ FAILED (%s test(s) failed)", infra_failed)
-
         logger.info("Project:       ✗ FAILED (%s test(s) failed)", project_results.get("failed", 0))
         logger.info("-" * TABLE_WIDTH)
         logger.info("Total:         ✗ FAILED (project tests failed)")

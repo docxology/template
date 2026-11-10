@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
+
+from infrastructure.rendering._mermaid_profile_io import read_adapter, select_package, validate_profile
 
 SCHEMA = "template-mermaid-v12-legacy11-default-theme-viewport-request-v2"
 POLICY = "template-mermaid-v12-official-run-legacy11-default-theme-1400x900-v2"
@@ -29,43 +30,18 @@ def rendering_profile() -> dict[str, str | int | bool]:
 
 def validate_rendering_profile(value: object) -> None:
     """Reject altered values and Python's bool/int equality ambiguity."""
-    expected = rendering_profile()
-    if not isinstance(value, dict) or set(value) != set(expected):
-        raise ValueError("Mermaid rendering profile differs from the source-owned default theme")
-    for key, original in expected.items():
-        if type(value[key]) is not type(original) or value[key] != original:
-            raise ValueError("Mermaid rendering profile changes theme, embedding or viewport semantics")
+    validate_profile(value, rendering_profile())
 
 
 def adapter_bytes() -> bytes:
     """Consume the packaged SDK asset; missing or changed bytes refuse execution."""
     path = Path(__file__).with_name("_mermaid_v12_adapter.mjs")
-    if path.is_symlink() or not path.is_file() or path.stat().st_size > 64 * 1024:
-        raise ValueError("packaged Mermaid adapter is absent or not a bounded regular asset")
-    data = path.read_bytes()
-    if hashlib.sha256(data).hexdigest() != ADAPTER_SHA256:
-        raise ValueError("packaged Mermaid adapter bytes differ from the declared source profile")
-    return data
+    return read_adapter(path, ADAPTER_SHA256)
 
 
 def selected_package(mmdc: str) -> Path:
     """Resolve the actual mmdc entrypoint, without environment package overrides."""
-    selected = Path(mmdc).resolve(strict=True)
-    root = selected.parent.parent
-    manifest = root / "package.json"
-    if selected.name != "cli.js" or selected.parent.name != "src":
-        raise ValueError("selected Mermaid entrypoint requires a separately admitted runtime profile")
-    if manifest.is_symlink() or not manifest.is_file() or manifest.stat().st_size > 1024 * 1024:
-        raise ValueError("selected Mermaid package manifest is absent or unbounded")
-    raw = json.loads(manifest.read_bytes())
-    if (
-        not isinstance(raw, dict)
-        or raw.get("name") != "@mermaid-js/mermaid-cli"
-        or raw.get("version") != "12.0.0"
-        or raw.get("bin") != {"mmdc": "./src/cli.js"}
-    ):
-        raise ValueError("selected Mermaid version has no admitted rectangular viewport API profile")
-    return root
+    return select_package(mmdc, "12.0.0")
 
 
 def request_bytes(

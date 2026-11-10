@@ -12,7 +12,7 @@ Interactive prompts and the menu redraw loop live in
 """
 
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Literal
 
 from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
@@ -47,23 +47,22 @@ class MenuAction:
     exit_when_alone: bool = False
 
 
+_STAGE_ACTIONS: dict[str, MenuAction] = {
+    "setup": MenuAction("stage", "Environment Setup", "stage_00_setup.py"),
+    "project_tests": MenuAction("stage", "Run Project Tests", "stage_01_test.py (project only)"),
+    "analysis": MenuAction("stage", "Run Analysis", "stage_02_analysis.py"),
+    "render_pdf": MenuAction("stage", "Render PDF", "stage_03_render.py"),
+    "validate": MenuAction("stage", "Validate Output", "stage_04_validate.py"),
+    "copy": MenuAction("stage", "Copy Outputs", "stage_05_copy.py"),
+    "llm_reviews": MenuAction("stage", "LLM Review", "stage_06_llm_review.py reviews (Ollama)", mode="live"),
+    "llm_translations": MenuAction(
+        "stage", "LLM Translations", "stage_06_llm_review.py translations (Ollama)", mode="live"
+    ),
+}
+
+
 _MENU_ACTIONS: dict[str, MenuAction] = {
-    "0": MenuAction("stage", "Environment Setup", "stage_00_setup.py", stage=MENU_KEY_TO_STAGE["0"]),
-    "1": MenuAction("stage", "Run Project Tests", "stage_01_test.py (project only)", stage=MENU_KEY_TO_STAGE["1"]),
-    "2": MenuAction("stage", "Run Analysis", "stage_02_analysis.py", stage=MENU_KEY_TO_STAGE["2"]),
-    "3": MenuAction("stage", "Render PDF", "stage_03_render.py", stage=MENU_KEY_TO_STAGE["3"]),
-    "4": MenuAction("stage", "Validate Output", "stage_04_validate.py", stage=MENU_KEY_TO_STAGE["4"]),
-    "5": MenuAction("stage", "Copy Outputs", "stage_05_copy.py", stage=MENU_KEY_TO_STAGE["5"]),
-    "6": MenuAction(
-        "stage", "LLM Review", "stage_06_llm_review.py reviews (Ollama)", stage=MENU_KEY_TO_STAGE["6"], mode="live"
-    ),
-    "7": MenuAction(
-        "stage",
-        "LLM Translations",
-        "stage_06_llm_review.py translations (Ollama)",
-        stage=MENU_KEY_TO_STAGE["7"],
-        mode="live",
-    ),
+    **{key: replace(_STAGE_ACTIONS[stage], stage=stage) for key, stage in MENU_KEY_TO_STAGE.items()},
     "8": MenuAction("pipeline", "Core Pipeline", "current project · infra on · local stages"),
     "9": MenuAction("pipeline", "Live Pipeline", "current project · infra on · live stages", mode="live"),
     "f": MenuAction(

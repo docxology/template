@@ -104,19 +104,50 @@ def _seed_pipeline_smoke_paths(repo_root: Path) -> None:
 
 @pytest.mark.timeout(180)
 def test_run_infrastructure_tests_pipeline_smoke_real_subprocess(tmp_path: Path) -> None:
-    """Pipeline-smoke scope runs real pytest subprocesses against smoke paths."""
-    (tmp_path / "projects").mkdir()
-    _write_minimal_project(tmp_path, "demo")
+    """Coverage-free smoke preserves prior Root coverage and reports the fresh project."""
+    project = _write_minimal_project(tmp_path, "demo")
     _seed_pipeline_smoke_paths(tmp_path)
-    exit_code, results = run_infrastructure_tests(
-        tmp_path,
-        project_name="demo",
-        quiet=True,
-        scope="pipeline-smoke",
-        strict=True,
+    old_coverage = {
+        tmp_path / ".coverage.infra": b"prior full coverage database",
+        tmp_path / ".coverage.infra.worker": b"prior full coverage worker",
+        tmp_path / "coverage_infra.json": json.dumps(
+            {
+                "totals": {"percent_covered": 40.0, "num_statements": 5},
+                "files": {"infrastructure/stale.py": {"executed_lines": [1, 2], "missing_lines": [3, 4, 5]}},
+            }
+        ).encode(),
+    }
+    for path, body in old_coverage.items():
+        path.write_bytes(body)
+    (tmp_path / "tests/infra_tests/conftest.py").write_text(
+        "def pytest_sessionstart(session):\n"
+        "    print('worker used 97.25% memory', flush=True)\n"
+        "    print('TOTAL 100 1 99.0%', flush=True)\n",
+        encoding="utf-8",
     )
-    assert exit_code == 0
-    assert results.get("failed", 0) == 0
+    code = execute_test_pipeline(
+        "active/demo",
+        tmp_path,
+        run_infra=True,
+        run_project=True,
+        quiet=True,
+        include_slow=False,
+        include_long_running=False,
+        include_ollama_tests=False,
+        strict=True,
+        infra_scope="pipeline-smoke",
+    )
+    report = json.loads((project / "output" / ".pipeline" / "tests" / "test_results.json").read_text())
+    infra = report["infrastructure"]
+    assert code == infra["original_exit_code"] == 0
+    assert infra["passed"] > 0 and infra["failed"] == 0
+    assert "coverage_percent" not in infra
+    assert "infrastructure_coverage" not in report["summary"]
+    assert "infrastructure" not in report["coverage_details"]
+    assert report["coverage_details"]["project"]["overall_coverage"] == 100.0
+    assert (project / "coverage_project.json").is_file()
+    for path, body in old_coverage.items():
+        assert path.read_bytes() == body
 
 
 @pytest.mark.timeout(120)
@@ -182,8 +213,9 @@ def test_shared_infrastructure_failure_blocks_real_project_child(tmp_path: Path,
     (tmp_path / "tests" / "infra_tests" / "conftest.py").write_text(
         "import pytest\nfrom pathlib import Path\n"
         "def pytest_sessionstart(session):\n"
-        f" Path({str(marker)!r}).write_text('actual infrastructure child executed')\n"
-        f" pytest.exit('deliberate infrastructure control', returncode={child_exit})\n"
+        f" with Path({str(marker)!r}).open('a') as stream:\n"
+        "  stream.write('actual infrastructure child executed')\n"
+        f" pytest.exit('coverage.exceptions.DataError: deliberate infrastructure control', returncode={child_exit})\n"
     )
     project_marker = project / "project_child_started"
     (project / "tests" / "test_demo.py").write_text(
@@ -192,6 +224,8 @@ def test_shared_infrastructure_failure_blocks_real_project_child(tmp_path: Path,
     )
     prior_coverage = project / ".coverage.project"
     prior_coverage.write_bytes(b"project evidence was never touched")
+    prior_root_coverage = tmp_path / ".coverage.infra"
+    prior_root_coverage.write_bytes(b"root evidence belongs to a previous full run")
     code = execute_test_pipeline(
         "active/demo",
         tmp_path,
@@ -208,6 +242,7 @@ def test_shared_infrastructure_failure_blocks_real_project_child(tmp_path: Path,
     assert code == (child_exit if child_exit in (75, 124, 130) else 1)
     assert not project_marker.exists()
     assert prior_coverage.read_bytes() == b"project evidence was never touched"
+    assert prior_root_coverage.read_bytes() == b"root evidence belongs to a previous full run"
     report = json.loads((project / "output" / ".pipeline" / "tests" / "test_results.json").read_text())
     assert report["infrastructure"]["original_exit_code"] == child_exit
     assert report["project"]["original_exit_code"] is None

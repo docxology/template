@@ -311,6 +311,7 @@ class TestSuiteConfig:
     total_timeout_seconds: float | None = None
     coverage_cleanup_scope_dir: Path | None = None
     coverage_cleanup_recursive: bool = True
+    coverage_enabled: bool = True
 
     def __post_init__(self) -> None:
         """Populate display defaults and validate opt-in total capacity."""
@@ -342,6 +343,8 @@ def _retry_coverage_conflict(
     exhausted_message: str,
 ) -> bool:
     """Apply the shared cleanup and retry transition for a classified conflict."""
+    if not config.coverage_enabled:
+        return False
     label = config.label.lower()
     if retry_count > max_retries:
         logger.error(exhausted_message, label)
@@ -443,15 +446,15 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
                     continue
             raise
 
-    coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, config.coverage_json_paths)
-
-    if not coverage_found:
-        logger.warning(f"No {config.label.lower()} coverage percentage found")
-
     test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
-
-    if coverage_pct is not None:
-        test_results["coverage_percent"] = coverage_pct
+    if config.coverage_enabled:
+        coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, config.coverage_json_paths)
+        if not coverage_found:
+            logger.warning(f"No {config.label.lower()} coverage percentage found")
+        if coverage_pct is not None:
+            test_results["coverage_percent"] = coverage_pct
+    else:
+        test_results.pop("coverage_percent", None)
 
     failed_tests = extract_failed_tests(stdout_text, stderr_text)
     # The parser is intentionally conservative, but a zero-exit pytest run is
