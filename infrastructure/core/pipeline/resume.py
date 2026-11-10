@@ -43,6 +43,22 @@ def _checkpoint_exit_code(result: PipelineStageResult) -> int:
     return result.exit_code
 
 
+def _resume_refusal(diagnostic: str) -> list[PipelineStageResult]:
+    return [
+        PipelineStageResult(
+            0,
+            "Resume",
+            False,
+            0.0,
+            75,
+            diagnostic,
+            stage_completed=False,
+            stage_key="resume",
+            outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
+        )
+    ]
+
+
 class PipelineResumeMixin(ABC):
     """Mixin providing checkpoint save/load and pipeline resume capability.
 
@@ -100,55 +116,19 @@ class PipelineResumeMixin(ABC):
         refusal = tool_reuse_refusal(self.config.repo_root, self.config.project_dir)
         if refusal is not None:
             diagnostic = f"Resume refused: {refusal}; preserve the checkpoint and rerun without --resume"
-            return [
-                PipelineStageResult(
-                    0,
-                    "Resume",
-                    False,
-                    0.0,
-                    75,
-                    diagnostic,
-                    stage_completed=False,
-                    stage_key="resume",
-                    outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
-                )
-            ]
+            return _resume_refusal(diagnostic)
 
         checkpoint, error_message = self.checkpoint_manager.load_validated_checkpoint()
         if checkpoint is None:
             diagnostic = f"Resume refused: {error_message}. Preserve the checkpoint; rerun without --resume."
             logger.warning(diagnostic)
-            return [
-                PipelineStageResult(
-                    0,
-                    "Resume",
-                    False,
-                    0.0,
-                    75,
-                    diagnostic,
-                    stage_completed=False,
-                    stage_key="resume",
-                    outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
-                )
-            ]
+            return _resume_refusal(diagnostic)
 
         expected_prefix = tuple(spec.key for spec in stages[: len(checkpoint.stage_results)])
         recorded_prefix = tuple(stored.context.get("stage_key") for stored in checkpoint.stage_results)
         if checkpoint.total_stages != len(stages) or recorded_prefix != expected_prefix:
             diagnostic = "Checkpoint stage identities differ from the exact current plan prefix; resume refused"
-            return [
-                PipelineStageResult(
-                    0,
-                    "Resume",
-                    False,
-                    0.0,
-                    75,
-                    diagnostic,
-                    stage_completed=False,
-                    stage_key="resume",
-                    outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
-                )
-            ]
+            return _resume_refusal(diagnostic)
         requested = self.execution_plan.stages if self.execution_plan is not None else ()
         completed_keys = {
             str(stored.context.get("stage_key", "")) for stored in checkpoint.stage_results if stored.completed
@@ -158,19 +138,7 @@ class PipelineResumeMixin(ABC):
             for stage in requested
         ) or any(key in completed_keys and is_analysis_capability(key) for key in expected_prefix):
             diagnostic = f"Resume refused: {ANALYSIS_REUSE_REFUSAL}; preserve the checkpoint and rerun without --resume"
-            return [
-                PipelineStageResult(
-                    0,
-                    "Resume",
-                    False,
-                    0.0,
-                    75,
-                    diagnostic,
-                    stage_completed=False,
-                    stage_key="resume",
-                    outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
-                )
-            ]
+            return _resume_refusal(diagnostic)
         try:
             for spec, stored in zip(stages, checkpoint.stage_results, strict=False):
                 digest = stored.context.get("input_digest")
@@ -182,19 +150,7 @@ class PipelineResumeMixin(ABC):
                     raise ValueError("Consumed input identity changed or is absent from the checkpoint")
         except (ValueError, OSError) as exc:
             diagnostic = f"Resume refused: {exc}; preserve the checkpoint and start a fresh run"
-            return [
-                PipelineStageResult(
-                    0,
-                    "Resume",
-                    False,
-                    0.0,
-                    75,
-                    diagnostic,
-                    stage_completed=False,
-                    stage_key="resume",
-                    outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
-                )
-            ]
+            return _resume_refusal(diagnostic)
         if checkpoint.run_id:
             self.run_id = checkpoint.run_id
             self.checkpoint_manager.run_id = checkpoint.run_id
@@ -291,19 +247,7 @@ class PipelineResumeMixin(ABC):
 
         if completed_idx != len(completed_names):
             diagnostic = "Checkpoint stage identities differ from current plan; resume refused"
-            return [
-                PipelineStageResult(
-                    0,
-                    "Resume",
-                    False,
-                    0.0,
-                    75,
-                    diagnostic,
-                    stage_completed=False,
-                    stage_key="resume",
-                    outcome=StageOutcome("resume", StageStatus.BLOCKED, None, diagnostic),
-                )
-            ]
+            return _resume_refusal(diagnostic)
 
         logger.info(f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)")
 
