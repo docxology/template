@@ -292,12 +292,25 @@ class TestLogDiscoveredTests:
         env.pop("PYTEST_DISABLE_PLUGIN_AUTOLOAD", None)
         env.pop("PYTEST_PLUGINS", None)
         command = [
-            sys.executable, "-B", "-m", "pytest", "-n", "2", "--dist", XDIST_DISTRIBUTION, "-fq", "-s", "-k", "test_probe",
+            sys.executable,
+            "-B",
+            "-m",
+            "pytest",
+            "-n",
+            "2",
+            "--dist",
+            XDIST_DISTRIBUTION,
+            "-fq",
+            "-s",
+            "-k",
+            "test_probe",
         ]
         with caplog.at_level(logging.INFO):
             log_discovered_tests(
                 [*command, "--", "test_discovery_cases.py"],
-                tmp_path, env, "parallel probe",
+                tmp_path,
+                env,
+                "parallel probe",
             )
         assert json.loads(observation.read_bytes()) == [str(tmp_path), 0, False]
         assert "Discovered 1 parallel probe tests" in caplog.text

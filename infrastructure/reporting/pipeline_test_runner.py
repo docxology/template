@@ -254,7 +254,10 @@ def run_infrastructure_tests(
     try:
         if full_scope:
             apply_coverage_datafile(
-                cmd, env, ".coverage.infra", cwd=repo_root,
+                cmd,
+                env,
+                ".coverage.infra",
+                cwd=repo_root,
                 timeout_seconds=min(PYTEST_HELP_PROBE_TIMEOUT_SECONDS, remaining_test_budget(deadline)),
             )
             remaining_test_budget(deadline)
@@ -495,7 +498,10 @@ def _run_project_tests_impl(
     test_results: dict[str, Any] = {}
     try:
         apply_coverage_datafile(
-            cmd, env, str(project_root / ".coverage.project"), cwd=project_root,
+            cmd,
+            env,
+            str(project_root / ".coverage.project"),
+            cwd=project_root,
             timeout_seconds=min(PYTEST_HELP_PROBE_TIMEOUT_SECONDS, remaining_test_budget(deadline)),
         )
         remaining_test_budget(deadline)

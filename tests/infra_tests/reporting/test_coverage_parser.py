@@ -262,13 +262,16 @@ class TestCheckCovDatafileSupport:
         positional.mkdir()
         executed = tmp_path / "test-executed"
         (positional / "test_probe.py").write_text(
-            "from pathlib import Path\n"
-            f"def test_probe():\n    Path({str(executed)!r}).touch()\n",
+            f"from pathlib import Path\ndef test_probe():\n    Path({str(executed)!r}).touch()\n",
             encoding="utf-8",
         )
         result = subprocess.run(
             [*command, "-p", PYTEST_PROCESS_PLUGIN, "--", positional.name],
-            cwd=tmp_path, env=env, stdin=subprocess.DEVNULL, capture_output=True, timeout=30,
+            cwd=tmp_path,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            timeout=30,
         )
         assert result.returncode == 0, (result.stdout, result.stderr)
         assert executed.exists() and sentinel.exists()

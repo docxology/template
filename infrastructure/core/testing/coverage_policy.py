@@ -85,8 +85,11 @@ def check_cov_datafile_support(
         command = [*get_python_command(), "-B", "-m", "pytest"]
     try:
         result = run_pytest_metadata(
-            command, Path.cwd() if cwd is None else cwd, env,
-            mode="capability", timeout_seconds=timeout_seconds,
+            command,
+            Path.cwd() if cwd is None else cwd,
+            env,
+            mode="capability",
+            timeout_seconds=timeout_seconds,
         )
     except (OSError, ValueError):
         return False
