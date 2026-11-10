@@ -36,6 +36,10 @@ matching tag identity and authenticated publication.
   native target before policy authorship. Preserve declared obligations and
   explicitly bind real Git-dependent tracked/untracked documentation checks.
 
+- Replace retained numeric-PID fallback cleanup in crash-recovery tests with
+  inherited fixture-owned run identities and live owned Popen cleanup. Keep
+  actual detached-descendant, interruption, provenance and arming assertions.
+
 - Derive each guardian package identity from its same fresh verified Source
   census, removing an immediate duplicate tree walk while preserving separate
   parent-startup/child-READY/child-DONE observations and all custody checks.
