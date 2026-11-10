@@ -2924,7 +2924,7 @@
         "tests/infra_tests/core/test_ci_test_ownership.py::test_supplemental_paper_protocol_owners_are_real_complete_modules",
         "tests/infra_tests/core/test_ci_test_ownership.py::test_unowned_reporting_helper_still_selects_complete_package_fallback"
       ],
-      "family_observations_sha256": "f527c5e4feeaaab377853e4cebf56d76556c3641b1325e2a0d6328cd81e394b9",
+      "family_observations_sha256": "c7b46ac2c5b90f610d2e06567aa9a061ab2777f0adb45d8dafe996178b1acb31",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2935,6 +2935,21 @@
           "path": "tests/infra_tests/core/test_ci_test_ownership.py",
           "source_sha256": "ea8dea1cb81fffe9062ab3f9ffeb0aa089d64394a220bbf9e9d667ad7d3eae00",
           "line": 116
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_test_ownership.py",
+          "source_sha256": "ea8dea1cb81fffe9062ab3f9ffeb0aa089d64394a220bbf9e9d667ad7d3eae00",
+          "line": 168
+        },
+        {
+          "path": "infrastructure/core/testing/ci_test_ownership.py",
+          "source_sha256": "64bb940478ad89f1820405835f3ae8ccdbe8660bb169cf778de1d892fc347108",
+          "line": 551
+        },
+        {
+          "path": "infrastructure/core/testing/ci_test_ownership.py",
+          "source_sha256": "64bb940478ad89f1820405835f3ae8ccdbe8660bb169cf778de1d892fc347108",
+          "line": 554
         }
       ]
     },
@@ -11204,12 +11219,12 @@
         },
         {
           "path": "infrastructure/orchestration/pipeline_runner.py",
-          "source_sha256": "547afa3a7058b8a3bf4d550f5f1bcb010f8f38f6affe71e599ec05d33bdd7328",
+          "source_sha256": "adb49a0385d6644c32c0aa2984d3ab7448c76c26d16d38111da659bf3a75e610",
           "line": 52
         },
         {
           "path": "infrastructure/orchestration/pipeline_runner.py",
-          "source_sha256": "547afa3a7058b8a3bf4d550f5f1bcb010f8f38f6affe71e599ec05d33bdd7328",
+          "source_sha256": "adb49a0385d6644c32c0aa2984d3ab7448c76c26d16d38111da659bf3a75e610",
           "line": 145
         },
         {
@@ -11219,8 +11234,8 @@
         },
         {
           "path": "infrastructure/core/pipeline/resume.py",
-          "source_sha256": "d6579c7911224d8f24d5294adacf834299621c4fd5e9b76d6378ddc15bf7a3a1",
-          "line": 87
+          "source_sha256": "41810e323d5fb42b2ea5c55783295f76c9a738966e2a9d6efe3f0f97c8815e41",
+          "line": 103
         },
         {
           "path": "infrastructure/core/pipeline/multi_project_support.py",
@@ -16705,28 +16720,28 @@
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "line": 146,
-          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
+          "line": 168,
+          "source_sha256": "2d52a421768d73f4265f4d794aa1d95b504159a2f3556da427a3f7d9e743b85f"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "line": 152,
-          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
+          "line": 174,
+          "source_sha256": "2d52a421768d73f4265f4d794aa1d95b504159a2f3556da427a3f7d9e743b85f"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "line": 249,
-          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
+          "line": 263,
+          "source_sha256": "2d52a421768d73f4265f4d794aa1d95b504159a2f3556da427a3f7d9e743b85f"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
-          "line": 299,
-          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
+          "line": 313,
+          "source_sha256": "2d52a421768d73f4265f4d794aa1d95b504159a2f3556da427a3f7d9e743b85f"
         },
         {
           "path": "infrastructure/publishing/publication_refresh.py",
           "line": 94,
-          "source_sha256": "d2af7c3c87adadaa07c166659c3cd7d17d667ca95b51e84ae01e9b353d07f7a6"
+          "source_sha256": "2d52a421768d73f4265f4d794aa1d95b504159a2f3556da427a3f7d9e743b85f"
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
@@ -20339,13 +20354,13 @@
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
-          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
-          "line": 16
+          "source_sha256": "ba138ef4e7aa302bcb8f3e44c1800d080c14a0a677bda522693cd78ec3b43dad",
+          "line": 17
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
-          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
-          "line": 75
+          "source_sha256": "ba138ef4e7aa302bcb8f3e44c1800d080c14a0a677bda522693cd78ec3b43dad",
+          "line": 51
         }
       ]
     },
@@ -21088,8 +21103,8 @@
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
-          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
-          "line": 55
+          "source_sha256": "ba138ef4e7aa302bcb8f3e44c1800d080c14a0a677bda522693cd78ec3b43dad",
+          "line": 46
         }
       ]
     },
@@ -24304,9 +24319,9 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_coverage_parser.py",
-      "source_sha256": "0c25374fc6d2603fd34244bc28cb5ffc650eb77bac9d1d5d4bb35e8b11868b02",
+      "source_sha256": "7e2550ed3ad4521afb03f5dda14016346e6f0f4e085bcac0e70c21b1de68b4fb",
       "families": [
-        "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckCovDatafileSupport::test_result_matches_actual_pytest_help",
+        "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckCovDatafileSupport::test_registered_hidden_option_is_read_before_conftests",
         "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckCovDatafileSupport::test_returns_bool",
         "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckTestFailures::test_exceeds_tolerance",
         "tests/infra_tests/reporting/test_coverage_parser.py::TestCheckTestFailures::test_invalid_env_value",
@@ -24346,7 +24361,7 @@
         "tests/infra_tests/reporting/test_coverage_parser.py::TestWaitForCoverageFile::test_no_files",
         "tests/infra_tests/reporting/test_coverage_parser.py::TestWaitForCoverageFile::test_valid_file"
       ],
-      "family_observations_sha256": "25daf35d51eacb63612e60fceddc429bd5dd83fdc34ce7f0c65afcd46bcc5113",
+      "family_observations_sha256": "2c40a23515a760fa802dfff3ff7518b7c35badb3fadbd9a30948c52a11678a7f",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -24356,7 +24371,12 @@
         {
           "path": "tests/infra_tests/reporting/test_coverage_parser.py",
           "line": 1,
-          "source_sha256": "0c25374fc6d2603fd34244bc28cb5ffc650eb77bac9d1d5d4bb35e8b11868b02"
+          "source_sha256": "7e2550ed3ad4521afb03f5dda14016346e6f0f4e085bcac0e70c21b1de68b4fb"
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_coverage_parser.py",
+          "source_sha256": "7e2550ed3ad4521afb03f5dda14016346e6f0f4e085bcac0e70c21b1de68b4fb",
+          "line": 236
         }
       ]
     },
@@ -26323,13 +26343,13 @@
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
-          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
-          "line": 34
+          "source_sha256": "ba138ef4e7aa302bcb8f3e44c1800d080c14a0a677bda522693cd78ec3b43dad",
+          "line": 35
         },
         {
           "path": "infrastructure/rendering/_mermaid_v122.py",
-          "source_sha256": "12c5f3a90f2a0910a8658fb66b6f9ee2c6bd9044156466daf11bfe7b946c10aa",
-          "line": 75
+          "source_sha256": "ba138ef4e7aa302bcb8f3e44c1800d080c14a0a677bda522693cd78ec3b43dad",
+          "line": 51
         },
         {
           "path": "infrastructure/reporting/native_mermaid_source_reference.py",
@@ -28296,15 +28316,16 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_workflow_transport.py",
-      "source_sha256": "10cbe71e5dae51bd1017b37633e76c8f855bf177161fec93e1942c70801f5730",
+      "source_sha256": "be04130165dff3952b9b83d050a513d5aa674f1500e6c188f9da30fc03a60946",
       "families": [
+        "tests/infra_tests/reporting/test_native_workflow_transport.py::test_checked_in_shard_uploads_match_source_transport_limit",
         "tests/infra_tests/reporting/test_native_workflow_transport.py::test_sibling_cells_never_share_an_artifact_name",
         "tests/infra_tests/reporting/test_native_workflow_transport.py::test_transport_cell_must_be_one_bare_declared_public_exemplar",
         "tests/infra_tests/reporting/test_native_workflow_transport.py::test_transport_cell_names_every_kind_not_only_native",
         "tests/infra_tests/reporting/test_native_workflow_transport.py::test_transport_cell_renames_only_the_artifact_names",
         "tests/infra_tests/reporting/test_native_workflow_transport.py::test_transport_names_are_unchanged_without_a_cell"
       ],
-      "family_observations_sha256": "fb1e7544e4798a4bd564337746a2f61c6214738dbb1b690842edfb2d4c709761",
+      "family_observations_sha256": "77391b01d3b646dab4707c105a2c359e253b9ee812216a5338c6996000f0f20a",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -28313,13 +28334,18 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_workflow_transport.py",
-          "source_sha256": "10cbe71e5dae51bd1017b37633e76c8f855bf177161fec93e1942c70801f5730",
+          "source_sha256": "be04130165dff3952b9b83d050a513d5aa674f1500e6c188f9da30fc03a60946",
           "line": 1
         },
         {
           "path": "tests/infra_tests/reporting/test_native_workflow_transport.py",
-          "source_sha256": "10cbe71e5dae51bd1017b37633e76c8f855bf177161fec93e1942c70801f5730",
-          "line": 17
+          "source_sha256": "be04130165dff3952b9b83d050a513d5aa674f1500e6c188f9da30fc03a60946",
+          "line": 21
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_workflow_transport.py",
+          "source_sha256": "be04130165dff3952b9b83d050a513d5aa674f1500e6c188f9da30fc03a60946",
+          "line": 60
         }
       ]
     },
@@ -29141,7 +29167,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_pipeline_test_runner.py",
-      "source_sha256": "dd0e1234d7185eafe345543463ae324038431dfbc8fe1cffc66d2a6a31178f69",
+      "source_sha256": "d15632f1ff0434ad388abbaf80ff0279726b75d22aa8575f53170eaa3ec21eb3",
       "families": [
         "tests/infra_tests/reporting/test_pipeline_test_runner.py::TestDiscoveryPatterns::test_pattern_matches_collected",
         "tests/infra_tests/reporting/test_pipeline_test_runner.py::TestDiscoveryPatterns::test_pattern_matches_collected_items",
@@ -29178,7 +29204,7 @@
         "tests/infra_tests/reporting/test_pipeline_test_runner.py::TestTestSuiteResults::test_full_construction",
         "tests/infra_tests/reporting/test_pipeline_test_runner.py::TestTestSuiteResults::test_partial_construction"
       ],
-      "family_observations_sha256": "79631ed3b6587349da036ea56d67d42afd6a55587d8b6339b0bb3746ec9bc1fc",
+      "family_observations_sha256": "62357d76ff5950563092120025ff0c259807118b69e71e106a42cb862a589657",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -29187,14 +29213,14 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_pipeline_test_runner.py",
-          "source_sha256": "dd0e1234d7185eafe345543463ae324038431dfbc8fe1cffc66d2a6a31178f69",
+          "source_sha256": "d15632f1ff0434ad388abbaf80ff0279726b75d22aa8575f53170eaa3ec21eb3",
           "line": 1
         }
       ]
     },
     {
       "path": "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
-      "source_sha256": "81db0f1d1bf56fd463a9d97ab9c2061bf1b57c580346532a4e7912f4134d402e",
+      "source_sha256": "2f192c8c892b4accdcbe37d0704a87c1eea9bcc9433c47c94183c2f664da948c",
       "families": [
         "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py::test_generic_native_profile_preserves_selection_and_failures",
         "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py::test_generic_project_runtime_refusal_preserves_prior_coverage",
@@ -29205,7 +29231,7 @@
         "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py::test_shared_infrastructure_failure_blocks_real_project_child",
         "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py::test_tolerated_nonzero_child_cannot_complete_a_stage"
       ],
-      "family_observations_sha256": "91436ea9f69e7287aa19d00578f62c0736fe86a7c9928cd2d5e6e44a9a9d076c",
+      "family_observations_sha256": "60c0f271f3c90f829771fe0328a5afc1782cdd746fece8efb3b025952632e5f2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -29214,13 +29240,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
-          "source_sha256": "81db0f1d1bf56fd463a9d97ab9c2061bf1b57c580346532a4e7912f4134d402e",
+          "source_sha256": "2f192c8c892b4accdcbe37d0704a87c1eea9bcc9433c47c94183c2f664da948c",
           "line": 1
         },
         {
           "path": "tests/infra_tests/reporting/test_pipeline_test_runner_integration.py",
-          "source_sha256": "81db0f1d1bf56fd463a9d97ab9c2061bf1b57c580346532a4e7912f4134d402e",
-          "line": 251
+          "source_sha256": "2f192c8c892b4accdcbe37d0704a87c1eea9bcc9433c47c94183c2f664da948c",
+          "line": 286
         }
       ]
     },
@@ -32034,7 +32060,7 @@
     },
     {
       "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-      "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0",
+      "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6",
       "families": [
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_changed_destination_is_preserved_before_publication",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_fake_kmyth_tools_are_executable",
@@ -32043,6 +32069,7 @@
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_processor_kmyth_step_fails_unavailable_when_required",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_processor_kmyth_step_seals_selected_artifacts",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_processor_kmyth_step_skips_unavailable_when_not_required",
+        "tests/infra_tests/steganography/test_kmyth_adapter.py::test_processor_promotes_configured_kmyth_sidecars",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_real_filesystem_publication_preserves_source_and_previous_mode",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_seal_file_with_kmyth_honors_overwrite_false",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_seal_file_with_kmyth_writes_sidecar",
@@ -32051,7 +32078,7 @@
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_validate_kmyth_installation_accepts_custom_binary_dir",
         "tests/infra_tests/steganography/test_kmyth_adapter.py::test_validate_kmyth_installation_reports_missing_tools"
       ],
-      "family_observations_sha256": "55e2b59ea14d30f7f3a3cde7f3cba6269f79a8cc201f8dc382c191a147ba2f2e",
+      "family_observations_sha256": "47b455f61124773e72bb288f744e2bf2a09525a736b0408ac91bc007e012a44e",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -32080,6 +32107,13 @@
         },
         {
           "id": "tests/infra_tests/steganography/test_kmyth_adapter.py::test_processor_kmyth_step_skips_unavailable_when_not_required",
+          "lane": "core",
+          "obligations": [
+            "python-format-distributions"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/steganography/test_kmyth_adapter.py::test_processor_promotes_configured_kmyth_sidecars",
           "lane": "core",
           "obligations": [
             "python-format-distributions"
@@ -32118,7 +32152,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
           "line": 109,
@@ -32171,74 +32205,79 @@
           "source_sha256": "27d75256f81c4542ca2272753c8dfa38ced53138a1d6debcf3b0cc38e3e16693"
         },
         {
-          "line": 272,
+          "line": 318,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 160,
+          "line": 206,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 168,
+          "line": 214,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 249,
+          "line": 295,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 140,
+          "line": 186,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
           "line": 98,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 122,
+          "line": 168,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 230,
+          "line": 276,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
           "line": 82,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
           "line": 66,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 207,
+          "line": 253,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
-          "line": 288,
+          "line": 334,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
           "line": 52,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
         },
         {
           "line": 40,
           "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
-          "source_sha256": "d7636289440e48cd70177c54faa3581c6db5292a4a21c10fab18f748bf9651a0"
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6"
+        },
+        {
+          "path": "tests/infra_tests/steganography/test_kmyth_adapter.py",
+          "source_sha256": "800b579e0a09a82b2ba62d22874b551c37f941804cdd86b59a0133625f2c73e6",
+          "line": 122
         }
       ]
     },
@@ -32475,18 +32514,18 @@
         },
         {
           "path": "infrastructure/steganography/core.py",
-          "line": 86,
-          "source_sha256": "c31976a240056ab12925ae04616973e20b725167567e080374f51c479bd31e58"
+          "line": 94,
+          "source_sha256": "1e87364c473b675893f93e658a66c77a18310d8e00a87e3e86b52f60cb256dff"
         },
         {
           "path": "infrastructure/steganography/core.py",
-          "line": 239,
-          "source_sha256": "c31976a240056ab12925ae04616973e20b725167567e080374f51c479bd31e58"
+          "line": 245,
+          "source_sha256": "1e87364c473b675893f93e658a66c77a18310d8e00a87e3e86b52f60cb256dff"
         },
         {
           "path": "infrastructure/steganography/core.py",
-          "line": 378,
-          "source_sha256": "c31976a240056ab12925ae04616973e20b725167567e080374f51c479bd31e58"
+          "line": 384,
+          "source_sha256": "1e87364c473b675893f93e658a66c77a18310d8e00a87e3e86b52f60cb256dff"
         },
         {
           "path": "infrastructure/steganography/publication.py",
