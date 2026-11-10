@@ -9,9 +9,10 @@ its Source behavior and pending qualification.
 **Final metadata must precede expensive release evidence.** Freeze the final
 implementation, dependency locks and authored release materials, then use the
 Source-owned publication producers in current provider order. Current Source
-requires fifteen publication-copy refreshes, genuine Pitch Stage 02 analysis
-and refresh, and nine unchanged-output rebinds. Derive that roster from tracked
-ownership rather than a prose list. Require the unchanged all-project
+regenerates all 25 canonical public scopes in `refresh` mode. Genuine Pitch
+Stage 02 analysis precedes its refresh; unchanged-output rebinds require explicit
+`rebind-only` mode. Derive the exact plan from tracked ownership rather than a
+prose list. Require the unchanged all-project
 exemplar-config guard and both strict publication audits on the committed tree.
 
 Measure genuine coverage at committed Source `C`; import the measured literals
