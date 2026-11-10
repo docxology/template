@@ -99,7 +99,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         self.log_file = config.runtime_output_dir / "logs" / "pipeline.log"
         self._log_handler: logging.FileHandler | None = None
         self._module_log_handler: logging.FileHandler | None = None
-        self._module_log_level: int | None = None
 
         # Dispose owned logging if telemetry initialization refuses configuration.
         self._telemetry: TelemetryCollector | None = None
