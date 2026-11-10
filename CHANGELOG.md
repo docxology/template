@@ -20,6 +20,18 @@ matching tag identity and authenticated publication.
   asset replacement. Preserve original acceptance, exact admitted assets and
   retrieved-byte verification.
 
+- Match hardcoded test totals as integer tokens, not components of dotted
+  versions or decimals. Keep real totals blocking strict documentation drift
+  validation even beside valid runtime-version prose.
+
+- Retire release-workflow source-shape and wording pins without repinning
+  publisher wiring. Preserve real handoff, archive, version and shell-routing
+  consumers, including blank and partial 5.x handoff refusals.
+- Preserve original multi-project CLI timeout streams and command/deadline
+  observations before re-raising the original exception, without inventing an exit.
+  Keep existing deadlines and fail-closed resume; document bound checkpoint
+  eligibility, retained progress and deliberate separate fresh execution.
+
 - Derive each guardian package identity from its same fresh verified Source
   census, removing an immediate duplicate tree walk while preserving separate
   parent-startup/child-READY/child-DONE observations and all custody checks.

@@ -485,10 +485,15 @@ def test_docs_hardcoded_counts_flags_bare_test_total(drift_module, tmp_path):
     README was never caught — which is how adding one test to template_formal
     came to require editing nine separate hardcoded totals (2026-07-27).
     """
-    (tmp_path / "README.md").write_text("279 tests, mirroring the src layout.\n", encoding="utf-8")
+    (tmp_path / "README.md").write_text(
+        "Python >=3.14 and tests Python 3.14/3.15; 279 tests, mirroring the src layout.\n",
+        encoding="utf-8",
+    )
     rep = drift_module.Report()
     drift_module.check_docs_hardcoded_counts(tmp_path, rep)
-    assert any(f.rule == "repo_docs_hardcoded_test_count" for f in rep.findings)
+    messages = [f.message for f in rep.findings if f.rule == "repo_docs_hardcoded_test_count"]
+    assert len(messages) == 1
+    assert "279 tests" in messages[0]
 
 
 def test_docs_hardcoded_counts_flags_reversed_coverage_phrasing(drift_module, tmp_path):

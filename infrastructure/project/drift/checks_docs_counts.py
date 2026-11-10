@@ -76,8 +76,9 @@ def _strip_code_fences(text: str) -> str:
 # At most ONE qualifier word between the number and the noun, so both the original
 # "1234 infrastructure tests" and the bare "279 tests" are caught. Allowing two
 # words matched "max_tokens=500 for fallback tests", where 500 is a token limit.
+# Counts are integer tokens, never components of a dotted version or decimal.
 _TEST_COUNT_RE = re.compile(
-    r"\b(\d{2,3}(?:,\d{3})*|\d{2,5})\s+(?:[A-Za-z][A-Za-z-]*\s+)?(?:tests|passed)\b",
+    r"(?<![\w.])(\d{2,3}(?:,\d{3})*|\d{2,5})\s+(?:[A-Za-z][A-Za-z-]*\s+)?(?:tests|passed)\b",
     re.IGNORECASE,
 )
 # "Stage 12 tests" is a pipeline stage, not a measured total.
