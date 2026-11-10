@@ -18,6 +18,7 @@ from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
+from infrastructure.core.testing.coverage_policy import coverage_free_subprocess_env
 from infrastructure.core.testing.test_runner_outputs import project_test_report_directory
 from infrastructure.core.testing.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
@@ -204,12 +205,14 @@ def run_infrastructure_tests(
     cmd.extend(resolve_infrastructure_test_paths(repo_root, scope))
     if full_scope:
         cmd.append("--cov=infrastructure")
+    else:
+        cmd.extend(("-p", "infrastructure.core.testing._pytest_smoke_coverage"))
     infra_marker = build_profile_marker_expression(selection)
     if infra_marker:
         cmd.extend(["-m", infra_marker])
     cmd.extend(resolve_xdist_args(parallel))
 
-    env = os.environ.copy()
+    env = os.environ.copy() if full_scope else coverage_free_subprocess_env()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     coverage_json_paths: list[Path] = []
     if full_scope:
