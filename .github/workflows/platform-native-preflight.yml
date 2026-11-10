@@ -32,6 +32,7 @@ on:
       - 'infrastructure/reporting/native_*.py'
       - 'infrastructure/reporting/release_readiness_*.py'
       - 'infrastructure/rendering/_mermaid_v11*'
+      - 'infrastructure/rendering/_mermaid_profile_io.py'
       - '.github/actions/setup-native-installed-readiness/**'
       - '.github/actions/setup-docs-lint/**'
       - '.github/workflows/platform-native-preflight.yml'

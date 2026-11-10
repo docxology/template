@@ -548,6 +548,9 @@ _PAPER_FRONTMATTER_TESTS = (
     "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py",
 )
 SUPPLEMENTAL_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    "infrastructure/rendering/_mermaid_profile_io.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
     "infrastructure/rendering/_mermaid_native_profile.py": (
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
     ),
