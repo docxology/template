@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
-import pytest
+import re
+from pathlib import Path
 
-from infrastructure.reporting.native_hosted_transport_archive import INDEX_ARTIFACT, SHARD_PREFIX
+import pytest
+import yaml
+
+from infrastructure.reporting.native_hosted_transport_archive import INDEX_ARTIFACT, MAX_SHARDS, SHARD_PREFIX
 from infrastructure.reporting.native_workflow_transport import transport_artifact_names
 
 
@@ -51,3 +55,34 @@ def test_sibling_cells_never_share_an_artifact_name(kind: str) -> None:
 def test_transport_cell_must_be_one_bare_declared_public_exemplar(kind: str, cell: str) -> None:
     with pytest.raises(ValueError, match="one declared public exemplar"):
         transport_artifact_names(kind, cell)
+
+
+def test_checked_in_shard_uploads_match_source_transport_limit() -> None:
+    action_path = Path(__file__).resolve().parents[3] / ".github/actions/upload-readiness-shards/action.yml"
+    steps = yaml.safe_load(action_path.read_bytes())["runs"]["steps"]
+    primary = steps[1]
+    assert primary["name"] == "Upload exact primary index"
+    upload_action = primary["uses"]
+    assert re.fullmatch(r"actions/upload-artifact@[0-9a-f]{40}", upload_action)
+    assert len(steps[2:]) == MAX_SHARDS
+    for index, step in enumerate(steps[2:]):
+        ordinal = f"{index:04d}"
+        assert type(step["with"]["compression-level"]) is int
+        assert step == {
+            "name": f"Upload exact bounded shard {ordinal}",
+            "if": f"fromJSON(steps.plan.outputs.shard_count) > {index}",
+            "uses": upload_action,
+            "with": {
+                "name": "${{ steps.plan.outputs.shard_prefix }}" + ordinal,
+                "path": (
+                    "${{ inputs.directory }}/shard-"
+                    + ordinal
+                    + "/${{ steps.plan.outputs.member_prefix }}-shard-"
+                    + ordinal
+                    + ".zip"
+                ),
+                "if-no-files-found": "error",
+                "retention-days": "${{ inputs.retention-days }}",
+                "compression-level": 0,
+            },
+        }
