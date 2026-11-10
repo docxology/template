@@ -231,7 +231,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 9.15832805633545
+      "total_size_mb": 9.158248901367188
     },
     "figures": {
       "files": 28,
@@ -240,7 +240,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.4547758102416992
+      "size_mb": 1.4546966552734375
     },
     "stable_inventory": {
       "categories": {
@@ -258,7 +258,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1525443
+          "size_bytes": 1525360
         },
         "release": {
           "files": 2,
@@ -279,7 +279,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 118,
-      "total_size_bytes": 9603203
+      "total_size_bytes": 9603120
     }
   },
   "recommendations": [],
@@ -290,11 +290,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-09T23:46:58Z",
+  "timestamp": "2026-11-10T10:20:33Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "224eacc1e6615d96df7704f4c89fb2bd75692384650101d5f3127c1e3d6354b8",
+      "sha256": "bc0e80231fe898339a578c7d91697d9ab79ca846aa2c08aad57a56d0c6c3fa9f",
       "size_bytes": 38615
     },
     "combined_manuscript": {
@@ -360,11 +360,11 @@
     "fingerprints": {
       "config": {
         "file_count": 23,
-        "sha256": "fb3412d8d960ce76934f397731d0c4bce57d361790be1753fa1df9601fe50e72"
+        "sha256": "96a1591acc225bfb3c63af9cdcf522e4e7214a1097f375c37e9bd9cd15c957d1"
       },
       "output": {
         "file_count": 118,
-        "sha256": "ba7a69c052f0d94760754f68dc98696a190b9f68a6eaa9cb030d4006b03a87ac"
+        "sha256": "212bf16686f6dfdfe7f8d182014436a55bdbdd0b96e5c3342a18a3a1cafd8073"
       },
       "source": {
         "file_count": 87,
@@ -372,7 +372,7 @@
       },
       "stage": {
         "file_count": 1747,
-        "sha256": "66d9a1615678fa7a3ffde3f70a2a16d59dda0f2c7e1bda6cf3f995ef44e403a8"
+        "sha256": "1629149eaf80bcf8e00038ba43d801196f10116cdfe223e025965c94f90dd087"
       }
     },
     "project": "templates/template_autoresearch_project",

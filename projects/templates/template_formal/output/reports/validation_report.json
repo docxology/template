@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.764432907104492
+      "total_size_mb": 3.764431953430176
     },
     "figures": {
       "files": 8,
@@ -208,7 +208,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.5825176239013672
+      "size_mb": 0.5825166702270508
     },
     "stable_inventory": {
       "categories": {
@@ -222,7 +222,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 610814
+          "size_bytes": 610813
         },
         "reports": {
           "files": 3,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 3947294
+      "total_size_bytes": 3947293
     }
   },
   "recommendations": [],
@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-09T23:46:58Z",
+  "timestamp": "2026-11-10T10:20:33Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "0c3fe8347c34cbb46e51ee2a8b48c24221ad971d8e97440e16518d3c6444ad24",
+      "sha256": "8d8618bcc3b9db836a626d13759ffe57f60d92e837e30f5eb20d1a33cc4c1aec",
       "size_bytes": 10699
     },
     "combined_manuscript": {
@@ -314,11 +314,11 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "a3edb7b1340bd5fd902d2713af9dfdd7d7f8f15c7b9dd477a240efffdacbec89"
+        "sha256": "19a81424c2f1bff564a501ec1a5526f8ed370b2f2c479374fddd05aa46448843"
       },
       "output": {
         "file_count": 32,
-        "sha256": "f6e79eb5075b1491c6a027db3d940c1a7d418ed7d4f421c7f20d812a4892fbfc"
+        "sha256": "59ba083fef3c96a6c91167be0d15406a891d92982dba567f7005a824cde19107"
       },
       "source": {
         "file_count": 61,
@@ -326,7 +326,7 @@
       },
       "stage": {
         "file_count": 1747,
-        "sha256": "66d9a1615678fa7a3ffde3f70a2a16d59dda0f2c7e1bda6cf3f995ef44e403a8"
+        "sha256": "1629149eaf80bcf8e00038ba43d801196f10116cdfe223e025965c94f90dd087"
       }
     },
     "project": "templates/template_formal",

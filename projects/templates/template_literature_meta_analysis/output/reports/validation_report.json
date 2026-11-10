@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 41.77880001068115
+      "total_size_mb": 41.7788028717041
     },
     "figures": {
       "files": 22,
@@ -256,7 +256,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 6.801135063171387
+      "size_mb": 6.801137924194336
     },
     "stable_inventory": {
       "categories": {
@@ -278,7 +278,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 7131507
+          "size_bytes": 7131510
         },
         "release": {
           "files": 2,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 127,
-      "total_size_bytes": 43808247
+      "total_size_bytes": 43808250
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-09T23:46:58Z",
+  "timestamp": "2026-11-10T10:20:33Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "36d686f89f9c833899a9ae15b4ef895bb2b505e802fd0064e922c1e6744cc4d6",
+      "sha256": "9cd28c6bb5cde38213ec3d65e612f36150e612b49cf22b97a112f8ea2a72f69d",
       "size_bytes": 41689
     },
     "combined_manuscript": {
@@ -458,11 +458,11 @@
     "fingerprints": {
       "config": {
         "file_count": 22,
-        "sha256": "2082fab2fec1c77a64ebb8368a9e8636df135c77b17669222fb0154880aec782"
+        "sha256": "758bd7431cabb2d582c098ae77cbc02e07588be01c31576d7603f8b6e04d77cd"
       },
       "output": {
         "file_count": 127,
-        "sha256": "9e5a868ff7be0f9c918854f480b6cbb9a6f91f95714634edbc586f39d75f973a"
+        "sha256": "b588fb6c8db183c2e49fdc58b32cafef88a55b1a684d4933167cdb6ae8918a17"
       },
       "source": {
         "file_count": 142,
@@ -470,7 +470,7 @@
       },
       "stage": {
         "file_count": 1747,
-        "sha256": "66d9a1615678fa7a3ffde3f70a2a16d59dda0f2c7e1bda6cf3f995ef44e403a8"
+        "sha256": "1629149eaf80bcf8e00038ba43d801196f10116cdfe223e025965c94f90dd087"
       }
     },
     "project": "templates/template_literature_meta_analysis",

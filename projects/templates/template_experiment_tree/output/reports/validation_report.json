@@ -225,12 +225,12 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.1591453552246094
+      "total_size_mb": 2.159008026123047
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.04767036437988281
+      "size_mb": 0.04753303527832031
     },
     "stable_inventory": {
       "categories": {
@@ -244,7 +244,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 49986
+          "size_bytes": 49842
         },
         "reports": {
           "files": 3,
@@ -261,7 +261,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 30,
-      "total_size_bytes": 2264028
+      "total_size_bytes": 2263884
     }
   },
   "recommendations": [],
@@ -272,11 +272,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-09T23:46:58Z",
+  "timestamp": "2026-11-10T10:20:33Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "512b4472e654969b961396deaa5e6f6705cb77d60c1c9825586bece4d4e96352",
+      "sha256": "4fb9659852c77addc8d15eedef4660bff5b6fbf57c4bda264ccc2f3613da436f",
       "size_bytes": 9766
     },
     "combined_manuscript": {
@@ -330,11 +330,11 @@
     "fingerprints": {
       "config": {
         "file_count": 14,
-        "sha256": "6e101ce62f6c1a25de0984c51950e6599a0b4c5fab7bd94635c1980dd6da8d04"
+        "sha256": "c194d24afe2cb82d06831e0224f346b2c6a2aac014d066c7956af051bc807e2d"
       },
       "output": {
         "file_count": 30,
-        "sha256": "8de087b6bcd3f17e7bb849a021a6481bd687730373d64919b7b4734fd2c51c60"
+        "sha256": "c57c0a70a1b1bde4f84064bc8decc40821ebd24c79c3dc90cf4477e938e0521e"
       },
       "source": {
         "file_count": 22,
@@ -342,7 +342,7 @@
       },
       "stage": {
         "file_count": 1747,
-        "sha256": "66d9a1615678fa7a3ffde3f70a2a16d59dda0f2c7e1bda6cf3f995ef44e403a8"
+        "sha256": "1629149eaf80bcf8e00038ba43d801196f10116cdfe223e025965c94f90dd087"
       }
     },
     "project": "templates/template_experiment_tree",

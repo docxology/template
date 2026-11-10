@@ -203,7 +203,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.897157669067383
+      "total_size_mb": 5.897022247314453
     },
     "figures": {
       "files": 15,
@@ -212,7 +212,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 1.4802923202514648
+      "size_mb": 1.4801568984985352
     },
     "stable_inventory": {
       "categories": {
@@ -226,7 +226,7 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 1552199
+          "size_bytes": 1552057
         },
         "reports": {
           "files": 4,
@@ -243,7 +243,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 38,
-      "total_size_bytes": 6183618
+      "total_size_bytes": 6183476
     }
   },
   "recommendations": [],
@@ -254,11 +254,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-09T23:46:58Z",
+  "timestamp": "2026-11-10T10:20:33Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "36778d6e8f226bda8f93b3a7f7d46c734f77bdf000ea8a8787ef3f483e0f7153",
+      "sha256": "a0be44c94484865580f522abe0ce938af7244b522345f208f461e9cf70a83b06",
       "size_bytes": 12668
     },
     "combined_manuscript": {
@@ -312,11 +312,11 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "8878e0d9fd9fb2860e7a8e8c2e32baba41928e0a57b0de1a0f30260341010e09"
+        "sha256": "5d5345bdb7ec783f61e0938c2ae1f2f3184e7c24e84c24c076da167ac04805d8"
       },
       "output": {
         "file_count": 38,
-        "sha256": "6caefc25065b536e7d0cb0784eb4224a5620e09d0f4fb65fd4cc0ad06492f1a2"
+        "sha256": "5cde0417b97b7baa99daed065b083c74f449db80fe32fa9c8664c9a84e5f08eb"
       },
       "source": {
         "file_count": 35,
@@ -324,7 +324,7 @@
       },
       "stage": {
         "file_count": 1747,
-        "sha256": "66d9a1615678fa7a3ffde3f70a2a16d59dda0f2c7e1bda6cf3f995ef44e403a8"
+        "sha256": "1629149eaf80bcf8e00038ba43d801196f10116cdfe223e025965c94f90dd087"
       }
     },
     "project": "templates/template_storybook",
