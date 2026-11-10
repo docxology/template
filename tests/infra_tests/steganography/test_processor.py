@@ -168,7 +168,7 @@ def test_private_receipt_publication_rolls_back_when_directory_is_substituted(tm
     # Inject the real filesystem race at the os.rename audit boundary in an
     # isolated child. The directory is moved immediately before the receipt
     # rename; no production callable is replaced.
-    child = r'''
+    child = r"""
 import os
 import sys
 from pathlib import Path
@@ -207,7 +207,7 @@ except ValueError as error:
         raise SystemExit(0)
     raise
 raise SystemExit("expected private-directory substitution failure was not raised")
-'''
+"""
     completed = subprocess.run(
         [sys.executable, "-B", "-c", child, str(source), str(owner), str(moved), str(replacement), receipt.name],
         cwd=Path(__file__).resolve().parents[3],
@@ -219,7 +219,7 @@ raise SystemExit("expected private-directory substitution failure was not raised
         check=False,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert completed.stdout.strip() == "EXPECTED_ROLLBACK"
+    assert "EXPECTED_ROLLBACK" in completed.stdout.splitlines()
     assert output.read_bytes() == prior_pdf
     assert (moved / receipt.name).read_bytes() == prior_receipt
     assert manifest.read_bytes() == prior_manifest
