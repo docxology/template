@@ -18,7 +18,11 @@ from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
-from infrastructure.core.testing.coverage_policy import coverage_free_subprocess_env
+from infrastructure.core.testing.coverage_policy import (
+    PYTEST_HELP_PROBE_TIMEOUT_SECONDS,
+    PYTEST_PROCESS_PLUGIN,
+    coverage_free_subprocess_env,
+)
 from infrastructure.core.testing.test_runner_outputs import project_test_report_directory
 from infrastructure.core.testing.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
@@ -206,7 +210,7 @@ def run_infrastructure_tests(
     if full_scope:
         cmd.append("--cov=infrastructure")
     else:
-        cmd.extend(("-p", "infrastructure.core.testing._pytest_smoke_coverage"))
+        cmd.extend(("-p", PYTEST_PROCESS_PLUGIN))
     infra_marker = build_profile_marker_expression(selection)
     if infra_marker:
         cmd.extend(["-m", infra_marker])
@@ -216,7 +220,6 @@ def run_infrastructure_tests(
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     coverage_json_paths: list[Path] = []
     if full_scope:
-        apply_coverage_datafile(cmd, env, ".coverage.infra")
         coverage_json_paths = [
             repo_root / "coverage_infra.json",
             repo_root / "coverage.json",
@@ -247,21 +250,23 @@ def run_infrastructure_tests(
             TestSuiteResults, {"exit_code": exc.exit_code, "original_exit_code": exc.original_exit_code}
         )
 
-    # Full coverage owns Root-only cleanup after command admission.
-    if full_scope:
-        clean_coverage_files(repo_root, recursive=False)
-
-    if discovery_preflight_enabled(env=env):
-        log_discovered_tests(
-            cmd,
-            repo_root,
-            env,
-            f"infrastructure ({scope})",
-            timeout_seconds=parse_test_discovery_timeout(scope),
-        )
-
     test_results: dict[str, Any] = {}
     try:
+        if full_scope:
+            apply_coverage_datafile(
+                cmd, env, ".coverage.infra", cwd=repo_root,
+                timeout_seconds=min(PYTEST_HELP_PROBE_TIMEOUT_SECONDS, remaining_test_budget(deadline)),
+            )
+            remaining_test_budget(deadline)
+            clean_coverage_files(repo_root, recursive=False)
+        if discovery_preflight_enabled(env=env):
+            log_discovered_tests(
+                cmd,
+                repo_root,
+                env,
+                f"infrastructure ({scope})",
+                timeout_seconds=min(parse_test_discovery_timeout(scope), remaining_test_budget(deadline)),
+            )
         config = _build_infrastructure_suite_config(
             cmd=cmd,
             env=env,
@@ -468,7 +473,6 @@ def _run_project_tests_impl(
     )
     env.pop("COVERAGE_PROCESS_START", None)
 
-    apply_coverage_datafile(cmd, env, str(project_root / ".coverage.project"))
     cmd.extend(
         [
             "--cov-report=term-missing",
@@ -488,25 +492,23 @@ def _run_project_tests_impl(
         cmd.extend(["-q"])
     prepend_uv_to_path(env)
 
-    # Both the runtime and all invocation options have been admitted. A missing
-    # interpreter or invalid verifier declaration must retain prior evidence.
-    clean_coverage_files(repo_root, scope_dir=project_root)
-
-    # Large private projects can legitimately expose tens of thousands of
-    # parametrized tests. Use the full-suite discovery budget here; the former
-    # 30-second default produced a misleading warning even when collection
-    # completed successfully moments later.
-    if discovery_preflight_enabled(env=env):
-        log_discovered_tests(
-            cmd,
-            repo_root,
-            env,
-            f"project '{project_name}'",
-            timeout_seconds=parse_test_discovery_timeout("full"),
-        )
-
     test_results: dict[str, Any] = {}
     try:
+        apply_coverage_datafile(
+            cmd, env, str(project_root / ".coverage.project"), cwd=project_root,
+            timeout_seconds=min(PYTEST_HELP_PROBE_TIMEOUT_SECONDS, remaining_test_budget(deadline)),
+        )
+        remaining_test_budget(deadline)
+        clean_coverage_files(repo_root, scope_dir=project_root)
+
+        if discovery_preflight_enabled(env=env):
+            log_discovered_tests(
+                cmd,
+                project_root,
+                env,
+                f"project '{project_name}'",
+                timeout_seconds=min(parse_test_discovery_timeout("full"), remaining_test_budget(deadline)),
+            )
         observation = prepare_measurement(
             repo_root,
             project_root,

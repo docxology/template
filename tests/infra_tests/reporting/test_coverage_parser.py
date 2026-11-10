@@ -6,11 +6,12 @@ Uses real pytest-style output strings and real temp files — no mocks.
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
-from infrastructure.core.testing.coverage_policy import PYTEST_HELP_PROBE_TIMEOUT_SECONDS
 from infrastructure.reporting.coverage_json_parser import read_coverage_total
 from infrastructure.reporting.coverage_parser import (
     _parse_failures_fallback,
@@ -24,7 +25,11 @@ from infrastructure.reporting.coverage_parser import (
     extract_failed_tests,
     extract_timeout_errors,
 )
-from infrastructure.core.testing.coverage_policy import check_cov_datafile_support
+from infrastructure.core.testing.coverage_policy import (
+    PYTEST_PROCESS_PLUGIN,
+    check_cov_datafile_support,
+    coverage_free_subprocess_env,
+)
 
 
 FAILURES_SECTION_OUTPUT = """\
@@ -228,18 +233,45 @@ class TestCheckCovDatafileSupport:
         result = check_cov_datafile_support()
         assert isinstance(result, bool)
 
-    def test_result_matches_actual_pytest_help(self):
-        # Verify the function correctly reflects whether --cov-datafile is in pytest --help
-        import subprocess
-
-        result = subprocess.run(
-            ["python", "-m", "pytest", "--help"],
-            capture_output=True,
-            text=True,
-            timeout=PYTEST_HELP_PROBE_TIMEOUT_SECONDS,
+    def test_registered_hidden_option_is_read_before_conftests(self, tmp_path):
+        plugin = tmp_path / "fixture_options.py"
+        plugin.write_text(
+            "from argparse import SUPPRESS\n"
+            "def pytest_addoption(parser):\n"
+            "    parser.addoption('--cov-datafile', dest='fixture_destination', help=SUPPRESS)\n",
+            encoding="utf-8",
         )
-        expected = "--cov-datafile" in result.stdout
-        assert check_cov_datafile_support() == expected
+        sentinel = tmp_path / "conftest-imported"
+        (tmp_path / "conftest.py").write_text(
+            f"from pathlib import Path\nPath({str(sentinel)!r}).touch()\n",
+            encoding="utf-8",
+        )
+        (tmp_path / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
+        env = coverage_free_subprocess_env() | {
+            "PYTEST_PLUGINS": plugin.stem,
+            "PYTEST_ADDOPTS": "",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+            "PYTHONPATH": str(Path(__file__).resolve().parents[3]),
+        }
+        command = [sys.executable, "-B", "-m", "pytest"]
+        assert check_cov_datafile_support(command=command, cwd=tmp_path, env=env)
+        assert not check_cov_datafile_support(command=[*command, "-p", f"no:{plugin.stem}"], cwd=tmp_path, env=env)
+        assert not sentinel.exists()
+
+        positional = tmp_path / "--template-pytest-metadata=capability"
+        positional.mkdir()
+        executed = tmp_path / "test-executed"
+        (positional / "test_probe.py").write_text(
+            "from pathlib import Path\n"
+            f"def test_probe():\n    Path({str(executed)!r}).touch()\n",
+            encoding="utf-8",
+        )
+        result = subprocess.run(
+            [*command, "-p", PYTEST_PROCESS_PLUGIN, "--", positional.name],
+            cwd=tmp_path, env=env, stdin=subprocess.DEVNULL, capture_output=True, timeout=30,
+        )
+        assert result.returncode == 0, (result.stdout, result.stderr)
+        assert executed.exists() and sentinel.exists()
 
 
 class TestCheckTestFailures:
