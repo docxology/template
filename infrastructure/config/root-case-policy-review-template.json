@@ -918,14 +918,15 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_executor_log_ownership.py",
-      "source_sha256": "c54e36cc2006a5f9342149cb127251422cf0f9f47a9dcdcbb4fd5298bade9fcd",
+      "source_sha256": "7374fc23a793106dc5381418854f5ed94175b6deaa64d05de860115f305d79b8",
       "families": [
         "tests/infra_tests/core/pipeline/test_executor_log_ownership.py::test_actual_closed_banner_stream_releases_constructed_executor",
         "tests/infra_tests/core/pipeline/test_executor_log_ownership.py::test_actual_telemetry_constructor_failure_detaches_owned_logging",
         "tests/infra_tests/core/pipeline/test_executor_log_ownership.py::test_executor_logging_has_exact_owned_sinks_and_preserves_pytest_observers",
-        "tests/infra_tests/core/pipeline/test_executor_log_ownership.py::test_executor_logging_preserves_ordinary_python_progress"
+        "tests/infra_tests/core/pipeline/test_executor_log_ownership.py::test_executor_logging_preserves_ordinary_python_progress",
+        "tests/infra_tests/core/pipeline/test_executor_log_ownership.py::test_oldest_executor_closes_without_resetting_live_peer_logging"
       ],
-      "family_observations_sha256": "372fa893b6798434b169c6982a9b3727e87d89adf1c6d66219a68c1f517f318f",
+      "family_observations_sha256": "1df42b06eca4c5284ba8201ff2c5fe41f82974778ff5e0644fe17e2710f7e307",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -934,8 +935,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_executor_log_ownership.py",
-          "source_sha256": "c54e36cc2006a5f9342149cb127251422cf0f9f47a9dcdcbb4fd5298bade9fcd",
+          "source_sha256": "7374fc23a793106dc5381418854f5ed94175b6deaa64d05de860115f305d79b8",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/core/pipeline/test_executor_log_ownership.py",
+          "source_sha256": "7374fc23a793106dc5381418854f5ed94175b6deaa64d05de860115f305d79b8",
+          "line": 197
         }
       ]
     },
