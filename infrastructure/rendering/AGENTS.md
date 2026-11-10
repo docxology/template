@@ -151,6 +151,9 @@ on nested/spanned header content. Literal examples are not a rewrite surface.
   options only on the opt-in `metadata.tagged_pdf: true` LuaLaTeX path.
   Untagged PDFs are unchanged, and neither tagged rendering nor metadata
   injection is a claim of PDF/UA certification.
+- Nested manuscript-relative image paths are rebased to the deployed web
+  figure directory before exact registry matching. This nested-path rewrite
+  targets image `src` attributes, not literal paths in prose or code examples.
 - Figure-registry 1.2 records may add a structured `long_description` and an
   `exact_value_fallback`. The renderer associates long descriptions through
   `aria-details`, validates the exact-value identifier inventory and its safe

@@ -145,11 +145,19 @@ class WebRenderer:
     def _output_file_for_source(self, source_file: Path) -> Path:
         """Return a collision-resistant HTML path for an individual section."""
         output_dir = Path(self.config.web_dir)
-        parent_name = source_file.parent.name
-        if parent_name and parent_name not in {".", ""}:
-            raw_stem = f"{parent_name}__{source_file.stem}"
-        else:
-            raw_stem = source_file.stem
+        # Use the full relative path from the output directory so that
+        # same-named files in different subdirectories never collide.
+        try:
+            anchor = Path(self.config.output_dir).resolve()
+            relative = source_file.resolve().relative_to(anchor)
+            raw_stem = "__".join(relative.with_suffix("").parts)
+        except (ValueError, AttributeError):
+            # Fallback: parent + stem (legacy behavior for unanchored sources).
+            parent_name = source_file.parent.name
+            if parent_name and parent_name not in {".", ""}:
+                raw_stem = f"{parent_name}__{source_file.stem}"
+            else:
+                raw_stem = source_file.stem
         safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", raw_stem).strip("-._") or source_file.stem
         return output_dir / f"{safe_stem}.html"
 
@@ -206,8 +214,11 @@ class WebRenderer:
             profile.validate_source(source_file)
         profile.prepare_output_directory(output_dir)
 
-        # Remove existing output file to ensure fresh generation
+        # Capture the existing page's mode before removing it so the
+        # replacement preserves restrictive permissions (e.g. 0600).
+        existing_mode: int | None = None
         if output_file.exists():
+            existing_mode = stat.S_IMODE(output_file.stat().st_mode)
             output_file.unlink()
             logger.debug(f"Removed existing output file: {output_file.name}")
 
@@ -284,8 +295,8 @@ class WebRenderer:
                 cmd, combined_md, source_files, writer="html", environment=options["env"]
             ):
                 subprocess.run(cmd, check=True, capture_output=True, text=True, **options)
-            if output_file.exists():
-                os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
+            if existing_mode is not None:
+                os.chmod(render_target, existing_mode)
             try:
                 os.replace(render_target, output_file)
             except OSError as exc:

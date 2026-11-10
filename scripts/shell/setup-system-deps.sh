@@ -157,6 +157,9 @@ verify_with_python() {
 if [[ -z "$PREPARED_PYTHON" ]]; then
     # shellcheck source=scripts/shell/shell_bootstrap.sh
     source "${REPO_ROOT}/scripts/shell/shell_bootstrap.sh"
+    # ensure_uv is defined in bash_utils.sh, which bootstrap does not source.
+    # shellcheck source=scripts/shell/bash_utils.sh
+    source "${REPO_ROOT}/scripts/shell/bash_utils.sh"
     if [[ ${CHECK_ONLY} -eq 1 ]]; then
         command -v uv >/dev/null 2>&1 || die "uv not found (required). Install: brew install uv, or the pinned installer in docs/operational/build/dependency-management.md"
     else

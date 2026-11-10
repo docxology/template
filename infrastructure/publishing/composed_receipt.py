@@ -273,6 +273,11 @@ def _check_entry(
     if not isinstance(producer, list) or not producer or any(not isinstance(arg, str) or not arg for arg in producer):
         raise ValueError(f"composed receipt class {gate} must name its producer argv")
     evidence_state = _check_hosted_origin(gate, entry, requirement)
+    if hosted_required((requirement,)) and evidence_state != "observed":
+        raise ValueError(
+            f"composed receipt class {gate} requires a hosted origin that could not be verified "
+            f"(resolved {evidence_state!r}); unverified hosted origins are not release evidence"
+        )
     if entry.get("evidence_state") != evidence_state:
         raise ValueError(
             f"composed receipt class {gate} evidence_state does not match the observed origin "

@@ -403,37 +403,43 @@ class TestFigureVerification:
     """Test figure verification before LaTeX compilation."""
 
     def test_figure_reference_extraction(self):
-        """Test extraction of figure references from LaTeX."""
-        import re
+        """verify_figure_references resolves existing figures and logs missing ones."""
+        from infrastructure.rendering._pdf_combined_prevalidate import verify_figure_references
 
-        latex_content = (
-            r"\includegraphics{../figures/fig1.png}" + "\n"
-            r"\includegraphics[width=0.8\textwidth]{../figures/fig2.png}" + "\n"
-            r"Some text without figures" + "\n"
-            r"\includegraphics{../figures/fig3.pdf}"
-        )
-
-        pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
-        figures = re.findall(pattern, latex_content)
-
-        assert len(figures) == 3
-        assert "../figures/fig1.png" in figures
-        assert "../figures/fig2.png" in figures
-        assert "../figures/fig3.pdf" in figures
-
-    def test_missing_figure_detection(self):
-        """Test detection of missing figure files."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            tmppath = Path(tmpdir)
-            figures_dir = tmppath / "figures"
+            figures_dir = Path(tmpdir) / "figures"
             figures_dir.mkdir()
+            (figures_dir / "fig1.png").write_text("dummy")
+            (figures_dir / "fig2.png").write_text("dummy")
+            (figures_dir / "fig3.pdf").write_text("dummy")
 
-            # Create one figure
+            latex_content = (
+                r"\includegraphics{../figures/fig1.png}" + "\n"
+                r"\includegraphics[width=0.8\textwidth]{../figures/fig2.png}" + "\n"
+                r"Some text without figures" + "\n"
+                r"\includegraphics{../figures/fig3.pdf}"
+            )
+            # All three figures exist; should not log any missing.
+            verify_figure_references(latex_content, figures_dir)
+
+    def test_missing_figure_detection(self, caplog):
+        """verify_figure_references logs a warning for each missing figure."""
+        import logging
+        from infrastructure.rendering._pdf_combined_prevalidate import verify_figure_references
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            figures_dir = Path(tmpdir) / "figures"
+            figures_dir.mkdir()
             (figures_dir / "exists.png").write_text("dummy")
 
-            # Check both existing and missing
-            assert (figures_dir / "exists.png").exists()
-            assert not (figures_dir / "missing.png").exists()
+            latex_content = (
+                r"\includegraphics{../figures/exists.png}" + "\n"
+                r"\includegraphics{../figures/missing.png}"
+            )
+            with caplog.at_level(logging.WARNING):
+                verify_figure_references(latex_content, figures_dir)
+            assert any("missing.png" in record.message for record in caplog.records)
+            assert not any("exists.png" in record.message and "Missing" in record.message for record in caplog.records)
 
 
 def test_active_declared_typography_reaches_emitted_tex(tmp_path: Path, repo_root: Path) -> None:

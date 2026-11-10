@@ -483,3 +483,31 @@ _agent_erg_archive_*/
 /.agents/state/*
 !/.agents/state/README.md
 !/.agents/state/continual-learning-memory.example.json
+
+# ── Credential / environment safety net ──────────────────────────────────
+# The exemplar negations above (`!projects/templates/<name>/**`) re-include
+# everything under an allowlisted exemplar. Re-exclude sensitive files here
+# so a `.env`, a virtual environment, or a credentials file can never be
+# committed by accident, regardless of which exemplar it sits under.
+**/.env
+**/.env.*
+**/.venv/
+**/venv/
+**/env/
+**/ENV/
+**/env.bak/
+**/venv.bak/
+**/test_credentials.yaml
+**/credentials.yaml
+**/credentials.yml
+**/.netrc
+**/.npmrc
+**/.pypirc
+**/id_rsa
+**/id_ed25519
+**/*.pem
+**/*.key
+**/secrets.yaml
+**/secrets.yml
+**/secrets.json
+**/.secrets

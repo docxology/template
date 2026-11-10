@@ -182,6 +182,10 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         Mode and explicit clean/verification selection leave the YAML source unchanged.
         """
+        # When incremental caching is enabled, the clean stage must not run:
+        # it would delete the very outputs the cache needs to skip work.
+        if self._incremental_enabled():
+            skip_clean = True
         plan = resolve_execution_plan(self, skip_clean=skip_clean)
         self._install_execution_plan(plan)
         return plan.bind(self)
