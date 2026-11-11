@@ -29,7 +29,11 @@ from infrastructure.reporting.native_stage_child_contracts import (
     verify_stage_observation,
 )
 from infrastructure.reporting.native_stage_child_custody import NativeStageChildReaderOperation
-from infrastructure.reporting.native_stage_child_scope import retain_native_stage_artifact
+from infrastructure.reporting.native_stage_child_scope import (
+    _render_stage,
+    _standalone_analysis_leaf,
+    retain_native_stage_artifact,
+)
 from infrastructure.reporting.native_tool_producer import _stage_scope_nomination
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
@@ -375,3 +379,40 @@ def test_specification_refuses_root_lane_sibling_and_wrong_nonce_child(tmp_path:
         spec["request"]["path"] = directory + "/request.json"
         with pytest.raises(ValueError):
             validate_specification(spec)
+
+
+def _standalone_leaf_spec(root: Path) -> dict[str, Any]:
+    spec, _ = _specification(root)
+    spec["protocol"] = "analysis"
+    spec["script"]["path"] = f"projects/{spec['scope']}/scripts/15_generate_diagrams.py"
+    spec["stage_key"] = "analysis:scripts/15_generate_diagrams.py"
+    return spec
+
+
+def test_standalone_mermaid_requires_exact_analysis_leaf_not_parent_or_render(tmp_path: Path) -> None:
+    leaf = _standalone_leaf_spec(tmp_path)
+    assert _standalone_analysis_leaf(leaf) is True
+    assert _render_stage(leaf) is False
+
+    parent, _ = _specification(tmp_path)
+    assert _standalone_analysis_leaf(parent) is False
+
+    render, _ = _specification(tmp_path)
+    render["stage_key"] = "render_pdf"
+    render["script"]["path"] = "scripts/pipeline/stage_03_render.py"
+    assert _render_stage(render) is True
+    assert _standalone_analysis_leaf(render) is False
+
+
+@pytest.mark.parametrize("damage", ["key", "script", "scope", "protocol"])
+def test_standalone_mermaid_analysis_leaf_rejects_identity_mismatches(tmp_path: Path, damage: str) -> None:
+    spec = _standalone_leaf_spec(tmp_path)
+    if damage == "key":
+        spec["stage_key"] = "analysis:scripts/other.py"
+    elif damage == "script":
+        spec["script"]["path"] = f"projects/{spec['scope']}/scripts/other.py"
+    elif damage == "scope":
+        spec["scope"] = "templates/template_other"
+    else:
+        spec["protocol"] = "stage"
+    assert _standalone_analysis_leaf(spec) is False

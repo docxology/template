@@ -144,7 +144,10 @@ def run_source_native_mermaid(
 
         if role not in CALLERS or type(timeout) is not int or timeout <= 0 or not isinstance(raw_source, str):
             raise ValueError("Mermaid production role/timeout/caller source is absent")
-        stage_directory = current_native_stage_directory(require_render=True)
+        stage_directory = current_native_stage_directory(
+            require_render=role == "inline",
+            require_analysis=role == "standalone",
+        )
         if stage_directory is None:
             raise ValueError("native Mermaid production requires its actual fixed Source-admitted stage child")
         root = owner.source.bindings.current_root
@@ -166,9 +169,12 @@ def run_source_native_mermaid(
         ):
             raise ValueError("Mermaid production inputs/output/CWD differ from a real selected Source project role")
         scope = matches[0]
+        # The caller's smaller timeout governs only its uninstrumented fallback.
+        # Native observation also includes Source custody, callbacks, cleanup and
+        # retention, so it always receives the shared finite observation ceiling.
         phase_deadline = min(
             owner.deadline,
-            time.monotonic() + min(timeout, NATIVE_OBSERVATION_CEILING_SECONDS),
+            time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS,
         )
         remaining(phase_deadline)
         paths = tuple(dict.fromkeys((source_path, *(path.absolute() for path in input_paths))))

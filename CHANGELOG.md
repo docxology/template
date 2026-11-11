@@ -38,6 +38,8 @@ locks.
 - Authenticate native loader terminal callbacks before reaping a completed
   process, and use one finite 600-second native observation ceiling for custody,
   callbacks, cleanup and retention without relaxing fail-closed acceptance.
+  Admit standalone Mermaid production only in the actual analysis stage; inline
+  manuscript fences remain render-stage only.
 ### Fixes carried forward from main
 
 - Apply generated project-test exclusions to the native pytest session's actual

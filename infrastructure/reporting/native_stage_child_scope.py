@@ -170,20 +170,40 @@ def _actual_native_stage_scope(owner: NativeProducerOperation, specification: Ar
         _CURRENT.reset(token)
 
 
-def current_native_stage_directory(*, require_render: bool = False) -> Path | None:
+def _render_stage(spec: dict[str, Any]) -> bool:
+    return bool(
+        spec["protocol"] == "stage"
+        and spec["stage_key"] == "render_pdf"
+        and spec["script"]["path"] == "scripts/pipeline/stage_03_render.py"
+    )
+
+
+def _standalone_analysis_leaf(spec: dict[str, Any]) -> bool:
+    """Match a Source-discovered analysis leaf, not its parent pipeline stage."""
+    script = spec["script"]["path"]
+    prefix = f"projects/{spec['scope']}/"
+    return bool(
+        spec["protocol"] == "analysis"
+        and script.startswith(prefix)
+        and spec["stage_key"] == "analysis:" + script.removeprefix(prefix)
+    )
+
+
+def current_native_stage_directory(*, require_render: bool = False, require_analysis: bool = False) -> Path | None:
     """Return verified child DATA location; a path never admits Source or tools."""
     context = _CURRENT.get()
     if context is None:
         return None
     context.verify()
-    if require_render:
+    if require_render and require_analysis:
+        raise ValueError("native stage admission cannot require both analysis and render roles")
+    if require_render or require_analysis:
         spec = context.specification.json_object()
-        if (
-            spec["protocol"] != "stage"
-            or spec["stage_key"] != "render_pdf"
-            or spec["script"]["path"] != "scripts/pipeline/stage_03_render.py"
-        ):
-            raise ValueError("native renderer launch requires the exact actual Source render stage")
+        admitted = _render_stage(spec) if require_render else _standalone_analysis_leaf(spec)
+        if not admitted:
+            if require_render:
+                raise ValueError("native renderer launch requires the exact actual Source render stage")
+            raise ValueError("native analysis Mermaid launch requires the exact actual Source analysis leaf")
     return context.directory
 
 
@@ -282,11 +302,14 @@ def retain_native_stage_artifact(
     ):
         raise ValueError("native stage renderer packet is not the actual child-owned Source-written snapshot")
     spec, value = context.specification.json_object(), actual.json_object()
-    if (
-        spec["protocol"] != "stage"
-        or spec["stage_key"] != "render_pdf"
-        or spec["script"]["path"] != "scripts/pipeline/stage_03_render.py"
-    ):
+    standalone = (
+        value.get("schema_version") == "template-source-native-mermaid-production-command-v1"
+        and value.get("role") == "standalone"
+    )
+    if standalone:
+        if not _standalone_analysis_leaf(spec):
+            raise ValueError("standalone Mermaid retention requires the exact actual Source analysis leaf")
+    elif not _render_stage(spec):
         raise ValueError("renderer retention requires the exact actual Source render stage")
     validate_renderer_stage_artifact(
         context.source,
