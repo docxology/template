@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-0-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-0-start-->
 ```
 
 # Abstract {#sec:abstract}
@@ -53,12 +53,12 @@ repository's configured project coverage gate, generates 18 artifacts
 (1 figures, 7 data files,
 10 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `0bfa8a91262ffb45`, build timestamp
-`2026-11-09T14:02:38Z`) into [@sec:reproducibility].
+`2026-11-11T08:19:55Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-0-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-0-end-->
 ```
 
 
@@ -68,7 +68,7 @@ metadata (configuration hash `0bfa8a91262ffb45`, build timestamp
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-1-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-1-start-->
 ```
 
 # Introduction {#sec:introduction}
@@ -167,7 +167,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
   mistaken for a general-purpose protocol-execution system.
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-1-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-1-end-->
 ```
 
 
@@ -177,7 +177,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-2-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-2-start-->
 ```
 
 # Methodology {#sec:methodology}
@@ -322,7 +322,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
    [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-2-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-2-end-->
 ```
 
 
@@ -332,7 +332,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-3-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-3-start-->
 ```
 
 # Results {#sec:results}
@@ -424,7 +424,7 @@ structure and provenance rather than transcribing values that would drift
 the moment the example methods changed.
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-3-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-3-end-->
 ```
 
 
@@ -434,7 +434,7 @@ the moment the example methods changed.
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-4-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-4-start-->
 ```
 
 # Conclusion {#sec:conclusion}
@@ -520,7 +520,7 @@ The pipeline compiled both worked example methods, wrote
 together with `config.yaml` into PDF.
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-4-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-4-end-->
 ```
 
 
@@ -530,7 +530,7 @@ together with `config.yaml` into PDF.
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-5-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-5-start-->
 ```
 
 # Experimental Setup {#sec:experimental_setup}
@@ -598,7 +598,7 @@ The typical analysis order is:
 
 1. `scripts/methods_analysis.py` — compiles every example method, runs all
    gates, exports worklist/CSV/Mermaid/JSON per method, demonstrates the
-   provenance hash-chain, and writes `../figures/step_counts.png`,
+   provenance hash-chain, and writes `output/figures/step_counts.png`,
    printing each output path for manifest collection.
 2. `scripts/z_generate_manuscript_variables.py` — reads `manuscript/config.yaml`
    and the analysis outputs, then resolves every generated variable in
@@ -620,7 +620,7 @@ This table is descriptive documentation only; it is not executed as code
 during the build.
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-5-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-5-end-->
 ```
 
 
@@ -630,7 +630,7 @@ during the build.
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-6-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-6-start-->
 ```
 
 # Reproducibility {#sec:reproducibility}
@@ -706,11 +706,11 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `0bfa8a91262ffb45` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-11-09T14:02:38Z` records when the variables were generated
+`2026-11-11T08:19:55Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-6-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-6-end-->
 ```
 
 
@@ -720,7 +720,7 @@ SHA-256 of `manuscript/config.yaml` at build time, and
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-7-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-7-start-->
 ```
 
 # Scope, Related Work, and Positioning {#sec:scope}
@@ -804,7 +804,7 @@ generated-variable-injected prose — remain visible rather than buried under
 a compiler implementation at BPL's full scale.
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-7-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-7-end-->
 ```
 
 
@@ -814,7 +814,7 @@ a compiler implementation at BPL's full scale.
 
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-8-start-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-8-start-->
 ```
 
 # References {#sec:references}
@@ -829,5 +829,5 @@ uv run python -m infrastructure.reference.citation.cli validate \
 ```
 
 ```{=html}
-<!--template-web-source-ec891aedcf23afa0d465d06436d128ee3114e165cfc359887bbdd3da469cb290-8-end-->
+<!--template-web-source-48d76a0f0bafe8598511ed46cedffa2ce03db889ea661902a331d391254bdce4-8-end-->
 ```

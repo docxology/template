@@ -44,7 +44,7 @@
     },
     {
       "rendered_path": "output/manuscript/06_reproducibility.md",
-      "rendered_sha256": "9774fabfc838ab9f52d9ace06cfab4d9328191a116367d24e92ce9e602c6559a",
+      "rendered_sha256": "80f1e97da286c82d134aca2526984cc9da01d232d9255c3f1b6fb2d07d16e6ef",
       "source_path": "manuscript/06_reproducibility.md",
       "source_sha256": "9160d7cf011ca7feb015ae49daa17536ef93d6bf359e887d27dc357499d4d0dc"
     },
@@ -76,23 +76,23 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b1e193a3543f5907b036f0910ff05d1402cff740a70d49c2e721436708ca79bf",
+      "sha256": "02f59f0bd46375176dd4b10663dfa8b95a386abb30c09764f8f2422afc47b283",
       "size_bytes": 24134
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "19863a0ce3ecca5f6e21aa4bc87e6536d85cec65ef5dd6e4002e8ed7b9e19d71",
-      "size_bytes": 106846
+      "sha256": "1c814a5a620d4d1ecb16c2f60f736deb6c181af5fcf99fed260326bbb6a55033",
+      "size_bytes": 106854
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "ed59552e3be9a3f80ad28d11135bfe6afe5bfd1fce1af3baba2ca315d4c3e8e5",
+      "sha256": "a4f83d9daffbeb0ec84c023b5c1236baa746f62cfbab2ec1f64765da236a664c",
       "size_bytes": 2942
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "f5ccee261b04e5ceb74697a2ddf2391012cdd417841cc46967d439aadeeb02c1",
-      "size_bytes": 13003
+      "sha256": "044038b9f45abebb6b8faa1637ba54c3f71fa4fe815fadad3276bc94511c0987",
+      "size_bytes": 13004
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -103,15 +103,15 @@
     },
     "output": {
       "file_count": 74,
-      "sha256": "6d71ccc24841e308633cc5e6b7b239314f3eaa8225a144a2c0cffb27b40ec08c"
+      "sha256": "3148cd3b65cb83021cafc29d96a5ee6eb81b9de0666e52bff66534e77435a471"
     },
     "source": {
       "file_count": 46,
       "sha256": "42f7ab4eb06f36d42cfea564a815f5318b5171796aa39c589263a7dbd8943b21"
     },
     "stage": {
-      "file_count": 1759,
-      "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+      "file_count": 1764,
+      "sha256": "504a965543a4729127300a2738700ffed95da43f1dee005f236b2b8b0886b0f7"
     }
   },
   "project": "templates/template_gold_refinement",

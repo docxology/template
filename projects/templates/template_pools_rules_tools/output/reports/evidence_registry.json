@@ -457,7 +457,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T11:03:37Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -465,11 +465,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "62538"
+      "value": "62546"
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T11:03:37Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -477,7 +477,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "625.38"
+      "value": "625.46"
     },
     {
       "active": true,

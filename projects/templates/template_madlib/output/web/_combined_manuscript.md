@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-0-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-0-start-->
 ```
 
 # Abstract
@@ -11,7 +11,7 @@ The committed seed is `431` and the current schema expands 22 slot rule(s) into 
 The result is not a claim that lexical substitution creates scholarship. It is a worked template for conditional manuscript assembly: section enablement, token provenance, figure registration, and unresolved-placeholder checks all become inspectable artifacts before the shared renderer produces PDF, HTML, and slides.
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-0-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-0-end-->
 ```
 
 
@@ -21,7 +21,7 @@ The result is not a claim that lexical substitution creates scholarship. It is a
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-1-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-1-start-->
 ```
 
 # Introduction: Lexicon as Data and Manuscript as Build Artifact
@@ -49,7 +49,7 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 | Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-1-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-1-end-->
 ```
 
 
@@ -59,7 +59,7 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-2-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-2-start-->
 ```
 
 # Methods: Source-Owned Token Injection and Conditional IMRAD Assembly
@@ -155,7 +155,7 @@ Fork migration closes the method. A downstream project should update config rows
 | Compose conditional IMRAD bodies | Build large-grain section variables from narrative moves, selected tokens, section switches, and local claim boundaries. | Generated manuscript variables and hydrated output/manuscript Markdown. | `section variables` |
 | Assemble evidence tables | Render method protocol, pipeline phase, design principle, audit rule, token inventory, section plan, and provenance tables from config and TokenPlan. | Composition tests and generated manuscript_variables.json table entries. | `Markdown evidence tables` |
 | Align claims with evidence ledger | Keep generated method, visualization, and publication-boundary claims tied to config, source modules, generated artifacts, or explicit non-claim boundaries. | data/claim_ledger.yaml and evidence registry validation. | `claim-aligned evidence surface` |
-| Generate visual audit surface | Write the cover overview, token-injection flow, section allocation, provenance trace, quality gate, and configured-field figures from generated data. | Nonblank figure tests and ../figures/figure_registry.json. | `registered figure set` |
+| Generate visual audit surface | Write the cover overview, token-injection flow, section allocation, provenance trace, quality gate, and configured-field figures from generated data. | Nonblank figure tests and output/figures/figure_registry.json. | `registered figure set` |
 | Emit machine-readable artifacts | Write token inventory, section plan, configured-field inventory, injection trace, summary reports, validation inputs, and figure registry. | Artifact-writing tests, artifact manifest, and validation reports. | `output/data, output/reports, and output/figures` |
 | Hydrate manuscript shell | Write manuscript_variables.json and resolve the source Markdown shells into output/manuscript. | Unresolved-token scan and render validation. | `output/manuscript` |
 | Render and validate deliverables | Render PDF, HTML, and slides through shared infrastructure, then validate PDFs, Markdown, figure registry, evidence registry, design overlays, and artifact manifest. | Stage 03 render log and Stage 04 validation report. | `validated project output` |
@@ -197,7 +197,7 @@ Fork migration closes the method. A downstream project should update config rows
 | R12 | Every fork migration note must name config, source, test, validator, pipeline, and claim-ledger obligations. |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-2-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-2-end-->
 ```
 
 
@@ -207,7 +207,7 @@ Fork migration closes the method. A downstream project should update config rows
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-3-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-3-start-->
 ```
 
 # Results: Provenance, Density, and Resolved Manuscript Surface
@@ -288,7 +288,7 @@ Visualization is enabled for configured_field_matrix, section_configuration_heat
 | Authoring Contract: Human Review and Forking Obligations | `AUTHORING_AUDIENCE`, `AUTHORING_QUALITY` | audiences, qualities |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-3-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-3-end-->
 ```
 
 
@@ -298,7 +298,7 @@ Visualization is enabled for configured_field_matrix, section_configuration_heat
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-4-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-4-start-->
 ```
 
 # Discussion: Accountability Boundaries for Generated Prose
@@ -310,7 +310,7 @@ The configured discussion moves are bound the scholarly claim, describe useful a
 The pattern scales only when authors preserve the same ownership boundary. Lexicons should be small enough to review, categories should be named for their manuscript function, and section switches should state what has been removed. When richer language is needed, the next layer should add domain-specific validators rather than relaxing provenance.
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-4-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-4-end-->
 ```
 
 
@@ -320,7 +320,7 @@ The pattern scales only when authors preserve the same ownership boundary. Lexic
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-5-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-5-start-->
 ```
 
 # Configuration: Schema-Controlled Lexicon, Slots, and Narrative Moves
@@ -535,7 +535,7 @@ The configured-field inventory separates 126 explicit YAML path(s) from 11 loade
 | `madlib.visualizations.token_injection_flow` | explicit | visualization | true |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-5-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-5-end-->
 ```
 
 
@@ -545,7 +545,7 @@ The configured-field inventory separates 126 explicit YAML path(s) from 11 loade
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-6-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-6-start-->
 ```
 
 # Evaluation: Gate Criteria, QA Probes, and Failure Discovery
@@ -566,7 +566,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | --- | --- | --- | --- |
 | Placeholder resolution | No unresolved uppercase manuscript placeholders remain in output/manuscript or rendered web output. | tests/test_manuscript_variables.py and rg unresolved-token scan. | `pytest` |
 | Token provenance coverage | Every selected token maps to category, selected value, section, and config pointer. | output/reports/injection_trace.json and output/data/token_inventory.json. | `analysis` |
-| Figure registry integrity | Every referenced figure label is present in ../figures/figure_registry.json. | scripts/pipeline/stage_04_validate.py figure registry check. | `validation` |
+| Figure registry integrity | Every referenced figure label is present in output/figures/figure_registry.json. | scripts/pipeline/stage_04_validate.py figure registry check. | `validation` |
 | Evidence registry cleanliness | Generated manuscript numbers and claims pass the project evidence registry. | output/reports/evidence_registry.json. | `validation` |
 | Copied-output readiness | PDF, HTML, slides, figures, data, and reports copy into output/templates/template_madlib. | scripts/pipeline/stage_05_copy.py output statistics. | `copy` |
 | Reviewer packet completeness | Hydrated Markdown, rendered PDF, web output, slides, figures, data, reports, validation results, and copy statistics are all present for review. | Stage 04 validation report and Stage 05 output_statistics.json. | `copy` |
@@ -581,7 +581,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | Placeholder survival | Did any source token survive hydration? | No uppercase placeholders are found in generated manuscript or web files. | `output/manuscript and output/web` |
 | Provenance completeness | Can every selected token be traced to a category, section, value, and config key? | The injection trace and token inventory contain one row for each generated token. | `output/reports/injection_trace.json` |
 | Section-switch observability | Does a disabled section resolve to a visible explanation? | Disabled section bodies cite their controlling section condition. | `output/data/section_plan.json` |
-| Figure registry coverage | Does every manuscript figure reference have a generated registry entry? | Figure registry validation passes. | `../figures/figure_registry.json` |
+| Figure registry coverage | Does every manuscript figure reference have a generated registry entry? | Figure registry validation passes. | `output/figures/figure_registry.json` |
 | Method-figure alignment | Do method figures describe generated data rather than decorative or unsupported claims? | Figure registry captions, nonblank PNG tests, and manual visual QA align with artifact data. | `output/figures` |
 | Evidence cleanliness | Do generated claims stay within local evidence boundaries? | Evidence registry validation passes without unsupported claims. | `output/reports/evidence_registry.json` |
 | Fork readiness | Does the authoring contract tell downstream forks what to extend before adding domain claims? | Authoring obligations cite config diffs, claim ledger updates, validators, and full reruns. | `output/manuscript/10_authoring_contract.md` |
@@ -592,7 +592,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 | Fork migration sufficiency | Does the documentation tell forks which surfaces to change before adding domain claims? | README, STANDALONE, manuscript README, and Authoring Contract list config, source, test, validator, and claim-ledger obligations. | `README.md, STANDALONE.md, manuscript/README.md, and output/manuscript/10_authoring_contract.md` |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-6-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-6-end-->
 ```
 
 
@@ -602,7 +602,7 @@ The QA probes are Method row completeness, Field-origin visibility, Placeholder 
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-7-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-7-start-->
 ```
 
 # Reproducibility: Seeded Regeneration and Artifact Trace
@@ -614,14 +614,14 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
 - Config hash: `70a5c7317f5e44db`
-- Generated: `2026-11-09T14:02:38Z` (derived from `SOURCE_DATE_EPOCH`; an
+- Generated: `2026-11-11T08:19:55Z` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
 - Python: `3.14.10`
 - Platform: `Linux x86_64`
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-7-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-7-end-->
 ```
 
 
@@ -631,7 +631,7 @@ The copied root output is therefore a consequence of local source and config. Ge
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-8-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-8-start-->
 ```
 
 # Limitations: Non-Claims, Misuse Modes, and Human Review
@@ -661,7 +661,7 @@ The author remains responsible for theory, citations, reader expectations, and d
 | Fork migration ambiguity | A fork leaves authors unsure which exemplar surfaces must change for a domain-specific manuscript. | README, STANDALONE notes, manuscript README, and Authoring Contract review. | Document required config, source, test, claim-ledger, validator, and pipeline changes before making domain claims. |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-8-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-8-end-->
 ```
 
 
@@ -671,7 +671,7 @@ The author remains responsible for theory, citations, reader expectations, and d
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-9-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-9-start-->
 ```
 
 # Scope: Related Generators and Responsible Forking
@@ -683,7 +683,7 @@ The configured scope moves are distinguish generation from truth, limit publicat
 Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` record the declared repository and deposited identifiers when present, but those metadata do not turn the generated manuscript into empirical validation or reader-quality evidence.
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-9-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-9-end-->
 ```
 
 
@@ -693,7 +693,7 @@ Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, 
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-10-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-10-start-->
 ```
 
 # Authoring Contract: Human Review and Forking Obligations
@@ -718,7 +718,7 @@ The quality standard is claim humility. A fork that only changes words has not p
 | Write fork migration notes | Document config, source, test, validator, and claim-ledger changes required by a domain fork. | `README.md, STANDALONE.md, and data/claim_ledger.yaml` |
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-10-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-10-end-->
 ```
 
 
@@ -728,11 +728,11 @@ The quality standard is claim humility. A fork that only changes words has not p
 
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-11-start-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-11-start-->
 ```
 
 # References
 
 ```{=html}
-<!--template-web-source-6ba35461558914e1564c4a40b4fedaf55208117c48556442aa219d3b5bf3aac8-11-end-->
+<!--template-web-source-98edcadde6c522a8302b6487d1bf0941226caccea63333287205b8d3d1142cab-11-end-->
 ```

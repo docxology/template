@@ -2,37 +2,37 @@
   "consumed_manuscript": [
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+      "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
       "source_path": "manuscript/00_abstract.md",
       "source_sha256": "6dac67c69bb6b7552420ad3c9da7ace1e361c3ccb0e32d8c4bf478fb488a8c64"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+      "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
       "source_path": "manuscript/01_introduction.md",
       "source_sha256": "15bfeaa33bafe7ff66490be186341c2e8b6b2fe93cacb0fcfa81eed3148bb092"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+      "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
       "source_path": "manuscript/02_architecture.md",
       "source_sha256": "b5d67db2dc82868a1be89d6d1deef3d825837dccdbca013f408309b757a888f6"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+      "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
       "source_path": "manuscript/03_story_and_graphics.md",
       "source_sha256": "6cc28869475ee90b89e3f2dd3463ca645ec9a24a44364a1aa9a53c49263eaf02"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+      "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
       "source_path": "manuscript/04_reproducibility.md",
       "source_sha256": "13750ef7f2e3fb48e23659f56ee9bcf21ba98ecdfe8d2669083c26feecc1a9c0"
     },
     {
       "rendered_path": "output/web/_combined_manuscript.md",
-      "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+      "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
       "source_path": "manuscript/99_references.md",
       "source_sha256": "e47938c4007f3e479c55570940821395c2c2cf228beffbd18bb505c9748c1a6c"
     }
@@ -40,23 +40,23 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4eba79d7d5edb4f37eca3b13f411d7dfeb7966d99f2933c21817a39bdc77dad7",
+      "sha256": "3642af0791868f939b661503034a7d53d83d0453d562a726a82ebc9f61aa2e35",
       "size_bytes": 12668
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
-      "size_bytes": 4633
+      "sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
+      "size_bytes": 6013
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "05018d90b902106a1109809faba4f80eec6032be03f899a1a6e53860e8a89c32",
-      "size_bytes": 1697
+      "sha256": "a650891bedb0103173b95bc5958ffa176ef71cea9f6e83b33809bc244923ab90",
+      "size_bytes": 1704
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "bb88c0d9d954d023383101fd2b84a1054cc8753e27c241221f13f54ca62ab133",
-      "size_bytes": 9791
+      "sha256": "c8478bc9d1a6a5801c8f6709330ce4e1404225429d4af24163273918721d546a",
+      "size_bytes": 9792
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -67,15 +67,15 @@
     },
     "output": {
       "file_count": 38,
-      "sha256": "00a343242631d37f22ac4d455e503e73f45c011339f633d9e7455dce6d4d6b9a"
+      "sha256": "0520e2147b12fb2c7bf083bb852ebebfbf4657898d4769af594bb6c006dee11f"
     },
     "source": {
       "file_count": 35,
       "sha256": "5e2252c9831dbe5a4f6f5778c880f1e01a33e7670938ec454e0a45aa2fe72fc0"
     },
     "stage": {
-      "file_count": 1759,
-      "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+      "file_count": 1764,
+      "sha256": "504a965543a4729127300a2738700ffed95da43f1dee005f236b2b8b0886b0f7"
     }
   },
   "project": "templates/template_storybook",
