@@ -197,10 +197,19 @@ def test_actual_prepared_workers_refuse_changed_definition_without_recompiling(
         if result.shared_infrastructure_result is not None
         else tuple(result.run_results.values())
     )
-    assert runs and all(not run.complete for run in runs)
+    assert len(runs) == len(specs)
+    assert all(not run.complete for run in runs)
     assert all(run.outcomes[0].status is StageStatus.BLOCKED for run in runs)
     assert all(run.outcomes[0].child_exit_code is None for run in runs)
-    assert all("source changed" in run.outcomes[0].diagnostic.lower() for run in runs)
+    expected_totals = {spec.plan.source_identity for spec in specs}
+    for run in runs:
+        encoded = run.outcomes[0].diagnostic.split("fingerprint_diagnostics=", 1)[1]
+        diagnostic, _ = json.JSONDecoder().raw_decode(encoded)
+        assert diagnostic["expected_total"] in expected_totals
+        assert diagnostic["observed_total"] != diagnostic["expected_total"]
+        assert set(diagnostic["components"]) == {"source", "python", "tools"}
+        digests = [diagnostic["observed_total"], *diagnostic["components"].values()]
+        assert all(len(digest) == 64 and set(digest) <= set("0123456789abcdef") for digest in digests)
 
 
 @pytest.mark.timeout(240)

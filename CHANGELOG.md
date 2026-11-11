@@ -55,6 +55,10 @@ locks.
 - Supply health-gate controls with genuinely generated standalone metadata and
   its matching lock. Frozen consumers retain `UV_FROZEN`, the real `uv run`
   command and every complete zero-drift/exit/failure boundary.
+- Retain complete expected/observed and Source/Python/tool component digests when
+  frozen execution identity refuses before launch or completion. Reuse one fresh
+  observation and the existing worker diagnostic schema; do not expose environment
+  values, rebaseline the plan or change original refusal/deadline precedence.
 
 ### Fixes carried forward from main
 
