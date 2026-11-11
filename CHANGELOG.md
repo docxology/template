@@ -59,6 +59,11 @@ locks.
   frozen execution identity refuses before launch or completion. Reuse one fresh
   observation and the existing worker diagnostic schema; do not expose environment
   values, rebaseline the plan or change original refusal/deadline precedence.
+- Export hosted native diagnostics only from numbered xdist case directories
+  and explicit original diagnostic leaves. Avoid fixture symlink loops,
+  `current` aliases, copied Source/environments and browser profiles.
+- Retain full browser-wrapper stdout/stderr, command and original outcome before
+  raising its actual child refusal; diagnostic loss cannot replace that refusal.
 
 ### Fixes carried forward from main
 
