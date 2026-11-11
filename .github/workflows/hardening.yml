@@ -514,13 +514,24 @@ jobs:
           name: infra-case-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
           path: |
             ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml
-            ${{ runner.temp }}/template-infra-case-workspaces/**/test_genuine_pdfium_runtime_gu*/*.stdout
-            ${{ runner.temp }}/template-infra-case-workspaces/**/test_genuine_pdfium_runtime_gu*/*.stderr
-            ${{ runner.temp }}/template-infra-case-workspaces/**/test_genuine_pdfium_runtime_gu*/*.exit
-            ${{ runner.temp }}/template-infra-case-workspaces/**/test_genuine_pdfium_runtime_gu*/runtime-input.json
-            ${{ runner.temp }}/template-infra-case-workspaces/**/test_genuine_pdfium_runtime_gu*/runtime-observation.json
-            ${{ runner.temp }}/template-infra-case-workspaces/**/complete-public-source-data[0-9]*.git-stage.trace2.json
-            !${{ runner.temp }}/template-infra-case-workspaces/**/test_genuine_pdfium_runtime_gucurrent/**
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.exit
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/runtime-input.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/runtime-observation.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/complete-public-source-data[0-9]*.git-stage.trace2.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/timeout.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper-exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/html-python-source-*/plan.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/html-python-source-*/closure.json
           if-no-files-found: warn
 
       - name: Upload complete selection record
