@@ -40,6 +40,9 @@ locks.
   callbacks, cleanup and retention without relaxing fail-closed acceptance.
   Admit standalone Mermaid production only in the actual analysis stage; inline
   manuscript fences remain render-stage only.
+- Preserve the reviewed Ubuntu APT mirror allowlist while appending lower-priority
+  EC2 regional fallbacks so hosted document setup can continue through primary
+  archive DNS failures.
 ### Fixes carried forward from main
 
 - Apply generated project-test exclusions to the native pytest session's actual
