@@ -929,7 +929,7 @@ here — the quality gate (sec. <a href="#sec:quality">6</a>) is where
 declared and actual counts are reconciled.</figcaption>
 </figure>
 <p>Running the script regenerates the figures under
-<code>../figures/</code>; the prose below and in later sections
+<code>output/figures/</code>; the prose below and in later sections
 describes what those artifacts show. Because the figures are produced
 from the descriptor and the fixture bytes, they cannot drift from the
 data without the tests and the quality gate noticing.</p>
@@ -1146,11 +1146,12 @@ artifacts:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_data_descriptor/scripts/generate_figures.py</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py</span></code></pre></div>
-<p>The first writes the five figures under <code>../figures/</code>; the
-second writes the descriptor readiness report, field-constraint summary,
-and metadata-only release manifest under <code>output/reports/</code>.
-Both are thin orchestrators: all computation lives in the tested
-<code>src/data_descriptor/</code> package.</p>
+<p>The first writes the five figures under <code>output/figures/</code>;
+the second writes the descriptor readiness report, field-constraint
+summary, and metadata-only release manifest under
+<code>output/reports/</code>. Both are thin orchestrators: all
+computation lives in the tested <code>src/data_descriptor/</code>
+package.</p>
 <h2 data-number="7.2" id="forking-in-a-real-dataset"><span
 class="header-section-number">7.2</span> Forking in a real dataset</h2>
 <p>To adapt this template to a real dataset:</p>

@@ -1143,9 +1143,9 @@ href="https://github.com/docxology/template/blob/main/projects/templates/templat
 analysis orchestrator</a> (<code>scripts/eda_analysis.py</code>), which
 calls the tested figure-data preparers in
 <code>src/template_eda_notebook/eda/figures.py</code>. Running the
-script regenerates the figures under <code>../figures/</code> and the
-summary CSV under <code>output/data/</code>; the prose below describes
-what those artifacts show.</p>
+script regenerates the figures under <code>output/figures/</code> and
+the summary CSV under <code>output/data/</code>; the prose below
+describes what those artifacts show.</p>
 <h2 data-number="4.1" id="dataset-and-missingness"><span
 class="header-section-number">4.1</span> Dataset and missingness</h2>
 <p>The dataset contains 120 subject records across three groups
@@ -1445,7 +1445,7 @@ class="header-section-number">6.4</span> Pipeline ordering</h2>
 <p>The typical analysis order is:</p>
 <ol type="1">
 <li><code>scripts/eda_analysis.py</code> — loads and cleans the dataset,
-then writes <code>../figures/*.png</code> and
+then writes <code>output/figures/*.png</code> and
 <code>output/data/summary_statistics.csv</code>, printing each output
 path for manifest collection.</li>
 <li>PDF rendering reads <code>manuscript/*.md</code> and

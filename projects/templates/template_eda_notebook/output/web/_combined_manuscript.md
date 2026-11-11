@@ -210,7 +210,7 @@ figure and the summary table are produced by the
 [EDA analysis orchestrator](https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py)
 (`scripts/eda_analysis.py`),
 which calls the tested figure-data preparers in `src/template_eda_notebook/eda/figures.py`. Running
-the script regenerates the figures under `../figures/` and the summary CSV
+the script regenerates the figures under `output/figures/` and the summary CSV
 under `output/data/`; the prose below describes what those artifacts show.
 
 ## Dataset and missingness
@@ -244,7 +244,7 @@ three numeric features, computed by `correlation_matrix()` and prepared for the
 heatmap by `correlation_heatmap_data()`. The diagonal is unity by construction
 and the matrix is symmetric.
 
-![Feature correlation heatmap: values from `correlation_heatmap_data()` (which wraps `correlation_matrix(method="pearson")`) rendered with a diverging colour map on the fixed range $[-1, 1]$. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two.](../figures/correlation_heatmap.png){#fig:correlation_heatmap}
+![Feature correlation heatmap: values from `correlation_heatmap_data()` (which wraps `correlation_matrix(method="pearson")`) rendered with a diverging colour map on the fixed range $[-1, 1]$. Height and weight are strongly positively correlated; resting heart rate is only weakly related to the other two.](../output/figures/correlation_heatmap.png){#fig:correlation_heatmap}
 
 `strongest_pairs(matrix, top_n=3)` ranks the distinct feature pairs by absolute
 correlation while preserving sign. On the shipped data the dominant relationship
@@ -433,7 +433,7 @@ numeric features.
 The typical analysis order is:
 
 1. `scripts/eda_analysis.py` — loads and cleans the dataset, then writes
-   `../figures/*.png` and `output/data/summary_statistics.csv`, printing each
+   `output/figures/*.png` and `output/data/summary_statistics.csv`, printing each
    output path for manifest collection.
 2. PDF rendering reads `manuscript/*.md` and `config.yaml` so figure paths and
    prose match the analysis that just completed.

@@ -1315,7 +1315,7 @@ traceable to a regenerable artifact.
 
 This manuscript was generated from a live retrieval run using 10 engines.
 Every number, table, and figure in this document is injected from a committed artifact
-(`output/data/*.json`, `../figures/*.png`). Re-running the pipeline with the same
+(`output/data/*.json`, `output/figures/*.png`). Re-running the pipeline with the same
 configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated from the same
 template. No number in this document was typed by hand.
