@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.testing.ci_execution_user import _environment, _git, _hosted, _payload
+from infrastructure.core.testing.ci_execution_user import _environment, _git, _hosted, _payload, _source_identity
 from infrastructure.core.testing._ci_execution_files import (
     _checkout_link,
     _copy_cache,
@@ -404,3 +404,53 @@ def test_real_git_binds_clean_initialized_and_uninitialized_submodules(tmp_path:
     assert git(parent, "submodule", "status", "--recursive").startswith(b"+")
     with pytest.raises(ValueError, match="tracked checkout changes"):
         _git(parent, time.monotonic() + 10)
+
+
+def test_real_git_rejects_parent_as_checkout_source(tmp_path: Path) -> None:
+    root = tmp_path.resolve(strict=True)
+    environment = {
+        "PATH": "/usr/bin:/bin",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_TERMINAL_PROMPT": "0",
+        "GIT_AUTHOR_NAME": "Execution profile fixture",
+        "GIT_AUTHOR_EMAIL": "execution-profile@example.invalid",
+        "GIT_COMMITTER_NAME": "Execution profile fixture",
+        "GIT_COMMITTER_EMAIL": "execution-profile@example.invalid",
+    }
+
+    def git(*arguments: str) -> bytes:
+        return subprocess.run(
+            [
+                "/usr/bin/git",
+                "-c",
+                "core.fsmonitor=false",
+                "-c",
+                "core.hooksPath=/dev/null",
+                "-c",
+                "commit.gpgsign=false",
+                "-C",
+                str(root),
+                *arguments,
+            ],
+            env=environment,
+            capture_output=True,
+            timeout=10,
+            check=True,
+        ).stdout
+
+    git("init", "--quiet")
+    (root / "tracked").write_bytes(b"original Source\n")
+    git("add", "tracked")
+    git("commit", "--quiet", "-m", "Original Source")
+    expected = git("rev-parse", "HEAD").decode().strip()
+    (root / "tracked").write_bytes(b"different child Source\n")
+    git("add", "tracked")
+    git("commit", "--quiet", "-m", "Different child Source")
+    actual = git("rev-parse", "HEAD").decode().strip()
+    assert git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:] == [expected]
+
+    with pytest.raises(ValueError, match="checkout differs from GitHub Source identity"):
+        _source_identity(root, time.monotonic() + 10, expected)
+
+    assert _source_identity(root, time.monotonic() + 10, actual)["head"] == actual

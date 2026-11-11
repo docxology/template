@@ -144,6 +144,13 @@ def _load(path: Path) -> dict:
     return data
 
 
+def _source_identity(root: Path, deadline: float, expected: str) -> dict[str, str]:
+    """Bind the actual clean checkout to the exact GitHub trigger commit."""
+    identity = _git(root, deadline)
+    _require(identity["head"] == expected, "checkout differs from GitHub Source identity")
+    return identity
+
+
 def _prepare(path: Path, docker: bool) -> None:
     _files._phase("request")
     _hosted(dict(os.environ))
@@ -160,17 +167,7 @@ def _prepare(path: Path, docker: bool) -> None:
     _require(not path.parent.exists(), "execution profile is one-shot")
     deadline = time.monotonic() + 240
     _require(shutil.disk_usage(temporary).free >= _files.RESERVE, "execution profile disk reserve refused")
-    identity = _git(root, deadline)
-    # On PRs, actions/checkout checks out the merge commit of the PR head into
-    # the base branch. GITHUB_SHA is the PR head, not the merge commit.
-    expected = os.environ["GITHUB_SHA"]
-    actual = identity["head"]
-    if actual != expected:
-        # A merge commit must have GITHUB_SHA as one of its parents.
-        parents = subprocess.check_output(
-            ["git", "rev-list", "--parents", "-n", "1", "HEAD"], cwd=root, text=True
-        ).split()
-        _require(expected in parents, "checkout differs from GitHub Source identity")
+    identity = _source_identity(root, deadline, os.environ["GITHUB_SHA"])
     caller = pwd.getpwuid(os.getuid())
     request = {
         "schema": 1,

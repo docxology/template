@@ -59,6 +59,10 @@ locks.
   frozen execution identity refuses before launch or completion. Reuse one fresh
   observation and the existing worker diagnostic schema; do not expose environment
   values, rebaseline the plan or change original refusal/deadline precedence.
+- Require execution-account preparation to use the exact GitHub trigger commit,
+  including the normal pull-request merge checkout. A real-Git regression
+  rejects an ordinary child checkout whose parent matches the trigger SHA;
+  ancestry alone cannot authorize a different Source or bypass the shared clock.
 - Export hosted native diagnostics only from numbered xdist case directories
   and explicit original diagnostic leaves. Avoid fixture symlink loops,
   `current` aliases, copied Source/environments and browser profiles.
