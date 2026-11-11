@@ -471,16 +471,6 @@
       },
       "exceptions": [
         {
-          "id": "tests/infra_tests/config/test_ci_gate.py::test_aggregate_requires_every_declared_job_and_keeps_independent_checks",
-          "lane": "core",
-          "obligations": []
-        },
-        {
-          "id": "tests/infra_tests/config/test_ci_gate.py::test_gate_decision_precedes_a_report_that_cannot_mask_it",
-          "lane": "core",
-          "obligations": []
-        },
-        {
           "id": "tests/infra_tests/config/test_ci_gate.py::test_source_owned_aggregate_refuses_invalid_workflow_selection",
           "lane": "core",
           "obligations": []

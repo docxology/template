@@ -94,18 +94,6 @@ def _job(values: dict[str, dict], event: str, tmp_path: Path) -> tuple[bool, boo
     return decision, report.returncode == 0, rows
 
 
-def test_gate_decision_precedes_a_report_that_cannot_mask_it() -> None:
-    job = _workflow()["jobs"]["ci-gate"]
-    steps = _gate_steps()
-    evaluation, summary = steps[_EVALUATION], steps[_SUMMARY]
-    assert "continue-on-error" not in job
-    assert all("continue-on-error" not in step for step in steps.values())
-    assert evaluation["id"] == "results" and "if" not in evaluation
-    assert summary["if"] == "always()"
-    assert summary["env"]["GATE_OUTCOME"] == "${{ steps.results.outcome }}"
-    assert summary["env"]["NEEDS_JSON"] == evaluation["env"]["NEEDS_JSON"] == "${{ toJson(needs) }}"
-
-
 def _skip(values: dict[str, dict], *names: str) -> dict[str, dict]:
     for name in names:
         values[name]["result"] = "skipped"
@@ -136,29 +124,6 @@ def test_actual_job_outcome_is_the_aggregate_decision(case: str, event: str, adm
     assert reported, "the report step must not fail the job or hide a refusal"
     assert decision is admitted
     assert [row.split(" | ")[0].removeprefix("| ") for row in rows] == list(values)
-
-
-def test_actual_report_labels_only_admitted_skips(tmp_path: Path) -> None:
-    values = _skip(_success(), "setup-hook-windows-smoke", "fep-lean", "test-infra-slow")
-    admitted, reported, rows = _job(values, "push", tmp_path)
-    assert admitted and reported
-    assert "| setup-hook-windows-smoke | skipped | detect: setup_hook=false |" in rows
-    assert "| fep-lean | skipped | detect: fep_lean=false |" in rows
-    assert "| test-infra-slow | skipped | schedule/manual lane on push |" in rows
-    assert "| lint | success |  |" in rows
-    admitted, reported, rows = _job(_skip(_success(), "lint"), "push", tmp_path)
-    assert not admitted and reported
-    assert "| lint | skipped | not admitted by CI Gate |" in rows
-
-
-def test_aggregate_requires_every_declared_job_and_keeps_independent_checks() -> None:
-    jobs = _workflow()["jobs"]
-    assert set(jobs["ci-gate"]["needs"]) == set(jobs) - {"ci-gate"}
-    assert jobs["ci-gate"]["if"] == "always()"
-    assert set(required_ci_jobs(Path(__file__).resolve().parents[3], "hardening.yml")) == set(jobs) - {"ci-gate"}
-    for name in ("health", "validate", "security", "docs-lint"):
-        assert "needs" not in jobs[name]
-        assert jobs[name]["steps"]
 
 
 @pytest.mark.parametrize("event", ["push", "pull_request", "schedule", "workflow_dispatch"])

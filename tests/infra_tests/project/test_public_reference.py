@@ -23,10 +23,13 @@ from infrastructure.reporting.readiness_receipts import public_source_paths
 pytestmark = pytest.mark.timeout(1800)
 
 
-def _git(root: Path, *arguments: str) -> bytes:
+def _git(root: Path, *arguments: str, trace: Path | None = None) -> bytes:
     """Owned fixture setup uses actual native Git and invented public author data."""
     executable = shutil.which("git", path=os.defpath)
     assert executable is not None
+    environment = {"PATH": os.defpath, "LC_ALL": "C", "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
+    if trace is not None:
+        environment["GIT_TRACE2_EVENT"] = str(trace)
     result = subprocess.run(
         [
             executable,
@@ -37,7 +40,7 @@ def _git(root: Path, *arguments: str) -> bytes:
             *arguments,
         ],
         cwd=root,
-        env={"PATH": os.defpath, "LC_ALL": "C", "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"},
+        env=environment,
         capture_output=True,
         check=False,
         timeout=60,
@@ -83,7 +86,9 @@ def complete_reference(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     # Reproduce the tracked tree exactly: a historically tracked file can match
     # a later ignore rule (for example a committed replay cache), and a fresh
     # clone still contains and tracks it.
-    _git(root, "add", "--all", "--force")
+    # Keep native staging phases outside the copied/staged public Source.
+    stage_trace = root.parent / f"{root.name}.git-stage.trace2.json"
+    _git(root, "add", "--all", "--force", trace=stage_trace)
     _git(root, "commit", "--quiet", "-m", "Owned complete public source DATA fixture")
     _git(root, "submodule", "init", "--", submodule)
     commit = _git(root, "rev-parse", "HEAD").decode().strip()

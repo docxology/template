@@ -24,6 +24,19 @@ matching tag identity and authenticated publication.
   standalone composed-evidence validation.
 - Wait for the selected original native acceptance producer before final
   collection, preserving both lanes, the complete-roster guards and clocks.
+- Retain original infrastructure JUnit outcomes and selected macOS native case
+  files, nonterminating parent/worker stacks, synchronous PDFium progress and
+  genuine fixture Git staging traces without uploading whole disposable Source
+  trees or environments. Optional diagnostic writes preserve original failures;
+  all controls, Source custody, shard coverage and production clocks remain.
+- Retire workflow-shape, copied-output, report-wording and serialization-tautology
+  test pins without replacing them. Preserve real aggregate shell execution,
+  malformed-input, no-side-effect, case-conservation and genuine wheel controls;
+  refresh their canonical metadata before policy qualification.
+- Give temporary health-gate parser workspaces their own non-packaged uv project
+  and workspace boundary instead of resolving unrelated ancestor packages.
+  Preserve complete zero-drift summary decisions and unchanged production gate
+  commands and timeouts.
 
 - Match hardcoded test totals as integer tokens, not components of dotted
   versions or decimals. Keep real totals blocking strict documentation drift

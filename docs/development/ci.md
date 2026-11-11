@@ -92,6 +92,40 @@ paths. Partial diagnostics never establish complete selection or coverage.
 Keep evidence-class mutation fixtures separate from the loaded SDK and require
 their initialized pinned Source closure instead of accepting skipped controls.
 
+Hardening retains each infrastructure shard's original JUnit report in
+`infra-case-diagnostics-<os>-<python>-<shard>`. JUnit distinguishes case failures,
+setup errors and skips; a completed-node selection receipt alone is not proof
+that a case passed. Linux transports JUnit through the existing fresh-account
+readiness exporter rather than expanding its environment allowlist.
+
+On macOS, owned case workspaces live beneath the runner's temporary directory.
+Pytest's parent/worker fault handler emits a nonterminating stack observation
+after 90 seconds. Genuine PDFium children use only synchronous, fixed
+caller-thread progress records: no child watchdog or additional profiler is
+installed. Optional FD2 write failures do not replace the original verification
+or mutation outcome. `verify:unwound` means the observed verifier exited and its
+previous profiler was restored, not that verification succeeded or the entire
+execution context closed. A missing optional record does not prove its boundary
+was never reached.
+
+The complete public-reference fixture also retains the real native Git staging
+Trace2 events. Its explicit subprocess environment nominates a sibling trace
+file outside copied/staged Source; neither inherited variables nor `git -c`
+enable Trace2 through this sanitized environment. All public bytes, every
+canonical project's stable outputs, empty directories, pinned submodule and the
+existing staging timeout remain intact. See the
+[Git Trace2 contract](https://git-scm.com/docs/api-trace2) for event semantics;
+the last emitted event is not an exact blocked instruction.
+
+The macOS diagnostic artifact selects those fixture traces and genuine PDFium
+stdout, stderr, exit, runtime-input and observation files, excluding pytest's
+`current` workspace aliases. It does not upload whole fixture clones, virtual
+environments or wheel payloads. Logs can contain run-local paths; review them
+before redistribution. Missing exits, partial records and failed runs remain
+missing or failed: these diagnostics do not grant Source admission, waive any
+provider or deadline check, or establish complete hardening, main or release
+acceptance.
+
 Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
 selected compiler controls also install the recommended TeX fonts and verify
 `pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract
