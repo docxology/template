@@ -192,7 +192,7 @@ import sys
 import time
 from uuid import uuid4
 
-import pytest
+from contextlib import contextmanager
 
 import infrastructure
 from infrastructure.core.implementation_custody import capture_implementation_custody
@@ -206,6 +206,17 @@ from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
 from infrastructure.reporting.native_source_external_admission import NativeExternalSourceBindings, admit_external_native_source
 from infrastructure.reporting.native_tool_producer import native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+
+@contextmanager
+def raises(exception_type, match):
+    try:
+        yield
+    except exception_type as error:
+        assert match in str(error), str(error)
+    else:
+        raise AssertionError(f"Expected {exception_type.__name__} containing {match!r}")
+
 
 original = Path(sys.argv[1])
 commit = sys.argv[2]
@@ -289,7 +300,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
             post_done["sequence"] = len(changed["events"]) + 1
             changed["events"].append(post_done)
         binding = write_json(mirror, runtime.directory / (mutation + ".lifecycle.json"), changed)
-        with pytest.raises(ValueError, match="validated terminal callback"):
+        with raises(ValueError, match="validated terminal callback"):
             validate_native_loader_data(
                 {**native, "loader_lifecycle": binding},
                 reader,
@@ -306,7 +317,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         purpose=purpose,
         deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
     )
-    with pytest.raises(NativeToolUnavailable, match="signed normal consuming-process OS termination"):
+    with raises(NativeToolUnavailable, match="signed normal consuming-process OS termination"):
         runtime.tool(
             "pandoc",
             ["--definitely-not-a-pandoc-option"],
@@ -328,7 +339,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         purpose=purpose,
         deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
     )
-    with pytest.raises(NativeToolUnavailable, match="EOF preceded its validated terminal callback"):
+    with raises(NativeToolUnavailable, match="EOF preceded its validated terminal callback"):
         runtime.tool(
             sys.executable,
             ["-I", "-c", "import os; os._exit(0)"],
@@ -342,7 +353,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
 
     retained = len(runtime.tools)
-    with pytest.raises(TimeoutError, match="exhausted its original finite deadline"):
+    with raises(TimeoutError, match="exhausted its original finite deadline"):
         runtime.tool(
             "pandoc",
             ["--version"],
@@ -395,7 +406,6 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
             "venv",
             "--no-project",
             "--no-python-downloads",
-            "--system-site-packages",
             "--python",
             sys.executable,
             str(installed),
@@ -415,7 +425,6 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
             "pip",
             "install",
             "--offline",
-            "--no-deps",
             "--no-build",
             "--force-reinstall",
             "--python",
@@ -426,7 +435,7 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
         env=environment,
         text=True,
         capture_output=True,
-        timeout=30,
+        timeout=120,
         check=False,
     )
     assert installed_result.returncode == 0, installed_result.stdout + installed_result.stderr
