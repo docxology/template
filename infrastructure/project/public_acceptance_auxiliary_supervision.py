@@ -255,7 +255,9 @@ def _cleanup(
         try:
             cleanup["final_census_matched_pids"] = sorted(
                 observe_bounded_run_processes(
-                    run_token, deadline=deadline, started_monotonic=guardian.started_monotonic
+                    run_token,
+                    deadline=deadline,
+                    started_monotonic=guardian.started_monotonic if guardian is not None else None,
                 )
             )
             cleanup["final_census_succeeded"] = True
