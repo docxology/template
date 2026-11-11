@@ -45,11 +45,10 @@ are excluded.
 
 These source corrections do not establish a new SDK release or adopt pending
 minor-release candidate work.
-## [5.1.0] - 2026-11-05
-## [5.1.0] - 2026-11-06
+## [5.2.0] - 2026-11-07
 
-See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor
-preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
+See the [5.2.0 candidate notes](docs/releases/v5.2.0.md). This coordinated minor
+preparation moves Root and canonical exemplar SDK bindings to 5.2.0 while
 preserving exemplar own versions and third-party locks. The release ceremony requires exact-source acceptance,
 matching tag identity and authenticated publication.
 

@@ -31,7 +31,7 @@ This document provides documentation for the Research Project Template system, e
 
 ## For assistants and automation
 
-**Current release scope:** [5.1.0](docs/releases/v5.1.0.md) coordinates the Root
+**Current release scope:** [5.2.0](docs/releases/v5.2.0.md) coordinates the Root
 SDK and all canonical public exemplar compatibility bindings while retaining
 exemplar own versions. Freeze final metadata and implementation before producer
 refresh and coverage measurement; preserve original results through coverage

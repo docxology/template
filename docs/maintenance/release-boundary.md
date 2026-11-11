@@ -1,9 +1,9 @@
 # Release boundary
 
-The root package metadata declares the **5.1.0** candidate. This explicit minor
+The root package metadata declares the **5.2.0** candidate. This explicit minor
 preparation coordinates the Root SDK and all 25 canonical exemplar compatibility
 bindings while preserving exemplar own versions, published identifiers, provider
-declarations and third-party locks. The [5.1.0 notes](../releases/v5.1.0.md) describe
+declarations and third-party locks. The [5.2.0 notes](../releases/v5.2.0.md) describe
 its Source behavior and pending qualification.
 
 **Final metadata must precede expensive release evidence.** Freeze the final
@@ -29,7 +29,7 @@ artifacts and installed handoff, and cut the matching tag only when its commit
 and tree satisfy that handoff. Reverify the config guard and both strict audits
 at the tag before the release workflow publishes. Ordinary CI and local metadata
 checks do not replace required acceptance; as of the
-2026-11-05 metadata preparation, final 5.1.0 acceptance and publication were
+2026-11-07 metadata preparation, final 5.2.0 acceptance and publication were
 still to be established by those exact-revision records.
 
 Preserve `v5.0.0`, `v5.0.1`, `v5.0.2` and all earlier tag identities, notes,

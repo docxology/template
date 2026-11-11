@@ -1,6 +1,6 @@
 # 🚀 Research Project Template
 
-**Release line: 5.1.0.** See the [release notes](docs/releases/v5.1.0.md)
+**Release line: 5.2.0.** See the [release notes](docs/releases/v5.2.0.md)
 and [acceptance/publication boundary](docs/maintenance/release-boundary.md).
 This coordinated minor preparation preserves exemplar own versions and historical
 tags. Final publication outputs, measured coverage and the complete exact-source
