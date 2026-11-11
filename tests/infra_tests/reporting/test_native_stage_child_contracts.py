@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import copy
-import importlib.metadata
 import hashlib
+import importlib.metadata
 import json
 import shutil
 import time
@@ -32,6 +32,7 @@ from infrastructure.reporting.native_stage_child_custody import NativeStageChild
 from infrastructure.reporting.native_stage_child_scope import (
     _render_stage,
     _standalone_analysis_leaf,
+    _validate_stage_launch,
     retain_native_stage_artifact,
 )
 from infrastructure.reporting.native_tool_producer import _stage_scope_nomination
@@ -416,3 +417,25 @@ def test_standalone_mermaid_analysis_leaf_rejects_identity_mismatches(tmp_path: 
     else:
         spec["protocol"] = "stage"
     assert _standalone_analysis_leaf(spec) is False
+
+
+def test_mermaid_cross_scope_launch_is_refused(tmp_path: Path) -> None:
+    leaf = _standalone_leaf_spec(tmp_path)
+    _validate_stage_launch(leaf, require_analysis=True, expected_scope=SCOPE)
+    with pytest.raises(ValueError, match="output scope differs"):
+        _validate_stage_launch(
+            leaf,
+            require_analysis=True,
+            expected_scope="templates/template_literature_meta_analysis",
+        )
+
+    render, _ = _specification(tmp_path)
+    render["stage_key"] = "render_pdf"
+    render["script"]["path"] = "scripts/pipeline/stage_03_render.py"
+    _validate_stage_launch(render, require_render=True, expected_scope=SCOPE)
+    with pytest.raises(ValueError, match="output scope differs"):
+        _validate_stage_launch(
+            render,
+            require_render=True,
+            expected_scope="templates/template_literature_meta_analysis",
+        )

@@ -21,7 +21,11 @@ from infrastructure.reporting.native_loader_qualification import (
     qualify_native_loader_tool,
     replay_native_loader_qualification,
 )
-from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
+from infrastructure.reporting.native_pdf_citation_runtime import (
+    CitationRuntime,
+    NATIVE_OBSERVATION_CEILING_SECONDS,
+    file_observation,
+)
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.native_tool_process import run_native_tool_process
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
@@ -153,7 +157,7 @@ def observe_loader_persistent_rx_control(runtime: CitationRuntime, scope: str) -
     _streams(baseline, reader, _DRIFT)
     directory = compiled.directory / "callbacks-persistent-rx"
     create_private_native_directory(runtime.root, directory)
-    deadline = min(runtime.deadline, time.monotonic() + 120.0)
+    deadline = min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
     observer = NativeLoaderObservation(compiled, directory, purpose="loader-control-drift", deadline=deadline)
     if before != file_observation(executable):
         raise ValueError("real clean/drift fixture executions changed the actual Source compiler output")

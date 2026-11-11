@@ -113,8 +113,11 @@ def validate_native_loader_data(
         raise ValueError("loader complete original callback cohort is absent or unbounded")
     active, opened, closed, previous, total = {}, {}, [], 0, 0
     preinit = False
+    terminal_done = False
     for sequence, event in enumerate(events, 1):
         remaining(deadline)
+        if terminal_done:
+            raise ValueError("loader callback followed its validated terminal callback")
         if (
             event.get("sequence") != sequence
             or event.get("pid") != native["pid"]
@@ -249,6 +252,7 @@ def validate_native_loader_data(
         elif kind == "done":
             if active or not preinit:
                 raise ValueError("loader original terminal callback left an unclosed image")
+            terminal_done = True
         elif kind == "hello":
             if sequence != 1:
                 raise ValueError("loader original initialization repeats")
@@ -289,6 +293,8 @@ def validate_native_loader_data(
             )
             if declared != expected_census:
                 raise ValueError("loader declared census differs from independently reconstructed every-map coverage")
+    if not terminal_done:
+        raise ValueError("loader lifecycle EOF preceded its validated terminal callback")
     main = [event for event in opened.values() if event["path_label"] == "/proc/self/exe"]
     if (
         len(main) != 1
@@ -300,6 +306,7 @@ def validate_native_loader_data(
     terminal = raw.get("resident_terminal")
     if (
         not preinit
+        or active
         or raw["opened"] != list(opened)
         or raw["closed"] != closed
         or not isinstance(terminal, dict)

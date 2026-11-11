@@ -9,6 +9,7 @@ import yaml
 import pytest
 
 from infrastructure.core.testing.ci_contracts import (
+    CONTRACT_MODULES,
     CONTRACT_SECONDS,
     combined_groups,
     contract_files,
@@ -76,6 +77,10 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
         preparation = contract_preparation(module)
         assert preparation["documents"] == "converter"
         assert preparation["tex"] is True and preparation["browser"] is False
+    for module in CONTRACT_MODULES:
+        preparation = contract_preparation(module)
+        if preparation["tex"]:
+            assert preparation["documents"] == "converter"
     for module in (
         "tests/infra_tests/reporting/test_native_browser_oracles.py",
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",

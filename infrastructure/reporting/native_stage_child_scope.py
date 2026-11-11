@@ -189,21 +189,42 @@ def _standalone_analysis_leaf(spec: dict[str, Any]) -> bool:
     )
 
 
-def current_native_stage_directory(*, require_render: bool = False, require_analysis: bool = False) -> Path | None:
-    """Return verified child DATA location; a path never admits Source or tools."""
-    context = _CURRENT.get()
-    if context is None:
-        return None
-    context.verify()
+def _validate_stage_launch(
+    spec: dict[str, Any],
+    *,
+    require_render: bool = False,
+    require_analysis: bool = False,
+    expected_scope: str | None = None,
+) -> None:
     if require_render and require_analysis:
         raise ValueError("native stage admission cannot require both analysis and render roles")
+    if expected_scope is not None and spec["scope"] != expected_scope:
+        raise ValueError("native Mermaid output scope differs from the actual admitted Source stage")
     if require_render or require_analysis:
-        spec = context.specification.json_object()
         admitted = _render_stage(spec) if require_render else _standalone_analysis_leaf(spec)
         if not admitted:
             if require_render:
                 raise ValueError("native renderer launch requires the exact actual Source render stage")
             raise ValueError("native analysis Mermaid launch requires the exact actual Source analysis leaf")
+
+
+def current_native_stage_directory(
+    *,
+    require_render: bool = False,
+    require_analysis: bool = False,
+    expected_scope: str | None = None,
+) -> Path | None:
+    """Return verified child DATA location; a path never admits Source or tools."""
+    context = _CURRENT.get()
+    if context is None:
+        return None
+    context.verify()
+    _validate_stage_launch(
+        context.specification.json_object(),
+        require_render=require_render,
+        require_analysis=require_analysis,
+        expected_scope=expected_scope,
+    )
     return context.directory
 
 
