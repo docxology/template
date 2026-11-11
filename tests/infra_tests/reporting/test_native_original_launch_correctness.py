@@ -366,20 +366,20 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     deadline = time.monotonic() + 1200
     mirror = _clone_complete_reference(complete_reference, tmp_path / "mirror", deadline=deadline)
     environment = dict(os.environ, UV_OFFLINE="1", UV_PYTHON_DOWNLOADS="never")
+    build_environment = dict(environment)
+    build_environment.pop("UV_OFFLINE")
     artifacts = tmp_path / "artifacts"
     built = subprocess.run(
         [
             "uv",
             "build",
             "--wheel",
-            "--offline",
-            "--no-build-isolation",
             "--no-create-gitignore",
             "--out-dir",
             str(artifacts),
         ],
         cwd=original,
-        env=environment,
+        env=build_environment,
         text=True,
         capture_output=True,
         timeout=90,
