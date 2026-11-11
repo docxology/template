@@ -2624,7 +2624,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_contracts.py",
-      "source_sha256": "a3757036e1693115d3af8ab07f912778ddbcb0ccac287e7e05a9c89cc6dc6c4e",
+      "source_sha256": "2352c9c59b8dc5713e09759bd30a156ac27b51cd16cbb6b61fee263dfb94f1e3",
       "families": [
         "tests/infra_tests/core/test_ci_contracts.py::test_acceptance_workflow_never_calls_python_before_the_readiness_action",
         "tests/infra_tests/core/test_ci_contracts.py::test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted",
@@ -2637,7 +2637,7 @@
         "tests/infra_tests/core/test_ci_contracts.py::test_readiness_action_creates_its_interpreter_before_deriving_cache_scopes",
         "tests/infra_tests/core/test_ci_contracts.py::test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcome"
       ],
-      "family_observations_sha256": "581d0642fc6cd4d4517fd979337c7d6ef85c8821a548ff3fe2adc69235e230c4",
+      "family_observations_sha256": "044e631a89a44e9d8ba97c472d678a675d1bedf5a552f58166d983022c0c7670",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2669,7 +2669,7 @@
         {
           "path": "tests/infra_tests/core/test_ci_contracts.py",
           "line": 27,
-          "source_sha256": "a3757036e1693115d3af8ab07f912778ddbcb0ccac287e7e05a9c89cc6dc6c4e"
+          "source_sha256": "2352c9c59b8dc5713e09759bd30a156ac27b51cd16cbb6b61fee263dfb94f1e3"
         }
       ]
     },
@@ -26734,7 +26734,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-      "source_sha256": "064d54e57feded15217d539ea68b3c88f7cb69f62a698f0f9775573678721bb0",
+      "source_sha256": "83919dc0ed4c7e1c076822271a8c96456a59299502ea563f726afd99df8b0229",
       "families": [
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_cold_selected_root_runtime_overrides_missing_or_wrong_ambient_nomination",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_popen_environment_matches_held_source_commitment_and_refuses_changed_digest",
@@ -26744,7 +26744,7 @@
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_keeps_existing_phase_ceiling_with_a_later_original_deadline",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline"
       ],
-      "family_observations_sha256": "d63211a2712bf33fb24c6e8782b1a93aa16a0f0b0ab668e468ef38149a2849c4",
+      "family_observations_sha256": "70105d2ed21ffc3f74a38bec05dc8e73828f81f7e77786e5c8b6269a25c76249",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26763,7 +26763,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "064d54e57feded15217d539ea68b3c88f7cb69f62a698f0f9775573678721bb0",
+          "source_sha256": "83919dc0ed4c7e1c076822271a8c96456a59299502ea563f726afd99df8b0229",
           "line": 1
         }
       ]
@@ -28057,13 +28057,14 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-      "source_sha256": "6c04ed821c46860553bd5f287694b86a394c8882cde554d41ebcd623ebaa5415",
+      "source_sha256": "0fd22a5ae7a78f91b5ec4a4c62b256d0b6b1009d7f7405773a6657c960c1e8f0",
       "families": [
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_arbitrary_worker_module_is_refused_before_any_execution",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_data_packet_cannot_open_a_source_owner_stage_directory_or_reader",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_fixed_bootstrap_covers_all_actual_source_lanes_and_original_stage_deadline",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_late_observation_identity_change_is_refused",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_late_retained_roster_row_refuses_repeats_paths_and_status_minting",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_mermaid_cross_scope_launch_is_refused",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_native_owner_construction_still_requires_actual_admitted_source",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_observation_cannot_claim_completion_authority_or_replace_request_bytes",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_ordinary_owner_query_imports_without_optional_rendering_dependencies",
@@ -28078,7 +28079,7 @@
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_standalone_mermaid_analysis_leaf_rejects_identity_mismatches",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_standalone_mermaid_requires_exact_analysis_leaf_not_parent_or_render"
       ],
-      "family_observations_sha256": "0dd4b05fe7ac0ca211e558523843d97e9850ec0618d25834e245c9ce6efcb813",
+      "family_observations_sha256": "0af03254d5325a113ba625d8598f9a5ea074ae92fec725bf159cf38c79dbaad5",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -28087,7 +28088,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-          "source_sha256": "6c04ed821c46860553bd5f287694b86a394c8882cde554d41ebcd623ebaa5415",
+          "source_sha256": "0fd22a5ae7a78f91b5ec4a4c62b256d0b6b1009d7f7405773a6657c960c1e8f0",
           "line": 1
         }
       ]
