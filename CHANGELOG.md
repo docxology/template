@@ -35,6 +35,9 @@ locks.
 - Review Core families with explicit prerequisites for the jq, uv and Pandoc
   commands they execute, preserving native obligations and complete census
   membership. Collection and review metadata do not grant runtime acceptance.
+- Refresh the literal Root case policy from all four supported targets and
+  record the baseline date after genuine release-profile measurements for
+  every public exemplar; retain the complete original producer evidence.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
