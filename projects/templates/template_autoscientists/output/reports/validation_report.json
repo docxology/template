@@ -262,7 +262,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-11T05:33:17Z",
+  "timestamp": "2026-11-11T07:05:05Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -350,7 +350,7 @@
       },
       "stage": {
         "file_count": 1761,
-        "sha256": "fc0667ab21eee516b6a7e92656855df4ff15c1b066f24b5db5a5c329e210ca5b"
+        "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
       }
     },
     "project": "templates/template_autoscientists",

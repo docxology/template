@@ -247,16 +247,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 3.25921630859375
+      "total_size_mb": 3.258559226989746
     },
     "figures": {
       "files": 10,
-      "size_mb": 0.47225284576416016
+      "size_mb": 0.471923828125
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.3039426803588867
+      "size_mb": 0.30361461639404297
     },
     "stable_inventory": {
       "categories": {
@@ -266,7 +266,7 @@
         },
         "figures": {
           "files": 10,
-          "size_bytes": 495193
+          "size_bytes": 494848
         },
         "manuscript": {
           "files": 13,
@@ -274,7 +274,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 318707
+          "size_bytes": 318363
         },
         "release": {
           "files": 2,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 58,
-      "total_size_bytes": 3417536
+      "total_size_bytes": 3416847
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-11T05:33:17Z",
+  "timestamp": "2026-11-11T07:05:05Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "59e015e72fdbc8353d0d688acc41bf9c1bce7ef83450dd08f3582583fb3ae84b",
+      "sha256": "54c17185d5e2b7fa60259397c9c97bee5299fc79c440a854c2b624103050ef1d",
       "size_bytes": 18980
     },
     "combined_manuscript": {
@@ -396,7 +396,7 @@
       },
       "output": {
         "file_count": 58,
-        "sha256": "9ea13ba14d4d3b032dc8cda76823f32b981a4d94140ddbe2aafbcc1a58fdbb58"
+        "sha256": "bfd5ea50cb55400c8e3f5eee60f0649173178dd638298975615598096ad05516"
       },
       "source": {
         "file_count": 33,
@@ -404,7 +404,7 @@
       },
       "stage": {
         "file_count": 1761,
-        "sha256": "fc0667ab21eee516b6a7e92656855df4ff15c1b066f24b5db5a5c329e210ca5b"
+        "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
       }
     },
     "project": "templates/template_prose_project",
