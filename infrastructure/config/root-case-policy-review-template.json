@@ -14588,7 +14588,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_root_runtime_controls.py",
-      "source_sha256": "299c2fddc91865e62995a5c8e25b90bfc44b3033f1b901c4c48bcbb49ea3e01d",
+      "source_sha256": "c32e650f5dd38d71bc3ca8238def7e41f02d09b5e9c045f3bcf56c73a5509e85",
       "families": [
         "tests/infra_tests/project/test_root_runtime_controls.py::test_actual_early_zero_root_child_cannot_replay_complete_previous_receipts",
         "tests/infra_tests/project/test_root_runtime_controls.py::test_actual_empty_root_collection_cannot_pass",
@@ -14597,7 +14597,7 @@
         "tests/infra_tests/project/test_root_runtime_controls.py::test_actual_root_pytest_receipt_preserves_forced_exit_before_outcome_validation",
         "tests/infra_tests/project/test_root_runtime_controls.py::test_root_coverage_cannot_fall_back_to_generic_case_receipts"
       ],
-      "family_observations_sha256": "46a1a1fe5e81562de44dbcfd307d3bae3fb99be09b1ae45fa4144122f832982d",
+      "family_observations_sha256": "87cb255ed37726612bfb6ad07e5fcad64173e097e61cb351302c7bb807b595f1",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -14606,7 +14606,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_root_runtime_controls.py",
-          "source_sha256": "299c2fddc91865e62995a5c8e25b90bfc44b3033f1b901c4c48bcbb49ea3e01d",
+          "source_sha256": "c32e650f5dd38d71bc3ca8238def7e41f02d09b5e9c045f3bcf56c73a5509e85",
           "line": 1
         }
       ]
@@ -32481,7 +32481,7 @@
     },
     {
       "path": "tests/infra_tests/steganography/test_processor.py",
-      "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+      "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275",
       "families": [
         "tests/infra_tests/steganography/test_processor.py::TestProcessPdfConvenience::test_embed_steganography",
         "tests/infra_tests/steganography/test_processor.py::TestSteganographyProcessor::test_process_auto_output_name",
@@ -32504,7 +32504,7 @@
         "tests/infra_tests/steganography/test_processor.py::test_success_preserves_source_manifest_name_and_previous_destination_modes",
         "tests/infra_tests/steganography/test_processor.py::test_unavailable_private_ownership_preserves_previous_custom_output"
       ],
-      "family_observations_sha256": "40187752fe67df82c9283bd098b7f87408fcfb2f029c406d7149489b5ffd18e5",
+      "family_observations_sha256": "c8e3a23d792b4ba375b971cfe9d6ea85190a64b3d1f6a43e438d1e3e5ec2255d",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -32516,7 +32516,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "path": "infrastructure/steganography/core.py",
@@ -32561,101 +32561,101 @@
         {
           "line": 362,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 298,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 261,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 268,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 277,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 335,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 316,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 245,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 184,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 378,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 193,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 38,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 236,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 53,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "line": 217,
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97"
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275"
         },
         {
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275",
           "line": 127
         },
         {
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275",
           "line": 148
         },
         {
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275",
           "line": 69
         },
         {
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275",
           "line": 85
         },
         {
           "path": "tests/infra_tests/steganography/test_processor.py",
-          "source_sha256": "6f16e3abc38afb159f3aa7e9bb2dec924eb0a10d49684281e5fb005c6088bd97",
+          "source_sha256": "e415fe0586a78eb501cfe21cceeb3570299d66068d432955b687c70a8f507275",
           "line": 107
         }
       ]
