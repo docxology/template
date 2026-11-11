@@ -49,6 +49,12 @@ locks.
   preserving exact records without library `print` calls or logging substitution.
 - Regenerate the API reference from the current public `__all__` declarations;
   preserve prose outside its canonical generated markers.
+- Close preview and direct plugin-plan executors deterministically. Exercise
+  last-owner restoration in an isolated real Python process, without resetting
+  another live owner's logging or repinning its expected level.
+- Supply health-gate controls with genuinely generated standalone metadata and
+  its matching lock. Frozen consumers retain `UV_FROZEN`, the real `uv run`
+  command and every complete zero-drift/exit/failure boundary.
 
 ### Fixes carried forward from main
 

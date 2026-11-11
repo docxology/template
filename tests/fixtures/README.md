@@ -12,6 +12,7 @@
 | [`private_project/cogant/`](private_project/cogant/) | Committed COGANT tool + manuscript stubs for `private_project` infra tests (staging tree overrides when present) |
 | [`timeseries_seed/`](timeseries_seed/README.md) | Genuine seeded synthetic benchmark snapshot for consistent hosted source custody |
 | `timeseries/` | M4/synthetic series — created by `download_timeseries_benchmarks.py` (required for `bench` integration tests) |
+| [`health_gate/`](health_gate/) | Dependency-free standalone metadata and its genuinely generated `uv.lock` for real frozen health-gate subprocess controls |
 
 ## Setup
 
@@ -32,6 +33,12 @@ Timeseries benchmark tests also require optional Python deps:
 ```bash
 uv sync --group timeseries-bench
 ```
+
+Health-gate controls consume the committed `health_gate/pyproject.toml` and
+matching `uv.lock`; tests do not generate locks or unset `UV_FROZEN`. Regenerate
+this dependency-free pair only during approved Source preparation, using
+`uv lock --project tests/fixtures/health_gate --offline` with a supported Root
+interpreter. Keep the metadata and lock together when either changes.
 
 ## See Also
 
