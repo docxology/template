@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.03 %",
-      "source_hash": "c70367387eea51d2254b11d21710399301b6476162ae9b123acb3ac3e2d25f56"
+      "source_hash": "f19cda9814a2dbf217e4a71071007e9287276efb7d33ee09992b82a7763ec860"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.04 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "cb5c8402dd4833379d1f4fb41b37af141c67a25a",
+  "source_commit": "a12bdcd68590e32de69402b0bf2d76b18dfcaa1f",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -111,7 +111,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "6f2df8161bde23cde9f6645a2c54a207e3b6cd9a8bf28a7db96a9e4395a6ee9f",
+        "digest": "3d745a17bc0434bc62c9dbd8a62dfe01b3b2fb35f6c0c720bca0dd066193eb08",
         "entries": [
           {
             "identity": "sha256",
@@ -175,7 +175,7 @@
           {
             "identity": "sha256",
             "path": "docs/development/ci.md",
-            "sha256": "207d5e1f1ec1803875b8ca0027c30d48a77aadbf35cde0464c6a14993ad2af51",
+            "sha256": "e1e1b68939a7b4c7a7f46ba63ba8fc2a3fa084ab399284e54bf43906134df9e7",
             "type": "file"
           },
           {
@@ -205,7 +205,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "c70367387eea51d2254b11d21710399301b6476162ae9b123acb3ac3e2d25f56",
+      "template_active_inference": "f19cda9814a2dbf217e4a71071007e9287276efb7d33ee09992b82a7763ec860",
       "template_advanced_literature_review": "bab6421befa17789edb7a6be681496bc6e75a2422ed983e6a3e22802294dee79",
       "template_autopoiesis": "742c6bc2775fc5b841b40fed360848d72f0d567089d97f268f2f5ce2414d6575",
       "template_autoresearch_project": "bdb72942076c54e5a881a71a4e26026922a259ccef154ea151c84b3c5b383e37",
