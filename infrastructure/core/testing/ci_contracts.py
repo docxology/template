@@ -14,6 +14,7 @@ _NATIVE_PREPARATION = {
     "tests/infra_tests/project/test_scientific_reference_replay.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_browser_oracles.py": ("converter", False, True),
     "tests/infra_tests/reporting/test_native_browser_scientific_structure.py": ("converter", False, True),
+    "tests/infra_tests/reporting/test_native_original_launch_correctness.py": ("converter", False, False),
     "tests/infra_tests/reporting/test_native_pdf_citations.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_pdf_math.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_pdf_source_witness.py": ("converter", True, False),

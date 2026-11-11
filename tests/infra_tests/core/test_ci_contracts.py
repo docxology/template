@@ -93,6 +93,11 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
         "tex": False,
         "browser": False,
     }
+    assert contract_preparation("tests/infra_tests/reporting/test_native_original_launch_correctness.py") == {
+        "documents": "converter",
+        "tex": False,
+        "browser": False,
+    }
     preparation = contract_preparation("none")
     assert (preparation["documents"], preparation["tex"], preparation["browser"]) == ("none", False, False)
     assert (
@@ -196,6 +201,7 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         "tests/infra_tests/reporting/test_native_browser_oracles.py",
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
         "tests/infra_tests/reporting/test_native_pdf_citations.py",
         "tests/infra_tests/reporting/test_native_pdf_math.py",
         "tests/infra_tests/reporting/test_native_pdf_source_witness.py",

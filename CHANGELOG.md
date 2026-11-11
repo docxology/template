@@ -45,6 +45,10 @@ locks.
   archive DNS failures. Run converter preparation before CI's raster and TeX APT
   installs so those steps use the same policy, and bound each connection attempt
   so a stalled mirror falls through to the next reviewed row.
+- Run the installed-SDK native-loader regression in its prepared full-module
+  contract lane, preserving its complete selection and original clocks instead
+  of truncating it at the routine smoke shard's 540-second deadline.
+
 ### Fixes carried forward from main
 
 - Apply generated project-test exclusions to the native pytest session's actual
