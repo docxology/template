@@ -161,7 +161,16 @@ def _prepare(path: Path, docker: bool) -> None:
     deadline = time.monotonic() + 240
     _require(shutil.disk_usage(temporary).free >= _files.RESERVE, "execution profile disk reserve refused")
     identity = _git(root, deadline)
-    _require(identity["head"] == os.environ["GITHUB_SHA"], "checkout differs from GitHub Source identity")
+    # On PRs, actions/checkout checks out the merge commit of the PR head into
+    # the base branch. GITHUB_SHA is the PR head, not the merge commit.
+    expected = os.environ["GITHUB_SHA"]
+    actual = identity["head"]
+    if actual != expected:
+        # A merge commit must have GITHUB_SHA as one of its parents.
+        parents = subprocess.check_output(
+            ["git", "rev-list", "--parents", "-n", "1", "HEAD"], cwd=root, text=True
+        ).split()
+        _require(expected in parents, "checkout differs from GitHub Source identity")
     caller = pwd.getpwuid(os.getuid())
     request = {
         "schema": 1,
