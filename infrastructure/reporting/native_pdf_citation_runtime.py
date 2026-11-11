@@ -42,16 +42,17 @@ if TYPE_CHECKING:
 
 DEPENDENCY_SCHEMA = "template-native-citation-dependency-observation-v1"
 EXECUTABLE_SCHEMA = "template-native-executable-observation-v1"
+NATIVE_OBSERVATION_CEILING_SECONDS = 600.0
 
 
 def budget(deadline: float) -> float:
-    """Use the caller's original clock and the existing native child ceiling."""
+    """Use the caller's original clock and the shared native observation ceiling."""
     if type(deadline) not in {int, float} or not math.isfinite(deadline):
         raise ValueError("citation observation requires an original finite deadline")
     remaining = deadline - time.monotonic()
     if remaining <= 0:
         raise TimeoutError("citation observer exhausted its original finite deadline")
-    return min(remaining, 120)
+    return min(remaining, NATIVE_OBSERVATION_CEILING_SECONDS)
 
 
 def file_observation(path: Path) -> dict[str, Any]:
@@ -123,7 +124,7 @@ class CitationRuntime:
             current_native_producer_operation,
         )
 
-        operation_deadline = min(self.deadline, time.monotonic() + 120.0)
+        operation_deadline = min(self.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
         if phase_deadline is not None:
             budget(phase_deadline)
             if phase_deadline > operation_deadline:

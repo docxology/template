@@ -13,7 +13,11 @@ from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_crossref_filter import (
     prepare_source_crossref_filter,
 )
-from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
+from infrastructure.reporting.native_pdf_citation_runtime import (
+    CitationRuntime,
+    NATIVE_OBSERVATION_CEILING_SECONDS,
+    file_observation,
+)
 from infrastructure.reporting.native_tool_producer import (
     current_native_producer_operation,
 )
@@ -101,7 +105,7 @@ def source_crossref_pandoc(
                 owner.validate_tool(payload[key], tool, reader, run_id=runtime.run_id)
                 if tool["tool"] != "cc" or tool["purpose"] != role or tool["original_exit_code"] != 0:
                     raise ValueError("Crossref parser/parent reuse omitted the genuine successful compiler ToolAPI")
-        pair_deadline = min(runtime.deadline, time.monotonic() + 120.0)
+        pair_deadline = min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
         with prepare_source_crossref_pair(
             runtime.root,
             runtime.directory / ("source-filter-pair-" + purpose),
@@ -152,7 +156,7 @@ def source_crossref_pandoc(
             return result, binding
     if compiled is not None:
         raise ValueError("Source compiler reuse requires the actual supported Linux parent path")
-    deadline = min(runtime.deadline, time.monotonic() + 120.0)
+    deadline = min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
     leaf = runtime.directory / ("source-filter-" + purpose)
     with prepare_source_crossref_filter(
         runtime.root,

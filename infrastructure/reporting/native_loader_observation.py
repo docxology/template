@@ -314,8 +314,14 @@ class NativeLoaderObservation:
                 while True:
                     value, descriptor = frame(connection, self.deadline)
                     if value is None:
+                        if not self.done or not self.preinit or self.active or set(self.closed) != set(self.seen):
+                            raise ValueError(
+                                "loader channel premature EOF preceded its validated terminal callback/closed roster"
+                            )
                         self.eof = True
                         break
+                    if self.done:
+                        raise ValueError("loader frame followed its validated terminal callback")
                     try:
                         self._verify_peer(live, connection)
                         peer = self.peer
@@ -367,7 +373,11 @@ class NativeLoaderObservation:
                                 if self.preinit and value["base"] == 0:
                                     rows = self._map_event(live, value["sequence"])
                                     value["complete_executable_map_census"] = self._census(rows, live)
-                        self._verify_peer(live, connection)
+                        if not self.done:
+                            self._verify_peer(live, connection)
+                        # DONE was authenticated while the child blocked for this
+                        # acknowledgement. It may now exit before EOF; reaping below
+                        # checks argv/owner/guardian custody without requiring a live poll.
                         connection.settimeout(remaining(self.deadline))
                         connection.sendall(b"\xa5")
                     finally:
@@ -389,7 +399,6 @@ class NativeLoaderObservation:
                     "resident_object_ids": residents,
                     "observed_monotonic": time.monotonic(),
                 }
-                self.done = True
         finally:
             self.server.close()
             for descriptor in self.descriptors.values():

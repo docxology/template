@@ -34,6 +34,7 @@ if _active_audit is None:
     atexit.register(_BYTECODE_CACHE.cleanup)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = PROJECT_ROOT.parents[2]
 _provider_roots = tuple(Path(sysconfig.get_path(kind)).resolve(strict=True) for kind in ("purelib", "platlib"))
 
 
@@ -105,7 +106,7 @@ finally:
     finally:
         for _descriptor in reversed(_audit_descriptors):
             os.close(_descriptor)
-_audit_roots = [PROJECT_ROOT / "src", PROJECT_ROOT / "scripts", _platform_source, _platform_source.parent / "scripts"]
+_audit_roots = [PROJECT_ROOT / "src", PROJECT_ROOT / "scripts", _platform_source, REPO_ROOT / "scripts"]
 if _active_audit is None:
     # A fresh standalone controller owns its provider-root selection. An
     # existing launcher already fixed its pre-import scope; an optional,

@@ -29,6 +29,15 @@ locks.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
+- Give the heavyweight Formal colony experiment modules an explicit 600-second
+  pytest ceiling while preserving their real on-disk trials, seeds and scientific
+  assertions.
+- Provision the pinned SIA sandbox image in its native acceptance cell and audit
+  the Autoscientists comparison against the actual Source repository scripts
+  root when the SDK is installed separately.
+- Authenticate native loader terminal callbacks before reaping a completed
+  process, and use one finite 600-second native observation ceiling for custody,
+  callbacks, cleanup and retention without relaxing fail-closed acceptance.
 ### Fixes carried forward from main
 
 - Apply generated project-test exclusions to the native pytest session's actual

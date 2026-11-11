@@ -1,4 +1,4 @@
-"""Actual selected interpreters and environment DATA; no Source owner fabricated."""
+"""Actual selected interpreters, genuine Source loader launches and environment DATA."""
 
 from __future__ import annotations
 
@@ -6,21 +6,45 @@ import json
 import os
 from pathlib import Path
 import secrets
+import shutil
 import subprocess
 import sys
 import time
+from uuid import uuid4
 
 import packaging
 import pytest
 
+import infrastructure
 from infrastructure.core._bounded_kill import _RUN_IDS_ENV
+from infrastructure.core.implementation_custody import capture_implementation_custody
 from infrastructure.core.pipeline.stages import PIPELINE_STAGE_TIMEOUT_SECONDS, _stage_launch_deadline
 from infrastructure.core.secrets import strip_secret_env
 from infrastructure.project.public_acceptance_evidence import bootstrap_command
 from infrastructure.reporting.native_environment_custody import capture_native_environment, validate_native_environment
-from infrastructure.reporting.native_format_acceptance_contracts import native_environment
+from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
+from infrastructure.reporting.native_format_acceptance_contracts import (
+    create_private_native_directory,
+    native_environment,
+)
+from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
+from infrastructure.reporting.native_loader_qualification import qualify_native_loader_tool
 from infrastructure.reporting.native_original_supervisor import _worker_environment
+from infrastructure.reporting.native_pdf_citation_runtime import (
+    CitationRuntime,
+    NATIVE_OBSERVATION_CEILING_SECONDS,
+    budget,
+)
+from infrastructure.reporting.native_source_external_admission import (
+    NativeExternalSourceBindings,
+    admit_external_native_source,
+)
+from infrastructure.reporting.native_tool_producer import native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from tests.infra_tests.project.test_public_reference import (
+    _clone_complete_reference,
+    complete_reference as complete_reference,
+)
 
 
 @pytest.fixture(scope="module")
@@ -168,3 +192,132 @@ def test_stage_launch_keeps_existing_phase_ceiling_with_a_later_original_deadlin
     after = time.monotonic()
     assert before + PIPELINE_STAGE_TIMEOUT_SECONDS <= selected <= after + PIPELINE_STAGE_TIMEOUT_SECONDS
     assert selected <= deadline
+
+
+def test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_time() -> None:
+    assert NATIVE_OBSERVATION_CEILING_SECONDS == 600.0
+    assert budget(time.monotonic() + 1200) == 600.0
+    with pytest.raises(TimeoutError, match="exhausted its original finite deadline"):
+        budget(time.monotonic() - 1)
+
+
+@pytest.mark.timeout(1800)
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="genuine glibc audit callbacks require Linux")
+def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
+    complete_reference: tuple[Path, str, str], tmp_path: Path
+) -> None:
+    """Exercise real baseline/audited children, not a substitute callback peer."""
+    if shutil.which("pandoc") is None or shutil.which("cc") is None:
+        pytest.skip("genuine Pandoc and the Source-selected C compiler are required")
+    original, commit, fingerprint = complete_reference
+    deadline = time.monotonic() + 1200
+    mirror = _clone_complete_reference(complete_reference, tmp_path / "mirror", deadline=deadline)
+    metadata = mirror.stat()
+    run_id = uuid4().hex
+    assert infrastructure.__file__ is not None
+    source = admit_external_native_source(
+        NativeExternalSourceBindings(
+            original,
+            commit,
+            fingerprint,
+            mirror,
+            (metadata.st_dev, metadata.st_ino),
+            Path(infrastructure.__file__).absolute().parent,
+            json.dumps(capture_implementation_custody(), sort_keys=True).encode(),
+            run_id,
+        ),
+        deadline=deadline,
+    )
+    environment = {
+        "PATH": os.environ.get("PATH", os.defpath),
+        "LC_ALL": "C",
+        "HOME": str(tmp_path),
+    }
+    with native_producer_operation(source, run_id=run_id, deadline=deadline):
+        runtime = CitationRuntime(
+            mirror,
+            mirror / "output/readiness/native-loader-terminal-control",
+            env=environment,
+            deadline=deadline,
+            run_id=run_id,
+        )
+        observed, qualification_binding, compiled = qualify_native_loader_tool(
+            runtime,
+            "pandoc",
+            ["--version"],
+            "pandoc-terminal-success",
+        )
+        reader = SnapshotReader(mirror)
+        qualification = reader.read(qualification_binding["path"]).json_object()
+        baseline = reader.read(qualification["baseline_tool"]["path"]).json_object()
+        observed = reader.read(qualification["observed_tool"]["path"]).json_object()
+        assert baseline["original_exit_code"] == observed["original_exit_code"] == 0
+        baseline_stdout = reader.read(baseline["raw_stdout"]["path"]).content
+        observed_stdout = reader.read(observed["raw_stdout"]["path"]).content
+        assert baseline_stdout == observed_stdout
+        assert baseline_stdout.startswith(b"pandoc ")
+        native = reader.read(observed["native_process_artifact"]["path"]).json_object()
+        lifecycle = reader.read(native["loader_lifecycle"]["path"]).json_object()
+        assert native["accepted"] is True and native["diagnostics"] == []
+        assert native["cleanup"]["guardian_finished"] is True
+        assert native["cleanup"]["root_reaped"] is True
+        assert lifecycle["complete_callbacks"] is True and lifecycle["channel_eof"] is True
+        assert lifecycle["events"][-1]["kind"] == "done"
+        assert len(lifecycle["opened"]) == len(lifecycle["closed"])
+        assert set(lifecycle["opened"]) == set(lifecycle["closed"])
+        assert lifecycle["resident_terminal"]["original_exit_code"] == 0
+
+        purpose = "pandoc-terminal-nonzero"
+        leaf = compiled.directory / ("callbacks-" + purpose)
+        create_private_native_directory(mirror, leaf)
+        observer = NativeLoaderObservation(
+            compiled,
+            leaf,
+            purpose=purpose,
+            deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
+        )
+        with pytest.raises(NativeToolUnavailable, match="signed normal consuming-process OS termination"):
+            runtime.tool(
+                "pandoc",
+                ["--definitely-not-a-pandoc-option"],
+                purpose,
+                loader=observer,
+            )
+        failed = reader.read(runtime.tools[-1]["path"]).json_object()
+        native = reader.read(failed["native_process_artifact"]["path"]).json_object()
+        assert failed["original_exit_code"] != 0
+        assert observer.done is True and observer.eof is True
+        assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
+
+        purpose = "python-terminal-premature-eof"
+        leaf = compiled.directory / ("callbacks-" + purpose)
+        create_private_native_directory(mirror, leaf)
+        observer = NativeLoaderObservation(
+            compiled,
+            leaf,
+            purpose=purpose,
+            deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
+        )
+        with pytest.raises(NativeToolUnavailable, match="EOF preceded its validated terminal callback"):
+            runtime.tool(
+                sys.executable,
+                ["-I", "-c", "import os; os._exit(0)"],
+                purpose,
+                loader=observer,
+            )
+        failed = reader.read(runtime.tools[-1]["path"]).json_object()
+        native = reader.read(failed["native_process_artifact"]["path"]).json_object()
+        assert failed["original_exit_code"] == 0
+        assert observer.done is False
+        assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
+
+        retained = len(runtime.tools)
+        with pytest.raises(TimeoutError, match="exhausted its original finite deadline"):
+            runtime.tool(
+                "pandoc",
+                ["--version"],
+                "pandoc-terminal-expired",
+                phase_deadline=time.monotonic() - 1,
+            )
+        assert len(runtime.tools) == retained
+        assert not (runtime.directory / "pandoc-terminal-expired.native-process.json").exists()

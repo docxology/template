@@ -104,7 +104,11 @@ class NativeLiveToolProcess:
             raise ValueError("native interaction lost its actual live original process")
 
     def observe_original_os_exit(self) -> int:
-        """Reap this genuine Popen's signed OS result, preserving its clock."""
+        """Reap after a validated terminal transition without requiring a live poll.
+
+        argv, owner and guardian custody still fail closed; the terminal observer
+        separately authenticates PID/birth and requires its complete callback roster.
+        """
         _remaining(self._deadline)
         actual_arguments = self._process.args
         if (

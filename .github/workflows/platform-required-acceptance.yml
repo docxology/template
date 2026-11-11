@@ -694,6 +694,17 @@ jobs:
       - uses: ./.github/actions/setup-native-installed-readiness
         with:
           matrix-cell: ${{ matrix.cell }}
+      - name: Prepare the exact immutable SIA sandbox image
+        if: matrix.cell == 'template_sia'
+        timeout-minutes: 10
+        shell: bash
+        env:
+          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+        run: |
+          set -euo pipefail
+          docker pull "$SIA_SANDBOX_IMAGE"
+          image=$(docker image inspect --format '{{.Id}}' "$SIA_SANDBOX_IMAGE")
+          echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
       - name: Keep the declared capacity before native allocation
         uses: ./.github/actions/reclaim-native-runner-capacity
       - name: Original authenticated installed native format inventory (one project)

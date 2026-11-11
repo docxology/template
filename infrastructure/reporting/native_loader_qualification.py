@@ -16,7 +16,10 @@ from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader, compile_native_loader
 from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
-from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+from infrastructure.reporting.native_pdf_citation_runtime import (
+    CitationRuntime,
+    NATIVE_OBSERVATION_CEILING_SECONDS,
+)
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -164,7 +167,7 @@ def qualify_native_loader_tool(
     if crossref_pair is None:
         leaf = compiled.directory / ("callbacks-" + purpose)
         create_private_native_directory(runtime.root, leaf)
-        deadline = min(runtime.deadline, time.monotonic() + 120.0)
+        deadline = min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
         observer = NativeLoaderObservation(compiled, leaf, purpose=purpose, deadline=deadline)
     else:
         observer = crossref_pair.parent_loader
