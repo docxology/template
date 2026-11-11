@@ -13350,7 +13350,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
-      "source_sha256": "be091b5bfdbc9879e6f768105657013a113e7cf8443764f7f4f742a40ef1894f",
+      "source_sha256": "f9ae7ec3556eb3a9a21ad68e07701aa4d9add827ee4aa1f67ab93f33287d9a2a",
       "families": [
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_concurrent_supervisors_have_distinct_tokens_without_environment_mutation",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_deadline_must_be_finite_before_evidence_or_launch",
@@ -13359,10 +13359,11 @@
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_interrupted_supervisor_still_cleans_detached_owned_children",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_original_failure_streams_binary_and_bootstrap_are_preserved",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_oversized_actual_stream_is_bounded_and_cannot_pass",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_real_fd_exhaustion_cannot_turn_failed_census_into_cleanup_acceptance",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_strict_census_observes_token_holders_without_killing_them"
       ],
-      "family_observations_sha256": "b2f4d07b6a21996d776a1e3093400d8a90b36e94afaadb99a73e78548d19780f",
+      "family_observations_sha256": "0a9aef9e0c9275cb53613b2d204862680510762e6498cf71421d00d967eb5021",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -13371,7 +13372,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
-          "source_sha256": "be091b5bfdbc9879e6f768105657013a113e7cf8443764f7f4f742a40ef1894f",
+          "source_sha256": "f9ae7ec3556eb3a9a21ad68e07701aa4d9add827ee4aa1f67ab93f33287d9a2a",
           "line": 1
         }
       ]
