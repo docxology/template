@@ -7,29 +7,9 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
-## [5.2.0] - 2026-11-07
+## [Unreleased]
 
-See the [5.2.0 candidate notes](docs/releases/v5.2.0.md). This minor preparation
-coordinates the Root SDK and all 25 canonical exemplar compatibility bindings
-with preserved own versions and provider declarations. Exemplar-owned dependency
-locks retain their project-specific pins; the reviewed refresh records the
-changed tzdata and Active Inference JAX/jaxlib entries in the owning project
-locks.
-
-- Share lifecycle traversal and direct public selection, keeping private
-  workspaces outside the public roster.
-- Consolidate stage vocabulary and target admission, worker transport, report
-  validation and archive readback under their owning contracts.
-- Render confined prepared Markdown as scriptless HTML for untrusted inputs.
-  Bind live review configuration and generated filenames to the selected project.
-- Preserve secure-PDF provenance across repeated runs using publisher-owned
-  custom-suffix receipts.
-- Build Active Inference certificate and crosswalk output from a single ledger
-  projection and regenerate its method inventory.
-- Measure current release-profile coverage, regenerate dependent publication
-  outputs and validate the resulting committed tree before exact-main
-  acceptance and authenticated publication.
-### Fixes carried forward from main
+### Fixed
 
 - Apply generated project-test exclusions to the native pytest session's actual
   marker vocabulary. Strict native projects no longer reject unused engine
@@ -63,23 +43,18 @@ locks.
   behind page-level clipping. Authored TeX, fonts, and mathematical content remain
   unchanged.
 
-## [5.1.0] - 2026-11-06
+These source corrections do not establish a new SDK release or adopt pending
+minor-release candidate work.
+## [5.2.0] - 2026-11-07
 
-See the [5.1.0 candidate notes](docs/releases/v5.1.0.md). This coordinated minor
-preparation moves Root and canonical exemplar SDK bindings to 5.1.0 while
+See the [5.2.0 candidate notes](docs/releases/v5.2.0.md). This coordinated minor
+preparation moves Root and canonical exemplar SDK bindings to 5.2.0 while
 preserving exemplar own versions and third-party locks. The release ceremony requires exact-source acceptance,
 matching tag identity and authenticated publication.
 
 - Bind each ARL capability projection to one invocation's original audited
   producer, retaining the first verdict even on failure. Separately authenticate
   and read a downloaded same-Source carrier with the full original reader.
-- Stream downloaded auxiliary evidence under the existing native aggregate
-  budget while preserving per-file bounds and the complete required closure.
-- Collect and review Root family policy through actual same-checkout census
-  originals on both supported Python minors and host families. Keep policy
-  authoring separate from runtime and release acceptance.
-- Probe the existing real tagged-PDF test independently on all four targets;
-  require one passing case with no skip before drawing a capability conclusion.
 - Retain bounded, allowlisted HTTP error-header observations while preserving
   existing retry behavior and keeping quota interpretation separate.
 - Retain structured rendered-validation drift observations and original worker
@@ -94,10 +69,8 @@ matching tag identity and authenticated publication.
   patches with finite generated ownership, original exits and committed-tree
   gates. Direct push remains inactive pending its separate owner decision.
 - Freeze final metadata and Source before publication regeneration and coverage.
-  Import genuine coverage literals from measured Source, regenerate publication
-  outputs that consume those values, compare measured source/support hashes and
-  remeasure affected source changes before all-project unchanged-output rebind
-  and exact-main acceptance.
+  Import genuine coverage literals from measured Source, then rebind unchanged
+  outputs at the committed import before exact-main acceptance.
 
 - Run coordinated publication preparation under the existing fresh execution
   account with exactly one generation worker, preserving strict original-process

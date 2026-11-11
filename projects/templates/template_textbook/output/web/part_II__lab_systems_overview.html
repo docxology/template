@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>lab_systems_overview.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,21 +744,23 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:lab_part_II_systems_overview">Lab — Systems Overview</h1>
+<h1 data-number="25" id="sec:lab_part_II_systems_overview"><span
+class="header-section-number">25</span> Lab — Systems Overview</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
 <p>Guided lab · Materials: Python environment, notebook or terminal, and
 a written observation record</p>
 </blockquote>
-<h2 id="objectives">Objectives</h2>
+<h2 data-number="25.1" id="objectives-6"><span
+class="header-section-number">25.1</span> Objectives</h2>
 <p>Execute <code>textbook.models.logistic_growth</code> with the
 declared inputs, compare its output with an independently worked
 expectation, and explain which part of the chapter’s claim the result
 checks. Track state, update rule and measurement process as separate
 parts of a system record.</p>
-<h2 id="background">Background</h2>
-<p>Linked chapter: <span class="citation"
-data-cites="sec:part_II_systems_overview">[@sec:part_II_systems_overview]</span>.
+<h2 data-number="25.2" id="background-6"><span
+class="header-section-number">25.2</span> Background</h2>
+<p>Linked chapter: sec. <a href="part_II__systems_overview.html#sec:part_II_systems_overview">12</a>.
 A dashboard shows a stock approaching a ceiling. One observer attributes
 the ceiling to limited capacity; another points to a change in counting
 rules. Both explanations can produce a flat line. A systems overview
@@ -741,15 +770,14 @@ inputs. No experiment on people, organisms or services is being
 reported. The exercise checks mathematical behavior under the model’s
 assumptions rather than supplying evidence that the scenario is
 real.</p>
-<h2 id="procedure">Procedure</h2>
+<h2 data-number="25.3" id="procedure-6"><span
+class="header-section-number">25.3</span> Procedure</h2>
 <ol type="1">
-<li>Write the input quantities, units and assumptions from <span
-class="citation"
-data-cites="tbl:part_II_systems_overview_parameters">[@tbl:part_II_systems_overview_parameters]</span>.</li>
+<li>Write the input quantities, units and assumptions from tbl. <a
+href="part_II__systems_overview.html#tbl:part_II_systems_overview_parameters">7</a>.</li>
 <li>Before running code, predict one boundary value and one interior
-value using <span class="citation"
-data-cites="eq:part_II_systems_overview_model">[@eq:part_II_systems_overview_model]</span>.
-Keep the prediction even if it proves incorrect.</li>
+value using eq. <a href="part_II__systems_overview.html#eq:part_II_systems_overview_model">8</a>. Keep
+the prediction even if it proves incorrect.</li>
 <li>Run the workflow below in a fresh interpreter. Preserve the command
 and output.</li>
 <li>Change one allowed input or parameter and explain which qualitative
@@ -759,7 +787,8 @@ comparison.</li>
 contract; record whether it is rejected or handled by an explicit
 convention.</li>
 </ol>
-<h2 id="analysis">Analysis</h2>
+<h2 data-number="25.4" id="analysis-6"><span
+class="header-section-number">25.4</span> Analysis</h2>
 <p>At time zero the denominator is <span
 class="math inline">\(1+19=20\)</span>, so the state is exactly five
 units. At time two it is <span
@@ -773,23 +802,25 @@ arithmetic should lead you to inspect units, input order and the
 declared convention. Agreement on these synthetic inputs establishes a
 limited computational result; it does not establish the opening
 scenario’s observation rule or empirical adequacy.</p>
-<h2 id="computational-workflow">Computational Workflow</h2>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> logistic_growth</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>time <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> logistic_growth(time, r<span class="op">=</span><span class="fl">0.7</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(values[<span class="dv">0</span>], <span class="fl">5.0</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(np.diff(values) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(values <span class="op">&lt;</span> <span class="fl">100.0</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(values)</span></code></pre></div>
+<h2 data-number="25.5" id="computational-workflow-6"><span
+class="header-section-number">25.5</span> Computational Workflow</h2>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> logistic_growth</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>time <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>])</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> logistic_growth(time, r<span class="op">=</span><span class="fl">0.7</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(values[<span class="dv">0</span>], <span class="fl">5.0</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(np.diff(values) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(values <span class="op">&lt;</span> <span class="fl">100.0</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(values)</span></code></pre></div>
 <p>The code calls the shared model implementation and asserts
 independently known properties. Add the changed-input result to the same
 record without overwriting the first one. If an assertion fails,
 preserve the failing inputs and exception before changing the
 computation.</p>
-<h2 id="reflection">Reflection</h2>
+<h2 data-number="25.6" id="reflection-6"><span
+class="header-section-number">25.6</span> Reflection</h2>
 <ul>
 <li>Does a flat dashboard establish equilibrium? Explain your answer
 before consulting the question bank.</li>
@@ -798,7 +829,8 @@ before consulting the question bank.</li>
 needed to decide whether the model is useful for a real instance of the
 scenario?</li>
 </ul>
-<h2 id="worked-solution">Worked Solution</h2>
+<h2 data-number="25.7" id="worked-solution-6"><span
+class="header-section-number">25.7</span> Worked Solution</h2>
 <p>No: measurement limits or observation-rule changes can also flatten
 it. When it addresses a specific observed inadequacy and its parameters
 can be supported by an observation plan. The code’s assertions give the

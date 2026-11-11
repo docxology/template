@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration" />
@@ -14,7 +14,10 @@ Task</title>
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +42,16 @@ Task</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +64,8 @@ Task</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +94,11 @@ Task</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +122,7 @@ Task</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +139,11 @@ Task</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -1297,7 +1305,7 @@ by the validated run artifacts. The project scripts remain thin
 dispatchers; reusable behavior writes
 <code>output/data/autoresearch_loop.json</code>,
 <code>output/data/ml_task_results.json</code>,
-<code>../figures/figure_registry.json</code>,
+<code>output/figures/figure_registry.json</code>,
 <code>output/data/autoresearch_phase_ledger.json</code>, and
 <code>output/data/manuscript_variable_provenance.json</code>.</p>
 <h2 data-number="3.1" id="sec:task-data"><span
@@ -1763,7 +1771,7 @@ class="header-section-number">3.6</span> Evidence And Scoring</h2>
 <code>output/reports/ml_benchmark_score.json</code>,
 <code>output/data/benchmark_boundary.json</code>,
 <code>output/data/figure_quality_report.json</code>, and registered
-figures through <code>../figures/figure_registry.json</code>. The
+figures through <code>output/figures/figure_registry.json</code>. The
 diagnostic payloads preserve probabilities, confidence and margin
 summaries, class metrics, calibration bins, confusion-pair summaries,
 train/test gaps, deterministic no-retrain perturbation scores, bootstrap
@@ -3155,7 +3163,7 @@ validation.</figcaption>
 </tr>
 </tbody>
 </table></div>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 18: Candidate probability-quality table from output/data/ml_statistical_summary.json ."><table id="tbl:probability-quality" style="width:100%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 18: Candidate probability-quality table from output/data/ml_statistical_summary.json ."><table id="tbl:probability-quality" style="width:99%;" data-responsive-table="true">
 <caption>Table 18: Candidate probability-quality table from
 <code>output/data/ml_statistical_summary.json</code>.</caption>
 <colgroup>
@@ -3641,107 +3649,107 @@ authority.</caption>
 <td>Run or candidate ledger</td>
 </tr>
 <tr>
-<td>../figures/autoresearch_candidate_lifecycle.png</td>
+<td>output/figures/autoresearch_candidate_lifecycle.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/autoresearch_closure_flow.png</td>
+<td>output/figures/autoresearch_closure_flow.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/autoresearch_integrity_chain.png</td>
+<td>output/figures/autoresearch_integrity_chain.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/autoresearch_security_control_matrix.png</td>
+<td>output/figures/autoresearch_security_control_matrix.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/autoresearch_stage_matrix.png</td>
+<td>output/figures/autoresearch_stage_matrix.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/figure_registry.json</td>
+<td>output/figures/figure_registry.json</td>
 <td>Loop artifact</td>
 </tr>
 <tr>
-<td>../figures/ml_bootstrap_intervals.png</td>
+<td>output/figures/ml_bootstrap_intervals.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_calibration_reliability.png</td>
+<td>output/figures/ml_calibration_reliability.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_candidate_rank_stability.png</td>
+<td>output/figures/ml_candidate_rank_stability.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_candidate_scores.png</td>
+<td>output/figures/ml_candidate_scores.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_classification_metrics_heatmap.png</td>
+<td>output/figures/ml_classification_metrics_heatmap.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_complexity_accuracy.png</td>
+<td>output/figures/ml_complexity_accuracy.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_confusion_matrix.png</td>
+<td>output/figures/ml_confusion_matrix.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_confusion_pairs.png</td>
+<td>output/figures/ml_confusion_pairs.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_generalization_gap.png</td>
+<td>output/figures/ml_generalization_gap.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_learning_curves.png</td>
+<td>output/figures/ml_learning_curves.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_paired_correctness.png</td>
+<td>output/figures/ml_paired_correctness.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_per_class_accuracy.png</td>
+<td>output/figures/ml_per_class_accuracy.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_probability_margin_distribution.png</td>
+<td>output/figures/ml_probability_margin_distribution.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_probability_quality.png</td>
+<td>output/figures/ml_probability_quality.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_robustness_matrix.png</td>
+<td>output/figures/ml_robustness_matrix.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_selective_accuracy.png</td>
+<td>output/figures/ml_selective_accuracy.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/ml_training_dynamics.png</td>
+<td>output/figures/ml_training_dynamics.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/mnist_class_balance.png</td>
+<td>output/figures/mnist_class_balance.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/mnist_error_examples.png</td>
+<td>output/figures/mnist_error_examples.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
-<td>../figures/mnist_subset_contact_sheet.png</td>
+<td>output/figures/mnist_subset_contact_sheet.png</td>
 <td>Generated figure</td>
 </tr>
 <tr>
@@ -4379,7 +4387,7 @@ self-approval.</p>
 <td>1</td>
 </tr>
 <tr>
-<td>../figures/figure_registry.json</td>
+<td>output/figures/figure_registry.json</td>
 <td>51</td>
 </tr>
 <tr>
@@ -4580,7 +4588,7 @@ href="https://doi.org/10.1038/s41586-025-09922-y">https://doi.org/10.1038/s41586
 <div id="ref-hasib_exhyte_2025" class="csl-entry" role="listitem">
 <span class="nocase">Hasib, Md Musaddaqul, Sumin Jo, Harsh Sinha, et
 al.</span> 2025. <span>“A Process-Centric Survey of AI for Scientific
-Discovery Through the EXHYTE Framework.”</span> In <em>Research
+Discovery through the EXHYTE Framework.”</span> In <em>Research
 Square</em>. <a
 href="https://doi.org/10.21203/rs.3.rs-8370059/v1">https://doi.org/10.21203/rs.3.rs-8370059/v1</a>.
 </div>
@@ -4718,7 +4726,7 @@ href="https://doi.org/10.6028/NIST.SP.800-207">https://doi.org/10.6028/NIST.SP.8
 </div>
 <div id="ref-shao_storm_2024" class="csl-entry" role="listitem">
 Shao, Yijia, Yucheng Jiang, Theodore Kanell, Peter Xu, Omar Khattab, and
-Monica S. Lam. 2024. <em>Assisting in Writing Wikipedia-Like Articles
+Monica S. Lam. 2024. <em>Assisting in Writing Wikipedia-like Articles
 from Scratch with Large Language Models</em>. <a
 href="https://arxiv.org/abs/2402.14207">https://arxiv.org/abs/2402.14207</a>.
 </div>
@@ -4758,7 +4766,7 @@ href="https://doi.org/10.1016/0303-2647(74)90031-8">https://doi.org/10.1016/0303
 </div>
 <div id="ref-weber_varela_life_after_kant_2002" class="csl-entry"
 role="listitem">
-Weber, Andreas, and Francisco J. Varela. 2002. <span>“Life After Kant:
+Weber, Andreas, and Francisco J. Varela. 2002. <span>“Life after Kant:
 Natural Purposes and the Autopoietic Foundations of Biological
 Individuality.”</span> <em>Phenomenology and the Cognitive Sciences</em>
 1 (2): 97–125. <a
@@ -4810,7 +4818,7 @@ href="https://proceedings.mlr.press/v258/yusupov25a.html">https://proceedings.ml
 <div id="ref-brink_kg_rag_2026" class="csl-entry" role="listitem">
 Zhou, Dongzhuoran, Yuqicheng Zhu, Xiaxia Wang, et al. 2026. <em>What
 Breaks Knowledge Graph Based RAG? Benchmarking and Empirical Insights
-into Reasoning Under Incomplete Knowledge</em>. <a
+into Reasoning under Incomplete Knowledge</em>. <a
 href="https://doi.org/10.48550/arXiv.2508.08344">https://doi.org/10.48550/arXiv.2508.08344</a>.
 </div>
 </div>

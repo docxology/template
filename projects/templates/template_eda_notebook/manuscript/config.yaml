@@ -1,69 +1,53 @@
-# EDA Notebook Configuration — Exploratory Data Analysis Exemplar
-# Demonstrates the computational-notebook archetype: a walkthrough notebook that
-# imports a fully-tested EDA library. This file is the configuration source of
-# truth for manuscript and publication metadata, loaded by `yaml.safe_load`
-# inside `infrastructure/rendering/_pdf_title_page_config.py`.
-
-# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
 paper:
-  # RASP Standard: Title must be descriptive and objective
-  title: "Exploratory Data Analysis: A Reproducible Notebook Template"
-  subtitle: "Notebook-to-Tested-Source Extraction for Computational Research"
-  version: "2.0.0"
-  date: ""  # Auto-generated via `infrastructure/validation/output/validator.py` if empty
-
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
+  title: 'Exploratory Data Analysis: A Reproducible Notebook Template'
+  subtitle: Notebook-to-Tested-Source Extraction for Computational Research
+  version: 2.0.0
+  date: ''
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "2.0.0"
-  platform_version: "5.2.0"
-  last_published_version: "1.0.0"
-  doi: "10.5281/zenodo.21086292" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.21086293" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/21086293"
-  github_repository: "docxology/template_eda_notebook"
-  repository_url: "https://github.com/docxology/template_eda_notebook"
+  release_status: unreleased
+  intended_version: 2.0.0
+  platform_version: 5.2.0
+  last_published_version: 1.0.0
+  doi: 10.5281/zenodo.21086292
+  version_doi: 10.5281/zenodo.21086293
+  version_record: https://zenodo.org/records/21086293
+  github_repository: docxology/template_eda_notebook
+  repository_url: https://github.com/docxology/template_eda_notebook
   published_artifacts:
-    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmSsHhWo2JC76gQSy6rQuN6uKTP1gH9vtj3kGKLgY5oU4E"
-    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_eda_notebook"
-    osf: "https://osf.io/ycwsk/"
-    pypi: "https://test.pypi.org/project/template-eda-notebook/1.0.0/"
-    netlify: "https://6a444920f59418acc0357e9f--tranquil-kleicha-0c9203.netlify.app"
-    github_pages: "https://docxology.github.io/template_eda_notebook/"
-    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_eda_notebook"
+    ipfs_pinata: https://gateway.pinata.cloud/ipfs/QmSsHhWo2JC76gQSy6rQuN6uKTP1gH9vtj3kGKLgY5oU4E
+    huggingface_hub: https://huggingface.co/datasets/ActiveInference/template_eda_notebook
+    osf: https://osf.io/ycwsk/
+    pypi: https://test.pypi.org/project/template-eda-notebook/1.0.0/
+    netlify: https://6a444920f59418acc0357e9f--tranquil-kleicha-0c9203.netlify.app
+    github_pages: https://docxology.github.io/template_eda_notebook/
+    software_heritage: https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_eda_notebook
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
     show_steganography: true
   deposit_filename:
     enabled: true
-    topic: ""  # optional; default = first significant title word
-  journal: ""
-  volume: ""
-  pages: ""
-  year: "2026"
-
+    topic: ''
+  journal: ''
+  volume: ''
+  pages: ''
+  year: '2026'
 keywords:
-  - "exploratory data analysis"
-  - "computational notebook"
-  - "reproducible research"
-  - "pandas"
-  - "data cleaning"
-  - "correlation analysis"
-
+- exploratory data analysis
+- computational notebook
+- reproducible research
+- pandas
+- data cleaning
+- correlation analysis
 metadata:
-  license: "MIT"
-  language: "en"
-
-# Steganography profile (disabled by default for this exemplar).
+  license: MIT
+  language: en
 steganography:
   enabled: false
   overlays_enabled: true
@@ -71,10 +55,8 @@ steganography:
   metadata_enabled: true
   hashing_enabled: true
   encryption_enabled: false
-  overlay_mode: "text"
-  overlay_text: "CONFIDENTIAL"
-
-# Render format toggles — gate per-renderer in infrastructure/rendering/pipeline.py.
+  overlay_mode: text
+  overlay_text: CONFIDENTIAL
 render:
   formats:
     pdf: true
@@ -82,42 +64,32 @@ render:
     slides: true
     docx: false
     epub: false
-
-# Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
 llm:
   reviews:
     enabled: false
     types:
-      - executive_summary
+    - executive_summary
   translations:
     enabled: false
     languages:
-      - zh
-
-# Generate the output-only sibling dataset before analysis and fresh-kernel acceptance.
-# The authoring-only notebook binding receipt is refreshed explicitly before a frozen run.
+    - zh
 analysis:
   scripts:
-    - generate_measurements_data.py
-    - eda_analysis.py
-    - execute_notebook.py
-
-# Consumed by: `infrastructure/reporting/pipeline_report_model.py` and CI/CD gates
+  - generate_measurements_data.py
+  - eda_analysis.py
+  - execute_notebook.py
 testing:
   max_test_failures: 0
   max_infra_test_failures: 0
   max_project_test_failures: 0
-
-# Dataset parameters — the EDA library reads the shipped CSV; these document the
-# schema for readers and downstream tooling.
 project_config:
   dataset:
-    csv_path: "data/measurements.csv"
-    id_column: "subject_id"
-    group_column: "group"
+    csv_path: data/measurements.csv
+    id_column: subject_id
+    group_column: group
     numeric_columns:
-      - "height_cm"
-      - "weight_kg"
-      - "resting_hr_bpm"
+    - height_cm
+    - weight_kg
+    - resting_hr_bpm
     histogram_bins: 10
     correlation_top_n: 3

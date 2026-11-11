@@ -275,9 +275,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -306,8 +306,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -392,7 +392,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -410,8 +417,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -424,8 +429,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -653,10 +656,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -707,10 +718,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -903,6 +910,7 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Exploratory data analysis (EDA) is the most common entry point in
@@ -933,7 +941,9 @@ explore fast in a cell, and the moment a computation matters, move it
 into the library behind a failing test — verified by a zero-mock suite
 and a structural notebook-binding check (sec. <a
 href="#sec:reproducibility">7</a>).</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>This <code>template_eda_notebook</code> serves as the
@@ -1023,7 +1033,9 @@ everything.</li>
 related literature so the exemplar is not mistaken for a general-purpose
 EDA toolkit.</li>
 </ul>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>This section maps each step of the exploratory analysis to the tested
@@ -1134,7 +1146,9 @@ preparer in <code>src/template_eda_notebook/eda/figures.py</code>:
 preparer and the key parameters (bin count, value range) so reviewers
 can navigate from the PDF to the code without inferring hidden
 defaults.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>This section presents the exploratory analysis of the shipped
@@ -1143,9 +1157,9 @@ href="https://github.com/docxology/template/blob/main/projects/templates/templat
 analysis orchestrator</a> (<code>scripts/eda_analysis.py</code>), which
 calls the tested figure-data preparers in
 <code>src/template_eda_notebook/eda/figures.py</code>. Running the
-script regenerates the figures under <code>../figures/</code> and the
-summary CSV under <code>output/data/</code>; the prose below describes
-what those artifacts show.</p>
+script regenerates the figures under <code>output/figures/</code> and
+the summary CSV under <code>output/data/</code>; the prose below
+describes what those artifacts show.</p>
 <h2 data-number="4.1" id="dataset-and-missingness"><span
 class="header-section-number">4.1</span> Dataset and missingness</h2>
 <p>The dataset contains 120 subject records across three groups
@@ -1276,7 +1290,9 @@ manuscript — which is the architectural point of the exemplar. Because
 every number is produced by a tested function and regenerated on demand,
 the prose here describes structure and provenance rather than
 transcribing values that would drift the moment the data changed.</p>
+
 <hr />
+
 <h1 data-number="5" id="sec:conclusion"><span
 class="header-section-number">5</span> Conclusion</h1>
 <p>This study demonstrated a complete, reproducible
@@ -1356,7 +1372,9 @@ pipeline produced the figures referenced in sec. <a
 href="#sec:results">4</a>, wrote
 <code>output/data/summary_statistics.csv</code>, and rendered this
 markdown together with <code>config.yaml</code> into PDF.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:experimental_setup"><span
 class="header-section-number">6</span> Experimental Setup</h1>
 <p>This section details the dataset, schema, and software environment
@@ -1445,7 +1463,7 @@ class="header-section-number">6.4</span> Pipeline ordering</h2>
 <p>The typical analysis order is:</p>
 <ol type="1">
 <li><code>scripts/eda_analysis.py</code> — loads and cleans the dataset,
-then writes <code>../figures/*.png</code> and
+then writes <code>output/figures/*.png</code> and
 <code>output/data/summary_statistics.csv</code>, printing each output
 path for manifest collection.</li>
 <li>PDF rendering reads <code>manuscript/*.md</code> and
@@ -1488,7 +1506,9 @@ class="header-section-number">6.5</span> Relation to figures</h2>
 </table></div>
 <p>This table is descriptive documentation only; it is not executed as
 code during the build.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:reproducibility"><span
 class="header-section-number">7</span> Reproducibility</h1>
 <p>This section explains how to regenerate every artifact in the study
@@ -1584,7 +1604,9 @@ and artifacts cannot disagree. The notebook itself is verified
 structurally by <code>tests/test_notebook.py</code>, which confirms it
 is valid nbformat, that its <code>from src</code> imports resolve to the
 library’s public surface, and that no cell defines its own logic.</p>
+
 <hr />
+
 <h1 data-number="8" id="sec:scope"><span
 class="header-section-number">8</span> Scope, Related Work, and
 Positioning</h1>
@@ -1654,7 +1676,9 @@ interactive widgets and dashboards are not part of the exemplar.</li>
 the reproducibility concerns — tested functions, a thin script, and a
 structurally verified notebook — remain visible rather than buried under
 analytical complexity.</p>
+
 <hr />
+
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
@@ -1669,6 +1693,7 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_eda_notebook/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-harris2020numpy" class="csl-entry" role="listitem">

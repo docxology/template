@@ -1,59 +1,69 @@
 paper:
-  title: "Redacted Report Template: Disclosure Control and Release Audit"
-  subtitle: "A public exemplar for sanitized release workflows"
-  version: "0.2.0"
-  date: "2026-07-10"
+  title: 'Redacted Report Template: Disclosure Control and Release Audit'
+  subtitle: A public exemplar for sanitized release workflows
+  version: 0.2.0
+  date: '2026-07-10'
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.2.0"
-  platform_version: "5.2.0"
-  last_published_version: "0.1.0"
-  doi: "10.5281/zenodo.21298890"
-  doi_status: "DOI published"
-  version_doi: "10.5281/zenodo.21298891"
-  version_record: "https://zenodo.org/records/21298891"
-  github_repository: "docxology/template_redacted_report"
-  repository_url: "https://github.com/docxology/template_redacted_report"
-  license: "CC-BY-4.0"
+  release_status: unreleased
+  intended_version: 0.2.0
+  platform_version: 5.2.0
+  last_published_version: 0.1.0
+  doi: 10.5281/zenodo.21298890
+  doi_status: DOI published
+  version_doi: 10.5281/zenodo.21298891
+  version_record: https://zenodo.org/records/21298891
+  github_repository: docxology/template_redacted_report
+  repository_url: https://github.com/docxology/template_redacted_report
+  license: CC-BY-4.0
 keywords:
-  - redaction
-  - disclosure control
-  - release audit
-  - source protection
+- redaction
+- disclosure control
+- release audit
+- source protection
 analysis:
   scripts:
-    - 01_generate_release_artifacts.py
-    - 02_build_figures.py
+  - 01_generate_release_artifacts.py
+  - 02_build_figures.py
 render:
-  engine: "pandoc"
+  engine: pandoc
   number_sections: true
   toc: true
   redaction_visual:
-    default_redaction_style: "blackout"
-    default_pdf_background: "white"
-    redaction_styles: ["blackout", "whiteout", "grayout", "blur"]
-    pdf_backgrounds: ["white", "gray", "black", "blur"]
-    margin_left: "0.16in"
-    margin_right: "0.16in"
-    dev_matrix_output: "output/dev/redaction_variants"
+    default_redaction_style: blackout
+    default_pdf_background: white
+    redaction_styles:
+    - blackout
+    - whiteout
+    - grayout
+    - blur
+    pdf_backgrounds:
+    - white
+    - gray
+    - black
+    - blur
+    margin_left: 0.16in
+    margin_right: 0.16in
+    dev_matrix_output: output/dev/redaction_variants
     kmyth_requested: true
     kmyth_required: false
-    kmyth_binary_dir: "infrastructure/steganography/kmyth/bin"
-    kmyth_seal_artifacts: ["hash_manifest", "pdf"]
+    kmyth_binary_dir: infrastructure/steganography/kmyth/bin
+    kmyth_seal_artifacts:
+    - hash_manifest
+    - pdf
     steganography_methods:
-      - sha256_sha512_hash_manifest
-      - diagonal_watermark_overlay
-      - footer_provenance_overlay
-      - first_page_invisible_text_overlay
-      - qr_payload_barcode
-      - code128_page_barcode
-      - pdf_info_metadata
-      - xmp_metadata
-      - embedded_stego_manifest_attachment
-      - kmyth_tpm_sidecar_sealing_requested
+    - sha256_sha512_hash_manifest
+    - diagonal_watermark_overlay
+    - footer_provenance_overlay
+    - first_page_invisible_text_overlay
+    - qr_payload_barcode
+    - code128_page_barcode
+    - pdf_info_metadata
+    - xmp_metadata
+    - embedded_stego_manifest_attachment
+    - kmyth_tpm_sidecar_sealing_requested

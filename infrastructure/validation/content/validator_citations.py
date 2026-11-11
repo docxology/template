@@ -53,9 +53,14 @@ def validate_citations(
         bib_paths = sorted(Path(md_paths[0]).parent.glob("*.bib"))
     elif isinstance(bib_file, (list, tuple)):
         bib_paths = [Path(p) for p in bib_file if Path(p).exists()]
+        missing = [str(p) for p in bib_file if not Path(p).exists()]
+        if missing:
+            raise FileNotFoundError(f"Explicitly provided BibTeX file(s) not found: {', '.join(missing)}")
     else:
         single = Path(bib_file)
-        bib_paths = [single] if single.exists() else []
+        if not single.exists():
+            raise FileNotFoundError(f"Explicitly provided BibTeX file not found: {single}")
+        bib_paths = [single]
 
     if not bib_paths:
         return problems

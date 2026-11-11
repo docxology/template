@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>appendix_formalisms.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +180,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -188,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -219,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -305,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -323,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -337,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -566,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -620,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -652,7 +744,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:appendix_formalisms">Appendix — Formalisms</h1>
+<h1 data-number="46" id="sec:appendix_formalisms"><span
+class="header-section-number">46</span> Appendix — Formalisms</h1>
 <p>A worked example of every <strong>formal</strong> element a technical
 book uses: definitions, theorems with proofs, lemmas, algorithms in
 pseudocode, step-by-step derivations, systems of numbered equations, and
@@ -670,13 +763,14 @@ may instead use native LaTeX <code>theorem</code>, <code>lemma</code>,
 <code>definition</code>, and <code>proof</code> environments.</p>
 </blockquote>
 <hr />
-<h2 id="definitions">1. Definitions</h2>
+<h2 data-number="46.1" id="definitions"><span
+class="header-section-number">46.1</span> 1. Definitions</h2>
 <blockquote>
 <p><strong>Definition 1 (Equilibrium).</strong> A state <span
 class="math inline">\(N^{*}\)</span> of a dynamical system <span
 class="math inline">\(\dot N = f(N)\)</span> is an <em>equilibrium</em>
 if <span class="math inline">\(f(N^{*}) = 0\)</span>. See <a
-href="#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
+href="manuscript__glossary.html#gl:equilibrium"><strong>equilibrium</strong></a>.</p>
 </blockquote>
 <blockquote>
 <p><strong>Definition 2 (Carrying capacity).</strong> For logistic
@@ -685,18 +779,19 @@ class="math inline">\(K\)</span> is the non-zero equilibrium toward
 which trajectories converge.</p>
 </blockquote>
 <hr />
-<h2 id="a-theorem-with-proof">2. A theorem with proof</h2>
+<h2 data-number="46.2" id="a-theorem-with-proof"><span
+class="header-section-number">46.2</span> 2. A theorem with proof</h2>
 <blockquote>
 <p><strong>Theorem 1 (Logistic limit).</strong> For the logistic model
-in <span class="citation"
-data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>
-with <span class="math inline">\(r &gt; 0\)</span> and <span
+in eq. <a href="#eq:formalisms_logistic">14</a> with <span
+class="math inline">\(r &gt; 0\)</span> and <span
 class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
 satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
 K\)</span>.</p>
 </blockquote>
-<p><span class="math display">\[N(t) = \frac{K}{1 + A e^{-rt}}, \qquad A
-= \frac{K - N_0}{N_0} .\]</span> {#eq:formalisms_logistic}</p>
+<p><span id="eq:formalisms_logistic"><span class="math display">\[N(t) =
+\frac{K}{1 + A e^{-rt}}, \qquad A = \frac{K - N_0}{N_0}
+.\qquad{(14)}\]</span></span></p>
 <p><em>Proof.</em> Because <span class="math inline">\(r &gt;
 0\)</span>, the term <span class="math inline">\(e^{-rt} \to 0\)</span>
 as <span class="math inline">\(t \to \infty\)</span>. Hence the
@@ -713,7 +808,8 @@ below; when <span class="math inline">\(N_0=K\)</span>, it is constant.
 checks at finite sample values. That numerical check supports the
 implementation case; it does not prove the infinite-time limit.</p>
 <hr />
-<h2 id="a-lemma">3. A lemma</h2>
+<h2 data-number="46.3" id="a-lemma"><span
+class="header-section-number">46.3</span> 3. A lemma</h2>
 <blockquote>
 <p><strong>Lemma 1 (Half-life).</strong> For exponential decay <span
 class="math inline">\(y(t) = y_0 e^{-\lambda t}\)</span> with <span
@@ -732,7 +828,9 @@ class="math inline">\(y_0\)</span>. <span
 class="math inline">\(\qquad\blacksquare\)</span></p>
 <p>Implemented as <code>textbook.models.half_life</code>.</p>
 <hr />
-<h2 id="algorithms-pseudocode">4. Algorithms (pseudocode)</h2>
+<h2 data-number="46.4" id="algorithms-pseudocode"><span
+class="header-section-number">46.4</span> 4. Algorithms
+(pseudocode)</h2>
 <p>Where the preamble provides an algorithm package, use it; otherwise
 this fenced form renders everywhere.</p>
 <pre class="text"><code>Algorithm 1: Ordinary least-squares line fit
@@ -749,7 +847,9 @@ Output: slope m, intercept b, coefficient of determination R^2
 case is covered by
 <code>tests/test_models.py::test_linear_fit_constant_y_gives_r_squared_one</code>.</p>
 <hr />
-<h2 id="a-step-by-step-derivation">5. A step-by-step derivation</h2>
+<h2 data-number="46.5" id="a-step-by-step-derivation"><span
+class="header-section-number">46.5</span> 5. A step-by-step
+derivation</h2>
 <p>For <span class="math inline">\(0&lt;N_0&lt;K\)</span>, separating
 variables in the logistic differential equation gives:</p>
 <p><span class="math display">\[\begin{aligned}
@@ -758,34 +858,35 @@ variables in the logistic differential equation gives:</p>
 \ln\!\left(\frac{N}{K - N}\right) &amp;= rt + C \\
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
 \end{aligned}\]</span></p>
-<p>which recovers <span class="citation"
-data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>.
-The boundary case <span class="math inline">\(N_0=K\)</span> has the
+<p>which recovers eq. <a href="#eq:formalisms_logistic">14</a>. The
+boundary case <span class="math inline">\(N_0=K\)</span> has the
 constant solution and is handled separately because the logarithm above
 is undefined there. Each line is one algebraic move; show your work at
 this granularity so readers can follow without gaps.</p>
 <hr />
-<h2 id="a-system-of-numbered-equations">6. A system of numbered
+<h2 data-number="46.6" id="a-system-of-numbered-equations"><span
+class="header-section-number">46.6</span> 6. A system of numbered
 equations</h2>
 <p>A simple predator–prey system, with each equation individually
-referenceable (<span class="citation"
-data-cites="eq:formalisms_prey">[@eq:formalisms_prey]</span>, <span
-class="citation"
-data-cites="eq:formalisms_pred">[@eq:formalisms_pred]</span>):</p>
-<p><span class="math display">\[\frac{dx}{dt} = \alpha x - \beta x
-y\]</span> {#eq:formalisms_prey}</p>
-<p><span class="math display">\[\frac{dy}{dt} = \delta x y - \gamma
-y\]</span> {#eq:formalisms_pred}</p>
+referenceable (eq. <a href="#eq:formalisms_prey">15</a>, eq. <a
+href="#eq:formalisms_pred">16</a>):</p>
+<p><span id="eq:formalisms_prey"><span
+class="math display">\[\frac{dx}{dt} = \alpha x - \beta x
+y\qquad{(15)}\]</span></span></p>
+<p><span id="eq:formalisms_pred"><span
+class="math display">\[\frac{dy}{dt} = \delta x y - \gamma
+y\qquad{(16)}\]</span></span></p>
 <p>The vector-field figure style for such systems is demonstrated by the
-quiver plot in the format gallery (<span class="citation"
-data-cites="sec:appendix_format_gallery">[@sec:appendix_format_gallery]</span>).</p>
+quiver plot in the format gallery (sec. <a
+href="appendices__appendix_format_gallery.html#sec:appendix_format_gallery">47</a>).</p>
 <hr />
-<h2 id="dimensioned-quantities">7. Dimensioned quantities</h2>
+<h2 data-number="46.7" id="dimensioned-quantities"><span
+class="header-section-number">46.7</span> 7. Dimensioned quantities</h2>
 <p>State parameters with units explicitly, in math mode so they render
 in every target:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Worked-model parameters with representative dimensioned values."><table id="tbl:formalisms_units" data-responsive-table="true">
-<caption>Worked-model parameters with representative dimensioned
-values.</caption>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 13: Worked-model parameters with representative dimensioned values."><table id="tbl:formalisms_units" data-responsive-table="true">
+<caption>Table 13: Worked-model parameters with representative
+dimensioned values.</caption>
 <thead>
 <tr>
 <th>Symbol</th>
@@ -817,18 +918,17 @@ values.</caption>
 </tbody>
 </table></div>
 <hr />
-<h2 id="notation-summary">8. Notation summary</h2>
-<p>The notation and unit conventions are collected in <span
-class="citation"
-data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>. Keep
-the mathematical domain distinct from a computational input restriction:
-a numerical helper may intentionally support a narrower class of inputs.
-Symbols used throughout are collected in the notation appendix (<span
-class="citation"
-data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>);
-glossary definitions for narrative terms such as <a
-href="#gl:gradient"><strong>gradient</strong></a> and <a
-href="#gl:threshold"><strong>threshold</strong></a> are in the master
+<h2 data-number="46.8" id="notation-summary"><span
+class="header-section-number">46.8</span> 8. Notation summary</h2>
+<p>The notation and unit conventions are collected in sec. <a
+href="appendices__appendix_notation.html#sec:appendix_notation">44</a>. Keep the mathematical domain
+distinct from a computational input restriction: a numerical helper may
+intentionally support a narrower class of inputs. Symbols used
+throughout are collected in the notation appendix (sec. <a
+href="appendices__appendix_notation.html#sec:appendix_notation">44</a>); glossary definitions for
+narrative terms such as <a
+href="manuscript__glossary.html#gl:gradient"><strong>gradient</strong></a> and <a
+href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a> are in the master
 glossary.</p>
 </main>
 </body>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Readability, structural, and citation-density gating for research manuscripts" />
@@ -14,7 +14,10 @@ Pipeline</title>
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +42,16 @@ Pipeline</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +64,8 @@ Pipeline</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +94,11 @@ Pipeline</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +122,7 @@ Pipeline</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +139,11 @@ Pipeline</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -750,12 +758,12 @@ in this paper, the project produces the following on-disk artefacts:</p>
 configured check.</li>
 <li><code>output/review_report.md</code> — the assembled markdown review
 report.</li>
-<li><code>../figures/section_word_counts.png</code> — per-file word
+<li><code>output/figures/section_word_counts.png</code> — per-file word
 counts.</li>
-<li><code>../figures/readability_metrics.png</code> — Flesch /
+<li><code>output/figures/readability_metrics.png</code> — Flesch /
 Flesch-Kincaid / Gunning Fog per file.</li>
-<li><code>../figures/citation_density.png</code> — citations per 1000
-words per file.</li>
+<li><code>output/figures/citation_density.png</code> — citations per
+1000 words per file.</li>
 <li><code>output/data/manuscript_variables.json</code> — substitution
 variables for the abstract.</li>
 </ul>
@@ -765,9 +773,9 @@ prose-review template, so its own rendered PDF deliberately contains no
 figure floats and runs cleanly through the very prose gate it documents.
 A fork that wants figures inside the manuscript should add real markdown
 image references to one of the produced figures (for example
-<code>../figures/section_word_counts.png</code>,
-<code>../figures/readability_metrics.png</code>, or
-<code>../figures/citation_density.png</code>) after those files
+<code>output/figures/section_word_counts.png</code>,
+<code>output/figures/readability_metrics.png</code>, or
+<code>output/figures/citation_density.png</code>) after those files
 exist.</p>
 <p>Because the pipeline does not consult any external service, every
 artefact is reproducible from the manuscript text +
@@ -796,12 +804,13 @@ starts with an H1.</li>
 <code>[@key]</code> in the prose resolves against
 <code>manuscript/references.bib</code>.</li>
 </ul>
-<p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
-2011 palette) <span class="citation" data-cites="wong2011points">(<a
-href="index.html#ref-wong2011points" role="doc-biblioref">Wong 2011</a>)</span>,
-300 dpi, and PNG-only for archival stability. They are referenced in
-sec. <a href="manuscript__05_pipeline_internals.html#sec:pipeline_internals">6</a> where we walk through the
-on-disk artefact set in full.</p>
+<p>The figures in <code>output/figures/</code> are colour-blind-safe
+(Wong 2011 palette) <span class="citation"
+data-cites="wong2011points">(<a href="index.html#ref-wong2011points"
+role="doc-biblioref">Wong 2011</a>)</span>, 300 dpi, and PNG-only for
+archival stability. They are referenced in sec. <a
+href="manuscript__05_pipeline_internals.html#sec:pipeline_internals">6</a> where we walk through the on-disk
+artefact set in full.</p>
 <p>The full pass/fail summary lands in
 <code>output/review_report.md</code>, which is itself a Markdown file
 rendered alongside the manuscript by Pandoc — i.e. the project reports

@@ -601,11 +601,11 @@ The steganography path exposes metadata injection, SHA-256 hashing, overlay gene
 
 Rendered via `projects/templates/template_template` (`generate_manuscript_metrics.py` → injected tokens such as `31`). Architecture figures stem from [`template_template.figures.architecture_viz`](../src/template_template/figures/architecture_viz.py)—font sizes constrained by §QA.
 
-![Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `31` enumerated infrastructure directories, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test-file counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.](../figures/architecture_overview.png){#fig:template-architecture data-slide-manifest="../figures/architecture_overview.panels.json"}
+![Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `31` enumerated infrastructure directories, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test-file counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.](../output/figures/architecture_overview.png){#fig:template-architecture data-slide-manifest="../output/figures/architecture_overview.panels.json"}
 
-![Declared-stage reference with all 17 YAML stages in reading order, showing complete names and tags (core, LLM, ebook, docxplus, metadata, bundle, archival). Panel order documents declarations; it does not imply a linear dependency chain.](../figures/pipeline_stages.png){#fig:template-pipeline-flow data-slide-manifest="../figures/pipeline_stages.panels.json"}
+![Declared-stage reference with all 17 YAML stages in reading order, showing complete names and tags (core, LLM, ebook, docxplus, metadata, bundle, archival). Panel order documents declarations; it does not imply a linear dependency chain.](../figures/pipeline_stages.png){#fig:template-pipeline-flow data-slide-manifest="../output/figures/pipeline_stages.panels.json"}
 
-![Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first.](../figures/module_inventory.png){#fig:template-module-inventory data-slide-manifest="../figures/module_inventory.panels.json" height="210mm" style="height: auto !important;"}
+![Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first.](../figures/module_inventory.png){#fig:template-module-inventory data-slide-manifest="../output/figures/module_inventory.panels.json" height="210mm" style="height: auto !important;"}
 
 The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.
 
@@ -614,7 +614,7 @@ The long tail of small, single-purpose packages beside a handful of larger ones 
 The comparative feature matrix below summarizes the Appendix F capability matrix.
 
 
-![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../figures/comparative_feature_matrix.panels.json"}
+![14 × 10 heatmap annotated in appendix text—green **✓** full native capability, yellow partial / plugin-hosted, red **—** unavailable. Rows group *Core Pipeline*, *Quality & Security*, then *Ecosystem*.](../figures/comparative_feature_matrix.png){#fig:template-comparative-matrix data-slide-manifest="../output/figures/comparative_feature_matrix.panels.json"}
 
 ¹ Nextflow lineage records exist at workflow scope, not per rendered PDF citation graph.
 

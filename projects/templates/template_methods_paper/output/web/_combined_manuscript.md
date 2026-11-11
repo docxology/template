@@ -598,7 +598,7 @@ The typical analysis order is:
 
 1. `scripts/methods_analysis.py` — compiles every example method, runs all
    gates, exports worklist/CSV/Mermaid/JSON per method, demonstrates the
-   provenance hash-chain, and writes `../figures/step_counts.png`,
+   provenance hash-chain, and writes `output/figures/step_counts.png`,
    printing each output path for manifest collection.
 2. `scripts/z_generate_manuscript_variables.py` — reads `manuscript/config.yaml`
    and the analysis outputs, then resolves every generated variable in

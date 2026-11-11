@@ -7,6 +7,7 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
@@ -52,6 +53,50 @@ def test_combined_invalid_manuscript_refuses_to_publish_html(tmp_path: Path, inv
         renderer.render_combined([source], manuscript, "invalid-proof")
 
     assert not list(Path(renderer.config.web_dir).glob("*.html"))
+
+
+@pytest.mark.parametrize("combined", [False, True])
+def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(tmp_path: Path, combined: bool) -> None:
+    output = tmp_path / "output"
+    manuscript = output / "manuscript"
+    source = manuscript / "parts" / "unit" / "chapter" / "overview.md"
+    source.parent.mkdir(parents=True)
+    figures = output / "figures"
+    (figures / "plots").mkdir(parents=True)
+    Image.new("RGB", (8, 8), color=(30, 60, 90)).save(figures / "plots" / "dense.png")
+    (figures / "figure_registry.json").write_text(
+        '{"fig:dense":{"filename":"plots/dense.png","alt_text":"A blue square; synthetic layout fixture."}}',
+        encoding="utf-8",
+    )
+    relative_image = "../../../../figures/plots/dense.png"
+    source.write_text(
+        f"# Results\n\n![Caption]({relative_image}){{#fig:dense}}\n\n`{relative_image}`\n",
+        encoding="utf-8",
+    )
+    renderer = WebRenderer(
+        RenderingConfig(output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web"))
+    )
+    rendered_path = renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
+    rendered = rendered_path.read_text(encoding="utf-8")
+    assert 'src="../figures/plots/dense.png"' in rendered
+    assert 'alt="A blue square; synthetic layout fixture."' in rendered
+    assert f"<code>{relative_image}</code>" in rendered
+
+
+def test_normalize_figure_paths_preserves_literal_output_paths() -> None:
+    """Literal output/figures/ paths in code spans and prose are not rewritten."""
+    from infrastructure.rendering._web_postprocess import normalize_figure_paths
+
+    # HTML img src is rewritten
+    assert normalize_figure_paths('<img src="output/figures/a.png">') == '<img src="../figures/a.png">'
+    # Markdown image is rewritten
+    assert normalize_figure_paths("![alt](output/figures/a.png)") == "![alt](../figures/a.png)"
+    # Literal code span is NOT rewritten
+    assert normalize_figure_paths("<code>output/figures/a.png</code>") == "<code>output/figures/a.png</code>"
+    # Backtick code span is NOT rewritten
+    assert normalize_figure_paths("`output/figures/a.png`") == "`output/figures/a.png`"
+    # Prose is NOT rewritten
+    assert normalize_figure_paths("See output/figures/a.png here") == "See output/figures/a.png here"
 
 
 @pytest.mark.parametrize("combined", [False, True])

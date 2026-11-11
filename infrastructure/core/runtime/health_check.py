@@ -78,11 +78,16 @@ class SystemHealthChecker:
         for check_name, check_func in self.checks.items():
             try:
                 result = check_func()
+                healthy = self._check_result_is_healthy(check_name, result)
                 status["checks"][check_name] = {
-                    "status": "healthy",
+                    "status": "healthy" if healthy else "unhealthy",
                     "details": result,
                     "timestamp": time.time(),
                 }
+                if not healthy:
+                    status["checks"][check_name]["error"] = f"{check_name} observed failure indicators in its result"
+                if not healthy:
+                    unhealthy_checks.append(check_name)
             except Exception as e:  # noqa: BLE001 — intentional: check functions are arbitrary; must not propagate
                 logger.warning(f"Health check failed for {check_name}: {e}")
                 status["checks"][check_name] = {
@@ -102,6 +107,34 @@ class SystemHealthChecker:
         status["summary"].update(self._generate_summary(status))
 
         return status
+
+    @staticmethod
+    def _check_result_is_healthy(check_name: str, result: dict[str, Any]) -> bool:
+        """Inspect a check's returned details for observed failure indicators.
+
+        Checks that return without raising are not automatically healthy:
+        failed writes, missing directories, critical resource levels, and
+        missing critical dependencies all count as observed failures.
+        """
+        if result.get("psutil_unavailable"):
+            return False
+        if result.get("is_critical"):
+            return False
+        if result.get("write_permissions") is False:
+            return False
+        if result.get("dns_resolution") is False:
+            return False
+        if result.get("http_connectivity") is False:
+            return False
+        # Critical directories must exist and be readable.
+        for _path, info in result.get("directories", {}).items():
+            if not info.get("exists") or not info.get("readable"):
+                return False
+        # Critical dependencies must be available.
+        for dep in ("numpy", "matplotlib", "yaml"):
+            if result.get(dep) == "missing":
+                return False
+        return True
 
     def _check_filesystem(self) -> dict[str, Any]:
         results: dict[str, Any] = {}

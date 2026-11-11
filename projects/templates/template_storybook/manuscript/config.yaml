@@ -1,49 +1,43 @@
 paper:
-  title: "The Shape Between: A Full-Page Illustrated Storybook Template"
-  subtitle: "A geometric fable of belonging, bracing, and reciprocal form"
-  version: "0.2.0"
-
+  title: 'The Shape Between: A Full-Page Illustrated Storybook Template'
+  subtitle: A geometric fable of belonging, bracing, and reciprocal form
+  version: 0.2.0
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.2.0"
-  platform_version: "5.2.0"
-  last_published_version: "0.1.0"
-  github_repository: "docxology/template_storybook"
-  repository_url: "https://github.com/docxology/template_storybook"
-  doi: "10.5281/zenodo.21176000"
-  version_doi: "10.5281/zenodo.21176001"
-  version_record: "https://zenodo.org/records/21176001"
-  doi_status: "DOI published"
-  year: "2026"
+  release_status: unreleased
+  intended_version: 0.2.0
+  platform_version: 5.2.0
+  last_published_version: 0.1.0
+  github_repository: docxology/template_storybook
+  repository_url: https://github.com/docxology/template_storybook
+  doi: 10.5281/zenodo.21176000
+  version_doi: 10.5281/zenodo.21176001
+  version_record: https://zenodo.org/records/21176001
+  doi_status: DOI published
+  year: '2026'
   published_artifacts:
-    github: "https://github.com/docxology/template_storybook/releases/tag/v0.1.0"
-    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy"
-    software_heritage: "https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_storybook/"
-    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_storybook"
-    osf: "https://osf.io/xbajh/"
-    netlify: "https://6a47fd2233010f4eb138cdcd--tranquil-kleicha-0c9203.netlify.app"
-    pypi: "https://test.pypi.org/project/template-storybook/0.1.0/"
-
+    github: https://github.com/docxology/template_storybook/releases/tag/v0.1.0
+    ipfs_pinata: https://gateway.pinata.cloud/ipfs/QmPcB1mTMZQb541ZsmwDwc6rQgSTLR4BGYefdTLsj1s5Qy
+    software_heritage: https://archive.softwareheritage.org/api/1/origin/save/git/url/https://github.com/docxology/template_storybook/
+    huggingface_hub: https://huggingface.co/datasets/ActiveInference/template_storybook
+    osf: https://osf.io/xbajh/
+    netlify: https://6a47fd2233010f4eb138cdcd--tranquil-kleicha-0c9203.netlify.app
+    pypi: https://test.pypi.org/project/template-storybook/0.1.0/
 keywords:
-  - "storybook"
-  - "illustration"
-  - "procedural graphics"
-  - "reportlab"
-  - "reproducible publishing"
-
+- storybook
+- illustration
+- procedural graphics
+- reportlab
+- reproducible publishing
 metadata:
-  license: "MIT"
-  language: "en"
-
-manuscript_dir: "manuscript"
-
+  license: MIT
+  language: en
+manuscript_dir: manuscript
 render:
   formats:
     pdf: true
@@ -51,21 +45,20 @@ render:
     slides: true
     docx: false
     epub: false
-
 analysis:
   scripts:
-    - "10_render_cover.py"
-    - "20_render_page_01.py"
-    - "21_render_page_02.py"
-    - "22_render_page_03.py"
-    - "23_render_page_04.py"
-    - "24_render_page_05.py"
-    - "25_render_page_06.py"
-    - "26_render_page_07.py"
-    - "27_render_page_08.py"
-    - "28_render_page_09.py"
-    - "29_render_page_10.py"
-    - "30_render_page_11.py"
-    - "31_render_page_12.py"
-    - "32_render_page_13.py"
-    - "90_build_storybook_pdf.py"
+  - 10_render_cover.py
+  - 20_render_page_01.py
+  - 21_render_page_02.py
+  - 22_render_page_03.py
+  - 23_render_page_04.py
+  - 24_render_page_05.py
+  - 25_render_page_06.py
+  - 26_render_page_07.py
+  - 27_render_page_08.py
+  - 28_render_page_09.py
+  - 29_render_page_10.py
+  - 30_render_page_11.py
+  - 31_render_page_12.py
+  - 32_render_page_13.py
+  - 90_build_storybook_pdf.py

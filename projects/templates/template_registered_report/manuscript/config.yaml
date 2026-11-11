@@ -1,32 +1,32 @@
 paper:
-  title: "Registered Report Template: Preregistration, Deviations, and Claim Boundaries"
-  subtitle: "A reproducible exemplar for registered analysis plans"
-  version: "0.2.0"
-  date: "2026-07-10"
+  title: 'Registered Report Template: Preregistration, Deviations, and Claim Boundaries'
+  subtitle: A reproducible exemplar for registered analysis plans
+  version: 0.2.0
+  date: '2026-07-10'
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.2.0"
-  platform_version: "5.2.0"
-  last_published_version: "0.1.0"
-  doi: "10.5281/zenodo.21298892"
-  doi_status: "DOI published"
-  version_doi: "10.5281/zenodo.21298893"
-  version_record: "https://zenodo.org/records/21298893"
-  github_repository: "docxology/template_registered_report"
-  repository_url: "https://github.com/docxology/template_registered_report"
-  license: "CC-BY-4.0"
+  release_status: unreleased
+  intended_version: 0.2.0
+  platform_version: 5.2.0
+  last_published_version: 0.1.0
+  doi: 10.5281/zenodo.21298892
+  doi_status: DOI published
+  version_doi: 10.5281/zenodo.21298893
+  version_record: https://zenodo.org/records/21298893
+  github_repository: docxology/template_registered_report
+  repository_url: https://github.com/docxology/template_registered_report
+  license: CC-BY-4.0
 keywords:
-  - registered report
-  - preregistration
-  - replication
-  - deviation ledger
+- registered report
+- preregistration
+- replication
+- deviation ledger
 render:
-  engine: "pandoc"
+  engine: pandoc
   number_sections: true
   toc: true

@@ -116,7 +116,7 @@ def scan_project_scripts(
     for name in PUBLIC_PROJECT_NAMES:
         scripts_dir = repo_root / "projects" / name / "scripts"
         if not scripts_dir.is_dir():
-            continue
+            raise FileNotFoundError(f"Declared public project scripts directory missing: {scripts_dir}")
         rel_root = scripts_dir.relative_to(repo_root).as_posix()
         part_warnings, part_failures = scan_line_counts(
             repo_root,
@@ -142,7 +142,7 @@ def scan_project_src(
     for name in PUBLIC_PROJECT_NAMES:
         src_dir = repo_root / "projects" / name / "src"
         if not src_dir.is_dir():
-            continue
+            raise FileNotFoundError(f"Declared public project src directory missing: {src_dir}")
         rel_root = src_dir.relative_to(repo_root).as_posix()
         part_warnings, part_failures = scan_line_counts(
             repo_root,

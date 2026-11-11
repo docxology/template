@@ -187,13 +187,50 @@ def resolve_split_page_fragments(combined_file: Path, section_files: tuple[Path,
         write_if_changed(page, content)
 
 
+_MD_IMAGE_RE = re.compile(
+    r"!\[([^\]]*)\]\(([^)]+)\)",
+)
+
+
+def _rebase_figure_source(source: str) -> str:
+    """Return the deployed ``../figures/`` path for a recognized source prefix."""
+    for prefix in (
+        "../../output/figures/",
+        "../output/figures/",
+        "output/figures/",
+    ):
+        if source.startswith(prefix):
+            return "../figures/" + source[len(prefix) :]
+    # Nested source-relative paths (e.g. ../../../../figures/plot.png).
+    return re.sub(r"^(?:\.\./){2,}figures/", "../figures/", source)
+
+
 def normalize_figure_paths(content: str) -> str:
-    """Rewrite manuscript figure paths for files emitted under ``output/web``."""
-    return (
-        content.replace("../../output/figures/", "../figures/")
-        .replace("../output/figures/", "../figures/")
-        .replace("output/figures/", "../figures/")
-    )
+    """Rewrite manuscript figure paths for files emitted under ``output/web``.
+
+    Both Markdown ``![alt](path)`` and HTML ``<img src="path">`` forms are
+    rewritten. Literal paths in prose, code spans, and other attributes are
+    preserved verbatim.
+    """
+
+    def rebase_html_image(match: re.Match[str]) -> str:
+        source = _html_attribute(match.group("attrs"), "src")
+        if source is None:
+            return match.group(0)
+        deployed = _rebase_figure_source(source)
+        if deployed == source:
+            return match.group(0)
+        return _set_image_source(match.group(0), deployed)
+
+    def rebase_md_image(match: re.Match[str]) -> str:
+        alt, source = match.group(1), match.group(2)
+        deployed = _rebase_figure_source(source)
+        if deployed == source:
+            return match.group(0)
+        return f"![{alt}]({deployed})"
+
+    content = _IMAGE_RE.sub(rebase_html_image, content)
+    return _MD_IMAGE_RE.sub(rebase_md_image, content)
 
 
 def normalize_figure_paths_in_file(html_file: Path) -> None:

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>quantitative_foundations.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,15 +744,15 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_0_quantitative_foundations">Quantitative
-Foundations</h1>
+<h1 data-number="6" id="sec:part_0_quantitative_foundations"><span
+class="header-section-number">6</span> Quantitative Foundations</h1>
 <figure id="fig:part_0_quantitative_foundations">
-<a class="figure-full-size-link" href="../figures/part_0_quantitative_foundations.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Synthetic paired observations and their fitted trend illustrate the difference between…"><img src="../figures/part_0_quantitative_foundations.png"
+<a class="figure-full-size-link" href="../figures/part_0_quantitative_foundations.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Synthetic paired observations and their fitted trend illustrate the difference between…"><img src="../figures/part_0_quantitative_foundations.png"
 style="width:90.0%"
 alt="A rising cloud of synthetic observations is crossed by a fitted line; the point-to-line deviations remain visible instead of being hidden by an average." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Synthetic paired observations and their
-fitted trend illustrate the difference between individual variation and
-a summary.</figcaption>
+<figcaption>Figure 3: Synthetic paired observations
+and their fitted trend illustrate the difference between individual
+variation and a summary.</figcaption>
 </figure>
 <!-- alt: A rising cloud of synthetic observations is crossed by a fitted line; the point-to-line deviations remain visible instead of being hidden by an average. -->
 <!-- chapter-metadata-badge -->
@@ -734,31 +761,33 @@ a summary.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="6.0.1" id="study-blueprint-2"><span
+class="header-section-number">6.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> A number is interpretable only with its
 units, observation rule and summary convention.</li>
 <li><strong>Core concepts:</strong> <a
-href="#gl:variable"><strong>variable</strong></a>, <a
-href="#gl:parameter"><strong>parameter</strong></a>, <a
-href="#gl:observable"><strong>observable</strong></a>, <a
-href="#gl:gradient"><strong>gradient</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_0_quantitative_foundations_model">[@eq:part_0_quantitative_foundations_model]</span>.</li>
+href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>, <a
+href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
+href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>, <a
+href="manuscript__glossary.html#gl:gradient"><strong>gradient</strong></a>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_0_quantitative_foundations_model">3</a>.</li>
 <li><strong>Data skill:</strong> Check units and divisors, then compare
 summaries with the original observations.</li>
 <li><strong>Common misconception to repair:</strong> A small spread of
 observations and a small uncertainty in an estimate are different
 quantities.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_quantitative_foundations">[@sec:lab_part_0_quantitative_foundations]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_quantitative_foundations">[@sec:q_part_0_quantitative_foundations]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_0__lab_quantitative_foundations.html#sec:lab_part_0_quantitative_foundations">21</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_0__q_quantitative_foundations.html#sec:q_part_0_quantitative_foundations">33</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.descriptive_statistics</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="6.1" id="learning-objectives-2"><span
+class="header-section-number">6.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Carry units through an arithmetic calculation.</li>
 <li>Compute a mean and distinguish population from sample spread.</li>
@@ -773,7 +802,8 @@ divisor. Neither number is necessarily wrong; both are incomplete.
 Quantitative foundations supply the missing definitions before a
 calculation becomes a claim.</p>
 </blockquote>
-<h2 id="quantities-and-units">Quantities and units</h2>
+<h2 data-number="6.2" id="quantities-and-units"><span
+class="header-section-number">6.2</span> Quantities and units</h2>
 <p>A quantity combines a numerical value with a unit or an explicit
 dimensionless definition. Adding a duration to a distance is not
 meaningful simply because both are stored as floating-point numbers. In
@@ -783,7 +813,8 @@ checks are inexpensive ways to reject an equation before writing code.
 Keep the chosen unit scale in a data dictionary: changing seconds to
 minutes changes the numerical value of a rate even when the underlying
 process is unchanged.</p>
-<h2 id="a-mean-describes-a-chosen-collection">A mean describes a chosen
+<h2 data-number="6.3" id="a-mean-describes-a-chosen-collection"><span
+class="header-section-number">6.3</span> A mean describes a chosen
 collection</h2>
 <p>The arithmetic mean distributes a total evenly across a collection.
 The worked four-value example makes this definition visible. Equal
@@ -794,7 +825,8 @@ information. Begin with the sampling unit, then decide which collection
 the reported mean describes. Keep identifiers long enough to reconstruct
 grouping decisions instead of reducing the dataset to an average at the
 moment it is read.</p>
-<h2 id="spread-has-a-convention">Spread has a convention</h2>
+<h2 data-number="6.4" id="spread-has-a-convention"><span
+class="header-section-number">6.4</span> Spread has a convention</h2>
 <p>Population standard deviation describes dispersion in the supplied
 collection using a divisor equal to its size. A sample variance
 estimator uses a different divisor under its statistical assumptions.
@@ -804,7 +836,8 @@ standard error is another quantity again: it concerns variation in an
 estimator under a sampling model. An error bar therefore needs a label
 describing what it represents, not merely a decorative line above a
 plotted point.</p>
-<h2 id="information-lost-by-summarizing">Information lost by
+<h2 data-number="6.5" id="information-lost-by-summarizing"><span
+class="header-section-number">6.5</span> Information lost by
 summarizing</h2>
 <p>Collections with the same mean can have different ranges, gaps,
 clusters or temporal order. A sequence of gradually increasing readings
@@ -812,10 +845,14 @@ and an alternating sequence can share a mean and spread but suggest
 different processes. Inspect the raw values and their order before
 treating a summary as sufficient. The synthetic scatter figure retains
 point-to-line deviations for exactly this reason. Shannon’s mathematical
-treatment of communication [shannon1948mathematical] offers further
-reading on information and encoding; it does not turn a single mean into
-a complete representation of a dataset.</p>
-<h2 id="scale-and-meaningful-comparisons">Scale and meaningful
+treatment of communication <span class="citation"
+data-cites="shannon1948mathematical">(<a
+href="index.html#ref-shannon1948mathematical" role="doc-biblioref">Shannon
+1948</a>)</span> offers further reading on information and encoding; it
+does not turn a single mean into a complete representation of a
+dataset.</p>
+<h2 data-number="6.6" id="scale-and-meaningful-comparisons"><span
+class="header-section-number">6.6</span> Scale and meaningful
 comparisons</h2>
 <p>When two quantities have different units, a normalization can make
 their ranges visually comparable. It does not make their physical
@@ -825,12 +862,13 @@ when normalizing the measured quantity. The lab asks you to change one
 value and then reorder all values: the first changes the mean, while the
 second preserves the arithmetic summary but changes the sequence. That
 comparison makes the limits of a statistic observable.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span class="math display">\[\mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
-\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}\]</span>
-{#eq:part_0_quantitative_foundations_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_quantitative_foundations_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+<h2 data-number="6.7" id="a-worked-formalism-2"><span
+class="header-section-number">6.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_0_quantitative_foundations_model"><span
+class="math display">\[\mu=\frac{1}{n}\sum_{i=1}^{n}x_i,\qquad
+\sigma=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}\qquad{(3)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 3: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_0_quantitative_foundations_parameters" data-responsive-table="true">
+<caption>Table 3: Quantities and conventions for this chapter’s worked
 example.</caption>
 <colgroup>
 <col style="width: 33%" />
@@ -874,41 +912,43 @@ class="math inline">\(\sqrt{5}\)</span>, approximately <span
 class="math inline">\(2.236\)</span>. Dividing the same
 squared-deviation sum by three instead would estimate sample variance;
 that is a different convention, not a rounding error.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> descriptive_statistics</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> descriptive_statistics([<span class="fl">2.0</span>, <span class="fl">4.0</span>, <span class="fl">6.0</span>, <span class="fl">8.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> summary[<span class="st">&quot;mean&quot;</span>] <span class="op">==</span> <span class="fl">5.0</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(summary[<span class="st">&quot;std&quot;</span>], np.sqrt(<span class="fl">5.0</span>))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> summary[<span class="st">&quot;count&quot;</span>] <span class="op">==</span> <span class="fl">4.0</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> descriptive_statistics</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> descriptive_statistics([<span class="fl">2.0</span>, <span class="fl">4.0</span>, <span class="fl">6.0</span>, <span class="fl">8.0</span>])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> summary[<span class="st">&quot;mean&quot;</span>] <span class="op">==</span> <span class="fl">5.0</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(summary[<span class="st">&quot;std&quot;</span>], np.sqrt(<span class="fl">5.0</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> summary[<span class="st">&quot;count&quot;</span>] <span class="op">==</span> <span class="fl">4.0</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.descriptive_statistics</code>. The assertions
 above are independent expectations for this designed example; the
-displayed figure in <span class="citation"
-data-cites="fig:part_0_quantitative_foundations">[@fig:part_0_quantitative_foundations]</span>
-is a deterministic illustration with its own explicitly stated inputs,
-not evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+displayed figure in fig. <a
+href="#fig:part_0_quantitative_foundations">3</a> is a deterministic
+illustration with its own explicitly stated inputs, not evidence
+collected from the opening scenario.</p>
+<h2 data-number="6.8" id="assumptions-and-limits-2"><span
+class="header-section-number">6.8</span> Assumptions and Limits</h2>
 <p>This summary describes the supplied finite collection using the
 population divisor. It is not automatically an estimator of uncertainty
 in a larger population. Missing, censored or dependent observations
 require an explicit handling rule before summary statistics become
 interpretable. Keep that rule with the input data rather than silently
 discarding awkward observations.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="6.9" id="summary-2"><span
+class="header-section-number">6.9</span> Summary</h2>
 <p>A number is interpretable only with its units, observation rule and
 summary convention. The worked example makes a narrow quantitative claim
 that can be checked with exact inputs and a tested function. A small
@@ -917,23 +957,28 @@ different quantities. State the assumptions, preserve the observation
 record and choose a comparison that can distinguish an arithmetic error
 from an inadequate model. Those habits make a result inspectable without
 expanding what its evidence establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
-<p><a href="#gl:variable"><strong>variable</strong></a>, <a
-href="#gl:parameter"><strong>parameter</strong></a>, <a
-href="#gl:observable"><strong>observable</strong></a>, <a
-href="#gl:gradient"><strong>gradient</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Shannon [shannon1948mathematical] develops a precise communication
-model; contrast an encoding problem with the choice of a scientific
-summary.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="6.10" id="key-terms-2"><span
+class="header-section-number">6.10</span> Key Terms</h2>
+<p><a href="manuscript__glossary.html#gl:variable"><strong>variable</strong></a>, <a
+href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
+href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>, <a
+href="manuscript__glossary.html#gl:gradient"><strong>gradient</strong></a>.</p>
+<h2 data-number="6.11" id="further-reading-2"><span
+class="header-section-number">6.11</span> Further Reading</h2>
+<p>Shannon <span class="citation"
+data-cites="shannon1948mathematical">(<a
+href="index.html#ref-shannon1948mathematical" role="doc-biblioref">Shannon
+1948</a>)</span> develops a precise communication model; contrast an
+encoding problem with the choice of a scientific summary.</p>
+<h2 data-number="6.12" id="practice-2"><span
+class="header-section-number">6.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_0_quantitative_foundations">[@sec:lab_part_0_quantitative_foundations]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_0_quantitative_foundations">[@sec:q_part_0_quantitative_foundations]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_0__lab_quantitative_foundations.html#sec:lab_part_0_quantitative_foundations">21</a> — execute the
+worked computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_0__q_quantitative_foundations.html#sec:q_part_0_quantitative_foundations">33</a> — compare your
+reasoning with the supplied solutions.</li>
 </ul>
 </main>
 </body>
