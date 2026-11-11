@@ -85,9 +85,7 @@ class SystemHealthChecker:
                     "timestamp": time.time(),
                 }
                 if not healthy:
-                    status["checks"][check_name]["error"] = (
-                        f"{check_name} observed failure indicators in its result"
-                    )
+                    status["checks"][check_name]["error"] = f"{check_name} observed failure indicators in its result"
                 if not healthy:
                     unhealthy_checks.append(check_name)
             except Exception as e:  # noqa: BLE001 — intentional: check functions are arbitrary; must not propagate
