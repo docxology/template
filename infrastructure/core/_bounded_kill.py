@@ -64,7 +64,27 @@ def _census_snapshot(deadline: float, pid: int | None = None) -> dict[int, str]:
     return states
 
 
-def observe_bounded_run_processes(run_token: str, *, deadline: float) -> set[int]:
+def _preexisting_process(pid: int, started_monotonic: float, deadline: float) -> bool:
+    """Return whether *pid* predates this guardian's token-bearing lifetime."""
+    observed = subprocess.run(  # nosec B603 - fixed process start-age query
+        ["/bin/ps", "-p", str(pid), "-o", "etimes="],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=_census_remaining(deadline),
+    )
+    if observed.returncode != 0:
+        raise RuntimeError(f"bounded-run census could not determine process start age for PID {pid}")
+    try:
+        elapsed = int(observed.stdout.strip())
+    except ValueError as error:
+        raise ValueError(f"bounded-run census received invalid process elapsed time for PID {pid}") from error
+    return elapsed > time.monotonic() - started_monotonic + 0.5
+
+
+def observe_bounded_run_processes(
+    run_token: str, *, deadline: float, started_monotonic: float | None = None
+) -> set[int]:
     """Strictly observe live same-owner token holders; this is no containment or reaping proof."""
     _census_remaining(deadline)
     if not isinstance(run_token, str) or len(run_token) != 32 or any(c not in "0123456789abcdef" for c in run_token):
@@ -94,6 +114,19 @@ def observe_bounded_run_processes(run_token: str, *, deadline: float) -> set[int
                     entry.startswith(prefix) and token in entry[len(prefix) :].split(b":") for entry in raw.split(b"\0")
                 )
             _census_remaining(deadline)
+        except PermissionError as error:
+            # Only processes started after this guardian's run token exists can
+            # hold it. Older runner daemons cannot be token holders and must not
+            # turn an unrelated process-environ restriction into a false census.
+            if started_monotonic is not None and _preexisting_process(pid, started_monotonic, deadline):
+                continue
+            current = _census_snapshot(deadline, pid)
+            if pid not in current or current[pid].startswith("Z"):
+                continue
+            raise RuntimeError(
+                f"bounded-run census cannot observe live same-owner PID {pid} "
+                f"(cause={type(error).__name__}, errno={getattr(error, 'errno', None)})"
+            ) from error
         except (OSError, RuntimeError, ValueError) as error:
             # A fresh successful OS observation may confirm exit or UID change.
             current = _census_snapshot(deadline, pid)

@@ -247,7 +247,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 41.72266101837158
+      "total_size_mb": 41.72266483306885
     },
     "figures": {
       "files": 22,
@@ -256,7 +256,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 6.801135063171387
+      "size_mb": 6.801138877868652
     },
     "stable_inventory": {
       "categories": {
@@ -278,7 +278,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 7131507
+          "size_bytes": 7131511
         },
         "release": {
           "files": 2,
@@ -299,7 +299,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 127,
-      "total_size_bytes": 43749381
+      "total_size_bytes": 43749385
     }
   },
   "recommendations": [],
@@ -310,11 +310,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-10T02:08:15Z",
+  "timestamp": "2026-11-11T08:05:13Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "e258c6c530aa370871417ba104fb43fffb6be9d5fa99ccb774e8455eb5c437c8",
+      "sha256": "29862e7df35756e0286cf224aa26007cc190ea3793038988a8062600816f64ec",
       "size_bytes": 41689
     },
     "combined_manuscript": {
@@ -462,15 +462,15 @@
       },
       "output": {
         "file_count": 127,
-        "sha256": "376ff9c02d6118c68a545a5b78691b04e5540705a88b80bcb54682359c80cc58"
+        "sha256": "c69ec18cf8b6d825e1cd0611f3f995d255d108ad517bcad6f0b7be4afbb89b20"
       },
       "source": {
         "file_count": 142,
         "sha256": "f4b72ef6e33d486ebd0c150da0c75edddf15a27a1592bc100b702622c74d1424"
       },
       "stage": {
-        "file_count": 1759,
-        "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+        "file_count": 1761,
+        "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
       }
     },
     "project": "templates/template_literature_meta_analysis",

@@ -243,7 +243,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.408726692199707
+      "total_size_mb": 2.408578872680664
     },
     "figures": {
       "files": 5,
@@ -252,7 +252,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.21355152130126953
+      "size_mb": 0.21340370178222656
     },
     "stable_inventory": {
       "categories": {
@@ -270,7 +270,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 223925
+          "size_bytes": 223770
         },
         "release": {
           "files": 2,
@@ -291,7 +291,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 47,
-      "total_size_bytes": 2525733
+      "total_size_bytes": 2525578
     }
   },
   "recommendations": [],
@@ -302,11 +302,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-10T02:08:15Z",
+  "timestamp": "2026-11-11T08:05:13Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "30a3fd4e99061ee3203c95e67e105dfb49e6f3315ad0c6b40412bfc89c394c0b",
+      "sha256": "712a60ae8d4d618a7373c3176b9565a1278088174b38f7ad3659507aebf6b34e",
       "size_bytes": 15248
     },
     "combined_manuscript": {
@@ -364,15 +364,15 @@
       },
       "output": {
         "file_count": 47,
-        "sha256": "1e1235addcb5fdfee6dc3b4cb24440652ea775fa9a875531b5083051c95cceef"
+        "sha256": "465359e7f12f211e75f42b6ed100dd64bc0711ad219a5b85201e5eb0725d1ef8"
       },
       "source": {
         "file_count": 56,
         "sha256": "4120062e7c70f56ce1ef67e3f334f8894fa0f0fb05c01baa13eb6ca370d5467e"
       },
       "stage": {
-        "file_count": 1759,
-        "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+        "file_count": 1761,
+        "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
       }
     },
     "project": "templates/template_sia",

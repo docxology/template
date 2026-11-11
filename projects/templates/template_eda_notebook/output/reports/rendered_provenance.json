@@ -73,7 +73,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "4b184d1c2790ff083f447ba8acbd3309e9c517e112169678596146a773293e54",
+      "sha256": "3137523eb082cd4721a5077c37ce7b67dd5609a6fee58b138da5fa2ba112f190",
       "size_bytes": 10666
     }
   },
@@ -92,8 +92,8 @@
       "sha256": "cf5d6dca557116eb6510a452b465ba07a7125edf71e32a5d8f59b2b2c10bfb8e"
     },
     "stage": {
-      "file_count": 1759,
-      "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+      "file_count": 1761,
+      "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
     }
   },
   "project": "templates/template_eda_notebook",

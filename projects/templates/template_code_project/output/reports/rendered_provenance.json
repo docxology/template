@@ -38,7 +38,7 @@
     },
     {
       "rendered_path": "output/manuscript/05_experimental_setup.md",
-      "rendered_sha256": "0a2b36c0de8f9c95b4e479b613b79a3038bf7e533ee2d5f3739de59a5d4f9763",
+      "rendered_sha256": "b1e6b5cbee3c3fb4fe3336300963dc41c4c38e0ea79ba0914447616faf63a5a4",
       "source_path": "manuscript/05_experimental_setup.md",
       "source_sha256": "9092fabe5b0c77a70dd2ffff7fa3437011a360cb8fc73b97364b7fba5163d0e7"
     },
@@ -70,22 +70,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "7b9dd15dfa86d08bf047f8898c17c6e4243639118bc22eaa2b5c3d34a9954a33",
+      "sha256": "85cfc7621571c212d447a8c84709b1a11017884b2be7b2408b008234688355a7",
       "size_bytes": 26174
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "d5ca443aee56ccc2a1d2c8b5c5ade687e210f0e2bf69f8cdd1e0d5eca4c39f5c",
+      "sha256": "87c8d3fc6305c602d28c73475317b709289e81325d3d0789f9617f94c6d1ec3c",
       "size_bytes": 51113
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "01d78f134b578a19ff2368f513f4bf37474dbe7ae9488b098e67f6ab05ba827a",
+      "sha256": "4a6276c36c3dc668cfbf20d79b1530a96fcc08d58da22cc09033390a382399b2",
       "size_bytes": 2753
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "818a46e05620c2f25878e60c3ca5442ea9e4cae6eabccd024c78f93592b1a2ed",
+      "sha256": "70b21cce6afb6ec2d033e085a6789ed526de95d39aaefa8eb33a6cc2614c9205",
       "size_bytes": 13843
     }
   },
@@ -97,15 +97,15 @@
     },
     "output": {
       "file_count": 80,
-      "sha256": "9303a6c7e526bba06897c7310f468540fae9410b475b9f3efcfd0f9b0f29e4d6"
+      "sha256": "190fa9b72d2749da7e42360bdbbea240c7d8b002549ef0649d217e551d6992f5"
     },
     "source": {
       "file_count": 55,
       "sha256": "fb69fde6c41c1642e8fcc2e479a22c473bab65cc2f653a67875cefb739b15a80"
     },
     "stage": {
-      "file_count": 1759,
-      "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+      "file_count": 1761,
+      "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
     }
   },
   "project": "templates/template_code_project",

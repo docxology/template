@@ -253,7 +253,13 @@ def _cleanup(
                 cleanup["root_reaped"] = child.returncode is not None
     if child is not None and run_token:
         try:
-            cleanup["final_census_matched_pids"] = sorted(observe_bounded_run_processes(run_token, deadline=deadline))
+            cleanup["final_census_matched_pids"] = sorted(
+                observe_bounded_run_processes(
+                    run_token,
+                    deadline=deadline,
+                    started_monotonic=guardian.started_monotonic if guardian is not None else None,
+                )
+            )
             cleanup["final_census_succeeded"] = True
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
             cleanup["diagnostics"].append(f"final census {type(error).__name__}: {error}")
