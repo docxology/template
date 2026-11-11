@@ -14,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 48,
-      "size_mb": 2.817361831665039
+      "size_mb": 2.8173599243164062
     },
     "detailed_validation": {
       "directories": {
@@ -95,7 +95,7 @@
           "file_count": 20,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.72"
+          "size_mb": "2.77"
         }
       },
       "file_counts": {
@@ -217,7 +217,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.72
+            "size_mb": 2.77
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -227,7 +227,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.6431941986084
+      "total_size_mb": 17.685389518737793
     },
     "figures": {
       "files": 27,
@@ -236,7 +236,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 3.9135684967041016
+      "size_mb": 3.913576126098633
     },
     "stable_inventory": {
       "categories": {
@@ -246,7 +246,7 @@
         },
         "data": {
           "files": 48,
-          "size_bytes": 2954218
+          "size_bytes": 2954216
         },
         "figures": {
           "files": 27,
@@ -258,20 +258,20 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 4103674
+          "size_bytes": 4103682
         },
         "reports": {
           "files": 33,
-          "size_bytes": 449051
+          "size_bytes": 447803
         },
         "web": {
           "files": 20,
-          "size_bytes": 2856127
+          "size_bytes": 2901614
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18500230
+      "total_size_bytes": 18544475
     }
   },
   "recommendations": [],
@@ -282,21 +282,21 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-10T02:08:15Z",
+  "timestamp": "2026-11-11T05:45:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "02c78220e5b1327103a6ba95879e647961df5d4cc8576ad21c24b0c3c59867e0",
-      "size_bytes": 58790
+      "sha256": "4421449a408a8c93245fc8f6211a8b5250b50b7fd11b07b93e6ce0d3affed51d",
+      "size_bytes": 58789
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "96ad130998efe1ae7834aa9c4f26a620e92cce23927bd8f4460959c4689fbca8",
-      "size_bytes": 142303
+      "sha256": "6bb122efcde563b9fdf21c3f937b94fd336dfd4180b26b5845645312a42205d8",
+      "size_bytes": 142311
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "c8ef1ba4327df5866e39cee7aa53556e77b95b6da81e8605c32dc8b821bb8a66",
+      "sha256": "6b9d7fa765fce27894306fe90ee8dc26027b4eec35d694c524e05a4b2d984ee1",
       "size_bytes": 4187
     },
     "consumed_manuscript": [
@@ -338,7 +338,7 @@
       },
       {
         "rendered_path": "output/manuscript/06_methods_pymdp.md",
-        "rendered_sha256": "a2f95f3e110062cf266fe971a257cc992cc90adc399f192ec49cb3c0d30b96bf",
+        "rendered_sha256": "974ada13b56e71ba27e31921430b27abd042429436e32554fcb54307a71b66fd",
         "source_path": "manuscript/06_methods_pymdp.md",
         "source_sha256": "0be242b1f5105625af2626cc44cd0ac242c207dfc8cdb92505a1d169a8b7636c"
       },
@@ -386,7 +386,7 @@
       },
       {
         "rendered_path": "output/manuscript/16_appendix_full_sheaf.md",
-        "rendered_sha256": "82d5fc41224692f8d463c3162cfaa5f75afe735e54136972d8bb0d704e454de8",
+        "rendered_sha256": "65fe30432744dc32281c08ffc390285db8eeb83e5cccec4eae5edf0d3161d3d1",
         "source_path": "manuscript/16_appendix_full_sheaf.md",
         "source_sha256": "0a3561e0a115696535a27b1f255f09e35a8b00a98cc1e824bcfaf73cf247e26f"
       },
@@ -412,19 +412,19 @@
     "fingerprints": {
       "config": {
         "file_count": 27,
-        "sha256": "d87887c704f29cfdea9b665d344f0ec5140c9a39756fab07b7e6b649fb6db134"
+        "sha256": "d4282a8d018ae72a6e0cac814e763d165c0550ffd46694ec38939401f0a15d7b"
       },
       "output": {
         "file_count": 178,
-        "sha256": "d3b17b1d5fdc6306101672cc335abceed284e2c08ddb1ddc4eb527cffd265ecc"
+        "sha256": "ed58a54daed5685f64558609bcf2e60eabf577794636604b117fced4e2006c9e"
       },
       "source": {
         "file_count": 283,
-        "sha256": "2e61536387d9111650eb67401a82ae2c2feca6d67503ebd444095d175fb09a8b"
+        "sha256": "676e1f461096adfc5a8524b2f4b6990e04cfdf5f5775886cbf654f7b1a657762"
       },
       "stage": {
-        "file_count": 1759,
-        "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
+        "file_count": 1764,
+        "sha256": "63a16f672aa695b32036c4607282731ea71e3b926e3258c99478e504d3c740fd"
       }
     },
     "project": "templates/template_active_inference",

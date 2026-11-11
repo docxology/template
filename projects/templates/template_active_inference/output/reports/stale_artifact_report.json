@@ -244,7 +244,7 @@
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
       "exists": true,
       "fresh": true,
-      "sha256": "bf52490ad056949e023ece3af251b36adbc948f2f1b21bbb1c9c62f16f863069"
+      "sha256": "b13ed3a673d51b315af086b109d88f90aaacba43b7339c20115eff6302644eba"
     },
     {
       "artifact": "output/reports/reproducibility_replay.json",

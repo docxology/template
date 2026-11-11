@@ -103,7 +103,7 @@
   "pymdp_policy_posterior_row_count": 10,
   "pymdp_policy_posteriors_normalized": 1,
   "pymdp_runtime_construction_count": 4,
-  "pymdp_runtime_known_warning_count": 4,
+  "pymdp_runtime_known_warning_count": 0,
   "pymdp_runtime_unexpected_warning_count": 0,
   "random_seed": 0,
   "release_attestation_all_attested": true,
