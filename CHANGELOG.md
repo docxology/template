@@ -63,6 +63,11 @@ locks.
   including the normal pull-request merge checkout. A real-Git regression
   rejects an ordinary child checkout whose parent matches the trigger SHA;
   ancestry alone cannot authorize a different Source or bypass the shared clock.
+- Refresh reviewed policy metadata from genuine complete Linux/macOS collection
+  on Python 3.14 and 3.15: 994 modules, 13,023 families and 17,224 members.
+  Keep the new exact-checkout family in Core with the existing Git prerequisite;
+  preserve the other 993 module reviews and all 31 obligation definitions.
+  This metadata review does not grant runtime acceptance or human approval.
 - Export hosted native diagnostics only from numbered xdist case directories
   and explicit original diagnostic leaves. Avoid fixture symlink loops,
   `current` aliases, copied Source/environments and browser profiles.

@@ -2932,7 +2932,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_execution_user.py",
-      "source_sha256": "16e2c068bbfe95508b7c4428539143a4717a7bb68b9292866382a8eb8aeb2ab2",
+      "source_sha256": "6e77d698f9106bc57d7b86806f4a32a56d746a211c629331b1138a95de0cecba",
       "families": [
         "tests/infra_tests/core/test_ci_execution_user.py::test_actual_cold_copy_ignores_atime_and_preserves_source_identity",
         "tests/infra_tests/core/test_ci_execution_user.py::test_actual_platform_refuses_privileged_setup_without_hosted_authority",
@@ -2944,9 +2944,10 @@
         "tests/infra_tests/core/test_ci_execution_user.py::test_physical_paths_and_descriptor_reads_refuse_real_parent_symlinks",
         "tests/infra_tests/core/test_ci_execution_user.py::test_public_cache_copy_uses_independent_files_and_confined_links",
         "tests/infra_tests/core/test_ci_execution_user.py::test_public_cache_escaping_link_is_refused_without_copying_target",
-        "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_binds_clean_initialized_and_uninitialized_submodules"
+        "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_binds_clean_initialized_and_uninitialized_submodules",
+        "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_rejects_parent_as_checkout_source"
       ],
-      "family_observations_sha256": "a4585fccfbb6a7a69a98d3f62e6a1955d35fb669e1a29cc663089e5ea8ad0367",
+      "family_observations_sha256": "08f123c51ee9a34808de3f3d72ffa19a42e86b6bb5f889e1d09c5f0112425be7",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2958,13 +2959,25 @@
           "obligations": [
             "git"
           ]
+        },
+        {
+          "id": "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_rejects_parent_as_checkout_source",
+          "lane": "core",
+          "obligations": [
+            "git"
+          ]
         }
       ],
       "evidence": [
         {
+          "path": "infrastructure/core/testing/ci_execution_user.py",
+          "source_sha256": "9ae61fbbdbe6544365f5c4b228e12e848c0b9d7052151217ed39680980cfeed1",
+          "line": 150
+        },
+        {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "16e2c068bbfe95508b7c4428539143a4717a7bb68b9292866382a8eb8aeb2ab2",
-          "line": 1
+          "source_sha256": "6e77d698f9106bc57d7b86806f4a32a56d746a211c629331b1138a95de0cecba",
+          "line": 409
         }
       ]
     },
