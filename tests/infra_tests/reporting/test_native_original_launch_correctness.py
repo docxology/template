@@ -429,6 +429,8 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
             "--python",
             str(selected_python),
             str(wheels[0]),
+            "reportlab>=4.0.0",
+            "pdfplumber>=0.11.0",
         ],
         cwd=tmp_path,
         env=build_environment,
