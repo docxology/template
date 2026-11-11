@@ -196,14 +196,8 @@ def audit_public_capability(repo_root: Path | str, project: str) -> PublicCapabi
     """Audit one qualified public project using only repository-local facts."""
     root = Path(repo_root).resolve()
     project_root = root / "projects" / project
-    missing_paths = tuple(
-        path
-        for path in REQUIRED_DIRECTORIES
-        if not (project_root / path).is_dir()
-    ) + tuple(
-        path
-        for path in REQUIRED_FILES
-        if not (project_root / path).is_file()
+    missing_paths = tuple(path for path in REQUIRED_DIRECTORIES if not (project_root / path).is_dir()) + tuple(
+        path for path in REQUIRED_FILES if not (project_root / path).is_file()
     )
     source_files = tuple(_python_files(project_root / "src"))
     test_python_files = tuple(_python_files(project_root / "tests"))

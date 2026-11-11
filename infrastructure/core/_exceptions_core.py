@@ -52,11 +52,7 @@ class TemplateError(Exception):
         event_severity = severity if severity is not None else DiagnosticSeverity.ERROR
 
         # Get line numbers/paths from context if available
-        file_path = (
-            self.context.get("source")
-            or self.context.get("problematic_file")
-            or self.context.get("file")
-        )
+        file_path = self.context.get("source") or self.context.get("problematic_file") or self.context.get("file")
         line_num = self.context.get("error_line") or self.context.get("line")
         suggestion = self.suggestions[0] if self.suggestions else getattr(self, "message", None)
 

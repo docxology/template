@@ -56,9 +56,7 @@ def test_combined_invalid_manuscript_refuses_to_publish_html(tmp_path: Path, inv
 
 
 @pytest.mark.parametrize("combined", [False, True])
-def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(
-    tmp_path: Path, combined: bool
-) -> None:
+def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(tmp_path: Path, combined: bool) -> None:
     output = tmp_path / "output"
     manuscript = output / "manuscript"
     source = manuscript / "parts" / "unit" / "chapter" / "overview.md"
@@ -76,13 +74,9 @@ def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(
         encoding="utf-8",
     )
     renderer = WebRenderer(
-        RenderingConfig(
-            output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web")
-        )
+        RenderingConfig(output_dir=str(output), figures_dir=str(figures), web_dir=str(output / "web"))
     )
-    rendered_path = (
-        renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
-    )
+    rendered_path = renderer.render_combined([source], manuscript, "test") if combined else renderer.render(source)
     rendered = rendered_path.read_text(encoding="utf-8")
     assert 'src="../figures/plots/dense.png"' in rendered
     assert 'alt="A blue square; synthetic layout fixture."' in rendered
@@ -96,13 +90,13 @@ def test_normalize_figure_paths_preserves_literal_output_paths() -> None:
     # HTML img src is rewritten
     assert normalize_figure_paths('<img src="output/figures/a.png">') == '<img src="../figures/a.png">'
     # Markdown image is rewritten
-    assert normalize_figure_paths('![alt](output/figures/a.png)') == '![alt](../figures/a.png)'
+    assert normalize_figure_paths("![alt](output/figures/a.png)") == "![alt](../figures/a.png)"
     # Literal code span is NOT rewritten
-    assert normalize_figure_paths('<code>output/figures/a.png</code>') == '<code>output/figures/a.png</code>'
+    assert normalize_figure_paths("<code>output/figures/a.png</code>") == "<code>output/figures/a.png</code>"
     # Backtick code span is NOT rewritten
-    assert normalize_figure_paths('`output/figures/a.png`') == '`output/figures/a.png`'
+    assert normalize_figure_paths("`output/figures/a.png`") == "`output/figures/a.png`"
     # Prose is NOT rewritten
-    assert normalize_figure_paths('See output/figures/a.png here') == 'See output/figures/a.png here'
+    assert normalize_figure_paths("See output/figures/a.png here") == "See output/figures/a.png here"
 
 
 @pytest.mark.parametrize("combined", [False, True])

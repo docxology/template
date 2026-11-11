@@ -200,7 +200,7 @@ def _rebase_figure_source(source: str) -> str:
         "output/figures/",
     ):
         if source.startswith(prefix):
-            return "../figures/" + source[len(prefix):]
+            return "../figures/" + source[len(prefix) :]
     # Nested source-relative paths (e.g. ../../../../figures/plot.png).
     return re.sub(r"^(?:\.\./){2,}figures/", "../figures/", source)
 
