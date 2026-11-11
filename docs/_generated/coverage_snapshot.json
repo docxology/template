@@ -19,7 +19,7 @@
     },
     "template_autoscientists": {
       "coverage_pct": "93.39 %",
-      "source_hash": "8e8168ccd48dd0e47ac4fc1c2defa47fee92db7bbd7dc3a962ff8407ad20947d"
+      "source_hash": "132826ef39ef9ae5a8904328d84ad9be21205d3fbaa87d8e21bf565b35edb33f"
     },
     "template_code_project": {
       "coverage_pct": "94.04 %",
@@ -39,7 +39,7 @@
     },
     "template_formal": {
       "coverage_pct": "90.30 %",
-      "source_hash": "e8160cbc3fc421ba7d2b112e48f3d9d722bc0408835b56df57289bce86b9dbdf"
+      "source_hash": "ce0cdb1fd9580beedcca65fa97747ac5e9ba9a110ceefbcd4e1b6f7bf884accb"
     },
     "template_gold_refinement": {
       "coverage_pct": "92.81 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "0107cd26a283a2b2179ec28e1fe1c7a8b27824fd",
+  "source_commit": "a5c1d5a76c9e8d7f9c5280c8b40d941b4a7e282c",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -209,12 +209,12 @@
       "template_advanced_literature_review": "00338041be42291608846993cb4192b1308f2b7f50ede705001709b32bafadb7",
       "template_autopoiesis": "1fb7a84a449b88d071f1a5c842f256fca9d350b9c7d003f0652824f3cc4a958d",
       "template_autoresearch_project": "c2f06485fd0117946b9d3b3e2ad0fd8ce49b18ecece6286a2fd7450c504036d8",
-      "template_autoscientists": "8e8168ccd48dd0e47ac4fc1c2defa47fee92db7bbd7dc3a962ff8407ad20947d",
+      "template_autoscientists": "132826ef39ef9ae5a8904328d84ad9be21205d3fbaa87d8e21bf565b35edb33f",
       "template_code_project": "7f0ad8367b4159e646dd7b748a3908b5765296e1be73cff01788ef1b350d2ebc",
       "template_data_descriptor": "956fcfbbbcb897bf3b5c4cb3217ca906c685e7b9f00020ebaf031e6e7690cdf1",
       "template_eda_notebook": "574ee65f7c975f9e4c6c0e1db5fa5f6243c2ab9cda1606ce83e40e0248212bb8",
       "template_experiment_tree": "57527aff3803bc99ae5080d0e58bdd16b6bef143a2bfe51215949abfb583362a",
-      "template_formal": "e8160cbc3fc421ba7d2b112e48f3d9d722bc0408835b56df57289bce86b9dbdf",
+      "template_formal": "ce0cdb1fd9580beedcca65fa97747ac5e9ba9a110ceefbcd4e1b6f7bf884accb",
       "template_gold_refinement": "c3f9491021c99143af3a3d4d399b53e9199c911aad0681fbad909d78b92540e8",
       "template_literature_meta_analysis": "a6fc1059fc97c2d34a2fb2fb485d1c45bba79999daeb5fd2f8339d8805d7da02",
       "template_madlib": "d0191191ed97ff94479ede05610383246033bcddc831bb720752d30eb153c81c",
