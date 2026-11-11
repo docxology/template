@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
-  <title>A template/ approach to Reproducible Generative
-Research</title>
+  <title>05a_zeromock_tradeoff.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +39,16 @@ Research</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +61,8 @@ Research</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +91,11 @@ Research</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +119,7 @@ Research</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +136,11 @@ Research</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -174,156 +179,7 @@ Research</title>
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <script data-template-mathjax-config>
-window.MathJax = window.MathJax || {};
-window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
-  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
-  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-});
-var templateMathOutput = window.MathJax.output || {};
-window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
-  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
-    width: "100%",
-    lineleading: 0.5
-  })
-});
-window.normalizeTemplateMathJaxAria = function () {
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[-]/.test(roleDescription)) {
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }
-  });
-};
-window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
-  ready: function () {
-    var measuredWidth = document.documentElement.clientWidth;
-    var reflowQueued = false;
-    window.MathJax.startup.defaultReady();
-    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
-      window.normalizeTemplateMathJaxAria
-    );
-    function reflowDisplayMath() {
-      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
-      reflowQueued = true;
-      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
-        .catch(function () { /* A later resize may retry a failed render. */ })
-        .then(async function () {
-          var width = document.documentElement.clientWidth;
-          try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
-            await window.MathJax.startup.document.rerenderPromise(110);
-            window.normalizeTemplateMathJaxAria();
-            window.templateMathJaxReflowError = null;
-          } catch (error) {
-            window.templateMathJaxReflowError = String(error);
-            console.error("MathJax viewport reflow failed", error);
-            throw error;
-          } finally {
-            measuredWidth = width;
-            reflowQueued = false;
-          }
-        })
-        .then(reflowDisplayMath);
-      // Keep failure observable to callers without an unhandled rejection.
-      window.templateMathJaxReflowPromise.catch(function () {});
-    }
-    window.addEventListener("resize", reflowDisplayMath);
-    // Also cover a resize that happened during the initial asynchronous render.
-    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
-  }
-});
-</script>
-<script defer=""
-  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -738,11 +594,9 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="5" id="discussion"><span
-class="header-section-number">5</span> Discussion</h1>
-<h2 data-number="5.1" id="the-zero-mock-tradeoff"><span
-class="header-section-number">5.1</span> The Zero-Mock Tradeoff</h2>
-<p>The <a href="manuscript__03e_quality.html#zero-mock-testing-policy">Zero-Mock
+<h1 id="discussion">Discussion</h1>
+<h2 id="the-zero-mock-tradeoff">The Zero-Mock Tradeoff</h2>
+<p>The <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03e_quality.md#zero-mock-testing-policy">Zero-Mock
 testing policy</a> is <code>template/</code>’s most distinctive design
 decision. By prohibiting all mock objects, we gain confidence that tests
 exercise real code paths—a pytest run against the template genuinely
@@ -759,44 +613,31 @@ deploys demand fast feedback loops, research pipelines run infrequently
 mocked test that passes while the real renderer fails is worse than a
 slow test that catches the failure. The analogy to statistical
 methodology is precise: just as Simmons et al.’s <em>researcher degrees
-of freedom</em> <span class="citation"
-data-cites="simmons2011falsepositive">(<a
-href="index.html#ref-simmons2011falsepositive" role="doc-biblioref">Simmons et al.
-2011</a>)</span> inflate false-positive rates through undisclosed
-analytical flexibility, mock objects create <em>testing degrees of
-freedom</em> that make integration failures invisible. The Zero-Mock
-policy closes this loophole by the same mechanism that pre-registration
-<span class="citation" data-cites="nosek2018preregistration">(<a
-href="index.html#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
-2018</a>)</span> closes the p-hacking loophole: removing flexibility
-before the fact. As Peng <span class="citation"
-data-cites="peng2011reproducible">(<a href="index.html#ref-peng2011reproducible"
-role="doc-biblioref">Peng 2011</a>)</span> argues, computational
-reproducibility requires independent verification—and mock-only tests
-verify assumptions rather than results. Garijo et al.’s FAIRsoft
-evaluator <span class="citation" data-cites="garijo2024fairsoft">(<a
-href="index.html#ref-garijo2024fairsoft" role="doc-biblioref"><span
-class="nocase">Garijo et al.</span> 2024</a>)</span> identifies
-<em>executability</em> as a primary quality indicator; the Zero-Mock
-policy operationalizes executability at the unit level.</p>
-<h3 data-number="5.1.1" id="when-mocks-are-not-the-problem"><span
-class="header-section-number">5.1.1</span> When Mocks Are Not the
+of freedom</em> [simmons2011falsepositive] inflate false-positive rates
+through undisclosed analytical flexibility, mock objects create
+<em>testing degrees of freedom</em> that make integration failures
+invisible. The Zero-Mock policy closes this loophole by the same
+mechanism that pre-registration [nosek2018preregistration] closes the
+p-hacking loophole: removing flexibility before the fact. As Peng
+[peng2011reproducible] argues, computational reproducibility requires
+independent verification—and mock-only tests verify assumptions rather
+than results. Garijo et al.’s FAIRsoft evaluator [garijo2024fairsoft]
+identifies <em>executability</em> as a primary quality indicator; the
+Zero-Mock policy operationalizes executability at the unit level.</p>
+<h3 id="when-mocks-are-not-the-problem">When Mocks Are Not the
 Problem</h3>
 <p>It is important to distinguish the Zero-Mock policy from a naive
 rejection of all test isolation techniques. Fowler’s classification
-<span class="citation" data-cites="martin2008clean">(<a
-href="index.html#ref-martin2008clean" role="doc-biblioref">Martin 2008</a>)</span>
-recognizes that stubs and fakes serve legitimate purposes—a test
-database populated with known data is not a mock, it is a fixture. The
-policy specifically prohibits <em>mock objects</em> as defined by
-Meszaros: assertions on indirect outputs (method calls, argument
-patterns) rather than direct outputs (return values, side effects). The
-distinction matters because mock-based assertions encode implementation
-assumptions (“method X must be called with argument Y”) that become
-invisible coupling between tests and production code, creating the
-illusion of coverage without testing real behavior.</p>
-<h3 data-number="5.1.2" id="practical-implementation"><span
-class="header-section-number">5.1.2</span> Practical Implementation</h3>
+[martin2008clean] recognizes that stubs and fakes serve legitimate
+purposes—a test database populated with known data is not a mock, it is
+a fixture. The policy specifically prohibits <em>mock objects</em> as
+defined by Meszaros: assertions on indirect outputs (method calls,
+argument patterns) rather than direct outputs (return values, side
+effects). The distinction matters because mock-based assertions encode
+implementation assumptions (“method X must be called with argument Y”)
+that become invisible coupling between tests and production code,
+creating the illusion of coverage without testing real behavior.</p>
+<h3 id="practical-implementation">Practical Implementation</h3>
 <p>The template enforces zero-mock compliance at three levels:</p>
 <ol type="1">
 <li><strong>Code review</strong>: <code>AGENTS.md</code> at every

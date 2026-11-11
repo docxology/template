@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 Exploratory data analysis (EDA) is the most common entry point in applied
@@ -27,11 +31,19 @@ the moment a computation matters, move it into the library behind a failing
 test — verified by a zero-mock suite and a structural notebook-binding check
 ([@sec:reproducibility]).
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -103,11 +115,19 @@ missing-data path honestly.
 - **[@sec:scope]** states scope and related literature so the exemplar is not
   mistaken for a general-purpose EDA toolkit.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-2-start-->
+```
 
 # Methodology {#sec:methodology}
 
@@ -197,11 +217,19 @@ Each figure in `03_results.md` maps to a figure-data preparer in
 count, value range) so reviewers can navigate from the PDF to the code without
 inferring hidden defaults.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-3-start-->
+```
 
 # Results {#sec:results}
 
@@ -299,11 +327,19 @@ point of the exemplar. Because every number is produced by a tested function and
 regenerated on demand, the prose here describes structure and provenance rather
 than transcribing values that would drift the moment the data changed.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-4-start-->
+```
 
 # Conclusion {#sec:conclusion}
 
@@ -373,11 +409,19 @@ stay synchronized across rebuilds. The pipeline produced the figures referenced
 in [@sec:results], wrote `output/data/summary_statistics.csv`, and rendered this
 markdown together with `config.yaml` into PDF.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-5-start-->
+```
 
 # Experimental Setup {#sec:experimental_setup}
 
@@ -449,11 +493,19 @@ The typical analysis order is:
 This table is descriptive documentation only; it is not executed as code during
 the build.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-6-start-->
+```
 
 # Reproducibility {#sec:reproducibility}
 
@@ -522,11 +574,19 @@ structurally by `tests/test_notebook.py`, which confirms it is valid nbformat,
 that its `from src` imports resolve to the library's public surface, and that no
 cell defines its own logic.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-7-start-->
+```
 
 # Scope, Related Work, and Positioning {#sec:scope}
 
@@ -580,11 +640,19 @@ reproducibility concerns — tested functions, a thin script, and a structurally
 verified notebook — remain visible rather than buried under analytical
 complexity.
 
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-7-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-8-start-->
+```
 
 # References {#sec:references}
 
@@ -595,4 +663,8 @@ To validate that `references.bib` is syntactically clean and contains the requir
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_eda_notebook/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-c6ad2106f7b60c552519b06290ebe4e6bbf97db70e820c4d250d50d81e594c01-8-end-->
 ```

@@ -1,137 +1,101 @@
-# template_search_project — configuration
-# All knobs the literature pipeline reads. Parsed by
-# `projects/templates/template_search_project/src/config.py::load_project_config`,
-# which uses `yaml.safe_load` directly.
-
 paper:
-  title: "Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference"
-  subtitle: "A configurable pipeline from query → references.bib → LLM-driven reading report"
-  version: "0.2.0"
-  date: ""
-
+  title: Reproducible Literature Synthesis with infrastructure/search and infrastructure/reference
+  subtitle: A configurable pipeline from query → references.bib → LLM-driven reading
+    report
+  version: 0.2.0
+  date: ''
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.2.0"
-  platform_version: "5.1.0"
-  last_published_version: "0.1"
-  doi: "10.5281/zenodo.21298894"
-  doi_status: "DOI published"
-  journal: ""
-  year: "2026"
-  github_repository: "docxology/template_search_project"
-  repository_url: "https://github.com/docxology/template_search_project"
-  version_doi: "10.5281/zenodo.21298895"
-  version_record: "https://zenodo.org/records/21298895"
-
+  release_status: unreleased
+  intended_version: 0.2.0
+  platform_version: 5.2.0
+  last_published_version: '0.1'
+  doi: 10.5281/zenodo.21298894
+  doi_status: DOI published
+  journal: ''
+  year: '2026'
+  github_repository: docxology/template_search_project
+  repository_url: https://github.com/docxology/template_search_project
+  version_doi: 10.5281/zenodo.21298895
+  version_record: https://zenodo.org/records/21298895
 keywords:
-  - "literature search"
-  - "automated reference management"
-  - "BibTeX"
-  - "reproducible research"
-  - "local LLM synthesis"
-
+- literature search
+- automated reference management
+- BibTeX
+- reproducible research
+- local LLM synthesis
 metadata:
-  license: "MIT"
-  language: "en"
-
-# ---------------------------------------------------------------------------
-# LLM synthesis (Ollama-local). Default OFF so the pipeline runs in CI
-# without an Ollama server. Flip to `true` and start `ollama serve` to use.
-# ---------------------------------------------------------------------------
+  license: MIT
+  language: en
 llm:
   enabled: false
-  model: "gemma3:4b"
+  model: gemma3:4b
   temperature: 0.0
   seed: 42
   per_paper: true
   corpus_synthesis: true
-  output_dir: "output/llm"
-  # Ollama budgets (optional; defaults match prior orchestrator literals).
-  # Env: LLM_CONTEXT_WINDOW, LLM_LONG_MAX_TOKENS, LLM_MAX_INPUT_LENGTH,
-  # LLM_REVIEW_TIMEOUT still affect other clients via from_env(); these YAML
-  # values are what run_search_pipeline passes explicitly.
+  output_dir: output/llm
   context_window: 131072
   long_max_tokens: 16384
   max_input_length: 600000
   review_timeout: 600.0
-
-# ---------------------------------------------------------------------------
-# Final report
-# ---------------------------------------------------------------------------
 report:
-  output_path: "output/reading_report.md"
+  output_path: output/reading_report.md
   include_per_paper: true
   include_corpus_synthesis: true
-
-# Search-project settings belong under the shared schema's project-owned
-# passthrough namespace; the loader requires these settings here.
 project_config:
   search:
-    query: "reproducible research optimization"
+    query: reproducible research optimization
     max_results: 100
     year_min: null
     year_max: null
     sources:
-      - "local"
-    local_corpus: "data/corpus.json"
-    crossref_mailto: "you@example.org"
+    - local
+    local_corpus: data/corpus.json
+    crossref_mailto: you@example.org
     paperclip: false
-    cache_dir: "output/search/cache"
+    cache_dir: output/search/cache
     cache_ttl_seconds: null
-
   enrichment:
-    # Network-backed enrichment is opt-in; the bundled local corpus already
-    # carries deterministic fixture metadata.
     fetch_abstracts: false
     fetch_fulltext: false
-    abstract_cache_dir: "output/cache/abs"
-    fulltext_cache_dir: "output/cache/pdf"
-    # 400k chars (~100k tokens) fits inside gemma3:4b's 131k-token window.
+    abstract_cache_dir: output/cache/abs
+    fulltext_cache_dir: output/cache/pdf
     max_fulltext_chars: 400000
-
-  references_path: "output/bibliography/references.bib"
-
-  # Multi-keyword deep-search mode is disabled by default. Enable it only
-  # after selecting a provenance-backed source and, separately, any LLM.
-  # Paperclip stays absent unless PAPERCLIP_API_KEY is configured.
+  references_path: output/bibliography/references.bib
   deep_search:
     enabled: false
     keywords:
-      - "convex optimization"
-      - "stochastic gradient descent"
-      - "reproducible research"
+    - convex optimization
+    - stochastic gradient descent
+    - reproducible research
     max_results_per_keyword: 100
     sources: []
     year_min: null
     year_max: null
-    crossref_mailto: "you@example.org"
+    crossref_mailto: you@example.org
     fetch_abstracts: false
     fetch_fulltext: false
     max_fulltext_chars: 400000
     llm_per_paper: false
-    llm_model: "gemma3:4b"
+    llm_model: gemma3:4b
     llm_seed: 42
     llm_temperature: 0.0
-    output_dir: "output/deep_search"
-    abstract_cache_dir: "output/cache/abs"
-    fulltext_cache_dir: "output/cache/pdf"
-    search_cache_dir: "output/search/cache"
+    output_dir: output/deep_search
+    abstract_cache_dir: output/cache/abs
+    fulltext_cache_dir: output/cache/pdf
+    search_cache_dir: output/search/cache
     write_unified_bibtex: true
-    unified_bibtex_path: "output/bibliography/references_deep.bib"
-
-# Default core producers use the local corpus. Deep search and composition
-# remain explicit opt-in commands and never replay historical output by discovery.
+    unified_bibtex_path: output/bibliography/references_deep.bib
 analysis:
   scripts:
-    - run_search_pipeline.py
-    - y_generate_search_figures.py
-    - z_generate_manuscript_variables.py
-    - zz_generate_review_report.py
-    - zzz_build_dashboard.py
+  - run_search_pipeline.py
+  - y_generate_search_figures.py
+  - z_generate_manuscript_variables.py
+  - zz_generate_review_report.py
+  - zzz_build_dashboard.py

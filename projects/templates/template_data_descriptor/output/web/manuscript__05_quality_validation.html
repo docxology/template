@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>05_quality_validation.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A FAIR-style exemplar for dataset papers" />
+  <title>Data Descriptor Template: Schema, Provenance, and Release
+Readiness</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -179,7 +182,156 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+var templateMathOutput = window.MathJax.output || {};
+window.MathJax.output = Object.assign({}, templateMathOutput, {
+  displayOverflow: "scroll",
+  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
+    inline: false,
+    width: "100%",
+    lineleading: 0.5
+  })
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    var measuredWidth = document.documentElement.clientWidth;
+    var reflowQueued = false;
+    window.MathJax.startup.defaultReady();
+    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
+      window.normalizeTemplateMathJaxAria
+    );
+    function reflowDisplayMath() {
+      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
+      reflowQueued = true;
+      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
+        .catch(function () { /* A later resize may retry a failed render. */ })
+        .then(async function () {
+          var width = document.documentElement.clientWidth;
+          try {
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
+            await window.MathJax.startup.document.rerenderPromise(110);
+            window.normalizeTemplateMathJaxAria();
+            window.templateMathJaxReflowError = null;
+          } catch (error) {
+            window.templateMathJaxReflowError = String(error);
+            console.error("MathJax viewport reflow failed", error);
+            throw error;
+          } finally {
+            measuredWidth = width;
+            reflowQueued = false;
+          }
+        })
+        .then(reflowDisplayMath);
+      // Keep failure observable to callers without an unhandled rejection.
+      window.templateMathJaxReflowPromise.catch(function () {});
+    }
+    window.addEventListener("resize", reflowDisplayMath);
+    // Also cover a resize that happened during the initial asynchronous render.
+    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
+  }
+});
+</script>
+<script defer=""
+  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -240,7 +392,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -258,8 +417,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -272,8 +429,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -501,10 +656,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -555,10 +718,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -587,38 +746,42 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:quality">Quality validation</h1>
+<h1 data-number="6" id="sec:quality"><span
+class="header-section-number">6</span> Quality validation</h1>
 <p>The quality gate is what separates a descriptor that merely
 <em>claims</em> to describe a dataset from one that <em>provably</em>
 does. It has two layers: structural validation of the descriptor, and
 byte-level reconciliation of the descriptor against the files it
 names.</p>
-<h2 id="the-validation-gate-reacts-to-defects">The validation gate
-reacts to defects</h2>
+<h2 data-number="6.1" id="the-validation-gate-reacts-to-defects"><span
+class="header-section-number">6.1</span> The validation gate reacts to
+defects</h2>
 <p><code>validate_descriptor()</code> emits severity-tagged findings for
 missing required keys, unsafe or duplicate file paths, malformed
 checksums, unknown media types, duplicate or malformed fields,
 constraint violations, missing primary keys, and thin provenance.
 <code>build_descriptor_report()</code> folds these into a readiness
 score, penalising each error and warning.</p>
-<p>To show the gate is not vacuous, <span class="citation"
-data-cites="fig:quality_gate">[@fig:quality_gate]</span> compares the
-shipped fixture against a deliberately-perturbed copy produced by
+<p>To show the gate is not vacuous, fig. <a
+href="#fig:quality_gate">4</a> compares the shipped fixture against a
+deliberately-perturbed copy produced by
 <code>demo_broken_descriptor()</code> (which strips the license,
 corrupts a checksum, zeroes a row count, and removes a unit). The clean
 fixture produces zero findings; the perturbed demo produces several
 errors and warnings.</p>
 <figure id="fig:quality_gate">
-<a class="figure-full-size-link" href="../figures/quality_gate.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Quality gate: validation findings by severity"><img src="../figures/quality_gate.png"
+<a class="figure-full-size-link" href="../figures/quality_gate.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 4, Quality gate: validation findings by severity"><img src="../figures/quality_gate.png"
 alt="Grouped bars compare validation findings. Supplied descriptor: 0 errors and 0 warnings. Deliberately perturbed control: 3 errors and 3 warnings. The control is synthetic and demonstrates gate sensitivity; it is not an empirical data-quality estimate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Quality gate: validation findings by
-severity for the clean fixture descriptor (left, zero findings) versus a
-deliberately-broken demonstration copy (right). The demonstration
-perturbation is clearly named in code and never treated as real data —
-it exists only to prove the gate reacts. Counts come from
+<figcaption>Figure 4: Quality gate: validation
+findings by severity for the clean fixture descriptor (left, zero
+findings) versus a deliberately-broken demonstration copy (right). The
+demonstration perturbation is clearly named in code and never treated as
+real data — it exists only to prove the gate reacts. Counts come from
 <code>severity_counts()</code>.</figcaption>
 </figure>
-<h2 id="descriptorfile-verification">Descriptor↔︎file verification</h2>
+<h2 data-number="6.2" id="descriptorfile-verification"><span
+class="header-section-number">6.2</span> Descriptor↔︎file
+verification</h2>
 <p>A checksum is only meaningful if something checks it.
 <code>verify_descriptor_files()</code> recomputes the sha256 digest and
 data-row count of every declared file that is present on disk and
@@ -629,23 +792,23 @@ references but does not bundle are reported as <code>absent</code>
 rather than as failures — verification is asserted only for bytes that
 are actually present, which is what makes the metadata-only release
 boundary honest.</p>
-<p><span class="citation"
-data-cites="fig:checksum_verification">[@fig:checksum_verification]</span>
-shows this reconciliation for the shipped fixture: both files verify,
-declared and actual row counts agree, and each recomputed checksum
-matches its declaration, so the readiness score is unpenalised.</p>
+<p>fig. <a href="#fig:checksum_verification">5</a> shows this
+reconciliation for the shipped fixture: both files verify, declared and
+actual row counts agree, and each recomputed checksum matches its
+declaration, so the readiness score is unpenalised.</p>
 <figure id="fig:checksum_verification">
-<a class="figure-full-size-link" href="../figures/checksum_verification.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Descriptor↔︎file verification: declared versus recomputed row counts"><img src="../figures/checksum_verification.png"
+<a class="figure-full-size-link" href="../figures/checksum_verification.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Descriptor↔︎file verification: declared versus recomputed row counts"><img src="../figures/checksum_verification.png"
 alt="2-row descriptor-to-file verification table: fixtures/measurements.csv: declared rows 12, actual rows 12, checksum match, status verified; fixtures/subjects.csv: declared rows 6, actual rows 6, checksum match, status verified. Descriptor readiness is 1.000; this is release-readiness evidence, not a scientific quality score." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Descriptor↔︎file verification: declared
-versus recomputed row counts and checksum agreement per file, from
-<code>verify_descriptor_files()</code>. Both shipped fixture files
+<figcaption>Figure 5: Descriptor↔︎file verification:
+declared versus recomputed row counts and checksum agreement per file,
+from <code>verify_descriptor_files()</code>. Both shipped fixture files
 verify against their bytes on disk; the title reports the descriptor’s
 readiness score. If a fixture file were edited without updating the
 descriptor, the corresponding row would flip to a mismatch status and
 the test suite would fail.</figcaption>
 </figure>
-<h2 id="machine-readable-release-manifest">Machine-readable release
+<h2 data-number="6.3" id="machine-readable-release-manifest"><span
+class="header-section-number">6.3</span> Machine-readable release
 manifest</h2>
 <p><code>build_release_bundle_manifest()</code> packages the above into
 a deterministic, JSON-ready manifest containing the schema fingerprint,
@@ -655,7 +818,8 @@ metadata and checksums, never the dataset bytes. The thin script <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py"><code>scripts/generate_release_artifacts.py</code></a>
 writes this manifest (plus the readiness report and constraint summary)
 under <code>output/reports/</code> for pre-publication review.</p>
-<h2 id="validation-evidence">Validation evidence</h2>
+<h2 data-number="6.4" id="validation-evidence"><span
+class="header-section-number">6.4</span> Validation evidence</h2>
 <p>Every capability above is exercised by the zero-mock
 <code>tests/</code> suite: structural validation and negative controls,
 order-independent schema fingerprints, byte-level verification against

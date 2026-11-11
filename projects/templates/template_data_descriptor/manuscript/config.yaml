@@ -1,32 +1,32 @@
 paper:
-  title: "Data Descriptor Template: Schema, Provenance, and Release Readiness"
-  subtitle: "A FAIR-style exemplar for dataset papers"
-  version: "0.2.0"
-  date: "2026-07-10"
+  title: 'Data Descriptor Template: Schema, Provenance, and Release Readiness'
+  subtitle: A FAIR-style exemplar for dataset papers
+  version: 0.2.0
+  date: '2026-07-10'
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.2.0"
-  platform_version: "5.1.0"
-  last_published_version: "0.1.0"
-  doi: "10.5281/zenodo.21298883"
-  doi_status: "DOI published"
-  version_doi: "10.5281/zenodo.21298884"
-  version_record: "https://zenodo.org/records/21298884"
-  github_repository: "docxology/template_data_descriptor"
-  repository_url: "https://github.com/docxology/template_data_descriptor"
-  license: "CC-BY-4.0"
+  release_status: unreleased
+  intended_version: 0.2.0
+  platform_version: 5.2.0
+  last_published_version: 0.1.0
+  doi: 10.5281/zenodo.21298883
+  doi_status: DOI published
+  version_doi: 10.5281/zenodo.21298884
+  version_record: https://zenodo.org/records/21298884
+  github_repository: docxology/template_data_descriptor
+  repository_url: https://github.com/docxology/template_data_descriptor
+  license: CC-BY-4.0
 keywords:
-  - data descriptor
-  - FAIR data
-  - provenance
-  - schema validation
+- data descriptor
+- FAIR data
+- provenance
+- schema validation
 render:
-  engine: "pandoc"
+  engine: pandoc
   number_sections: true
   toc: true

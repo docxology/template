@@ -1,64 +1,44 @@
-# AutoScientists Coordination Testbed — Exemplar Configuration
-# A deterministic, ablatable reference implementation of the coordination
-# mechanisms from AutoScientists (arXiv:2605.28655), framed honestly as a
-# noise-robustness testbed rather than a performance claim.
-#
-# This file supplies manuscript metadata (title, authors, DOIs) consumed by the
-# renderer (`infrastructure/rendering/_pdf_title_page_config.py`). The
-# `experiment:` block below is a human-readable mirror of the code defaults; it is
-# NOT loaded by the analysis scripts (they construct SearchConfig/SyntheticObjective
-# directly) — the test `test_config_yaml_experiment_block_mirrors_code_defaults`
-# binds the two so the mirror cannot drift.
-
-# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
 paper:
-  title: "A Deterministic Testbed for Self-Organizing Agent-Team Coordination"
-  subtitle: "Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget"
-  version: "2.0.0"
-  date: "2026-06-26"
-
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
+  title: A Deterministic Testbed for Self-Organizing Agent-Team Coordination
+  subtitle: Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment
+    Budget
+  version: 2.0.0
+  date: '2026-06-26'
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "2.0.0"
-  platform_version: "5.1.0"
-  last_published_version: "1.0.2"
-  doi: "10.5281/zenodo.20533669"  # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20931927" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20931927"
-  github_repository: "docxology/template_autoscientists"
-  repository_url: "https://github.com/docxology/template_autoscientists"
-  year: "2026"
+  release_status: unreleased
+  intended_version: 2.0.0
+  platform_version: 5.2.0
+  last_published_version: 1.0.2
+  doi: 10.5281/zenodo.20533669
+  version_doi: 10.5281/zenodo.20931927
+  version_record: https://zenodo.org/records/20931927
+  github_repository: docxology/template_autoscientists
+  repository_url: https://github.com/docxology/template_autoscientists
+  year: '2026'
   published_artifacts:
-    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4"
-    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_autoscientists"
-    osf: "https://osf.io/6xcf5/"
-    pypi: "https://test.pypi.org/project/template-autoscientists/1.0.2/"
-    netlify: "https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app"
-    github_pages: "https://docxology.github.io/template_autoscientists/"
-    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists"
-
+    ipfs_pinata: https://gateway.pinata.cloud/ipfs/QmX6F3ExeC87DxxH95YgJuHcJmjhXuf1x54BKF6V5bn5z4
+    huggingface_hub: https://huggingface.co/datasets/ActiveInference/template_autoscientists
+    osf: https://osf.io/6xcf5/
+    pypi: https://test.pypi.org/project/template-autoscientists/1.0.2/
+    netlify: https://6a44401a17ba160047501e98--tranquil-kleicha-0c9203.netlify.app
+    github_pages: https://docxology.github.io/template_autoscientists/
+    software_heritage: https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoscientists
 keywords:
-  - "agent coordination"
-  - "scientific discovery"
-  - "noise-band confirmation"
-  - "ablation study"
-  - "reproducible research"
-  - "language-model agents"
-
+- agent coordination
+- scientific discovery
+- noise-band confirmation
+- ablation study
+- reproducible research
+- language-model agents
 metadata:
-  license: "MIT"
-  language: "en"
-
-# Render format toggles — gate per-renderer in infrastructure/rendering/pipeline.py.
+  license: MIT
+  language: en
 render:
   formats:
     pdf: true
@@ -66,34 +46,25 @@ render:
     slides: false
     docx: false
     epub: false
-
-# LLM features are off by default: the exemplar renders deterministically with
-# no Ollama dependency. The live Hermes proposer is exercised by the opt-in
-# `requires_ollama` test, not the rendered pipeline.
 llm:
   reviews:
     enabled: false
   translations:
     enabled: false
-
-# ZERO-MOCK TOLERANCE: Any failure blocks manuscript rendering.
 testing:
   max_test_failures: 0
   max_infra_test_failures: 0
   max_project_test_failures: 0
-
-# Experimental parameters — a documentation mirror of the code defaults:
-# budget/num_teams/confirm_seeds/base_seed/stagnation_window/dead_end_threshold/sigma
-# are SearchConfig defaults; dimensions/noise_scale/ripple are SyntheticObjective
-# defaults. The analysis scripts (run_search_comparison.py, run_ablation.py) do not
-# read this file — they build those objects directly; the mirror is pinned by tests.
 experiment:
   budget: 60
   num_teams: 3
   dimensions: 4
   noise_scale: 0.02
   ripple: 0.15
-  confirm_seeds: [101, 202, 303]
+  confirm_seeds:
+  - 101
+  - 202
+  - 303
   base_seed: 7
   stagnation_window: 10
   dead_end_threshold: 3

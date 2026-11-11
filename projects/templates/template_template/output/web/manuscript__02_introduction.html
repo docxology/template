@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
-  <title>A template/ approach to Reproducible Generative
-Research</title>
+  <title>02_introduction.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,11 +39,16 @@ Research</title>
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -56,11 +61,8 @@ Research</title>
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -89,8 +91,11 @@ Research</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -114,7 +119,7 @@ Research</title>
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -131,11 +136,11 @@ Research</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -174,156 +179,7 @@ Research</title>
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <script data-template-mathjax-config>
-window.MathJax = window.MathJax || {};
-window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
-  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
-  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-});
-var templateMathOutput = window.MathJax.output || {};
-window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
-  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
-    width: "100%",
-    lineleading: 0.5
-  })
-});
-window.normalizeTemplateMathJaxAria = function () {
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[-]/.test(roleDescription)) {
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }
-  });
-};
-window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
-  ready: function () {
-    var measuredWidth = document.documentElement.clientWidth;
-    var reflowQueued = false;
-    window.MathJax.startup.defaultReady();
-    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
-      window.normalizeTemplateMathJaxAria
-    );
-    function reflowDisplayMath() {
-      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
-      reflowQueued = true;
-      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
-        .catch(function () { /* A later resize may retry a failed render. */ })
-        .then(async function () {
-          var width = document.documentElement.clientWidth;
-          try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
-            await window.MathJax.startup.document.rerenderPromise(110);
-            window.normalizeTemplateMathJaxAria();
-            window.templateMathJaxReflowError = null;
-          } catch (error) {
-            window.templateMathJaxReflowError = String(error);
-            console.error("MathJax viewport reflow failed", error);
-            throw error;
-          } finally {
-            measuredWidth = width;
-            reflowQueued = false;
-          }
-        })
-        .then(reflowDisplayMath);
-      // Keep failure observable to callers without an unhandled rejection.
-      window.templateMathJaxReflowPromise.catch(function () {});
-    }
-    window.addEventListener("resize", reflowDisplayMath);
-    // Also cover a resize that happened during the initial asynchronous render.
-    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
-  }
-});
-</script>
-<script defer=""
-  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -738,264 +594,173 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="2" id="introduction"><span
-class="header-section-number">2</span> Introduction</h1>
-<h2 data-number="2.1"
-id="research-tools-as-epistemic-infrastructure"><span
-class="header-section-number">2.1</span> Research Tools as Epistemic
-Infrastructure</h2>
+<h1 id="introduction">Introduction</h1>
+<h2 id="research-tools-as-epistemic-infrastructure">Research Tools as
+Epistemic Infrastructure</h2>
 <p>Scientific research operates through a layered ecology of tools,
 documents, and practices—each shaping what can be known, communicated,
 and verified. When these layers are fragmented, manuscripts, data, code,
 and figures can drift out of alignment, creating gaps that are
 structural rather than incidental. Survey and economic evidence
-documents the practical cost of failed reproduction attempts <span
-class="citation"
-data-cites="baker2016reproducibility freedman2015economics">(<a
-href="index.html#ref-baker2016reproducibility" role="doc-biblioref">Baker
-2016</a>; <a href="index.html#ref-freedman2015economics"
-role="doc-biblioref">Freedman et al. 2015</a>)</span>, but
-reproducibility is only the most visible face of a broader problem.
-Research software engineering, epistemic integrity, and the coordination
-between human researchers and AI collaborators all depend on whether the
-tools that produce research artifacts can themselves be transparent,
-testable, and self-documenting. Nosek et al. <span class="citation"
-data-cites="nosek2018preregistration">(<a
-href="index.html#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
-2018</a>)</span> argue that committing to analytical plans before data
-collection is a necessary structural reform; we extend this logic to the
-research build pipeline.</p>
+documents the practical cost of failed reproduction attempts
+[baker2016reproducibility; freedman2015economics], but reproducibility
+is only the most visible face of a broader problem. Research software
+engineering, epistemic integrity, and the coordination between human
+researchers and AI collaborators all depend on whether the tools that
+produce research artifacts can themselves be transparent, testable, and
+self-documenting. Nosek et al. [nosek2018preregistration] argue that
+committing to analytical plans before data collection is a necessary
+structural reform; we extend this logic to the research build
+pipeline.</p>
 <p>One root cause is fragmentation—of attention (in the mind) as well as
 in the cyberphysical niche (documents, versions, and reproducibility
 artefacts). A typical research project scatters its artifacts across
-disconnected tools: LaTeX editors <span class="citation"
-data-cites="lamport1994latex">(<a href="index.html#ref-lamport1994latex"
-role="doc-biblioref">Lamport 1994</a>)</span> for prose, Jupyter
+disconnected tools: LaTeX editors [lamport1994latex] for prose, Jupyter
 notebooks for analysis, ad-hoc shell scripts for figure generation, and
 manual copy-paste for integrating results into manuscripts. Each
 boundary between tools is a potential locus of desynchronization. The
 version of a figure embedded in a PDF may not match the code that
 ostensibly generated it, while tests may exercise analysis code without
-exercising the rendering path. Pimentel et al. <span class="citation"
-data-cites="pimentel2019jupyter">(<a href="index.html#ref-pimentel2019jupyter"
-role="doc-biblioref">Pimentel et al. 2019</a>)</span> studied a corpus
-described as 1.4 million Jupyter notebooks; in the valid execution
-subset, 24.11% ran without errors and 4.03% reproduced the recorded
-results. Those distinctions matter: execution success is not equivalent
-to result reproduction. Peng <span class="citation"
-data-cites="peng2011reproducible">(<a href="index.html#ref-peng2011reproducible"
-role="doc-biblioref">Peng 2011</a>)</span> argues that reproducibility
-in computational science requires, at minimum, that the data and code
-underlying a published result be available for independent verification.
-Barba <span class="citation" data-cites="barba2018terminologies">(<a
-href="index.html#ref-barba2018terminologies" role="doc-biblioref">Barba
-2018</a>)</span> further documents how “reproducibility,”
-“replicability,” and “repeatability” carry conflicting definitions
-across disciplines, complicating cross-field standards.</p>
-<h2 data-number="2.2" id="related-work"><span
-class="header-section-number">2.2</span> Related Work</h2>
-<p>Gentleman and Temple Lang <span class="citation"
-data-cites="gentleman2007research">(<a href="index.html#ref-gentleman2007research"
-role="doc-biblioref">Gentleman and Temple Lang 2007</a>)</span>
-introduced the concept of a <em>research compendium</em>—a single unit
-of scholarly communication bundling code, data, and narrative. This
-vision has driven two decades of tooling, which can be grouped into four
-categories: workflow managers, literate programming systems,
-containerization approaches, and best-practice frameworks.</p>
-<h3 data-number="2.2.1" id="workflow-managers"><span
-class="header-section-number">2.2.1</span> Workflow Managers</h3>
-<p><strong>Snakemake</strong> <span class="citation"
-data-cites="koster2012snakemake">(<a href="index.html#ref-koster2012snakemake"
-role="doc-biblioref">Köster and Rahmann 2012</a>)</span> uses a
-rule-based, Python-derived DSL to specify computational workflows as
-directed acyclic graphs of file-producing steps. It supports
-containerized execution and an extension architecture for execution and
-storage backends, while its central scope remains computational pipeline
+exercising the rendering path. Pimentel et al. [pimentel2019jupyter]
+studied a corpus described as 1.4 million Jupyter notebooks; in the
+valid execution subset, 24.11% ran without errors and 4.03% reproduced
+the recorded results. Those distinctions matter: execution success is
+not equivalent to result reproduction. Peng [peng2011reproducible]
+argues that reproducibility in computational science requires, at
+minimum, that the data and code underlying a published result be
+available for independent verification. Barba [barba2018terminologies]
+further documents how “reproducibility,” “replicability,” and
+“repeatability” carry conflicting definitions across disciplines,
+complicating cross-field standards.</p>
+<h2 id="related-work">Related Work</h2>
+<p>Gentleman and Temple Lang [gentleman2007research] introduced the
+concept of a <em>research compendium</em>—a single unit of scholarly
+communication bundling code, data, and narrative. This vision has driven
+two decades of tooling, which can be grouped into four categories:
+workflow managers, literate programming systems, containerization
+approaches, and best-practice frameworks.</p>
+<h3 id="workflow-managers">Workflow Managers</h3>
+<p><strong>Snakemake</strong> [koster2012snakemake] uses a rule-based,
+Python-derived DSL to specify computational workflows as directed
+acyclic graphs of file-producing steps. It supports containerized
+execution and an extension architecture for execution and storage
+backends, while its central scope remains computational pipeline
 orchestration rather than this repository’s combined manuscript, test,
 and document-provenance contract.</p>
-<p><strong>Nextflow</strong> <span class="citation"
-data-cites="ditommaso2017nextflow">(<a href="index.html#ref-ditommaso2017nextflow"
-role="doc-biblioref">Di Tommaso et al. 2017</a>)</span> employs a
-dataflow programming paradigm with native support for container-based
-execution across heterogeneous computing environments (local, SLURM,
-AWS). Like Snakemake, Nextflow excels at bioinformatics pipeline
-parallelism but does not address manuscript production, document
-integrity, or the testing–publication coupling that characterizes
-research reproducibility.</p>
-<p><strong>CWL</strong> (Common Workflow Language) <span
-class="citation" data-cites="amstutz2016cwl">(<a
-href="index.html#ref-amstutz2016cwl" role="doc-biblioref">Amstutz et al.
-2016</a>)</span> provides a portable, YAML-based standard for describing
-computational workflows and their dependencies. Its strength lies in
-interoperability across execution engines (cwltool, Toil, Arvados), but
-it requires external tooling for manuscript generation and offers no
-built-in testing or provenance framework.</p>
-<h3 data-number="2.2.2"
-id="literate-programming-and-publication-tools"><span
-class="header-section-number">2.2.2</span> Literate Programming and
-Publication Tools</h3>
-<p>Knuth’s literate programming <span class="citation"
-data-cites="knuth1984literate">(<a href="index.html#ref-knuth1984literate"
-role="doc-biblioref">Knuth 1984</a>)</span> established the principle
-that programs should be authored as documents intended for human
-comprehension. Schulte et al. <span class="citation"
-data-cites="schulte2012multilanguage">(<a
-href="index.html#ref-schulte2012multilanguage" role="doc-biblioref">Schulte et al.
-2012</a>)</span> extended this to multi-language computing environments
-(Org-mode), demonstrating that literate programming could span languages
-and output formats.</p>
-<p><strong>Quarto</strong> <span class="citation"
-data-cites="allaire2024quarto">(<a href="index.html#ref-allaire2024quarto"
-role="doc-biblioref">Allaire et al. 2024</a>)</span> extends the R
-Markdown tradition to support Python, Julia, and Observable, rendering
-to PDF, HTML, and Word. Quarto integrates code execution with document
+<p><strong>Nextflow</strong> [ditommaso2017nextflow] employs a dataflow
+programming paradigm with native support for container-based execution
+across heterogeneous computing environments (local, SLURM, AWS). Like
+Snakemake, Nextflow excels at bioinformatics pipeline parallelism but
+does not address manuscript production, document integrity, or the
+testing–publication coupling that characterizes research
+reproducibility.</p>
+<p><strong>CWL</strong> (Common Workflow Language) [amstutz2016cwl]
+provides a portable, YAML-based standard for describing computational
+workflows and their dependencies. Its strength lies in interoperability
+across execution engines (cwltool, Toil, Arvados), but it requires
+external tooling for manuscript generation and offers no built-in
+testing or provenance framework.</p>
+<h3 id="literate-programming-and-publication-tools">Literate Programming
+and Publication Tools</h3>
+<p>Knuth’s literate programming [knuth1984literate] established the
+principle that programs should be authored as documents intended for
+human comprehension. Schulte et al. [schulte2012multilanguage] extended
+this to multi-language computing environments (Org-mode), demonstrating
+that literate programming could span languages and output formats.</p>
+<p><strong>Quarto</strong> [allaire2024quarto] extends the R Markdown
+tradition to support Python, Julia, and Observable, rendering to PDF,
+HTML, and Word. Quarto integrates code execution with document
 rendering, achieving a modern form of literate programming, but it does
 not enforce testing thresholds, manage multi-project repositories, or
 provide cryptographic provenance.</p>
-<p><strong>Jupyter Book</strong> <span class="citation"
-data-cites="kluyver2016jupyter">(<a href="index.html#ref-kluyver2016jupyter"
-role="doc-biblioref">Kluyver et al. 2016</a>)</span> builds on Jupyter
+<p><strong>Jupyter Book</strong> [kluyver2016jupyter] builds on Jupyter
 notebooks to produce publication-quality documents via Sphinx. While
 powerful for interactive exploration, Jupyter’s notebook format
-introduces execution-order fragility <span class="citation"
-data-cites="pimentel2019jupyter">(<a href="index.html#ref-pimentel2019jupyter"
-role="doc-biblioref">Pimentel et al. 2019</a>)</span> and does not
+introduces execution-order fragility [pimentel2019jupyter] and does not
 naturally support the separation of logic from orchestration that
 characterizes maintainable research software.</p>
-<p><strong>R Markdown</strong> <span class="citation"
-data-cites="xie2018dynamic">(<a href="index.html#ref-xie2018dynamic"
-role="doc-biblioref">Xie et al. 2018</a>)</span> pioneered knitr-based
+<p><strong>R Markdown</strong> [xie2018dynamic] pioneered knitr-based
 dynamic documents that weave code and prose. Its ecosystem is rich but
 R-centric, and it lacks the multi-project management, infrastructure
 testing, and provenance embedding that characterize
 <code>template/</code>.</p>
-<p><strong>Typst</strong> <span class="citation"
-data-cites="madje2023typst">(<a href="index.html#ref-madje2023typst"
-role="doc-biblioref">Mädje and Haug 2023</a>)</span> is an emerging
-markup-based typesetting system with incremental compilation and a
-programmable scripting layer. While Typst offers faster compilation than
-LaTeX and a more modern authoring experience, it does not integrate
-testing, provenance, or multi-project pipeline management.</p>
-<h3 data-number="2.2.3"
-id="containerization-and-environment-capture"><span
-class="header-section-number">2.2.3</span> Containerization and
+<p><strong>Typst</strong> [madje2023typst] is an emerging markup-based
+typesetting system with incremental compilation and a programmable
+scripting layer. While Typst offers faster compilation than LaTeX and a
+more modern authoring experience, it does not integrate testing,
+provenance, or multi-project pipeline management.</p>
+<h3 id="containerization-and-environment-capture">Containerization and
 Environment Capture</h3>
-<p><strong>Docker</strong> <span class="citation"
-data-cites="boettiger2015docker">(<a href="index.html#ref-boettiger2015docker"
-role="doc-biblioref">Boettiger 2015</a>)</span> addresses
+<p><strong>Docker</strong> [boettiger2015docker] addresses
 reproducibility at the environment level—packaging operating system,
 libraries, and code into portable containers. While Docker solves the
 “works on my machine” problem, containerization is complementary to, not
 a replacement for, the architectural concerns addressed here: Docker
 does not enforce testing, embed provenance, or manage multi-project
 manuscript workflows.</p>
-<h3 data-number="2.2.4"
-id="best-practice-frameworks-and-data-standards"><span
-class="header-section-number">2.2.4</span> Best-Practice Frameworks and
-Data Standards</h3>
-<p>Wilson et al. <span class="citation" data-cites="wilson2017good">(<a
-href="index.html#ref-wilson2017good" role="doc-biblioref">Wilson et al.
-2017</a>)</span> define “good enough” practices for scientific
-computing, emphasizing version control, testing, and documentation.
-Sandve et al. <span class="citation" data-cites="sandve2013ten">(<a
-href="index.html#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
-2013</a>)</span> propose ten rules for reproducible computational
-research. Piccolo and Frampton <span class="citation"
-data-cites="piccolo2016tools">(<a href="index.html#ref-piccolo2016tools"
-role="doc-biblioref">Piccolo and Frampton 2016</a>)</span>
-systematically survey tools for computational reproducibility, finding
-that environment isolation, workflow automation, and documentation
-generation address complementary but non-overlapping reproducibility
-concerns—yet no single tool unifies all three. Stodden et al. <span
-class="citation" data-cites="stodden2016enhancing">(<a
-href="index.html#ref-stodden2016enhancing" role="doc-biblioref">Stodden et al.
-2016</a>)</span> advocate for enhanced computational method
-transparency. The FAIR principles <span class="citation"
-data-cites="wilkinson2016fair">(<a href="index.html#ref-wilkinson2016fair"
-role="doc-biblioref"><span class="nocase">Wilkinson et al.</span>
-2016</a>)</span>—Findable, Accessible, Interoperable, Reusable—establish
-a standard for data stewardship that has been widely adopted by funding
-agencies and journals. Lamprecht et al. <span class="citation"
-data-cites="lamprecht2020towards">(<a href="index.html#ref-lamprecht2020towards"
-role="doc-biblioref">Lamprecht et al. 2020</a>)</span> formalize
-“Towards FAIR Principles for Research Software,” providing the
-conceptual scaffolding that Barker et al. <span class="citation"
-data-cites="barker2022fair4rs">(<a href="index.html#ref-barker2022fair4rs"
-role="doc-biblioref">Barker et al. 2022</a>)</span> would soon
-operationalize as the FAIR4RS initiative—recognizing that software has
-execution, composability, and dependency-management requirements that
-data-centric FAIR does not address. Cohen et al. <span class="citation"
-data-cites="cohen2021four">(<a href="index.html#ref-cohen2021four"
-role="doc-biblioref">Cohen et al. 2021</a>)</span> characterize the four
-pillars of research software engineering (software sustainability,
-software quality, community building, and policy advocacy), situating
-formal testing and provenance practices within a broader RSE governance
-framework. Garijo et al. <span class="citation"
-data-cites="garijo2024fairsoft">(<a href="index.html#ref-garijo2024fairsoft"
-role="doc-biblioref"><span class="nocase">Garijo et al.</span>
-2024</a>)</span> operationalize FAIR4RS through the FAIRsoft evaluator,
-an automated assessment framework that scores research software against
-17+ quality indicators including executability, metadata richness, and
-documentation completeness. Goble et al. <span class="citation"
-data-cites="goble2020fair">(<a href="index.html#ref-goble2020fair"
-role="doc-biblioref">Goble et al. 2020</a>)</span> extend FAIR to
-computational workflows specifically, arguing that workflow provenance
-requires first-class treatment in scientific computing infrastructure.
-Nüst et al. <span class="citation"
-data-cites="nust2017containerization">(<a
-href="index.html#ref-nust2017containerization" role="doc-biblioref">Nüst et al.
-2017</a>)</span> introduce the <em>executable research compendium</em>
-(ERC), extending Gentleman and Temple Lang’s compendium concept with
-containerized, interactive reproduction environments. The W3C PROV data
-model <span class="citation" data-cites="moreau2013provdm">(<a
-href="index.html#ref-moreau2013provdm" role="doc-biblioref">Moreau and Missier
-2013</a>)</span> provides a formal vocabulary for expressing provenance
-records, while in-toto <span class="citation"
-data-cites="torresarias2019intoto">(<a href="index.html#ref-torresarias2019intoto"
-role="doc-biblioref">Torres-Arias et al. 2019</a>)</span> provides a
-framework for end-to-end software supply chain integrity verification,
-and SLSA <span class="citation" data-cites="openssf2023slsa">(<a
-href="index.html#ref-openssf2023slsa" role="doc-biblioref">Open Source Security
-Foundation 2023</a>)</span> (Supply-chain Levels for Software Artifacts)
-extends this to graduated, attestation-based supply-chain security
-levels for build pipelines. These frameworks articulate <em>what</em>
-reproducible research requires but do not provide an integrated
-<em>how</em>—they lack the tooling, enforcement mechanisms, and
-architectural patterns that translate standards into practice.</p>
-<h3 data-number="2.2.5" id="the-gap"><span
-class="header-section-number">2.2.5</span> The Gap</h3>
-<p>Despite advances in FAIR4RS principles <span class="citation"
-data-cites="barker2022fair4rs lamprecht2020towards">(<a
-href="index.html#ref-barker2022fair4rs" role="doc-biblioref">Barker et al.
-2022</a>; <a href="index.html#ref-lamprecht2020towards"
-role="doc-biblioref">Lamprecht et al. 2020</a>)</span>, automated FAIR
-software assessment <span class="citation"
-data-cites="garijo2024fairsoft">(<a href="index.html#ref-garijo2024fairsoft"
-role="doc-biblioref"><span class="nocase">Garijo et al.</span>
-2024</a>)</span>, FAIR computational workflow standards <span
-class="citation" data-cites="goble2020fair">(<a
-href="index.html#ref-goble2020fair" role="doc-biblioref">Goble et al.
-2020</a>)</span>, supply-chain attestation frameworks <span
-class="citation" data-cites="torresarias2019intoto openssf2023slsa">(<a
-href="index.html#ref-torresarias2019intoto" role="doc-biblioref">Torres-Arias et
-al. 2019</a>; <a href="index.html#ref-openssf2023slsa" role="doc-biblioref">Open
-Source Security Foundation 2023</a>)</span>, and the preregistration
-revolution <span class="citation"
-data-cites="nosek2018preregistration">(<a
-href="index.html#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
-2018</a>)</span>, no existing system integrates six cross-cutting
-concerns into a single enforced pipeline: (1) end-to-end pipeline
-orchestration with testing enforcement, (2) multi-format manuscript
-rendering, (3) cryptographic provenance embedding, (4) multi-project
-repository management, (5) FAIR-aligned software stewardship, and (6)
-AI-agent collaboration via structured documentation. Each existing
-framework addresses a subset; none provides the unified enforcement
-mechanism. The detailed tool-by-tool comparison is developed in the <a
-href="manuscript__05c_comparison.html#comparison-to-existing-tools">Comparison to
+<h3 id="best-practice-frameworks-and-data-standards">Best-Practice
+Frameworks and Data Standards</h3>
+<p>Wilson et al. [wilson2017good] define “good enough” practices for
+scientific computing, emphasizing version control, testing, and
+documentation. Sandve et al. [sandve2013ten] propose ten rules for
+reproducible computational research. Piccolo and Frampton
+[piccolo2016tools] systematically survey tools for computational
+reproducibility, finding that environment isolation, workflow
+automation, and documentation generation address complementary but
+non-overlapping reproducibility concerns—yet no single tool unifies all
+three. Stodden et al. [stodden2016enhancing] advocate for enhanced
+computational method transparency. The FAIR principles
+[wilkinson2016fair]—Findable, Accessible, Interoperable,
+Reusable—establish a standard for data stewardship that has been widely
+adopted by funding agencies and journals. Lamprecht et
+al. [lamprecht2020towards] formalize “Towards FAIR Principles for
+Research Software,” providing the conceptual scaffolding that Barker et
+al. [barker2022fair4rs] would soon operationalize as the FAIR4RS
+initiative—recognizing that software has execution, composability, and
+dependency-management requirements that data-centric FAIR does not
+address. Cohen et al. [cohen2021four] characterize the four pillars of
+research software engineering (software sustainability, software
+quality, community building, and policy advocacy), situating formal
+testing and provenance practices within a broader RSE governance
+framework. Garijo et al. [garijo2024fairsoft] operationalize FAIR4RS
+through the FAIRsoft evaluator, an automated assessment framework that
+scores research software against 17+ quality indicators including
+executability, metadata richness, and documentation completeness. Goble
+et al. [goble2020fair] extend FAIR to computational workflows
+specifically, arguing that workflow provenance requires first-class
+treatment in scientific computing infrastructure. Nüst et
+al. [nust2017containerization] introduce the <em>executable research
+compendium</em> (ERC), extending Gentleman and Temple Lang’s compendium
+concept with containerized, interactive reproduction environments. The
+W3C PROV data model [moreau2013provdm] provides a formal vocabulary for
+expressing provenance records, while in-toto [torresarias2019intoto]
+provides a framework for end-to-end software supply chain integrity
+verification, and SLSA [openssf2023slsa] (Supply-chain Levels for
+Software Artifacts) extends this to graduated, attestation-based
+supply-chain security levels for build pipelines. These frameworks
+articulate <em>what</em> reproducible research requires but do not
+provide an integrated <em>how</em>—they lack the tooling, enforcement
+mechanisms, and architectural patterns that translate standards into
+practice.</p>
+<h3 id="the-gap">The Gap</h3>
+<p>Despite advances in FAIR4RS principles [barker2022fair4rs;
+lamprecht2020towards], automated FAIR software assessment
+[garijo2024fairsoft], FAIR computational workflow standards
+[goble2020fair], supply-chain attestation frameworks
+[torresarias2019intoto; openssf2023slsa], and the preregistration
+revolution [nosek2018preregistration], no existing system integrates six
+cross-cutting concerns into a single enforced pipeline: (1) end-to-end
+pipeline orchestration with testing enforcement, (2) multi-format
+manuscript rendering, (3) cryptographic provenance embedding, (4)
+multi-project repository management, (5) FAIR-aligned software
+stewardship, and (6) AI-agent collaboration via structured
+documentation. Each existing framework addresses a subset; none provides
+the unified enforcement mechanism. The detailed tool-by-tool comparison
+is developed in the <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/05c_comparison.md#comparison-to-existing-tools">Comparison to
 Existing Tools</a> section; the summary table below captures the gap
 landscape.</p>
-<h3 data-number="2.2.6" id="summary-gaps-left-by-existing-tools"><span
-class="header-section-number">2.2.6</span> Summary: Gaps Left by
+<h3 id="summary-gaps-left-by-existing-tools">Summary: Gaps Left by
 Existing Tools</h3>
 <p>The six concerns identified above map onto existing tool categories
 as follows:</p>
@@ -1053,24 +818,17 @@ reasoning)</td>
 </table></div>
 <p>No existing system addresses all six concerns within a single
 enforced pipeline.</p>
-<h2 data-number="2.3" id="template-an-integrated-solution"><span
-class="header-section-number">2.3</span> <code>template/</code>: An
+<h2 id="template-an-integrated-solution"><code>template/</code>: An
 Integrated Solution</h2>
 <p><code>template/</code> was conceived as a structural antidote to this
 fragmentation. Rather than adding reproducibility as an afterthought—a
-Docker container wrapping an already-disjointed workflow <span
-class="citation" data-cites="boettiger2015docker">(<a
-href="index.html#ref-boettiger2015docker" role="doc-biblioref">Boettiger
-2015</a>)</span>—the template enforces integrity at the architectural
-level. It realizes Gentleman and Temple Lang’s research compendium
-vision <span class="citation" data-cites="gentleman2007research">(<a
-href="index.html#ref-gentleman2007research" role="doc-biblioref">Gentleman and
-Temple Lang 2007</a>)</span> at repository scale, bundling code, data,
-tests, manuscripts, and provenance into a single, pipeline-enforced
-system with version-controlled infrastructure <span class="citation"
-data-cites="ram2013git">(<a href="index.html#ref-ram2013git"
-role="doc-biblioref">Ram 2013</a>)</span>. It stands on four primary
-pillars:</p>
+Docker container wrapping an already-disjointed workflow
+[boettiger2015docker]—the template enforces integrity at the
+architectural level. It realizes Gentleman and Temple Lang’s research
+compendium vision [gentleman2007research] at repository scale, bundling
+code, data, tests, manuscripts, and provenance into a single,
+pipeline-enforced system with version-controlled infrastructure
+[ram2013git]. It stands on four primary pillars:</p>
 <ol type="1">
 <li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
 cleanly separates globally shared infrastructure (logging, rendering,
@@ -1103,10 +861,8 @@ shared contracts. At the structural level, <code>AGENTS.md</code> files
 in documented directories expose local API surfaces, file inventories,
 and integration contracts. At the module level, <code>SKILL.md</code>
 files—written to a discoverable YAML+Markdown schema aligned with the
-Model Context Protocol <span class="citation"
-data-cites="anthropic2024mcp">(<a href="index.html#ref-anthropic2024mcp"
-role="doc-biblioref">Anthropic 2024</a>)</span>—describe skill-enabled
-modules and exemplars as reusable capabilities.</p></li>
+Model Context Protocol [anthropic2024mcp]—describe skill-enabled modules
+and exemplars as reusable capabilities.</p></li>
 </ol>
 <p>An agent invoking <code>infrastructure.rendering</code> does not need
 to read source code: it reads the <code>rendering/SKILL.md</code>, which
@@ -1114,33 +870,26 @@ declares the module’s name, description, activation metadata in YAML
 frontmatter and imports and example invocations in its Markdown body.
 This architecture is the practical realization of the skill-library
 paradigm established in the agent literature: Yao et al.’s ReAct
-framework <span class="citation" data-cites="yao2023react">(<a
-href="index.html#ref-yao2023react" role="doc-biblioref">Yao et al.
-2023</a>)</span> demonstrated that interleaving reasoning traces with
-tool invocations dramatically improves LLM reliability; Schick et al.’s
-Toolformer <span class="citation" data-cites="schick2023toolformer">(<a
-href="index.html#ref-schick2023toolformer" role="doc-biblioref">Schick et al.
-2023</a>)</span> showed that self-supervised tool use can be
-bootstrapped from natural language; Wang et al.’s Voyager <span
-class="citation" data-cites="wang2023voyager">(<a
-href="index.html#ref-wang2023voyager" role="doc-biblioref">Wang et al.
-2023</a>)</span> proved that growing skill libraries enable open-ended
+framework [yao2023react] demonstrated that interleaving reasoning traces
+with tool invocations dramatically improves LLM reliability; Schick et
+al.’s Toolformer [schick2023toolformer] showed that self-supervised tool
+use can be bootstrapped from natural language; Wang et al.’s Voyager
+[wang2023voyager] proved that growing skill libraries enable open-ended
 autonomous exploration in complex environments. <code>template/</code>
 instantiates this vision in the domain of scientific research
 infrastructure: each <code>SKILL.md</code> is a Voyager-style skill,
 each pipeline stage is a ReAct action, and the full infrastructure layer
 constitutes a composable, protocol-aligned skill library for scientific
 computation.</p>
-<h2 data-number="2.4" id="scope-and-contributions"><span
-class="header-section-number">2.4</span> Scope and Contributions</h2>
+<h2 id="scope-and-contributions">Scope and Contributions</h2>
 <p>This paper is itself a product of the template it describes. The
 metrics populating its tables were computed by the introspection module
-documented in the <a href="manuscript__03a_architecture.html#methods">Methods</a>; the
+documented in the <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03a_architecture.md#methods">Methods</a>; the
 figures were rendered by the visualization code validated by the test
-suite described in <a href="manuscript__03e_quality.html#quality-assurance">Quality
+suite described in <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03e_quality.md#quality-assurance">Quality
 Assurance</a>; the PDF carrying these words was assembled by the same
 YAML-declared pipeline whose architecture is the subject of the <a
-href="manuscript__04_results.html#results">Results</a>. This self-productive
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/04_results.md#results">Results</a>. This self-productive
 loop—where the system that is described is also the system that produces
 the description—is not incidental but structural, a concrete
 demonstration that <code>template/</code> can sustain the full lifecycle
@@ -1194,32 +943,27 @@ from <code>projects/templates/template_template</code>, which exercises
 introspection-derived metrics.</li>
 <li>A security analysis of the steganographic provenance layer,
 including a formal threat model and tamper-detection capabilities
-aligned with the W3C PROV data model <span class="citation"
-data-cites="moreau2013provdm">(<a href="index.html#ref-moreau2013provdm"
-role="doc-biblioref">Moreau and Missier 2013</a>)</span> and SLSA <span
-class="citation" data-cites="openssf2023slsa">(<a
-href="index.html#ref-openssf2023slsa" role="doc-biblioref">Open Source Security
-Foundation 2023</a>)</span>.</li>
+aligned with the W3C PROV data model [moreau2013provdm] and SLSA
+[openssf2023slsa].</li>
 <li>An open-source reference implementation available at
 <code>github.com/docxology/template</code>.</li>
 </ul>
-<h2 data-number="2.5" id="paper-organization"><span
-class="header-section-number">2.5</span> Paper Organization</h2>
-<p>The <a href="manuscript__03a_architecture.html#methods">Methods</a> describe the
+<h2 id="paper-organization">Paper Organization</h2>
+<p>The <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/03a_architecture.md#methods">Methods</a> describe the
 Two-Layer Architecture, Thin Orchestrator pattern, pipeline stages, and
-AI collaboration model. <a href="manuscript__04_results.html#results">Results</a>
+AI collaboration model. <a href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/04_results.md#results">Results</a>
 present quantitative metrics from multi-project execution, coverage
 analysis, and steganographic benchmarks. The <a
-href="manuscript__05a_zeromock_tradeoff.html#the-zero-mock-tradeoff">Discussion</a>
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The <a
-href="manuscript__06_infrastructure_modules.html#infrastructure-module-reference">Infrastructure
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
 Module Reference</a> provides detailed documentation for all 31
 subdirectories. <a
-href="manuscript__07_security_provenance.html#security-and-provenance">Security and
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/07_security_provenance.md#security-and-provenance">Security and
 Provenance</a> describes the steganographic and cryptographic integrity
 layer. The <a
-href="manuscript__08a_appendix_pipeline.html#appendix-pipeline">Appendices</a> provide
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/08a_appendix_pipeline.md#appendix-pipeline">Appendices</a> provide
 pipeline, configuration, and comparative references.</p>
 </main>
 </body>

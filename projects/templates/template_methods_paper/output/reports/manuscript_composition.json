@@ -1,23 +1,9 @@
 {
   "algorithm": "web-renderer-source-context-v2",
-<<<<<<< HEAD
-  "binding_sha256": "4734231ca51cec8d1b7db1cdb253c0abdf73650a1f9103c9c915c8cb54671052",
-||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
-  "binding_sha256": "91b6b74cb9b8a979025506a67b3658da34b8e0f3c2f7d4e36003f87ab107b8e9",
-=======
-  "binding_sha256": "87d31b297370c7319a317dc072b6295bb7a3a89fa40e12b2c9e27d9f2cf6ab03",
->>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
+  "binding_sha256": "163e424921d916c663bd365f86a888eb532f4d60ffbb82653455f6ca7cfd1498",
   "combined_path": "output/web/_combined_manuscript.md",
-<<<<<<< HEAD
-  "combined_sha256": "9c625123f909c21d41f46bbdaf44b8015128915f0742150a942072cb15095a00",
-  "combined_size_bytes": 39361,
-||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
-  "combined_sha256": "238ab5e89065426b860088eb3f20cd8cbb541f5820078a0dc0ac623b50e03abf",
-  "combined_size_bytes": 39361,
-=======
-  "combined_sha256": "256e86433b5ab83efac9b3718bfeae4284719f713908f009887b7ed602962e06",
+  "combined_sha256": "0acd44aac69ac8576674ba50a67b4a86da7d61c7a2bd6df11b51a06a9fb6aa04",
   "combined_size_bytes": 39365,
->>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {

@@ -1,7 +1,1 @@
-<<<<<<< HEAD
-{"executablePath": "<system>/opt/google/chrome/chrome", "args": ["--no-sandbox"]}
-||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
-{"executablePath": "<system>/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "args": ["--no-sandbox"]}
-=======
 {"executablePath": "<home>/.cache/puppeteer/chrome-headless-shell/mac_arm-150.0.7871.24/chrome-headless-shell-mac-arm64/chrome-headless-shell", "args": ["--no-sandbox"]}
->>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)

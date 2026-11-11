@@ -1,60 +1,41 @@
-# template_newspaper — manuscript configuration
-#
-# This manuscript is a short, descriptive paper ABOUT the layout engine. It
-# exists so the repository pipeline's Stage 03 (infrastructure manuscript
-# renderer) produces a standard PDF for this project, exactly like the sibling
-# templates. The *newspaper* PDF itself is produced separately by scripts/ in
-# Stage 02 (see ../README.md).
-
 paper:
-  title: "The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine"
-  subtitle: "Designed multi-column page layout as a reproducible-research exemplar"
-  version: "2.0.0"
-
+  title: 'The Triplicate: A Data-Driven Large-Format Newspaper Layout Engine'
+  subtitle: Designed multi-column page layout as a reproducible-research exemplar
+  version: 2.0.0
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 keywords:
-  - "newspaper layout"
-  - "typography"
-  - "reportlab"
-  - "reproducible publishing"
-  - "document engineering"
-
+- newspaper layout
+- typography
+- reportlab
+- reproducible publishing
+- document engineering
 publication:
-  release_status: "unreleased"
-  intended_version: "2.0.0"
-  platform_version: "5.1.0"
-  last_published_version: "1.0.2"
-  # Standalone GitHub repo for the double-publication (GitHub + Zenodo), created
-  # by a maintainer via `scripts/publish/publish_project_release.py`; `doi` /
-  # `version_doi` / `version_record` below were written back here on deposit.
-  # This exemplar has since been deposited (see README.md's generated
-  # publishing-status table for the current per-platform status).
-  github_repository: "docxology/template_newspaper"
-  repository_url: "https://github.com/docxology/template_newspaper"
-  doi: "10.5281/zenodo.20533675"  # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20932039" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20932039"
-  year: "2026"  # Zenodo publication_date / deposit description year
+  release_status: unreleased
+  intended_version: 2.0.0
+  platform_version: 5.2.0
+  last_published_version: 1.0.2
+  github_repository: docxology/template_newspaper
+  repository_url: https://github.com/docxology/template_newspaper
+  doi: 10.5281/zenodo.20533675
+  version_doi: 10.5281/zenodo.20932039
+  version_record: https://zenodo.org/records/20932039
+  year: '2026'
   published_artifacts:
-    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmUsept2d9X3sz42whTgEGM9TjdxjzSqxnuyPCbu3pPwku"
-    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_newspaper"
-    osf: "https://osf.io/tzwf8/"
-    pypi: "https://test.pypi.org/project/template-newspaper/1.0.2/"
-    netlify: "https://6a4441f8d6dc10153d77788d--tranquil-kleicha-0c9203.netlify.app"
-    github_pages: "https://docxology.github.io/template_newspaper/"
-    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_newspaper"
-
+    ipfs_pinata: https://gateway.pinata.cloud/ipfs/QmUsept2d9X3sz42whTgEGM9TjdxjzSqxnuyPCbu3pPwku
+    huggingface_hub: https://huggingface.co/datasets/ActiveInference/template_newspaper
+    osf: https://osf.io/tzwf8/
+    pypi: https://test.pypi.org/project/template-newspaper/1.0.2/
+    netlify: https://6a4441f8d6dc10153d77788d--tranquil-kleicha-0c9203.netlify.app
+    github_pages: https://docxology.github.io/template_newspaper/
+    software_heritage: https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_newspaper
 metadata:
-  license: "MIT"
-  language: "en"
-
-# Render format toggles consumed by infrastructure/rendering.
+  license: MIT
+  language: en
 render:
   formats:
     pdf: true
@@ -62,5 +43,4 @@ render:
     slides: true
     docx: false
     epub: false
-
-manuscript_dir: "manuscript"
+manuscript_dir: manuscript

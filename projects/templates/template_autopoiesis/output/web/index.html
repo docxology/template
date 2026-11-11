@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.11" />
+  <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
@@ -13,7 +13,10 @@
     */
     html {
       color: #1a1a1a;
+      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
+      background-color: light-dark(#fdfdfd, #1a1a1a);
+      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -38,11 +41,16 @@
     }
     @media print {
       html {
-        background-color: white;
+        color-scheme: light only;
       }
-      body {
+      html, body, pre, code {
         background-color: transparent;
+      }
+      body, a, a:visited, blockquote {
         color: black;
+      }
+      pre, code {
+        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -55,11 +63,8 @@
     p {
       margin: 1em 0;
     }
-    a {
-      color: #1a1a1a;
-    }
-    a:visited {
-      color: #1a1a1a;
+    a, a:visited {
+      color: inherit;
     }
     img {
       max-width: 100%;
@@ -88,8 +93,11 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid #e6e6e6;
+      border-left: 2px solid;
+      border-color: #e6e6e6;
+      border-color: light-dark(#e6e6e6, #4c4c4c);
       color: #606060;
+      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -113,7 +121,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       height: 1px;
       margin: 1em 0;
     }
@@ -130,11 +138,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
     }
     th {
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid currentColor;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -962,21 +970,23 @@ statement and branch coverage, with an explicit negative control per
 domain distinguishing the real kernel from a deliberately-wrong one.</p>
 <h3 data-number="1.1" id="generation-pipeline"><span
 class="header-section-number">1.1</span> Generation pipeline</h3>
-<pre class="mermaid"><code>flowchart LR
-    G[Grammar\nconfig.yaml] --&gt; E[Expand\nseed → Spec]
-    E --&gt; M[Materialize\nSpec → Child]
-    M --&gt; V[Verify\ntree-hash check]
-    V --&gt; S[Seal\nQR provenance]</code></pre>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">G</span>[<span class="vs">Grammar\nconfig.yaml</span>] <span class="pp">--&gt;</span> <span class="dt">E</span>[<span class="vs">Expand\nseed → Spec</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">E</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Materialize\nSpec → Child</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">V</span>[<span class="vs">Verify\ntree-hash check</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">V</span> <span class="pp">--&gt;</span> <span class="dt">S</span>[<span class="vs">Seal\nQR provenance</span>]</span></code></pre></div>
 <h3 data-number="1.2" id="grammar-product-space"><span
 class="header-section-number">1.2</span> Grammar product space</h3>
-<pre class="mermaid"><code>%% noqa: docs-lint — {{...}} tokens are manuscript-variable placeholders
-%% (src/template_autopoiesis/manuscript/manuscript_variables.py) injected at render time, not literal mermaid
-flowchart TB
-    A[primitive_domain: 5] --&gt; EP[Effective product: 45 cells]
-    T[track: 3] --&gt; EP
-    S[section_set: 3] --&gt; EP
-    EP --&gt; TP[Total product: 360 cells]
-    R[3 reserved slots, 2 options each] --&gt; TP</code></pre>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">%% </span><span class="al">noqa:</span><span class="co"> docs-lint — {{...}} tokens are manuscript-variable placeholders</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% (src/template_autopoiesis/manuscript/manuscript_variables.py) injected at render time, not literal mermaid</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">TB</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">A</span>[<span class="vs">primitive_domain: 5</span>] <span class="pp">--&gt;</span> <span class="dt">EP</span>[<span class="vs">Effective product: 45 cells</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">T</span>[<span class="vs">track: 3</span>] <span class="pp">--&gt;</span> <span class="dt">EP</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">S</span>[<span class="vs">section_set: 3</span>] <span class="pp">--&gt;</span> <span class="dt">EP</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">EP</span> <span class="pp">--&gt;</span> <span class="dt">TP</span>[<span class="vs">Total product: 360 cells</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">R</span>[<span class="vs">3 reserved slots, 2 options each</span>] <span class="pp">--&gt;</span> <span class="dt">TP</span></span></code></pre></div>
 <ul>
 <li><strong>Domain count</strong>: 5</li>
 <li><strong>Effective product size</strong>: 45</li>
@@ -1233,11 +1243,12 @@ function in its own module
 depends on interactive state or network access; every stage takes an
 immutable input and returns an immutable (or file-system-materialized)
 output.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Load Grammar] --&gt; B[Expand Spec]
-    B --&gt; C[Materialize Child]
-    C --&gt; D[Verify Integrity]
-    D --&gt; E[Seal + QR]</code></pre>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">A</span>[<span class="vs">Load Grammar</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Expand Spec</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Materialize Child</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>[<span class="vs">Verify Integrity</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">D</span> <span class="pp">--&gt;</span> <span class="dt">E</span>[<span class="vs">Seal + QR</span>]</span></code></pre></div>
 <h3 data-number="3.2" id="stage-a-grammar-loading-and-validation"><span
 class="header-section-number">3.2</span> Stage A — Grammar loading and
 validation</h3>

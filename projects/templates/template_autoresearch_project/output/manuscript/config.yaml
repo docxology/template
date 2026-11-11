@@ -1,51 +1,47 @@
 paper:
-  title: "Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task"
-  subtitle: "A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration"
-  version: "0.4.0"
-
+  title: Bounded AutoResearch for a Tiny Reproducible Machine-Learning Task
+  subtitle: A public exemplar for autoresearch, metric loops, evidence ledgers, review
+    gates, and template orchestration
+  version: 0.4.0
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.4.0"
-  platform_version: "5.2.0"
-  last_published_version: "0.3.2"
-  doi: "10.5281/zenodo.20417016" # Concept DOI — stable citation
-  version_doi: "10.5281/zenodo.20931907" # Latest Zenodo deposit
-  version_record: "https://zenodo.org/records/20931907"
-  year: "2026"
-  github_repository: "docxology/template_autoresearch_project"
-  repository_url: "https://github.com/docxology/template_autoresearch_project"
+  release_status: unreleased
+  intended_version: 0.4.0
+  platform_version: 5.2.0
+  last_published_version: 0.3.2
+  doi: 10.5281/zenodo.20417016
+  version_doi: 10.5281/zenodo.20931907
+  version_record: https://zenodo.org/records/20931907
+  year: '2026'
+  github_repository: docxology/template_autoresearch_project
+  repository_url: https://github.com/docxology/template_autoresearch_project
   published_artifacts:
-    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmZvS2v7ZpqS4T8ZufeW9sA4gNBteAdVfmLH4LcoAqrUhv"
-    huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_autoresearch_project"
-    osf: "https://osf.io/geykb/"
-    pypi: "https://test.pypi.org/project/template-autoresearch-project/0.3.2/"
-    netlify: "https://6a443f868786d30c7d8ea014--tranquil-kleicha-0c9203.netlify.app"
-    github_pages: "https://docxology.github.io/template_autoresearch_project/"
-    software_heritage: "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoresearch_project"
+    ipfs_pinata: https://gateway.pinata.cloud/ipfs/QmZvS2v7ZpqS4T8ZufeW9sA4gNBteAdVfmLH4LcoAqrUhv
+    huggingface_hub: https://huggingface.co/datasets/ActiveInference/template_autoresearch_project
+    osf: https://osf.io/geykb/
+    pypi: https://test.pypi.org/project/template-autoresearch-project/0.3.2/
+    netlify: https://6a443f868786d30c7d8ea014--tranquil-kleicha-0c9203.netlify.app
+    github_pages: https://docxology.github.io/template_autoresearch_project/
+    software_heritage: https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/docxology/template_autoresearch_project
   transmission_bookends:
     enabled: true
     max_prior_releases: 5
     show_steganography: true
-
 keywords:
-  - "autoresearch"
-  - "reproducible research"
-  - "machine learning benchmark"
-  - "artifact readiness"
-  - "human review"
-  - "local artifact integrity"
-
+- autoresearch
+- reproducible research
+- machine learning benchmark
+- artifact readiness
+- human review
+- local artifact integrity
 metadata:
-  license: "MIT"
-  language: "en"
-
+  license: MIT
+  language: en
 render:
   formats:
     pdf: true
@@ -53,38 +49,40 @@ render:
     slides: true
     docx: false
     epub: false
-
 analysis:
   scripts:
-    - run_autoresearch_loop.py
-    - z_generate_manuscript_variables.py
-
+  - run_autoresearch_loop.py
+  - z_generate_manuscript_variables.py
 project_config:
-  review_policy: "human_review_required"
+  review_policy: human_review_required
   loop_stages:
-    - plan
-    - gate
-    - experiment
-    - evidence
-    - claims
-    - artifacts
-    - readiness
+  - plan
+  - gate
+  - experiment
+  - evidence
+  - claims
+  - artifacts
+  - readiness
   research_questions:
-    - id: rq1
-      question: "Can the template express a bounded AutoResearch loop without autonomous execution?"
-      expected_evidence: "output/reports/autoresearch_loop.md"
-    - id: rq2
-      question: "Can a deterministic candidate loop evaluate and select a small MNIST neural-network configuration under budget?"
-      expected_evidence: "output/data/ml_task_results.json"
-    - id: rq3
-      question: "Are manuscript claims grounded in generated project artifacts?"
-      expected_evidence: "output/reports/evidence_registry.json"
-    - id: rq4
-      question: "Can readiness checks be rerun from the standard validation stage?"
-      expected_evidence: "output/reports/autoresearch_readiness.json"
-    - id: rq5
-      question: "Does the benchmark ledger record metric improvement, budget compliance, and offline execution?"
-      expected_evidence: "output/reports/ml_benchmark_score.json"
-    - id: rq6
-      question: "Does the local security layer record artifact-integrity evidence without claiming external signing?"
-      expected_evidence: "output/data/autoresearch_integrity_attestation.json"
+  - id: rq1
+    question: Can the template express a bounded AutoResearch loop without autonomous
+      execution?
+    expected_evidence: output/reports/autoresearch_loop.md
+  - id: rq2
+    question: Can a deterministic candidate loop evaluate and select a small MNIST
+      neural-network configuration under budget?
+    expected_evidence: output/data/ml_task_results.json
+  - id: rq3
+    question: Are manuscript claims grounded in generated project artifacts?
+    expected_evidence: output/reports/evidence_registry.json
+  - id: rq4
+    question: Can readiness checks be rerun from the standard validation stage?
+    expected_evidence: output/reports/autoresearch_readiness.json
+  - id: rq5
+    question: Does the benchmark ledger record metric improvement, budget compliance,
+      and offline execution?
+    expected_evidence: output/reports/ml_benchmark_score.json
+  - id: rq6
+    question: Does the local security layer record artifact-integrity evidence without
+      claiming external signing?
+    expected_evidence: output/data/autoresearch_integrity_attestation.json

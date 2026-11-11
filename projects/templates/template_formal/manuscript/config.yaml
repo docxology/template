@@ -1,67 +1,52 @@
-# Formal Configuration - Strongly-Typed Multiagent Ant-Robot Colony Exemplar
-# This file serves as a meta-artifact linking the prose of the manuscript to the execution
-# layer. It is loaded by `yaml.safe_load` inside `infrastructure/rendering/_pdf_title_page_config.py`
-# (manuscript metadata).
-
-# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_report_model.py`
 paper:
-  # RASP Standard: Title must be descriptive and objective
-  title: "Illegal States, Mostly Unrepresentable"
-  subtitle: "Session Types, Affine Handles, and Machine-Checked Invariants in a Simulated Ant-Robot Colony -- and an Honest Account of Where the Guarantees Stop"
-  version: "0.2.0"
-  date: ""  # Auto-generated via `infrastructure/validation/output/validator.py` if empty
+  title: Illegal States, Mostly Unrepresentable
+  subtitle: Session Types, Affine Handles, and Machine-Checked Invariants in a Simulated
+    Ant-Robot Colony -- and an Honest Account of Where the Guarantees Stop
+  version: 0.2.0
+  date: ''
   cover:
-    image: "figures/cover_colony.png"
-
-# Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
+    image: figures/cover_colony.png
 authors:
-  - name: "Daniel Ari Friedman"
-    orcid: "0000-0001-6232-9096"
-    email: "daniel@activeinference.institute"
-    affiliation: "Active Inference Institute"
-    corresponding: true
-
-# Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/zenodo/publish.py`)
+- name: Daniel Ari Friedman
+  orcid: 0000-0001-6232-9096
+  email: daniel@activeinference.institute
+  affiliation: Active Inference Institute
+  corresponding: true
 publication:
-  release_status: "unreleased"
-  intended_version: "0.2.0"
-  platform_version: "5.1.0"
-  last_published_version: "0.1.0"
-  doi: "10.5281/zenodo.21298885"
-  doi_status: "DOI published" # Concept DOI — reserved on first real publish, not fabricated here
-  version_doi: "10.5281/zenodo.21298886"
-  version_record: "https://zenodo.org/records/21298886"
-  github_repository: "docxology/template_formal"
-  repository_url: "https://github.com/docxology/template_formal"
-  repository_label: "docxology/template_formal"
+  release_status: unreleased
+  intended_version: 0.2.0
+  platform_version: 5.2.0
+  last_published_version: 0.1.0
+  doi: 10.5281/zenodo.21298885
+  doi_status: DOI published
+  version_doi: 10.5281/zenodo.21298886
+  version_record: https://zenodo.org/records/21298886
+  github_repository: docxology/template_formal
+  repository_url: https://github.com/docxology/template_formal
+  repository_label: docxology/template_formal
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
     show_steganography: true
   deposit_filename:
     enabled: true
-    topic: ""  # optional; default = first significant title word
-  journal: ""
-  volume: ""
-  pages: ""
-  year: "2026"
-
+    topic: ''
+  journal: ''
+  volume: ''
+  pages: ''
+  year: '2026'
 keywords:
-  - "strongly typed programming"
-  - "session types"
-  - "algebraic data types"
-  - "category theory"
-  - "active inference"
-  - "multiagent systems"
-  - "affine types"
-  - "illegal state unrepresentable"
-
+- strongly typed programming
+- session types
+- algebraic data types
+- category theory
+- active inference
+- multiagent systems
+- affine types
+- illegal state unrepresentable
 metadata:
-  license: "MIT"
-  language: "en"
-
-# Steganography profile for secure_run.sh and transmission bookend summary.
-# Precedence: infrastructure/config/secure_config.yaml < this block.
+  license: MIT
+  language: en
 steganography:
   enabled: true
   overlays_enabled: true
@@ -69,13 +54,8 @@ steganography:
   metadata_enabled: true
   hashing_enabled: true
   encryption_enabled: false
-  overlay_mode: "text"
-  overlay_text: "CONFIDENTIAL"
-
-# Render format toggles — gate per-renderer in infrastructure/rendering/pipeline.py.
-# Defaults: pdf/html/slides on, docx/epub off. Setting `false` makes the pipeline
-# log `[skip] <format> rendering disabled in config` and emit no artifacts.
-# Consumed by: `infrastructure/rendering/config.py::RenderingConfig.from_project_config`.
+  overlay_mode: text
+  overlay_text: CONFIDENTIAL
 render:
   formats:
     pdf: true
@@ -83,26 +63,18 @@ render:
     slides: true
     docx: false
     epub: false
-
-# Analysis scripts — only the actual analysis script runs in Stage 02.
-# 00_setup_environment.py is a preflight check, not an analysis script.
 analysis:
   scripts:
-    - 02_run_analysis.py
-
-# Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
+  - 02_run_analysis.py
 llm:
   reviews:
     enabled: false
     types:
-      - executive_summary
+    - executive_summary
   translations:
     enabled: false
     languages:
-      - zh
-
-# Consumed by: `infrastructure/reporting/pipeline_report_model.py` and CI/CD gates
-# ZERO-MOCK TOLERANCE: Any failure blocks manuscript rendering
+    - zh
 testing:
   max_test_failures: 0
   max_infra_test_failures: 0
