@@ -13,6 +13,7 @@ from pathlib import Path
 
 from infrastructure.core.pipeline.artifacts import compute_sha256
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
+from infrastructure.validation.rendered_snapshot._inputs import declared_generated_manuscript_inputs
 from infrastructure.validation.rendered_snapshot._scan import (
     CACHE_PARTS,
     FileRecord,
@@ -135,6 +136,10 @@ def _project_records(
             config.append(FileRecord(f"@root/{relative}", path))
     source = cached_records(source, repo_root, require_worktrees=external_project)
     config = cached_records(config, repo_root, require_worktrees=external_project)
+    if declared_generated_manuscript_inputs(project_root) is not None:
+        # This is a declared rendering configuration, not tracked authored
+        # Source. Bind its bytes even when Git ignores the generated tree.
+        config.append(FileRecord("output/manuscript/config.yaml", project_root / "output/manuscript/config.yaml"))
     if not source:
         raise RenderedSnapshotError("PROJECT_SOURCE_MISSING", "no cached project source files found")
     if not config:

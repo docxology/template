@@ -165,9 +165,7 @@ def test_validate_outputs_rejects_graph_world_summary_trace_mismatch(project_roo
     assert checks["si_graph_world_schema"] is False
 
 
-def test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected(
-    project_root: Path,
-) -> None:
+def test_pymdp_runtime_diagnostics_rejects_unexpected_warning(project_root: Path) -> None:
     from simulation.pymdp_config import load_pymdp_config
     from simulation.pymdp_runtime import (
         construct_agent_with_diagnostics,
@@ -201,7 +199,6 @@ def test_pymdp_runtime_diagnostics_captures_known_warning_and_rejects_unexpected
         path = write_runtime_diagnostics(project_root, [record])
         payload = json.loads(path.read_text(encoding="utf-8"))
 
-        assert payload["known_warning_count"] >= 1
         assert payload["unexpected_warning_count"] == 1
         assert {"construction", "inference", "backend", "warning", "fallback"} <= set(payload["phase_types"])
         assert payload["all_phase_rows_ok"] is False

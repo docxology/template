@@ -252,12 +252,15 @@ class CitationRuntime:
                 "sha256": process.sha256,
             },
         }
-        self.unchanged()
+        budget(self.deadline)
         extra_after = [file_observation(path) for path in input_paths]
-        payload["input_observations_after"] = [
-            *[file_observation(path) for path in self.inputs],
-            *extra_after,
-        ]
+        inputs_after = []
+        for path, expected in self.inputs.items():
+            actual = file_observation(path)
+            if actual != expected:
+                raise ValueError("citation source/private input changed during original observation")
+            inputs_after.append(actual)
+        payload["input_observations_after"] = [*inputs_after, *extra_after]
         if set(payload) != CITATION_TOOL_FIELDS:
             raise ValueError("citation ToolAPI differs from the exact shared original fieldset")
         binding = write_json(self.root, self.directory / f"{purpose}.json", payload)

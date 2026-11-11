@@ -155,12 +155,15 @@ def start_bounded_run_guardian(
     package_root = Path(__file__).resolve().parents[1]
     try:
         from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
-        from infrastructure.core.pipeline.fingerprints import paths_digest, verify_loaded_implementation
+        from infrastructure.core.pipeline.fingerprints import (
+            _observe_loaded_implementation,
+            canonical_digest,
+            paths_digest,
+        )
 
         try:
-            verify_loaded_implementation()
-            source_digest = paths_digest((package_root,), source=True)
-        except (OSError, ValueError) as exc:
+            source_digest = canonical_digest([(package_root.name, _observe_loaded_implementation()[package_root])])
+        except (KeyError, OSError, ValueError) as exc:
             raise GuardianCustodyError("guardian source custody refused before startup") from exc
         _start_wait_timeout(startup_deadline)
         cache = tempfile.TemporaryDirectory(prefix="template-guardian-bytecode-")
@@ -363,18 +366,18 @@ def _process_is_running(pid: int) -> bool:
 
 def _verify_guardian_implementation(source_digest: str) -> None:
     from infrastructure.core.implementation_custody import verify_fresh_module_bytecode
-    from infrastructure.core.pipeline.fingerprints import paths_digest, verify_loaded_implementation
+    from infrastructure.core.pipeline.fingerprints import _observe_loaded_implementation, canonical_digest
 
     prefix = sys.pycache_prefix
     if not prefix:
         raise ValueError("guardian has no owned fresh bytecode prefix")
     package_root = Path(__file__).resolve().parents[1]
     try:
-        verify_loaded_implementation()
-        if paths_digest((package_root,), source=True) != source_digest:
+        observed_digest = canonical_digest([(package_root.name, _observe_loaded_implementation()[package_root])])
+        if observed_digest != source_digest:
             raise ValueError("guardian implementation changed after parent admission")
         verify_fresh_module_bytecode(package_root, Path(prefix))
-    except (OSError, ValueError) as exc:
+    except (KeyError, OSError, ValueError) as exc:
         raise GuardianCustodyError("guardian implementation custody refused") from exc
 
 

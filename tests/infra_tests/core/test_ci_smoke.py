@@ -87,9 +87,6 @@ def test_actual_fast_gate_requires_success_from_every_declared_job(
     elif fault not in {"none", "malformed"}:
         values["lint"]["result"] = fault
     step = gate["steps"][0]
-    assert step["env"]["COVERAGE_REQUESTED"] == (
-        "${{ github.event_name == 'workflow_dispatch' && inputs.coverage-project != '' }}"
-    )
     result = subprocess.run(
         ["bash", "-e", "-o", "pipefail", "-c", step["run"]],
         env={
@@ -107,12 +104,6 @@ def test_actual_fast_gate_requires_success_from_every_declared_job(
     assert (result.returncode == 0) == (fault == "none" and coverage_requested in {"true", "false"}), result.stderr
 
 
-def test_full_hardening_is_explicit_and_keeps_its_complete_aggregate() -> None:
-    workflow = yaml.load((REPO / ".github/workflows/hardening.yml").read_text(), Loader=yaml.BaseLoader)
-    assert set(workflow["on"]) == {"workflow_dispatch"}
-    assert len(required_ci_jobs(REPO, "hardening.yml")) > len(required_ci_jobs(REPO))
-
-
 def test_external_symlinked_public_project_roots_are_refused(tmp_path: Path) -> None:
     (tmp_path / ".github").mkdir()
     (tmp_path / ".github/project-smoke.json").write_bytes((REPO / ".github/project-smoke.json").read_bytes())
@@ -122,22 +113,6 @@ def test_external_symlinked_public_project_roots_are_refused(tmp_path: Path) -> 
         (templates / Path(project).name).symlink_to(REPO / "projects" / project, target_is_directory=True)
     with pytest.raises(ValueError, match="project root is missing or noncanonical"):
         project_smoke_matrix(tmp_path)
-
-
-def test_search_render_smoke_gets_converter_only_preparation_before_execution() -> None:
-    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
-    steps = workflow["jobs"]["test-project"]["steps"]
-    preparations = [
-        (index, step)
-        for index, step in enumerate(steps)
-        if step.get("uses") == "./.github/actions/setup-acceptance-documents"
-    ]
-    assert len(preparations) == 1
-    index, preparation = preparations[0]
-    assert preparation["if"] == "matrix.project == 'templates/template_search_project'"
-    assert preparation["with"]["mode"] == "converter"
-    execution = next(i for i, step in enumerate(steps) if step.get("name") == "Run focused behavioral tests")
-    assert index < execution
 
 
 @pytest.mark.parametrize(

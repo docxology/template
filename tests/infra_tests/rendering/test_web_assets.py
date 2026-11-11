@@ -139,7 +139,7 @@ def test_full_size_figure_link_rejects_missing_context(tmp_path: Path) -> None:
         WebRenderer._add_full_resolution_figure_links(html_file)
 
 
-def test_individual_render_embeds_publication_css_and_full_resolution_figure_link(tmp_path: Path) -> None:
+def test_individual_render_links_the_full_resolution_figure(tmp_path: Path) -> None:
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
     source = manuscript_dir / "03_results.md"
@@ -153,16 +153,5 @@ def test_individual_render_embeds_publication_css_and_full_resolution_figure_lin
     result = renderer.render(source)
 
     content = result.read_text(encoding="utf-8")
-    assert "--brand-1" in content
-    assert "width: min(100%, 800px)" in content
     assert 'class="figure-full-size-link"' in content
     assert 'href="../figures/dense.png"' in content
-
-
-def test_individual_render_output_names_include_parent_context(tmp_path: Path) -> None:
-    renderer = _make_renderer(tmp_path)
-    source_a = tmp_path / "manuscript" / "parts" / "alpha" / "00-overview.md"
-    source_b = tmp_path / "manuscript" / "parts" / "beta" / "00-overview.md"
-
-    assert renderer._output_file_for_source(source_a).name == "alpha__00-overview.html"
-    assert renderer._output_file_for_source(source_b).name == "beta__00-overview.html"

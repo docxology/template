@@ -1,7 +1,8 @@
-# `tests/regression/pinned_values/` — ground-truth JSON
+# `tests/regression/pinned_values/` — declared quantitative baselines
 
-> One JSON file per project. Each file is the immutable record of
-> every numerical manuscript claim for that project.
+One JSON file per project declaring bound claims in `../claim_bindings.json`.
+Each file records those selected claims, tolerances and their provenance; it is
+not an exhaustive inventory or independent validation of every manuscript claim.
 
 ## File shape
 
@@ -35,9 +36,10 @@
 
 ## Files
 
-One file per project — currently `template_code_project.json` has live pins and
-`template_prose_project.json` remains scaffolded. New projects add a new file
-using the same shape.
+The current roster is `../claim_bindings.json`; only its `bound` projects require
+pin files. Prose's current editorial measurements are not frozen numerical
+baselines. Its separate source-integrity test checks current bibliography
+resolution instead.
 
 ## Discipline
 

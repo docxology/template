@@ -251,6 +251,9 @@ def test_documentation_plan_executes_real_modules_and_retains_prepared_contracts
     assert plan["infra_shards"] == [["tests/infra_tests/documentation/test_guide.py"]]
     monkeypatch.setenv("PYTEST_ADDOPTS", "")
     monkeypatch.setenv("PYTHONPATH", str(Path(__file__).resolve().parents[3]))
+    monkeypatch.setenv("PYTEST_XDIST_WORKER", "gw-parent")
+    monkeypatch.setenv("PYTEST_XDIST_WORKER_COUNT", "8")
+    monkeypatch.setenv("PYTEST_XDIST_TESTRUNUID", "parent-session")
     receipts = tmp_path / "receipts"
     for shard in range(2):
         assert run_shard(root, plan, shard, receipts / str(shard)) == 0

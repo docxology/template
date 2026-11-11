@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import re
 
-import infrastructure.rendering._web_postprocess as web_postprocess
-
 _RAW_LATEX_INLINE_RE = re.compile(r"`([^`]+)`\{=latex\}")
 _CITE_RE = re.compile(
     r"\\cite(?:p|t|alp|alt|author|year|yearpar)?"
@@ -126,7 +124,7 @@ def html_safe_markdown(
     content = html_theorem_blocks(content)
     if render_citations:
         content = render_pandoc_citations(content, preserve_crossrefs=preserve_crossrefs)
-    return web_postprocess.normalize_figure_paths(_RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
+    return _RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content)
 
 
 def html_theorem_blocks(content: str) -> str:

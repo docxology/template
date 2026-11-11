@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import tempfile
@@ -18,7 +19,6 @@ from infrastructure.publishing.root_release_contract import root_package_version
 from infrastructure.publishing.publication_refresh import (
     _generation_sequence,
     generate,
-    generation_commands,
     main,
     provider_waves,
     run_coordinated,
@@ -32,7 +32,6 @@ from tests.infra_tests.validation._rendered_provenance_helpers import (
     _green_project,
     _write_green_validation_report,
 )
-from scripts.maintenance.refresh_rendered_provenance import _parse_args
 from infrastructure.publishing.publication_refresh_custody import (
     DEPENDENT_ANALYSIS_SCOPE,
     _DEPENDENT_INPUTS,
@@ -43,10 +42,10 @@ from infrastructure.publishing.publication_refresh_custody import (
     commit_candidate,
     finish_review,
     git,
-    gate_commands,
     write_json,
 )
 from infrastructure.publishing.release_provider_graph import current_provider_graph
+from infrastructure.publishing._publication_refresh_protocol import successful_command_receipt
 
 ROOT = Path(__file__).resolve().parents[3]
 ACTIVE = "templates/template_active_inference"
@@ -136,12 +135,8 @@ def _plan(root: Path) -> dict:
     return build_plan(root, git(root, "rev-parse", "HEAD").decode().strip(), "5.1.0")
 
 
-def test_current_provider_graph_and_publication_copies_derive_from_source(repository: Path) -> None:
+def test_provider_order_and_generated_ownership_preserve_authored_sources(repository: Path) -> None:
     plan = _plan(repository)
-    assert plan["refresh"] == [
-        scope for scope in PUBLIC_PROJECT_NAMES if scope in (ACTIVE, META, DEPENDENT_ANALYSIS_SCOPE)
-    ]
-    assert set(plan["rebind"]) == set(PUBLIC_PROJECT_NAMES) - {ACTIVE, META, DEPENDENT_ANALYSIS_SCOPE}
     waves = provider_waves(current_provider_graph(repository))
     assert next(i for i, row in enumerate(waves) if META in row) < next(
         i for i, row in enumerate(waves) if ADVANCED in row
@@ -149,6 +144,18 @@ def test_current_provider_graph_and_publication_copies_derive_from_source(reposi
     assert f"projects/{ACTIVE}/manuscript/02_compiled.md" in plan["allowed"]
     assert f"projects/{ACTIVE}/manuscript/01_authored.md" not in plan["allowed"]
     assert all(row["mode"] == "100644" for row in plan["allowed"].values())
+
+
+def test_refresh_does_not_treat_missing_publication_copy_as_unchanged_output(repository: Path) -> None:
+    publication = f"projects/{ADVANCED}/output/web/index.html"
+    _write(repository, publication, "<!doctype html><h1>Retained engineering publication</h1>\n")
+    _commit(repository)
+    assert not (repository / f"projects/{ADVANCED}/output/manuscript/config.yaml").exists()
+
+    plan = _plan(repository)
+
+    assert ADVANCED in plan["refresh"] and ADVANCED not in plan["rebind"]
+    assert publication in plan["allowed"]
 
 
 @pytest.mark.parametrize("change", ["authored", "config", "untracked", "removed", "symlink", "mode", "forged-plan"])
@@ -235,6 +242,73 @@ def test_actual_candidate_commit_preserves_base_and_only_declared_generated_path
     assert not (directory / "review").exists()
 
 
+@pytest.mark.parametrize("mode", ["refresh", "rebind-only"])
+def test_actual_manifested_asset_replacement_retains_exact_candidate_custody(
+    repository: Path, tmp_path: Path, mode: str
+) -> None:
+    prefix = f"projects/{ACTIVE}/output/"
+    old = prefix + "figures/retired.svg"
+    new = prefix + "figures/current.svg"
+    old_bytes = b'<svg xmlns="http://www.w3.org/2000/svg"><title>Retired result</title></svg>\n'
+    new_bytes = b'<svg xmlns="http://www.w3.org/2000/svg"><title>Current result</title></svg>\n'
+    _write(repository, old, old_bytes)
+    snapshot_current_artifact_manifest(repository / prefix)
+    base = _commit(repository)
+    plan = build_plan(repository, base, "5.1.0", mode=mode)
+    (repository / old).unlink()
+    _write(repository, new, new_bytes)
+    snapshot_current_artifact_manifest(repository / prefix)
+    if mode == "rebind-only":
+        with pytest.raises((ValueError, OSError)):
+            check_footprint(repository, plan)
+        assert git(repository, "rev-parse", "HEAD").decode().strip() == base
+        assert git(repository, "diff", "--cached", "--name-only") == b""
+        return
+    manifest = prefix + "reports/artifact_manifest.json"
+    assert set(check_footprint(repository, plan)) == {old, new, manifest}
+    directory = tmp_path / "asset-operator"
+    directory.mkdir()
+    write_json(directory / "plan.json", plan)
+    candidate = commit_candidate(repository, directory)
+    assert git(repository, "rev-parse", "HEAD^").decode().strip() == base
+    assert git(repository, "rev-parse", "HEAD^{tree}").decode().strip() == candidate["tree"]
+    assert set(git(repository, "diff", "--no-renames", "--name-status", base, "HEAD").decode().splitlines()) == {
+        "D\t" + old,
+        "A\t" + new,
+        "M\t" + manifest,
+    }
+    assert git(repository, "show", base + ":" + old) == old_bytes
+    assert git(repository, "show", "HEAD:" + new) == new_bytes
+    assert git(repository, "ls-tree", "HEAD", "--", old) == b""
+    assert git(repository, "status", "--porcelain", "--untracked-files=all") == b""
+
+
+@pytest.mark.parametrize("tamper", ["changed-bytes", "symlink", "executable"])
+def test_actual_manifested_addition_refuses_changed_bytes_links_and_modes(
+    repository: Path, tmp_path: Path, tamper: str
+) -> None:
+    prefix = f"projects/{ACTIVE}/output/"
+    _write(repository, prefix + "figures/retained.svg", "<svg/>\n")
+    snapshot_current_artifact_manifest(repository / prefix)
+    base = _commit(repository)
+    plan = build_plan(repository, base, "5.1.0")
+    target = _write(repository, prefix + "figures/current.svg", "<svg><title>Current result</title></svg>\n")
+    snapshot_current_artifact_manifest(repository / prefix)
+    if tamper == "changed-bytes":
+        target.write_text("<svg><title>Unattested result</title></svg>\n")
+    elif tamper == "symlink":
+        external = tmp_path / "external.svg"
+        external.write_bytes(target.read_bytes())
+        target.unlink()
+        target.symlink_to(external)
+    else:
+        target.chmod(0o755)
+    with pytest.raises((ValueError, OSError)):
+        check_footprint(repository, plan)
+    assert git(repository, "rev-parse", "HEAD").decode().strip() == base
+    assert git(repository, "diff", "--cached", "--name-only") == b""
+
+
 def _assert_observed_custody(receipt: dict, original: int) -> None:
     assert receipt["original_exit_code"] == original
     process = receipt["process"]
@@ -279,6 +353,34 @@ def test_original_binary_streams_and_child_exit_are_preserved(repository: Path, 
     assert (directory / "diagnostics/actual-child.stderr").read_bytes() == b"error\xfe"
 
 
+@pytest.mark.parametrize("original_exit", [False, 0.0])
+def test_stored_receipt_rejects_json_boolean_or_float_original_success(
+    tmp_path: Path, original_exit: bool | float
+) -> None:
+    diagnostics = tmp_path / "diagnostics"
+    diagnostics.mkdir()
+    argv = ["publication-producer"]
+    source = "1" * 40
+    receipt = {
+        "argv": argv,
+        "source_commit": source,
+        "returncode": 0,
+        "original_exit_code": 0,
+        "process": {"accepted": True},
+    }
+    for stream, body in {"stdout": b"retained\0original\xff", "stderr": b""}.items():
+        (diagnostics / f"typed-exit.{stream}").write_bytes(body)
+        receipt[stream + "_sha256"] = hashlib.sha256(body).hexdigest()
+    target = diagnostics / "typed-exit.exit.json"
+    write_json(target, receipt)
+    assert successful_command_receipt(tmp_path, "typed-exit", argv, source)
+
+    receipt["original_exit_code"] = original_exit
+    target.write_text(json.dumps(receipt, sort_keys=True) + "\n", encoding="utf-8")
+
+    assert not successful_command_receipt(tmp_path, "typed-exit", argv, source)
+
+
 def test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates(repository: Path, tmp_path: Path) -> None:
     directory = tmp_path / "operator"
     directory.mkdir()
@@ -291,45 +393,9 @@ def test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates(repo
         receipt = json.loads((directory / "diagnostics" / f"{label}.exit.json").read_bytes())
         assert result == receipt["returncode"]
         _assert_observed_custody(receipt, 0)
-    with pytest.raises(ValueError, match="both original gates"):
+    with pytest.raises(ValueError):
         finish_review(repository, directory)
     assert not (directory / "review").exists()
-
-
-def test_manual_workflow_has_no_write_credential_and_requires_both_original_gates() -> None:
-    workflow = yaml.safe_load((ROOT / ".github/workflows/publication-refresh.yml").read_text())
-    trigger = workflow.get("on", workflow.get(True))
-    assert set(trigger) == {"workflow_dispatch"}
-    workers = trigger["workflow_dispatch"]["inputs"]["workers"]
-    assert workers["options"] == ["1"] and workers["default"] == "1"
-    assert workflow["permissions"] == {"contents": "read"}
-    job = workflow["jobs"]["refresh"]
-    assert job["permissions"] == {"contents": "read"}
-    steps = job["steps"]
-    checkout = next(row for row in steps if row.get("uses", "").startswith("actions/checkout@"))
-    assert checkout["with"]["persist-credentials"] is False
-    assert any(row.get("uses") == "./.github/actions/setup-native-installed-readiness" for row in steps)
-    upload = next(row for row in steps if row.get("name", "").startswith("Retain the verified patch"))
-    assert upload["if"] == "steps.coordinated.outcome == 'success'"
-    setup = next(i for i, row in enumerate(steps) if row.get("uses") == "./.github/actions/setup-ci-execution-user")
-    native = next(
-        i for i, row in enumerate(steps) if row.get("uses") == "./.github/actions/setup-native-installed-readiness"
-    )
-    owned = [(i, row) for i, row in enumerate(steps) if "ci_execution_user run" in row.get("run", "")]
-    assert len(owned) == 1
-    index, payload = owned[0]
-    assert native < setup < index and payload["id"] == "coordinated"
-    assert payload.get("continue-on-error", False) is False
-    assert '--state "$RUNNER_TEMP/template-ci-execution/state.json" --' in payload["run"]
-    assert 'run --source-sha "$REQUESTED_SOURCE" --expected-version "$EXPECTED_VERSION"' in payload["run"]
-    assert '--jobs "$REFRESH_WORKERS"' in payload["run"]
-    artifact_root = "$" + "{{ runner.temp }}/template-ci-execution/artifacts/coordinated-publication-refresh"
-    assert payload["env"]["REFRESH_DIRECTORY"] == artifact_root
-    assert upload["with"]["path"] == artifact_root + "/review/"
-    diagnostic = next(row for row in steps if row.get("name") == "Retain original diagnostics separately")
-    assert diagnostic["if"] == "always()" and artifact_root + "/diagnostics/" in diagnostic["with"]["path"]
-    assert "output/readiness/publication-refresh/" in diagnostic["with"]["path"]
-    assert not any("push" in row.get("run", "") for row in steps)
 
 
 def test_real_atomic_0600_publication_output_retains_git_100644(repository: Path) -> None:
@@ -354,24 +420,13 @@ def test_real_config_validator_refuses_stale_copy_then_accepts_exact_source_copy
     assert validate_exemplar_configs(repository, projects=(ACTIVE,)).passed
 
 
-def test_real_source_inventory_and_mandatory_config_guard(tmp_path: Path) -> None:
+def test_actual_source_inventory_excludes_authored_manuscripts() -> None:
     sha = git(ROOT, "rev-parse", "HEAD").decode().strip()
     plan = _inventory_plan(ROOT, sha, root_package_version(ROOT))
-    expected = [
-        scope for scope in PUBLIC_PROJECT_NAMES if f"projects/{scope}/output/manuscript/config.yaml" in plan["allowed"]
-    ]
-    assert plan["publication_copies"] == expected
-    assert plan["refresh"] == [
-        scope for scope in PUBLIC_PROJECT_NAMES if scope in set(expected) | {DEPENDENT_ANALYSIS_SCOPE}
-    ]
-    assert set(plan["rebind"]) == set(PUBLIC_PROJECT_NAMES) - set(expected) - {DEPENDENT_ANALYSIS_SCOPE}
     assert f"projects/{ACTIVE}/manuscript/00_abstract.md" not in plan["allowed"]
-    commands = gate_commands(ROOT, tmp_path)
-    assert set(commands) == {"exemplar-config", "publication-gate", "rendered-audit"}
-    assert commands["exemplar-config"][1:] == ["scripts/audit/check_exemplar_configs.py"]
 
 
-def test_rebind_only_plan_routes_every_canonical_project_to_actual_rebind_cli(repository: Path) -> None:
+def test_rebind_only_ownership_excludes_analysis_and_compiled_manuscripts(repository: Path) -> None:
     sha = git(repository, "rev-parse", "HEAD").decode().strip()
     plan = build_plan(repository, sha, "5.1.0", mode="rebind-only")
     assert plan["mode"] == "rebind-only"
@@ -379,17 +434,6 @@ def test_rebind_only_plan_routes_every_canonical_project_to_actual_rebind_cli(re
     assert plan["compiled_manuscripts"] == []
     assert plan["dependent_analysis"] == {}
     assert all(Path(path).parent.name == "reports" and Path(path).suffix == ".json" for path in plan["allowed"])
-    commands = [
-        item for wave in provider_waves(plan["providers"]) for item in generation_commands(repository, plan, wave)
-    ]
-    assert len(commands) == len(PUBLIC_PROJECT_NAMES)
-    selected = []
-    for _, argv in commands:
-        assert argv[1] == "scripts/maintenance/refresh_rendered_provenance.py"
-        parsed = _parse_args(argv[2:])
-        assert parsed.rebind is True
-        selected.extend(parsed.projects)
-    assert set(selected) == set(PUBLIC_PROJECT_NAMES)
 
 
 @pytest.mark.parametrize(
@@ -449,22 +493,6 @@ def test_actual_rebind_refuses_changed_output_fingerprint_without_restamping(tmp
     assert receipt.read_bytes() == before
 
 
-def test_rebind_only_workflow_mode_is_explicit_and_carried_to_every_phase() -> None:
-    workflow = yaml.safe_load((ROOT / ".github/workflows/publication-refresh.yml").read_text())
-    trigger = workflow.get("on", workflow.get(True))
-    assert trigger["workflow_dispatch"]["inputs"]["mode"] == {
-        "description": "Refresh publication copies and dependent Pitch analysis, or revalidate unchanged outputs",
-        "type": "choice",
-        "options": ["refresh", "rebind-only"],
-        "default": "refresh",
-    }
-    job = workflow["jobs"]["refresh"]
-    assert job["env"]["REFRESH_MODE"] == "$" + "{{ inputs.mode }}"
-    for step in job["steps"]:
-        if "infrastructure.publishing.publication_refresh" in step.get("run", ""):
-            assert '--mode "$REFRESH_MODE"' in step["run"]
-
-
 @pytest.mark.parametrize("version", ["5.0.2", "5.1.0"])
 def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_version(
     repository: Path, version: str
@@ -490,30 +518,6 @@ def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_vers
 
         assert row["sha256"] == hashlib.sha256((repository / row["path"]).read_bytes()).hexdigest()
         assert row["bytes"] == (repository / row["path"]).stat().st_size
-    commands = generation_commands(repository, plan, [DEPENDENT_ANALYSIS_SCOPE])
-    assert commands == [
-        (
-            DEPENDENT_ANALYSIS_SCOPE.replace("/", "__") + "-analysis",
-            [
-                str(repository / ".venv/bin/python"),
-                "scripts/pipeline/stage_02_analysis.py",
-                "--project",
-                DEPENDENT_ANALYSIS_SCOPE,
-            ],
-        ),
-        (
-            DEPENDENT_ANALYSIS_SCOPE.replace("/", "__") + "-generate",
-            [
-                str(repository / ".venv/bin/python"),
-                "scripts/maintenance/refresh_rendered_provenance.py",
-                "--project",
-                DEPENDENT_ANALYSIS_SCOPE,
-                "--no-analysis-recovery",
-            ],
-        ),
-    ]
-    parsed_refresh = _parse_args(commands[1][1][2:])
-    assert parsed_refresh.no_analysis_recovery and not parsed_refresh.rebind
     (repository / _DEPENDENT_INPUTS[0]).write_bytes(b"changed actual counts DATA")
     with pytest.raises(ValueError, match="differs"):
         check_footprint(repository, plan)

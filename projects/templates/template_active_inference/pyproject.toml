@@ -21,7 +21,9 @@ dependencies = [
     "pillow>=13.0.0",
     "pyyaml>=6.0",
     "scipy>=1.11.0",
-    "inferactively-pymdp==1.0.3",
+    "inferactively-pymdp==1.0.5",
+    # Python 3.15 needs compatible native wheels; jaxlib 0.11.0 lacks them.
+    "jaxlib>=0.11.1",
 ]
 
 [project.optional-dependencies]

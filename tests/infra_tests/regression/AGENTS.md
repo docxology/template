@@ -1,5 +1,5 @@
 # Regression-oracle agent notes
 
-Exercise the real collection command and checked-in manifest. Negative controls
-must prove that an empty suite, a missing required file, or pytest exit code 5
-fails the gate.
+Preserve real isolated canonical-source imports and sibling-shadow refusals.
+Retain original process and source bindings; do not replace dependencies with
+test doubles. Quantitative claim cases live in `tests/regression/`.

@@ -251,11 +251,6 @@ class PDFRenderer:
                 },
             )
 
-        # Remove existing output file to ensure fresh compilation
-        if output_file.exists():
-            output_file.unlink()
-            logger.debug(f"Removed existing output file: {output_file.name}")
-
         # All manuscript *.bib files: pre-render citation gate unions them when
         # bib_file=None; LaTeX/BibTeX use \bibliography{stem1,stem2,...}.
         bib_paths = discover_manuscript_bib_paths(manuscript_dir)

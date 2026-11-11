@@ -14,4 +14,9 @@ required-profile prerequisite gates still govern complete hosted acceptance.
 The authenticated TLC tool uses the explicit external provider boundary, so it
 cannot enter authored source/export inventory; no source exclusion is introduced. Retain upstream licenses and fixed archive hashes/lengths.
 
+Use the official immutable TLC asset API with octet-stream content negotiation.
+The existing GitHub token belongs only to the hosted acquisition step, never
+`GITHUB_ENV` or observed case workers. Preserve HTTPS-only redirects and curl's
+normal cross-origin authorization stripping; do not use `--location-trusted`.
+
 Use [README.md](README.md) for ordering and run actionlint after edits.

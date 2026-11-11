@@ -139,10 +139,15 @@ def test_original_collection_accounts_for_wholly_deselected_files_and_refuses_om
 
 
 @pytest.mark.parametrize("workers", [0, 2])
-@pytest.mark.parametrize("fault", ["none", "failed", "nonce", "skip"])
+@pytest.mark.parametrize(
+    "fault", ["none", "failed", "nonce", "skip", "skip-only", "duplicate-controller", "missing-report"]
+)
 def test_original_pytest_observation_requires_real_complete_success(tmp_path: Path, fault: str, workers: int) -> None:
     tests = tmp_path / "test_owned.py"
-    tests.write_text("def test_owned():\n    assert " + ("False" if fault == "failed" else "True") + "\n")
+    if fault == "skip-only":
+        tests.write_text("def test_owned():\n    import pytest\n    pytest.skip('no real successful call')\n")
+    else:
+        tests.write_text("def test_owned():\n    assert " + ("False" if fault == "failed" else "True") + "\n")
     if fault == "skip":
         with tests.open("a") as stream:
             stream.write("\ndef test_expected_skip():\n    import pytest\n    pytest.skip('explicit existing skip')\n")
@@ -165,6 +170,10 @@ def test_original_pytest_observation_requires_real_complete_success(tmp_path: Pa
             **os.environ,
             "PYTHONPATH": str(ROOT),
             "PYTEST_ADDOPTS": "",
+            "PYTEST_XDIST_WORKER": "gw-parent",
+            "PYTEST_XDIST_WORKER_COUNT": "8",
+            "PYTEST_XDIST_TESTRUNUID": "parent-session",
+            "TEMPLATE_PYTEST_RECEIPT_ACTIVE": "parent-observation",
             DIRECTORY_ENV: str(directory),
             NONCE_ENV: "owned",
             ROOT_ENV: str(tmp_path),
@@ -174,6 +183,22 @@ def test_original_pytest_observation_requires_real_complete_success(tmp_path: Pa
         timeout=30,
     )
     assert result.returncode == (1 if fault == "failed" else 0)
+    originals = tuple(directory.glob("execution-*.json"))
+    controllers = [path for path in originals if json.loads(path.read_bytes())["worker"] == "controller"]
+    assert len(controllers) == 1
+    original = controllers[0].read_bytes()
+    progress = [
+        json.loads(line) for path in directory.glob("progress-*.jsonl") for line in path.read_bytes().splitlines()
+    ]
+    sessions = [event for event in progress if event["event"] in {"session_start", "session_finish"}]
+    assert [event["event"] for event in sessions] == ["session_start", "session_finish"]
+    assert {event["worker"] for event in sessions} == {"controller"}
+    if fault == "duplicate-controller":
+        (directory / "execution-duplicate.json").write_bytes(original)
+    elif fault == "missing-report":
+        value = json.loads(original)
+        value["reports"].clear()
+        controllers[0].write_text(json.dumps(value))
     if fault in {"none", "skip"}:
         selected, outcomes = read_execution_receipts(directory, "owned")
         assert "test_owned.py::test_owned" in selected
@@ -182,6 +207,8 @@ def test_original_pytest_observation_requires_real_complete_success(tmp_path: Pa
     else:
         with pytest.raises(ValueError):
             read_execution_receipts(directory, "wrong" if fault == "nonce" else "owned")
+    if fault != "missing-report":
+        assert controllers[0].read_bytes() == original
 
 
 def test_separate_project_controllers_qualify_equal_local_nodeids(tmp_path: Path) -> None:
@@ -211,7 +238,8 @@ def test_separate_project_controllers_qualify_equal_local_nodeids(tmp_path: Path
     assert selected == ("projects/one/test_owned.py::test_owned", "projects/two/test_owned.py::test_owned")
 
 
-def test_pytest_spawned_by_test_cannot_add_another_controller_observation(tmp_path: Path) -> None:
+@pytest.mark.parametrize("workers", [0, 2])
+def test_pytest_spawned_by_test_cannot_add_another_controller_observation(tmp_path: Path, workers: int) -> None:
     child = tmp_path / "child"
     child.mkdir()
     (child / "test_inner.py").write_text("def test_inner():\n    assert True\n")
@@ -231,6 +259,8 @@ def test_pytest_spawned_by_test_cannot_add_another_controller_observation(tmp_pa
             "pytest",
             "-q",
             "--no-cov",
+            "-n",
+            str(workers),
             "-p",
             "infrastructure.core.testing.pytest_receipt",
             "test_owned.py",
@@ -240,6 +270,9 @@ def test_pytest_spawned_by_test_cannot_add_another_controller_observation(tmp_pa
             **os.environ,
             "PYTHONPATH": str(ROOT),
             "PYTEST_ADDOPTS": "",
+            "PYTEST_XDIST_WORKER": "gw-parent",
+            "PYTEST_XDIST_WORKER_COUNT": "8",
+            "PYTEST_XDIST_TESTRUNUID": "parent-session",
             DIRECTORY_ENV: str(directory),
             NONCE_ENV: "owned",
             ROOT_ENV: str(tmp_path),
@@ -338,6 +371,9 @@ def test_progress_retains_complete_original_and_suppresses_nested_pytest(tmp_pat
             **os.environ,
             "PYTHONPATH": str(ROOT),
             "PYTEST_ADDOPTS": "",
+            "PYTEST_XDIST_WORKER": "gw-parent",
+            "PYTEST_XDIST_WORKER_COUNT": "8",
+            "PYTEST_XDIST_TESTRUNUID": "parent-session",
             DIRECTORY_ENV: str(directory),
             NONCE_ENV: "nested-original",
             ROOT_ENV: str(tmp_path),

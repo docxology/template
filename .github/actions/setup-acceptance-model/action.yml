@@ -5,19 +5,26 @@ runs:
   steps:
     - name: Prepare exact official Ollama runtime
       shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
         destination=$(mktemp -d "$RUNNER_TEMP/template-acceptance-model.XXXXXX")
         if [ "$RUNNER_OS" = Linux ]; then
           asset=ollama-linux-amd64.tar.zst
+          asset_id=606088513
           digest=9fcd79ac4575b2bd31b992eee18b1000c8ad126b451627c8f8cd091714cfbb10
           size=1439658961
         else
           asset=ollama-darwin.tgz
+          asset_id=606088436
           digest=3137dbf28948ee844e0fb3e584d9b5de6879d73d9f0cb7eff3ad64930601d307
           size=159625239
         fi
-        curl --fail --location --retry 2 --max-time 900 --output "$destination/$asset" "https://github.com/ollama/ollama/releases/download/v0.35.1/$asset"
+        curl --fail --location --header 'Accept: application/octet-stream' \
+          --header "Authorization: Bearer $GH_TOKEN" --proto '=https' --proto-redir '=https' \
+          --retry 2 --max-time 900 --output "$destination/$asset" \
+          "https://api.github.com/repos/ollama/ollama/releases/assets/$asset_id"
         test "$(wc -c < "$destination/$asset" | tr -d ' ')" = "$size"
         echo "$digest  $destination/$asset" | shasum -a 256 --check --status
         if [ "$RUNNER_OS" = Linux ]; then

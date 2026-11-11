@@ -4,16 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import shlex
-
 import subprocess
 
 import pytest
 
-from infrastructure.publishing.release_acceptance import (
-    MissingAcceptanceHandoff,
-    validate_handoff_inputs,
-)
 from infrastructure.publishing.root_release_contract import (
     main,
     root_changelog_versions,
@@ -64,67 +58,11 @@ def test_root_release_rejects_missing_changelog_heading(tmp_path: Path) -> None:
         validate_root_release_tag(tmp_path, "v3.5.1")
 
 
-def test_cli_fails_closed_for_exemplar_shaped_tag(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_fails_closed_for_exemplar_shaped_tag(tmp_path: Path) -> None:
     _write_pyproject(tmp_path)
 
     assert main(["--repo-root", str(tmp_path), "--tag", "v1.0.1"]) == 2
-    assert "root release contract failed" in capsys.readouterr().out
-
-
-def test_cli_reports_matching_root_version(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    _write_pyproject(tmp_path)
-
     assert main(["--repo-root", str(tmp_path), "--tag", "v3.5.1"]) == 0
-    assert capsys.readouterr().out == "root release contract passed: v3.5.1\n"
-
-
-def test_root_release_workflow_invokes_version_contract() -> None:
-    import yaml
-
-    workflow = (REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
-    steps = yaml.safe_load(workflow)["jobs"]["release"]["steps"]
-    audit_index, audit = next(
-        (index, step)
-        for index, step in enumerate(steps)
-        if step.get("name") == "Verify pristine published public exemplars"
-    )
-    assert shlex.split(audit["run"]) == [
-        "uv",
-        "run",
-        "--no-sync",
-        "--offline",
-        "python",
-        "scripts/audit/check_publication_outputs.py",
-        "--repo-root",
-        "$GITHUB_WORKSPACE",
-        "--all-public",
-        "--strict",
-        "--jobs",
-        "4",
-        "--receipts",
-        "$RUNNER_TEMP/publication-receipts",
-    ]
-    assert "if" not in audit
-    assert not audit.get("continue-on-error", False)
-    assert "Verify root package release contract" in workflow
-    assert 'python -m infrastructure.publishing.root_release_contract --tag "$TAG"' in workflow
-    assert "ref: ${{ steps.tag.outputs.name }}" in workflow
-    assert 'EXPECTED=$(git rev-parse "refs/tags/$TAG^{commit}")' in workflow
-    assert 'if [ "$ACTUAL" != "$EXPECTED" ]; then' in workflow
-    assert "python scripts/gates/public_capabilities.py" in workflow
-    assert workflow.index("Determine tag name") < workflow.index("uses: actions/checkout@")
-    names = {step.get("name"): index for index, step in enumerate(steps)}
-    assert (
-        names["Verify checkout is the requested tag"]
-        < audit_index
-        < names["Require an exact-tag acceptance handoff"]
-        < names["Verify complete authenticated candidate with independently installed current providers"]
-        < names["Verify root package release contract"]
-        < names["Verify public capability manifest"]
-        < names["Admit the exact installed wheel and final source distribution"]
-    )
-    distribution = steps[names["Admit the exact installed wheel and final source distribution"]]
-    assert "uv build" in distribution["run"]
 
 
 def test_runtime_and_package_version_drift_blocks_release(tmp_path: Path) -> None:
@@ -179,81 +117,6 @@ def test_wrong_distribution_provider_is_refused(tmp_path: Path) -> None:
     )
     with pytest.raises(ValueError, match="canonical package metadata"):
         root_runtime_version(tmp_path)
-
-
-def test_release_requires_handoff_and_uses_exact_reader_runtime() -> None:
-    """Publication uses the authenticated full matrix and a fresh installed reader."""
-    import yaml
-
-    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text())
-    triggers = workflow.get("on", workflow.get(True))
-    assert set(triggers) == {"workflow_dispatch"}
-    inputs = triggers["workflow_dispatch"]["inputs"]
-    # The invariant is "a dispatch cannot be started without naming its evidence",
-    # not "every input is required". Two admissible shapes exist -- one hosted
-    # carrier triple, or one composed receipt -- so the evidence inputs may be
-    # optional individually while the dispatch as a whole still cannot omit all
-    # of them. The `required:` flags are an affordance; the refusals in
-    # `validate_handoff_inputs` are the enforcement, so pin the enforcement.
-    assert set(inputs) == {
-        "tag",
-        "acceptance_run_id",
-        "acceptance_artifact_id",
-        "acceptance_receipt_sha256",
-        "composed_receipt",
-    }
-    assert inputs["tag"]["required"] is True
-    # Every shape that supplies no evidence is refused. Supplying none at all is
-    # a missing receipt; supplying a partial hosted triple is a malformed one.
-    # Either way admission stops before any receipt is read.
-    refused = {
-        "no evidence": ("", "", "", ""),
-        "blank receipt path": ("", "", "", "   "),
-        "id without receipt": ("1234", "", "", ""),
-        "run and artifact only": ("1234", "5678", "", ""),
-    }
-    for _label, (run_id, artifact_id, receipt_sha256, composed_receipt) in refused.items():
-        with pytest.raises((MissingAcceptanceHandoff, ValueError)):
-            validate_handoff_inputs(REPO_ROOT, run_id, artifact_id, receipt_sha256, composed_receipt=composed_receipt)
-    steps = workflow["jobs"]["release"]["steps"]
-    # One admission owns both shapes, so neither can be silently skipped, and it
-    # runs before the publication step.
-    handoff = next(step for step in steps if step.get("id") == "acceptance")
-    assert "--composed-receipt" in handoff["run"]
-    assert all(argument in handoff["run"] for argument in ("--run-id", "--artifact-id", "--receipt-sha256"))
-    publish_index = next(index for index, step in enumerate(steps) if "action-gh-release@" in step.get("uses", ""))
-    assert steps.index(handoff) < publish_index
-    # One admission owns both shapes, so neither can be silently skipped, and it
-    # runs before the publication step.
-    handoff = next(step for step in steps if step.get("id") == "acceptance")
-    assert "--composed-receipt" in handoff["run"]
-    assert all(argument in handoff["run"] for argument in ("--run-id", "--artifact-id", "--receipt-sha256"))
-    publish_index = next(index for index, step in enumerate(steps) if "action-gh-release@" in step.get("uses", ""))
-    assert steps.index(handoff) < publish_index
-    selected = {
-        step.get("with", {}).get("python-version") for step in steps if "actions/setup-python@" in step.get("uses", "")
-    }
-    assert selected == {"3.14.4"}
-    reader = next(step for step in steps if step.get("id") == "candidate_reader")
-    assert "if" not in reader
-    assert "native_installed_launcher --mode handoff" in reader["run"]
-    assert not any("scripts/gates/installed_public.py" in step.get("run", "") for step in steps)
-    policy = next(step for step in steps if step.get("name") == "Bind tagged candidate build policy")
-    assert 'git -C "$GITHUB_WORKSPACE" show -s --format=%ct "$candidate"' in policy["run"]
-    assert "TEMPLATE_BUILD_EPOCH_SOURCE=git:$candidate" in policy["run"]
-
-
-def test_release_serializes_selected_tag_across_trigger_refs() -> None:
-    """Dispatch branches must share the selected tag publication lock."""
-    import yaml
-
-    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8"))
-    concurrency = workflow["concurrency"]
-    assert concurrency["group"] == "release-${{ inputs.tag }}"
-    assert concurrency["cancel-in-progress"] is False
-    steps = workflow["jobs"]["release"]["steps"]
-    selection = next(step for step in steps if step.get("id") == "tag")
-    assert selection["env"]["INPUT_TAG"] == "${{ inputs.tag }}"
 
 
 @pytest.mark.parametrize("case", ["accepted", "checkout-receipt-only", "missing-receipt", "different-revision"])

@@ -5,6 +5,14 @@ Call after checkout and Python setup. Fixed release archives are admitted by
 exact byte length and SHA-256 before extraction or execution. Preparation
 failures block the observation; they cannot certify an acceptance gate.
 
+Ollama 0.35.1 runtime acquisition uses the official immutable release-asset API
+identities in [`action.yml`](action.yml), with octet-stream content negotiation
+and the existing GitHub token scoped only to that preparation step. HTTPS-only
+redirects retain curl's ordinary cross-origin authorization stripping; no token
+is exported to the daemon or observed case workers. Both OS-specific archive
+lengths/hashes and every acquisition/readiness deadline remain authoritative.
+Model manifest/blob acquisition remains the separate pinned registry path.
+
 Only the fixed model manifest and blobs are cached in runner-temporary storage.
 Every use repeats the pinned length and SHA-256 checks, and rejects symlinks or
 mismatched bytes without replacing them. Missing files use the existing bounded

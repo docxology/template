@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -116,7 +117,7 @@ def main(argv: list[str] | None = None) -> int:
     outcome = evaluate_original_outcome(args.kind, report, requirements, fingerprint=fingerprint)
     if source_fingerprint(root) != fingerprint or not reader.unchanged():
         raise ValueError("original job report changed during summary")
-    print(json.dumps(outcome, sort_keys=True))
+    sys.stdout.write(json.dumps(outcome, sort_keys=True) + "\n")
     return int(outcome["exit_code"])
 
 

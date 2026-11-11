@@ -121,9 +121,7 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [SIA infrastructure tests](infra_tests/sia/README.md)
 - [tests/infra_tests/validation/docs/consistency/](infra_tests/validation/docs/consistency/AGENTS.md)
 - [Documentation consistency lint tests](infra_tests/validation/docs/consistency/README.md)
-- [template_code_project — figure regression tests](regression/projects/template_code_project/figures/README.md)
 - [template_code_project — table regression tests](regression/projects/template_code_project/tables/README.md)
-- [template_prose_project — figure regression tests](regression/projects/template_prose_project/figures/README.md)
 - [template_prose_project — table regression tests](regression/projects/template_prose_project/tables/README.md)
 
 <!-- foam-orphan-nav:end -->

@@ -1,250 +1,145 @@
-# Checkpoint and Resume System
+# Checkpoints and fail-closed resume
 
-The pipeline includes a checkpoint system that allows resuming from the last successful stage after interruption.
+A checkpoint records local pipeline progress. It is not an acceptance receipt,
+a publication grant, an analysis cache, or a human approval. Resume only reuses
+an eligible completed prefix whose current identities and evidence validate.
 
-## Overview
+## Run from a prepared checkout
 
-The checkpoint system automatically saves pipeline state after each successful stage, enabling resume capability for long-running pipelines.
-
-## How It Works
-
-### Automatic Checkpointing
-
-Checkpoints are automatically saved after each successful stage:
-
-1. **Stage Completion**: After a stage completes successfully (exit code 0)
-2. **State Saving**: Pipeline state is saved to `projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
-3. **State Includes**:
-   - Pipeline start time
-   - Last completed stage number
-   - Stage results (name, exit code, duration, timestamp)
-   - Total number of stages
-
-### Checkpoint Structure
-
-```json
-{
-  "pipeline_start_time": 1701234567.89,
-  "last_stage_completed": 3,
-  "total_stages": 6,
-  "checkpoint_time": 1701234600.12,
-  "stage_results": [
-    {
-      "name": "stage_00_setup",
-      "exit_code": 0,
-      "duration": 1.5,
-      "timestamp": "2024-01-01 12:00:00",
-      "completed": true
-    },
-    ...
-  ]
-}
-```
-
-## Using Resume
-
-### Python Script (`execute_pipeline.py`)
+Prepare the Root interpreter using [START_HERE](../../../START_HERE.md) first.
+Run these commands from the repository root. `--no-sync --offline` prevents uv
+from repairing or downloading the environment; it does not change stage policy.
+Choose the actual discovered project name, not its filesystem path.
 
 ```bash
-# Resume from checkpoint (--project is required)
-uv run python scripts/runner/execute_pipeline.py --project {name} --resume
+PROJECT=template_storybook
 
-# Start fresh (clears checkpoint on success)
-uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
+# Request verified continuation; a refusal is not an automatic fresh run.
+uv run --no-sync --offline python -m infrastructure.orchestration pipeline \
+  --project "$PROJECT" --mode core --resume
 ```
 
-### Shell Script (`run.sh`)
+For the discovered project set, use the same admission path:
 
 ```bash
-# Resume from checkpoint
-./run.sh --pipeline --resume
-
-# Start fresh
-./run.sh --pipeline
+uv run --no-sync --offline python -m infrastructure.orchestration pipeline \
+  --all-projects --mode core --resume
 ```
 
-## Checkpoint Validation
+The [script entry point](../../../scripts/runner/execute_pipeline.py) also accepts
+`--project`, `--mode`, and `--resume`. The prepared
+[shell wrapper](../../../run.sh) forwards flat `--pipeline` arguments to the same
+orchestrator; select a project explicitly rather than relying on an interactive
+selection in automation.
 
-The system validates checkpoints before resuming:
+Exported, non-Git inputs must provide an explicit `SOURCE_DATE_EPOCH` when build
+identity requires it. Missing preparation is an admission error, not permission
+to use a test clock, alter evidence, or bypass the requested resume.
 
-- **File Existence**: Checkpoint file must exist
-- **Format Validation**: JSON structure must be valid
-- **Consistency Checks**: Stage counts and results must be consistent
-- **Integrity Verification**: All completed stages must have exit code 0
+## Admission and execution
 
-### Validation Errors
+```mermaid
+flowchart TD
+    R[Request resume] --> V[Validate current plan, Source, checkpoint and eligible prefix]
+    V -->|refused| B[Preserve checkpoint; blocked resume 75; no fresh stages]
+    V -->|admitted| G[Apply current lock, deadline, Source and human-decision gates]
+    G --> E[Execute remaining stages]
+    B --> O[Record actual execution and report outcome]
+    E --> O
+```
 
-If checkpoint validation fails, the pipeline will:
-1. Log the validation error
-2. Start a fresh pipeline instead
-3. Provide instructions to clear the checkpoint if needed
+Validation covers the current schema, typed stage history, stable stage keys,
+exact plan and Source bindings, consumed inputs, stable output identity, and
+applicable receipt/tool-reuse requirements. A file that parses successfully is
+not sufficient. Recorded analysis completion does not authorize numerical
+analysis reuse; the analysis/tool capability guards can require a fresh run.
+
+The originating run ID is retained for admitted continuation. Any pending human
+decision must independently match its run, plan, and stage. A checkpoint cannot
+approve it, and another run's approval is not a substitute.
+
+## Storage and authority
+
+`PROJECT_DIR` is the actual discovered project directory. Canonical public
+exemplars live under `projects/templates/`; other layouts may differ.
+
+| Record | Location and meaning |
+| --- | --- |
+| Checkpoint | `<runtime_output_dir>/.checkpoints/pipeline_checkpoint.json`; defaults to `<PROJECT_DIR>/output/.checkpoints/pipeline_checkpoint.json` for ordinary execution. |
+| Execution outcome | `<runtime_output_dir>/.pipeline/execution.json`; records actual completion, exit status, stage outcomes, and diagnostics. A blocked resume is incomplete. |
+| Deliverables | `<PROJECT_DIR>/output/`; independently fingerprinted for checkpoint reuse even when runtime metadata uses a separate namespace. |
+
+Use the actual runtime namespace when one is selected. Do not confuse an old
+checkpoint or execution record with another run's current outputs. A refused
+project-lock attempt must not overwrite an active holder's execution record.
+
+Checkpoint writes use confined atomic replacement. Save failures are reported
+and leave resume unavailable for that progress; they do not make an unpersisted
+stage reusable. Invalid or unsafe loads return no admitted checkpoint and
+preserve the original file. Successful execution does **not** imply that the
+checkpoint file has been deleted: presence is neither failure nor reuse proof.
+
+## Current checkpoint contract
+
+The runtime owns schema version `4`; do not manufacture or edit its payload.
+
+| Fields | Required interpretation |
+| --- | --- |
+| `schema_version` | Exact supported integer schema, not a boolean or an unversioned legacy record. |
+| `pipeline_start_time`, `checkpoint_time` | Nonnegative finite measurements. |
+| `last_stage_completed`, `total_stages`, `stage_results` | Consistent counts and ordered completed-prefix records; the prefix count is not a zero-based stage index. |
+| `plan_digest`, `source_digest`, `run_id` | Bound execution contract and originating run identity. Copying values into a new file does not establish current admission. |
+| `output_digest` | SHA-256 identity of stable deliverables; a nonempty completed prefix needs the recorded identity to match current outputs. |
+| Stage status and `context` | Stable stage key, consumed-input identity, genuine child/attempt history, completion classification, and required validated receipts. Cached or skipped status is not self-authorizing. |
+
+Inspect the original record without changing it:
 
 ```bash
-# Clear corrupted checkpoint manually
-rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
+PROJECT_DIR=projects/templates/template_storybook
+uv run --no-sync --offline python -m json.tool \
+  "$PROJECT_DIR/output/.checkpoints/pipeline_checkpoint.json"
 ```
 
-## Checkpoint Lifecycle
+For library consumers,
+[`CheckpointManager`](../../../infrastructure/core/runtime/checkpoint.py)
+accepts `project_dir`, explicit `checkpoint_dir`, and independent `output_dir`.
+`load_checkpoint()` is a confined data read; `checkpoint_exists()` means the
+record is loadable, not that current resume is authorized.
+`load_validated_checkpoint()` and `validate_checkpoint()` require the expected
+plan/Source bindings installed by the pipeline executor. Do not derive those
+expected bindings from the untrusted checkpoint being checked. `save_checkpoint`
+and `clear_checkpoint` are explicit low-level operations, not recovery bypasses.
 
-### Creation
+## Refusal and deliberate fresh execution
 
-- Checkpoints are created after each successful stage
-- Saved to: `projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
-- Overwrites previous checkpoint (only latest state kept)
+For a missing, corrupt, legacy-schema, mismatched, or otherwise ineligible
+checkpoint, retain its bytes, execution record, diagnostics, and original child
+streams. Inspect the refusal before deciding whether continuation remains valid.
+Changing Source, dependencies, inputs, outputs, or the requested stage plan can
+invalidate a previously usable checkpoint.
 
-### Loading
+A refused resume returns blocked status `75` without silently rerunning stages.
+It can still write the actual blocked execution outcome and run report
+finalization. Do not delete the checkpoint, clear an active lock, fabricate a
+receipt, or loop with automatic retries to force acceptance.
 
-- Checkpoint is loaded when `--resume` flag is used
-- Validated before use
-- Pipeline resumes from `last_stage_completed + 1`
+If the work's owner explicitly chooses a new execution, preserve the old evidence
+and run a **separate command without `--resume`**:
 
-### Cleanup
-
-- Checkpoint is automatically cleared on successful pipeline completion
-- Manual cleanup: `rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
-
-## Resume Behavior
-
-### What Gets Skipped
-
-When resuming:
-- **Clean Stage**: Skipped (output directories not cleaned)
-- **Completed Stages**: Skipped (not re-executed)
-- **Failed Stage**: Re-executed (pipeline resumes from failure point)
-
-### What Gets Preserved
-
-- **Pipeline Start Time**: Preserved from original run
-- **Stage Durations**: Preserved for completed stages
-- **Output Files**: Preserved from completed stages
-
-### Example Resume Flow
-
-```
-Original Run:
-  Stage 0: Clean ✓
-  Stage 1: Setup ✓ (checkpoint saved)
-  Stage 2: Tests ✓ (checkpoint saved)
-  Stage 3: Analysis ✗ (pipeline interrupted)
-
-Resume Run:
-  Stage 0: Clean (skipped)
-  Stage 1: Setup (skipped - already completed)
-  Stage 2: Tests (skipped - already completed)
-  Stage 3: Analysis (re-executed)
-  Stage 4: PDF Rendering (executed)
-  ...
-```
-
-## Checkpoint Manager API
-
-### Python API
-
-```python
-from infrastructure.core.runtime.checkpoint import CheckpointManager, StageResult
-
-# Initialize manager
-manager = CheckpointManager()
-
-# Save checkpoint
-manager.save_checkpoint(pipeline_start_time=time.time(), last_stage_completed=3, stage_results=[...], total_stages=6)
-
-# Load checkpoint
-checkpoint = manager.load_checkpoint()
-
-# Validate checkpoint
-is_valid, error_msg = manager.validate_checkpoint()
-
-# Clear checkpoint
-manager.clear_checkpoint()
-
-# Check if exists
-exists = manager.checkpoint_exists()
-```
-
-## Troubleshooting
-
-### Checkpoint Not Found
-
-**Symptom**: Resume fails with "checkpoint not found"
-
-**Solutions**:
-- Check if checkpoint file exists: `ls projects/{name}/output/.checkpoints/`
-- Verify checkpoint directory was created
-- Start fresh pipeline if checkpoint intentionally cleared
-
-### Corrupted Checkpoint
-
-**Symptom**: Validation fails with "corrupted checkpoint"
-
-**Solutions**:
 ```bash
-# Clear corrupted checkpoint
-rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
-
-# Restart pipeline
-uv run python scripts/runner/execute_pipeline.py --project {name} --mode core
+uv run --no-sync --offline python -m infrastructure.orchestration pipeline \
+  --project "$PROJECT" --mode core
 ```
 
-### Checkpoint Out of Date
+Fresh execution can replace project outputs and progress records. A failed stage,
+missing provider, timeout, or pending approval remains its actual outcome; fresh
+execution is not a waiver of those requirements.
 
-**Symptom**: Checkpoint references stages that no longer exist
+## Implementation and recovery references
 
-**Solutions**:
-- Clear old checkpoint
-- Start fresh pipeline
-- Checkpoint will be recreated with current stage structure
+- [Checkpoint schema, confined persistence and validation](../../../infrastructure/core/runtime/checkpoint.py)
+- [Resume admission and completed-prefix checks](../../../infrastructure/core/pipeline/resume.py)
+- [Exact-plan execution, lock ownership and reporting](../../../infrastructure/core/pipeline/execution_session.py)
+- [Operational recovery runbook](../runbook.md)
+- [Troubleshooting](../troubleshooting/)
 
-### Resume Starts from Wrong Stage
-
-**Symptom**: Pipeline resumes from incorrect stage
-
-**Solutions**:
-- Check checkpoint contents: `cat projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
-- Verify `last_stage_completed` value
-- Clear checkpoint if incorrect
-
-## Best Practices
-
-### When to Use Resume
-
-✅ **Use resume when**:
-- Pipeline was interrupted (Ctrl+C, system crash)
-- Long-running pipeline needs to continue after interruption
-- Testing specific stages without re-running entire pipeline
-
-❌ **Don't use resume when**:
-- Code changes were made (may cause inconsistencies)
-- Dependencies changed
-- Starting fresh is preferred
-
-### Checkpoint Maintenance
-
-- **Automatic**: Checkpoints cleared on successful completion
-- **Manual**: Clear checkpoints before major changes
-- **Version Control**: Checkpoints are in `.gitignore` (not committed)
-
-## Implementation Details
-
-### Checkpoint Location
-
-- **Default**: `projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
-- **Custom**: Can specify custom directory in `CheckpointManager(checkpoint_dir=...)`
-
-### Checkpoint Format
-
-- **Format**: JSON
-- **Encoding**: UTF-8
-- **Indentation**: 2 spaces (human-readable)
-
-### Error Handling
-
-- **Save Failures**: Logged as warnings, pipeline continues
-- **Load Failures**: Logged as warnings, pipeline starts fresh
-- **Validation Failures**: Logged as errors, pipeline starts fresh
-
-## See Also
-
-- [`infrastructure/core/runtime/checkpoint.py`](../../../infrastructure/core/runtime/checkpoint.py) - Implementation
-- [`scripts/runner/execute_pipeline.py`](../../../scripts/runner/execute_pipeline.py) - Resume integration
-- [Troubleshooting](../troubleshooting/) - Troubleshooting guide

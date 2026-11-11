@@ -247,7 +247,7 @@ def main() -> int:
         )
     except (OSError, ValueError, TypeError, KeyError) as error:
         parser.error(str(error))
-    print(json.dumps(result, sort_keys=True))
+    sys.stdout.write(json.dumps(result, sort_keys=True) + "\n")
     return int(result["exit_code"])
 
 

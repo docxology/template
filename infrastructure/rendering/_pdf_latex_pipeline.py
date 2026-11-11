@@ -133,6 +133,8 @@ def _check_fatal_error(
         "Emergency stop",
         "That makes 100 errors",
         "TeX capacity exceeded",
+        # Measured authored overflow cannot be repaired by another compiler pass.
+        "Package paperfrontmatter Error: paper.frontmatter page overflow",
     )
     has_fatal_marker = any(marker in log_content for marker in fatal_markers)
     is_fatal_exit = result.returncode != 0
@@ -242,6 +244,34 @@ def _recover_invalid_pdf(
         )
 
 
+def _bibliography_requested(aux_file: Path) -> bool:
+    """Read actual compiler requests, including citations in included aux files."""
+    pending = [aux_file]
+    seen: set[Path] = set()
+    auxiliary = aux_file
+    try:
+        while pending:
+            auxiliary = pending.pop()
+            resolved = auxiliary.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            with auxiliary.open(encoding="utf-8", errors="replace") as stream:
+                for line in stream:
+                    command = line.lstrip()
+                    if re.match(r"\\citation\s*(?:\{|$)", command):
+                        return True
+                    included = re.match(r"\\@input\s*\{([^}]*)\}", command)
+                    if included:
+                        pending.append(aux_file.parent / included.group(1))
+    except OSError as error:
+        raise RenderingError(
+            "Could not inspect compiler bibliography requests",
+            context={"auxiliary": str(auxiliary)},
+        ) from error
+    return False
+
+
 def compile_latex_manuscript(
     combined_tex: Path,
     combined_md: Path,
@@ -292,6 +322,9 @@ def compile_latex_manuscript(
 
     try:
         temp_pdf = output_dir / "_combined_manuscript.pdf"
+        if temp_pdf.resolve() == output_file.resolve():
+            raise RenderingError("Final PDF must not alias the compilation staging path")
+        temp_pdf.unlink(missing_ok=True)
 
         # Phase 1: Clean stale auxiliary files
         _clean_stale_aux_files(output_dir, tex_stem)
@@ -318,13 +351,19 @@ def compile_latex_manuscript(
             )
 
         # Phase 3: Bibliography processing
-        if bib_exists:
+        if bib_exists and _bibliography_requested(output_dir / f"{tex_stem}.aux"):
             logger.info("  Bibliography processing...")
-            try:
-                process_bibliography(combined_tex, output_dir, bib_files)
-            except Exception as bib_error:  # noqa: BLE001
-                logger.warning(f"  Bibliography processing failed: {bib_error}")
-                logger.warning("  Continuing PDF generation without bibliography processing")
+            if not process_bibliography(combined_tex, output_dir, bib_files):
+                raise RenderingError(
+                    "Bibliography processing failed; PDF was not published",
+                    context={
+                        "source": str(combined_tex),
+                        "output": str(output_file),
+                        "log_file": str(output_dir / f"{tex_stem}.blg"),
+                    },
+                )
+        elif bib_exists:
+            logger.info("  No bibliography entries requested; skipping BibTeX")
 
         # Phase 4: Additional compilation passes (2-4)
         for run in range(1, MAX_LATEX_PASSES):
@@ -366,11 +405,6 @@ def compile_latex_manuscript(
                 canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)
                 log_pdf_success(output_file, source_files, start_time)
                 _remove_luamml_mathml_cache(output_dir)
-            return output_file
-        elif output_file.exists():
-            canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)
-            log_pdf_success(output_file, source_files, start_time)
-            _remove_luamml_mathml_cache(output_dir)
             return output_file
         else:
             raise RenderingError(

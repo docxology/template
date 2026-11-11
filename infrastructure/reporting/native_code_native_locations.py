@@ -25,6 +25,7 @@ from infrastructure.reporting.native_code_native_endpoints import office_native_
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
 from infrastructure.reporting.native_format_acceptance_evidence import _file, _tool
 from infrastructure.reporting.native_format_pdf_source import pdf_source_inputs
+from infrastructure.reporting.native_format_semantic_source import semantic_owned_sources
 from infrastructure.reporting.native_hydration_reconstruction import replay_native_pdf_recomposition
 from infrastructure.reporting.native_office_hydration_ordinals import observe_office_hydration_ordinals
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
@@ -40,7 +41,8 @@ def _binding(snapshot: ArtifactSnapshot) -> dict[str, Any]:
     return {"path": snapshot.relative, "sha256": snapshot.sha256, "bytes": len(snapshot.content)}
 
 
-def _inputs(artifact: NativeArtifact, observer: dict[str, Any], reader: SnapshotReader) -> list[dict[str, Any]]:
+def _context_inputs(artifact: NativeArtifact, observer: dict[str, Any], reader: SnapshotReader) -> list[dict[str, Any]]:
+    """Retain the complete ordered parser context, not artifact ownership."""
     if artifact.format in {"docx", "epub"}:
         rows = observer["office_complete_source"]["reference"]["source"]["sources"]
     elif artifact.format == "html":
@@ -58,6 +60,16 @@ def _inputs(artifact: NativeArtifact, observer: dict[str, Any], reader: Snapshot
     if not result or len({row["path"] for row in result}) != len(result):
         raise ValueError("selected native locations omitted/repeated its complete own Source input roster")
     return result
+
+
+def _inputs(artifact: NativeArtifact, observer: dict[str, Any], reader: SnapshotReader) -> list[dict[str, Any]]:
+    """Select exact artifact-owned inputs for occurrence and absence obligations."""
+    context = _context_inputs(artifact, observer, reader)
+    if artifact.format != "html":
+        return context
+    sources = tuple((row["path"], reader.read(row["path"]).content) for row in context)
+    by_path = {row["path"]: row for row in context}
+    return [by_path[path] for path, _ in semantic_owned_sources(reader.root, CODE_SCOPE, artifact, sources)]
 
 
 def _selected(
@@ -295,7 +307,7 @@ def replay_code_native_locations(
                 artifact,
                 ordinal,
                 hydration,
-                inputs,
+                _context_inputs(artifact, observer, reader),
                 reader,
                 custody=custody,
                 run_id=original.run_id,

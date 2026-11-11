@@ -3,7 +3,7 @@
 This hosted Ubuntu composite prepares the Source-declared tools and dependency
 cache used by the installed original, independent reader and release handoff.
 Call after a full checkout and source-fixture preparation. The caller provisions
-`uv` and Python 3.14.4 first through the existing
+`uv` and the Source-declared Python first through the existing
 [Python setup](../setup-python-env/README.md). Use this action in an owned hosted
 workspace, before the cold operation starts. Complete native roles retain their
 14400-second budget; the incomplete Code diagnostic retains its bounded
@@ -26,8 +26,12 @@ This self-contained runtime avoids distribution-managed links that escape a
 system-installed Java tree and prevents PATH from selecting another JDK. The strict engine binder still rejects escaping links;
 no runtime configuration, security file or bundle dependency is omitted.
 Browser math inputs are prepared or independently inspected as Source DATA.
-Temporary cache-warming environments contain only Root-locked dependencies;
-independent project locks are preserved.
+The Root lock is always warmed. Nonempty `project-scopes` explicitly overrides
+the derived project selection. Otherwise `matrix-cell` selects that cell and its
+local provider closure through the existing SDK predicate; no selected cell
+warms the complete public roster. Each independent project lock is preserved.
+APT HTTP(S) acquisition uses 60-second connection/data-idle timeouts, not a
+shortened total installation or native-operation budget.
 The documentation setup selects Node 24.22.0 LTS and installs the
 Source-declared npm serializer. The current native Mermaid11 profile requires
 actual Node 24 in both original version proofs and live loaded-library reports;

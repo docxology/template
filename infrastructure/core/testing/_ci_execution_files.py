@@ -38,7 +38,7 @@ def _diagnostic(error: BaseException) -> None:
         "runtime_acceptance": False,
     }
     try:
-        print(json.dumps(value), file=sys.stderr)
+        sys.stderr.write(json.dumps(value) + "\n")
     except OSError:
         pass  # A failed diagnostic write cannot replace the original refusal.
 

@@ -12,15 +12,15 @@ The Source-owned controller is
 `infrastructure.publishing.publication_refresh`; path custody is in
 `publication_refresh_custody`, and `release_provider_graph` supplies the same
 current metadata graph used by coordinated version planning. The controller
-derives the rerender roster from the canonical projects whose
-`output/manuscript/config.yaml` is already tracked. It renders and validates
-those projects with the existing `rendered_refresh` producer. One reviewed
-semantic consumer, `templates/template_pitch_deck`, additionally reads COUNTS and
-version facts during canonical Stage 02; default refresh runs that genuine stage
-before its existing non-rebind refresh. The remaining canonical projects revalidate
-their unchanged output bytes. Current Source therefore has fifteen tracked
-publication-copy projects, Pitch analysis/refresh, and nine unchanged rebinds. The roster is not a fixed
-list of fifteen names. Provider dependencies finish before their consumers,
+regenerates every canonical public project with the existing `rendered_refresh`
+producer. A tracked `output/manuscript/config.yaml` identifies a materialized
+publication copy, not whether that project's rendered products depend on the
+current renderer. Projects without that copy must also acquire current global
+HTML semantics, mathematics and applicable EPUB styling through real generation.
+One reviewed semantic consumer, `templates/template_pitch_deck`, additionally
+reads COUNTS and version facts during canonical Stage 02; default refresh runs
+that genuine stage before its non-rebind refresh. There is no implicit
+unchanged-output complement. Provider dependencies finish before their consumers,
 with exactly one project worker per wave. The shared execution account uses
 strict same-UID process observation: concurrent project producers can appear in
 each other's final census, so both `run` and `generate` refuse `--jobs` values
@@ -47,28 +47,46 @@ outside Source; only the final successful payload admits a review upload.
 Original diagnostics remain available after a failed phase. Inputs are explicit
 CLI arguments; the account's runtime environment allowlist is unchanged.
 
-The v3 plan binds the one fixed dependent consumer, its actual canonical subject,
+The v4 plan binds the one fixed dependent consumer, its actual canonical subject,
 COUNTS/version input bytes and reviewed Stage 02/reader/compiler paths to the exact
 Source commit. The actual canonical Stage 02 selection is also bound and must
 include chart generation before deck rendering. Private or unknown subjects,
 missing producers and changed inputs
 refuse before generation. This declaration grants no additional output paths.
 
-Capture admits only the finite base-tracked canonical output inventory in mode
-100644. Flat numbered manuscript sections additionally require explicit
+Capture freezes the base-tracked canonical output inventory in mode 100644 and
+the immutable blob identities of its tracked canonical artifact manifests.
+Reconstructing that ownership does not reopen retired output paths. The clean
+initial plan still requires every base-owned file to be a real non-executable
+regular file. Flat numbered manuscript sections additionally require explicit
 compose-enabled targets in the tracked schema-2 sheaf manifest, tracked compiler
-sources and tracked authored fragment inputs. A numbered filename by itself
-grants no generated ownership. Authored/config/test/private paths, additions,
-deletions, symlinks, mode changes and unexpected untracked files are refused.
+sources and tracked authored fragment inputs; numbering alone grants nothing.
+
+Default refresh also captures genuine stable-output inventory transitions. A new
+path must occur in the freshly validated canonical artifact manifest of its own
+fixed public project. That manifest must match the complete current Git-shippable
+inventory, including file bytes and hashes. A retired path must have been both
+tracked and declared by the frozen base manifest, and must be absent from the
+current manifest and filesystem. A newly invented manifest cannot grant ownership.
+This permits renderer-owned filename changes without retaining obsolete aliases
+or dropping current pages from the candidate. Authored/config/test/private paths,
+undeclared additions or removals, symlinks, executable modes and all other
+unexpected untracked files remain refused. `rebind-only` grants no such
+additions or removals.
 
 The runner commits its generated candidate in the disposable checkout. Both
 existing strict all-public publication gates and the unchanged all-project
 exemplar-config guard then run on that committed tree.
-Only success of all three commands admits the review artifact: an exact full-index
-binary patch from the dispatched base, the base/result commits and trees, a
-changed-path/blob/SHA-256 manifest, original producer and gate bytes/exits, and
-checksums. Failures retain separately named diagnostics without an accepted
-review artifact.
+Only success of all three commands and every actual canonical generation command
+(including dependent Pitch analysis) admits the review artifact: an exact
+full-index binary patch from the dispatched base, the base/result commits and
+trees, a changed-path/blob/SHA-256 manifest, original producer and gate bytes/exits,
+and checksums. The v4 change records identify `A`, `M` and `D` explicitly;
+`before_blob` is null for additions, while `after_blob`, `sha256` and `bytes` are
+null for deletions. The binary patch disables rename collapsing so both sides
+remain explicit. `COMPLETE.json` records `all_committed_tree_gates_passed`; it is
+not release acceptance. Failures retain separately named diagnostics without an
+accepted review artifact.
 
 Review and integrate the exact retained patch through the ordinary PR path.
 Verify the integrated tree against the candidate tree; preserve the original
@@ -79,13 +97,13 @@ publication validation and exact-SHA required acceptance remain the separate
 
 ## Coverage import and unchanged-output rebind
 
-The default mode remains `refresh`: regenerate tracked publication copies, run
-the genuine dependent Pitch analysis/refresh, and revalidate the unchanged
-complement. A coverage import changes semantic Pitch inputs as well as the shared
-stage fingerprint. Regenerate those dependent outputs before using `rebind-only`;
-unchanged output bytes alone cannot prove that displayed measurements are current. The requested mode is frozen in the Source-derived plan,
-preparation and generation records, checked against the dispatch on every phase,
-and retained in the review manifest.
+The default mode is `refresh`: regenerate all canonical public projects and run
+the genuine dependent Pitch analysis before its refresh. A coverage import
+changes semantic Pitch inputs as well as the shared stage fingerprint.
+Regenerate those outputs before using `rebind-only`; unchanged bytes alone do not
+prove current displayed measurements or renderer behavior. The requested mode is
+frozen in the Source-derived plan, preparation and generation records, checked
+against the dispatch on every phase, and retained in the review manifest.
 
 In `rebind-only`, all canonical projects use the actual existing
 `rebind_project` path through `refresh_rendered_provenance.py --rebind`.
@@ -104,9 +122,9 @@ Use this sequence after final metadata and genuine publication generation settle
    project input hash still matches C; retain the original measurements.
 3. Commit the imported literals and provenance as D. Preserve the original C
    measurements and compare every project/support identity with C.
-4. Produce dependent publication candidate Q through the actual Source-owned
-   analysis/refresh chain. The default hosted refresh includes Pitch's genuine
-   Stage 02 before refresh, the fifteen publication copies, and nine rebinds.
+4. Produce publication candidate Q through the actual complete Source-owned
+   regeneration chain. Default refresh regenerates every canonical public project
+   and includes Pitch's genuine Stage 02 before its rendering.
    Check its complete footprint and strict committed-tree gates. If any project
    source, compiled manuscript or measured support input changes, remeasure that
    affected input after it settles; never keep a mismatched C identity.

@@ -17,6 +17,7 @@ from infrastructure.core.pipeline.artifacts import (
     OutputInventoryMode,
     collect_stable_output_inventory,
 )
+from infrastructure.rendering._bibliography import resolve_bibliography
 from infrastructure.validation.evidence_registry import (
     EvidenceFact,
     VerifiedEvidenceRegistry,
@@ -25,6 +26,7 @@ from infrastructure.validation.evidence_registry import (
     _is_numeric_cell,
     _number_to_string,
 )
+from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
 
 _BIBTEX_KEY_RE = re.compile(r"@[A-Za-z]+\s*\{\s*([^,\s]+)")
 _FIGURE_LABEL_RE = re.compile(r"#(fig:[A-Za-z0-9_:-]+)")
@@ -66,12 +68,27 @@ def register_all_project_facts(
     )
     if output_inventory.issues:
         raise ValueError("unstable evidence output inventory: " + "; ".join(output_inventory.issues))
+    generated_inputs = declared_generated_manuscript_inputs(project_root)
+    if generated_inputs is None:
+        manuscript_dir = resolve_source_manuscript_dir(project_root)
+        label_files = _iter_existing(manuscript_dir, "*.md")
+        bibliography_files = _iter_existing(manuscript_dir, "*.bib")
+    else:
+        # An owned generated roster replaces the authored roster for rendering,
+        # but does not turn arbitrary output Markdown into evidence. Retain the
+        # caller's stable-output admission policy for every generated fact.
+        admitted_outputs = set(output_inventory.files)
+        label_files = (
+            path for path in generated_inputs if path in admitted_outputs and path.suffix.lower() in {".md", ".rmd"}
+        )
+        generated_root = project_root / "output" / "manuscript"
+        bibliography_files = (path for path in resolve_bibliography(generated_root) if path in admitted_outputs)
     _register_config_numbers(project_root, registry)
     _register_json_numbers(project_root, registry, output_files=output_inventory.files)
     _register_tabular_numbers(project_root, registry, output_files=output_inventory.files)
     _register_claim_ledgers(project_root, registry, output_files=output_inventory.files)
-    _register_bibtex_citations(project_root, registry)
-    _register_markdown_labels(project_root, registry)
+    _register_bibtex_citations(project_root, registry, bibliography_files)
+    _register_markdown_labels(project_root, registry, label_files)
     _register_output_artifacts(project_root, registry, output_files=output_inventory.files)
 
 
@@ -319,9 +336,12 @@ def _is_claim_ledger_path(path: Path) -> bool:
     return "claim" in path.name.lower() and "ledger" in path.name.lower()
 
 
-def _register_bibtex_citations(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
-    manuscript_dir = resolve_source_manuscript_dir(project_root)
-    for bib_path in _iter_existing(manuscript_dir, "*.bib"):
+def _register_bibtex_citations(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    bibliography_files: Iterable[Path],
+) -> None:
+    for bib_path in bibliography_files:
         try:
             text = bib_path.read_text(encoding="utf-8")
         except OSError:
@@ -339,9 +359,12 @@ def _register_bibtex_citations(project_root: Path, registry: VerifiedEvidenceReg
             )
 
 
-def _register_markdown_labels(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
-    manuscript_dir = resolve_source_manuscript_dir(project_root)
-    for markdown_path in _iter_existing(manuscript_dir, "*.md"):
+def _register_markdown_labels(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    manuscript_files: Iterable[Path],
+) -> None:
+    for markdown_path in manuscript_files:
         try:
             # Keep evidence collection diagnostic rather than crash-only when
             # a manuscript tree contains a malformed Markdown fixture. The

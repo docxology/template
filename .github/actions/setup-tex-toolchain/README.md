@@ -15,6 +15,10 @@ It is two steps, in the order both callers already used:
 2. On a cache miss, `apt-get install` of `texlive-xetex texlive-latex-extra
    texlive-bibtex-extra texlive-fonts-recommended lmodern`.
 
+APT HTTP(S) connections and idle transfers use the existing native 60-second
+acquisition bound. Cache conditions, package sets, signatures, retry settings
+and the calling jobs' total budgets are unchanged.
+
 Callers:
 
 | Caller | Why |
