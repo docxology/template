@@ -68,13 +68,34 @@ def _load_config(project_root: Path) -> dict[str, Any]:
         return yaml.safe_load(f) or {}
 
 
-def _load_json_list(project_root: Path, name: str) -> list[dict[str, Any]]:
-    json_path = project_root / "output" / "data" / name
-    if not json_path.exists():
+class RequiredAnalysisInputUnavailable(FileNotFoundError):
+    """The strict manuscript generator reached its missing or empty analysis input."""
+
+    def __init__(self, path: Path, message: str, *, empty_sha256: str | None = None) -> None:
+        super().__init__(message)
+        self.path = path
+        self.empty_sha256 = empty_sha256
+
+
+def _load_compiled_plans(project_root: Path, *, required: bool) -> list[dict[str, Any]]:
+    json_path = project_root / "output" / "data" / "compiled_plans.json"
+    unavailable = (
+        f"Analysis outputs required but missing or empty: {json_path}. "
+        "Run projects/templates/template_methods_paper/scripts/methods_analysis.py first."
+    )
+    try:
+        raw = json_path.read_bytes()
+    except FileNotFoundError as error:
+        if required:
+            raise RequiredAnalysisInputUnavailable(json_path, unavailable) from error
         return []
-    with json_path.open("r") as f:
-        loaded: list[dict[str, Any]] = json.load(f)
-        return loaded
+    loaded: list[dict[str, Any]] = json.loads(raw.decode("utf-8"))
+    if required:
+        if not isinstance(loaded, list) or any(not isinstance(row, dict) for row in loaded):
+            raise ValueError(f"Compiled plans must contain a JSON array of objects: {json_path}")
+        if not loaded:
+            raise RequiredAnalysisInputUnavailable(json_path, unavailable, empty_sha256=hashlib.sha256(raw).hexdigest())
+    return loaded
 
 
 def _load_json_report(project_root: Path, name: str) -> dict[str, Any]:
@@ -130,13 +151,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
         :func:`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`.
     """
     config = _load_config(project_root)
-    plans = _load_json_list(project_root, "compiled_plans.json")
-    if require_analysis_outputs and not plans:
-        json_path = project_root / "output" / "data" / "compiled_plans.json"
-        raise FileNotFoundError(
-            f"Analysis outputs required but missing or empty: {json_path}. "
-            "Run projects/templates/template_methods_paper/scripts/methods_analysis.py first."
-        )
+    plans = _load_compiled_plans(project_root, required=require_analysis_outputs)
     gate_report = _load_json_report(project_root, "gate_report.json")
     trust_report = _load_json_report(project_root, "trust_chain_report.json")
     artifact_counts = _count_output_artifacts(project_root)

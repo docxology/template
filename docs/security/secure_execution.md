@@ -74,7 +74,7 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 | `--skip-infra` | Skip infrastructure tests stage during pipeline phase. |
 | `--mode core` | Omit LLM-tagged stages during pipeline phase. |
 | `--resume` | Resume pipeline from checkpoint (pipeline phase only). |
-| `--deterministic` | Parsed by the Python `secure` subcommand ([`infrastructure/orchestration/cli.py`](../../infrastructure/orchestration/cli.py)): sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
+| `--deterministic` | Uses the Git committer date (`git log -1 --format=%cI`) for the steganography phase of this invocation. With identical source bytes and settings, unencrypted outputs are byte-identical at the same `HEAD`. When omitted, the phase honors `STEGANOGRAPHY_DETERMINISTIC`. |
 | `--validate-kmyth` | Validates optional Kmyth/TPM tooling from the effective secure-run configuration and exits without rendering or sealing PDFs; skips both the pipeline and steganography phases. |
 
 ### Deterministic / reproducible mode
@@ -84,6 +84,20 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh \
   --project templates/template_code_project
 ```
+
+Secure runs skip legacy filenames containing `_steganography`. For a custom
+`output_suffix`, the publisher keeps private ownership receipts in the
+`.steganography-ownership` directory beside its PDFs. Repeat runs use the
+receipt to verify and replace the previous output. The publishing account
+must own the PDF directory. If group or other users can write there, the PDF
+directory must be sticky. Keep the receipt directory at mode `0700` and its
+regular single-link receipts at `0600`, with ACLs restricted to the publishing
+account. Export selected PDFs and public hash manifests for portable checksum
+evidence. An ordinary source may end in the same suffix. An existing destination
+without a matching private receipt, or an existing receipt with unsafe
+permissions, prevents publication. Earlier custom outputs need a fresh
+destination to establish private ownership. Publication is atomic per file.
+An interruption between files can require operator recovery before a rerun.
 
 Trade-offs and internals: [steganography.md § Deterministic mode](steganography.md#deterministic-mode).
 

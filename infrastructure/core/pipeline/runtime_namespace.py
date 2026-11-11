@@ -8,7 +8,7 @@ from pathlib import Path
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.core.pipeline.plan import ExecutionPlan, PlannedStage
 from infrastructure.core.pipeline.plan_custody import FrozenPlanSources
-from infrastructure.core.pipeline.target_contracts import effective_target_tags
+from infrastructure.core.pipeline.target_contracts import effective_stage_declaration
 from infrastructure.core.pipeline.types import PipelineConfig, StagePolicy
 
 
@@ -37,17 +37,14 @@ def validate_shared_runtime(config: PipelineConfig, plan: ExecutionPlan) -> None
     sources = FrozenPlanSources.capture(config)
     if sources.source_identity != plan.source_identity or sources.environment_identity != plan.environment_identity:
         raise ValueError("Shared plan source or environment differs from its admitted declaration")
-    declarations = tuple(
-        replace(stage, tags=list(effective_target_tags(stage.tags, stage.script, stage.method)))
-        for stage in sources.dag().sorted_stages()
-    )
+    declarations = tuple(effective_stage_declaration(stage) for stage in sources.dag().sorted_stages())
     if canonical_digest([asdict(stage) for stage in declarations]) != plan.definition_identity:
         raise ValueError("Shared plan definition differs from the admitted canonical declarations")
     selected = [(ordinal, stage) for ordinal, stage in enumerate(declarations, 1) if stage.key == "infra_tests"]
     if len(selected) != 1:
         raise ValueError("Canonical declaration must contain exactly one infrastructure gate")
     ordinal, stage = selected[0]
-    control = sources.control(config)
+    control = sources.control()
     arguments = tuple(stage.args)
     if stage.script and "--project" not in arguments:
         arguments += ("--project", config.project_name)

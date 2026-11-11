@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
+from infrastructure.rendering._slides_participation import skips_beamer
 from infrastructure.reporting.native_format_acceptance_checks import audit_pdf_raster, parse_native_bytes
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
@@ -79,7 +80,7 @@ def manuscript_slide_source_plan(
     if len(matches) != 1:
         raise ValueError("manuscript slide source selection is missing or ambiguous")
     snapshot = reader.read(matches[0].relative_to(root).as_posix())
-    if b"<!-- render:skip-beamer -->" in snapshot.content:
+    if skips_beamer(snapshot.content):
         raise ValueError("manuscript slide source is explicitly outside projection selection")
     expected = f"projects/{scope}/output/slides/{matches[0].stem}_slides.{artifact.format}"
     if artifact.path != expected:

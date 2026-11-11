@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <title>_combined_manuscript</title>
+  <title>lab_dynamics_and_change.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -245,26 +244,7 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -273,9 +253,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -304,8 +284,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -390,14 +370,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -415,6 +388,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -427,6 +402,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -654,18 +631,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -716,6 +685,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -744,40 +717,39 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="26" id="sec:lab_part_II_dynamics_and_change"><span
-class="header-section-number">26</span> Lab — Dynamics and Change</h1>
+<h1 id="sec:lab_part_II_dynamics_and_change">Lab — Dynamics and
+Change</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
 <p>Guided lab · Materials: Python environment, notebook or terminal, and
 a written observation record</p>
 </blockquote>
-<h2 data-number="26.1" id="objectives-7"><span
-class="header-section-number">26.1</span> Objectives</h2>
+<h2 id="objectives">Objectives</h2>
 <p>Execute <code>textbook.models.exponential_decay</code> with the
 declared inputs, compare its output with an independently worked
 expectation, and explain which part of the chapter’s claim the result
 checks. Use ratios over equal intervals to inspect a proposed constant
 fractional loss rate.</p>
-<h2 data-number="26.2" id="background-7"><span
-class="header-section-number">26.2</span> Background</h2>
-<p>Linked chapter: sec. <a
-href="part_II__dynamics_and_change.html#sec:part_II_dynamics_and_change">13</a>. A stored quantity falls
-from one hundred to fifty, then to twenty-five over equal intervals. A
-straight-line extension would reach zero after the next interval. A
-fractional-loss model instead predicts twelve and one half. The choice
-between constant amount and constant fraction is a claim about change,
-and data can distinguish them. The values below are instructional
-inputs. No experiment on people, organisms or services is being
-reported. The exercise checks mathematical behavior under the model’s
-assumptions rather than supplying evidence that the scenario is
+<h2 id="background">Background</h2>
+<p>Linked chapter: <span class="citation"
+data-cites="sec:part_II_dynamics_and_change">[@sec:part_II_dynamics_and_change]</span>.
+A stored quantity falls from one hundred to fifty, then to twenty-five
+over equal intervals. A straight-line extension would reach zero after
+the next interval. A fractional-loss model instead predicts twelve and
+one half. The choice between constant amount and constant fraction is a
+claim about change, and data can distinguish them. The values below are
+instructional inputs. No experiment on people, organisms or services is
+being reported. The exercise checks mathematical behavior under the
+model’s assumptions rather than supplying evidence that the scenario is
 real.</p>
-<h2 data-number="26.3" id="procedure-7"><span
-class="header-section-number">26.3</span> Procedure</h2>
+<h2 id="procedure">Procedure</h2>
 <ol type="1">
-<li>Write the input quantities, units and assumptions from tbl. <a
-href="part_II__dynamics_and_change.html#tbl:part_II_dynamics_and_change_parameters">8</a>.</li>
+<li>Write the input quantities, units and assumptions from <span
+class="citation"
+data-cites="tbl:part_II_dynamics_and_change_parameters">[@tbl:part_II_dynamics_and_change_parameters]</span>.</li>
 <li>Before running code, predict one boundary value and one interior
-value using eq. <a href="part_II__dynamics_and_change.html#eq:part_II_dynamics_and_change_model">9</a>.
+value using <span class="citation"
+data-cites="eq:part_II_dynamics_and_change_model">[@eq:part_II_dynamics_and_change_model]</span>.
 Keep the prediction even if it proves incorrect.</li>
 <li>Run the workflow below in a fresh interpreter. Preserve the command
 and output.</li>
@@ -788,8 +760,7 @@ comparison.</li>
 contract; record whether it is rejected or handled by an explicit
 convention.</li>
 </ol>
-<h2 data-number="26.4" id="analysis-7"><span
-class="header-section-number">26.4</span> Analysis</h2>
+<h2 id="analysis">Analysis</h2>
 <p>Setting the remaining amount to half its initial value gives <span
 class="math inline">\(e^{-\lambda t}=1/2\)</span>. Taking logarithms
 yields the half-life in the equation. At rate one half per time unit,
@@ -802,24 +773,22 @@ arithmetic should lead you to inspect units, input order and the
 declared convention. Agreement on these synthetic inputs establishes a
 limited computational result; it does not establish the opening
 scenario’s observation rule or empirical adequacy.</p>
-<h2 data-number="26.5" id="computational-workflow-7"><span
-class="header-section-number">26.5</span> Computational Workflow</h2>
-<div class="sourceCode" id="cb33"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> exponential_decay, half_life</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>t_half <span class="op">=</span> half_life(rate)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> exponential_decay([<span class="fl">0.0</span>, t_half, <span class="dv">2</span><span class="op">*</span>t_half], initial<span class="op">=</span><span class="fl">100.0</span>, rate<span class="op">=</span>rate)</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(values, [<span class="fl">100.0</span>, <span class="fl">50.0</span>, <span class="fl">25.0</span>])</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t_half, values)</span></code></pre></div>
+<h2 id="computational-workflow">Computational Workflow</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> exponential_decay, half_life</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>t_half <span class="op">=</span> half_life(rate)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> exponential_decay([<span class="fl">0.0</span>, t_half, <span class="dv">2</span><span class="op">*</span>t_half], initial<span class="op">=</span><span class="fl">100.0</span>, rate<span class="op">=</span>rate)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(values, [<span class="fl">100.0</span>, <span class="fl">50.0</span>, <span class="fl">25.0</span>])</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t_half, values)</span></code></pre></div>
 <p>The code calls the shared model implementation and asserts
 independently known properties. Add the changed-input result to the same
 record without overwriting the first one. If an assertion fails,
 preserve the failing inputs and exception before changing the
 computation.</p>
-<h2 data-number="26.6" id="reflection-7"><span
-class="header-section-number">26.6</span> Reflection</h2>
+<h2 id="reflection">Reflection</h2>
 <ul>
 <li>How does half-life change if a positive rate doubles? Explain your
 answer before consulting the question bank.</li>
@@ -829,8 +798,7 @@ places?</li>
 needed to decide whether the model is useful for a real instance of the
 scenario?</li>
 </ul>
-<h2 data-number="26.7" id="worked-solution-7"><span
-class="header-section-number">26.7</span> Worked Solution</h2>
+<h2 id="worked-solution">Worked Solution</h2>
 <p>It halves. A coarse grid can omit transients; precision at the same
 times cannot reconstruct omitted events. The code’s assertions give the
 expected numerical control. The changed-input comparison should identify

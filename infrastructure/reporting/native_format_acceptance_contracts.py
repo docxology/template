@@ -22,6 +22,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import public_source_paths
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from infrastructure.project.public_acceptance_evidence import evidence_directory
+from infrastructure.rendering._slides_participation import is_beamer_manuscript_section, skips_beamer
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
@@ -377,10 +378,10 @@ def native_artifact_contract(
             effective = _mapping(reader, (manuscript / "config.yaml").relative_to(root).as_posix())
             profile = effective.get("render", {}).get("slides", {}).get("profile", "archive")
             for source in consumed:
-                if source.suffix != ".md" or is_transmission_bookend(source):
+                if not is_beamer_manuscript_section(source):
                     continue
                 text = reader.read(source.relative_to(root).as_posix()).content.decode()
-                if "<!-- render:skip-beamer -->" in text:
+                if skips_beamer(text):
                     continue
                 add(
                     f"section:{source.relative_to(manuscript).as_posix()}:slides",

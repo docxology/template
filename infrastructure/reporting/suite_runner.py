@@ -311,6 +311,7 @@ class TestSuiteConfig:
     total_timeout_seconds: float | None = None
     coverage_cleanup_scope_dir: Path | None = None
     coverage_cleanup_recursive: bool = True
+    coverage_enabled: bool = True
 
     def __post_init__(self) -> None:
         """Populate display defaults and validate opt-in total capacity."""
@@ -331,6 +332,30 @@ def _remaining_attempt_timeout_seconds(
         return per_attempt_timeout_seconds
     current_time = monotonic() if now_seconds is None else now_seconds
     return max(0.0, min(per_attempt_timeout_seconds, total_deadline_seconds - current_time))
+
+
+def _retry_coverage_conflict(
+    config: TestSuiteConfig,
+    retry_count: int,
+    max_retries: int,
+    *,
+    retry_message: str,
+    exhausted_message: str,
+) -> bool:
+    """Apply the shared cleanup and retry transition for a classified conflict."""
+    if not config.coverage_enabled:
+        return False
+    label = config.label.lower()
+    if retry_count > max_retries:
+        logger.error(exhausted_message, label)
+        return False
+    logger.warning(retry_message, label, retry_count, max_retries)
+    clean_coverage_files(
+        config.repo_root,
+        scope_dir=config.coverage_cleanup_scope_dir,
+        recursive=config.coverage_cleanup_recursive,
+    )
+    return True
 
 
 def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
@@ -395,60 +420,41 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
 
             if exit_code != 0 and is_coverage_conflict:
                 retry_count += 1
-                if retry_count <= max_retries:
-                    logger.warning(
-                        "Coverage data conflict detected for %s tests, cleaning stale files and retrying (%d/%d)...",
-                        config.label.lower(),
-                        retry_count,
-                        max_retries,
-                    )
-                    clean_coverage_files(
-                        config.repo_root,
-                        scope_dir=config.coverage_cleanup_scope_dir,
-                        recursive=config.coverage_cleanup_recursive,
-                    )
+                if _retry_coverage_conflict(
+                    config,
+                    retry_count,
+                    max_retries,
+                    retry_message=(
+                        "Coverage data conflict detected for %s tests, cleaning stale files and retrying (%d/%d)..."
+                    ),
+                    exhausted_message="Coverage data conflict persisted for %s tests after cleanup retry.",
+                ):
                     continue
-                else:
-                    logger.error(
-                        "Coverage data conflict persisted for %s tests after cleanup retry.",
-                        config.label.lower(),
-                    )
             break
 
         except subprocess.SubprocessError as e:
             error_msg = str(e)
             if "coverage.exceptions.DataError" in error_msg or "no such table: file" in error_msg:
                 retry_count += 1
-                if retry_count <= max_retries:
-                    logger.warning(
-                        "Coverage database corruption detected for %s, cleaning and retrying (%d/%d)...",
-                        config.label.lower(),
-                        retry_count,
-                        max_retries,
-                    )
-                    clean_coverage_files(
-                        config.repo_root,
-                        scope_dir=config.coverage_cleanup_scope_dir,
-                        recursive=config.coverage_cleanup_recursive,
-                    )
+                if _retry_coverage_conflict(
+                    config,
+                    retry_count,
+                    max_retries,
+                    retry_message="Coverage database corruption detected for %s, cleaning and retrying (%d/%d)...",
+                    exhausted_message="Coverage database corruption persisted after cleanup for %s",
+                ):
                     continue
-                else:
-                    logger.error(
-                        "Coverage database corruption persisted after cleanup for %s",
-                        config.label.lower(),
-                    )
-                    raise
             raise
 
-    coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, config.coverage_json_paths)
-
-    if not coverage_found:
-        logger.warning(f"No {config.label.lower()} coverage percentage found")
-
     test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
-
-    if coverage_pct is not None:
-        test_results["coverage_percent"] = coverage_pct
+    if config.coverage_enabled:
+        coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, config.coverage_json_paths)
+        if not coverage_found:
+            logger.warning(f"No {config.label.lower()} coverage percentage found")
+        if coverage_pct is not None:
+            test_results["coverage_percent"] = coverage_pct
+    else:
+        test_results.pop("coverage_percent", None)
 
     failed_tests = extract_failed_tests(stdout_text, stderr_text)
     # The parser is intentionally conservative, but a zero-exit pytest run is

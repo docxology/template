@@ -17,14 +17,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import platform
 from pathlib import Path
 from typing import Any
 
+from figures._common import figure_markdown_variables
+
 from .composition import generate_token_plan
 from .config import load_gold_refinement_config
 from .evidence import build_evidence_registry
-from figures._common import figure_markdown_variables
 from .formalisms import (
     equation_labels,
     formalism_count,
@@ -49,8 +51,6 @@ from .security_assay import (
     security_assay_summary_line,
     security_assay_table_rows,
 )
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -341,6 +341,14 @@ def _add_integrity_variables(variables: dict[str, str], gr_config: Any, shared_e
 # --------------------------------------------------------------------------- #
 
 
+class RequiredAnalysisInputUnavailable(FileNotFoundError):
+    """The strict manuscript generator reached its missing or empty analysis input."""
+
+    def __init__(self, path: Path, message: str) -> None:
+        super().__init__(message)
+        self.path = path
+
+
 def generate_variables(project_root: Path, *, require_analysis_outputs: bool = False) -> dict[str, str]:
     """Generate all manuscript variables from config and refinery computation.
 
@@ -361,14 +369,16 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     refinery_result = run_refinery()
 
     analysis_path = project_root / "output" / "data" / "refinery_results.json"
-    if analysis_path.exists():
+    try:
         with analysis_path.open("r") as f:
             json.load(f)  # Validate file is readable JSON
-    elif require_analysis_outputs:
-        raise FileNotFoundError(
-            f"Analysis outputs required but missing: {analysis_path}. "
-            "Run projects/templates/template_gold_refinement/scripts/refinement_analysis.py first."
-        )
+    except FileNotFoundError as error:
+        if require_analysis_outputs:
+            raise RequiredAnalysisInputUnavailable(
+                analysis_path,
+                f"Analysis outputs required but missing: {analysis_path}. "
+                "Run projects/templates/template_gold_refinement/scripts/refinement_analysis.py first.",
+            ) from error
 
     token_plan = generate_token_plan(gr_config)
     artifact_counts = _count_output_artifacts(project_root)

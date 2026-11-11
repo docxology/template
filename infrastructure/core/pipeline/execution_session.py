@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import time
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from infrastructure.core.files.project_lock import project_output_lock
@@ -11,7 +12,7 @@ from infrastructure.core.pipeline.execution_custody import execution_guard_resul
 from infrastructure.core.pipeline.execution_records import write_execution_record
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.report_finalization import finalize_execution_reports
-from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -26,6 +27,35 @@ def compose_run_deadline(budget: float, supplied: float | None) -> float:
             raise ValueError("Supervising run deadline must be finite")
         deadline = min(deadline, supplied)
     return deadline
+
+
+@dataclass(frozen=True)
+class PreparedPipelineRun:
+    """Keep the immutable selected plan and original preflight deadline together."""
+
+    plan: ExecutionPlan
+    deadline: float
+
+    def expired(self) -> bool:
+        """Check the original deadline at the caller's preflight boundary."""
+        return time.monotonic() >= self.deadline
+
+
+def prepare_pipeline_run(
+    config: PipelineConfig,
+    *,
+    deadline_monotonic: float | None = None,
+    skip_clean: bool | None = None,
+    target_stage: str | None = None,
+) -> PreparedPipelineRun:
+    """Resolve the selected plan before creating runtime or log resources."""
+    from infrastructure.core.pipeline.plan import compile_execution_plan
+
+    deadline = deadline_monotonic
+    if deadline is None:
+        deadline = compose_run_deadline(config.run_timeout_seconds, None)
+    plan = compile_execution_plan(config, skip_clean=skip_clean, target_stage=target_stage)
+    return PreparedPipelineRun(plan, deadline)
 
 
 def execute_resolved_plan(
@@ -46,18 +76,7 @@ def execute_resolved_plan(
 
     validate_shared_runtime(executor.config, plan)
     plan.admit_targets(executor.config.repo_root)
-    executor.execution_plan = plan
-    executor._plan_digest = plan.digest
-    executor.config.total_stages = len(plan.stages)
-    executor._artifact_manifest_boundary_keys = frozenset(
-        stage.key for stage in plan.stages if stage.validation_boundary
-    )
-    executor._artifact_manifest_boundary_names = frozenset(
-        stage.name for stage in plan.stages if stage.validation_boundary
-    )
-    executor.checkpoint_manager.expected_plan_digest = plan.digest
-    executor.checkpoint_manager.expected_source_digest = plan.source_identity
-    executor.checkpoint_manager.run_id = executor.run_id
+    executor._install_execution_plan(plan)
     executor._run_deadline = deadline
     stages = plan.bind(executor)
     guard = execution_guard_result(
@@ -87,8 +106,11 @@ def execute_resolved_plan(
                 if guard is not None:
                     results.append(guard)
             results = write_execution_record(executor, results)
-            results = finalize_execution_reports(executor, results)
-            return write_execution_record(executor, results)
+            reported_results = finalize_execution_reports(executor, results)
+            if reported_results == results:
+                # Successful reporting already verified the persisted record bytes.
+                return reported_results
+            return write_execution_record(executor, reported_results)
     except TimeoutError as exc:
         return [
             PipelineStageResult(
@@ -105,4 +127,9 @@ def execute_resolved_plan(
         ]
 
 
-__all__ = ["compose_run_deadline", "execute_resolved_plan"]
+__all__ = [
+    "PreparedPipelineRun",
+    "compose_run_deadline",
+    "execute_resolved_plan",
+    "prepare_pipeline_run",
+]

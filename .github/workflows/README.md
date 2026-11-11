@@ -319,12 +319,14 @@ test's one-case JUnit result with zero skips/errors/failures, and its passed
 probe record. Compiler logs and PDFs remain original bounded diagnostics.
 
 
-When `NATIVE_SHARDING_CELLS` is `true`, the required-acceptance reader and release
-handoff explicitly select `--native-cell-union`. Every Source-declared cell must
-complete its genuine installed Original and upload its distinct native index and
-shards. Cell-qualified original evidence/transport paths preserve all receipts;
-the fresh reader consumes them all under one Source and clock. The legacy whole
-roster route retains its existing paths when sharding is disabled. Neither a cell
-nor transport DATA alone grants whole-roster or release acceptance. Successful
-native-cell indexes and shards explicitly request 30 days of artifact retention.
-Retainers still check each actual artifact expiry at retrieval time.
+The required-acceptance reader and release handoff select
+`--native-cell-union` from the checked-out workflow. Every Source-declared
+cell must complete its genuine installed Original and upload its distinct
+native index and shards. Cell-qualified paths preserve the original evidence
+and transport receipts. The fresh reader consumes them under one Source and
+clock. `NATIVE_SHARDING_CELLS=true` selects the matrix producer. The legacy
+whole-roster job can still collect diagnostics when sharding is disabled.
+The complete job requires successful matrix production before setup.
+A cell or transport DATA alone cannot establish whole-roster or release
+acceptance. Successful native-cell artifacts request 30 days of retention.
+Retainers check each actual expiry at retrieval time.

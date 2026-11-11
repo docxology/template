@@ -16,14 +16,14 @@ from typing import Any
 
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.project.public_acceptance_evidence import evidence_directory
-from infrastructure.project.public_hosted_origin import (
-    HostedReadbackContext,
+from infrastructure.project._hosted_protocol import (
     MAX_ARCHIVE,
     MAX_LISTING_PAGES,
     WORKFLOW,
     _context,
-    _merge_listing_pages,
+    collect_artifact_pages,
 )
+from infrastructure.project.public_hosted_origin import HostedReadbackContext
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_auxiliary_print_custody import AuxiliaryPrintOriginal, _ORIGINAL
 from infrastructure.reporting.native_hosted_transport_archive import _archive
@@ -88,14 +88,8 @@ def collect_auxiliary_print_original(
         or base64.b64decode(workflow["content"]) != SnapshotReader(root).read(WORKFLOW).content
     ):
         raise ValueError("auxiliary print actual workflow differs from current Source")
-    pages = []
-    for page in range(1, MAX_LISTING_PAGES + 1):
-        value, _ = api.artifact_page(page)
-        pages.append(value)
-        listing = _merge_listing_pages(pages, complete=False)
-        if len(listing["artifacts"]) == listing["total_count"]:
-            break
-    rows = _merge_listing_pages(pages, complete=True)["artifacts"]
+    listing, _ = collect_artifact_pages(lambda page: api.artifact_page(page)[0])
+    rows = listing["artifacts"]
     selected = [row for row in rows if row.get("name") == ARTIFACT]
     if len(selected) != 1:
         raise ValueError("auxiliary print needs exactly one same-run fixed Darwin artifact")

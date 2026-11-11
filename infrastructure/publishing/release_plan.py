@@ -49,6 +49,7 @@ def git(root: Path, *arguments: str) -> bytes:
     return subprocess.check_output(
         ["git", "-c", "core.fsmonitor=false", "-C", str(root), *arguments],
         env=environment,
+        stdin=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
         timeout=30,
     )
@@ -195,6 +196,19 @@ def build_release_plan(
     return _prepare(root, target_version, expected_current, release_kind=release_kind)[0]
 
 
+def _verify_tracked_inputs(root: Path, paths: list[str]) -> None:
+    tracked = git(root, "--literal-pathspecs", "ls-files", "--stage", "-z", "--", *paths)
+    admitted = []
+    for row in tracked.split(b"\0")[:-1]:
+        metadata, path = row.split(b"\t", 1)
+        mode, _object_id, stage = metadata.split()
+        if stage != b"0" or mode not in {b"100644", b"100755"}:
+            raise ValueError("release inputs require resolved regular-file index entries")
+        admitted.append(os.fsdecode(path))
+    if sorted(admitted) != sorted(paths):
+        raise ValueError("release inputs must be tracked at their exact paths")
+
+
 def _prepare(
     root: Path, target: str, old: str, *, release_kind: str = "patch"
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
@@ -220,9 +234,7 @@ def _prepare(
         raise ValueError(message)
     fixed = [CONTRACT, "infrastructure/_version.py", "infrastructure/project/public_scope.py"]
     scopes = ("root", *PUBLIC_PROJECT_NAMES)
-    inputs: dict[str, bytes] = {}
-    modes = {}
-    for path in [
+    input_paths = [
         *fixed,
         *(
             prefix + name
@@ -231,10 +243,12 @@ def _prepare(
             for name in ("pyproject.toml", "uv.lock")
         ),
         *(f"projects/{scope}/manuscript/config.yaml" for scope in PUBLIC_PROJECT_NAMES),
-    ]:
+    ]
+    _verify_tracked_inputs(root, input_paths)
+    inputs: dict[str, bytes] = {}
+    modes = {}
+    for path in input_paths:
         inputs[path], modes[path] = read_input(root, path)
-        if git(root, "ls-files", "--error-unmatch", "--", path).decode().strip() != path:
-            raise ValueError("release input must be tracked at its exact path")
     contract = json.loads(inputs[CONTRACT])
     if contract != CONTRACT_VALUE:
         raise ValueError("source-owned release-plan contract differs from this implementation")
@@ -272,7 +286,8 @@ def _prepare(
                 "sdk_after": target,
             }
         )
-    # Read back every held byte before returning a plan; no filesystem cache.
+    # Close both the tracked selection and the held byte observations.
+    _verify_tracked_inputs(root, input_paths)
     if git(root, "rev-parse", "HEAD").decode().strip() != commit or any(
         read_input(root, path) != (body, modes[path]) for path, body in inputs.items()
     ):

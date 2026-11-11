@@ -14,6 +14,10 @@ strict verification and capture in one `run` payload under the existing fresh
 unprivileged Linux execution account. Its original Git preflight precedes the phase
 chain and is not repeated after the disposable candidate commit. The strict
 same-owner process census, guardian, deadlines and exit predicates are unchanged.
+Generation permits exactly one worker because concurrent producers under the
+same execution account interfere with each other's final process census. Both
+`run` and `generate` reject other worker counts before any phase or producer;
+the CLI and hosted workflow default to `1`. Provider ordering is unchanged.
 Evidence is created in the account's existing caller-readable artifact directory
 outside Source; only the final successful payload admits a review upload.
 Original diagnostics remain available after a failed phase. Inputs are explicit

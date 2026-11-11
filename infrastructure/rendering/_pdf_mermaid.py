@@ -22,14 +22,13 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
-from infrastructure.rendering import _mermaid_v11
+from infrastructure.rendering._mermaid_native_profile import find_native_profile
 from infrastructure.rendering._mermaid_source_font_default import (
     PROFILE_NAME,
     SCRIPT_NAME,
     default_font_profile_bytes,
     default_font_script_bytes,
 )
-from infrastructure.rendering._mermaid_v12 import POLICY, adapter_bytes, request_bytes, selected_package
 from infrastructure.rendering.native_render_custody import native_render_custody
 from infrastructure.rendering.security import run_isolated_subprocess
 
@@ -492,8 +491,7 @@ def _render_mermaid(
     # Native profile and font inputs are reconstructed before cache admission.
 
     mmd_path.write_text(source + "\n", encoding="utf-8")
-    use_api12 = False
-    use_api11 = False
+    profile = None
     inputs: tuple[Path, ...] = (mmd_path, *((puppeteer_config,) if puppeteer_config is not None else ()))
     try:
         entry = Path(mmdc).resolve(strict=True)
@@ -502,46 +500,36 @@ def _render_mermaid(
             if manifest.stat().st_size > 1024 * 1024:
                 raise ValueError("selected Mermaid package declaration exceeds its finite profile bound")
             metadata = json.loads(manifest.read_bytes())
-            use_api11 = (
-                isinstance(metadata, dict)
-                and metadata.get("name") == "@mermaid-js/mermaid-cli"
-                and metadata.get("version") == "11.16.0"
-            )
-            use_api12 = (
-                isinstance(metadata, dict)
-                and metadata.get("name") == "@mermaid-js/mermaid-cli"
-                and metadata.get("version") == "12.0.0"
-            )
-        if use_api12 or use_api11:
-            module = _mermaid_v11 if use_api11 else None
-            package = module.selected_package(mmdc) if module is not None else selected_package(mmdc)
-            node = shutil.which("node")
-            if node is None:
-                raise ValueError("the selected Mermaid API requires its admitted Node executable")
-            api_version = "v11" if use_api11 else "v12"
-            adapter = output_dir / f"{stem}.mermaid-{api_version}.mjs"
-            request = output_dir / f"{stem}.mermaid-{api_version}-request.json"
-            if use_api11:
-                helper = output_dir / SCRIPT_NAME
-                fonts = output_dir / PROFILE_NAME
-                helper.write_bytes(default_font_script_bytes())
-                fonts.write_bytes(default_font_profile_bytes())
-                inputs = (*inputs, helper, fonts)
-            adapter.write_bytes(module.adapter_bytes() if module is not None else adapter_bytes())
-            request.write_bytes(
-                (module.request_bytes if module is not None else request_bytes)(
-                    package,
-                    mmd_path.absolute(),
-                    png_path.absolute(),
-                    "png",
-                    puppeteer_config.absolute() if puppeteer_config is not None else None,
-                )
-            )
-            cmd = [str(Path(node).resolve(strict=True)), str(adapter.absolute()), str(request.absolute())]
-            inputs = (*inputs, adapter, request)
-            policy = module.POLICY if module is not None else POLICY
-        else:
+            if isinstance(metadata, dict) and metadata.get("name") == "@mermaid-js/mermaid-cli":
+                profile = find_native_profile(metadata.get("version"))
+        if profile is None:
             raise ValueError("selected Mermaid entrypoint has no admitted runtime profile")
+        module = profile.adapter
+        package = module.selected_package(mmdc)
+        node = shutil.which("node")
+        if node is None:
+            raise ValueError("the selected Mermaid API requires its admitted Node executable")
+        adapter = output_dir / f"{stem}.mermaid-{profile.suffix}.mjs"
+        request = output_dir / f"{stem}.mermaid-{profile.suffix}-request.json"
+        if profile.sdk_fonts:
+            helper = output_dir / SCRIPT_NAME
+            fonts = output_dir / PROFILE_NAME
+            helper.write_bytes(default_font_script_bytes())
+            fonts.write_bytes(default_font_profile_bytes())
+            inputs = (*inputs, helper, fonts)
+        adapter.write_bytes(module.adapter_bytes())
+        request.write_bytes(
+            module.request_bytes(
+                package,
+                mmd_path.absolute(),
+                png_path.absolute(),
+                "png",
+                puppeteer_config.absolute() if puppeteer_config is not None else None,
+            )
+        )
+        cmd = [str(Path(node).resolve(strict=True)), str(adapter.absolute()), str(request.absolute())]
+        inputs = (*inputs, adapter, request)
+        policy = module.POLICY
     except (OSError, ValueError) as exc:
         raise RenderingError(f"Mermaid rectangular viewport profile admission failed: {exc}") from exc
     env = os.environ.copy()
@@ -552,7 +540,34 @@ def _render_mermaid(
     before = {str(path.absolute()): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     cache = output_dir / f"{stem}.mermaid-cache.json"
     cache_binding = {"policy": policy, "inputs": before, "source": source, "mmdc": str(Path(mmdc).resolve(strict=True))}
-    if png_path.is_file() and png_path.stat().st_size > 0 and cache.is_file():
+    cache_identity_complete = True
+    if profile.bind_inline_tooling:
+        source_lock = package.parents[2] / "package-lock.json"
+        cache_identity_complete = (
+            source_lock.is_file() and not source_lock.is_symlink() and source_lock.stat().st_size <= 4 * 1024 * 1024
+        )
+        if cache_identity_complete:
+            try:
+                selected_node = Path(node).resolve(strict=True)
+                with selected_node.open("rb") as stream:
+                    node_sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
+                cache_binding["tooling"] = {
+                    "source_lock_sha256": hashlib.sha256(source_lock.read_bytes()).hexdigest(),
+                    "node_path": str(selected_node),
+                    "node_sha256": node_sha256,
+                    "cli_manifest_sha256": hashlib.sha256((package / "package.json").read_bytes()).hexdigest(),
+                    "cli_api_sha256": hashlib.sha256((package / "src/index.js").read_bytes()).hexdigest(),
+                }
+            except OSError:
+                cache_identity_complete = False
+    custody = native_render_custody("native-origin Mermaid production lacks its independently admitted Source owner")
+    if (
+        custody is None
+        and cache_identity_complete
+        and png_path.is_file()
+        and png_path.stat().st_size > 0
+        and cache.is_file()
+    ):
         try:
             cached = json.loads(cache.read_bytes())
         except (ValueError, OSError):
@@ -564,9 +579,6 @@ def _render_mermaid(
     try:
         # Intentionally convert every mmdc execution failure into a documented
         # caller-side fallback so combined PDF rendering can continue.
-        custody = native_render_custody(
-            "native-origin Mermaid production lacks its independently admitted Source owner"
-        )
         # The launcher is called from this frame: native custody verifies
         # this exact function as its caller.
         completed = (

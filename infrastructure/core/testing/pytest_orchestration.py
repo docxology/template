@@ -9,11 +9,15 @@ from __future__ import annotations
 
 import os
 import re
-import subprocess
 from pathlib import Path
 from typing import Any, Literal, Mapping, TypedDict
 
-from infrastructure.core.testing.coverage_policy import check_cov_datafile_support
+from infrastructure.core.testing.coverage_policy import (
+    PYTEST_HELP_PROBE_TIMEOUT_SECONDS,
+    check_cov_datafile_support,
+    pytest_metadata_value,
+    run_pytest_metadata,
+)
 from infrastructure.core.logging.utils import get_logger, log_substep, log_success
 from infrastructure.core.testing.pytest_profiles import (
     DEFAULT_PROJECT_MATRIX_MAX_WORKERS,
@@ -200,34 +204,21 @@ def log_discovered_tests(
     *,
     timeout_seconds: float = 30.0,
 ) -> None:
-    """Run pytest serially with ``--collect-only`` and log its test count.
-
-    Pytest-xdist may schedule collected items even in collection-only mode.
-    Discovery is only a pre-flight count, so carrying the execution command's
-    ``-n``/``--dist`` options into it can duplicate or even start a large suite
-    before the real test run.  A final ``-n 0`` overrides command-line and
-    project-level ``addopts`` parallelism; ``--no-cov`` avoids instrumenting a
-    throwaway collection pass.
-    """
-    discovery_cmd = [*cmd, "--collect-only", "-n", "0", "--no-cov"]
+    """Log a count from a successful bounded, nonmeasuring collection."""
     log_substep(f"Discovering {label} tests...", logger)
     try:
-        result = subprocess.run(  # nosec B603
-            discovery_cmd,
-            cwd=str(repo_root),
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=timeout_seconds,
-        )
-        combined = result.stdout + "\n" + result.stderr
-        test_count = parse_discovery_count(combined)
-        if test_count is not None:
-            log_success(f"Discovered {test_count} {label} tests", logger)
-        else:
-            logger.warning("Could not parse test count from %s test discovery", label)
-    except (subprocess.TimeoutExpired, subprocess.SubprocessError) as exc:
+        result = run_pytest_metadata(cmd, repo_root, env, mode="discovery", timeout_seconds=timeout_seconds)
+    except (OSError, ValueError) as exc:
         logger.warning("Test discovery failed for %s: %s", label, exc)
+        return
+    if result.returncode:
+        logger.warning("Test discovery failed for %s (exit %s)", label, result.returncode)
+        return
+    test_count = pytest_metadata_value(result, mode="discovery")
+    if test_count is not None and test_count.isascii() and test_count.isdecimal() and test_count[0] != "0":
+        log_success(f"Discovered {test_count} {label} tests", logger)
+    else:
+        logger.warning("Could not parse test count from %s test discovery", label)
 
 
 def build_pythonpath(
@@ -261,12 +252,17 @@ def apply_coverage_datafile(
     datafile_name: str,
     *,
     supported: bool | None = None,
+    cwd: Path | None = None,
+    timeout_seconds: float = PYTEST_HELP_PROBE_TIMEOUT_SECONDS,
 ) -> None:
     """Pin coverage output to ``datafile_name`` via CLI flag or COVERAGE_FILE."""
     if supported is None:
-        supported = check_cov_datafile_support()
+        supported = check_cov_datafile_support(
+            command=cmd if cwd is not None else None, cwd=cwd, env=env, timeout_seconds=timeout_seconds
+        )
     if supported:
-        cmd.append(f"--cov-datafile={datafile_name}")
+        option_end = cmd.index("--") if "--" in cmd else len(cmd)
+        cmd.insert(option_end, f"--cov-datafile={datafile_name}")
     else:
         env["COVERAGE_FILE"] = datafile_name
 

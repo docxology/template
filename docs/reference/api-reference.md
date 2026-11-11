@@ -1012,7 +1012,7 @@ Parse, dispatch, and return a stable process exit code.
 *constant — defined in `infrastructure.orchestration.menu`*
 
 ```python
-MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', 'stage_00_setup.py'), ('1', 'Run Project Tests', ...
+MENU_OPTIONS: tuple[tuple[str, str, str], ...] = tuple(((key, action.label, action.detail) for key, action in _MENU_ACTIONS.it...
 ```
 
 ### `PipelineRunner`
@@ -1067,7 +1067,7 @@ Create the log directory and append a session-start banner.
 
 ### `validate_project_slug`
 
-*function — defined in `infrastructure.orchestration.discovery`*
+*function — defined in `infrastructure.project.discovery`*
 
 ```python
 validate_project_slug(slug: str, repo_root: Path, *, projects: Sequence[ProjectInfo] | None=None) -> str
@@ -1275,7 +1275,7 @@ Return source paths for public CI type checks.
 public_project_infos(repo_root: Path | str) -> list[ProjectInfo]
 ```
 
-Return discovered projects that are part of the public template repo.
+Read the declared exemplar roster without opening unrelated lifecycle trees.
 
 ### `PUBLIC_PROJECT_NAMES`
 
@@ -1317,7 +1317,7 @@ Run the project's setup hook, if present.
 
 ### `validate_project_structure`
 
-*function — defined in `infrastructure.project.validation`*
+*function — defined in `infrastructure.core.lifecycle_discovery`*
 
 ```python
 validate_project_structure(project_dir: Path) -> tuple[bool, str]
@@ -3799,7 +3799,7 @@ Return an ISO-8601 build timestamp.
 seal_file_with_kmyth(input_path: Path, output_path: Path | None=None, *, options: KmythSealOptions | None=None) -> Path
 ```
 
-Seal *input_path* with ``kmyth-seal`` and return the ``.ski`` path.
+Seal an artifact while preserving its input and previous sidecar on failure.
 
 ### `SteganographyConfig`
 
@@ -3816,7 +3816,7 @@ Configuration for steganographic PDF post-processing.
 *class — defined in `infrastructure.steganography.core`*
 
 ```python
-class SteganographyProcessor(config: SteganographyConfig | None=None)
+class SteganographyProcessor(config: SteganographyConfig | None=None, *, repo_root: Path | None=None)
 ```
 
 Orchestrates steganographic PDF post-processing.

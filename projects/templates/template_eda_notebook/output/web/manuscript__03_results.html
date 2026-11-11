@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Notebook-to-Tested-Source Extraction for Computational Research" />
-  <title>Exploratory Data Analysis: A Reproducible Notebook
-Template</title>
+  <title>03_results.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -182,91 +179,7 @@ Template</title>
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -275,9 +188,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -306,8 +219,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -392,14 +305,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -417,6 +323,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -429,6 +337,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -656,18 +566,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -718,6 +620,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -746,8 +652,7 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="4" id="sec:results"><span
-class="header-section-number">4</span> Results</h1>
+<h1 id="sec:results">Results</h1>
 <p>This section presents the exploratory analysis of the shipped
 dataset. Every figure and the summary table are produced by the <a
 href="https://github.com/docxology/template/blob/main/projects/templates/template_eda_notebook/scripts/eda_analysis.py">EDA
@@ -757,8 +662,7 @@ calls the tested figure-data preparers in
 script regenerates the figures under <code>../figures/</code> and the
 summary CSV under <code>output/data/</code>; the prose below describes
 what those artifacts show.</p>
-<h2 data-number="4.1" id="dataset-and-missingness"><span
-class="header-section-number">4.1</span> Dataset and missingness</h2>
+<h2 id="dataset-and-missingness">Dataset and missingness</h2>
 <p>The dataset contains 120 subject records across three groups
 (<code>alpha</code>, <code>beta</code>, <code>gamma</code>) with three
 numeric features: height (cm), weight (kg), and resting heart rate
@@ -767,46 +671,47 @@ numeric features: height (cm), weight (kg), and resting heart rate
 <code>clean_dataset()</code> then drops rows missing any numeric feature
 and reports the count. With the shipped data, four rows are removed,
 leaving a complete-case dataset for the analysis below.</p>
-<h2 data-number="4.2" id="distributions"><span
-class="header-section-number">4.2</span> Distributions</h2>
-<p>fig. <a href="#fig:height_histogram">1</a> shows the distribution of
-height across the complete-case dataset, binned by
+<h2 id="distributions">Distributions</h2>
+<p><span class="citation"
+data-cites="fig:height_histogram">[@fig:height_histogram]</span> shows
+the distribution of height across the complete-case dataset, binned by
 <code>histogram_data()</code> and plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
-<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in…"><img src="../figures/height_histogram.png"
+<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in…"><img src="../figures/height_histogram.png"
 alt="10-bin histogram of 116 non-missing height_cm observations from 142.59 to 193.71. The tallest bar count is 33 in 168.15 to 173.26. Bars encode counts; missing values are excluded and no fitted distribution is implied." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 1: Height distribution: bin counts
-produced by <code>histogram_data(frame, "height_cm", bins=10)</code> in
+<figcaption>Height distribution: bin counts produced
+by <code>histogram_data(frame, "height_cm", bins=10)</code> in
 <code>src/template_eda_notebook/eda/figures.py</code> and plotted as a
 bar chart by <code>scripts/eda_analysis.py</code>. The bin counts sum to
 the number of complete-case rows; the shape is the roughly bell-shaped
 spread expected from the generating process.</figcaption>
 </figure>
-<h2 data-number="4.3" id="group-composition"><span
-class="header-section-number">4.3</span> Group composition</h2>
-<p>fig. <a href="#fig:group_counts">2</a> reports how many complete-case
-rows fall in each group, computed by <code>group_count_data()</code>
-(labels sorted for deterministic output).</p>
+<h2 id="group-composition">Group composition</h2>
+<p><span class="citation"
+data-cites="fig:group_counts">[@fig:group_counts]</span> reports how
+many complete-case rows fall in each group, computed by
+<code>group_count_data()</code> (labels sorted for deterministic
+output).</p>
 <figure id="fig:group_counts">
-<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Rows per group: sorted category labels and aligned counts from group_count_data() ."><img src="../figures/group_counts.png"
+<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Rows per group: sorted category labels and aligned counts from group_count_data() ."><img src="../figures/group_counts.png"
 alt="3 bars encode complete-case row counts: alpha: 38; beta: 34; gamma: 44. Largest count 44 occurs for gamma; smallest count 34 occurs for beta. These counts describe sample composition, not group effects." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 2: Rows per group: sorted category
-labels and aligned counts from <code>group_count_data()</code>. The
-three groups are of comparable, though not identical, size; the counts
-sum to the complete-case row total.</figcaption>
+<figcaption>Rows per group: sorted category labels
+and aligned counts from <code>group_count_data()</code>. The three
+groups are of comparable, though not identical, size; the counts sum to
+the complete-case row total.</figcaption>
 </figure>
-<h2 data-number="4.4" id="correlation-structure-1"><span
-class="header-section-number">4.4</span> Correlation structure</h2>
-<p>fig. <a href="#fig:correlation_heatmap">3</a> visualizes the Pearson
-correlation matrix of the three numeric features, computed by
-<code>correlation_matrix()</code> and prepared for the heatmap by
-<code>correlation_heatmap_data()</code>. The diagonal is unity by
-construction and the matrix is symmetric.</p>
+<h2 id="correlation-structure">Correlation structure</h2>
+<p><span class="citation"
+data-cites="fig:correlation_heatmap">[@fig:correlation_heatmap]</span>
+visualizes the Pearson correlation matrix of the three numeric features,
+computed by <code>correlation_matrix()</code> and prepared for the
+heatmap by <code>correlation_heatmap_data()</code>. The diagonal is
+unity by construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
-<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Feature correlation heatmap: values from correlation_heatmap_data()"><img src="../figures/correlation_heatmap.png"
+<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Feature correlation heatmap: values from correlation_heatmap_data()"><img src="../figures/correlation_heatmap.png"
 alt="3-by-3 Pearson correlation heatmap for height_cm, weight_kg, resting_hr_bpm on a fixed minus-one-to-one diverging scale. The diagonal is 1.00. Off-diagonal pairs are height_cm with weight_kg: 0.72; height_cm with resting_hr_bpm: -0.12; weight_kg with resting_hr_bpm: -0.08. Correlations are descriptive and do not establish causation." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 3: Feature correlation heatmap:
-values from <code>correlation_heatmap_data()</code> (which wraps
+<figcaption>Feature correlation heatmap: values from
+<code>correlation_heatmap_data()</code> (which wraps
 <code>correlation_matrix(method="pearson")</code>) rendered with a
 diverging colour map on the fixed range <span class="math inline">\([-1,
 1]\)</span>. Height and weight are strongly positively correlated;
@@ -820,16 +725,14 @@ the comparatively weak <strong>height ~ resting heart rate</strong>
 (slightly negative) and <strong>weight ~ resting heart rate</strong>.
 This ranking is the single most useful artifact of the first pass: it
 points directly at the relationship worth modelling next.</p>
-<h2 data-number="4.5" id="summary-statistics"><span
-class="header-section-number">4.5</span> Summary statistics</h2>
+<h2 id="summary-statistics">Summary statistics</h2>
 <p>The analysis script writes a per-column summary table to
 <code>output/data/summary_statistics.csv</code> from
 <code>summary_statistics()</code>. Each row reports the count of
 non-missing observations, mean, sample standard deviation, minimum,
 median, and maximum for one numeric feature.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 1: Summary-statistics table written by the analysis script from src/template_eda_notebook/eda/statistics.py::su…"><table id="tbl:summary_statistics" data-responsive-table="true">
-<caption>Table 1: Summary-statistics table written by the analysis
-script from
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Summary-statistics table written by the analysis script from src/template_eda_notebook/eda/statistics.py::summary_sta…"><table id="tbl:summary_statistics" data-responsive-table="true">
+<caption>Summary-statistics table written by the analysis script from
 <code>src/template_eda_notebook/eda/statistics.py::summary_statistics()</code>.
 The concrete numbers are reproduced verbatim by running the script — the
 manuscript intentionally does not transcribe volatile values, so prose
@@ -859,8 +762,7 @@ and CSV cannot drift.</caption>
 numeric feature within each group; the three group means for height are
 close but not equal, reflecting the mild group structure in the
 generating process.</p>
-<h2 data-number="4.6" id="validation"><span
-class="header-section-number">4.6</span> Validation</h2>
+<h2 id="validation">Validation</h2>
 <p>The analysis was validated through the zero-mock <code>tests/</code>
 suite:</p>
 <ul>
@@ -876,8 +778,7 @@ cells.</li>
 </ul>
 <p>All tests pass with coverage exceeding the 90% project gate, with no
 mocks.</p>
-<h2 data-number="4.7" id="discussion"><span
-class="header-section-number">4.7</span> Discussion</h2>
+<h2 id="discussion">Discussion</h2>
 <p>The results confirm the EDA workflow end to end: missingness is
 surfaced and removed with an explicit count, distributions and group
 composition are read straight from tested preparers, and the correlation

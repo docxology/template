@@ -1,7 +1,8 @@
-"""Exact HTML-attribute matching and source-preserving removal helpers."""
+"""Exact HTML attribute matching and source-preserving edits."""
 
 from __future__ import annotations
 
+import html
 import re
 
 
@@ -17,6 +18,17 @@ def html_attribute_assignment_pattern(name: str) -> re.Pattern[str]:
         rf"(?<!\S){re.escape(name)}\s*=\s*(?:\"(?P<double>[^\"]*)\"|'(?P<single>[^']*)'|(?P<bare>[^\s>]+))",
         flags=re.IGNORECASE | re.DOTALL,
     )
+
+
+def set_html_attribute(tag: str, name: str, value: str) -> str:
+    """Replace the first exact attribute, or append it to the opening tag."""
+
+    escaped = html.escape(value, quote=True)
+    pattern = html_attribute_assignment_pattern(name)
+    updated, replacements = pattern.subn(lambda _match: f'{name}="{escaped}"', tag, count=1)
+    if replacements:
+        return updated
+    return tag[:-1].rstrip() + f' {name}="{escaped}">' if tag.endswith(">") else tag
 
 
 def remove_html_attribute_assignment(attributes: str, name: str) -> str:
@@ -68,4 +80,5 @@ __all__ = [
     "html_attribute_assignment_pattern",
     "remove_html_attribute_assignment",
     "remove_unquoted_whitespace_only_lines",
+    "set_html_attribute",
 ]

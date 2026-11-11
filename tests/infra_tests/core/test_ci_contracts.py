@@ -40,7 +40,8 @@ def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcom
     jobs = workflow["jobs"]
     assert "test-contract" in jobs["ci-gate"]["needs"]
     contract = jobs["test-contract"]
-    assert contract["timeout-minutes"] * 60 == 7200
+    assert contract["timeout-minutes"] == "${{ matrix.documents == 'native' && 165 || 120 }}"
+    assert CONTRACT_SECONDS + 2430 < 165 * 60
     assert CONTRACT_SECONDS <= 7200
     assert jobs["test-infra"]["timeout-minutes"] == 10
     assert jobs["test-infra"]["strategy"]["max-parallel"] == 16

@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import re
 import signal
+import stat
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,7 +21,8 @@ _UNTRUSTED_SOURCE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "file or command inclusion",
         re.compile(
-            r"file://|(?:\.\./)+|!include\b|\^\^|\\(?:input|include|openin|read|write18|shellescape)\b",
+            r"file://|(?:\.\./)+|!include\b|\^\^|"
+            r"\\(?:input|include|openin|openout|read|write|shellescape)(?![A-Za-z@])",
             re.IGNORECASE,
         ),
     ),
@@ -75,6 +77,34 @@ class RenderSecurityProfile:
         for label, pattern in _UNTRUSTED_SOURCE_PATTERNS:
             if pattern.search(content):
                 raise RenderingError(f"untrusted renderer rejected {label}: {path}")
+
+    def validate_output_tree(self, path: Path, *, allow_missing_root: bool = False) -> None:
+        """Admit a caller-owned output tree before cleanup or compilation."""
+        if not self.untrusted:
+            return
+        self.validate_output(path)
+        root = self.temp_root
+        if root is None or root.is_symlink() or (not root.is_dir() and (root.exists() or not allow_missing_root)):
+            raise RenderingError("untrusted rendering requires an existing real temporary root")
+        if path.is_symlink() or (path.exists() and not path.is_dir()):
+            raise RenderingError(f"untrusted renderer requires a real output directory: {path}")
+        if not path.exists():
+            return
+        pending = [path]
+        while pending:
+            for entry in pending.pop().iterdir():
+                info = entry.lstat()
+                if stat.S_ISDIR(info.st_mode):
+                    pending.append(entry)
+                elif not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                    raise RenderingError(f"untrusted renderer refuses linked or special output: {entry}")
+
+    def prepare_output_directory(self, path: Path) -> None:
+        """Admit a direct renderer directory before creating it."""
+
+        self.validate_output_tree(path, allow_missing_root=True)
+        directory = path.resolve() if self.untrusted else path
+        directory.mkdir(parents=True, exist_ok=True)
 
     def environment(self) -> dict[str, str] | None:
         """Return a credential-free child environment for untrusted rendering."""

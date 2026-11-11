@@ -712,6 +712,24 @@ primitives. This process profile is separate from the accessible composer's
 AST, TeX, and raster preflights; callers handling external material should use
 both boundaries rather than treating either one as a complete content sandbox.
 
+The Stage 3 orchestrator accepts `untrusted` for scriptless HTML from
+prepared top-level Markdown. Use `--skip-manuscript-hydration` and an existing
+temporary root that contains the project's `output/` directory. The project
+slot and temporary root must have real directory components. The reader
+admits bounded, unlinked Markdown, `config.yaml`, and optional local BibTeX
+files through the selected manuscript directory. It validates the parsed
+document and each generated page before replacing HTML. Basic formatting,
+mathematics, citations, and safe links are supported. This profile refuses
+raw markup, images, authored attribute values, and document metadata beyond
+title, subtitle, author, date, and language. It emits HTML previews without
+running hydration or writing native publication evidence. Direct untrusted
+web rendering uses the configured manuscript directory for a single file
+and the explicit manuscript directory for a combined render.
+
+Untrusted PDF and TeX require an operating-system filesystem sandbox. The
+direct renderers refuse that profile before reading a document or changing
+outputs. Use the trusted profile for documents and compiler inputs you control.
+
 When a figure registry record includes `long_description`, rendered HTML places
 one labelled disclosure after the caption and associates it with the image via
 `aria-details`. The concise `alt_text`, visible caption, and long
@@ -1486,3 +1504,16 @@ composition and engineering guarantees; they do not establish scientific,
 publication, tagged-PDF or accessibility conformance acceptance.
 
 Stage 3 prepares enabled native transmission assets before project hydration can seal their visualization evidence. It preserves explicit paper-frontmatter admission and repeats the bookend write after hydration restores the manuscript tree. Skipping hydration retains the existing final bookend path.
+
+
+The current exact Mermaid CLI12.2 profile is owned by [`_mermaid_v122.py`](_mermaid_v122.py)
+and its separate single/ordered SDK assets. It preserves the curated licensed
+font constructor before layout, used-face embedding, explicit default theme,
+1400×900 native viewport and scale one, with upstream font embedding disabled.
+Historical11.16 and12.0 profiles remain exact separate adapters. The standalone
+caller preserves custom rectangles/backgrounds through a distinct literal
+request; those values cannot borrow native fixed-profile admission. Ordinary
+current-profile caches bind the actual Source lock, Node body and consumed
+adapter/request/font inputs; genuine native owners always execute their call.
+Run `npm run test:katex-trust` for the output-only inherited-trust regression.
+Component rendering and dependency audits do not grant native or release acceptance.

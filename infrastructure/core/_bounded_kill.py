@@ -117,13 +117,6 @@ def _terminate_process_group(group_id: int) -> None:
         os.killpg(group_id, signal.SIGKILL)
 
 
-def _timeout_output_text(value: str | bytes | None) -> str:
-    """Normalize ``TimeoutExpired`` partial output across Python versions."""
-    if isinstance(value, bytes):
-        return value.decode("utf-8", errors="replace")
-    return value or ""
-
-
 def _terminate_and_reap_interrupted_process(
     process: subprocess.Popen[str],
     *,

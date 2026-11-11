@@ -166,6 +166,9 @@ observations alone do not establish complete execution or a universal speedup.
 | Module | Role |
 | --- | --- |
 | `native_analysis_boundary_replay.py` | Reconstruct retained analysis boundaries under genuine native custody. |
+| `multi_project_readback.py` | Validated per-project and shared-run readback for multi-project reporting, preserving requested project order. |
+| `native_analysis_current.py` | Fresh Current analysis execution through the complete native core controller using admitted Source, held Git root and live producer scope. |
+| `readiness_artifact_graph.py` | Walk bounded exact readiness artifact references from a snapshot, checking digest bindings and preserving strict public/native payload labels. |
 | `native_analysis_read_replay.py` | Reconstruct every authenticated actual read/write event from held Source bytes. |
 | `native_analysis_semantic_compare.py` | Compare complete authenticated analysis graphs across physical executions. |
 | `native_analysis_stage_replay.py` | Bind an analysis leaf to the one genuinely authenticated fixed stage chain. |
@@ -332,7 +335,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_mermaid_all_source_worker.py` | Thin installed-SDK entry point for the original complete28 Source component. |
 | `native_mermaid_all_sources.py` | Actual complete Source fence observation and explicitly nominated fresh reader. |
 | `native_mermaid_batch_all_sources.py` | Actual complete Source fence observation and explicitly nominated fresh reader. |
-| `native_mermaid_batch_source_reference.py` | Genuine ordered Source11 artifacts and independently owned batch readers. |
+| `native_mermaid_batch_source_reference.py` | Genuine ordered Source122 artifacts and independently owned batch readers. |
 | `native_mermaid_font_bodies.py` | Live independently nominated Source font bodies, separate from OS shaping. |
 | `native_mermaid_production_tool.py` | Retain actual Mermaid production launches inside the existing fixed stage. |
 | `native_mermaid_runtime_custody.py` | Original Mermaid/Node runtime bytes and exact observed platform-font faces. |
@@ -548,3 +551,22 @@ and holds each custodian under the same Source and deadline. It consumes every
 original receipt and rejects conflicting shared bytes. DATA selection helpers in
 `native_cell_selection.py` grant no native authority; the full union and complete
 profile validators remain mandatory before candidate publication.
+
+
+## Current Source Mermaid profile
+
+The current Source-owned profile admits exact Mermaid CLI 12.2.0 with the
+declared Root Node 24 engine and complete Source-pinned npm lock, installed
+package manifests and dependency-body inventory. Keep the installed KaTeX
+package version separate from independently inspected bundled ESM code;
+neither an inventory nor a version label grants native or release authority.
+
+Single and ordered Source 12.2 references retain the licensed Source fonts,
+default theme, white background, 1400x900 viewport, scale 1 and disabled Mermaid
+font embedding. Every original still requires actual Node 24 proof, live
+before/after library observations, independent paint/font/topology checks,
+finite pixel and storage budgets, process custody and the original clock.
+The historical 11.16.0 and 12.0.0 render profiles remain distinct; the current
+profile cannot enter the historical 12 path with weaker font obligations.
+The historical Office CLI observer explicitly refuses 12.2 before creating
+output evidence; current native consumers use the full Source-owned API.

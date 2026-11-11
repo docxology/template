@@ -144,7 +144,9 @@ def _reopen_ancestor(tag: str, raw: str) -> str:
     return raw
 
 
-def split_canonical_html(content: str, bodies: tuple[bytes, ...]) -> tuple[str, tuple[str, ...]]:
+def split_canonical_html(
+    content: str, bodies: tuple[bytes, ...], *, byte_limit: int | None = None
+) -> tuple[str, tuple[str, ...]]:
     """Return marker-free index and source-owned pages with the identical shell.
 
     Generated title/TOC content, bibliography and footnotes stay in index;
@@ -163,25 +165,32 @@ def split_canonical_html(content: str, bodies: tuple[bytes, ...]) -> tuple[str, 
     ordered = [document.markers[token] for token in expected]
     if any(left[1] > right[0] for left, right in zip(ordered, ordered[1:])):
         raise RenderingError("Canonical HTML reordered source boundaries")
-    prefix, suffix = content[: document.body_start], content[document.body_end :]
-    pages = []
-    for start, end in tokens:
-        first, ancestors = document.markers[start][1], document.markers[start][2]
-        last, _, closing = document.markers[end]
-        pages.append(
-            prefix
-            + "".join(_reopen_ancestor(tag, raw) for tag, raw in ancestors)
-            + content[first:last]
-            + "".join(f"</{tag}>" for tag, _ in reversed(closing))
-            + suffix
-        )
     parts = []
     cursor = 0
     for first, last, _ in ordered:
         parts.append(content[cursor:first])
         cursor = last
     parts.append(content[cursor:])
-    return "".join(parts), tuple(pages)
+    combined = "".join(parts)
+
+    prefix, suffix = content[: document.body_start], content[document.body_end :]
+    remaining = None if byte_limit is None else byte_limit - len(combined.encode())
+    if remaining is not None and remaining < 0:
+        raise RenderingError("Untrusted HTML publication exceeds its aggregate byte budget")
+    shell_bytes = 0 if remaining is None else len(prefix.encode()) + len(suffix.encode())
+    pages = []
+    for start, end in tokens:
+        first, ancestors = document.markers[start][1], document.markers[start][2]
+        last, _, closing = document.markers[end]
+        opening = "".join(_reopen_ancestor(tag, raw) for tag, raw in ancestors)
+        inner = content[first:last]
+        closing_tags = "".join(f"</{tag}>" for tag, _ in reversed(closing))
+        if remaining is not None:
+            remaining -= shell_bytes + len(opening.encode()) + len(inner.encode()) + len(closing_tags.encode())
+            if remaining < 0:
+                raise RenderingError("Untrusted HTML publication exceeds its aggregate byte budget")
+        pages.append(prefix + opening + inner + closing_tags + suffix)
+    return combined, tuple(pages)
 
 
 def project_source_context_ast(ast: bytes, bodies: tuple[bytes, ...], source_index: int | None = None) -> bytes:

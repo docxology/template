@@ -20,6 +20,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
+from infrastructure.rendering._untrusted_web import PreparedWeb, prepare_web_sources, render_prepared_web
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.combined_native_commands import html_combined_command, html_metadata_arguments
 from infrastructure.rendering.native_render_custody import native_render_custody
@@ -55,12 +56,14 @@ class WebRenderer:
     def render(self, source_file: Path) -> Path:
         """Render markdown to HTML."""
         output_dir = Path(self.config.web_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
         output_file = self._output_file_for_source(source_file)
         profile = self.config.security()
+        if profile.untrusted:
+            prepared = prepare_web_sources(Path(self.config.manuscript_dir), (source_file,), bibliographies=False)
+            return render_prepared_web(self.config, prepared, (output_file,))
         profile.validate_output(output_file)
         profile.validate_source(source_file)
+        profile.prepare_output_directory(output_dir)
 
         # Apply the same web-only markdown pass used for the combined build so
         # per-section HTML resolves Pandoc ``[@key]`` citations and raw-LaTeX
@@ -174,6 +177,12 @@ class WebRenderer:
         Raises:
             RenderingError: If combination or rendering fails
         """
+        if self.config.security().untrusted:
+            if paper_layout is not None:
+                raise RenderingError("Untrusted HTML does not admit an authored paper layout")
+            prepared = prepare_web_sources(manuscript_dir, tuple(source_files), bibliographies=True)
+            return self._render_untrusted_combined(prepared)
+
         layout = admit_paper_layout(manuscript_dir, tuple(source_files), paper_layout)
         source_files = list(layout.complete)
 
@@ -190,13 +199,12 @@ class WebRenderer:
         logger.info("=" * BANNER_WIDTH + "\n")
 
         output_dir = Path(self.config.web_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
         output_file = output_dir / "index.html"
         profile = self.config.security()
         profile.validate_output(output_file)
         for source_file in source_files:
             profile.validate_source(source_file)
+        profile.prepare_output_directory(output_dir)
 
         # Remove existing output file to ensure fresh generation
         if output_file.exists():
@@ -369,6 +377,21 @@ class WebRenderer:
         )
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
         return output_file
+
+    def _render_untrusted_combined(
+        self, prepared: PreparedWeb, *, project_anchor: tuple[Path, tuple[int, int]] | None = None
+    ) -> Path:
+        outputs = tuple(
+            None if is_transmission_bookend(source) else self._output_file_for_source(source)
+            for source, _ in prepared.sources
+        )
+        return render_prepared_web(
+            self.config,
+            prepared,
+            outputs,
+            index=Path(self.config.web_dir) / "index.html",
+            project_anchor=project_anchor,
+        )
 
     @staticmethod
     def _pandoc_metadata_args(manuscript_dir: Path) -> list[str]:

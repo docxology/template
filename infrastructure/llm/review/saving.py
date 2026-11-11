@@ -1,9 +1,12 @@
 """File I/O operations for saving and summarizing LLM review outputs."""
 
 import json
+import ntpath
+import re
 from datetime import datetime
 from pathlib import Path
 
+from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.llm.review.formatting import (
@@ -17,12 +20,37 @@ from infrastructure.llm.templates import TRANSLATION_LANGUAGES
 logger = get_logger(__name__)
 
 
+def _review_filename(name: str) -> str:
+    filename = f"{name}.md"
+    if (
+        not isinstance(name, str)
+        or re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]*", name) is None
+        or ntpath.isreserved(filename)
+    ):
+        raise ValueError("Review name must be a safe filename component")
+    return filename
+
+
+def _review_output_boundary(output_dir: Path, project_dir: Path | None) -> tuple[Path, Path]:
+    """Use the selected project or the caller's explicit output directory."""
+    target = output_dir.absolute()
+    if project_dir is not None:
+        return project_dir, target
+    ancestor = target.parent
+    while not ancestor.exists():
+        ancestor = ancestor.parent
+    root = ancestor.resolve(strict=True)
+    return root, root / target.relative_to(ancestor)
+
+
 def save_review_outputs(
     reviews: dict[str, str],
     output_dir: Path,
     model_name: str,
     pdf_path: Path,
     session_metrics: SessionMetrics,
+    *,
+    project_dir: Path | None = None,
 ) -> bool:
     """Save all review outputs to markdown files with detailed metrics.
 
@@ -32,14 +60,19 @@ def save_review_outputs(
         model_name: Name of LLM model used
         pdf_path: Path to source manuscript PDF
         session_metrics: Complete session metrics
+        project_dir: Selected project root for pipeline output confinement
 
     Returns:
         True if all files saved successfully
     """
     logger.info("Saving review outputs...")
 
-    # Create output directory
-    output_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        filenames = {name: _review_filename(name) for name in reviews}
+        root, directory = _review_output_boundary(output_dir, project_dir)
+    except (OSError, ValueError) as exc:
+        logger.error("Review output refused: %s", exc)
+        return False
 
     success = True
     timestamp = datetime.now().isoformat()
@@ -47,17 +80,11 @@ def save_review_outputs(
 
     # Save individual reviews
     for name, content in reviews.items():
-        filepath = output_dir / f"{name}.md"
+        filepath = directory / filenames[name]
         try:
             metrics = session_metrics.reviews.get(name, ReviewMetrics())
             header = build_review_header(name, model_name, date_str, metrics)
-            _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
-            try:
-                _tmp.write_text(header + content, encoding="utf-8")
-                _tmp.replace(filepath)
-            except Exception:
-                _tmp.unlink(missing_ok=True)
-                raise
+            atomic_write_text_confined(root, filepath, header + content, mode=0o600)
             # Log with full absolute path and word count
             full_path = filepath.resolve()
             if name.startswith("translation_"):
@@ -68,12 +95,12 @@ def save_review_outputs(
                 )
             else:
                 logger.info(f"  Saved: {full_path} ({metrics.output_words:,} words)")
-        except OSError as e:
+        except (OSError, ValueError) as e:
             logger.error(f"Failed to save {name}: {e}", exc_info=True)
             success = False
 
     # Save combined review
-    combined_path = output_dir / "combined_review.md"
+    combined_path = directory / "combined_review.md"
     try:
         combined_content = build_combined_review_content(
             reviews,
@@ -83,20 +110,14 @@ def save_review_outputs(
             timestamp,
             date_str,
         )
-        _tmp = combined_path.with_suffix(combined_path.suffix + ".tmp")
-        try:
-            _tmp.write_text(combined_content, encoding="utf-8")
-            _tmp.replace(combined_path)
-        except Exception:
-            _tmp.unlink(missing_ok=True)
-            raise
+        atomic_write_text_confined(root, combined_path, combined_content, mode=0o600)
         logger.info(f"  Saved combined review: {combined_path}")
-    except OSError as e:
+    except (OSError, ValueError) as e:
         logger.error(f"Failed to save combined review: {e}", exc_info=True)
         success = False
 
     # Save metadata
-    metadata_path = output_dir / "review_metadata.json"
+    metadata_path = directory / "review_metadata.json"
     try:
         metadata = build_review_metadata(
             reviews,
@@ -105,13 +126,7 @@ def save_review_outputs(
             session_metrics,
             timestamp,
         )
-        _tmp = metadata_path.with_suffix(metadata_path.suffix + ".tmp")
-        try:
-            _tmp.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-            _tmp.replace(metadata_path)
-        except Exception:
-            _tmp.unlink(missing_ok=True)
-            raise
+        atomic_write_text_confined(root, metadata_path, json.dumps(metadata, indent=2), mode=0o600)
         logger.info(f"  Saved metadata: {metadata_path}")
     except (OSError, ValueError) as e:
         logger.error(f"Failed to save metadata: {e}", exc_info=True)
@@ -129,6 +144,8 @@ def save_single_review(
     output_dir: Path,
     model_name: str,
     metrics: ReviewMetrics,
+    *,
+    project_dir: Path | None = None,
 ) -> Path:
     """Save a single review immediately after generation.
 
@@ -142,15 +159,14 @@ def save_single_review(
         output_dir: Output directory path
         model_name: Name of LLM model used
         metrics: Review generation metrics
+        project_dir: Selected project root for pipeline output confinement
 
     Returns:
         Path to saved file
     """
-    # Create output directory if needed
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Generate filepath
-    filepath = output_dir / f"{review_name}.md"
+    filename = _review_filename(review_name)
+    root, directory = _review_output_boundary(output_dir, project_dir)
+    filepath = directory / filename
 
     # Create header with metadata
     timestamp = datetime.now().isoformat()
@@ -159,13 +175,7 @@ def save_single_review(
 
     # Write file
     try:
-        _tmp = filepath.with_suffix(filepath.suffix + ".tmp")
-        try:
-            _tmp.write_text(header + content, encoding="utf-8")
-            _tmp.replace(filepath)
-        except Exception:
-            _tmp.unlink(missing_ok=True)
-            raise
+        atomic_write_text_confined(root, filepath, header + content, mode=0o600)
 
         # Log with full absolute path and word count
         full_path = filepath.resolve()
@@ -180,9 +190,9 @@ def save_single_review(
         else:
             logger.info(f"✅ Saved: {full_path} ({metrics.output_words:,} words)")
 
-        return filepath
+        return output_dir / filename
 
-    except OSError as e:
+    except (OSError, ValueError) as e:
         logger.error(f"Failed to save {review_name}: {e}")
         raise
 

@@ -14,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 48,
-      "size_mb": 2.817342758178711
+      "size_mb": 2.817361831665039
     },
     "detailed_validation": {
       "directories": {
@@ -47,7 +47,7 @@
           "file_count": 27,
           "largest_file": "sheaf_layers_overview.png",
           "largest_file_path": "figures/sheaf_layers_overview.png",
-          "size_mb": "3.70"
+          "size_mb": "3.69"
         },
         "llm": {
           "exists": false,
@@ -71,7 +71,7 @@
           "file_count": 1,
           "largest_file": "template_active_inference_combined.pdf",
           "largest_file_path": "pdf/template_active_inference_combined.pdf",
-          "size_mb": "3.80"
+          "size_mb": "3.91"
         },
         "reports": {
           "exists": true,
@@ -95,7 +95,7 @@
           "file_count": 20,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.73"
+          "size_mb": "2.72"
         }
       },
       "file_counts": {
@@ -127,7 +127,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 3.8
+            "size_mb": 3.91
           },
           "data": {
             "exists": true,
@@ -157,7 +157,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.7
+            "size_mb": 3.69
           },
           "llm": {
             "exists": false,
@@ -187,7 +187,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.8
+            "size_mb": 3.91
           },
           "reports": {
             "exists": true,
@@ -217,7 +217,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.73
+            "size_mb": 2.72
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -227,16 +227,16 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 17.538436889648438
+      "total_size_mb": 17.6431941986084
     },
     "figures": {
       "files": 27,
-      "size_mb": 3.6972551345825195
+      "size_mb": 3.69451904296875
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 3.8005847930908203
+      "size_mb": 3.9135684967041016
     },
     "stable_inventory": {
       "categories": {
@@ -246,11 +246,11 @@
         },
         "data": {
           "files": 48,
-          "size_bytes": 2954198
+          "size_bytes": 2954218
         },
         "figures": {
           "files": 27,
-          "size_bytes": 3876853
+          "size_bytes": 3873984
         },
         "manuscript": {
           "files": 21,
@@ -258,20 +258,20 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 3985202
+          "size_bytes": 4103674
         },
         "reports": {
           "files": 33,
-          "size_bytes": 449053
+          "size_bytes": 449051
         },
         "web": {
           "files": 20,
-          "size_bytes": 2861902
+          "size_bytes": 2856127
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 178,
-      "total_size_bytes": 18390384
+      "total_size_bytes": 18500230
     }
   },
   "recommendations": [],
@@ -282,12 +282,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T06:08:09Z",
+  "timestamp": "2026-11-10T02:08:15Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "95f376cffe43e17e1d9425129b5a22a5329f4c85164378ef311ce3b5017dd771",
-      "size_bytes": 54341
+      "sha256": "02c78220e5b1327103a6ba95879e647961df5d4cc8576ad21c24b0c3c59867e0",
+      "size_bytes": 58790
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -412,19 +412,19 @@
     "fingerprints": {
       "config": {
         "file_count": 27,
-        "sha256": "4a747ec2869cc30d12bd10a1c1b5c1d05f2581a20529cc3a36af301e9ec6db41"
+        "sha256": "d87887c704f29cfdea9b665d344f0ec5140c9a39756fab07b7e6b649fb6db134"
       },
       "output": {
         "file_count": 178,
-        "sha256": "eb806c2bf443aee66a6e29fd54f2b100073bf1b20a0accc57fcf182f7c44e80f"
+        "sha256": "d3b17b1d5fdc6306101672cc335abceed284e2c08ddb1ddc4eb527cffd265ecc"
       },
       "source": {
         "file_count": 283,
-        "sha256": "5238fc792ac2563532713448c8e6262c8f3fb84d9249a0ddad88f96fa1d625ac"
+        "sha256": "2e61536387d9111650eb67401a82ae2c2feca6d67503ebd444095d175fb09a8b"
       },
       "stage": {
-        "file_count": 1616,
-        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
+        "file_count": 1759,
+        "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
       }
     },
     "project": "templates/template_active_inference",

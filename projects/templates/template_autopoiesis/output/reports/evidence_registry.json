@@ -1896,7 +1896,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T05:50:23Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -1908,7 +1908,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T05:50:23Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",

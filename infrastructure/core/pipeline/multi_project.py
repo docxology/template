@@ -12,7 +12,7 @@ import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.types import PipelineStageResult
@@ -30,6 +30,7 @@ if TYPE_CHECKING:
     from infrastructure.core.pipeline.multi_project_runtime import ProjectExecutionSpec
 
 logger = get_logger(__name__)
+_OUTCOME_HINT_LIMIT = 160
 
 
 @dataclass
@@ -81,7 +82,7 @@ def format_multi_project_outcome_lines(
     ordered_projects: Sequence[ProjectInfo],
     result: MultiProjectResult,
     *,
-    hint_max_chars: int = 160,
+    hint_max_chars: int = _OUTCOME_HINT_LIMIT,
 ) -> list[str]:
     """Human-readable lines naming succeeded vs failed projects (serial multi-project UX).
 
@@ -93,7 +94,17 @@ def format_multi_project_outcome_lines(
         result: Aggregate result from ``execute_all_projects``.
         hint_max_chars: Truncate first failing stage ``error_message`` to this length.
     """
-    lines: list[str] = []
+    return [text for _, text in _multi_project_outcome_lines(ordered_projects, result, hint_max_chars=hint_max_chars)]
+
+
+def _multi_project_outcome_lines(
+    ordered_projects: Sequence[ProjectInfo],
+    result: MultiProjectResult,
+    *,
+    hint_max_chars: int = _OUTCOME_HINT_LIMIT,
+) -> list[tuple[Literal["info", "error"], str]]:
+    """Project ordered outcome messages with their logging severity."""
+    lines: list[tuple[Literal["info", "error"], str]] = []
     n = len(ordered_projects)
     if n == 0:
         return lines
@@ -101,9 +112,7 @@ def format_multi_project_outcome_lines(
     pr = result.project_results
     infra_aborted = len(pr) == 0 and result.successful_projects == 0 and result.failed_projects == n
     if infra_aborted:
-        lines.append(
-            "Infrastructure tests failed — no project pipelines were run.",
-        )
+        lines.append(("error", "Infrastructure tests failed — no project pipelines were run."))
         return lines
 
     succeeded: list[str] = []
@@ -135,11 +144,11 @@ def format_multi_project_outcome_lines(
                 failed.append(f"{qn}: {first_bad.stage_name}")
 
     if succeeded:
-        lines.append("Succeeded:")
-        lines.extend(f"  - {name}" for name in succeeded)
+        lines.append(("info", "Succeeded:"))
+        lines.extend(("info", f"  - {name}") for name in succeeded)
     if failed:
-        lines.append("Failed:")
-        lines.extend(f"  - {entry}" for entry in failed)
+        lines.append(("error", "Failed:"))
+        lines.extend(("error", f"  - {entry}") for entry in failed)
     return lines
 
 

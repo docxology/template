@@ -17,6 +17,7 @@ Exit codes:
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -27,7 +28,9 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 
 ensure_repo_root_on_path()
 
+from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import get_logger, log_header
+from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.rendering.pipeline import execute_render_pipeline
 
 # Set up logger for this module
@@ -55,13 +58,19 @@ def main() -> int:
     log_header(f"STAGE 03: Render PDF (Project: {args.project})", logger)
 
     try:
-        # Run rendering pipeline
-        exit_code = execute_render_pipeline(
-            args.project,
-            skip_manuscript_hydration=args.skip_manuscript_hydration,
-            repo_root=Path(__file__).resolve().parents[2],
-        )
-        return exit_code
+        repo_root = Path(__file__).resolve().parents[2]
+        if os.environ.get("RENDER_SECURITY_PROFILE", "trusted-local") != "trusted-local":
+            return execute_render_pipeline(
+                args.project, skip_manuscript_hydration=args.skip_manuscript_hydration, repo_root=repo_root
+            )
+        project_root = resolve_project_root(repo_root, args.project)
+        with project_output_lock(project_root):
+            if resolve_project_root(repo_root, args.project) != project_root:
+                logger.error("Render project moved before acquiring its output lock")
+                return 1
+            return execute_render_pipeline(
+                args.project, skip_manuscript_hydration=args.skip_manuscript_hydration, repo_root=repo_root
+            )
 
     except Exception as e:
         logger.error(f"Render pipeline error: {e}", exc_info=True)

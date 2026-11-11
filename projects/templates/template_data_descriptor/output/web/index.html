@@ -275,9 +275,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -306,8 +306,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -392,14 +392,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -417,6 +410,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -429,6 +424,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -656,18 +653,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -718,6 +707,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -831,7 +824,6 @@ class="toc-section-number">8</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
-
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This exemplar demonstrates a <strong>data descriptor</strong>
@@ -853,9 +845,7 @@ and provenance rather than transcribing values that would drift. This is
 a template with a demonstration dataset: it makes no scientific claim
 about the data, only about how to describe and release a dataset
 responsibly.</p>
-
 <hr />
-
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>A <em>data descriptor</em> (or data paper) publishes a dataset as a
@@ -904,9 +894,7 @@ its provenance (sec. <a href="#sec:provenance">5</a>), and the quality
 gate that binds the descriptor to the bytes it names (sec. <a
 href="#sec:quality">6</a>), and close with usage and forking notes
 (sec. <a href="#sec:usage">7</a>).</p>
-
 <hr />
-
 <h1 data-number="3" id="sec:data"><span
 class="header-section-number">3</span> Data description</h1>
 <p>The demonstration dataset consists of two comma-separated files under
@@ -954,9 +942,7 @@ user verify integrity once they obtain the files through the appropriate
 channel. In this template the fixture bytes are public and small, so
 they are shipped alongside the descriptor and used to demonstrate
 end-to-end verification.</p>
-
 <hr />
-
 <h1 data-number="4" id="sec:schema"><span
 class="header-section-number">4</span> Schema and data dictionary</h1>
 <p>The descriptor’s <code>fields</code> list is the dataset’s
@@ -1019,9 +1005,7 @@ empty, numeric bounds where the minimum exceeds the maximum, and
 patterns declared on non-text fields. On the shipped descriptor none of
 these fire — the data dictionary above is complete, so the readiness
 score is unpenalised (see sec. <a href="#sec:quality">6</a>).</p>
-
 <hr />
-
 <h1 data-number="5" id="sec:provenance"><span
 class="header-section-number">5</span> Provenance</h1>
 <p>Provenance records <em>how the release came to be</em>. The
@@ -1071,9 +1055,7 @@ validation and packaging trail, which is the minimum a downstream reuser
 needs to judge whether the dataset was produced the way they require.
 For a real dataset, these steps would cite concrete tools, versions, and
 operators rather than the template’s synthetic agents.</p>
-
 <hr />
-
 <h1 data-number="6" id="sec:quality"><span
 class="header-section-number">6</span> Quality validation</h1>
 <p>The quality gate is what separates a descriptor that merely
@@ -1154,9 +1136,7 @@ order-independent schema fingerprints, byte-level verification against
 real temporary files, figure-data preparation, and an integration test
 that runs the figure script end to end and asserts real PNGs are
 written. Coverage exceeds the 90% project gate with no mocks.</p>
-
 <hr />
-
 <h1 data-number="7" id="sec:usage"><span
 class="header-section-number">7</span> Usage notes</h1>
 <h2 data-number="7.1" id="regenerating-the-artifacts"><span
@@ -1203,9 +1183,7 @@ any empirical effect in the data. When you fork it, keep that
 discipline: a data descriptor earns trust by describing a dataset
 precisely and verifiably, not by over-claiming what the dataset
 shows.</p>
-
 <hr />
-
 <h1 data-number="8" id="sec:references"><span
 class="header-section-number">8</span> References</h1>
 <p>This exemplar draws on established data-publishing practice: the FAIR
@@ -1231,7 +1209,6 @@ the manuscript is resolved against that file. To validate that
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_data_descriptor/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
-
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-frictionless2023datapackage" class="csl-entry"

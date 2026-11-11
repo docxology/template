@@ -18,7 +18,6 @@ from typing import Any
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.project.public_acceptance_evidence import evidence_directory
 from infrastructure.project.public_hosted_origin import MAX_ARCHIVE, _context
-from infrastructure.reporting.native_hosted_original_producer import _zip
 from infrastructure.reporting.native_hosted_transport_archive import (
     MAX_CHUNK,
     MAX_MEMBERS,
@@ -26,6 +25,7 @@ from infrastructure.reporting.native_hosted_transport_archive import (
     MAX_SHARDS,
     MAX_TOTAL,
     _file_identity,
+    encode_transport_zip,
 )
 from infrastructure.reporting.readiness_receipts import source_fingerprint
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -91,7 +91,7 @@ def pack_failed_native_evidence(
         if len(shards) >= MAX_SHARDS:
             raise ValueError("failed diagnostic shard census exceeds its256 bound")
         filename = f"{kind}-shard-{len(shards):04d}.zip"
-        body = _zip(chunks)
+        body = encode_transport_zip(chunks)
         if len(body) > MAX_ARCHIVE:
             raise ValueError("failed diagnostic shard exceeds unchanged64MiB archive bound")
         atomic_write_bytes_confined(root, directory / f"shard-{len(shards):04d}" / filename, body, mode=0o600)

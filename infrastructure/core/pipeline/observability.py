@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from threading import Lock
 from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.utils import (
@@ -16,6 +17,29 @@ if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
 
 logger = get_logger(__name__)
+_module_log_level_lock = Lock()
+_module_log_handlers: set[logging.FileHandler] = set()
+_previous_module_log_level: int | None = None
+
+
+def _register_module_log_handler(handler: logging.FileHandler) -> None:
+    """Borrow the process-global module level while an owned handler is attached."""
+    global _previous_module_log_level
+    with _module_log_level_lock:
+        if not _module_log_handlers:
+            _previous_module_log_level = logger.level
+        _module_log_handlers.add(handler)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
+
+
+def _release_module_log_level(handler: logging.FileHandler) -> None:
+    global _previous_module_log_level
+    with _module_log_level_lock:
+        _module_log_handlers.discard(handler)
+        if not _module_log_handlers and _previous_module_log_level is not None:
+            logger.setLevel(_previous_module_log_level)
+            _previous_module_log_level = None
 
 
 class _ExcludeObservability(logging.Filter):
@@ -27,23 +51,22 @@ class _ExcludeObservability(logging.Filter):
 
 def close_log_file_handler(self: PipelineExecutor) -> None:
     """Detach and close only the handlers owned by this executor."""
-    owned = (
-        (logging.getLogger(), self._log_handler),
-        (logger, self._module_log_handler),
-    )
+    module_handler = self._module_log_handler
+    owned = ((logging.getLogger(), self._log_handler), (logger, module_handler))
     self._log_handler = None
     self._module_log_handler = None
-    for owner, handler in owned:
-        if handler is None:
-            continue
-        owner.removeHandler(handler)
-        try:
-            handler.close()
-        except OSError as exc:
-            logger.warning("Failed to close owned pipeline log handler: %s", exc)
-    if self._module_log_level is not None:
-        logger.setLevel(self._module_log_level)
-        self._module_log_level = None
+    try:
+        for owner, handler in owned:
+            if handler is None:
+                continue
+            owner.removeHandler(handler)
+            try:
+                handler.close()
+            except OSError as exc:
+                logger.warning("Failed to close owned pipeline log handler: %s", exc)
+    finally:
+        if module_handler is not None:
+            _release_module_log_level(module_handler)
 
 
 def setup_log_file_handler(self: PipelineExecutor) -> None:
@@ -55,13 +78,11 @@ def setup_log_file_handler(self: PipelineExecutor) -> None:
     """
     close_log_file_handler(self)
     self.log_file.parent.mkdir(parents=True, exist_ok=True)
-    self._module_log_level = logger.level
     try:
         self._module_log_handler = logging.FileHandler(self.log_file)
         self._module_log_handler.setLevel(logging.DEBUG)
         self._module_log_handler.setFormatter(logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s"))
-        logger.addHandler(self._module_log_handler)
-        logger.setLevel(logging.DEBUG)
+        _register_module_log_handler(self._module_log_handler)
         self._log_handler = logging.FileHandler(self.log_file)
         self._log_handler.setLevel(logging.DEBUG)
         self._log_handler.setFormatter(logging.Formatter("[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"))

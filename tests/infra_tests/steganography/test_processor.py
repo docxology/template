@@ -66,6 +66,167 @@ def test_source_alias_refused_before_any_artifact_write(tmp_path: Path, alias: s
     assert not source.with_suffix(".hashes.json").exists()
 
 
+def test_protected_custom_pdf_reruns_without_a_public_manifest(tmp_path: Path):
+    from infrastructure.steganography.artifact_paths import custom_secure_sources, owned_secure_pdf_sha256
+
+    source = _plain_pdf(tmp_path / "source.pdf")
+    processor = _metadata_processor()
+    processor.config.output_suffix = "_private"
+    processor.config.manifest_enabled = False
+    processor.protect_output = True
+
+    output = processor.process(source)
+    assert not source.with_suffix(".hashes.json").exists()
+    assert owned_secure_pdf_sha256(source, output) is not None
+    assert custom_secure_sources([source, output], "_private") == [source]
+    assert processor.process(source) == output
+
+
+def test_public_manifest_does_not_classify_a_naturally_suffixed_pdf(tmp_path: Path):
+    from infrastructure.steganography.artifact_paths import custom_secure_sources, secure_file_sha256
+
+    source = tmp_path / "source.pdf"
+    naturally_suffixed = _plain_pdf(tmp_path / "source_private.pdf")
+    source.with_suffix(".hashes.json").write_text(
+        json.dumps(
+            {
+                "source_file": source.name,
+                "steganography_applied": "true",
+                "secure_pdf": naturally_suffixed.name,
+                "secure_pdf_sha256": secure_file_sha256(naturally_suffixed),
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert custom_secure_sources([naturally_suffixed], "_private") == [naturally_suffixed]
+    _plain_pdf(source)
+    with pytest.raises(ValueError, match="without matching source evidence"):
+        custom_secure_sources([source, naturally_suffixed], "_private")
+
+
+def test_unavailable_private_ownership_preserves_previous_custom_output(tmp_path: Path):
+    from infrastructure.steganography.artifact_paths import owned_secure_pdf_sha256
+
+    source = _plain_pdf(tmp_path / "source.pdf")
+    processor = _metadata_processor()
+    processor.config.output_suffix = "_private"
+    processor.protect_output = True
+    output = processor.process(source)
+    previous = output.read_bytes()
+    state_directory = tmp_path / ".steganography-ownership"
+    state_directory.chmod(0o750)
+    try:
+        assert owned_secure_pdf_sha256(source, output) is None
+        with pytest.raises(ValueError, match="without matching source evidence"):
+            processor.process(source)
+        assert output.read_bytes() == previous
+    finally:
+        state_directory.chmod(0o700)
+
+
+def test_missing_pdf_with_nonprivate_receipt_refuses_publication(tmp_path: Path):
+    source = _plain_pdf(tmp_path / "source.pdf")
+    processor = _metadata_processor()
+    processor.config.output_suffix = "_private"
+    processor.protect_output = True
+    output = processor.process(source)
+    (receipt,) = (tmp_path / ".steganography-ownership").glob("*.json")
+    original = receipt.read_bytes()
+    output.unlink()
+    receipt.chmod(0o644)
+
+    with pytest.raises(ValueError, match="Existing ownership receipt is not a private regular file"):
+        processor.process(source)
+    assert not output.exists()
+    assert receipt.read_bytes() == original
+
+    receipt.chmod(0o600)
+    assert processor.process(source) == output
+    assert processor.process(source) == output
+
+
+def test_private_receipt_publication_rolls_back_when_directory_is_substituted(tmp_path: Path):
+    import subprocess
+    import sys
+
+    source = _plain_pdf(tmp_path / "source.pdf")
+    processor = _metadata_processor()
+    processor.config.output_suffix = "_private"
+    processor.protect_output = True
+    output = processor.process(source)
+    owner = tmp_path / ".steganography-ownership"
+    (receipt,) = owner.glob("*.json")
+    manifest = source.with_suffix(".hashes.json")
+    prior_pdf, prior_receipt, prior_manifest = output.read_bytes(), receipt.read_bytes(), manifest.read_bytes()
+    _plain_pdf(source, width=400)
+    moved = tmp_path / "detached-owner"
+    replacement = tmp_path / "replacement"
+    replacement.mkdir()
+    sentinel = replacement / receipt.name
+    sentinel.write_bytes(b"unrelated existing receipt")
+
+    # Inject the real filesystem race at the os.rename audit boundary in an
+    # isolated child. The directory is moved immediately before the receipt
+    # rename; no production callable is replaced.
+    child = r"""
+import os
+import sys
+from pathlib import Path
+
+source, owner, moved, replacement = map(Path, sys.argv[1:5])
+receipt_name = sys.argv[5]
+sys.path.insert(0, os.getcwd())
+
+
+def substitute_directory(event, args):
+    if event == "os.rename" and args[1] == receipt_name and not moved.exists():
+        owner.rename(moved)
+        owner.symlink_to(replacement, target_is_directory=True)
+
+
+sys.addaudithook(substitute_directory)
+from infrastructure.steganography.config import SteganographyConfig
+from infrastructure.steganography.core import SteganographyProcessor
+
+processor = SteganographyProcessor(
+    SteganographyConfig(
+        enabled=True,
+        overlays_enabled=False,
+        barcodes_enabled=False,
+        metadata_enabled=True,
+        hashing_enabled=True,
+    )
+)
+processor.config.output_suffix = "_private"
+processor.protect_output = True
+try:
+    processor.process(source)
+except ValueError as error:
+    if "Private ownership directory changed during publication" in str(error):
+        print("EXPECTED_ROLLBACK", flush=True)
+        raise SystemExit(0)
+    raise
+raise SystemExit("expected private-directory substitution failure was not raised")
+"""
+    completed = subprocess.run(
+        [sys.executable, "-B", "-c", child, str(source), str(owner), str(moved), str(replacement), receipt.name],
+        cwd=Path(__file__).resolve().parents[3],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert "EXPECTED_ROLLBACK" in completed.stdout.splitlines()
+    assert output.read_bytes() == prior_pdf
+    assert (moved / receipt.name).read_bytes() == prior_receipt
+    assert manifest.read_bytes() == prior_manifest
+    assert not list(moved.glob("*.tmp"))
+    assert sentinel.read_bytes() == b"unrelated existing receipt"
+
+
 def test_missing_output_parent_preserves_previous_manifest(tmp_path: Path):
     source = _plain_pdf(tmp_path / "source.pdf")
     manifest = source.with_suffix(".hashes.json")

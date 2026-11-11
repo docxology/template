@@ -2,24 +2,29 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
-import hashlib
 import sys
 import traceback
 from contextlib import ExitStack
-from types import ModuleType
 from pathlib import Path
+from types import ModuleType
 
-from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.analysis_data_custody import capture_analysis_data, require_analysis_data
 from infrastructure.core.analysis_read_custody import observe_stage_analysis_reads
 from infrastructure.core.analysis_write_custody import observe_stage_analysis_writes
+from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.implementation_custody import source_file_digest, verify_fresh_module_bytecode
-from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint, source_content_fingerprint
-from infrastructure.core.pipeline._stage_protocol import SCHEMA, ANALYSIS_SCHEMA
-from infrastructure.core.runtime.python_binding import admit_current_analysis_runtime
+from infrastructure.core.pipeline._stage_protocol import ANALYSIS_SCHEMA, SCHEMA
+from infrastructure.core.pipeline.fingerprints import canonical_digest, source_content_fingerprint, source_fingerprint
+from infrastructure.core.pipeline.hydration_recovery import (
+    HydrationInputObservation,
+    canonical_hydration_artifact,
+    observe_hydration_failure,
+)
 from infrastructure.core.pipeline.stage_admission import validate_stage_admission
+from infrastructure.core.runtime.python_binding import admit_current_analysis_runtime
 
 
 def main() -> int:
@@ -68,6 +73,15 @@ def main() -> int:
     data_after: dict[str, object] | None = None
     analysis_reads: dict[str, object] | None = None
     supervisory_interrupted = False
+    hydration_initial = payload.get("hydration_prerequisite")
+    hydration_artifact = (
+        canonical_hydration_artifact(repo, project, payload["argv"], payload["stage_key"])
+        if analysis and hydration_initial is not None
+        else None
+    )
+    if hydration_initial is not None and hydration_artifact is None:
+        raise ValueError("Hydration prerequisite request is outside the canonical standalone stage")
+    hydration_input: HydrationInputObservation | None = None
 
     def verify(*, before_attempt: bool = True) -> None:
         nonlocal actual_runtime
@@ -172,6 +186,13 @@ def main() -> int:
                     else:
                         print(exc.code, file=sys.stderr)
                         original = 1
+                except FileNotFoundError as error:
+                    traceback.print_exc()
+                    original = 1
+                    if hydration_artifact is not None:
+                        hydration_input = observe_hydration_failure(
+                            project, hydration_artifact, hydration_initial, error
+                        )
                 except KeyboardInterrupt:
                     original = 130
                 except Exception:
@@ -217,6 +238,8 @@ def main() -> int:
     except KeyboardInterrupt:
         custody, diagnostic = "blocked", "Python stage supervisory verification/capture interrupted"
         supervisory_interrupted = True
+    if hydration_input is not None and not hydration_input.matches_current(project):
+        hydration_input = None
     receipt = {
         "schema": payload["schema"],
         "request_digest": expected_digest,
@@ -240,6 +263,8 @@ def main() -> int:
             analysis_reads=analysis_reads,
             supervisory_interrupted=supervisory_interrupted,
         )
+        if custody == "verified" and hydration_input is not None:
+            receipt["hydration_input"] = hydration_input.to_dict()
     try:
         atomic_write_text_confined(
             scratch, scratch / "result.json", json.dumps(receipt, sort_keys=True) + "\n", mode=0o600
@@ -249,6 +274,7 @@ def main() -> int:
         # if repeated interruption prevents any final receipt from closing.
         custody, diagnostic, supervisory_interrupted = "blocked", "Python stage result promotion interrupted", True
         receipt.update(custody=custody, diagnostic=diagnostic)
+        receipt.pop("hydration_input", None)
         if analysis:
             receipt["supervisory_interrupted"] = True
         atomic_write_text_confined(

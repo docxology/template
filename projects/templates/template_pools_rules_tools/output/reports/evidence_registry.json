@@ -457,7 +457,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T05:53:54Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -469,7 +469,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T05:53:54Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -1383,6 +1383,18 @@
       "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
+      "source": "manuscript/05_tools.md",
+      "source_field": "",
+      "source_path": "manuscript/05_tools.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:toolcontract"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "figure",
       "source": "manuscript/04_rules.md",
       "source_field": "",
       "source_path": "manuscript/04_rules.md",
@@ -1402,18 +1414,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:architecture"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "figure",
-      "source": "manuscript/05_tools.md",
-      "source_field": "",
-      "source_path": "manuscript/05_tools.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "fig:toolcontract"
     },
     {
       "active": true,
@@ -1659,6 +1659,18 @@
       "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "section",
+      "source": "manuscript/05_tools.md",
+      "source_field": "",
+      "source_path": "manuscript/05_tools.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:tools"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "section",
       "source": "manuscript/07_conclusion.md",
       "source_field": "",
       "source_path": "manuscript/07_conclusion.md",
@@ -1678,18 +1690,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "sec:rules"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "section",
-      "source": "manuscript/05_tools.md",
-      "source_field": "",
-      "source_path": "manuscript/05_tools.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:tools"
     },
     {
       "active": true,

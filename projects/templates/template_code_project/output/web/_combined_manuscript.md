@@ -549,8 +549,8 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 - **Python**: 3.14.10
 - **NumPy**: 2.5.4
-- **Platform**: Darwin arm64
-- **Generated**: 2026-11-08T06:08:09Z
+- **Platform**: Linux x86_64
+- **Generated**: 2026-11-09T14:02:38Z
 
 ## Pipeline ordering
 
@@ -590,7 +590,7 @@ This section provides a machine-verifiable reproducibility certificate for the c
 
 | Property                          | Value                 |
 | --------------------------------- | --------------------- |
-| Config hash (SHA-256, truncated)  | `86e3e9b4a602241a`     |
+| Config hash (SHA-256, truncated)  | `5698652ccb6dafdb`     |
 | Paper version                     | 3.0.0    |
 | First author                      | Daniel Ari Friedman |
 | Keywords                          | optimization algorithms, gradient descent, convergence analysis, numerical methods, mathematical programming, reproducible research, infrastructure automation   |

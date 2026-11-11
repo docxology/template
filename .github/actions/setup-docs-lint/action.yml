@@ -33,13 +33,14 @@ runs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.cache/puppeteer
-        key: puppeteer-chrome-headless-shell-${{ runner.os }}-v1
+        key: puppeteer-chrome-headless-shell-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
     - name: Install pinned repository documentation tooling
       shell: bash
       working-directory: ${{ github.workspace }}
       run: |
-        npm ci --ignore-scripts --no-audit --no-fund
+        npm ci --ignore-scripts --no-audit --no-fund || exit 1
+        npm run test:katex-trust || exit 1
         echo "${{ github.workspace }}/node_modules/.bin" >> "$GITHUB_PATH"
 
     - name: Install chrome-headless-shell for puppeteer
@@ -49,10 +50,11 @@ runs:
 
     - name: Locate chrome-headless-shell binary
       shell: bash
+      working-directory: ${{ github.workspace }}
       run: |
         set -euo pipefail
-        CHROME_PATH=$(find "$HOME/.cache/puppeteer" \( -type f -o -type l \) -name 'chrome-headless-shell' 2>/dev/null | head -n1)
-        if [ -z "$CHROME_PATH" ]; then
+        CHROME_PATH=$(env -u PUPPETEER_EXECUTABLE_PATH -u CHROME_EXECUTABLE_PATH node --input-type=module -e 'import puppeteer from "puppeteer"; process.stdout.write(await puppeteer.executablePath({headless: "shell"}));') || exit 1
+        if [ -z "$CHROME_PATH" ] || [ ! -x "$CHROME_PATH" ]; then
           echo "ERROR: chrome-headless-shell binary not found"
           exit 1
         fi

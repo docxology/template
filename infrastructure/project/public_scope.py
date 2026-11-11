@@ -13,8 +13,8 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from infrastructure.project.discovery import discover_projects
-from infrastructure.project.project_info import ProjectInfo
+from infrastructure.project.project_info import ProjectInfo, build_project_info
+from infrastructure.project.validation import validate_project_structure
 
 PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
     "templates/template_active_inference",
@@ -92,10 +92,17 @@ def public_project_source_roots(repo_root: Path | str) -> tuple[Path, ...]:
 
 
 def public_project_infos(repo_root: Path | str) -> list[ProjectInfo]:
-    """Return discovered projects that are part of the public template repo."""
-    root = Path(repo_root)
-    allowed = set(PUBLIC_PROJECT_NAMES)
-    return [project for project in discover_projects(root) if project.qualified_name in allowed]
+    """Read the declared exemplar roster without opening unrelated lifecycle trees."""
+    projects = Path(repo_root) / "projects"
+    template_pool = projects / "templates"
+    if not template_pool.is_dir() or validate_project_structure(template_pool)[0]:
+        return []
+    roster = []
+    for name in sorted(PUBLIC_PROJECT_NAMES):
+        path = projects / name
+        if validate_project_structure(path)[0]:
+            roster.append(build_project_info(path, program="templates"))
+    return roster
 
 
 def public_project_names(repo_root: Path | str) -> list[str]:

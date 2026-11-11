@@ -66,6 +66,8 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 | Module | Role |
 | --- | --- |
 | `artifact_contracts.py` | Executable artifact prerequisites and immutable consumed-input custody. |
+| `hydration_recovery.py` | Observe analysis prerequisites for standalone canonical manuscript hydration in the reviewed template producer scopes. |
+| `worker_transport.py` | Encode worker configuration and stage results and restore their typed fields for source-bound pipeline workers. |
 | `execution_custody.py` | Revalidate the frozen execution identity at launch, reuse, and completion. |
 | `execution_environment.py` | Digest the effective child environment without recording its values. |
 | `execution_records.py` | Source-bound execution records shared by every executor entry point. |

@@ -9,6 +9,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._html_attributes import set_html_attribute
 from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
 from infrastructure.rendering._slides_accessibility_figures import (
     FIGURE_SAFE_BODY_MAX_HEIGHT_PERCENT_16_9,
@@ -69,17 +70,6 @@ _ACCESSIBLE_REVEAL_MARKERS = (
 )
 
 
-def _set_html_attribute(tag: str, name: str, value: str) -> str:
-    escaped = html.escape(value, quote=True)
-    pattern = re.compile(
-        rf"(?<!\S){re.escape(name)}\s*=\s*(?:\"[^\"]*\"|'[^']*'|[^\s>]+)",
-        flags=re.IGNORECASE,
-    )
-    if pattern.search(tag):
-        return pattern.sub(lambda _match: f'{name}="{escaped}"', tag, count=1)
-    return tag[:-1].rstrip() + f' {name}="{escaped}">' if tag.endswith(">") else tag
-
-
 def _reveal_semantics(content: str) -> str:
     """Name every Reveal slide from its first heading and add slide roles."""
 
@@ -99,14 +89,14 @@ def _reveal_semantics(content: str) -> str:
             while heading_id in seen_heading_ids:
                 heading_id = f"{base_id}-{suffix}"
                 suffix += 1
-            updated_heading_open = _set_html_attribute(heading_open, "id", heading_id)
+            updated_heading_open = set_html_attribute(heading_open, "id", heading_id)
         else:
             heading_id = candidate_id
             updated_heading_open = heading_open
         seen_heading_ids.add(heading_id)
-        open_tag = _set_html_attribute(match.group("open"), "role", "group")
-        open_tag = _set_html_attribute(open_tag, "aria-roledescription", "slide")
-        open_tag = _set_html_attribute(open_tag, "aria-labelledby", heading_id)
+        open_tag = set_html_attribute(match.group("open"), "role", "group")
+        open_tag = set_html_attribute(open_tag, "aria-roledescription", "slide")
+        open_tag = set_html_attribute(open_tag, "aria-labelledby", heading_id)
         return f"{open_tag}{match.group('spacing')}{updated_heading_open}{heading_body}{match.group('heading_close')}"
 
     updated = _SLIDE_OPEN_RE.sub(replace, content)
@@ -161,7 +151,7 @@ def _set_document_title_and_heading(content: str, heading: str) -> str:
         document_heading = f'<h1 id="{heading_id}" class="visually-hidden">{escaped_title}</h1>'
 
         def add_heading(match: re.Match[str]) -> str:
-            main = _set_html_attribute(match.group(0), "aria-labelledby", heading_id)
+            main = set_html_attribute(match.group(0), "aria-labelledby", heading_id)
             return f"{main}\n{document_heading}"
 
         content, replacements = _MAIN_OPEN_RE.subn(add_heading, content, count=1)

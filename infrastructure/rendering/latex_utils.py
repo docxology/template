@@ -7,11 +7,15 @@ import tempfile
 import time
 from pathlib import Path
 
-from infrastructure.core.determinism import deterministic_subprocess_env, resolve_source_date_epoch
+from infrastructure.core.determinism import (
+    deterministic_subprocess_env,
+    resolve_source_date_epoch,
+)
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.native_render_custody import native_render_custody
+from infrastructure.rendering.security import RenderSecurityProfile
 
 logger = get_logger(__name__)
 
@@ -216,6 +220,8 @@ def compile_latex(
     compiler: str = "xelatex",
     timeout: int = 300,
     passes: int = 2,
+    *,
+    security_profile: RenderSecurityProfile | None = None,
 ) -> Path:
     """Compile LaTeX file to PDF.
 
@@ -224,10 +230,14 @@ def compile_latex(
         output_dir: Directory for output
         compiler: Compiler command (xelatex, pdflatex)
         timeout: Timeout in seconds
+        security_profile: Optional output and subprocess policy.
 
     Returns:
         Path to generated PDF
     """
+    if security_profile is not None and security_profile.untrusted:
+        raise CompilationError("Untrusted TeX requires an operating-system filesystem sandbox")
+
     tex_path = Path(tex_file)
     out_dir = Path(output_dir) if output_dir is not None else tex_path.parent
 

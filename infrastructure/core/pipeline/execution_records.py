@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
 from typing import TYPE_CHECKING
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.worker_transport import stage_results_to_payload
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -39,7 +39,7 @@ def execution_record_payload(executor: PipelineExecutor, results: list[PipelineS
         "complete": result.complete,
         "exit_code": result.exit_code,
         "outcomes": [outcome.to_dict() for outcome in result.outcomes],
-        "stage_results": [asdict(stage) for stage in results],
+        "stage_results": stage_results_to_payload(results),
     }
 
 

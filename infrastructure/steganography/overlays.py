@@ -185,6 +185,7 @@ def create_footer_overlay(
     source_filename: str = "",
     source_file_size: int = 0,
     font_size: int = 5,
+    timestamp: str | None = None,
 ) -> bytes:
     """Generate a two-line footer overlay with comprehensive document metrics.
 
@@ -208,6 +209,7 @@ def create_footer_overlay(
         source_filename: Original filename for metrics.
         source_file_size: Byte size of source file.
         font_size: Footer font size in points.
+        timestamp: Timestamp captured for the document, when provided.
 
     Returns:
         PDF bytes of the one-page footer overlay.
@@ -278,8 +280,7 @@ def create_footer_overlay(
     if cfg.hash_short:
         parts.append(f"SHA256 (compiled PDF): {cfg.hash_short}")
 
-    ts = resolve_build_timestamp()
-    parts.append(ts)
+    parts.append(timestamp if timestamp is not None else resolve_build_timestamp())
 
     metrics_text = "  │  ".join(parts)
     c.drawString(margin, line2_y, metrics_text)

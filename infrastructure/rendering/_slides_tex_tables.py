@@ -6,49 +6,13 @@ import re
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility_contracts import ACCESSIBLE_BEAMER_TABLE_WIDTH_LENGTH
+from infrastructure.rendering._slides_tex_lexical import commented_at, in_literal_span, literal_spans
 
 
 _TABLE_MARKER = "% template-accessible-table-inset"
 _LONGTABLE_BEGIN_RE = re.compile(r"\\begin\{longtable\}")
 _LONGTABLE_END_RE = re.compile(r"\\end\{longtable\}")
 _FIRST_TABLE_RULE_RE = re.compile(r"^[ \t]*\\(?:toprule|hline)\b", flags=re.MULTILINE)
-_VERBATIM_ENVIRONMENT_RE = re.compile(
-    r"\\begin\{(?P<environment>verbatim\*?|Verbatim|lstlisting|minted)\}.*?"
-    r"\\end\{(?P=environment)\}",
-    flags=re.DOTALL,
-)
-_INLINE_VERB_RE = re.compile(r"\\verb\*?(?P<delimiter>[^\w\s]).*?(?P=delimiter)", flags=re.DOTALL)
-
-
-def _commented_at(text: str, position: int) -> bool:
-    """Return whether one TeX token follows an unescaped percent on its line."""
-
-    line_start = text.rfind("\n", 0, position) + 1
-    for index in range(line_start, position):
-        if text[index] != "%":
-            continue
-        backslashes = 0
-        cursor = index - 1
-        while cursor >= line_start and text[cursor] == "\\":
-            backslashes += 1
-            cursor -= 1
-        if backslashes % 2 == 0:
-            return True
-    return False
-
-
-def _protected_spans(text: str) -> tuple[tuple[int, int], ...]:
-    """Return verbatim spans whose literal examples must remain byte-identical."""
-
-    spans = [
-        *(match.span() for match in _VERBATIM_ENVIRONMENT_RE.finditer(text)),
-        *(match.span() for match in _INLINE_VERB_RE.finditer(text)),
-    ]
-    return tuple(sorted(spans))
-
-
-def _inside_spans(position: int, spans: tuple[tuple[int, int], ...]) -> bool:
-    return any(start <= position < end for start, end in spans)
 
 
 def _table_preamble_error(message: str, *, table_index: int) -> RenderingError:
@@ -83,17 +47,17 @@ def inset_accessible_longtables(tex_content: str) -> tuple[str, int]:
     cursor = 0
     changed = 0
     table_index = 0
-    protected = _protected_spans(tex_content)
+    protected = literal_spans(tex_content)
     for begin in _LONGTABLE_BEGIN_RE.finditer(tex_content):
         if (
             begin.start() < cursor
-            or _inside_spans(begin.start(), protected)
-            or _commented_at(tex_content, begin.start())
+            or in_literal_span(begin.start(), protected)
+            or commented_at(tex_content, begin.start())
         ):
             continue
         table_index += 1
         end = _LONGTABLE_END_RE.search(tex_content, begin.end())
-        if end is None or _inside_spans(end.start(), protected) or _commented_at(tex_content, end.start()):
+        if end is None or in_literal_span(end.start(), protected) or commented_at(tex_content, end.start()):
             raise _table_preamble_error("accessible longtable has no matching visible end", table_index=table_index)
 
         body = tex_content[begin.end() : end.start()]

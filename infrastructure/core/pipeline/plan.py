@@ -18,7 +18,12 @@ from infrastructure.core.pipeline.types import (
     StageSpec,
 )
 from infrastructure.core.pipeline.outcomes import StageOutcome
-from infrastructure.core.pipeline.target_contracts import canonical_target_contract, effective_target_tags
+from infrastructure.core.pipeline.target_contracts import (
+    _bind_script_target,
+    canonical_target_contract,
+    effective_stage_declaration,
+    selects_default_stage,
+)
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -66,7 +71,7 @@ class PlanResolutionContext(Protocol):
 def resolve_plan_control_config(config: PipelineConfig) -> PipelineControlConfig:
     """Apply the canonical definition, project, CLI, and explicit control policy."""
     sources = FrozenPlanSources.capture(config)
-    loaded = sources.control(config)
+    loaded = sources.control()
     sources.verify(config)
     return loaded
 
@@ -180,14 +185,7 @@ class ExecutionPlan:
         for stage in self.stages:
             target: Callable[[], bool | StageOutcome]
             if stage.script:
-
-                def invoke(selected: PlannedStage = stage) -> StageOutcome:
-                    assert selected.script is not None
-                    return executor._run_script(
-                        selected.script, *selected.arguments, allow_skip_code=selected.allow_skip
-                    )
-
-                target = invoke
+                target = _bind_script_target(executor, stage.script, stage.arguments, allow_skip=stage.allow_skip)
             else:
                 target = getattr(executor, stage.method or "")
                 if not callable(target):
@@ -210,13 +208,9 @@ def resolve_execution_plan(
     sources = FrozenPlanSources.capture(executor.config, explicit)
     config = sources.configuration
     path = sources.paths[0]
-    control = sources.control(config)
+    control = sources.control()
     dag = sources.dag()
-    declarations = tuple(dag.sorted_stages())
-    declarations = tuple(
-        replace(stage, tags=list(effective_target_tags(stage.tags, stage.script, stage.method)))
-        for stage in declarations
-    )
+    declarations = tuple(effective_stage_declaration(stage) for stage in dag.sorted_stages())
     identities = {stage.name: stage.key for stage in declarations}
     source_ordinals = {stage.key: index for index, stage in enumerate(declarations, 1)}
     definition_identity = canonical_digest([asdict(stage) for stage in declarations])
@@ -233,23 +227,15 @@ def resolve_execution_plan(
         if config.mode == "core" and any({"live", "llm"}.intersection(stage.tags) for stage in selected):
             raise ValueError("Selected stages require explicit --mode live")
     else:
-        excluded_tags = set(dag.opt_in_tags) | {"paid"}
-        if config.mode == "core":
-            excluded_tags.update({"llm", "live"})
         selected = [
             stage
             for stage in declarations
-            if not excluded_tags.intersection(stage.tags)
-            and not canonical_target_contract(stage.script, stage.method).opt_in
-            and not (
-                skip_clean and (stage.key == "clean" or canonical_target_contract(stage.script, stage.method).clean)
-            )
-            and not (
-                config.skip_infra
-                and (
-                    stage.key == "infra_tests"
-                    or canonical_target_contract(stage.script, stage.method, stage.args).infrastructure_tests
-                )
+            if selects_default_stage(
+                stage,
+                mode=config.mode,
+                opt_in_tags=dag.opt_in_tags,
+                skip_clean=skip_clean,
+                skip_infra=config.skip_infra,
             )
         ]
     if not selected:

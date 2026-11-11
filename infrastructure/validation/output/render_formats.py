@@ -9,14 +9,9 @@ HTML-only validation or copy gate.
 
 from __future__ import annotations
 
-import re
 import shutil
-import zipfile
 from collections.abc import Callable, Collection
 from pathlib import Path
-from typing import Any
-
-import yaml
 
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.pipeline.artifacts import (
@@ -25,32 +20,24 @@ from infrastructure.core.pipeline.artifacts import (
     StableOutputInventory,
     collect_stable_output_inventory,
 )
-from infrastructure.core.project_paths import resolve_source_manuscript_dir
-from infrastructure.transmission.transmission_bookends import is_transmission_bookend
-from infrastructure.rendering._epub_package_validation import validate_epub_package
+from infrastructure.rendering._slides_participation import is_beamer_manuscript_section, skips_beamer
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
-from infrastructure.rendering._slides_accessibility_reveal import accessible_reveal_output_issues
-from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.config import (
+    RenderingConfig,
+    load_render_config_for_verification,
+    render_config_manuscript_dir as render_config_manuscript_dir,
+)
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
+from infrastructure.rendering.output_validation import (
+    validate_combined_html,
+    validate_docx_output,
+    validate_epub_output,
+    validate_slide_artifacts,
+)
 
 logger = get_logger(__name__)
 
 RENDER_FORMATS: frozenset[str] = frozenset({"pdf", "html", "slides", "docx", "epub"})
-
-
-def render_config_manuscript_dir(project_root: Path) -> Path:
-    """Return the manuscript tree whose render toggles govern current outputs.
-
-    Stage 3 prefers a populated, variable-injected ``output/manuscript`` tree
-    during post-render verification and otherwise uses the canonical source
-    manuscript.  Later gates use the same rule so YAML and environment
-    precedence cannot drift between stages.
-    """
-
-    injected = project_root / "output" / "manuscript"
-    if injected.exists() and any(injected.glob("*.md")):
-        return injected
-    return resolve_source_manuscript_dir(project_root)
 
 
 def load_effective_rendering_config(
@@ -60,19 +47,7 @@ def load_effective_rendering_config(
 ) -> RenderingConfig:
     """Load render toggles using the same YAML/env precedence as Stage 3."""
 
-    manuscript_dir = render_config_manuscript_dir(project_root)
-    config_path = manuscript_dir / "config.yaml"
-    project_config: dict[str, Any] | None = None
-    if config_path.is_file():
-        try:
-            loaded = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-        except (OSError, yaml.YAMLError) as exc:
-            raise ValueError(f"Could not read rendering configuration {config_path}: {exc}") from exc
-        if loaded is not None and not isinstance(loaded, dict):
-            raise ValueError(f"Rendering configuration must be a mapping: {config_path}")
-        project_config = loaded
-    config = RenderingConfig.from_project_config(project_config, env=env)
-    return config
+    return load_render_config_for_verification(render_config_manuscript_dir(project_root), env=env)
 
 
 def enabled_render_formats(config: RenderingConfig) -> frozenset[str]:
@@ -220,25 +195,6 @@ def _validate_combined_pdf(output_dir: Path, project_basename: str) -> bool:
     return False
 
 
-def _validate_combined_html(output_dir: Path) -> bool:
-    """Require a non-empty standalone combined HTML document."""
-
-    path = output_dir / "web" / "index.html"
-    try:
-        if not path.is_file() or path.stat().st_size == 0:
-            logger.error("Combined HTML output missing or empty: %s", path)
-            return False
-        prefix = path.read_text(encoding="utf-8")[:8192].lower()
-    except (OSError, UnicodeDecodeError) as exc:
-        logger.error("Could not validate combined HTML output %s: %s", path, exc)
-        return False
-    if not re.search(r"(?:<!doctype\s+html\b|<html(?:\s|>))", prefix):
-        logger.error("Combined HTML output is not a standalone HTML document: %s", path)
-        return False
-    log_success(f"Combined HTML valid: {path.name}", logger)
-    return True
-
-
 def _expected_slide_outputs(output_dir: Path, manuscript_dir: Path) -> list[Path] | None:
     """Return exact Beamer deliverables expected from current manuscript inputs."""
 
@@ -249,14 +205,14 @@ def _expected_slide_outputs(output_dir: Path, manuscript_dir: Path) -> list[Path
 
     expected: list[Path] = []
     for source_file in source_files:
-        if source_file.suffix != ".md" or is_transmission_bookend(source_file):
+        if not is_beamer_manuscript_section(source_file):
             continue
         try:
             source_text = source_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
             logger.error("Could not inspect slide source %s: %s", source_file, exc)
             return None
-        if "<!-- render:skip-beamer -->" in source_text:
+        if skips_beamer(source_text):
             continue
         expected.append(output_dir / "slides" / f"{source_file.stem}_slides.pdf")
     return expected
@@ -286,80 +242,14 @@ def _validate_slide_outputs(
         return False
 
     slides_dir = output_dir / "slides"
-    expected_reserved = {
-        *(path for path in expected),
-        *(path.with_suffix(".html") for path in expected),
-    }
-    actual_reserved = {
-        *slides_dir.glob("*_slides.pdf"),
-        *slides_dir.glob("*_slides.html"),
-    }
-    unexpected = sorted(actual_reserved - expected_reserved)
-    if unexpected:
-        for path in unexpected:
-            logger.error("Unexpected slide output has no current manuscript source: %s", path)
+    if not validate_slide_artifacts(slides_dir, expected, slides_profile=slides_profile, logger=logger):
         return False
-
-    invalid = [path for path in expected if not path.is_file() or not validate_pdf_structure(path)]
-    if invalid:
-        for path in invalid:
-            logger.error("Slide output missing or structurally invalid: %s", path)
-        return False
-
-    if slides_profile == "accessible":
-        invalid_html = [
-            (path, accessible_reveal_output_issues(path)) for path in (pdf.with_suffix(".html") for pdf in expected)
-        ]
-        invalid_html = [(path, issues) for path, issues in invalid_html if issues]
-        if invalid_html:
-            for path, issues in invalid_html:
-                logger.error("Accessible Reveal output missing or invalid: %s (%s)", path, "; ".join(issues))
-            return False
     log_success(f"Slide outputs valid: {len(expected)} expected deck(s), profile={slides_profile}", logger)
     return True
 
 
-def _validate_docx_output(output_dir: Path, project_basename: str) -> bool:
-    """Validate one exact DOCX identity across the recursive format tree."""
-
-    path = output_dir / "docx" / f"{project_basename}_combined.docx"
-    unexpected = sorted(set((output_dir / "docx").rglob("*_combined.docx")) - {path})
-    if unexpected:
-        for candidate in unexpected:
-            logger.error("Unexpected combined DOCX has no current project identity: %s", candidate)
-        return False
-    required_members = {"[Content_Types].xml", "word/document.xml"}
-    try:
-        with zipfile.ZipFile(path) as archive:
-            names = set(archive.namelist())
-            valid = required_members <= names and archive.testzip() is None
-    except (OSError, zipfile.BadZipFile) as exc:
-        logger.error("Combined DOCX output missing or invalid (%s): %s", path, exc)
-        return False
-    if not valid:
-        logger.error("Combined DOCX output has an invalid package structure: %s", path)
-        return False
-    log_success(f"Combined DOCX valid: {path.name}", logger)
-    return True
-
-
 def _validate_epub_output(output_dir: Path, project_basename: str) -> bool:
-    """Validate one exact EPUB identity and its bounded package contract."""
-
-    path = output_dir / "epub" / f"{project_basename}_combined.epub"
-    unexpected = sorted(set((output_dir / "epub").rglob("*_combined.epub")) - {path})
-    if unexpected:
-        for candidate in unexpected:
-            logger.error("Unexpected combined EPUB has no current project identity: %s", candidate)
-        return False
-    try:
-        with zipfile.ZipFile(path) as archive:
-            validate_epub_package(archive)
-    except (EOFError, KeyError, NotImplementedError, OSError, RuntimeError, ValueError, zipfile.BadZipFile) as exc:
-        logger.error("Combined EPUB output missing or invalid (%s): %s", path, exc)
-        return False
-    log_success(f"Combined EPUB valid: {path.name}", logger)
-    return True
+    return validate_epub_output(output_dir, project_basename, logger=logger)
 
 
 def validate_enabled_render_outputs(
@@ -408,11 +298,11 @@ def validate_enabled_render_outputs(
         )
         checks.append(("PDF", pdf_valid))
     if "html" in enabled:
-        checks.append(("HTML", _validate_combined_html(output_dir)))
+        checks.append(("HTML", validate_combined_html(output_dir, logger=logger)))
     if "slides" in enabled:
         checks.append(("slides", _validate_slide_outputs(output_dir, manuscript_dir, slides_profile=slides_profile)))
     if "docx" in enabled:
-        checks.append(("DOCX", _validate_docx_output(output_dir, project_basename)))
+        checks.append(("DOCX", validate_docx_output(output_dir, project_basename, logger=logger)))
     if "epub" in enabled:
         checks.append(("EPUB", _validate_epub_output(output_dir, project_basename)))
 

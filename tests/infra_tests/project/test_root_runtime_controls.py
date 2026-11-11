@@ -149,7 +149,13 @@ def test_root_coverage_cannot_fall_back_to_generic_case_receipts(actual_runtime)
         next(item for item in requirements if item.id == "root:coverage"),
         python_version=probe["runtime"]["python_version"],
     )
-    details = _details(probe, produced["bundle_artifact"], observed, policy.sha256)
+    details = _details(
+        probe,
+        produced["bundle_artifact"],
+        observed,
+        policy.sha256,
+        portable_artifact=produced["portable_artifact"],
+    )
     details.update(
         coverage_artifact=observed["coverage_artifact"],
         branch_coverage=True,
@@ -173,7 +179,13 @@ def test_actual_root_branch_coverage_below_sixty_refuses_success(actual_runtime)
         next(item for item in requirements if item.id == "root:coverage"),
         python_version=probe["runtime"]["python_version"],
     )
-    details = _details(probe, produced["bundle_artifact"], observed, policy.sha256)
+    details = _details(
+        probe,
+        produced["bundle_artifact"],
+        observed,
+        policy.sha256,
+        portable_artifact=produced["portable_artifact"],
+    )
     details.update(
         coverage_artifact=observed["coverage_artifact"],
         branch_coverage=True,

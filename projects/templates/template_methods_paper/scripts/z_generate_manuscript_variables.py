@@ -35,8 +35,12 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    from template_methods_paper.manuscript_variables import (
+        generate_variables,
+        save_variables,
+    )
+
     from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
-    from template_methods_paper.manuscript_variables import generate_variables, save_variables
 
     variables = generate_variables(
         _PROJECT_ROOT,

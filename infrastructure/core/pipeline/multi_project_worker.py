@@ -8,14 +8,12 @@ import json
 import math
 import sys
 import traceback
-from dataclasses import asdict
 from pathlib import Path
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.pipeline.executor import PipelineExecutor
-from infrastructure.core.pipeline.multi_project_runtime import WORKER_SCHEMA
 from infrastructure.core.pipeline.plan import ExecutionPlan
-from infrastructure.core.pipeline.types import PipelineConfig
+from infrastructure.core.pipeline.worker_transport import WORKER_SCHEMA, config_from_payload, stage_results_to_payload
 
 
 def main() -> int:
@@ -51,23 +49,7 @@ def main() -> int:
         prefix = Path(sys.pycache_prefix)
         implementation = Path(infrastructure.__file__).absolute().parent
         verify_fresh_module_bytecode(implementation, prefix)
-        if not isinstance(request["config"], dict) or set(request["config"]) != {
-            "project_name",
-            "repo_root",
-            "projects_dir",
-            "clean",
-            "skip_infra",
-            "resume",
-            "shared_infrastructure",
-            "mode",
-            "run_timeout_seconds",
-            "pipeline_path",
-        }:
-            raise ValueError("Worker configuration requires the exact current storage role fields")
-        config = dict(request["config"])
-        config["repo_root"] = Path(config["repo_root"])
-        config["pipeline_path"] = Path(config["pipeline_path"]) if config["pipeline_path"] is not None else None
-        resolved = PipelineConfig(**config)
+        resolved = config_from_payload(request["config"])
         plan = ExecutionPlan.from_dict(request["plan"], expected_digest=request["plan_digest"])
         from infrastructure.core.pipeline.runtime_namespace import validate_shared_runtime
 
@@ -85,7 +67,7 @@ def main() -> int:
             "source_identity": plan.source_identity,
             "environment_identity": plan.environment_identity,
             "expected_stage_keys": list(plan.expected_stage_keys),
-            "stage_results": [asdict(row) for row in results],
+            "stage_results": stage_results_to_payload(results),
             "exit_code": run.exit_code,
         }
         atomic_write_text_confined(

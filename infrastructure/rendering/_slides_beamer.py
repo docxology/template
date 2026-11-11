@@ -26,11 +26,8 @@ from infrastructure.rendering._slides_math_header import (
 from infrastructure.rendering._slides_tex_figures import (
     normalize_accessible_projection_latex as normalize_accessible_projection_latex,
 )
-from infrastructure.rendering._slides_tex_tables import (
-    _inside_spans as _inside_spans,
-    _protected_spans as _protected_spans,
-    inset_accessible_longtables as inset_accessible_longtables,
-)
+from infrastructure.rendering._slides_tex_lexical import in_literal_span, literal_spans
+from infrastructure.rendering._slides_tex_tables import inset_accessible_longtables as inset_accessible_longtables
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import (
     parse_latex_log_findings as parse_latex_log_findings,
@@ -265,12 +262,12 @@ def _escape_ampersands_in_href_urls(tex_content: str) -> tuple[str, int]:
     Returns:
         The transformed text and the number of URL arguments escaped.
     """
-    protected = _protected_spans(tex_content)
+    protected = literal_spans(tex_content)
     count = 0
 
     def _escape(match: re.Match[str]) -> str:
         nonlocal count
-        if _inside_spans(match.start(), protected):
+        if in_literal_span(match.start(), protected):
             return match.group(0)
         url = match.group(1)
         if "&" not in url:

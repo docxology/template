@@ -7,6 +7,7 @@ from typing import Any
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering._paper_frontmatter import PaperLayout
+from infrastructure.rendering._slides_participation import skips_beamer
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 from infrastructure.rendering.web_renderer import WebRenderer
@@ -93,7 +94,7 @@ class RenderManager:
                 # Markdown supports slides and web formats
                 logger.debug(f"Rendering Markdown file: {source_file.name}")
                 source_text = source_file.read_text(encoding="utf-8")
-                skip_beamer = "<!-- render:skip-beamer -->" in source_text
+                skip_beamer = skips_beamer(source_text)
 
                 # 1. Presentation derivatives. Accessible mode is an atomic
                 # Beamer/Reveal pair; archive mode preserves the historical

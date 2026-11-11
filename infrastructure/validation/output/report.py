@@ -15,28 +15,15 @@ from infrastructure.core.determinism import resolve_build_timestamp
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_substep
-from infrastructure.project.discovery import resolve_project_root
+from infrastructure.core.project_paths import resolve_project_root
 
 logger = get_logger(__name__)
 
 _REPO_ROOT = Path(__file__).parent.parent.parent.parent
 
 
-def _project_root(project_name: str, *, repo_root: Path = _REPO_ROOT) -> Path:
-    """Resolve active or WIP project roots for validation reports."""
-    return resolve_project_root(repo_root, project_name)
-
-
-def _project_output_dir(project_name: str, *, repo_root: Path = _REPO_ROOT) -> Path:
-    """Return the resolved project output directory."""
-    return _project_root(project_name, repo_root=repo_root) / "output"
-
-
-def _project_relative_path(project_name: str, child: str = "", *, repo_root: Path = _REPO_ROOT) -> str:
-    """Return a repo-relative project path for reports and recommendations."""
-    path = _project_root(project_name, repo_root=repo_root)
-    if child:
-        path = path / child
+def _display_path(path: Path, repo_root: Path) -> str:
+    """Display a path relative to the repository when possible."""
     try:
         return str(path.relative_to(repo_root))
     except ValueError:
@@ -55,7 +42,8 @@ def generate_validation_report(
     """Generate validation report with structured output."""
     log_substep("Generating validation report...", logger)
 
-    output_dir = _project_output_dir(project_name, repo_root=repo_root) / "reports"
+    project_root = resolve_project_root(repo_root, project_name)
+    output_dir = project_root / "output" / "reports"
 
     validation_results: dict[str, Any] = {
         "timestamp": resolve_build_timestamp(
@@ -92,9 +80,7 @@ def generate_validation_report(
                         "priority": "high",
                         "issue": "Transmission bookend page-span validation failed",
                         "action": "Compact bookend content or reduce QR strip so BEGIN/END each fit one page",
-                        "file": _project_relative_path(
-                            project_name, f"output/pdf/{project_name}_combined.pdf", repo_root=repo_root
-                        ),
+                        "file": _display_path(project_root / f"output/pdf/{project_name}_combined.pdf", repo_root),
                     }
                 )
             elif check_name == "Markdown validation":
@@ -103,7 +89,7 @@ def generate_validation_report(
                         "priority": "medium",
                         "issue": "Markdown validation issues found",
                         "action": "Review markdown validation output for formatting issues",
-                        "file": _project_relative_path(project_name, "manuscript", repo_root=repo_root),
+                        "file": _display_path(project_root / "manuscript", repo_root),
                     }
                 )
             elif check_name == "Output structure":
@@ -112,7 +98,7 @@ def generate_validation_report(
                         "priority": "high",
                         "issue": "Missing output directories",
                         "action": "Ensure all analysis scripts completed successfully",
-                        "file": _project_relative_path(project_name, "output", repo_root=repo_root),
+                        "file": _display_path(project_root / "output", repo_root),
                     }
                 )
             elif check_name == "Figure registry":
@@ -121,9 +107,7 @@ def generate_validation_report(
                         "priority": "high",
                         "issue": "Figure registry validation failed",
                         "action": "Regenerate the figure registry and repair missing or unbound figures",
-                        "file": _project_relative_path(
-                            project_name, "output/figures/figure_registry.json", repo_root=repo_root
-                        ),
+                        "file": _display_path(project_root / "output/figures/figure_registry.json", repo_root),
                     }
                 )
             elif check_name == "Evidence registry":
@@ -132,9 +116,7 @@ def generate_validation_report(
                         "priority": "medium",
                         "issue": "Evidence registry reported unsupported manuscript facts",
                         "action": "Register generated facts or replace unsupported hard-coded claims",
-                        "file": _project_relative_path(
-                            project_name, "output/reports/evidence_registry.json", repo_root=repo_root
-                        ),
+                        "file": _display_path(project_root / "output/reports/evidence_registry.json", repo_root),
                     }
                 )
             elif check_name == "Artifact manifest":
@@ -143,9 +125,7 @@ def generate_validation_report(
                         "priority": "medium",
                         "issue": "Artifact manifest reported drift or missing declared outputs",
                         "action": "Regenerate declared outputs or update the stage contract",
-                        "file": _project_relative_path(
-                            project_name, "output/reports/artifact_manifest.json", repo_root=repo_root
-                        ),
+                        "file": _display_path(project_root / "output/reports/artifact_manifest.json", repo_root),
                     }
                 )
             elif check_name == "Project design overlays":
@@ -154,7 +134,7 @@ def generate_validation_report(
                         "priority": "high",
                         "issue": "Domain profile or experiment plan validation failed",
                         "action": "Fix domain_profile.yaml or experiment_plan.yaml schema and design declarations",
-                        "file": _project_relative_path(project_name, repo_root=repo_root),
+                        "file": _display_path(project_root, repo_root),
                     }
                 )
 
@@ -164,9 +144,7 @@ def generate_validation_report(
                 "priority": "medium",
                 "issue": f"{len(figure_issues)} figure reference issue(s)",
                 "action": "Register missing figures or remove unused references",
-                "file": _project_relative_path(
-                    project_name, "output/figures/figure_registry.json", repo_root=repo_root
-                ),
+                "file": _display_path(project_root / "output/figures/figure_registry.json", repo_root),
             }
         )
 
@@ -180,16 +158,17 @@ def generate_validation_report(
     if bind_rendered_inputs:
         from infrastructure.reporting.pipeline_io import generate_validation_markdown
 
-        project_root = _project_root(project_name, repo_root=repo_root)
+        # Recheck the write owner after collecting the rendered inputs.
+        write_root = resolve_project_root(repo_root, project_name)
         json_path = output_dir / "validation_report.json"
         markdown_path = output_dir / "validation_report.md"
         atomic_write_text_confined(
-            project_root,
+            write_root,
             json_path,
             json.dumps(validation_results, indent=2, sort_keys=True) + "\n",
         )
         atomic_write_text_confined(
-            project_root,
+            write_root,
             markdown_path,
             generate_validation_markdown(validation_results),
         )

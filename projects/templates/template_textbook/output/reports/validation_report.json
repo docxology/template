@@ -61,7 +61,7 @@
           "file_count": 1,
           "largest_file": "template_textbook_combined.pdf",
           "largest_file_path": "pdf/template_textbook_combined.pdf",
-          "size_mb": "1.47"
+          "size_mb": "1.84"
         },
         "release": {
           "exists": true,
@@ -92,7 +92,7 @@
           "file_count": 53,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "3.74"
+          "size_mb": "3.55"
         }
       },
       "file_counts": {
@@ -117,7 +117,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 1.47
+            "size_mb": 1.84
           },
           "data": {
             "exists": true,
@@ -171,7 +171,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.47
+            "size_mb": 1.84
           },
           "release": {
             "exists": true,
@@ -209,7 +209,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 3.74
+            "size_mb": 3.55
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 9.728014945983887
+      "total_size_mb": 9.905265808105469
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -244,7 +244,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 1.469411849975586
+      "size_mb": 1.842081069946289
     },
     "stable_inventory": {
       "categories": {
@@ -254,11 +254,11 @@
         },
         "docx": {
           "files": 2,
-          "size_bytes": 1138230
+          "size_bytes": 1138231
         },
         "epub": {
           "files": 1,
-          "size_bytes": 1233489
+          "size_bytes": 1233398
         },
         "figures": {
           "files": 96,
@@ -266,7 +266,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 1540790
+          "size_bytes": 1931562
         },
         "release": {
           "files": 2,
@@ -278,12 +278,12 @@
         },
         "web": {
           "files": 53,
-          "size_bytes": 3926824
+          "size_bytes": 3722003
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 10200563
+      "total_size_bytes": 10386424
     }
   },
   "recommendations": [],
@@ -294,12 +294,12 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-08T06:08:09Z",
+  "timestamp": "2026-11-10T02:08:15Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "e186acf385861da1dc0a1a955050299da90079560f6947acc861fa9938827d2d",
-      "size_bytes": 49396
+      "sha256": "bcb87f2ab04ce103afadee58cffd614e12ccbd301812064d8f05bf226be045b6",
+      "size_bytes": 53396
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
@@ -610,19 +610,19 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "35e866524da39de80fe7ffad42b9bc94f201393e4d0b460bc6606e131756eb26"
+        "sha256": "0651437ee857a76d5a2ae52e7fa2373ff7119bdc43b1d657633ebb3be012a438"
       },
       "output": {
         "file_count": 160,
-        "sha256": "777ca56992e006d025b619b5320418095591674db797a4985a678dbfc1fda3bf"
+        "sha256": "8c81498dc775a88ebd7b2b3f01a475c670258cda878a17ab7a1d303e9dbb8f9a"
       },
       "source": {
         "file_count": 94,
         "sha256": "db667c4f77bc05c9b0f749c72f13d30b1d58d277a8d5acc24b53672fa475386f"
       },
       "stage": {
-        "file_count": 1616,
-        "sha256": "387391735704fc12c1ad611db5cfd0f76789db44d667f9fa0bdd697d1421d2f6"
+        "file_count": 1759,
+        "sha256": "78de1e8e21c2abfc1e1d85d7200b7668905ad3bbf1333f459951cf64d35b7ba3"
       }
     },
     "project": "templates/template_textbook",

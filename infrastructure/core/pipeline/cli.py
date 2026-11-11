@@ -22,14 +22,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import logging
 import sys
 from collections.abc import Sequence
-from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Iterator, TextIO
+from typing import Any
 
 from infrastructure.core.cli_scaffold import add_schema_flag, emit_schema
+from infrastructure.core.logging.setup import _scoped_console_destination
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.definition import (
@@ -45,39 +44,6 @@ from infrastructure.core.pipeline.definition import (
 from infrastructure.core.pipeline.stage_vocabulary import _OPT_IN_TAGS
 
 logger = get_logger(__name__)
-
-
-@contextmanager
-def _preview_logging() -> Iterator[None]:
-    """Keep preview diagnostics on stderr and restore their console streams.
-
-    Initialize the genuine script-discovery logger before compilation lazily
-    imports it. Only stdout console handlers on the two resolution loggers are
-    routed; file/capture handlers, levels, filters and propagation stay intact.
-    Ordinary pipeline execution keeps its configured logging outside this scope.
-    """
-    from infrastructure.core.script_discovery import logger as discovery_logger
-
-    loggers = (logging.getLogger("infrastructure.core.pipeline.dag"), discovery_logger)
-    streams: list[tuple[logging.StreamHandler[Any], TextIO]] = []
-    for selected in loggers:
-        for handler in selected.handlers:
-            stream = getattr(handler, "stream", None)
-            if (
-                isinstance(handler, logging.StreamHandler)
-                and not isinstance(handler, logging.FileHandler)
-                and (stream is sys.stdout or stream is sys.__stdout__)
-                and all(existing is not handler for existing, _stream in streams)
-            ):
-                if stream is not None:
-                    streams.append((handler, stream))
-    try:
-        for handler, _stream in streams:
-            handler.setStream(sys.stderr)
-        yield
-    finally:
-        for handler, stream in reversed(streams):
-            handler.setStream(stream)
 
 
 DEFAULT_PIPELINE_YAML = Path(__file__).resolve().parent / "pipeline.yaml"
@@ -129,7 +95,7 @@ def stage_rows(
     Resolution diagnostics use stderr within this scope so CLI and MCP callers
     receive clean stdout without discarding the configured logger messages.
     """
-    with _preview_logging():
+    with _scoped_console_destination(sys.stderr):
         dag = PipelineDAG.from_yaml(yaml_path)
         if exclude_tags or include_only:
             dag.filter_tags(exclude=exclude_tags or None, include_only=include_only or None)
@@ -208,7 +174,7 @@ def pipeline_description(
             argparse.Namespace(repo_root=config.repo_root, project=config.project_name, yaml=yaml_path)
         )
         return {"version": 2, "view": view, "source": str(path), "stages": stage_rows(path)}
-    with _preview_logging():
+    with _scoped_console_destination(sys.stderr):
         plan = compile_execution_plan(config)
     rows = [
         {

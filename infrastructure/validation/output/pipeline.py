@@ -25,8 +25,7 @@ from infrastructure.core.pipeline.artifacts import (
     output_inventory_mode_for_project,
     validate_artifact_manifest,
 )
-from infrastructure.core.project_paths import resolve_source_manuscript_dir
-from infrastructure.project.discovery import resolve_project_root
+from infrastructure.core.project_paths import resolve_project_root, resolve_source_manuscript_dir
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
@@ -90,7 +89,7 @@ def build_core_checks(
     repo_root: Path = _REPO_ROOT,
     prose_validator: Callable[[str], bool] | None = None,
 ) -> list[PipelineCheck]:
-    project_root = _project_root(project_name, repo_root=repo_root)
+    project_root = resolve_project_root(repo_root, project_name)
     inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
     try:
         render_config = load_effective_rendering_config(project_root)
@@ -150,34 +149,13 @@ def _run_registered_checks(checks: list[PipelineCheck]) -> list[tuple[str, bool]
     return results
 
 
-def _project_root(project_name: str, *, repo_root: Path = _REPO_ROOT) -> Path:
-    """Resolve active or WIP project roots for validation stages."""
-    return resolve_project_root(repo_root, project_name)
-
-
-def _project_output_dir(project_name: str, *, repo_root: Path = _REPO_ROOT) -> Path:
-    """Return the resolved project output directory."""
-    return _project_root(project_name, repo_root=repo_root) / "output"
-
-
-def _project_relative_path(project_name: str, child: str = "", *, repo_root: Path = _REPO_ROOT) -> str:
-    """Return a repo-relative project path for reports and recommendations."""
-    path = _project_root(project_name, repo_root=repo_root)
-    if child:
-        path = path / child
-    try:
-        return str(path.relative_to(repo_root))
-    except ValueError:
-        return str(path)
-
-
 def validate_pdfs(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> bool:
     """Validate generated PDF files.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
     """
-    return _validate_pdfs(_project_root(project_name, repo_root=repo_root))
+    return _validate_pdfs(resolve_project_root(repo_root, project_name))
 
 
 def validate_transmission_bookends(
@@ -188,7 +166,7 @@ def validate_transmission_bookends(
 ) -> bool:
     """Validate transmission bookend single-page contract when enabled."""
     return _validate_transmission_bookends(
-        _project_root(project_name, repo_root=repo_root),
+        resolve_project_root(repo_root, project_name),
         project_name,
         page_validator=page_validator,
     )
@@ -200,7 +178,7 @@ def validate_manuscript_output_markdown(project_name: str = "project", *, repo_r
     Args:
         project_name: Name of project in projects/ directory (default: "project")
     """
-    return _validate_markdown(_project_root(project_name, repo_root=repo_root), repo_root, project_name)
+    return _validate_markdown(resolve_project_root(repo_root, project_name), repo_root, project_name)
 
 
 def verify_outputs_exist(
@@ -222,11 +200,9 @@ def verify_outputs_exist(
     """
     log_substep("Verifying output structure...", logger)
 
-    output_dir = _project_output_dir(project_name, repo_root=repo_root)
-    inventory_mode = output_inventory_mode_for_project(
-        repo_root,
-        _project_root(project_name, repo_root=repo_root),
-    )
+    project_root = resolve_project_root(repo_root, project_name)
+    output_dir = project_root / "output"
+    inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
 
     detailed_validation = collect_detailed_validation_results(
         output_dir, enabled_formats=enabled_formats, inventory_mode=inventory_mode
@@ -348,7 +324,7 @@ def _prose_quality_enabled(project_name: str, *, repo_root: Path = _REPO_ROOT) -
     ``validation.prose_quality.enabled`` and defaults to ``False`` so existing
     runs are unaffected.
     """
-    return _is_prose_quality_enabled(_project_root(project_name, repo_root=repo_root))
+    return _is_prose_quality_enabled(resolve_project_root(repo_root, project_name))
 
 
 def validate_prose_quality(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> bool:
@@ -361,7 +337,7 @@ def validate_prose_quality(project_name: str = "project", *, repo_root: Path = _
     only invoked when ``validation.prose_quality.enabled`` is set in the project
     config, so disabled runs are byte-identical to the default behavior.
     """
-    return _validate_prose_quality(_project_root(project_name, repo_root=repo_root))
+    return _validate_prose_quality(resolve_project_root(repo_root, project_name))
 
 
 def execute_validation_pipeline(
@@ -377,7 +353,7 @@ def execute_validation_pipeline(
     Returns:
         Exit code (0=success, 1=failure)
     """
-    project_output_dir = _project_output_dir(project_name, repo_root=repo_root)
+    project_output_dir = resolve_project_root(repo_root, project_name) / "output"
     DiagnosticReporter(
         project_name=project_name,
         output_dir=project_output_dir,
@@ -389,7 +365,7 @@ def execute_validation_pipeline(
     figure_issues: list[str] = []
     detailed_validation = None
 
-    project_root = _project_root(project_name, repo_root=repo_root)
+    project_root = resolve_project_root(repo_root, project_name)
     inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
 

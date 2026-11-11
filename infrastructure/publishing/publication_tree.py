@@ -16,11 +16,8 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.files.secure_write import (
-    _close_all,
-    _directory_identity_matches,
-    _open_parent,
-    _relative_target,
     atomic_write_bytes_confined,
+    hold_confined_directory,
     read_bytes_confined,
 )
 
@@ -162,9 +159,8 @@ def _entries(root: Path, budget: _Budget, *, source: bool = False) -> Iterator[t
         budget.check()
         if len(parts) > budget.limits.max_depth:
             raise ValueError("publication tree exceeds its finite depth limit")
-        descriptor, opened = _open_parent(root, parts, create=False, expected_root_identity=identity)
-        try:
-            with os.scandir(descriptor) as entries:
+        with hold_confined_directory(root, Path(*parts), expected_root_identity=identity) as directory_handle:
+            with os.scandir(directory_handle.descriptor) as entries:
                 for entry in entries:
                     budget.check()
                     count += 1
@@ -183,10 +179,8 @@ def _entries(root: Path, budget: _Budget, *, source: bool = False) -> Iterator[t
                     yield relative, directory
                     if directory:
                         pending.append((*parts, entry.name))
-            if not _directory_identity_matches(root, parts, descriptor, identity):
+            if not directory_handle.matches_path():
                 raise ValueError("publication directory changed during bounded traversal")
-        finally:
-            _close_all(opened)
 
 
 def _names(root: Path, budget: _Budget) -> set[str]:
@@ -412,51 +406,46 @@ def _quarantine_file(
     destination_identity: tuple[int, int],
     quarantine_identity: tuple[int, int],
 ) -> None:
-    root, parts, filename = _relative_target(destination, destination / _path(relative))
-    parent, opened = _open_parent(root, parts, create=False, expected_root_identity=destination_identity)
-    quarantine_root, quarantine_parts, _ = _relative_target(quarantine, quarantine / relative)
-    try:
-        moved_parent, moved_opened = _open_parent(
-            quarantine_root, quarantine_parts, create=True, expected_root_identity=quarantine_identity
-        )
-    except BaseException:
-        _close_all(opened)
-        raise
-    moved = False
-    try:
-        original = os.stat(filename, dir_fd=parent, follow_symlinks=False)
-        if not stat.S_ISREG(original.st_mode) or _file(destination, relative, destination_identity) != expected:
-            raise ValueError("reviewed publication file changed before quarantine")
-        if not _directory_identity_matches(
-            root, parts, parent, destination_identity
-        ) or not _directory_identity_matches(quarantine_root, quarantine_parts, moved_parent, quarantine_identity):
-            raise ValueError("publication removal ancestor changed before quarantine")
-        os.rename(filename, filename, src_dir_fd=parent, dst_dir_fd=moved_parent)
-        moved = True
-        observed = os.stat(filename, dir_fd=moved_parent, follow_symlinks=False)
-        if (
-            (original.st_dev, original.st_ino, original.st_size, original.st_mtime_ns)
-            != (observed.st_dev, observed.st_ino, observed.st_size, observed.st_mtime_ns)
-            or _file(quarantine, relative, quarantine_identity) != expected
-            or not _directory_identity_matches(root, parts, parent, destination_identity)
-            or not _directory_identity_matches(quarantine_root, quarantine_parts, moved_parent, quarantine_identity)
-        ):
-            raise ValueError("publication file or ancestor changed during quarantine; retained rollback evidence")
-        os.fsync(parent)
-        os.fsync(moved_parent)
-    except BaseException as error:
-        if moved and (
-            not _directory_identity_matches(root, parts, parent, destination_identity)
-            or not _directory_identity_matches(quarantine_root, quarantine_parts, moved_parent, quarantine_identity)
-            or not _restore(parent, moved_parent, filename, _Budget())
-        ):
-            raise ValueError(
-                "publication removal refused; concurrent destination retained and quarantine needs recovery"
-            ) from error
-        raise
-    finally:
-        _close_all(moved_opened)
-        _close_all(opened)
+    path = _path(relative)
+    filename = path.name
+    with (
+        hold_confined_directory(destination, path.parent, expected_root_identity=destination_identity) as source_handle,
+        hold_confined_directory(
+            quarantine, path.parent, create=True, expected_root_identity=quarantine_identity
+        ) as quarantine_handle,
+    ):
+        parent = source_handle.descriptor
+        moved_parent = quarantine_handle.descriptor
+        moved = False
+        try:
+            original = os.stat(filename, dir_fd=parent, follow_symlinks=False)
+            if not stat.S_ISREG(original.st_mode) or _file(destination, relative, destination_identity) != expected:
+                raise ValueError("reviewed publication file changed before quarantine")
+            if not source_handle.matches_path() or not quarantine_handle.matches_path():
+                raise ValueError("publication removal ancestor changed before quarantine")
+            os.rename(filename, filename, src_dir_fd=parent, dst_dir_fd=moved_parent)
+            moved = True
+            observed = os.stat(filename, dir_fd=moved_parent, follow_symlinks=False)
+            if (
+                (original.st_dev, original.st_ino, original.st_size, original.st_mtime_ns)
+                != (observed.st_dev, observed.st_ino, observed.st_size, observed.st_mtime_ns)
+                or _file(quarantine, relative, quarantine_identity) != expected
+                or not source_handle.matches_path()
+                or not quarantine_handle.matches_path()
+            ):
+                raise ValueError("publication file or ancestor changed during quarantine; retained rollback evidence")
+            os.fsync(parent)
+            os.fsync(moved_parent)
+        except BaseException as error:
+            if moved and (
+                not source_handle.matches_path()
+                or not quarantine_handle.matches_path()
+                or not _restore(parent, moved_parent, filename, _Budget())
+            ):
+                raise ValueError(
+                    "publication removal refused; concurrent destination retained and quarantine needs recovery"
+                ) from error
+            raise
 
 
 def _restore_files(
@@ -470,23 +459,24 @@ def _restore_files(
     budget = _Budget()
     for relative in reversed(names):
         budget.check()
-        root, parts, filename = _relative_target(destination, destination / relative)
-        parent, opened = _open_parent(root, parts, create=False, expected_root_identity=destination_identity)
-        moved_root, moved_parts, _ = _relative_target(quarantine, quarantine / relative)
-        try:
-            moved_parent, moved_opened = _open_parent(
-                moved_root, moved_parts, create=False, expected_root_identity=quarantine_identity
-            )
-        except BaseException:
-            _close_all(opened)
-            raise
-        try:
+        path = _path(relative)
+        filename = path.name
+        with (
+            hold_confined_directory(
+                destination, path.parent, expected_root_identity=destination_identity
+            ) as target_handle,
+            hold_confined_directory(
+                quarantine, path.parent, expected_root_identity=quarantine_identity
+            ) as quarantine_handle,
+        ):
+            parent = target_handle.descriptor
+            moved_parent = quarantine_handle.descriptor
             original = os.stat(filename, dir_fd=moved_parent, follow_symlinks=False)
             if _file(quarantine, relative, quarantine_identity, budget) != records[relative]:
                 raise ValueError("publication quarantine differs from reviewed rollback bytes")
             if (
-                not _directory_identity_matches(root, parts, parent, destination_identity)
-                or not _directory_identity_matches(moved_root, moved_parts, moved_parent, quarantine_identity)
+                not target_handle.matches_path()
+                or not quarantine_handle.matches_path()
                 or not _restore(parent, moved_parent, filename, budget, records[relative])
             ):
                 raise ValueError("publication rollback refused an occupied target; quarantine remains recoverable")
@@ -495,9 +485,6 @@ def _restore_files(
                 _file(destination, relative, destination_identity, budget) != records[relative]
             ):
                 raise ValueError("publication rollback changed during restoration; both locations remain retained")
-        finally:
-            _close_all(moved_opened)
-            _close_all(opened)
 
 
 def restore_publication_quarantine(
@@ -607,15 +594,12 @@ def update_publication_tree(
         if quarantine_root.is_relative_to(source) or quarantine_root.is_relative_to(destination):
             raise ValueError("publication quarantine must remain outside the source and destination")
         quarantine = quarantine_root / uuid.uuid4().hex
-        held, opened = _open_parent(
-            quarantine_root, (quarantine.name,), create=True, expected_root_identity=quarantine_root_identity
-        )
-        try:
-            os.fchmod(held, 0o700)
-            metadata = os.fstat(held)
+        with hold_confined_directory(
+            quarantine_root, Path(quarantine.name), create=True, expected_root_identity=quarantine_root_identity
+        ) as held:
+            os.fchmod(held.descriptor, 0o700)
+            metadata = os.fstat(held.descriptor)
             quarantine_identity = (metadata.st_dev, metadata.st_ino)
-        finally:
-            _close_all(opened)
         journal = {
             "schema_version": _PLAN_SCHEMA,
             "reviewed_plan_sha256": reviewed_plan_sha256,

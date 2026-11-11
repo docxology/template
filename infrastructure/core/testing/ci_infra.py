@@ -11,10 +11,12 @@ import shlex
 import time
 import sys
 import tomllib
+from dataclasses import dataclass
 from pathlib import Path
 from uuid import uuid4
 
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
+from infrastructure.core.testing.ci_change_scope import documentation_only
 from infrastructure.core.testing.ci_contracts import CONTRACT_SECONDS, combined_groups, contract_files
 
 from infrastructure.core.testing.ci_module_durations import load_module_durations, module_weights
@@ -70,9 +72,14 @@ AUTOMATIC_SHARD_TARGET_SECONDS = 240.0
 AUTOMATIC_SHARD_LOAD_MAX_JOBS = 64
 
 
-def infrastructure_files(root: Path, changed: tuple[str, ...] = (), *, documentation: bool = False) -> tuple[str, ...]:
-    """Enumerate real test modules for the selected functional lane."""
-    paths = (
+def _discover_infrastructure_files(
+    root: Path,
+    changed: tuple[str, ...],
+    *,
+    documentation: bool,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Collect selected and baseline modules from one observation."""
+    baseline_paths = (
         [root / "tests/infra_tests/documentation"]
         if documentation
         else [
@@ -80,6 +87,7 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = (), *, documenta
             *[root / p for p in CI_EXTRA_PATHS],
         ]
     )
+    paths: list[Path] = []
     for name in () if documentation else changed:
         relative = Path(name)
         if relative.is_absolute() or ".." in relative.parts:
@@ -109,6 +117,14 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = (), *, documenta
                 package = relative.parts[1] if len(relative.parts) > 2 else ""
                 paths.append(root / "tests/infra_tests" / package)
         paths.extend(root / owner for owner in SUPPLEMENTAL_TEST_OWNERS.get(name, ()))
+    baseline = _test_modules(root, baseline_paths)
+    selected_modules = baseline | _test_modules(root, paths)
+    if not selected_modules:
+        raise ValueError("functional infrastructure selection is empty")
+    return tuple(sorted(selected_modules)), tuple(sorted(baseline))
+
+
+def _test_modules(root: Path, paths: list[Path]) -> set[str]:
     files: set[str] = set()
     for path in paths:
         if not path.exists() or path.is_symlink() or not path.resolve().is_relative_to(root.resolve()):
@@ -118,9 +134,26 @@ def infrastructure_files(root: Path, changed: tuple[str, ...] = (), *, documenta
             if candidate.is_symlink() or candidate.resolve() != candidate.absolute():
                 raise ValueError("functional infrastructure test must be a real confined file")
             files.add(candidate.relative_to(root).as_posix())
-    if not files:
+    return files
+
+
+def infrastructure_files(root: Path, changed: tuple[str, ...] = (), *, documentation: bool = False) -> tuple[str, ...]:
+    """Enumerate real test modules for the selected functional lane."""
+    files, _ = _discover_infrastructure_files(root, changed, documentation=documentation)
+    return files
+
+
+@dataclass(frozen=True)
+class _InfrastructureRoster:
+    files: tuple[str, ...]
+    contracts: tuple[str, ...]
+
+
+def _infrastructure_roster(root: Path, changed: tuple[str, ...], *, documentation: bool) -> _InfrastructureRoster:
+    files, baseline = _discover_infrastructure_files(root, changed, documentation=documentation)
+    if not documentation and not baseline:
         raise ValueError("functional infrastructure selection is empty")
-    return tuple(sorted(files))
+    return _InfrastructureRoster(files, contract_files(files, () if documentation else baseline))
 
 
 def infrastructure_shards(
@@ -133,9 +166,16 @@ def infrastructure_shards(
     """
     if count is not None and (type(count) is not int or not 1 <= count <= 8):
         raise ValueError("functional shard count must be between one and eight")
-    files = infrastructure_files(root, changed, documentation=documentation)
-    contracts = contract_files(files, () if documentation else infrastructure_files(root))
-    files = tuple(name for name in files if name not in contracts)
+    roster = _infrastructure_roster(root, changed, documentation=documentation)
+    return _partition_infrastructure_roster(root, roster, count)
+
+
+def _partition_infrastructure_roster(
+    root: Path,
+    roster: _InfrastructureRoster,
+    count: int | None = None,
+) -> list[list[str]]:
+    files = tuple(name for name in roster.files if name not in roster.contracts)
     isolated = tuple(name for name in files if count is None and name in _ISOLATED_ROUTINE_MODULES)
     files = tuple(name for name in files if name not in isolated)
     automatic = count is None
@@ -166,6 +206,17 @@ def infrastructure_shards(
     return [*[sorted(shard) for shard in shards], *[[name] for name in isolated]]
 
 
+def infrastructure_selection_fields(root: Path, changed: tuple[str, ...], *, full: bool) -> dict[str, object]:
+    """Partition the producer's exact roster and project it into the existing plan fields."""
+    docs_only = not full and documentation_only(changed)
+    roster = _infrastructure_roster(root, changed, documentation=docs_only)
+    return {
+        "infra_shards": _partition_infrastructure_roster(root, roster),
+        "contract_modules": list(roster.contracts),
+        "documentation_only": docs_only,
+    }
+
+
 def validate_shards(shards: list[list[str]], expected: tuple[str, ...]) -> None:
     flattened = [path for shard in shards for path in shard]
     if (
@@ -178,17 +229,14 @@ def validate_shards(shards: list[list[str]], expected: tuple[str, ...]) -> None:
 
 
 def validate_plan(root: Path, plan: dict) -> None:
-    from infrastructure.core.testing.ci_selection import documentation_only
-
     changed = tuple(plan["changed_paths"])
     docs_only = not plan.get("full", False) and documentation_only(changed)
     if plan.get("documentation_only", False) is not docs_only:
         raise ValueError("documentation lane differs from its changed-path scope")
-    expected = infrastructure_files(root, changed, documentation=docs_only)
-    baseline = () if docs_only else infrastructure_files(root)
-    if plan.get("contract_modules", []) != list(contract_files(expected, baseline)):
+    roster = _infrastructure_roster(root, changed, documentation=docs_only)
+    if plan.get("contract_modules", []) != list(roster.contracts):
         raise ValueError("deep contract selection differs from its source-owned exact roster")
-    validate_shards(combined_groups(plan), expected)
+    validate_shards(combined_groups(plan), roster.files)
 
 
 def _functional_selection(root: Path, *, is_contract: bool = False) -> dict[str, str]:

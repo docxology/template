@@ -1141,7 +1141,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T05:51:35Z",
+      "checked_at": "2026-10-17T02:27:10Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -1149,11 +1149,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "18577"
+      "value": "16737"
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T05:51:35Z",
+      "checked_at": "2026-10-17T02:27:10Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -1161,7 +1161,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "185.77"
+      "value": "167.37"
     },
     {
       "active": true,
@@ -2377,39 +2377,39 @@
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
-      "source": "manuscript/99_references.md",
+      "checked_at": "2026-11-07T02:14:29Z",
+      "kind": "figure",
+      "source": "manuscript/04_provenance.md",
       "source_field": "",
-      "source_path": "manuscript/99_references.md",
+      "source_path": "manuscript/04_provenance.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:references"
+      "value": "fig:provenance_flow"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
-      "source": "manuscript/06_usage_notes.md",
+      "checked_at": "2026-11-07T02:14:29Z",
+      "kind": "figure",
+      "source": "output/figures/provenance_flow.png",
       "source_field": "",
-      "source_path": "manuscript/06_usage_notes.md",
+      "source_path": "output/figures/provenance_flow.png",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:usage"
+      "value": "fig:provenance_flow"
     },
     {
       "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
-      "source": "manuscript/01_introduction.md",
+      "checked_at": "2026-11-07T02:14:29Z",
+      "kind": "figure",
+      "source": "manuscript/README.md",
       "source_field": "",
-      "source_path": "manuscript/01_introduction.md",
+      "source_path": "manuscript/README.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:introduction"
+      "value": "fig:schema_overview"
     }
   ],
   "schema": "template-evidence-registry-report-v1",

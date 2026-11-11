@@ -32,7 +32,9 @@ on:
       - 'infrastructure/reporting/native_*.py'
       - 'infrastructure/reporting/release_readiness_*.py'
       - 'infrastructure/rendering/_mermaid_v11*'
+      - 'infrastructure/rendering/_mermaid_profile_io.py'
       - '.github/actions/setup-native-installed-readiness/**'
+      - '.github/actions/reclaim-native-runner-capacity/action.yml'
       - '.github/actions/setup-docs-lint/**'
       - '.github/workflows/platform-native-preflight.yml'
       - 'pyproject.toml'
@@ -57,9 +59,9 @@ jobs:
     # Ubuntu 26.04 has no setup-python build for 3.14.4; this workflow needs the
     # same reviewed Noble image as ci.yml and the required acceptance.
     runs-on: ubuntu-24.04
-    # 12000s operation + cold setup/upload. The 1800s bound was measured below
-    # the cold lifecycle; see docs/guides/native-format-acceptance.md.
-    timeout-minutes: 240
+    # Reserve 12000s for the diagnostic and 40 minutes for cold TeX setup,
+    # with time for the remaining preparation and upload.
+    timeout-minutes: 260
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -98,28 +100,7 @@ jobs:
         # reserve plus its declared peak (8 GiB preparation, 16 GiB transport).
         # Hosted images ship toolchains this lane never uses: remove exactly
         # those paths, keep chrome, node, python and uv, and report free space.
-        run: |
-          set -euo pipefail
-          free_before=$(df -k --output=avail / | tail -n 1)
-          for path in \
-            /usr/local/lib/android \
-            /usr/share/dotnet \
-            /opt/ghc \
-            /usr/share/swift \
-            /usr/local/share/boost \
-            /opt/hostedtoolcache/CodeQL \
-            /opt/hostedtoolcache/PyPy \
-            /opt/hostedtoolcache/Ruby \
-            /opt/hostedtoolcache/Go; do
-            if [ -e "$path" ]; then
-              sudo rm -rf --one-file-system -- "$path" || echo "reclaim-retained=$path"
-            fi
-          done
-          free_after=$(df -k --output=avail / | tail -n 1)
-          echo "reclaimed_kib=$((free_after - free_before)) free_kib=$free_after"
-          if [ "$free_after" -lt 10485760 ]; then
-            echo "::warning::free space is below the declared 10 GiB preparation threshold"
-          fi
+        uses: ./.github/actions/reclaim-native-runner-capacity
       - name: Bounded cold diagnostic native lifecycle
         id: preflight
         # This lane is diagnostic feedback, never a format verdict. Its native
@@ -180,7 +161,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_auxiliary == true && inputs.diagnostic_arl_readback != true
     name: ARL auxiliary diagnostic
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 110
     env:
       OLLAMA_SKIP_TEST_MODEL_PULL: '1'
     steps:

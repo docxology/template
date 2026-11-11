@@ -275,9 +275,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -306,8 +306,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -392,14 +392,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -417,6 +410,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -429,6 +424,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -656,18 +653,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -718,6 +707,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -825,7 +818,6 @@ class="toc-section-number">8</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
-
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This document is a <strong>template</strong>, not an empirical study.
@@ -852,9 +844,7 @@ analysis on the primary outcome is validated and reported alongside the
 confirmatory result. The purpose is to give forks a working, auditable
 skeleton in which planned analyses, frozen hypotheses, deviations, and
 post-run claims are separable and machine-checkable.</p>
-
 <hr />
-
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>A registered report separates <em>what a study commits to</em> from
@@ -899,9 +889,7 @@ confirmatory outcome bound to the executed analysis (Section <a
 href="#sec:results">5</a>), records deviations (Section <a
 href="#sec:deviations">6</a>), and discusses scope and boundaries
 (Section <a href="#sec:discussion">7</a>).</p>
-
 <hr />
-
 <h1 data-number="3" id="sec:hypotheses"><span
 class="header-section-number">3</span> Preregistered hypotheses</h1>
 <p>The registration in <code>data/example_registration.json</code>
@@ -955,9 +943,7 @@ exclusion decisions cannot depend on the observed effect.</li>
 introduced during analysis is therefore exploratory and must be recorded
 in the deviation ledger (Section <a href="#sec:deviations">6</a>) rather
 than presented as a confirmatory finding.</p>
-
 <hr />
-
 <h1 data-number="4" id="sec:methods"><span
 class="header-section-number">4</span> Methods and analysis plan</h1>
 <p>The method is the registered-report workflow itself, implemented as
@@ -1032,9 +1018,7 @@ href="#sec:results">5</a>.</p>
 keeping the same <code>run_registered_analysis</code> contract, so the
 confirmatory analysis remains bound to the frozen plan rather than to
 post-hoc choices.</p>
-
 <hr />
-
 <h1 data-number="5" id="sec:results"><span
 class="header-section-number">5</span> Results</h1>
 <p>Results are interpreted only after the registered analysis has run
@@ -1166,9 +1150,7 @@ findings list. The same row is carried verbatim into the review packet
 <code>sensitivity_analyses</code> from the frozen plan), so the
 sensitivity check is visible in source, tests, review packets, and this
 manuscript — never invented after results are known.</p>
-
 <hr />
-
 <h1 data-number="6" id="sec:deviations"><span
 class="header-section-number">6</span> Deviation register</h1>
 <p>A registered report must state, explicitly, every way the executed
@@ -1260,9 +1242,7 @@ exploratory <code>secondary_score</code> endpoint is visible, labelled,
 and excluded from confirmatory interpretation. Forks should extend this
 ledger — never edit the frozen registration — whenever the executed
 analysis must diverge from plan.</p>
-
 <hr />
-
 <h1 data-number="7" id="sec:discussion"><span
 class="header-section-number">7</span> Discussion</h1>
 <h2 data-number="7.1"
@@ -1318,9 +1298,7 @@ collection, record stage and ethics metadata, and rerun the tests and
 figure generation. Keep confirmatory claims tied to registered outcomes,
 record every departure in the deviation ledger, and never let post-run
 result prose rewrite the preregistered intent.</p>
-
 <hr />
-
 <h1 data-number="8" id="sec:references"><span
 class="header-section-number">8</span> References</h1>
 <p>The bibliography lives in <a
@@ -1335,7 +1313,6 @@ root:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_registered_report/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
-
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-chambers2013registered" class="csl-entry" role="listitem">

@@ -20,7 +20,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.core.pipeline.types import PipelineConfig
-from infrastructure.core.pipeline.plan import compile_execution_plan
+from infrastructure.core.pipeline.execution_session import compose_run_deadline, prepare_pipeline_run
 from infrastructure.core.pipeline.multi_project_runtime import freeze_project_plans, freeze_shared_plan
 from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.multi_project import format_multi_project_outcome_lines
@@ -99,10 +99,10 @@ class PipelineRunner:
                 resume=invocation.resume,
                 incremental=IncrementalConfig(enabled=invocation.incremental),
             )
-            deadline = time.monotonic() + config.run_timeout_seconds
+            deadline = compose_run_deadline(config.run_timeout_seconds, None)
             stage_log_path(self.repo_root, project, layout=invocation.log_layout)
-            plan = compile_execution_plan(config)
-            stage_names = tuple(stage.name for stage in plan.stages)
+            prepared = prepare_pipeline_run(config, deadline_monotonic=deadline)
+            stage_names = tuple(stage.name for stage in prepared.plan.stages)
             which = f"{invocation.mode} pipeline"
         except ValueError as exc:
             self._emit(f"Invalid pipeline invocation: {exc}")
@@ -110,7 +110,7 @@ class PipelineRunner:
         if not stage_names:
             self._emit(f"FAILED: {which} has no executable stages")
             return 1
-        if time.monotonic() >= deadline:
+        if prepared.expired():
             self._emit("Pipeline deadline expired during plan preflight")
             return 124
         executor: Any = None
@@ -121,7 +121,7 @@ class PipelineRunner:
             self._emit(f"=== {which.upper()} === project={project}")
             for idx, name in enumerate(stage_names, start=1):
                 self._banner(idx, len(stage_names), name, project)
-            results = executor.execute_plan(plan, deadline_monotonic=deadline)
+            results = executor.execute_plan(prepared.plan, deadline_monotonic=prepared.deadline)
         except TimeoutError as exc:
             self._emit(f"Pipeline deadline expired: {exc}")
             return 124

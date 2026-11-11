@@ -10,10 +10,45 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 import logging
 import os
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
+from typing import TextIO
 
 from infrastructure.core.logging.formatters import ConsoleFormatter, JSONFormatter
 from infrastructure.core.logging.constants import get_structured_logging_enabled
+
+
+_CONSOLE_DESTINATION: ContextVar[TextIO | None] = ContextVar("console_destination", default=None)
+
+
+@contextmanager
+def _scoped_console_destination(stream: TextIO) -> Iterator[None]:
+    """Route owned stdout consoles in the current execution context."""
+    token = _CONSOLE_DESTINATION.set(stream)
+    try:
+        yield
+    finally:
+        _CONSOLE_DESTINATION.reset(token)
+
+
+class _ConsoleHandler(logging.StreamHandler):
+    """Keep the configured stream and resolve any diagnostic scope at emission."""
+
+    def emit(self, record: logging.LogRecord) -> None:
+        destination = _CONSOLE_DESTINATION.get()
+        if destination is None or (self.stream is not sys.stdout and self.stream is not sys.__stdout__):
+            super().emit(record)
+            return
+
+        try:
+            destination.write(self.format(record) + self.terminator)
+            destination.flush()
+        except RecursionError:
+            raise
+        except Exception:
+            self.handleError(record)
 
 
 def _is_test_environment() -> bool:
@@ -69,7 +104,7 @@ def setup_logger(name: str, level: int | None = None, log_file: Path | str | Non
     logger_level = min(level, logging.DEBUG) if log_file else level
     logger.setLevel(logger_level)
 
-    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler = _ConsoleHandler(sys.stdout)
     console_handler.setLevel(console_level)
     if get_structured_logging_enabled():
         console_handler.setFormatter(JSONFormatter())

@@ -9,11 +9,12 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pipeline.multi_project import MultiProjectResult, validated_project_run
+from infrastructure.core.pipeline.multi_project import MultiProjectResult
 from infrastructure.reporting._executive_renderers import (
     generate_executive_summary,
     save_executive_summary,
 )
+from infrastructure.reporting.multi_project_readback import iter_project_runs, shared_infrastructure_run
 
 logger = get_logger(__name__)
 
@@ -71,8 +72,7 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
     project_names = [getattr(p, "qualified_name", p.name) for p in projects]
     raw_results = result.project_results
     project_results = raw_results if isinstance(raw_results, dict) else {}
-    shared = result.shared_infrastructure_result
-    shared_run = shared.validated_run() if shared is not None else None
+    shared_run = shared_infrastructure_run(result)
 
     summary: dict[str, Any] = {
         "timestamp": datetime.now().isoformat(),
@@ -88,7 +88,7 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
                 "exit_code": shared_run.exit_code,
                 "complete": shared_run.complete,
             }
-            if shared_run is not None and shared_run.exit_code == result.shared_infrastructure_exit_code
+            if shared_run is not None
             else None
         ),
         "complete": False,
@@ -101,11 +101,11 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
         "recommendations": [],
     }
 
-    for proj_name in project_names:
+    for project in iter_project_runs(result, project_names):
+        proj_name, run = project.qualified_name, project.run
         raw = project_results.get(proj_name, [])
         proj_result = raw if isinstance(raw, list) else []
-        run = validated_project_run(result, proj_name)
-        passed = run is not None and run.complete and proj_name in result.expected_projects
+        passed = project.complete and proj_name in result.expected_projects
         summary["projects"][proj_name] = {
             "success": passed,
             "exit_code": run.exit_code if run is not None else 1,

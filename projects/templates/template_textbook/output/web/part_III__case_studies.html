@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <title>_combined_manuscript</title>
+  <title>case_studies.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -245,26 +244,7 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -273,9 +253,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -304,8 +284,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -390,14 +370,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -415,6 +388,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -427,6 +402,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -654,18 +631,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -716,6 +685,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -744,13 +717,12 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="17" id="sec:part_III_case_studies"><span
-class="header-section-number">17</span> Case Studies</h1>
+<h1 id="sec:part_III_case_studies">Case Studies</h1>
 <figure id="fig:part_III_case_studies">
-<a class="figure-full-size-link" href="../figures/part_III_case_studies.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 11, Instructional fixture values with supplied error bars across the control, low-treatment"><img src="../figures/part_III_case_studies.png" style="width:75.0%"
+<a class="figure-full-size-link" href="../figures/part_III_case_studies.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Instructional fixture values with supplied error bars across the control, low-treatment"><img src="../figures/part_III_case_studies.png" style="width:75.0%"
 alt="Six instructional fixture values increase across control, low-treatment, and high-treatment conditions; each point has a supplied error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 11: Instructional fixture values
-with supplied error bars across the control, low-treatment, and
+<figcaption>Instructional fixture values with
+supplied error bars across the control, low-treatment, and
 high-treatment conditions, generated directly from
 <code>manuscript/assets/data/sample_dataset.csv</code>.</figcaption>
 </figure>
@@ -763,20 +735,20 @@ Principles</p>
 </blockquote>
 <blockquote>
 <p><strong>This chapter is a worked reference</strong> in a different
-style from sec. <a href="part_I__first_principles.html#sec:part_I_first_principles">8</a>: where that
-chapter <em>derives</em> a model, this one <em>applies</em> one to a
-small dataset. The book uses both styles to connect model assumptions
-with computations.</p>
+style from <span class="citation"
+data-cites="sec:part_I_first_principles">[@sec:part_I_first_principles]</span>:
+where that chapter <em>derives</em> a model, this one <em>applies</em>
+one to a small dataset. The book uses both styles to connect model
+assumptions with computations.</p>
 </blockquote>
-<h2 data-number="17.1" id="learning-objectives-10"><span
-class="header-section-number">17.1</span> Learning Objectives</h2>
+<h2 id="learning-objectives">Learning Objectives</h2>
 <p>By the end of this chapter you should be able to:</p>
 <ol type="1">
 <li>Frame a real question as a comparison between a <a
-href="manuscript__glossary.html#gl:system"><strong>system</strong></a> under control and
+href="#gl:system"><strong>system</strong></a> under control and
 treatment conditions.</li>
 <li>Summarise grouped <a
-href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a> data with means
+href="#gl:observable"><strong>observable</strong></a> data with means
 and a measure of spread, and read an error-bar figure.</li>
 <li>Fit a simple dose–response trend with
 <code>textbook.models.linear_fit</code> and state what its slope and
@@ -785,28 +757,28 @@ and a measure of spread, and read an error-bar figure.</li>
 extrapolation.</li>
 </ol>
 <!-- curriculum-scaffold-start -->
-<h3 data-number="17.1.1" id="study-blueprint-10"><span
-class="header-section-number">17.1.1</span> Study Blueprint</h3>
+<h3 id="study-blueprint">Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> A case study turns a general <a
-href="manuscript__glossary.html#gl:model"><strong>model</strong></a> into a decision about a
+href="#gl:model"><strong>model</strong></a> into a decision about a
 specific dataset — and into an honest statement of its limits.</li>
 <li><strong>Core concepts:</strong> <a
-href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>, <a
-href="manuscript__glossary.html#gl:gradient"><strong>gradient</strong></a>, <a
-href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a>.</li>
+href="#gl:observable"><strong>observable</strong></a>, <a
+href="#gl:gradient"><strong>gradient</strong></a>, <a
+href="#gl:threshold"><strong>threshold</strong></a>.</li>
 <li><strong>Quantitative lens:</strong> a linear dose–response fit,
-eq. <a href="#eq:part_III_case_studies_fit">12</a>.</li>
+<span class="citation"
+data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>.</li>
 <li><strong>Data skill:</strong> group, average, and fit; then
-sanity-check the fit against the raw numbers in tbl. <a
-href="#tbl:part_III_case_studies_data">11</a>.</li>
+sanity-check the fit against the raw numbers in <span class="citation"
+data-cites="tbl:part_III_case_studies_data">[@tbl:part_III_case_studies_data]</span>.</li>
 <li><strong>Common misconception to repair:</strong> a high <span
 class="math inline">\(R^2\)</span> on three points is not strong
 evidence — it is an invitation to collect more.</li>
-<li><strong>Primary lab:</strong> sec. <a
-href="part_III__lab_case_studies.html#sec:lab_part_III_case_studies">29</a>.</li>
-<li><strong>Question bank:</strong> sec. <a
-href="part_III__q_case_studies.html#sec:q_part_III_case_studies">41</a>.</li>
+<li><strong>Primary lab:</strong> <span class="citation"
+data-cites="sec:lab_part_III_case_studies">[@sec:lab_part_III_case_studies]</span>.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_III_case_studies">[@sec:q_part_III_case_studies]</span>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.linear_fit</code>,
 <code>descriptive_statistics</code>.
@@ -825,13 +797,13 @@ the discipline of answering those three questions without
 overreaching.</p>
 </blockquote>
 <hr />
-<h2 data-number="17.2" id="the-data"><span
-class="header-section-number">17.2</span> The data</h2>
+<h2 id="the-data">The data</h2>
 <p>The bundled instructional fixture contains six values across three
 conditions, recorded in <code>assets/data/sample_dataset.csv</code> and
-reproduced in tbl. <a href="#tbl:part_III_case_studies_data">11</a>.</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 11: The instructional dataset: two replicates per condition."><table id="tbl:part_III_case_studies_data" data-responsive-table="true">
-<caption>Table 11: The instructional dataset: two replicates per
+reproduced in <span class="citation"
+data-cites="tbl:part_III_case_studies_data">[@tbl:part_III_case_studies_data]</span>.</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: The instructional dataset: two replicates per condition."><table id="tbl:part_III_case_studies_data" data-responsive-table="true">
+<caption>The instructional dataset: two replicates per
 condition.</caption>
 <thead>
 <tr>
@@ -887,71 +859,67 @@ class="math inline">\(4.95\)</span> (high). Across all six points the
 mean is <span class="math inline">\(3.55\)</span> with a standard
 deviation of <span class="math inline">\(1.13\)</span>
 (<code>textbook.models.descriptive_statistics</code>). The error-bar
-view is fig. <a href="#fig:part_III_case_studies">11</a>. The supplied
-row errors are fixture annotations; they are not calculated from these
-two replicates. The reported overall spread uses the population
-denominator and is not an estimated standard error.</p>
-<h2 data-number="17.3" id="fitting-a-trend"><span
-class="header-section-number">17.3</span> Fitting a trend</h2>
+view is <span class="citation"
+data-cites="fig:part_III_case_studies">[@fig:part_III_case_studies]</span>.
+The supplied row errors are fixture annotations; they are not calculated
+from these two replicates. The reported overall spread uses the
+population denominator and is not an estimated standard error.</p>
+<h2 id="fitting-a-trend">Fitting a trend</h2>
 <p>Encode the dose as <span class="math inline">\(0, 1, 2\)</span> for
 control, low, and high, and fit a line with
 <code>textbook.models.linear_fit</code>:</p>
-<div class="sourceCode" id="cb21"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>dose <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>])</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> np.array([<span class="fl">2.20</span>, <span class="fl">3.50</span>, <span class="fl">4.95</span>])   <span class="co"># condition means</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> models.linear_fit(dose, response)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.slope ≈ 1.375, fit.intercept ≈ 2.175, fit.r_squared ≈ 0.999</span></span></code></pre></div>
-<p>The fitted relationship in eq. <a
-href="#eq:part_III_case_studies_fit">12</a> is</p>
-<p><span id="eq:part_III_case_studies_fit"><span
-class="math display">\[\widehat{y}(d) = 1.375\,d +
-2.175\qquad{(12)}\]</span></span></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dose <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> np.array([<span class="fl">2.20</span>, <span class="fl">3.50</span>, <span class="fl">4.95</span>])   <span class="co"># condition means</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> models.linear_fit(dose, response)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.slope ≈ 1.375, fit.intercept ≈ 2.175, fit.r_squared ≈ 0.999</span></span></code></pre></div>
+<p>The fitted relationship in <span class="citation"
+data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>
+is</p>
+<p><span class="math display">\[\widehat{y}(d) = 1.375\,d +
+2.175\]</span> {#eq:part_III_case_studies_fit}</p>
 <p>with <span class="math inline">\(R^2 = 0.999\)</span>. The slope says
 each dose step adds about <span class="math inline">\(1.4\)</span> units
 of response; the intercept, <span class="math inline">\(2.175\)</span>,
 is close to the measured control mean of <span
 class="math inline">\(2.20\)</span>, a reassuring internal check.</p>
-<h2 data-number="17.4" id="interpolation-versus-extrapolation"><span
-class="header-section-number">17.4</span> Interpolation versus
+<h2 id="interpolation-versus-extrapolation">Interpolation versus
 extrapolation</h2>
-<p>Using eq. <a href="#eq:part_III_case_studies_fit">12</a> to estimate
-the response at an <em>intermediate</em> dose is reasonable: the model
-interpolates within the range it was fit on. Using it to predict a
-<em>much higher</em> dose — say <span class="math inline">\(d =
-3\)</span>, giving <span class="math inline">\(\widehat{y} =
+<p>Using <span class="citation"
+data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>
+to estimate the response at an <em>intermediate</em> dose is reasonable:
+the model interpolates within the range it was fit on. Using it to
+predict a <em>much higher</em> dose — say <span class="math inline">\(d
+= 3\)</span>, giving <span class="math inline">\(\widehat{y} =
 6.3\)</span> — is an <strong>extrapolation</strong> the data cannot
 support. An alternative dose–response model could saturate (recall the
-<a href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a> behaviour of the
-saturating response in sec. <a href="appendices__appendix_math_review.html#sec:appendix_math_review">45</a>);
+<a href="#gl:threshold"><strong>threshold</strong></a> behaviour of the
+saturating response in <span class="citation"
+data-cites="sec:appendix_math_review">[@sec:appendix_math_review]</span>);
 a straight line would overpredict if the system approached a ceiling.
 The fixture does not establish which mechanism applies.</p>
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">LR</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Raw measurements</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Group + average</span>]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Fit a trend</span>]</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>{<span class="vs">Within data range?</span>}</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|yes|</span> <span class="dt">E</span>[<span class="vs">Interpolate: defensible</span>]</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|no|</span> <span class="dt">F</span>[<span class="vs">Extrapolate: flag the risk</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">graph</span> <span class="cn">LR</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">A</span>[<span class="vs">Raw measurements</span>] <span class="pp">--&gt;</span> <span class="dt">B</span>[<span class="vs">Group + average</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">B</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Fit a trend</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span> <span class="dt">D</span>{<span class="vs">Within data range?</span>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|yes|</span> <span class="dt">E</span>[<span class="vs">Interpolate: defensible</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">D</span> <span class="pp">--&gt;</span><span class="vs">|no|</span> <span class="dt">F</span>[<span class="vs">Extrapolate: flag the risk</span>]</span></code></pre></div>
 <blockquote>
 <p><strong>Warning.</strong> A linear fit through three averaged points
 reports <span class="math inline">\(R^2 = 0.999\)</span>, but that
 number describes how well the line passes through three dots — not how
 well it predicts the next experiment. Treat it as a reason to collect
 more data, not as a conclusion. Box discusses the adequacy of scientific
-models <span class="citation" data-cites="box1976science">(<a
-href="index.html#ref-box1976science" role="doc-biblioref">Box 1976</a>)</span>;
-reproducible handling of the calculation is a distinct concern addressed
-by Sandve and colleagues <span class="citation"
-data-cites="sandve2013ten">(<a href="index.html#ref-sandve2013ten"
-role="doc-biblioref">Sandve et al. 2013</a>)</span>.</p>
+models [box1976science]; reproducible handling of the calculation is a
+distinct concern addressed by Sandve and colleagues [sandve2013ten].</p>
 </blockquote>
-<h2 data-number="17.5" id="summary-10"><span
-class="header-section-number">17.5</span> Summary</h2>
+<h2 id="summary">Summary</h2>
 <p>A case study moves from raw <a
-href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>s to a summary, a
+href="#gl:observable"><strong>observable</strong></a>s to a summary, a
 fitted trend, and — crucially — an honest boundary around what the trend
 can claim. Here, averaging and a <code>linear_fit</code> recovered a
 clean dose–response slope of about <span
@@ -959,33 +927,31 @@ class="math inline">\(1.4\)</span> units per step with an intercept that
 matched the control, but the same fit must not be pushed beyond the
 measured range. The reusable move is: summarise, fit, then state the
 limits.</p>
-<h2 data-number="17.6" id="key-terms-10"><span
-class="header-section-number">17.6</span> Key Terms</h2>
-<p><a href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>, <a
-href="manuscript__glossary.html#gl:gradient"><strong>gradient</strong></a>, <a
-href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a>, <a
-href="manuscript__glossary.html#gl:model"><strong>model</strong></a>.</p>
-<h2 data-number="17.7" id="further-reading-10"><span
-class="header-section-number">17.7</span> Further Reading</h2>
+<h2 id="key-terms">Key Terms</h2>
+<p><a href="#gl:observable"><strong>observable</strong></a>, <a
+href="#gl:gradient"><strong>gradient</strong></a>, <a
+href="#gl:threshold"><strong>threshold</strong></a>, <a
+href="#gl:model"><strong>model</strong></a>.</p>
+<h2 id="further-reading">Further Reading</h2>
 <ul>
-<li><span class="citation" data-cites="box1976science">Box (<a
-href="index.html#ref-box1976science" role="doc-biblioref">1976</a>)</span> —
-reasoning about models as useful approximations, which motivates
-explicitly stating the limits of this fitted trend.</li>
-<li><span class="citation" data-cites="sandve2013ten">Sandve et al. (<a
-href="index.html#ref-sandve2013ten" role="doc-biblioref">2013</a>)</span> —
-reproducible computational research practices; use them to preserve the
-fixture, code, parameters, and resulting calculation.</li>
+<li><span class="citation"
+data-cites="box1976science">@box1976science</span> — reasoning about
+models as useful approximations, which motivates explicitly stating the
+limits of this fitted trend.</li>
+<li><span class="citation"
+data-cites="sandve2013ten">@sandve2013ten</span> — reproducible
+computational research practices; use them to preserve the fixture,
+code, parameters, and resulting calculation.</li>
 </ul>
-<h2 data-number="17.8" id="practice-10"><span
-class="header-section-number">17.8</span> Practice</h2>
+<h2 id="practice">Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. <a
-href="part_III__lab_case_studies.html#sec:lab_part_III_case_studies">29</a> — re-run the grouping and
-fit, then add a fourth condition and watch the fit change.</li>
-<li><strong>Question bank:</strong> sec. <a
-href="part_III__q_case_studies.html#sec:q_part_III_case_studies">41</a> — recall through
-synthesis.</li>
+<li><strong>Lab:</strong> <span class="citation"
+data-cites="sec:lab_part_III_case_studies">[@sec:lab_part_III_case_studies]</span>
+— re-run the grouping and fit, then add a fourth condition and watch the
+fit change.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_III_case_studies">[@sec:q_part_III_case_studies]</span>
+— recall through synthesis.</li>
 </ul>
 </main>
 </body>

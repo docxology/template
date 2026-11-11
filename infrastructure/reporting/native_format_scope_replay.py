@@ -112,7 +112,7 @@ def replay_native_scope_evidence(
     current_comparisons: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """Execute once before the separate Office reader opens its Source owner."""
-    from infrastructure.core.pipeline.native_analysis_current import replay_current_native_analysis
+    from infrastructure.reporting.native_analysis_current import replay_current_native_analysis
     from infrastructure.reporting.native_format_current_orchestration import current_native_analysis_scope
     from infrastructure.reporting.native_format_acceptance_contracts import NATIVE_SCHEMA
     from infrastructure.reporting.native_format_acceptance_validation import native_environment_for_replay

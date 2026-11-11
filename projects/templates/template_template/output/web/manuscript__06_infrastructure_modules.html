@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.13" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
@@ -14,10 +14,7 @@ Research</title>
     */
     html {
       color: #1a1a1a;
-      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
-      background-color: light-dark(#fdfdfd, #1a1a1a);
-      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -42,16 +39,11 @@ Research</title>
     }
     @media print {
       html {
-        color-scheme: light only;
+        background-color: white;
       }
-      html, body, pre, code {
+      body {
         background-color: transparent;
-      }
-      body, a, a:visited, blockquote {
         color: black;
-      }
-      pre, code {
-        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -64,8 +56,11 @@ Research</title>
     p {
       margin: 1em 0;
     }
-    a, a:visited {
-      color: inherit;
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
     }
     img {
       max-width: 100%;
@@ -94,11 +89,8 @@ Research</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid;
-      border-color: #e6e6e6;
-      border-color: light-dark(#e6e6e6, #4c4c4c);
+      border-left: 2px solid #e6e6e6;
       color: #606060;
-      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -122,7 +114,7 @@ Research</title>
     }
     hr {
       border: none;
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -139,11 +131,11 @@ Research</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
     }
     th {
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -751,8 +743,8 @@ class="header-section-number">6</span> Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>31</code> <code>discover_infrastructure_modules(repo_root)</code>.
-File totals use <code>1335</code> Python sources across infra +
-<code>12,564</code> infra tests guarding them. Documentation Duality =
+File totals use <code>1355</code> Python sources across infra +
+<code>13,093</code> infra tests guarding them. Documentation Duality =
 paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 <code>SKILL.md</code> manifests feed
 <code>python -m infrastructure.skills</code>.</p>
@@ -797,7 +789,7 @@ paired <code>README.md</code> + <code>AGENTS.md</code>; optional
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">201</td>
+<td style="text-align: center;">202</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -879,7 +871,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">117</td>
+<td style="text-align: center;">123</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -900,7 +892,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">85</td>
+<td style="text-align: center;">89</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -914,14 +906,14 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">120</td>
+<td style="text-align: center;">123</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">411</td>
+<td style="text-align: center;">416</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Coverage parsers, dashboards, executive artefacts</td>
@@ -972,7 +964,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>steganography</code></td>
-<td style="text-align: center;">13</td>
+<td style="text-align: center;">14</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Watermark overlays + hash manifests</td>
@@ -1023,9 +1015,9 @@ class="header-section-number">6.1.3</span>
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 data-number="6.1.4" id="infrastructure.core-201-files"><span
+<h3 data-number="6.1.4" id="infrastructure.core-202-files"><span
 class="header-section-number">6.1.4</span>
-<code>infrastructure.core</code> (201 files)</h3>
+<code>infrastructure.core</code> (202 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
@@ -1091,9 +1083,9 @@ class="header-section-number">6.1.13</span>
 interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
-<h3 data-number="6.1.14" id="infrastructure.project-117-files"><span
+<h3 data-number="6.1.14" id="infrastructure.project-123-files"><span
 class="header-section-number">6.1.14</span>
-<code>infrastructure.project</code> (117 files)</h3>
+<code>infrastructure.project</code> (123 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
@@ -1112,9 +1104,9 @@ produced/consumed/derived-from/supports/refutes edges. Includes a
 structured Review system with severity (blocking/major/minor/info) and
 verdict (refutes/supports). Features a CLI and pipeline integration
 hooks for automatic lineage recording after every stage.</p>
-<h3 data-number="6.1.17" id="infrastructure.publishing-85-files"><span
+<h3 data-number="6.1.17" id="infrastructure.publishing-89-files"><span
 class="header-section-number">6.1.17</span>
-<code>infrastructure.publishing</code> (85 files)</h3>
+<code>infrastructure.publishing</code> (89 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
 <h3 data-number="6.1.18" id="infrastructure.reference-16-files"><span
@@ -1122,14 +1114,14 @@ class="header-section-number">6.1.18</span>
 <code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3 data-number="6.1.19" id="infrastructure.rendering-120-files"><span
+<h3 data-number="6.1.19" id="infrastructure.rendering-123-files"><span
 class="header-section-number">6.1.19</span>
-<code>infrastructure.rendering</code> (120 files)</h3>
+<code>infrastructure.rendering</code> (123 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
-<h3 data-number="6.1.20" id="infrastructure.reporting-411-files"><span
+<h3 data-number="6.1.20" id="infrastructure.reporting-416-files"><span
 class="header-section-number">6.1.20</span>
-<code>infrastructure.reporting</code> (411 files)</h3>
+<code>infrastructure.reporting</code> (416 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
 <h3 data-number="6.1.21" id="infrastructure.research-3-files"><span
@@ -1180,9 +1172,9 @@ class="header-section-number">6.1.26</span>
 <p>Discovers <code>SKILL.md</code> frontmatter →
 <code>.agents/skill_manifest.json</code>.</p>
 <h3 data-number="6.1.27"
-id="infrastructure.steganography-13-files"><span
+id="infrastructure.steganography-14-files"><span
 class="header-section-number">6.1.27</span>
-<code>infrastructure.steganography</code> (13 files)</h3>
+<code>infrastructure.steganography</code> (14 files)</h3>
 <p>Watermark overlays, hashing companions triggered by secure pipeline
 path.</p>
 <h3 data-number="6.1.28" id="infrastructure.tools-6-files"><span

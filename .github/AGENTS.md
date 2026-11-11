@@ -17,8 +17,9 @@ jobs for selected process measurement, run-matrix and Root acceptance modules. A
 routine jobs run concurrently; the 540-second job-body clock is unchanged.
 Changed-contract lanes also run eight at a time (`max-parallel: 8`): over the 27
 measured modules the longest-path schedule is 2626s at 3 lanes, 1337s at 6, and
-1031s at 8, where the slowest module sets the floor and the 120-minute job budget
-is unchanged.
+1031s at 8, where the slowest module sets the floor. Native document contract
+jobs reserve 165 minutes for the cold setup and module. Other contract jobs
+retain 120 minutes.
 Guide-only pull requests enumerate the complete documentation test-module
 roster, keeping heavy documentation contracts in their prepared jobs. Only the
 exemplar matrix skips, and `CI Gate` requires that exact declared outcome. Main

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <title>_combined_manuscript</title>
+  <title>building_blocks.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -245,26 +244,7 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -273,9 +253,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -304,8 +284,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -390,14 +370,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -415,6 +388,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -427,6 +402,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -654,18 +631,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -716,6 +685,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -744,14 +717,12 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="9" id="sec:part_I_building_blocks"><span
-class="header-section-number">9</span> Building Blocks</h1>
+<h1 id="sec:part_I_building_blocks">Building Blocks</h1>
 <figure id="fig:part_I_building_blocks">
-<a class="figure-full-size-link" href="../figures/part_I_building_blocks.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 5, Static saturating responses with a shared half-saturation input"><img src="../figures/part_I_building_blocks.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_I_building_blocks.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Static saturating responses with a shared half-saturation input"><img src="../figures/part_I_building_blocks.png" style="width:90.0%"
 alt="Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 5: Static saturating responses
-with a shared half-saturation input and different shape
-exponents.</figcaption>
+<figcaption>Static saturating responses with a shared
+half-saturation input and different shape exponents.</figcaption>
 </figure>
 <!-- alt: Three input-versus-response curves rise from zero toward one and all pass through response one half at input three; larger exponents sharpen the transition around that point. -->
 <!-- chapter-metadata-badge -->
@@ -760,33 +731,31 @@ exponents.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 data-number="9.0.1" id="study-blueprint-4"><span
-class="header-section-number">9.0.1</span> Study Blueprint</h3>
+<h3 id="study-blueprint">Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> Reusable model components need explicit
 input domains, output meanings and limiting behavior.</li>
 <li><strong>Core concepts:</strong> <a
-href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
-href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
-href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a>, <a
-href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> eq. <a
-href="#eq:part_I_building_blocks_model">6</a>.</li>
+href="#gl:model"><strong>model</strong></a>, <a
+href="#gl:parameter"><strong>parameter</strong></a>, <a
+href="#gl:threshold"><strong>threshold</strong></a>, <a
+href="#gl:observable"><strong>observable</strong></a>.</li>
+<li><strong>Quantitative lens:</strong> <span class="citation"
+data-cites="eq:part_I_building_blocks_model">[@eq:part_I_building_blocks_model]</span>.</li>
 <li><strong>Data skill:</strong> Probe a model component at designed
 boundary inputs before composing it.</li>
 <li><strong>Common misconception to repair:</strong> A steep response
 curve does not by itself prove a switch or identify a molecular
 mechanism.</li>
-<li><strong>Primary lab:</strong> sec. <a
-href="part_I__lab_building_blocks.html#sec:lab_part_I_building_blocks">23</a>.</li>
-<li><strong>Question bank:</strong> sec. <a
-href="part_I__q_building_blocks.html#sec:q_part_I_building_blocks">35</a>.</li>
+<li><strong>Primary lab:</strong> <span class="citation"
+data-cites="sec:lab_part_I_building_blocks">[@sec:lab_part_I_building_blocks]</span>.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_I_building_blocks">[@sec:q_part_I_building_blocks]</span>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.saturating_response</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 data-number="9.1" id="learning-objectives-4"><span
-class="header-section-number">9.1</span> Learning Objectives</h2>
+<h2 id="learning-objectives">Learning Objectives</h2>
 <ol type="1">
 <li>Distinguish a static response from a dynamic state law.</li>
 <li>Interpret maximum, half-saturation and shape parameters.</li>
@@ -800,8 +769,7 @@ input. Connecting the pictures cannot supply the missing state equation.
 Useful building blocks start with contracts that say what each component
 can represent.</p>
 </blockquote>
-<h2 data-number="9.2" id="begin-with-the-interface"><span
-class="header-section-number">9.2</span> Begin with the interface</h2>
+<h2 id="begin-with-the-interface">Begin with the interface</h2>
 <p>An interface states which values a component accepts and what its
 result means. The response helper accepts non-negative input and
 positive scale and shape parameters. It returns a response in the
@@ -811,8 +779,7 @@ connecting components: a downstream function that requires a positive
 input cannot safely receive every output of a component whose valid
 range includes zero. Composition requires compatible contracts, not just
 visually appealing arrows.</p>
-<h2 data-number="9.3" id="parameters-have-different-jobs"><span
-class="header-section-number">9.3</span> Parameters have different
+<h2 id="parameters-have-different-jobs">Parameters have different
 jobs</h2>
 <p>The maximum sets an output scale, the half-saturation parameter sets
 an input scale and the shape exponent adjusts curvature. Changing the
@@ -822,8 +789,7 @@ the midpoint but changes the transition around it. The generated figure
 holds the scales fixed while varying the exponent, making these roles
 separable. A parameter name should describe its mathematical job before
 a field-specific interpretation is attached to it.</p>
-<h2 data-number="9.4" id="boundary-cases-reveal-the-model"><span
-class="header-section-number">9.4</span> Boundary cases reveal the
+<h2 id="boundary-cases-reveal-the-model">Boundary cases reveal the
 model</h2>
 <p>At zero input the response is zero. At input equal to half-saturation
 the response is half of its maximum, for every valid exponent. As input
@@ -834,22 +800,17 @@ adds one interior value. Negative inputs must fail instead of silently
 producing complex or misleading values for non-integer exponents.
 Boundary cases are part of an explanation, not merely an implementation
 detail hidden in a test directory.</p>
-<h2 data-number="9.5" id="shape-does-not-establish-mechanism"><span
-class="header-section-number">9.5</span> Shape does not establish
+<h2 id="shape-does-not-establish-mechanism">Shape does not establish
 mechanism</h2>
 <p>Several mechanisms can produce similar saturating observations. A
 static curve can summarize them without distinguishing them. To infer a
 mechanism, collect observations that separate its predictions from
 plausible alternatives, such as a transient response or a controlled
-intervention. Box’s discussion of model adequacy <span class="citation"
-data-cites="box1976science">(<a href="index.html#ref-box1976science"
-role="doc-biblioref">Box 1976</a>)</span> is relevant to that
-evaluation. Do not label the shape exponent a count of interacting
-physical units unless a separate derivation and observation protocol
-justify that meaning for the application.</p>
-<h2 data-number="9.6" id="compose-only-what-is-defined"><span
-class="header-section-number">9.6</span> Compose only what is
-defined</h2>
+intervention. Box’s discussion of model adequacy [box1976science] is
+relevant to that evaluation. Do not label the shape exponent a count of
+interacting physical units unless a separate derivation and observation
+protocol justify that meaning for the application.</p>
+<h2 id="compose-only-what-is-defined">Compose only what is defined</h2>
 <p>A simple series composition sends one component’s output into
 another’s input. Retain units at the connection and write any conversion
 explicitly. Feedback composition is harder because an output affects an
@@ -859,12 +820,11 @@ declared input, component and observation, with an evaluation arrow
 returning to assumptions. It is an explanatory map, not an executable
 simulator. The lab evaluates component boundaries and asks which
 additional equation a time-dependent claim would require.</p>
-<h2 data-number="9.7" id="a-worked-formalism-3"><span
-class="header-section-number">9.7</span> A Worked Formalism</h2>
-<p><span id="eq:part_I_building_blocks_model"><span
-class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\qquad{(6)}\]</span></span></p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 5: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_building_blocks_parameters" data-responsive-table="true">
-<caption>Table 5: Quantities and conventions for this chapter’s worked
+<h2 id="a-worked-formalism">A Worked Formalism</h2>
+<p><span class="math display">\[y(x)=M\frac{x^h}{k^h+x^h}\]</span>
+{#eq:part_I_building_blocks_model}</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_I_building_blocks_parameters" data-responsive-table="true">
+<caption>Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -902,41 +862,40 @@ fifths. At the half-saturation input, the numerator and the other
 denominator term are equal. Doubling the input from three to six
 therefore does not double the output: the finite ceiling changes the
 arithmetic.</p>
-<div class="sourceCode" id="cb9"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> saturating_response</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>])</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> saturating_response(x, maximum<span class="op">=</span><span class="fl">1.0</span>, half_saturation<span class="op">=</span><span class="fl">3.0</span>, hill<span class="op">=</span><span class="fl">2.0</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(y, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> saturating_response</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">3.0</span>, <span class="fl">6.0</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> saturating_response(x, maximum<span class="op">=</span><span class="fl">1.0</span>, half_saturation<span class="op">=</span><span class="fl">3.0</span>, hill<span class="op">=</span><span class="fl">2.0</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(y, [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.saturating_response</code>. The assertions above
 are independent expectations for this designed example; the displayed
-figure in fig. <a href="#fig:part_I_building_blocks">5</a> is a
-deterministic illustration with its own explicitly stated inputs, not
-evidence collected from the opening scenario.</p>
-<h2 data-number="9.8" id="assumptions-and-limits-3"><span
-class="header-section-number">9.8</span> Assumptions and Limits</h2>
+figure in <span class="citation"
+data-cites="fig:part_I_building_blocks">[@fig:part_I_building_blocks]</span>
+is a deterministic illustration with its own explicitly stated inputs,
+not evidence collected from the opening scenario.</p>
+<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
 <p>This function is a static response curve: it relates an input to an
 output without a state or elapsed time. It cannot by itself explain
 adaptation, delays, oscillation or memory. Different exponents describe
 different shapes but do not uniquely identify a physical mechanism.
 Interpret the parameters within the declared model rather than treating
 a fitted shape as a causal discovery.</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 data-number="9.9" id="summary-4"><span
-class="header-section-number">9.9</span> Summary</h2>
+<h2 id="summary">Summary</h2>
 <p>Reusable model components need explicit input domains, output
 meanings and limiting behavior. The worked example makes a narrow
 quantitative claim that can be checked with exact inputs and a tested
@@ -945,27 +904,23 @@ identify a molecular mechanism. State the assumptions, preserve the
 observation record and choose a comparison that can distinguish an
 arithmetic error from an inadequate model. Those habits make a result
 inspectable without expanding what its evidence establishes.</p>
-<h2 data-number="9.10" id="key-terms-4"><span
-class="header-section-number">9.10</span> Key Terms</h2>
-<p><a href="manuscript__glossary.html#gl:model"><strong>model</strong></a>, <a
-href="manuscript__glossary.html#gl:parameter"><strong>parameter</strong></a>, <a
-href="manuscript__glossary.html#gl:threshold"><strong>threshold</strong></a>, <a
-href="manuscript__glossary.html#gl:observable"><strong>observable</strong></a>.</p>
-<h2 data-number="9.11" id="further-reading-4"><span
-class="header-section-number">9.11</span> Further Reading</h2>
-<p>Box <span class="citation" data-cites="box1976science">(<a
-href="index.html#ref-box1976science" role="doc-biblioref">Box 1976</a>)</span>
-discusses selective checks of model inadequacy; use those checks to
-distinguish a convenient response family from a mechanism.</p>
-<h2 data-number="9.12" id="practice-4"><span
-class="header-section-number">9.12</span> Practice</h2>
+<h2 id="key-terms">Key Terms</h2>
+<p><a href="#gl:model"><strong>model</strong></a>, <a
+href="#gl:parameter"><strong>parameter</strong></a>, <a
+href="#gl:threshold"><strong>threshold</strong></a>, <a
+href="#gl:observable"><strong>observable</strong></a>.</p>
+<h2 id="further-reading">Further Reading</h2>
+<p>Box [box1976science] discusses selective checks of model inadequacy;
+use those checks to distinguish a convenient response family from a
+mechanism.</p>
+<h2 id="practice">Practice</h2>
 <ul>
-<li><strong>Lab:</strong> sec. <a
-href="part_I__lab_building_blocks.html#sec:lab_part_I_building_blocks">23</a> — execute the worked
-computation and its boundary control.</li>
-<li><strong>Question bank:</strong> sec. <a
-href="part_I__q_building_blocks.html#sec:q_part_I_building_blocks">35</a> — compare your reasoning
-with the supplied solutions.</li>
+<li><strong>Lab:</strong> <span class="citation"
+data-cites="sec:lab_part_I_building_blocks">[@sec:lab_part_I_building_blocks]</span>
+— execute the worked computation and its boundary control.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_I_building_blocks">[@sec:q_part_I_building_blocks]</span>
+— compare your reasoning with the supplied solutions.</li>
 </ul>
 </main>
 </body>

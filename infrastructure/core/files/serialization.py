@@ -11,7 +11,7 @@ infrastructure modules (reporting, pipeline, documentation, project/drift):
 * :func:`relative_or_self` — best-effort ``path.relative_to(base)`` as a string,
   falling back to ``str(path)`` when *path* is outside *base*.
 
-All three are pure/deterministic and never raise on missing or malformed input.
+These helpers share parsing and path handling while exposing each caller's error policy.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-__all__ = ["load_yaml_mapping", "read_json_object", "relative_or_self"]
+__all__ = ["load_optional_resource_metadata", "load_yaml_mapping", "read_json_object", "relative_or_self"]
 
 
 def read_json_object(path: Path) -> dict[str, Any]:
@@ -51,6 +51,20 @@ def load_yaml_mapping(path: Path, *, strict: bool = False) -> dict[str, Any]:
     except (OSError, yaml.YAMLError):
         if strict:
             raise
+        return {}
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def load_optional_resource_metadata(path: Path) -> dict[str, Any]:
+    """Read descriptive pool metadata without blocking discovery on unusable input."""
+    if not path.exists():
+        return {}
+    import yaml  # noqa: PLC0415 — keep import cost off callers that never load YAML
+
+    try:
+        with path.open(encoding="utf-8") as stream:
+            loaded = yaml.safe_load(stream)
+    except Exception:  # noqa: BLE001 — optional descriptions must not block discovery
         return {}
     return loaded if isinstance(loaded, dict) else {}
 

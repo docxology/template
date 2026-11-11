@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
-  <title>A Deterministic Testbed for Self-Organizing Agent-Team
-Coordination</title>
+  <title>05_reproducibility.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -247,91 +244,7 @@ Coordination</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <script data-template-mathjax-config>
-window.MathJax = window.MathJax || {};
-window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
-  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
-  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-});
-var templateMathOutput = window.MathJax.output || {};
-window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
-  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
-    width: "100%",
-    lineleading: 0.5
-  })
-});
-window.normalizeTemplateMathJaxAria = function () {
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[-]/.test(roleDescription)) {
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }
-  });
-};
-window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
-  ready: function () {
-    var measuredWidth = document.documentElement.clientWidth;
-    var reflowQueued = false;
-    window.MathJax.startup.defaultReady();
-    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
-      window.normalizeTemplateMathJaxAria
-    );
-    function reflowDisplayMath() {
-      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
-      reflowQueued = true;
-      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
-        .catch(function () { /* A later resize may retry a failed render. */ })
-        .then(async function () {
-          var width = document.documentElement.clientWidth;
-          try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
-            await window.MathJax.startup.document.rerenderPromise(110);
-            window.normalizeTemplateMathJaxAria();
-            window.templateMathJaxReflowError = null;
-          } catch (error) {
-            window.templateMathJaxReflowError = String(error);
-            console.error("MathJax viewport reflow failed", error);
-            throw error;
-          } finally {
-            measuredWidth = width;
-            reflowQueued = false;
-          }
-        })
-        .then(reflowDisplayMath);
-      // Keep failure observable to callers without an unhandled rejection.
-      window.templateMathJaxReflowPromise.catch(function () {});
-    }
-    window.addEventListener("resize", reflowDisplayMath);
-    // Also cover a resize that happened during the initial asynchronous render.
-    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
-  }
-});
-</script>
-<script defer=""
-  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -392,14 +305,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -417,6 +323,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -429,6 +337,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -656,18 +566,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -718,6 +620,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -746,36 +652,32 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="6" id="sec:reproducibility"><span
-class="header-section-number">6</span> Reproducibility</h1>
+<h1 id="sec:reproducibility">Reproducibility</h1>
 <p>Every figure and number in this manuscript is regenerable from a
 clean checkout with fixed seeds and no network access.</p>
-<h2 data-number="6.1" id="deterministic-core"><span
-class="header-section-number">6.1</span> Deterministic core</h2>
+<h2 id="deterministic-core">Deterministic core</h2>
 <p>The objective is a pure function of <code>(params, seed)</code>, and
 the coordination loop is deterministic given the objective, proposer,
 and configuration. Re-running the analysis scripts reproduces the
 figures and the JSON summaries byte-for-byte.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regenerate the matched-budget comparison and the ablation</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_search_comparison.py</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_ablation.py</span></code></pre></div>
-<h2 data-number="6.2" id="tests-and-coverage"><span
-class="header-section-number">6.2</span> Tests and coverage</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regenerate the matched-budget comparison and the ablation</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_search_comparison.py</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_ablation.py</span></code></pre></div>
+<h2 id="tests-and-coverage">Tests and coverage</h2>
 <p>The project carries its own test suite under <code>tests/</code>, run
 as a standalone per-project gate. There are no mocks anywhere: the
 <code>DeterministicProposer</code>, the synthetic objective, and the
 registries are all real objects exercised with real numerical
 inputs.</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Project test suite with the per-project coverage gate</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autoscientists/tests/ <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_autoscientists/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Project test suite with the per-project coverage gate</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_autoscientists/tests/ <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_autoscientists/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span></code></pre></div>
 <p>Source coverage includes domain checks and real controlled HTTP
 transport. The opt-in installed-model run is separate evidence and fails
 when its selected capability is missing.</p>
-<h2 data-number="6.3" id="bounded-local-coordination-opt-in"><span
-class="header-section-number">6.3</span> Bounded local coordination
+<h2 id="bounded-local-coordination-opt-in">Bounded local coordination
 (opt-in)</h2>
 <p>The default <code>--mode core</code> preserves the deterministic
 figures. <code>--mode live</code> requires the declared platform SDK and
@@ -785,10 +687,10 @@ experiment, token and request-time ceilings, and three-seed
 confirmation. Actual token consumption is recorded separately. The JSON
 proposal may alter one assigned axis by a finite nonzero step in
 <code>[-1,1]</code>; code and paths are forbidden.</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_search_comparison.py <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--mode</span> live <span class="at">--model</span> llama3.2:1b <span class="at">--endpoint</span> http://127.0.0.1:11434 <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-dir</span> output/.pipeline/local_coordination/selected-run</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_autoscientists/scripts/run_search_comparison.py <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--mode</span> live <span class="at">--model</span> llama3.2:1b <span class="at">--endpoint</span> http://127.0.0.1:11434 <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-dir</span> output/.pipeline/local_coordination/selected-run</span></code></pre></div>
 <p>The fresh ignored run retains source and active producer hashes,
 installed model digest, every prompt context, exact provider
 request/response text, proposals, observed outcomes and budgets. Null
@@ -797,8 +699,7 @@ capabilities return <code>75</code>; malformed generations or source
 drift return <code>1</code>. No acquisition, paid API, source
 application, or external publication occurs. Full instructions:
 <code>docs/live-coordination.md</code>.</p>
-<h2 data-number="6.4" id="shared-estimator"><span
-class="header-section-number">6.4</span> Shared estimator</h2>
+<h2 id="shared-estimator">Shared estimator</h2>
 <p>The noise-band confirmation estimator is generic. A synchronized copy
 lives at <code>infrastructure.scientific.confirmation</code>
 (<code>confirm_improvement</code>, <code>Confirmation</code>) for reuse

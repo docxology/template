@@ -13,7 +13,7 @@ import time
 import uuid
 from dataclasses import replace
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import Callable
 
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.logging.utils import get_logger
@@ -52,10 +52,6 @@ from infrastructure.core.pipeline.artifact_contracts import (
 )
 
 logger = get_logger(__name__)
-
-if TYPE_CHECKING:
-    from infrastructure.core.pipeline.dag import PipelineDAG
-    from infrastructure.core.pipeline.plugins import PluginStageDeclaration
 
 
 class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
@@ -103,7 +99,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         self.log_file = config.runtime_output_dir / "logs" / "pipeline.log"
         self._log_handler: logging.FileHandler | None = None
         self._module_log_handler: logging.FileHandler | None = None
-        self._module_log_level: int | None = None
 
         # Dispose owned logging if telemetry initialization refuses configuration.
         self._telemetry: TelemetryCollector | None = None
@@ -128,7 +123,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         self._active_stage_key = ""
         self._last_child_outcome: StageOutcome | None = None
         self._run_deadline = 0.0
-        self._remaining_run_seconds = config.run_timeout_seconds
         self._stage_deadline = 0.0
         self._preview_plan: ExecutionPlan | None = None
         self._preview_selection: tuple[object, ...] | None = None
@@ -172,9 +166,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             purpose=PipelinePurpose.EXECUTION,
         ).path
 
-    def _project_pipeline_yaml(self) -> Path:
-        return Path(self.config.project_dir) / "pipeline.yaml"
-
     def _resolve_control_config(self) -> PipelineControlConfig:
         """Resolve advisory control config from YAML plus explicit config."""
         return resolve_plan_control_config(self.config)
@@ -191,57 +182,45 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         Mode and explicit clean/verification selection leave the YAML source unchanged.
         """
-        self.execution_plan = resolve_execution_plan(self, skip_clean=skip_clean)
-        self._plan_digest = self.execution_plan.digest
+        plan = resolve_execution_plan(self, skip_clean=skip_clean)
+        self._install_execution_plan(plan)
+        return plan.bind(self)
+
+    def _install_execution_plan(self, plan: ExecutionPlan) -> None:
+        """Expose the selected plan and align checkpoint and artifact state."""
+        self.execution_plan = plan
+        self._plan_digest = plan.digest
         self.checkpoint_manager.expected_plan_digest = self._plan_digest
-        self.checkpoint_manager.expected_source_digest = self.execution_plan.source_identity
+        self.checkpoint_manager.expected_source_digest = plan.source_identity
         self.checkpoint_manager.run_id = self.run_id
-        specs = self.execution_plan.bind(self)
-        self.config.total_stages = len(specs)
-        self._artifact_manifest_boundary_keys = frozenset(
-            stage.key for stage in self.execution_plan.stages if stage.validation_boundary
-        )
-        self._artifact_manifest_boundary_names = frozenset(
-            stage.name for stage in self.execution_plan.stages if stage.validation_boundary
-        )
-        return specs
+        self.config.total_stages = len(plan.stages)
+        boundaries = tuple(stage for stage in plan.stages if stage.validation_boundary)
+        self._artifact_manifest_boundary_keys = frozenset(stage.key for stage in boundaries)
+        self._artifact_manifest_boundary_names = frozenset(stage.name for stage in boundaries)
 
     def preview_stage_names(self, *, skip_clean: bool | None = None) -> tuple[str, ...]:
         """Return the exact filtered project/plugin execution order without running it."""
         effective_skip_clean = not self.config.clean if skip_clean is None else skip_clean
-        specs = self._build_stage_list(skip_clean=effective_skip_clean)
-        self._preview_plan = self.execution_plan
+        plan = resolve_execution_plan(self, skip_clean=effective_skip_clean)
+        self._install_execution_plan(plan)
+        self._preview_plan = plan
         self._preview_selection = self._preview_identity(effective_skip_clean)
-        return tuple(stage.name for stage in specs)
+        return tuple(stage.name for stage in plan.stages)
 
     def _preview_identity(self, skip_clean: bool) -> tuple[object, ...]:
         return (skip_clean, configuration_control_identity(self.config, self._explicit_plan_control()))
-
-    # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
-
-    def _load_plugin_stages(self) -> list[PluginStageDeclaration]:
-        """Load validated plugin declarations for this project (``[]`` if none)."""
-        from infrastructure.core.pipeline.plugins import load_plugin_stages
-
-        return load_plugin_stages(self.config.project_dir)
-
-    def _merge_plugin_stages_into_dag(self, dag: PipelineDAG) -> None:
-        """Merge declared plugin stages into the DAG (no-op when none declared)."""
-        from infrastructure.core.pipeline.plugins import merge_plugin_stages
-
-        merge_plugin_stages(dag, self._load_plugin_stages())
 
     # -- Pipeline execution --------------------------------------------------
 
     def execute_pipeline(self, *, deadline_monotonic: float | None = None) -> list[PipelineStageResult]:
         """Execute the core or live contract selected by config.mode."""
         try:
-            selection = self._preview_identity(not self.config.clean)
-            if self._preview_plan is not None and self._preview_selection == selection:
-                return self.execute_plan(self._preview_plan, deadline_monotonic=deadline_monotonic)
-            self._build_stage_list(skip_clean=not self.config.clean)
-            assert self.execution_plan is not None
-            return self.execute_plan(self.execution_plan, deadline_monotonic=deadline_monotonic)
+            skip_clean = not self.config.clean
+            selection = self._preview_identity(skip_clean)
+            plan = self._preview_plan
+            if plan is None or self._preview_selection != selection:
+                plan = resolve_execution_plan(self, skip_clean=skip_clean)
+            return self.execute_plan(plan, deadline_monotonic=deadline_monotonic)
         finally:
             self.close()
 
@@ -266,9 +245,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         pipeline_start: float,
     ) -> PipelineStageResult:
         """Execute or validate reuse, then record the source-bound result."""
-        self._remaining_run_seconds = (
-            self._run_deadline - time.monotonic() if self._run_deadline else self.config.run_timeout_seconds
-        )
         guard = execution_guard_result(
             config=self.config,
             plan=self.execution_plan,

@@ -65,7 +65,7 @@ def _failure(state: StageStatus, diagnostic: str, child_code: int | None = None)
 def finalize_execution_reports(
     executor: PipelineExecutor, results: list[PipelineStageResult]
 ) -> list[PipelineStageResult]:
-    """Require a fresh bound report receipt; preserve failure/interruption precedence."""
+    """Verify bound reports and return updated outcomes without mutating the input."""
     plan = executor.execution_plan
     assert plan is not None
     guard = execution_guard_result(

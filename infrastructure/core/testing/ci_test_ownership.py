@@ -220,6 +220,15 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
     "infrastructure/reporting/native_mermaid_source_reference.py": (
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
     ),
+    "infrastructure/rendering/_mermaid_v122.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/rendering/_mermaid_v122_adapter.mjs": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/rendering/_mermaid_v122_batch_adapter.mjs": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
     "infrastructure/rendering/_mermaid_v11.py": ("tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",),
     "infrastructure/rendering/_mermaid_v11_adapter.mjs": (
         "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
@@ -539,6 +548,21 @@ _PAPER_FRONTMATTER_TESTS = (
     "tests/infra_tests/reporting/test_paper_frontmatter_reconstruction_native.py",
 )
 SUPPLEMENTAL_TEST_OWNERS: dict[str, tuple[str, ...]] = {
+    ".github/actions/upload-readiness-shards/action.yml": (
+        "tests/infra_tests/reporting/test_native_workflow_transport.py",
+    ),
+    "infrastructure/rendering/_mermaid_profile_io.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/rendering/_mermaid_native_profile.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/reporting/native_mermaid_batch_source_reference.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
+    "infrastructure/reporting/native_office_mermaid_source.py": (
+        "tests/infra_tests/reporting/test_native_mermaid_runtime_profile.py",
+    ),
     "infrastructure/steganography/metadata.py": ("tests/infra_tests/steganography/test_processor.py",),
     "infrastructure/core/secrets.py": ("tests/infra_tests/steganography/test_kmyth_adapter.py",),
     "infrastructure/steganography/publication.py": (

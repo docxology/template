@@ -23,7 +23,12 @@ from infrastructure.reporting.release_readiness_validators import validate_accep
 
 
 def _details(
-    probe: dict[str, Any], bundle_artifact: dict[str, str], observed: dict[str, Any], policy_sha256: str
+    probe: dict[str, Any],
+    bundle_artifact: dict[str, str],
+    observed: dict[str, Any],
+    policy_sha256: str,
+    *,
+    portable_artifact: dict[str, str],
 ) -> dict[str, Any]:
     runtime = observed["runtime"]
     return {
@@ -34,6 +39,7 @@ def _details(
         "interpreter": runtime["executable"],
         "runtime_artifact": probe["binding"],
         "root_case_bundle_artifact": bundle_artifact,
+        "portable_root_artifact": portable_artifact,
         "case_policy_sha256": policy_sha256,
         "policy_artifact_sha256": observed["policy_artifact"]["sha256"],
     }
@@ -193,8 +199,9 @@ def run_root_case_acceptance(
                 status, original_code = "fail", 1
                 child_codes.append(original_code)
         if observation is not None and bundle_artifact is not None:
-            details = _details(probe, bundle_artifact, observation, policy.sha256)
-            details["portable_root_artifact"] = produced["portable_artifact"]
+            details = _details(
+                probe, bundle_artifact, observation, policy.sha256, portable_artifact=produced["portable_artifact"]
+            )
             policy_proof = policy_proof or (details, command)
             if minor == coverage_requirement.python_version:
                 coverage_proof = (
@@ -250,7 +257,13 @@ def run_root_case_acceptance(
                 observed_state = "fail"
             else:
                 details = {
-                    **_details(probe, bundle_artifact, observation, policy.sha256),
+                    **_details(
+                        probe,
+                        bundle_artifact,
+                        observation,
+                        policy.sha256,
+                        portable_artifact=produced["portable_artifact"],
+                    ),
                     "collected": len(requirement.case_nodes),
                     "passed": len(requirement.case_nodes),
                     "failed": 0,

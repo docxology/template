@@ -7,10 +7,11 @@ executable research projects.
 
 from __future__ import annotations
 
-import yaml
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+from infrastructure.core.files.serialization import load_optional_resource_metadata
 
 
 @dataclass
@@ -58,36 +59,16 @@ def build_fond_info(fond_dir: Path, program: str = "") -> FondInfo:
     Returns:
         Populated FondInfo instance.
     """
-    metadata = _load_fond_manifest(fond_dir)
+    metadata = load_optional_resource_metadata(fond_dir / "fonds.yaml")
     return FondInfo(
         name=fond_dir.name,
         path=fond_dir,
-        fond_type=metadata.get("type", "generic") if metadata else "generic",
+        fond_type=metadata.get("type", "generic"),
         has_data=(fond_dir / "data").exists(),
         has_manuscript=(fond_dir / "manuscript").exists(),
-        metadata=metadata or {},
+        metadata=metadata,
         program=program,
     )
-
-
-def _load_fond_manifest(fond_dir: Path) -> dict[str, Any] | None:
-    """Load fonds.yaml if present.
-
-    Args:
-        fond_dir: Path to the fond directory.
-
-    Returns:
-        Parsed YAML dict or None if the file is absent or unreadable.
-    """
-    manifest_path = fond_dir / "fonds.yaml"
-    if manifest_path.exists():
-        try:
-            with open(manifest_path, encoding="utf-8") as f:
-                loaded = yaml.safe_load(f)
-                return loaded if isinstance(loaded, dict) else None
-        except Exception:  # noqa: BLE001
-            return None
-    return None
 
 
 __all__ = [

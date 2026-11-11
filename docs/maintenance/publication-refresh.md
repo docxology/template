@@ -21,8 +21,12 @@ before its existing non-rebind refresh. The remaining canonical projects revalid
 their unchanged output bytes. Current Source therefore has fifteen tracked
 publication-copy projects, Pitch analysis/refresh, and nine unchanged rebinds. The roster is not a fixed
 list of fifteen names. Provider dependencies finish before their consumers,
-with one to four independent project workers per wave. A project owns one
-sequential command chain, so Pitch analysis and refresh never race. A nonzero or
+with exactly one project worker per wave. The shared execution account uses
+strict same-UID process observation: concurrent project producers can appear in
+each other's final census, so both `run` and `generate` refuse `--jobs` values
+other than `1` before any phase or producer. The CLI and workflow default to
+that single worker. A project owns one sequential command chain, so Pitch
+analysis and refresh never race. A nonzero or
 unaccepted analysis result is terminal; it cannot fall through to refresh.
 
 Before generation, the workflow prepares the exact locked Root and own project

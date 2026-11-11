@@ -29,7 +29,7 @@ jobs:
             host: darwin
         runner: [ubuntu-24.04, macos-latest]
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 180
+    timeout-minutes: ${{ matrix.host == 'linux' && 200 || 180 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -150,9 +150,11 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: required-source-root-${{ runner.os }}-${{ matrix.python }}
+          # Anchor ZIP paths at readiness, then include only this cell's original.
           path: |
             ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/
-            !${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/auxiliary-darwin/**
+            !${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/**
+            ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/root-${{ matrix.host }}-${{ matrix.python }}/
           if-no-files-found: error
           retention-days: 1
       - name: Retain original designated macOS auxiliary audit
@@ -191,9 +193,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 2 --max-time 60 --output "$RUNNER_TEMP/elan-init.sh" https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | shasum -a 256 --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          bash scripts/shell/prepare_ci_lean.sh
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
@@ -412,7 +412,7 @@ jobs:
       max-parallel: 4
       matrix: ${{ fromJSON(needs.auxiliary-plan.outputs.matrix) }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: ${{ matrix.formal && 110 || 90 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -451,9 +451,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 2 --max-time 60 --output "$RUNNER_TEMP/elan-init.sh" https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | shasum -a 256 --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          bash scripts/shell/prepare_ci_lean.sh
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
@@ -549,13 +547,12 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  # Retained until the sharded cells are enabled: the single-job roster form
-  # cannot finish (one project measured 10264.8 s, 25 cannot fit one clock).
+  # Historical roster-wide diagnostics remain available with sharding disabled.
+  # A full roster has not been qualified within this single launcher clock.
   native-original:
-    # TODO(native-sharding): delete once native-original-cell runs.
     if: vars.NATIVE_SHARDING_CELLS != 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 320
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -639,9 +636,8 @@ jobs:
           retention-days: 30
 
 
-  # The sharded native lane selects every canonical project from Source and
-  # admits only a complete cell union. NATIVE_SHARDING_CELLS selects this lane;
-  # the separately gated monolithic job remains the supported fallback.
+  # Current hosted acceptance uses the complete Source-owned sharded lane.
+  # The roster-wide diagnostic job is outside complete.needs.
   native-plan:
     if: vars.NATIVE_SHARDING_CELLS == 'true'
     runs-on: ubuntu-24.04
@@ -659,10 +655,11 @@ jobs:
         id: plan
         run: |
           set -euo pipefail
-          # Reuse the Source-owned auxiliary matrix emitter. The `cell` values
-          # are bare project names; `root` is not a project and is excluded.
-          matrix=$(.venv/bin/python -m infrastructure.project.public_acceptance_auxiliary_cli --matrix-json \
-            | jq -c '{include: [.include[] | select(.cell != "root")]}')
+          # This planner uses runner Python and does not require a cached project environment.
+          matrix=$(python -B -c '
+          from infrastructure.reporting.native_cell_selection import native_cell_matrix_json
+          print(native_cell_matrix_json())
+          ')
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   native-original-cell:
@@ -677,7 +674,7 @@ jobs:
     runs-on: ubuntu-24.04
     # 14,400 s launcher clock plus preparation and transport margin. One project
     # measured 10,264.8 s without completing in run 41539538215.
-    timeout-minutes: 300
+    timeout-minutes: 320
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -698,28 +695,7 @@ jobs:
         with:
           matrix-cell: ${{ matrix.cell }}
       - name: Keep the declared capacity before native allocation
-        run: |
-          set -euo pipefail
-          free_before=$(df -k --output=avail / | tail -n 1)
-          for path in \
-            /usr/local/lib/android \
-            /usr/share/dotnet \
-            /opt/ghc \
-            /usr/share/swift \
-            /usr/local/share/boost \
-            /opt/hostedtoolcache/CodeQL \
-            /opt/hostedtoolcache/PyPy \
-            /opt/hostedtoolcache/Ruby \
-            /opt/hostedtoolcache/Go; do
-            if [ -e "$path" ]; then
-              sudo rm -rf --one-file-system -- "$path" || echo "reclaim-retained=$path"
-            fi
-          done
-          free_after=$(df -k --output=avail / | tail -n 1)
-          echo "reclaimed_kib=$((free_after - free_before)) free_kib=$free_after"
-          if [ "$free_after" -lt 10485760 ]; then
-            echo "::warning::free space is below the declared 10 GiB preparation threshold"
-          fi
+        uses: ./.github/actions/reclaim-native-runner-capacity
       - name: Original authenticated installed native format inventory (one project)
         id: native
         run: >-
@@ -772,8 +748,17 @@ jobs:
     needs: [root-original, common-original, auxiliary-original, native-plan, native-original-cell]
     if: always() && !cancelled()
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 320
     steps:
+      - name: Require successful native cell production
+        env:
+          NATIVE_JOB_RESULT: ${{ needs.native-original-cell.result }}
+        run: |
+          set -euo pipefail
+          if [ "$NATIVE_JOB_RESULT" != "success" ]; then
+            echo "::error::native cell lane result is '$NATIVE_JOB_RESULT', not success"
+            exit 1
+          fi
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
@@ -795,53 +780,25 @@ jobs:
           path: output/readiness/auxiliary-darwin
       - uses: ./.github/actions/setup-native-installed-readiness
       - name: Require the complete native cell union before any admission
-        if: vars.NATIVE_SHARDING_CELLS == 'true'
-        # Fail closed with a named project. This is the guard the roster-wide
-        # lane lacked: stopping early must never look like a 24-of-25 candidate.
+        # This names-only precheck precedes independent authenticated admission.
         env:
           GH_TOKEN: ${{ github.token }}
           NATIVE_MATRIX: ${{ needs.native-plan.outputs.matrix }}
-          NATIVE_JOB_RESULT: ${{ needs.native-original-cell.result }}
         run: |
           set -euo pipefail
-          expected=$(jq -r '.include[].cell' <<< "$NATIVE_MATRIX" | sort)
-          expected_count=$(wc -l <<< "$expected" | tr -d ' ')
-          echo "expected native cells: $expected_count"
-          if [ "$NATIVE_JOB_RESULT" != "success" ]; then
-            echo "::error::native cell lane result is '$NATIVE_JOB_RESULT', not success"
-            exit 1
-          fi
           gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
             --jq '.artifacts[].name' > "$RUNNER_TEMP/native-artifacts.txt"
-          # A cell uploads one primary index plus its own `-shard-NNNN` members.
-          # Only the primary names the cell, so the shard members are excluded:
-          # counting them would report every shard as an undeclared cell.
-          actual=$(grep -o '^required-source-native-cell-.*' "$RUNNER_TEMP/native-artifacts.txt" \
-            | grep -v -- '-shard-[0-9]\{4\}$' \
-            | sed 's/^required-source-native-cell-//' | sort || true)
-          # comm needs two file operands; a here-string is stdin, not operand one.
-          missing=$(comm -23 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual" | sed '/^$/d'))
-          extra=$(comm -13 <(printf '%s\n' "$expected") <(printf '%s\n' "$actual" | sed '/^$/d'))
-          if [ -n "$missing" ]; then
-            echo "::error::missing native cell artifacts for: $(tr '\n' ' ' <<< "$missing")"
-            exit 1
-          fi
-          if [ -n "$extra" ]; then
-            echo "::error::unexpected native cell artifacts for: $(tr '\n' ' ' <<< "$extra")"
-            exit 1
-          fi
-          echo "complete native cell union: $expected_count of $expected_count"
-      - name: Note the disabled native cell lane
-        if: vars.NATIVE_SHARDING_CELLS != 'true'
-        run: |
-          echo "::warning::native cell lane disabled; native-original is the active lane"
+          env -u GH_TOKEN python -B -c '
+          import sys
+          from infrastructure.reporting.native_cell_selection import check_native_artifact_listing
+          raise SystemExit(check_native_artifact_listing(*sys.argv[1:]))
+          ' "$NATIVE_MATRIX" "$RUNNER_TEMP/native-artifacts.txt"
       - name: Independently admit complete candidate through fresh installed Source
         id: reader
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode reader
-          ${{ vars.NATIVE_SHARDING_CELLS == 'true' && '--native-cell-union' || '' }}
+          .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode reader --native-cell-union
           --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
           --source-identity "$(.venv/bin/python -c 'from pathlib import Path;from infrastructure.reporting.readiness_receipts import source_fingerprint;print(source_fingerprint(Path.cwd()))')"
           --python "$GITHUB_WORKSPACE/.venv/bin/python" --uv "$(command -v uv)"

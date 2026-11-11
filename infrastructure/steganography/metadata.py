@@ -146,7 +146,7 @@ def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     Returns:
         Dictionary of ``/Key`` → string value pairs.
     """
-    timestamp = resolve_build_timestamp()
+    timestamp = doc.timestamp if doc.timestamp is not None else resolve_build_timestamp()
 
     meta: dict[str, str] = {
         "/Creator": "Research Template Steganography Module",
@@ -192,7 +192,7 @@ def build_xmp_packet(doc: DocumentMetadata) -> str:
     Returns:
         XMP XML string.
     """
-    timestamp = resolve_build_timestamp()
+    timestamp = doc.timestamp if doc.timestamp is not None else resolve_build_timestamp()
 
     authors_xml = ""
     if doc.authors:

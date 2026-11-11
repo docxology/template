@@ -3,7 +3,7 @@
 Repository-local composite action that installs the real Mermaid CLI and
 Puppeteer `chrome-headless-shell`, then exports `CHROME_EXECUTABLE_PATH`.
 It selects [Node 24.22.0 LTS](https://nodejs.org/en/blog/release/v24.22.0), matching Root's `24.x` engine and the native
-Mermaid11 profile. The locked Puppeteer dependencies require at least Node
+exact Mermaid CLI12.2 profile. The locked Puppeteer dependencies require at least Node
 22.12.0; Node 20 does not satisfy the complete locked graph.
 It explicitly installs and verifies the exact npm version declared by Root
 `package.json`'s `packageManager` before `npm ci`. npm 11 preserves the locked
@@ -25,3 +25,13 @@ keeps its deterministic reinstall semantics.
 
 The action intentionally does not run Python setup, dependency sync, or the
 linter itself; callers retain those explicit job-level steps.
+
+
+The Source lock binds CLI12.2.0, Mermaid12.3.0 and its embedded patched KaTeX;
+the standalone KaTeX/CSS package has its own exact locked version. The setup
+runs the repository's output-only inherited-trust regression after npm install,
+with dependency lifecycle scripts disabled. Chrome's cache is keyed on this
+lock, and the awaited installed Puppeteer `executablePath({headless: 'shell'})`
+selects the actual required browser after installation. Cache enumeration cannot
+select an older retained browser. Preparation and these scoped controls do not
+grant native or release acceptance.

@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
-  <title>A Deterministic Testbed for Self-Organizing Agent-Team
-Coordination</title>
+  <title>04_experimental_setup.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -182,91 +179,7 @@ Coordination</title>
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -275,9 +188,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -306,8 +219,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -392,14 +305,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -417,6 +323,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -429,6 +337,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -656,18 +566,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -718,6 +620,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -746,24 +652,23 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="5" id="sec:setup"><span
-class="header-section-number">5</span> Experimental Setup</h1>
-<h2 data-number="5.1" id="objective-and-budget"><span
-class="header-section-number">5.1</span> Objective and budget</h2>
-<p>All experiments optimize the synthetic objective of sec. <a
-href="manuscript__02_methodology.html#sec:methodology">3</a> with <span class="math inline">\(d =
-4\)</span> dimensions, ripple amplitude <span class="math inline">\(\rho
-= 0.15\)</span>, and per-evaluation noise scale <span
+<h1 id="sec:setup">Experimental Setup</h1>
+<h2 id="objective-and-budget">Objective and budget</h2>
+<p>All experiments optimize the synthetic objective of <span
+class="citation" data-cites="sec:methodology">@sec:methodology</span>
+with <span class="math inline">\(d = 4\)</span> dimensions, ripple
+amplitude <span class="math inline">\(\rho = 0.15\)</span>, and
+per-evaluation noise scale <span
 class="math inline">\(\sigma_{\text{noise}} = 0.02\)</span>. The global
 optimum is the origin, where the clean objective equals <span
 class="math inline">\(0\)</span>. Every configuration is given the
 <strong>same</strong> budget of <span class="math inline">\(60\)</span>
 sequential experiments; coordinated configurations partition that budget
 across teams.</p>
-<h2 data-number="5.2" id="configurations"><span
-class="header-section-number">5.2</span> Configurations</h2>
-<p>The configurations compared in sec. <a href="manuscript__03_results.html#sec:results">4</a>
-correspond directly to <code>SearchConfig</code> objects:</p>
+<h2 id="configurations">Configurations</h2>
+<p>The configurations compared in <span class="citation"
+data-cites="sec:results">@sec:results</span> correspond directly to
+<code>SearchConfig</code> objects:</p>
 <ul>
 <li><strong>Coordinated teams</strong> — the full configuration: <span
 class="math inline">\(3\)</span> teams, all mechanisms on
@@ -787,16 +692,15 @@ experiments; a direction is retired after <span
 class="math inline">\(3\)</span> consecutive non-improving experiments.
 These values are the <code>SearchConfig</code> defaults and are echoed
 in <code>manuscript/config.yaml</code>.</p>
-<h2 data-number="5.3" id="proposer"><span
-class="header-section-number">5.3</span> Proposer</h2>
+<h2 id="proposer">Proposer</h2>
 <p>The rendered figures and the JSON summaries are produced with
 <code>DeterministicProposer</code>, a rule-based agent that reads the
 shared state and emits a concrete proposal. No mock objects are used
 anywhere. The bounded local <code>LiveProposer</code> path is not part
-of the rendered pipeline; it is exercised separately (see sec. <a
-href="manuscript__05_reproducibility.html#sec:reproducibility">6</a>).</p>
-<h2 data-number="5.4" id="outputs"><span
-class="header-section-number">5.4</span> Outputs</h2>
+of the rendered pipeline; it is exercised separately (see <span
+class="citation"
+data-cites="sec:reproducibility">@sec:reproducibility</span>).</p>
+<h2 id="outputs">Outputs</h2>
 <p>Two thin orchestrator scripts produce all results:</p>
 <ul>
 <li><code>scripts/run_search_comparison.py</code> →
@@ -809,8 +713,9 @@ class="header-section-number">5.4</span> Outputs</h2>
 </ul>
 <p>Each script imports all computation from <code>src/</code>, runs the
 configurations, and writes a figure plus a machine-readable summary. The
-numbers quoted in sec. <a href="manuscript__03_results.html#sec:results">4</a> are read directly
-from those JSON files.</p>
+numbers quoted in <span class="citation"
+data-cites="sec:results">@sec:results</span> are read directly from
+those JSON files.</p>
 </main>
 </body>
 </html>

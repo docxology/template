@@ -8,7 +8,6 @@ Import from this module directly; functions are not re-exported via the package 
 from __future__ import annotations
 
 
-import json
 import os
 import re
 import time
@@ -17,6 +16,9 @@ from typing import TypedDict
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.config.queries import get_testing_config
+
+from .coverage_json_parser import read_coverage_total
+from .pytest_output_parser import parse_console_coverage
 
 
 class FailedTestInfo(TypedDict, total=False):
@@ -37,9 +39,6 @@ class TimeoutErrorInfo(TypedDict):
 
 
 logger = get_logger(__name__)
-
-# Minimum file size (bytes) for a valid coverage JSON file; an empty JSON is ~50 bytes
-MIN_VALID_COVERAGE_FILE_BYTES = 100
 
 
 def _parse_failures_section(combined_output: str) -> list[FailedTestInfo]:
@@ -245,61 +244,31 @@ def check_test_failures(
         )
 
 
-def _wait_for_coverage_file(paths: list[Path], max_retries: int = 3, delay: float = 0.5) -> Path | None:
-    """Return the first ready coverage JSON path, waiting up to max_retries attempts."""
+def _wait_for_coverage_total(paths: list[Path], max_retries: int = 3, delay: float = 0.5) -> float | None:
+    """Read the first available measured total in configured path order."""
+    if not paths:
+        return None
     for attempt in range(max_retries):
         if attempt > 0:
             time.sleep(delay)
         for path in paths:
-            if not path.exists():
-                continue
-            file_size = path.stat().st_size
-            if file_size >= MIN_VALID_COVERAGE_FILE_BYTES:
-                return path
-            logger.debug(f"Attempt {attempt + 1}/{max_retries}: {path} too small ({file_size} bytes)")
-    return None
-
-
-def _parse_coverage_json(path: Path) -> float | None:
-    """Return percent_covered from a coverage JSON file, or None on failure."""
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            coverage_data = json.load(f)
-        pct = coverage_data.get("totals", {}).get("percent_covered", 0)
-        if pct > 0:
-            return float(pct)
-        logger.debug(f"Coverage file {path}: percent_covered is 0")
-    except json.JSONDecodeError as e:  # noqa: BLE001 — return None so caller falls back to stdout parsing
-        logger.warning(f"Corrupt coverage JSON at {path}: {e} (falling back to stdout parsing)")
-    except OSError as e:  # noqa: BLE001 — return None so caller falls back to stdout parsing
-        logger.warning(f"Could not read coverage from {path}: {e}")
+            percent = read_coverage_total(path)
+            if percent is not None:
+                return percent
     return None
 
 
 def extract_coverage_percentage(stdout_text: str, coverage_json_paths: list[Path]) -> tuple[bool, float | None]:
-    """Extract coverage percentage from defined JSON paths or stdout fallback; returns (found, pct)."""
-    logger.debug("Looking for coverage files")
+    """Extract a measured JSON total or a recognized console coverage summary."""
+    percent = _wait_for_coverage_total(coverage_json_paths)
+    if percent is not None:
+        logger.info(f"✓ Found coverage: {percent:.1f}%")
+        return True, percent
 
-    ready_path = _wait_for_coverage_file(coverage_json_paths)
-    if ready_path is not None:
-        pct = _parse_coverage_json(ready_path)
-        if pct is not None:
-            logger.info(f"✓ Found coverage: {pct:.1f}%")
-            return True, pct
-
-    # Fallback to stdout parsing (strip ANSI codes so regexes work)
-    from .pytest_output_parser import _strip_ansi
-
-    clean_text = _strip_ansi(stdout_text)
-    coverage_match = re.search(r"TOTAL\s+.*?\s+(\d+\.\d+)%", clean_text)
-    if not coverage_match:
-        coverage_match = re.search(r"(\d+\.\d+)%", clean_text)
-
-    if coverage_match:
-        pct = float(coverage_match.group(1))
-        logger.info(f"✓ Found coverage: {pct:.1f}%")
-        return True, pct
-
+    percent = parse_console_coverage(stdout_text)
+    if percent is not None:
+        logger.info(f"✓ Found coverage from console: {percent:.1f}%")
+        return True, percent
     return False, None
 
 

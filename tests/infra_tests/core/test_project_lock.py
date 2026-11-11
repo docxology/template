@@ -11,6 +11,7 @@ from infrastructure.core.files.project_lock import (
     _env_var,
     _lock_key,
     _lock_path,
+    owned_project_output_lock,
     project_output_lock,
 )
 
@@ -70,3 +71,21 @@ def test_acquires_after_holder_releases(tmp_path: Path) -> None:
     # Lock is free now; this should acquire without raising.
     with project_output_lock(tmp_path, timeout=1.0):
         assert os.environ.get(_env_var(_lock_key(tmp_path))) == "1"
+
+
+def test_recovery_requires_actual_lock_despite_inherited_marker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A marker by itself gives a recovery attempt no write ownership."""
+    import fcntl
+
+    key = _lock_key(tmp_path)
+    monkeypatch.setenv(_env_var(key), "1")
+    with _lock_path(key).open("a") as holder:
+        fcntl.flock(holder.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        with pytest.raises(TimeoutError), owned_project_output_lock(tmp_path, timeout=0):
+            pytest.fail("a recovery attempt bypassed the held OS lock")
+
+    with owned_project_output_lock(tmp_path, timeout=0), project_output_lock(tmp_path):
+        assert os.environ[_env_var(key)] == "1"
+    assert os.environ[_env_var(key)] == "1"

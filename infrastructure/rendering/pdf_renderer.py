@@ -93,11 +93,11 @@ class PDFRenderer:
         For this implementation, we focus on LaTeX compilation.
         """
         if source_file.suffix == ".tex":
-            self.config.security().validate_source(source_file)
             return compile_latex(
                 source_file,
                 Path(self.config.pdf_dir),
                 compiler=self.config.latex_compiler,
+                security_profile=self.config.security(),
             )
 
         # Use Markdown rendering for .md files
@@ -122,13 +122,15 @@ class PDFRenderer:
         Raises:
             RenderingError: If Pandoc rendering fails
         """
-        output_dir = Path(self.config.pdf_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        output_file = output_dir / (output_name or f"{source_file.stem}.pdf")
         profile = self.config.security()
+        if profile.untrusted:
+            raise RenderingError("Untrusted PDF rendering requires an operating-system filesystem sandbox")
+
+        output_dir = Path(self.config.pdf_dir)
+        output_file = output_dir / (output_name or f"{source_file.stem}.pdf")
         profile.validate_output(output_file)
         profile.validate_source(source_file)
+        profile.prepare_output_directory(output_dir)
 
         # Build resource paths to help pandoc find figures
         resource_paths = []
@@ -210,6 +212,9 @@ class PDFRenderer:
             RenderingError: If combination or rendering fails
         """
 
+        if self.config.security().untrusted:
+            raise RenderingError("Combined PDF rendering requires the trusted-local profile")
+
         layout = admit_paper_layout(manuscript_dir, tuple(source_files), paper_layout)
         source_files = list(layout.complete)
 
@@ -230,10 +235,6 @@ class PDFRenderer:
 
         project_basename = Path(project_name).name
         output_file = output_dir / f"{project_basename}_combined.pdf"
-        profile = self.config.security()
-        for source_file in source_files:
-            profile.validate_source(source_file)
-        profile.validate_output(output_file)
 
         project_config, project_config_file = _load_render_config(manuscript_dir)
         tagged_pdf, language = _pdf_tagging_options(manuscript_dir)

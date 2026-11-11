@@ -5,18 +5,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from infrastructure.rendering._slides_tex_lexical import commented_at, in_literal_span, literal_spans
+
 
 _EMPTY_PROJECTED_CAPTION_RE = re.compile(r"\\caption\{\}")
 _PROJECTED_FLOAT_RE = re.compile(
     r"(?P<open>\\begin\{(?P<environment>figure\*?|table\*?|longtable)\})(?P<body>.*?)(?P<close>\\end\{(?P=environment)\})",
     flags=re.DOTALL,
 )
-_VERBATIM_ENVIRONMENT_RE = re.compile(
-    r"\\begin\{(?P<environment>verbatim\*?|Verbatim|lstlisting|minted)\}.*?"
-    r"\\end\{(?P=environment)\}",
-    flags=re.DOTALL,
-)
-_INLINE_VERB_RE = re.compile(r"\\verb\*?(?P<delimiter>[^\w\s]).*?(?P=delimiter)", flags=re.DOTALL)
 _ENVIRONMENT_TOKEN_RE = re.compile(r"\\(?P<action>begin|end)\{(?P<environment>[^{}]+)\}")
 _DIRECT_HREF_IMAGE_PREFIX_RE = re.compile(
     r"\\href\s*\{(?:\\.|[^{}])*\}\s*\{\s*$",
@@ -58,29 +54,12 @@ def _split_top_level_options(options: str) -> list[str]:
     return items
 
 
-def _commented_at(text: str, position: int) -> bool:
-    """Return whether ``position`` follows an unescaped percent on its line."""
-
-    line_start = text.rfind("\n", 0, position) + 1
-    for index in range(line_start, position):
-        if text[index] != "%":
-            continue
-        backslashes = 0
-        cursor = index - 1
-        while cursor >= line_start and text[cursor] == "\\":
-            backslashes += 1
-            cursor -= 1
-        if backslashes % 2 == 0:
-            return True
-    return False
-
-
 def _environment_depth_at(text: str, position: int) -> int:
     """Return direct-environment depth before one TeX position."""
 
     depth = 0
     for token in _ENVIRONMENT_TOKEN_RE.finditer(text, 0, position):
-        if _commented_at(text, token.start()):
+        if commented_at(text, token.start()):
             continue
         if token.group("action") == "begin":
             depth += 1
@@ -98,7 +77,7 @@ def _brace_depth_at(text: str, position: int) -> int:
         if character == "\n":
             escaped = False
             continue
-        if _commented_at(text, index):
+        if commented_at(text, index):
             continue
         if escaped:
             escaped = False
@@ -123,7 +102,7 @@ def _inside_direct_href_image(text: str, position: int) -> bool:
     match = _DIRECT_HREF_IMAGE_PREFIX_RE.search(text[:position])
     return bool(
         match is not None
-        and not _commented_at(text, match.start())
+        and not commented_at(text, match.start())
         and _environment_depth_at(text, match.start()) == 0
         and _brace_depth_at(text, match.start()) == 0
     )
@@ -150,17 +129,13 @@ def _remove_projected_empty_captions(tex_content: str) -> tuple[str, int]:
         # floats advance only through their caption and therefore need the
         # zero-glue replacement.
         counter_step = "" if environment == "longtable" else rf"\refstepcounter{{{counter}}}"
-        protected = [
-            *(item.span() for item in _VERBATIM_ENVIRONMENT_RE.finditer(body)),
-            *(item.span() for item in _INLINE_VERB_RE.finditer(body)),
-        ]
+        protected = literal_spans(body)
         pieces: list[str] = []
         cursor = 0
         for caption in _EMPTY_PROJECTED_CAPTION_RE.finditer(body):
-            in_verbatim = any(start <= caption.start() < end for start, end in protected)
             if (
-                in_verbatim
-                or _commented_at(body, caption.start())
+                in_literal_span(caption.start(), protected)
+                or commented_at(body, caption.start())
                 or _environment_depth_at(body, caption.start())
                 or _brace_depth_at(body, caption.start())
             ):
@@ -197,10 +172,7 @@ def _normalize_direct_projection_graphics(
     cursor = 0
     graphics = 0
     command = r"\includegraphics"
-    protected = [
-        *(item.span() for item in _VERBATIM_ENVIRONMENT_RE.finditer(tex_content)),
-        *(item.span() for item in _INLINE_VERB_RE.finditer(tex_content)),
-    ]
+    protected = literal_spans(tex_content)
     while True:
         start = tex_content.find(command, cursor)
         if start == -1:
@@ -211,8 +183,8 @@ def _normalize_direct_projection_graphics(
         while option_start < len(tex_content) and tex_content[option_start].isspace():
             option_start += 1
         if (
-            _commented_at(tex_content, start)
-            or any(protected_start <= start < protected_end for protected_start, protected_end in protected)
+            commented_at(tex_content, start)
+            or in_literal_span(start, protected)
             or (
                 not owned_projection_only
                 and (

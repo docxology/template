@@ -1,5 +1,6 @@
 """LLM Review Pipeline runner for orchestration."""
 
+import re
 import time
 from pathlib import Path
 
@@ -32,6 +33,7 @@ from infrastructure.llm.review.generator import (
 )
 
 logger = get_logger(__name__)
+_LANGUAGE_TAG = re.compile(r"[A-Za-z]{1,8}(?:-[A-Za-z0-9]{1,8})*")
 
 REVIEW_GENERATORS = {
     "executive_summary": generate_llm_executive_summary,
@@ -70,23 +72,24 @@ def run_llm_review_pipeline(
     if repo_root is None:
         repo_root = Path.cwd()
 
-    _project_root = project_dir if project_dir is not None else repo_root / "projects" / project_name
-    project_output = _project_root / "output"
-
-    # Use project basename for file matching
-    project_basename = Path(project_name).name
-    pdf_dir = project_output / "pdf"
-    project_specific_pdf = pdf_dir / f"{project_basename}_combined.pdf"
-
-    pdf_path = project_specific_pdf  # Always use expected filename; extract_manuscript_text handles missing-file case
-
-    output_dir = project_output / "llm"
-
-    # Initialize session metrics
-    max_input_length = get_max_input_length()
-    session_metrics = SessionMetrics(max_input_length=max_input_length)
-
     try:
+        project_root = (project_dir if project_dir is not None else repo_root / "projects" / project_name).resolve()
+        project_output = project_root / "output"
+        pdf_path = project_output / "pdf" / f"{Path(project_name).name}_combined.pdf"
+        output_dir = project_output / "llm"
+        max_input_length = get_max_input_length()
+        session_metrics = SessionMetrics(max_input_length=max_input_length)
+        translation_languages = (
+            []
+            if mode == ReviewMode.REVIEWS_ONLY
+            else get_translation_languages(repo_root, project_name, project_dir=project_root)
+        )
+        if any(
+            not isinstance(language, str) or _LANGUAGE_TAG.fullmatch(language) is None
+            for language in translation_languages
+        ):
+            raise ValueError("Translation languages must be language tags such as de or zh-Hant")
+
         # Step 1: Check Ollama availability
         available, model_name = select_and_start_ollama_model()
 
@@ -135,7 +138,7 @@ def run_llm_review_pipeline(
         # English reviews
         if mode != ReviewMode.TRANSLATIONS_ONLY:
             logger.info("\n  Generating English draft feedback...")
-            review_types = get_review_types(repo_root, project_name) or ["executive_summary"]
+            review_types = get_review_types(repo_root, project_name, project_dir=project_root) or ["executive_summary"]
 
             for i, review_type in enumerate(review_types, 1):
                 log_progress(i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger)
@@ -152,11 +155,10 @@ def run_llm_review_pipeline(
                     continue
 
                 reviews[review_type] = response
-                save_single_review(review_type, response, output_dir, model_name, metrics)
+                save_single_review(review_type, response, output_dir, model_name, metrics, project_dir=project_root)
 
         # Translations
         if mode != ReviewMode.REVIEWS_ONLY:
-            translation_languages = get_translation_languages(repo_root, project_name)
             if translation_languages:
                 logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
 
@@ -168,7 +170,9 @@ def run_llm_review_pipeline(
                     session_metrics.reviews[review_name] = metrics
                     if translation_response is not None:
                         reviews[review_name] = translation_response
-                        save_single_review(review_name, translation_response, output_dir, model_name, metrics)
+                        save_single_review(
+                            review_name, translation_response, output_dir, model_name, metrics, project_dir=project_root
+                        )
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 from infrastructure.core.pipeline.skip_receipts import write_skip_receipt
@@ -183,7 +187,9 @@ def run_llm_review_pipeline(
         session_metrics.total_generation_time = time.time() - total_start
 
         # Step 5: Save outputs
-        if not save_review_outputs(reviews, output_dir, model_name, pdf_path, session_metrics):
+        if not save_review_outputs(
+            reviews, output_dir, model_name, pdf_path, session_metrics, project_dir=project_root
+        ):
             logger.error("Failed to save some review outputs")
             return 1
 

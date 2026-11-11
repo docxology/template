@@ -11,11 +11,15 @@ from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.pipeline.fingerprint_files import anchored_parent, verify_directory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+if TYPE_CHECKING:
+    from infrastructure.project.public_hosted_origin import HostedOriginIdentity, HostedRootAuthorization
+    from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
 
 PUBLIC_ROOT_FILES = frozenset(
     {
@@ -214,14 +218,13 @@ class SnapshotReader:
         self.root = repo_root.resolve()
         self.operation_deadline = operation_deadline
         self.hosted_origin = hosted_origin
+        self._hosted_root_authorization: HostedRootAuthorization | None = None
         # Live external context only; receipt decoding never populates this.
-        self.native_operation = native_operation
+        self._native_operation = native_operation
         # Explicit live owner only; never inferred from retained receipt DATA.
         self.native_producer_operation = native_producer_operation
         # A genuinely completed distinct original control; never receipt DATA.
         self.native_control_operation = native_control_operation
-        # Cache origin authentication only; no gate or logical execution decisions.
-        self.hosted_origin_authorizations: dict[str, Any] = {}
         self.snapshots: dict[Path, ArtifactSnapshot] = {}
         # These caches contain only immutable lexical/expected structure. Every
         # read and unchanged call still performs its original physical checks.
@@ -237,6 +240,35 @@ class SnapshotReader:
         ) = None
         self.validated_exports: dict[str, str] = {}
         self.validated_export_commits: dict[str, str] = {}
+
+    @property
+    def hosted_root_authorization(self) -> HostedRootAuthorization:
+        """Bind the hosted Root verifier to this snapshot only when it is needed."""
+        if self._hosted_root_authorization is None:
+            from infrastructure.project.public_hosted_origin import HostedRootAuthorization
+
+            self._hosted_root_authorization = HostedRootAuthorization(self)
+        return self._hosted_root_authorization
+
+    @property
+    def hosted_origin_authorizations(self) -> Mapping[str, HostedOriginIdentity]:
+        """Expose the existing authorization observations without admitting writes."""
+        return self.hosted_root_authorization.observed
+
+    @property
+    def native_operation(self) -> Any:
+        """Return the native context supplied to this reader."""
+        return self._native_operation
+
+    def bind_native_operation(self, operation: NativeReaderOperation) -> None:
+        """Attach live native context after observing the original artifacts."""
+        from infrastructure.reporting.native_format_joint_source import NativeReaderOperation
+
+        if not isinstance(operation, NativeReaderOperation):
+            raise ValueError("snapshot reader needs a live native operation")
+        if self._native_operation is not None:
+            raise ValueError("snapshot reader already has a native operation")
+        self._native_operation = operation
 
     def _public_lexical_path(self, relative: str) -> Path:
         """Apply public scope policy without granting filesystem authority."""

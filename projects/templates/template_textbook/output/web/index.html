@@ -273,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -304,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -390,14 +390,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -415,6 +408,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -427,6 +422,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -654,18 +651,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -716,6 +705,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -1860,7 +1853,6 @@ Terms</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
-
 <h1 data-number="1" id="sec:front_matter"><span
 class="header-section-number">1</span> Front Matter</h1>
 <h2 data-number="1.1" id="about-this-book"><span
@@ -1908,9 +1900,7 @@ Consult the repository license files for the governing text.
 Bibliography entries identify verified primary publications; they are
 not placeholders or invented reading suggestions. No ISBN or new
 publication identifier is asserted here.</p>
-
 <hr />
-
 <h1 data-number="2" id="sec:preface"><span
 class="header-section-number">2</span> Preface</h1>
 <h2 data-number="2.1" id="purpose"><span
@@ -1969,9 +1959,7 @@ execution or a new publication deposit. Historical publication
 identifiers continue to identify the releases to which they were
 assigned. This source is an authored teaching record whose computations
 and interpretation can be inspected and improved.</p>
-
 <hr />
-
 <h1 data-number="3" id="sec:part_0_intro"><span
 class="header-section-number">3</span> Orientation and Methods</h1>
 <p>This unit establishes the record that makes a calculation
@@ -2003,9 +1991,7 @@ class="header-section-number">3.2</span> Study Route</h2>
 and then answer the question bank before comparing your reasoning with
 its solutions. Retain units, assumptions and failed predictions in the
 study record.</p>
-
 <hr />
-
 <h1 data-number="4" id="sec:part_0_orientation"><span
 class="header-section-number">4</span> Orientation to the Field</h1>
 <figure id="fig:part_0_orientation">
@@ -2235,9 +2221,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_0_orientation">31</a> — compare your reasoning with
 the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="5" id="sec:part_0_core_methods"><span
 class="header-section-number">5</span> Core Methods and Tools</h1>
 <figure id="fig:part_0_core_methods">
@@ -2474,9 +2458,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_0_core_methods">32</a> — compare your reasoning with
 the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="6" id="sec:part_0_quantitative_foundations"><span
 class="header-section-number">6</span> Quantitative Foundations</h1>
 <figure id="fig:part_0_quantitative_foundations">
@@ -2713,9 +2695,7 @@ worked computation and its boundary control.</li>
 href="#sec:q_part_0_quantitative_foundations">33</a> — compare your
 reasoning with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="7" id="sec:part_I_intro"><span
 class="header-section-number">7</span> Fundamentals</h1>
 <p>This unit develops the relationship between a mathematical law and
@@ -2746,9 +2726,7 @@ class="header-section-number">7.2</span> Study Route</h2>
 and then answer the question bank before comparing your reasoning with
 its solutions. Retain units, assumptions and failed predictions in the
 study record.</p>
-
 <hr />
-
 <h1 data-number="8" id="sec:part_I_first_principles"><span
 class="header-section-number">8</span> First Principles</h1>
 <figure id="fig:part_I_first_principles">
@@ -2995,9 +2973,7 @@ estimate its parameters.</li>
 href="#sec:q_part_I_first_principles">34</a> — recall through
 synthesis.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="9" id="sec:part_I_building_blocks"><span
 class="header-section-number">9</span> Building Blocks</h1>
 <figure id="fig:part_I_building_blocks">
@@ -3221,9 +3197,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_I_building_blocks">35</a> — compare your reasoning
 with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="10" id="sec:part_I_structure_and_form"><span
 class="header-section-number">10</span> Structure and Form</h1>
 <figure id="fig:part_I_structure_and_form">
@@ -3444,9 +3418,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_I_structure_and_form">36</a> — compare your reasoning
 with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="11" id="sec:part_II_intro"><span
 class="header-section-number">11</span> Core Systems</h1>
 <p>This unit combines state, observation, time and feedback. Systems
@@ -3476,9 +3448,7 @@ class="header-section-number">11.2</span> Study Route</h2>
 and then answer the question bank before comparing your reasoning with
 its solutions. Retain units, assumptions and failed predictions in the
 study record.</p>
-
 <hr />
-
 <h1 data-number="12" id="sec:part_II_systems_overview"><span
 class="header-section-number">12</span> Systems Overview</h1>
 <figure id="fig:part_II_systems_overview">
@@ -3708,9 +3678,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_II_systems_overview">37</a> — compare your reasoning
 with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="13" id="sec:part_II_dynamics_and_change"><span
 class="header-section-number">13</span> Dynamics and Change</h1>
 <figure id="fig:part_II_dynamics_and_change">
@@ -3943,9 +3911,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_II_dynamics_and_change">38</a> — compare your
 reasoning with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="14" id="sec:part_II_regulation_and_control"><span
 class="header-section-number">14</span> Regulation and Control</h1>
 <figure id="fig:part_II_regulation_and_control">
@@ -4178,9 +4144,7 @@ worked computation and its boundary control.</li>
 href="#sec:q_part_II_regulation_and_control">39</a> — compare your
 reasoning with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="15" id="sec:part_III_intro"><span
 class="header-section-number">15</span> Applications and Synthesis</h1>
 <p>This unit asks what a result can justify. Applied Models compares
@@ -4210,9 +4174,7 @@ class="header-section-number">15.2</span> Study Route</h2>
 and then answer the question bank before comparing your reasoning with
 its solutions. Retain units, assumptions and failed predictions in the
 study record.</p>
-
 <hr />
-
 <h1 data-number="16" id="sec:part_III_applied_models"><span
 class="header-section-number">16</span> Applied Models</h1>
 <figure id="fig:part_III_applied_models">
@@ -4439,9 +4401,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_III_applied_models">40</a> — compare your reasoning
 with the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="17" id="sec:part_III_case_studies"><span
 class="header-section-number">17</span> Case Studies</h1>
 <figure id="fig:part_III_case_studies">
@@ -4685,9 +4645,7 @@ fit, then add a fourth condition and watch the fit change.</li>
 href="#sec:q_part_III_case_studies">41</a> — recall through
 synthesis.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="18" id="sec:part_III_frontiers"><span
 class="header-section-number">18</span> Frontiers and Open Problems</h1>
 <figure id="fig:part_III_frontiers">
@@ -4919,9 +4877,7 @@ computation and its boundary control.</li>
 href="#sec:q_part_III_frontiers">42</a> — compare your reasoning with
 the supplied solutions.</li>
 </ul>
-
 <hr />
-
 <h1 data-number="19" id="sec:lab_part_0_orientation"><span
 class="header-section-number">19</span> Lab — Orientation to the
 Field</h1>
@@ -5020,9 +4976,7 @@ to the documented input domain. A real evaluation would need an
 observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="20" id="sec:lab_part_0_core_methods"><span
 class="header-section-number">20</span> Lab — Core Methods and
 Tools</h1>
@@ -5118,9 +5072,7 @@ should be tied to the documented input domain. A real evaluation would
 need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="21" id="sec:lab_part_0_quantitative_foundations"><span
 class="header-section-number">21</span> Lab — Quantitative
 Foundations</h1>
@@ -5217,9 +5169,7 @@ held fixed, while the boundary case should be tied to the documented
 input domain. A real evaluation would need an observation protocol,
 actual data and a comparison capable of challenging the model rather
 than another copy of its constructed example.</p>
-
 <hr />
-
 <h1 data-number="22" id="sec:lab_part_I_first_principles"><span
 class="header-section-number">22</span> Lab — First Principles</h1>
 <!-- chapter-metadata-badge -->
@@ -5338,9 +5288,7 @@ greater than one. Overshoot followed by decline would contradict this
 particular monotone trajectory; possible revisions include a
 time-varying environment or another state variable, which would need
 separate assumptions and tests.</p>
-
 <hr />
-
 <h1 data-number="23" id="sec:lab_part_I_building_blocks"><span
 class="header-section-number">23</span> Lab — Building Blocks</h1>
 <!-- chapter-metadata-badge -->
@@ -5432,9 +5380,7 @@ what was held fixed, while the boundary case should be tied to the
 documented input domain. A real evaluation would need an observation
 protocol, actual data and a comparison capable of challenging the model
 rather than another copy of its constructed example.</p>
-
 <hr />
-
 <h1 data-number="24" id="sec:lab_part_I_structure_and_form"><span
 class="header-section-number">24</span> Lab — Structure and Form</h1>
 <!-- chapter-metadata-badge -->
@@ -5528,9 +5474,7 @@ tied to the documented input domain. A real evaluation would need an
 observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="25" id="sec:lab_part_II_systems_overview"><span
 class="header-section-number">25</span> Lab — Systems Overview</h1>
 <!-- chapter-metadata-badge -->
@@ -5627,9 +5571,7 @@ tied to the documented input domain. A real evaluation would need an
 observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="26" id="sec:lab_part_II_dynamics_and_change"><span
 class="header-section-number">26</span> Lab — Dynamics and Change</h1>
 <!-- chapter-metadata-badge -->
@@ -5725,9 +5667,7 @@ tied to the documented input domain. A real evaluation would need an
 observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="27" id="sec:lab_part_II_regulation_and_control"><span
 class="header-section-number">27</span> Lab — Regulation and
 Control</h1>
@@ -5826,9 +5766,7 @@ the boundary case should be tied to the documented input domain. A real
 evaluation would need an observation protocol, actual data and a
 comparison capable of challenging the model rather than another copy of
 its constructed example.</p>
-
 <hr />
-
 <h1 data-number="28" id="sec:lab_part_III_applied_models"><span
 class="header-section-number">28</span> Lab — Applied Models</h1>
 <!-- chapter-metadata-badge -->
@@ -5922,9 +5860,7 @@ should be tied to the documented input domain. A real evaluation would
 need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="29" id="sec:lab_part_III_case_studies"><span
 class="header-section-number">29</span> Lab — Case Studies</h1>
 <!-- chapter-metadata-badge -->
@@ -6033,9 +5969,7 @@ uncertainty in advance, then compare linear and saturating models on
 values excluded from fitting. The supplied row error bars are fixture
 annotations, not standard errors derived from the two replicates in this
 lab.</p>
-
 <hr />
-
 <h1 data-number="30" id="sec:lab_part_III_frontiers"><span
 class="header-section-number">30</span> Lab — Frontiers and Open
 Problems</h1>
@@ -6129,9 +6063,7 @@ tied to the documented input domain. A real evaluation would need an
 observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed
 example.</p>
-
 <hr />
-
 <h1 data-number="31" id="sec:q_part_0_orientation"><span
 class="header-section-number">31</span> Question Bank — Orientation to
 the Field</h1>
@@ -6174,9 +6106,7 @@ that could change your mind. A plausible curve is not a complete
 explanation of the system. A complete response distinguishes a designed
 arithmetic control from an empirical claim, names the quantities being
 compared and preserves the limits of the model.</p>
-
 <hr />
-
 <h1 data-number="32" id="sec:q_part_0_core_methods"><span
 class="header-section-number">32</span> Question Bank — Core Methods and
 Tools</h1>
@@ -6219,9 +6149,7 @@ establish that its scientific input or interpretation is correct. A
 complete response distinguishes a designed arithmetic control from an
 empirical claim, names the quantities being compared and preserves the
 limits of the model.</p>
-
 <hr />
-
 <h1 data-number="33" id="sec:q_part_0_quantitative_foundations"><span
 class="header-section-number">33</span> Question Bank — Quantitative
 Foundations</h1>
@@ -6265,9 +6193,7 @@ uncertainty in an estimate are different quantities. A complete response
 distinguishes a designed arithmetic control from an empirical claim,
 names the quantities being compared and preserves the limits of the
 model.</p>
-
 <hr />
-
 <h1 data-number="34" id="sec:q_part_I_first_principles"><span
 class="header-section-number">34</span> Question Bank — First
 Principles</h1>
@@ -6323,9 +6249,7 @@ class="math inline">\(K\)</span>; the plateau tracks <span
 class="math inline">\(K\)</span>, not the nominal resource supply.
 Accept reasoned alternatives.)</em></li>
 </ol>
-
 <hr />
-
 <h1 data-number="35" id="sec:q_part_I_building_blocks"><span
 class="header-section-number">35</span> Question Bank — Building
 Blocks</h1>
@@ -6368,9 +6292,7 @@ itself prove a switch or identify a molecular mechanism. A complete
 response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of
 the model.</p>
-
 <hr />
-
 <h1 data-number="36" id="sec:q_part_I_structure_and_form"><span
 class="header-section-number">36</span> Question Bank — Structure and
 Form</h1>
@@ -6413,9 +6335,7 @@ do not imply equal original quantities or equal mechanisms. A complete
 response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of
 the model.</p>
-
 <hr />
-
 <h1 data-number="37" id="sec:q_part_II_systems_overview"><span
 class="header-section-number">37</span> Question Bank — Systems
 Overview</h1>
@@ -6459,9 +6379,7 @@ sufficient evidence that the entire system is at equilibrium. A complete
 response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of
 the model.</p>
-
 <hr />
-
 <h1 data-number="38" id="sec:q_part_II_dynamics_and_change"><span
 class="header-section-number">38</span> Question Bank — Dynamics and
 Change</h1>
@@ -6503,9 +6421,7 @@ automatically provide accurate forecasts for arbitrarily long times. A
 complete response distinguishes a designed arithmetic control from an
 empirical claim, names the quantities being compared and preserves the
 limits of the model.</p>
-
 <hr />
-
 <h1 data-number="39" id="sec:q_part_II_regulation_and_control"><span
 class="header-section-number">39</span> Question Bank — Regulation and
 Control</h1>
@@ -6551,9 +6467,7 @@ negative-feedback loop does not prove that it is stable. A complete
 response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of
 the model.</p>
-
 <hr />
-
 <h1 data-number="40" id="sec:q_part_III_applied_models"><span
 class="header-section-number">40</span> Question Bank — Applied
 Models</h1>
@@ -6597,9 +6511,7 @@ existing range need not provide the best prediction outside it. A
 complete response distinguishes a designed arithmetic control from an
 empirical claim, names the quantities being compared and preserves the
 limits of the model.</p>
-
 <hr />
-
 <h1 data-number="41" id="sec:q_part_III_case_studies"><span
 class="header-section-number">41</span> Question Bank — Case
 Studies</h1>
@@ -6653,9 +6565,7 @@ Collecting more doses, especially higher ones, would reveal
 curvature/saturation and test whether the linear model generalises.
 Accept reasoned alternatives.)</em></li>
 </ol>
-
 <hr />
-
 <h1 data-number="42" id="sec:q_part_III_frontiers"><span
 class="header-section-number">42</span> Question Bank — Frontiers and
 Open Problems</h1>
@@ -6698,9 +6608,7 @@ Reproducible execution is valuable evidence about a procedure, but it is
 not proof of scientific truth. A complete response distinguishes a
 designed arithmetic control from an empirical claim, names the
 quantities being compared and preserves the limits of the model.</p>
-
 <hr />
-
 <h1 data-number="43" id="sec:appendix_authoring_guide"><span
 class="header-section-number">43</span> Appendix A — Authoring and
 Verification</h1>
@@ -6822,9 +6730,7 @@ href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
 and colleagues <span class="citation" data-cites="wilson2014best">(<a
 href="#ref-wilson2014best" role="doc-biblioref"><span
 class="nocase">Wilson et al.</span> 2014</a>)</span>.</p>
-
 <hr />
-
 <h1 data-number="44" id="sec:appendix_notation"><span
 class="header-section-number">44</span> Appendix B — Notation and
 Symbols</h1>
@@ -6995,9 +6901,7 @@ results.</p>
 <p>See sec. <a href="#sec:appendix_math_review">45</a> for numerical
 examples and sec. <a href="#sec:appendix_formalisms">46</a> for
 mathematical domains.</p>
-
 <hr />
-
 <h1 data-number="45" id="sec:appendix_math_review"><span
 class="header-section-number">45</span> Appendix C — Mathematical
 Review</h1>
@@ -7150,9 +7054,7 @@ decay rate’s numeric value unchanged. Will the predicted half-life
 describe the same process? No: the rate must be divided by twenty-four
 when time is measured in hours. The numeric half-life then multiplies by
 twenty-four. Check units before interpreting a change in a graph.</p>
-
 <hr />
-
 <h1 data-number="46" id="sec:appendix_formalisms"><span
 class="header-section-number">46</span> Appendix — Formalisms</h1>
 <p>A worked example of every <strong>formal</strong> element a technical
@@ -7339,9 +7241,7 @@ narrative terms such as <a
 href="#gl:gradient"><strong>gradient</strong></a> and <a
 href="#gl:threshold"><strong>threshold</strong></a> are in the master
 glossary.</p>
-
 <hr />
-
 <h1 data-number="47" id="sec:appendix_format_gallery"><span
 class="header-section-number">47</span> Appendix — Format Gallery</h1>
 <p>This appendix is a <strong>kitchen-sink demonstration</strong>: a
@@ -7799,9 +7699,7 @@ dashes):</p>
 Markdown. Unicode renders directly: α, β, γ, Δ, ∑, ∞, ≈, →. For PDF
 math, prefer LaTeX (<code>$\alpha$</code>) over raw Unicode in
 equations.</p>
-
 <hr />
-
 <h1 data-number="48" id="sec:glossary"><span
 class="header-section-number">48</span> Master Glossary</h1>
 <p>Definitions follow the conventions used in this book. They specify
@@ -7890,9 +7788,7 @@ class="header-section-number">48.15</span> Variable</h2>
 <p>A quantity that can take different values across observations, states
 or inputs. Its role and units must be declared; storage as a numeric
 array does not make unlike variables scientifically interchangeable.</p>
-
 <hr />
-
 <h1 data-number="49" id="sec:appendix_index"><span
 class="header-section-number">49</span> Appendix G — Index of Key
 Terms</h1>
@@ -7954,7 +7850,6 @@ href="#sec:appendix_authoring_guide">43</a>. For worked arithmetic, see
 sec. <a href="#sec:appendix_math_review">45</a>. For assumptions behind
 mathematical limits, see sec. <a
 href="#sec:appendix_formalisms">46</a>.</p>
-
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-box1976science" class="csl-entry" role="listitem">

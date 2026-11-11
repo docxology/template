@@ -119,6 +119,52 @@ def test_processor_kmyth_step_seals_selected_artifacts(tmp_path: Path) -> None:
     assert sealed[1].exists()
 
 
+def test_processor_promotes_configured_kmyth_sidecars(tmp_path: Path) -> None:
+    from pypdf import PdfWriter
+
+    from infrastructure.steganography.config import SteganographyConfig
+    from infrastructure.steganography.core import SteganographyProcessor
+
+    source = tmp_path / "paper.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=200, height=300)
+    writer.write(source)
+    config = SteganographyConfig(
+        enabled=True,
+        overlays_enabled=False,
+        barcodes_enabled=False,
+        metadata_enabled=False,
+        output_suffix="_review",
+        kmyth_enabled=True,
+        kmyth_required=True,
+        kmyth_binary_dir=str(_write_fake_kmyth_tools(tmp_path / "bin")),
+        kmyth_source_dir=str(tmp_path / "source"),
+        kmyth_seal_artifacts=["hash_manifest", "pdf"],
+        kmyth_output_suffix=".sealed",
+        kmyth_overwrite=False,
+    )
+    processor = SteganographyProcessor(config)
+    output = tmp_path / "paper_review.pdf"
+    pdf_seal = tmp_path / "paper_review.pdf.sealed"
+    manifest_seal = tmp_path / "paper.hashes.json.sealed"
+
+    assert processor.process(source) == output
+    assert Path(pdf_seal.read_text(encoding="utf-8").removeprefix("sealed:")).name == "working.pdf"
+    assert Path(manifest_seal.read_text(encoding="utf-8").removeprefix("sealed:")).name == "manifest.json"
+
+    pdf_seal.write_text("previous PDF seal", encoding="utf-8")
+    manifest_seal.unlink()
+    with pytest.raises(FileExistsError) as error:
+        processor.process(source)
+    assert error.value.args == (pdf_seal,)
+    assert not manifest_seal.exists()
+
+    config.kmyth_required = False
+    assert processor.process(source) == output
+    assert pdf_seal.read_text(encoding="utf-8") == "previous PDF seal"
+    assert Path(manifest_seal.read_text(encoding="utf-8").removeprefix("sealed:")).name == "manifest.json"
+
+
 def test_processor_kmyth_step_skips_unavailable_when_not_required(tmp_path: Path) -> None:
     from infrastructure.steganography.config import SteganographyConfig
     from infrastructure.steganography.core import SteganographyProcessor

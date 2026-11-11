@@ -11,48 +11,44 @@ from __future__ import annotations
 import base64
 import hashlib
 import io
+import json
 import os
 import re
 import stat
 import sys
 import time
 import zipfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from types import MappingProxyType
 from typing import Any
+from weakref import ref
 
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
+from infrastructure.project._hosted_protocol import (
+    DOWNLOAD_SCRIPT as DOWNLOAD_SCRIPT,
+    MAX_ARCHIVE as MAX_ARCHIVE,
+    MAX_LISTING_PAGES as MAX_LISTING_PAGES,
+    MAX_RUN_ARTIFACTS as MAX_RUN_ARTIFACTS,
+    WORKFLOW as WORKFLOW,
+    _api_command as _api_command,
+    _context as _context,
+    _merge_listing_pages as _merge_listing_pages,
+    _process as _process,
+    collect_artifact_pages,
+)
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
+from infrastructure.project.public_root_case_contract import _artifact
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader, json_object_from_bytes
 
 SCHEMA = "template-public-hosted-origin-v2"
-WORKFLOW = ".github/workflows/platform-required-acceptance.yml"
 ARTIFACTS = {
     f"required-source-root-{host}-{minor}": (platform, minor)
     for host, platform in (("Linux", "linux"), ("macOS", "darwin"))
     for minor in ("3.14", "3.15")
 }
-MAX_ARCHIVE = 64 * 1024 * 1024
-MAX_RUN_ARTIFACTS = 1024
-MAX_LISTING_PAGES = 11
-DOWNLOAD_SCRIPT = """import sys,subprocess,json,hashlib,tempfile
-from pathlib import Path
-p=Path(sys.argv[1]); limit=64*1024*1024; written=0
-with p.open('xb') as output, tempfile.TemporaryFile() as errors:
- child=subprocess.Popen(sys.argv[2:],stdout=subprocess.PIPE,stderr=errors)
- while True:
-  chunk=child.stdout.read(65536)
-  if not chunk: break
-  written+=len(chunk)
-  if written>limit:
-   child.kill();child.wait();sys.exit(75)
-  output.write(chunk)
- code=child.wait()
- errors.seek(0);sys.stderr.buffer.write(errors.read(1024*1024))
-print(json.dumps({'original_exit_code':code,'archive_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}))
-sys.exit(code)
-"""
 
 
 @dataclass(frozen=True)
@@ -77,27 +73,51 @@ class HostedOriginIdentity:
     artifact_id: int
 
 
-def _context(repository: str, run_id: int, head_sha: str) -> None:
-    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) or any(
-        part in {".", ".."} for part in repository.split("/")
-    ):
-        raise ValueError("invalid designated repository")
-    if type(run_id) is not int or run_id <= 0 or not re.fullmatch(r"[0-9a-f]{40}", head_sha):
-        raise ValueError("invalid original run or exact commit")
+class HostedRootAuthorization:
+    """Authorize portable Root closures within one physical snapshot's lifetime."""
 
+    def __init__(self, reader: SnapshotReader) -> None:
+        self._reader = ref(reader)
+        self._origins: dict[str, HostedOriginIdentity] = {}
+        self.observed: Mapping[str, HostedOriginIdentity] = MappingProxyType(self._origins)
 
-def _process(raw: dict[str, Any], command: list[str]) -> None:
-    if (
-        raw.get("command") != command
-        or type(raw.get("exit_code")) is not int
-        or raw["exit_code"] != 0
-        or type(raw.get("original_exit_code")) is not int
-        or raw["original_exit_code"] != 0
-        or raw.get("timed_out") is not False
-        or raw.get("custody_refused") is not False
-        or raw.get("diagnostic") != ""
-    ):
-        raise ValueError("original hosted observation process was not successful")
+    def authorize(self, reader: SnapshotReader, bindings: list[dict[str, str]]) -> HostedOriginIdentity:
+        """Recheck held bytes on a hit and verify the complete original closure on a miss."""
+        if self._reader() is not reader:
+            raise ValueError("hosted authorization requires its original snapshot reader")
+        context = reader.hosted_origin
+        if not isinstance(context, HostedReadbackContext):
+            raise ValueError("portable Root needs authenticated external hosted handoff context")
+        _artifact(reader, context.manifest_binding)
+        if not reader.unchanged():
+            raise ValueError("portable original closure changed before hosted authentication")
+        key = hashlib.sha256(
+            json.dumps(
+                {
+                    "bindings": bindings,
+                    "manifest": context.manifest_binding,
+                    "repository": context.repository,
+                    "run_id": context.run_id,
+                    "head_sha": context.head_sha,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+        ).hexdigest()
+        origin = self._origins.get(key)
+        if origin is None:
+            origin = authorize_root_evidence(
+                reader,
+                bindings,
+                manifest_binding=context.manifest_binding,
+                repository=context.repository,
+                run_id=context.run_id,
+                head_sha=context.head_sha,
+            )
+            if not reader.unchanged():
+                raise ValueError("portable hosted origin changed during original archive authentication")
+            self._origins[key] = origin
+        return origin
 
 
 def _metadata(
@@ -190,44 +210,6 @@ def _zip_members(content: bytes, name: str) -> dict[str, bytes]:
     return members
 
 
-def _api_command(endpoint: str) -> list[str]:
-    return [
-        "gh",
-        "api",
-        "--hostname",
-        "github.com",
-        "-H",
-        "Accept: application/vnd.github+json",
-        "-H",
-        "X-GitHub-Api-Version: 2022-11-28",
-        endpoint,
-    ]
-
-
-def _merge_listing_pages(pages: list[dict[str, Any]], *, complete: bool) -> dict[str, Any]:
-    """Require full ordered finite pagination, including fixed artifacts beyond100."""
-    if not pages or len(pages) > MAX_LISTING_PAGES:
-        raise ValueError("hosted artifact pagination is absent or exceeds its Source bound")
-    count = pages[0].get("total_count")
-    if type(count) is not int or not 0 <= count <= MAX_RUN_ARTIFACTS:
-        raise ValueError("hosted artifact census exceeds its Source-owned1024 bound")
-    rows: list[dict[str, Any]] = []
-    for ordinal, page in enumerate(pages):
-        current = page.get("artifacts")
-        if (
-            page.get("total_count") != count
-            or not isinstance(current, list)
-            or len(current) > 100
-            or (ordinal < len(pages) - 1 and len(current) != 100)
-            or any(not isinstance(row, dict) or type(row.get("id")) is not int for row in current)
-        ):
-            raise ValueError("hosted artifact pagination is truncated, changed or malformed")
-        rows.extend(current)
-    if len(rows) > count or len({row["id"] for row in rows}) != len(rows) or (complete and len(rows) != count):
-        raise ValueError("hosted artifact census is incomplete, ambiguous or changed")
-    return {"total_count": count, "artifacts": rows}
-
-
 def collect_hosted_origin(
     root: Path,
     directory: Path,
@@ -290,26 +272,18 @@ def collect_hosted_origin(
     commit = execute(["git", "rev-parse", "HEAD"], "commit")
     if commit["stdout"].strip() != head_sha:
         raise ValueError("checkout is not the source run commit")
-    base = f"repos/{repository}"
-    endpoints = {
-        "run": f"{base}/actions/runs/{run_id}",
-        "workflow": f"{base}/contents/{WORKFLOW}?ref={head_sha}",
-    }
     responses: dict[str, Any] = {}
-    for label, endpoint in endpoints.items():
-        responses[label], observations[label] = api.run_metadata() if label == "run" else api.workflow_metadata()
+    for label, collect in (("run", api.run_metadata), ("workflow", api.workflow_metadata)):
+        responses[label], observations[label] = collect()
         observations[label + "_response"] = write_json(root, directory / f"{label}-response.json", responses[label])
-    pages = []
-    for page in range(1, MAX_LISTING_PAGES + 1):
+
+    def read_listing_page(page: int) -> dict[str, Any]:
         label = f"listing-{page}"
         response, observations[label] = api.artifact_page(page)
         observations[label + "_response"] = write_json(root, directory / f"{label}-response.json", response)
-        pages.append(response)
-        listing = _merge_listing_pages(pages, complete=False)
-        if len(listing["artifacts"]) == listing["total_count"]:
-            break
-    responses["listing"] = _merge_listing_pages(pages, complete=True)
-    observations["listing_pages"] = len(pages)
+        return response
+
+    responses["listing"], observations["listing_pages"] = collect_artifact_pages(read_listing_page)
     selected = _metadata(responses["run"], responses["listing"], repository, run_id, head_sha)
     workflow = base64.b64decode(responses["workflow"]["content"], validate=False)
     if responses["workflow"].get("path") != WORKFLOW or workflow != SnapshotReader(root).read(WORKFLOW).content:

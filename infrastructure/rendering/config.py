@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 from urllib.parse import urlsplit
 
+import yaml
+
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering.security import RenderSecurityProfile
 
 logger = get_logger(__name__)
@@ -338,3 +342,46 @@ class RenderingConfig:
             name=self.security_profile,
             temp_root=Path(self.untrusted_temp_root) if self.untrusted_temp_root else None,
         )
+
+
+# ``{{UPPER_SNAKE}}`` is the canonical project hydration token, the same shape
+# as :data:`infrastructure.rendering.manuscript_injection._TOKEN_RE`.
+_CONFIG_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+
+# A token inside a backtick code span is prose *about* the token syntax, not a
+# hydration target — ``template_gold_refinement``'s config documents "Resolve
+# `{{TOKEN}}` placeholders into output/manuscript/". Those spans are stripped
+# before scanning so documenting the contract can never fail a render. Same
+# rationale as ``manuscript_injection.EXCLUDED_DOC_FILENAMES`` for markdown.
+_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
+
+
+def _unresolved_config_tokens(content: str) -> list[str]:
+    """List unresolved hydration tokens in an already admitted config body."""
+    text = _CODE_SPAN_RE.sub("", content)
+    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+
+
+def render_config_manuscript_dir(project_root: Path) -> Path:
+    """Select the manuscript that governs read-only render verification."""
+
+    injected = project_root / "output" / "manuscript"
+    if injected.exists() and any(injected.glob("*.md")):
+        return injected
+    return resolve_source_manuscript_dir(project_root)
+
+
+def load_render_config_for_verification(manuscript_dir: Path, *, env: dict[str, str] | None = None) -> RenderingConfig:
+    """Read effective settings without hydrating or modifying the manuscript."""
+
+    config_path = manuscript_dir / "config.yaml"
+    project_config: dict[str, Any] | None = None
+    if config_path.is_file():
+        try:
+            loaded = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError) as exc:
+            raise ValueError(f"Could not read rendering configuration {config_path}: {exc}") from exc
+        if loaded is not None and not isinstance(loaded, dict):
+            raise ValueError(f"Rendering configuration must be a mapping: {config_path}")
+        project_config = loaded
+    return RenderingConfig.from_project_config(project_config, env=env)

@@ -24,6 +24,7 @@ from infrastructure.core.runtime.python_binding import (
     analysis_runtime_binding,
     select_analysis_python,
 )
+from infrastructure.core.testing.coverage_policy import coverage_free_subprocess_env
 from infrastructure.core.testing.pytest_profiles import TEST_RUNNER_BASE_DEPS, test_runner_dependency_specs
 
 
@@ -174,7 +175,7 @@ def admit_project_test_runtime(
         result = run_bounded_subprocess(
             [str(selected), "-I", "-B", "-c", probe, json.dumps(expected, sort_keys=True)],
             cwd=project_root,
-            env=os.environ.copy(),
+            env=coverage_free_subprocess_env(),
             timeout=remaining_test_budget(operation_deadline),
         )
     except (FileNotFoundError, PermissionError) as exc:
@@ -294,7 +295,7 @@ def _declared_provider_roots(
                 json.dumps(sorted(names)),
             ],
             cwd=project_root,
-            env=os.environ.copy(),
+            env=coverage_free_subprocess_env(),
             timeout=remaining_test_budget(operation_deadline),
         )
     except OSError as exc:

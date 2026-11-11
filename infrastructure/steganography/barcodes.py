@@ -64,6 +64,8 @@ def create_barcode_strip_overlay(
     source_filename: str = "",
     total_pages: int = 0,
     source_file_size: int = 0,
+    *,
+    timestamp: str | None = None,
 ) -> bytes:
     """Create a PDF overlay page with labeled QR codes and a barcode strip.
 
@@ -90,11 +92,13 @@ def create_barcode_strip_overlay(
         source_filename: Original PDF filename.
         total_pages: Total page count.
         source_file_size: Original PDF file size in bytes.
+        timestamp: Timestamp captured for the document, when provided.
 
     Returns:
         PDF bytes of the one-page overlay.
     """
     rl_canvas_mod, _inch, _mm, ImageReader = _get_reportlab()
+    timestamp = timestamp if timestamp is not None else resolve_build_timestamp()
 
     buf = io.BytesIO()
     c = rl_canvas_mod.Canvas(buf, pagesize=(page_width, page_height))
@@ -122,11 +126,12 @@ def create_barcode_strip_overlay(
         title=title,
         authors=authors,
         document_id=document_id,
+        timestamp=timestamp,
     )
     qr_items.append(("Metadata", meta_text))
 
     # 2. Citation QR
-    cite_text = build_citation_qr_text(title=title, authors=authors)
+    cite_text = build_citation_qr_text(title=title, authors=authors, timestamp=timestamp)
     qr_items.append(("Citation", cite_text))
 
     # 3. Contact QR (mailto: link)
@@ -200,8 +205,7 @@ def create_barcode_strip_overlay(
     c.saveState()
     c.setFont("Courier", 3.5)
     c.setFillColorRGB(0.5, 0.5, 0.5)
-    ts = resolve_build_timestamp()
-    c.drawRightString(page_width - 6, qr_y + qr_size + 2, ts)
+    c.drawRightString(page_width - 6, qr_y + qr_size + 2, timestamp)
     c.restoreState()
 
     c.save()

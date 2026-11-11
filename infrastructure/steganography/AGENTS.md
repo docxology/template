@@ -42,6 +42,7 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 | File | Responsibility |
 |------|---------------|
 | `config.py` | `SteganographyConfig` dataclass |
+| `artifact_paths.py` | Shared secure PDF and hash-manifest identities, stable-file hashing and private ownership receipt helpers. |
 | `publication.py` | Validated staging and per-file atomic PDF/sidecar publication |
 | `core.py` | `SteganographyProcessor` orchestrator |
 | `overlays.py` | Watermark, footer, invisible text (reportlab) |

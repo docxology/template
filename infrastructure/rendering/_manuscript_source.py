@@ -3,22 +3,24 @@
 from __future__ import annotations
 
 import os
-import re
 import stat
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.hydration_recovery import HydrationRecoveryEvidence
 
 from infrastructure.core.exceptions import TemplateError, ValidationError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.core.progress import SubStageProgress
-from infrastructure.transmission.transmission_bookends import is_transmission_bookend
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering import RenderManager
-from infrastructure.rendering.latex_validation import validate_preamble_packages
-from infrastructure.rendering.latex_validation import ValidationReport
+from infrastructure.rendering.config import _unresolved_config_tokens
+from infrastructure.rendering.latex_validation import ValidationReport, validate_preamble_packages
+from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 
 logger = get_logger(__name__)
 
@@ -65,17 +67,6 @@ GENERATED_ORDERING_MARKER = "# Generated manuscript ordering"
 PROJECT_RESOLVED_MARKER = "# Project-resolved config"
 """Explicit opt-in marker: this injected config is the project's own artifact."""
 
-# ``{{UPPER_SNAKE}}`` is the canonical project hydration token, the same shape
-# as :data:`infrastructure.rendering.manuscript_injection._TOKEN_RE`.
-_CONFIG_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
-
-# A token inside a backtick code span is prose *about* the token syntax, not a
-# hydration target — ``template_gold_refinement``'s config documents "Resolve
-# `{{TOKEN}}` placeholders into output/manuscript/". Those spans are stripped
-# before scanning so documenting the contract can never fail a render. Same
-# rationale as ``manuscript_injection.EXCLUDED_DOC_FILENAMES`` for markdown.
-_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
-
 
 def has_generated_manuscript_ordering(config_path: Path) -> bool:
     """Return True when an injected config owns generated manuscript ordering."""
@@ -87,13 +78,12 @@ def has_generated_manuscript_ordering(config_path: Path) -> bool:
 def unresolved_config_tokens(config_path: Path) -> list[str]:
     """Return the sorted unique ``{{UPPER_SNAKE}}`` tokens still present in *config_path*.
 
-    Backtick code spans are stripped first (see :data:`_CODE_SPAN_RE`), so a
+    Backtick code spans are stripped first (see :func:`_unresolved_config_tokens`), so a
     config that *documents* the token syntax reports no unresolved tokens.
     """
     if not config_path.is_file():
         return []
-    text = _CODE_SPAN_RE.sub("", config_path.read_text(encoding="utf-8"))
-    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+    return _unresolved_config_tokens(config_path.read_text(encoding="utf-8"))
 
 
 def is_project_resolved(config_path: Path, source_config_path: Path | None = None) -> bool:
@@ -198,21 +188,37 @@ def run_manuscript_variable_script(
     template_repo_root: Path | None = None,
 ) -> int:
     """Hydrate project manuscript variables before rendering, when available."""
+    return run_manuscript_hydration(project_root, template_repo_root)
+
+
+def run_manuscript_hydration(
+    project_root: Path,
+    template_repo_root: Path | None = None,
+    *,
+    recovery_evidence: HydrationRecoveryEvidence | None = None,
+) -> int:
+    """Run the original hydration and optionally retain its audited recovery evidence."""
     import math
     import os
     import time
 
     from infrastructure.core.analysis_launch import launch_analysis_script
+    from infrastructure.core.pipeline.hydration_recovery import HYDRATION_SCRIPT, HYDRATION_STAGE_KEY
     from infrastructure.core.pipeline.outcomes import RunResult
     from infrastructure.core.runtime._python_env import build_analysis_script_cmd_and_env
     from infrastructure.core.runtime.python_binding import AnalysisRuntimeUnavailable
 
-    script = project_root / "scripts" / "z_generate_manuscript_variables.py"
+    script = project_root / HYDRATION_SCRIPT
     if not os.path.lexists(script):
         return 0
 
     root = template_repo_root or Path(__file__).absolute().parents[2]
     env = os.environ.copy()
+    if recovery_evidence is not None:
+        # The standalone attempt owns a new receipt namespace, even if the caller
+        # inherited a full pipeline's run identity.
+        for key in ("PIPELINE_RUN_ID", "PIPELINE_PLAN_DIGEST", "PIPELINE_STAGE_KEY"):
+            env.pop(key, None)
     if template_repo_root is not None:
         env["TEMPLATE_REPO_ROOT"] = str(template_repo_root)
     try:
@@ -250,8 +256,9 @@ def run_manuscript_variable_script(
         cmd,
         env,
         deadline,
-        stage_key="hydration:scripts/z_generate_manuscript_variables.py",
+        stage_key=HYDRATION_STAGE_KEY,
         cwd=project_root,
+        hydration_evidence=recovery_evidence,
     )
     code = RunResult((outcome.stage_key,), (outcome,)).exit_code
     if code != 0:

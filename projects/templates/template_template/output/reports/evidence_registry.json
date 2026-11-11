@@ -2388,7 +2388,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-28T21:24:42Z",
+      "checked_at": "2026-11-07T13:30:27Z",
       "kind": "number",
       "source": "output/figures/module_inventory_panel_03.labels.json:$.text_measurements[7].bbox_px[0]",
       "source_field": "$.text_measurements[7].bbox_px[0]",
@@ -2400,7 +2400,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-10-28T21:24:42Z",
+      "checked_at": "2026-11-07T13:30:27Z",
       "kind": "number",
       "source": "output/figures/module_inventory_panel_03.labels.json:$.text_measurements[10].bbox_px[0]",
       "source_field": "$.text_measurements[10].bbox_px[0]",

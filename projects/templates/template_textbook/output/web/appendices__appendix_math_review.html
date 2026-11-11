@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <title>_combined_manuscript</title>
+  <title>appendix_math_review.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -245,26 +244,7 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -273,9 +253,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
+  displayOverflow: "linebreak",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
+    inline: true,
     width: "100%",
     lineleading: 0.5
   })
@@ -304,8 +284,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
+            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
+            // state retains old container metrics and cannot reflow on zoom.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -390,14 +370,7 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -415,6 +388,8 @@ mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 
 html {
   max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -427,6 +402,8 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main,
@@ -654,18 +631,10 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
-.math.inline {
-  display: inline-block;
-  max-width: 100%;
-  margin: 0;
-  overflow-x: auto;
-  vertical-align: middle;
-}
-
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 0.25rem;
 }
 
@@ -716,6 +685,10 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
+  body {
+    overflow-x: visible;
+  }
+
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -744,9 +717,7 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 data-number="45" id="sec:appendix_math_review"><span
-class="header-section-number">45</span> Appendix C — Mathematical
-Review</h1>
+<h1 id="sec:appendix_math_review">Appendix C — Mathematical Review</h1>
 <!-- chapter-metadata-badge -->
 <blockquote>
 <p>Reference appendix · From explicit assumptions to runnable
@@ -758,8 +729,7 @@ declared input restrictions. Mathematical reasoning and numerical tests
 supply different checks: a formula explains a relationship, while an
 executable example checks a specific implementation and finite
 input.</p>
-<h2 data-number="45.1" id="functions-and-rescaling"><span
-class="header-section-number">45.1</span> Functions and rescaling</h2>
+<h2 id="functions-and-rescaling">Functions and rescaling</h2>
 <p>A function assigns an output to each input in its domain. With
 reference minimum <span class="math inline">\(a\)</span> and maximum
 <span class="math inline">\(b&gt;a\)</span>, define <span
@@ -773,14 +743,13 @@ bounds from the supplied array, so fitting bounds separately to two
 groups can hide their absolute difference. For a constant array it
 returns zeros by an explicit convention, rather than dividing by
 zero.</p>
-<div class="sourceCode" id="cb39"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.normalize_unit_interval(np.array([<span class="fl">10.</span>, <span class="fl">20.</span>, <span class="fl">30.</span>])), [<span class="fl">0.</span>, <span class="fl">.5</span>, <span class="fl">1.</span>])</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.normalize_unit_interval(np.array([<span class="fl">4.</span>, <span class="fl">4.</span>])), [<span class="fl">0.</span>, <span class="fl">0.</span>])</span></code></pre></div>
-<h2 data-number="45.2" id="logistic-growth"><span
-class="header-section-number">45.2</span> Logistic growth</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.normalize_unit_interval(np.array([<span class="fl">10.</span>, <span class="fl">20.</span>, <span class="fl">30.</span>])), [<span class="fl">0.</span>, <span class="fl">.5</span>, <span class="fl">1.</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.normalize_unit_interval(np.array([<span class="fl">4.</span>, <span class="fl">4.</span>])), [<span class="fl">0.</span>, <span class="fl">0.</span>])</span></code></pre></div>
+<h2 id="logistic-growth">Logistic growth</h2>
 <p>The rate law is <span
 class="math inline">\(N&#39;=rN(1-N/K)\)</span>. For <span
 class="math inline">\(r&gt;0\)</span>, <span
@@ -804,15 +773,14 @@ is <span class="math inline">\(1+19(0.0183156)\approx1.347997\)</span>,
 giving <span class="math inline">\(N(5)\approx74.1841\)</span>. A
 reproducible calculation retains more precision than the printed
 explanation:</p>
-<div class="sourceCode" id="cb40"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> exp</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>expected <span class="op">=</span> <span class="fl">100.</span> <span class="op">/</span> (<span class="fl">1.</span> <span class="op">+</span> <span class="fl">19.</span> <span class="op">*</span> exp(<span class="op">-</span><span class="fl">4.</span>))</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>observed <span class="op">=</span> models.logistic_growth(<span class="fl">5.</span>, r<span class="op">=</span><span class="fl">.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.</span>, initial<span class="op">=</span><span class="fl">5.</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(observed) <span class="op">-</span> expected) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
-<h2 data-number="45.3" id="exponential-decay"><span
-class="header-section-number">45.3</span> Exponential decay</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> exp</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>expected <span class="op">=</span> <span class="fl">100.</span> <span class="op">/</span> (<span class="fl">1.</span> <span class="op">+</span> <span class="fl">19.</span> <span class="op">*</span> exp(<span class="op">-</span><span class="fl">4.</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>observed <span class="op">=</span> models.logistic_growth(<span class="fl">5.</span>, r<span class="op">=</span><span class="fl">.8</span>, carrying_capacity<span class="op">=</span><span class="fl">100.</span>, initial<span class="op">=</span><span class="fl">5.</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(observed) <span class="op">-</span> expected) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
+<h2 id="exponential-decay">Exponential decay</h2>
 <p>For <span class="math inline">\(N&#39;=-\lambda N\)</span>, <span
 class="math inline">\(N(t)=N_0e^{-\lambda t}\)</span>. Solving <span
 class="math inline">\(N(t_{1/2})=N_0/2\)</span> gives <span
@@ -823,15 +791,14 @@ class="math inline">\(100\)</span> reaches <span
 class="math inline">\(50\)</span> at one and <span
 class="math inline">\(25\)</span> at two. This states a multiplicative
 rate; it is not a subtraction of the same amount at every step.</p>
-<div class="sourceCode" id="cb41"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> log</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.exponential_decay(np.array([<span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>]), initial<span class="op">=</span><span class="fl">100.</span>, rate<span class="op">=</span>log(<span class="fl">2.</span>)), [<span class="fl">100.</span>, <span class="fl">50.</span>, <span class="fl">25.</span>])</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(models.half_life(log(<span class="fl">2.</span>)) <span class="op">-</span> <span class="fl">1.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
-<h2 data-number="45.4" id="saturating-response"><span
-class="header-section-number">45.4</span> Saturating response</h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> log</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.exponential_decay(np.array([<span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>]), initial<span class="op">=</span><span class="fl">100.</span>, rate<span class="op">=</span>log(<span class="fl">2.</span>)), [<span class="fl">100.</span>, <span class="fl">50.</span>, <span class="fl">25.</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(models.half_life(log(<span class="fl">2.</span>)) <span class="op">-</span> <span class="fl">1.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
+<h2 id="saturating-response">Saturating response</h2>
 <p>For positive <span class="math inline">\(V_{\max}\)</span> and <span
 class="math inline">\(K_m\)</span>, <span
 class="math inline">\(v(x)=V_{\max}x/(K_m+x)\)</span> at nonnegative
@@ -844,13 +811,12 @@ class="math inline">\(K_m=3\)</span>, inputs <span
 class="math inline">\(0,3,12\)</span> produce <span
 class="math inline">\(0,0.5,0.8\)</span>. The shape is illustrative; it
 does not identify a biochemical mechanism from a curve alone.</p>
-<div class="sourceCode" id="cb42"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.saturating_response(np.array([<span class="fl">0.</span>, <span class="fl">3.</span>, <span class="fl">12.</span>]), maximum<span class="op">=</span><span class="fl">1.</span>, half_saturation<span class="op">=</span><span class="fl">3.</span>), [<span class="fl">0.</span>, <span class="fl">.5</span>, <span class="fl">.8</span>])</span></code></pre></div>
-<h2 data-number="45.5" id="least-squares-fitting"><span
-class="header-section-number">45.5</span> Least-squares fitting</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>np.testing.assert_allclose(models.saturating_response(np.array([<span class="fl">0.</span>, <span class="fl">3.</span>, <span class="fl">12.</span>]), maximum<span class="op">=</span><span class="fl">1.</span>, half_saturation<span class="op">=</span><span class="fl">3.</span>), [<span class="fl">0.</span>, <span class="fl">.5</span>, <span class="fl">.8</span>])</span></code></pre></div>
+<h2 id="least-squares-fitting">Least-squares fitting</h2>
 <p>A line predicts <span class="math inline">\(\widehat
 y_i=mx_i+b\)</span>. Least squares minimizes the sum of squared
 residuals. If <span class="math inline">\(x=[0,1,2]\)</span> and <span
@@ -863,15 +829,14 @@ intercept <span class="math inline">\(2.175\)</span>; predictions are
 <span class="math inline">\([0.025,-0.05,0.025]\)</span>. Their sum is
 zero up to roundoff. The small residuals describe these three points,
 not an unseen dose.</p>
-<div class="sourceCode" id="cb43"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> models.linear_fit(np.array([<span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>]), np.array([<span class="fl">1.</span>, <span class="fl">3.</span>, <span class="fl">5.</span>]))</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(fit.slope <span class="op">-</span> <span class="fl">2.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(fit.intercept <span class="op">-</span> <span class="fl">1.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
-<h2 data-number="45.6" id="means-and-spread"><span
-class="header-section-number">45.6</span> Means and spread</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> models.linear_fit(np.array([<span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>]), np.array([<span class="fl">1.</span>, <span class="fl">3.</span>, <span class="fl">5.</span>]))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(fit.slope <span class="op">-</span> <span class="fl">2.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(fit.intercept <span class="op">-</span> <span class="fl">1.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
+<h2 id="means-and-spread">Means and spread</h2>
 <p>For <span class="math inline">\(x=[2,4,6,8]\)</span>, the mean is
 <span class="math inline">\(5\)</span> and the squared deviations sum to
 <span class="math inline">\(20\)</span>. Population variance divides by
@@ -882,15 +847,14 @@ class="math inline">\(3\)</span>, yielding <span
 class="math inline">\(20/3\)</span>. Neither quantity is automatically a
 standard error of a mean. Reporting which denominator was used is part
 of reporting the result.</p>
-<div class="sourceCode" id="cb44"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> sqrt</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> models.descriptive_statistics([<span class="fl">2.</span>, <span class="fl">4.</span>, <span class="fl">6.</span>, <span class="fl">8.</span>])</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(stats[<span class="st">&quot;mean&quot;</span>] <span class="op">-</span> <span class="fl">5.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(stats[<span class="st">&quot;std&quot;</span>] <span class="op">-</span> sqrt(<span class="fl">5.</span>)) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
-<h2 data-number="45.7" id="exercise-and-solution"><span
-class="header-section-number">45.7</span> Exercise and solution</h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> sqrt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook <span class="im">import</span> models</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> models.descriptive_statistics([<span class="fl">2.</span>, <span class="fl">4.</span>, <span class="fl">6.</span>, <span class="fl">8.</span>])</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(stats[<span class="st">&quot;mean&quot;</span>] <span class="op">-</span> <span class="fl">5.</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(stats[<span class="st">&quot;std&quot;</span>] <span class="op">-</span> sqrt(<span class="fl">5.</span>)) <span class="op">&lt;</span> <span class="fl">1e-12</span></span></code></pre></div>
+<h2 id="exercise-and-solution">Exercise and solution</h2>
 <p>A learner changes the time unit from days to hours but keeps the
 decay rate’s numeric value unchanged. Will the predicted half-life
 describe the same process? No: the rate must be divided by twenty-four

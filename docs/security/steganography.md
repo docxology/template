@@ -71,10 +71,10 @@ storage.
 Setting **`STEGANOGRAPHY_DETERMINISTIC=1`** (or passing `--deterministic`
 to `secure_run.sh`) pins every timestamp inside the steganography
 pipeline to the latest commit's strict-ISO8601 committer date, retrieved
-via `git log -1 --format=%cI`. The same env var also derives the
-`Doc-ID` from a SHA-256 of that timestamp instead of `secrets.token_hex`,
-so two consecutive runs against the same `HEAD` produce **byte-identical**
-`*_steganography.pdf` files.
+together with the commit hash. The processor reuses that timestamp
+across the output and derives the `Doc-ID` from its SHA-256. With identical
+source bytes and settings, consecutive unencrypted runs against the same
+`HEAD` produce **byte-identical** `*_steganography.pdf` files.
 
 ```bash
 # Reproducible build — byte-identical PDFs across consecutive runs

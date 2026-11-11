@@ -20,12 +20,11 @@ from typing import Any
 from infrastructure.project._hosted_api import fixed_hosted_api
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.project.public_acceptance_evidence import evidence_directory, write_json
-from infrastructure.project.public_hosted_origin import (
+from infrastructure.project._hosted_protocol import (
     MAX_ARCHIVE,
-    MAX_LISTING_PAGES,
     WORKFLOW,
     _context,
-    _merge_listing_pages,
+    collect_artifact_pages,
 )
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_cell_scope
@@ -48,6 +47,7 @@ from infrastructure.reporting.native_hosted_transport_archive import (
     _hash,
     _archive,
     _file_identity,
+    is_transport_output,
 )
 
 _COLLECTOR_KEY = object()
@@ -66,10 +66,8 @@ def _receive_native_original_file(
     when one exists. A differing earlier derived/evidence file is never replaced.
     This filesystem helper grants no Source or transport authentication itself.
     """
-    from infrastructure.reporting.native_hosted_original_producer import _mutable_output
-
     label = _path(label)
-    if not _mutable_output(label):
+    if not is_transport_output(label):
         raise ValueError("native hosted extraction refuses authored Source paths")
     target = root / label
     if target.exists() or target.is_symlink():
@@ -342,14 +340,8 @@ def collect_native_hosted_originals(
     steps = [step for step in selected_jobs[0].get("steps", []) if step.get("name") == producer_step]
     if len(steps) != 1 or steps[0].get("status") != "completed" or steps[0].get("conclusion") != "success":
         raise ValueError("native hosted source-declared installed producer step did not pass")
-    pages: list[dict[str, Any]] = []
-    for page in range(1, MAX_LISTING_PAGES + 1):
-        response = api_response("listing", page)
-        pages.append(response)
-        listing = _merge_listing_pages(pages, complete=False)
-        if len(listing["artifacts"]) == listing["total_count"]:
-            break
-    artifacts = _merge_listing_pages(pages, complete=True)["artifacts"]
+    listing, _ = collect_artifact_pages(lambda page: api_response("listing", page))
+    artifacts = listing["artifacts"]
     index_name, shard_prefix = cell_artifact_names(cell)
     selected = {
         row["name"]: row

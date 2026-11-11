@@ -8,9 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.pipeline.single_stage import execute_single_stage
-from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
 from infrastructure.orchestration.discovery import select_project_interactive
-from infrastructure.orchestration.menu import parse_choice_sequence, render_menu
+from infrastructure.orchestration.menu import menu_action, parse_choice_sequence, render_menu
 from infrastructure.orchestration.pipeline_runner import (
     MultiProjectInvocation,
     PipelineInvocation,
@@ -48,16 +47,18 @@ def interactive(
             print()
             return 0
 
-        if raw in {"q", "Q"}:
+        action = menu_action(raw.lower())
+        control = action.control if action is not None else None
+        if control == "quit":
             return 0
-        if raw in {"p", "P"}:
+        if control == "select":
             picked = select_project_interactive(projects, current=current, reader=reader, writer=sys.stdout)
             if picked is None:
                 return 0
             if picked != "all":
                 current = picked
             continue
-        if raw in {"i", "I"}:
+        if control == "info":
             print(f"Current project: {current}")
             continue
 
@@ -71,12 +72,12 @@ def interactive(
 
         for key in keys:
             rc = dispatch_menu_key(key, current, repo_root, runner, stage_runner=stage_runner)
-            if len(keys) == 1 and key == "d":
-                if rc != 0:
-                    print(f"Last operation exited with code {rc}", file=sys.stderr)
-                return rc
             if rc != 0:
                 print(f"Last operation exited with code {rc}", file=sys.stderr)
+            action = menu_action(key)
+            if len(keys) == 1 and action is not None and action.exit_when_alone:
+                return rc
+            if rc != 0:
                 break
 
 
@@ -89,24 +90,17 @@ def dispatch_menu_key(
     stage_runner: Any = None,
 ) -> int:
     """Dispatch one interactive menu key."""
-    if key == "8":
-        return runner.run(PipelineInvocation(project=project, mode="core"))
-    if key == "9":
-        return runner.run(PipelineInvocation(project=project, mode="live"))
-    if key == "f":
-        return runner.run(PipelineInvocation(project=project, skip_infra=True, mode="live"))
-    if key in {"a", "b", "c", "d"}:
-        return runner.run_multi(
-            MultiProjectInvocation(
-                skip_infra=key in {"b", "d"},
-                mode="core" if key in {"c", "d"} else "live",
-            )
-        )
-    if key in MENU_KEY_TO_STAGE:
-        stage = MENU_KEY_TO_STAGE[key]
+    action = menu_action(key)
+    if action is None:
+        return 1
+    if action.section == "pipeline":
+        return runner.run(PipelineInvocation(project=project, skip_infra=action.skip_infra, mode=action.mode))
+    if action.section == "multi":
+        return runner.run_multi(MultiProjectInvocation(skip_infra=action.skip_infra, mode=action.mode))
+    if action.stage is not None:
         if stage_runner is not None:
-            return int(stage_runner(stage, project, repo_root))
-        return int(execute_single_stage(stage, project, repo_root, mode="live" if key in {"6", "7"} else "core"))
+            return int(stage_runner(action.stage, project, repo_root))
+        return int(execute_single_stage(action.stage, project, repo_root, mode=action.mode))
     return 1
 
 

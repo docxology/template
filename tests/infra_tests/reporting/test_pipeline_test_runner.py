@@ -263,35 +263,58 @@ class TestLogDiscoveredTests:
         env = os.environ.copy()
         log_discovered_tests(cmd, tmp_path, env, "integration")
 
-    def test_discovery_forces_serial_collection(self, tmp_path):
-        """The pre-flight count must not schedule tests through xdist."""
+    def test_discovery_forces_serial_collection(self, tmp_path, caplog):
+        """Actual collection uses the selected project and starts no workers."""
+        import json
         import os
         import sys
 
-        probe = tmp_path / "probe.py"
-        argv_path = tmp_path / "argv.txt"
-        probe.write_text(
-            "import pathlib, sys\n"
-            "pathlib.Path(sys.argv[1]).write_text('\\n'.join(sys.argv[2:]), encoding='utf-8')\n"
-            "print('1 test collected')\n",
+        observation = tmp_path / "collection.json"
+        executed = tmp_path / "executed"
+        (tmp_path / "conftest.py").write_text(
+            "import json\n"
+            "from pathlib import Path\n"
+            "def pytest_configure(config):\n"
+            "    print('312 tests collected')\n"
+            f"    Path({str(observation)!r}).write_text(json.dumps(["
+            "str(Path.cwd()), config.option.numprocesses, config.option.looponfail]))\n",
             encoding="utf-8",
         )
-        cmd = [
+        (tmp_path / "test_discovery_cases.py").write_text(
+            "from pathlib import Path\n"
+            f"def test_probe():\n    Path({str(executed)!r}).touch()\n"
+            "def test_unselected():\n    raise AssertionError('unexpected selection')\n",
+            encoding="utf-8",
+        )
+        (tmp_path / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
+        env = os.environ.copy()
+        env["PYTEST_ADDOPTS"] = ""
+        env.pop("PYTEST_DISABLE_PLUGIN_AUTOLOAD", None)
+        env.pop("PYTEST_PLUGINS", None)
+        command = [
             sys.executable,
-            str(probe),
-            str(argv_path),
+            "-B",
+            "-m",
+            "pytest",
             "-n",
-            "4",
+            "2",
             "--dist",
             XDIST_DISTRIBUTION,
-            "--cov=src",
+            "-fq",
+            "-s",
+            "-k",
+            "test_probe",
         ]
-
-        log_discovered_tests(cmd, tmp_path, os.environ.copy(), "parallel probe")
-
-        argv = argv_path.read_text(encoding="utf-8").splitlines()
-        assert argv[-4:] == ["--collect-only", "-n", "0", "--no-cov"]
-        assert "--cov=src" in argv
+        with caplog.at_level(logging.INFO):
+            log_discovered_tests(
+                [*command, "--", "test_discovery_cases.py"],
+                tmp_path,
+                env,
+                "parallel probe",
+            )
+        assert json.loads(observation.read_bytes()) == [str(tmp_path), 0, False]
+        assert "Discovered 1 parallel probe tests" in caplog.text
+        assert not executed.exists()
 
 
 class TestReportSuiteFailure:
@@ -464,7 +487,7 @@ class TestReportResults:
         report = {}
         report_results(0, 1, infra_results, project_results, report, "myproject")
 
-    def test_infra_skipped(self):
+    def test_infra_skipped(self, caplog):
         """Test report when infra tests were not run."""
         infra_results: dict = {}
         project_results = {
@@ -475,7 +498,11 @@ class TestReportResults:
             "execution_phases": {"call": 3.0},
         }
         report = {}
-        report_results(0, 0, infra_results, project_results, report, "myproject")
+        with caplog.at_level(logging.INFO):
+            report_results(0, 0, infra_results, project_results, report, "myproject")
+            report_results(0, 1, infra_results, {"failed": 1, "total": 1}, report, "myproject")
+        assert caplog.text.count("Infrastructure: ⏭ SKIPPED") == 2
+        assert "Infrastructure: ✓ PASSED (0/0" not in caplog.text
 
     def test_collection_errors(self):
         """Test report with collection errors."""
@@ -517,24 +544,28 @@ class TestReportResults:
         report = {}
         report_results(1, 1, infra_results, project_results, report, "myproject")
 
-    def test_success_no_duration(self):
-        """Test success report with zero-duration phases."""
+    def test_success_no_duration(self, caplog):
+        """Absent coverage and a measured zero display distinctly without duration."""
         infra_results = {
             "passed": 5,
             "total": 5,
             "failed": 0,
-            "coverage_percent": 100.0,
             "execution_phases": {},
         }
         project_results = {
             "passed": 5,
             "total": 5,
             "failed": 0,
-            "coverage_percent": 100.0,
+            "coverage_percent": 0.0,
             "execution_phases": {},
         }
         report = {}
-        report_results(0, 0, infra_results, project_results, report, "myproject")
+        with caplog.at_level(logging.INFO):
+            report_results(0, 0, infra_results, project_results, report, "myproject")
+        assert "Coverage:      Infrastructure: N/A | Project: 0.0%" in caplog.text
+        assert "Infrastructure coverage is" not in caplog.text
+        assert "Project coverage is 90.0% below threshold" in caplog.text
+        assert "Duration:" not in caplog.text
 
 
 class TestReportInfraOnlyResults:

@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
     "requests>=2.32.0",
-    "research-project-template==5.0.2",
+    "research-project-template==5.2.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
     # 13.0.0 is the first Pillow release with no open advisory: 12.3.0 carries 130 critical and 598 high alerts in this repository. Do not lower this floor.
@@ -85,7 +85,7 @@ exclude_lines = [
 
 # Compatibility contract for this independent exemplar release.
 [tool.template]
-platform_version = "5.0.2"
+platform_version = "5.2.0"
 tested_python_versions = ["3.14", "3.15"]
 required_unpaid_capabilities = ["local-coordination"]
 

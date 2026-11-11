@@ -25,14 +25,14 @@ __all__ = [
 ]
 
 
-def _deterministic_datetime() -> datetime:
+def _build_datetime(timestamp: str | None = None) -> datetime:
     """Parse :func:`resolve_build_timestamp` back into a UTC :class:`datetime`.
 
     The deterministic timestamp may carry an offset (e.g. ``-08:00``); we
     convert to UTC so downstream ``strftime`` calls remain consistent
     regardless of the committer's local timezone.
     """
-    ts = resolve_build_timestamp()
+    ts = timestamp if timestamp is not None else resolve_build_timestamp()
     try:
         return datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(timezone.utc)
     except ValueError:
@@ -48,6 +48,8 @@ def build_barcode_payload(
     hashes: dict[str, str] | None = None,
     document_id: str = "",
     extra: dict[str, str] | None = None,
+    *,
+    timestamp: str | None = None,
 ) -> str:
     """Build a compact barcode payload string.
 
@@ -59,12 +61,13 @@ def build_barcode_payload(
         hashes: Algorithm -> digest mapping (only first 16 chars used).
         document_id: Unique document identifier.
         extra: Additional key=value pairs.
+        timestamp: Timestamp captured for the document, when provided.
 
     Returns:
         Payload string.
     """
-    timestamp = _deterministic_datetime().strftime("%Y%m%dT%H%M%SZ")
-    parts = [f"T:{title[:60]}", f"TS:{timestamp}"]
+    compact_timestamp = _build_datetime(timestamp).strftime("%Y%m%dT%H%M%SZ")
+    parts = [f"T:{title[:60]}", f"TS:{compact_timestamp}"]
 
     if document_id:
         parts.append(f"ID:{document_id}")
@@ -93,6 +96,8 @@ def build_metadata_qr_text(
     title: str = "",
     authors: list[str] | None = None,
     document_id: str = "",
+    *,
+    timestamp: str | None = None,
     **_kwargs: Any,
 ) -> str:
     """Build compact metadata for the metadata QR code (<=100 chars)."""
@@ -102,7 +107,7 @@ def build_metadata_qr_text(
     if document_id:
         # Use hyphen instead of colon to avoid URI scheme triggering in camera apps
         parts.append(f"Doc-ID {document_id[:16]}")
-    ts = _deterministic_datetime().strftime("%Y-%m-%d")
+    ts = _build_datetime(timestamp).strftime("%Y-%m-%d")
     parts.append(ts)
     return " | ".join(parts)
 
@@ -110,11 +115,13 @@ def build_metadata_qr_text(
 def build_citation_qr_text(
     title: str = "",
     authors: list[str] | None = None,
+    *,
+    timestamp: str | None = None,
     **_kwargs: Any,
 ) -> str:
     """Build a compact citation string (<=100 chars)."""
     author = authors[0] if authors else "Unknown"
-    year = _deterministic_datetime().strftime("%Y")
+    year = _build_datetime(timestamp).strftime("%Y")
     cite = f"{author} ({year}). {title[:50]}."
     return cite[:100]
 

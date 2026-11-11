@@ -23,8 +23,8 @@ from infrastructure.reporting.native_format_joint_source import (
     validate_retained_sdk_closure,
 )
 from infrastructure.reporting.native_full_worker_pdfium import NativePDFiumProvider
-from infrastructure.reporting.native_hosted_original_custody import NativeHostedArtifactCustodian, _hash, _path
-from infrastructure.reporting.native_hosted_original_producer import _mutable_output
+from infrastructure.reporting.native_hosted_original_custody import NativeHostedArtifactCustodian
+from infrastructure.reporting.native_hosted_transport_archive import _hash, _path, is_transport_output
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
@@ -102,7 +102,7 @@ def admit_authenticated_native_originals(
         if native.json_object().get("execution_exit_code") != process.json_object().get("original_exit_code"):
             raise ValueError("authenticated original execution data differs from its independently retained OS result")
         operation = NativeReaderOperation(source, deadline, {scope: original}, {scope: current_provider})
-        reader.native_operation = operation
+        reader.bind_native_operation(operation)
         _, descriptor = validate_original_joint_launch(
             specification.json_object(), specification, process, closure, reader, operation
         )
@@ -110,7 +110,7 @@ def admit_authenticated_native_originals(
         # All original mutable payloads actually consumed by the validators must
         # be members of the exact retrieved producer graph, not local substitutes.
         for snapshot in tuple(reader.snapshots.values()):
-            if _mutable_output(snapshot.relative):
+            if is_transport_output(snapshot.relative):
                 custodian.read_original_file(
                     scope, {"path": snapshot.relative, "sha256": snapshot.sha256, "bytes": len(snapshot.content)}
                 )

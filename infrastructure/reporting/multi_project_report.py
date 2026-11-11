@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.testing.test_runner_outputs import project_test_report_paths
-from infrastructure.core.pipeline.multi_project import validated_project_run
+from infrastructure.reporting.multi_project_readback import iter_project_runs, shared_infrastructure_run
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.multi_project import MultiProjectResult
@@ -52,10 +52,8 @@ def format_multi_project_detailed_report(
 ) -> list[str]:
     """Render a rich end-of-run summary for multi-project execution."""
     n = len(ordered_projects)
-    succ = sum(
-        run is not None and run.complete
-        for run in (validated_project_run(result, project.qualified_name) for project in ordered_projects)
-    )
+    project_runs = tuple(iter_project_runs(result, (project.qualified_name for project in ordered_projects)))
+    succ = sum(project.complete for project in project_runs)
     failed = n - succ
     rate = (succ / n * 100.0) if n else 0.0
     total = float(result.total_duration or 0.0)
@@ -71,9 +69,8 @@ def format_multi_project_detailed_report(
     out.append(f"wall time {_fmt_duration(total)}  ·  avg/project {_fmt_duration(avg)}".center(width))
     if result.infra_test_duration and result.infra_test_duration > 0:
         out.append(f"infrastructure tests: {_fmt_duration(result.infra_test_duration)}".center(width))
-    shared = result.shared_infrastructure_result
-    shared_run = shared.validated_run() if shared is not None else None
-    if shared_run is not None and shared_run.exit_code == result.shared_infrastructure_exit_code:
+    shared_run = shared_infrastructure_run(result)
+    if shared_run is not None:
         for outcome in shared_run.outcomes:
             out.append(
                 f"shared {outcome.stage_key}: {outcome.status.value}; original child exit {outcome.child_exit_code}"
@@ -83,8 +80,8 @@ def format_multi_project_detailed_report(
     pr = result.project_results
     rows: list[tuple[str, str, str, str, str, str]] = []
     project_durations: list[tuple[str, float]] = []
-    for proj in ordered_projects:
-        qn = proj.qualified_name
+    for project in project_runs:
+        qn = project.qualified_name
         stages = pr.get(qn) or []
         total_stages = len(stages)
         ok_stages = sum(1 for s in stages if getattr(s, "success", False))
@@ -94,7 +91,7 @@ def format_multi_project_detailed_report(
         if total_stages == 0:
             icon = "❌"
             fail_at = "no stages ran"
-        elif (run := validated_project_run(result, qn)) is not None and run.complete:
+        elif project.complete:
             icon = "✅"
             fail_at = ""
         else:
@@ -133,8 +130,8 @@ def format_multi_project_detailed_report(
     out.append("STAGE TIMING BREAKDOWN")
     out.append(sep)
     stage_stats: dict[str, dict[str, float]] = {}
-    for proj in ordered_projects:
-        for s in pr.get(proj.qualified_name, []) or []:
+    for project in project_runs:
+        for s in pr.get(project.qualified_name, []) or []:
             name = getattr(s, "stage_name", "?")
             entry = stage_stats.setdefault(name, {"total": 0.0, "n": 0.0, "ok": 0.0})
             entry["total"] += float(getattr(s, "duration", 0.0))
@@ -164,13 +161,13 @@ def format_multi_project_detailed_report(
         out.append(f"  Slowest project: {slowest_name}  ({_fmt_duration(slowest_dur)})")
 
     failure_rows: list[tuple[str, str, str]] = []
-    for proj in ordered_projects:
-        qn = proj.qualified_name
+    for project in project_runs:
+        qn = project.qualified_name
         stages = pr.get(qn) or []
         if not stages:
             failure_rows.append((qn, "pipeline aborted before any stage ran", ""))
             continue
-        if (run := validated_project_run(result, qn)) is not None and run.complete:
+        if project.complete:
             continue
         first_bad = next((s for s in stages if not getattr(s, "success", False)), None)
         if first_bad is None:
@@ -218,11 +215,9 @@ def format_multi_project_detailed_report(
             except ValueError:
                 rel = summary_md
             out.append(f"  Summary report : {rel}")
-        for proj in ordered_projects:
-            qn = proj.qualified_name
-            stages = pr.get(qn) or []
-            run = validated_project_run(result, qn)
-            if run is None or not run.complete:
+        for project in project_runs:
+            qn = project.qualified_name
+            if not project.complete:
                 continue
             pdf_dir = repo_root / "output" / qn
             if pdf_dir.exists():

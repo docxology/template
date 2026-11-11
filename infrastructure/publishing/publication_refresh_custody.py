@@ -15,6 +15,11 @@ import yaml
 
 from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.publishing._publication_refresh_protocol import (
+    gate_commands,
+    generation_commands,
+    successful_command_receipt,
+)
 from infrastructure.publishing.release_provider_graph import current_provider_graph
 from infrastructure.publishing.root_release_contract import root_package_version
 
@@ -256,8 +261,20 @@ def check_footprint(root: Path, plan: dict[str, Any]) -> list[str]:
         root, "diff", "--cached", "--name-only"
     ):
         raise ValueError("refresh Source or index moved before candidate capture")
-    if git(root, "ls-files", "--others", "--exclude-standard", "-z"):
-        raise ValueError("unexpected untracked path prevents complete refresh capture")
+    untracked = git(root, "ls-files", "--others", "--exclude-standard", "-z")
+    if untracked:
+        labels = [label for label in untracked.split(b"\0") if label]
+        details = {
+            "count": len(labels),
+            "paths": [label[:256].decode("utf-8", errors="backslashreplace") for label in labels[:16]],
+            "path_bytes_clipped": any(len(label) > 256 for label in labels[:16]),
+            "paths_omitted": max(0, len(labels) - 16),
+            "nul_listing_sha256": hashlib.sha256(untracked).hexdigest(),
+        }
+        raise ValueError(
+            "unexpected untracked path prevents complete refresh capture: "
+            + json.dumps(details, ensure_ascii=True, sort_keys=True)
+        )
     changed = [p.decode() for p in git(root, "diff", "--name-only", "-z", plan["base_commit"]).split(b"\0") if p]
     for path in changed:
         record = plan["allowed"].get(path)
@@ -310,41 +327,11 @@ def finish_review(root: Path, directory: Path) -> Path:
     ):
         raise ValueError("committed candidate changed during verification")
     for label, arguments in gate_commands(root, directory).items():
-        receipt = json.loads((directory / "diagnostics" / f"{label}.exit.json").read_bytes())
-        if (
-            type(receipt.get("returncode")) is not int
-            or receipt["returncode"] != 0
-            or receipt.get("source_commit") != candidate["commit"]
-            or receipt.get("argv") != arguments
-            or receipt.get("process", {}).get("accepted") is not True
-            or receipt.get("original_exit_code") != 0
-            or any(
-                receipt.get(stream + "_sha256")
-                != hashlib.sha256((directory / "diagnostics" / f"{label}.{stream}").read_bytes()).hexdigest()
-                for stream in ("stdout", "stderr")
-            )
-        ):
+        if not successful_command_receipt(directory, label, arguments, candidate["commit"]):
             raise ValueError("both original gates must succeed on the committed candidate")
-    if plan["dependent_analysis"]:
-        from infrastructure.publishing.publication_refresh import generation_commands
-
-        for scope in plan["dependent_analysis"]:
-            for label, arguments in generation_commands(root, plan, [scope]):
-                original = json.loads((directory / "diagnostics" / f"{label}.exit.json").read_bytes())
-                if (
-                    type(original.get("returncode")) is not int
-                    or original["returncode"] != 0
-                    or original.get("original_exit_code") != 0
-                    or original.get("source_commit") != plan["base_commit"]
-                    or original.get("argv") != arguments
-                    or original.get("process", {}).get("accepted") is not True
-                    or any(
-                        original.get(stream + "_sha256")
-                        != hashlib.sha256((directory / "diagnostics" / f"{label}.{stream}").read_bytes()).hexdigest()
-                        for stream in ("stdout", "stderr")
-                    )
-                ):
-                    raise ValueError("dependent analysis and refresh require their actual successful original commands")
+    for label, arguments in generation_commands(root, plan, list(plan["dependent_analysis"])):
+        if not successful_command_receipt(directory, label, arguments, plan["base_commit"]):
+            raise ValueError("dependent analysis and refresh require their actual successful original commands")
     changes = []
     paths = [p.decode() for p in git(root, "diff", "--name-only", "-z", plan["base_commit"], "HEAD").split(b"\0") if p]
     for path in paths:
@@ -380,35 +367,6 @@ def finish_review(root: Path, directory: Path) -> Path:
             )
     (review / "SHA256SUMS").write_text("\n".join(sums) + "\n")
     return review
-
-
-def gate_commands(root: Path, directory: Path) -> dict[str, list[str]]:
-    """The two exact existing strict all-public gates, without altered policy."""
-    python = str(root / ".venv/bin/python")
-    return {
-        "exemplar-config": [python, "scripts/audit/check_exemplar_configs.py"],
-        "publication-gate": [
-            python,
-            "scripts/audit/check_publication_outputs.py",
-            "--all-public",
-            "--strict",
-            "--jobs",
-            "4",
-            "--receipts",
-            str(directory / "diagnostics/publication-gate"),
-        ],
-        "rendered-audit": [
-            python,
-            "-m",
-            "infrastructure.validation.cli",
-            "publication-audit",
-            "--all-public",
-            "--strict",
-            "--rendered",
-            "--format",
-            "json",
-        ],
-    }
 
 
 __all__ = [

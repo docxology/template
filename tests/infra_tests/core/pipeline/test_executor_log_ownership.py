@@ -192,3 +192,35 @@ def test_actual_closed_banner_stream_releases_constructed_executor(tmp_path: Pat
     assert tuple(logging.getLogger().handlers) == root_handlers
     assert tuple(observability.logger.handlers) == module_handlers
     assert observability.logger.level == module_level
+
+
+def test_oldest_executor_closes_without_resetting_live_peer_logging(tmp_path: Path) -> None:
+    import logging
+
+    from infrastructure.core.pipeline import observability
+    from infrastructure.core.pipeline.executor import PipelineExecutor
+    from infrastructure.core.pipeline.types import PipelineConfig
+
+    scaffold_pipeline(tmp_path, ("first", "second"))
+    logger = observability.logger
+    original_level = logger.level
+    executors = []
+    logger.setLevel(logging.WARNING)
+    try:
+        first = PipelineExecutor(PipelineConfig("first", tmp_path, clean=False, skip_infra=True))
+        executors.append(first)
+        second = PipelineExecutor(PipelineConfig("second", tmp_path, clean=False, skip_infra=True))
+        executors.append(second)
+        assert first.preview_stage_names() == second.preview_stage_names() == ("Project Analysis",)
+
+        first.close()
+        assert logger.level == logging.DEBUG
+        logger.debug("SURVIVING_OWNER_DEBUG")
+        assert "SURVIVING_OWNER_DEBUG" in second.log_file.read_text()
+
+        second.close()
+        assert logger.level == logging.WARNING
+    finally:
+        for executor in reversed(executors):
+            executor.close()
+        logger.setLevel(original_level)

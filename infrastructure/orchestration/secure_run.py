@@ -38,6 +38,7 @@ class SecureRunOptions:
     mode: str = "core"
     resume: bool = False
     validate_kmyth: bool = False
+    deterministic: bool | None = None
 
 
 def _load_steganography() -> tuple[Any, Any]:  # pragma: no cover - import indirection
@@ -127,6 +128,7 @@ def apply_steganography_to_project(
     processor_factory: Any = None,
     force_secure: bool = False,
     strict_config: bool = False,
+    deterministic: bool | None = None,
 ) -> int:
     """Apply steganography to all PDFs in a single project.
 
@@ -136,6 +138,8 @@ def apply_steganography_to_project(
         processor_factory: Optional factory ``(config) -> processor`` used by
             tests. The default uses
             :class:`infrastructure.steganography.SteganographyProcessor`.
+        deterministic: Override steganography build identity mode for this call.
+            The default honors the legacy environment setting.
 
     Returns:
         ``0`` on success, ``1`` on failure, ``2`` if no PDFs were found.
@@ -153,7 +157,14 @@ def apply_steganography_to_project(
         logger.warning("No PDF output directory for %s", project_qualified_name)
         return 2
 
-    pdfs = [p for p in pdf_dir.glob("*.pdf") if "_steganography" not in p.stem]
+    from infrastructure.steganography.artifact_paths import (
+        DEFAULT_OUTPUT_SUFFIX,
+        custom_secure_sources,
+        hash_manifest_path,
+        is_secure_pdf,
+    )
+
+    pdfs = [path for path in pdf_dir.glob("*.pdf") if not is_secure_pdf(path)]
     if not pdfs:
         logger.warning("No PDFs found in %s", pdf_dir)
         return 2
@@ -163,6 +174,24 @@ def apply_steganography_to_project(
     except Exception as exc:  # noqa: BLE001 - strict mode must fail closed
         logger.error("Could not load secure config for %s: %s", project_qualified_name, exc)
         return 1
+
+    steg_mapping = _effective_steganography_config(repo_root, config_yaml, force_secure=force_secure)
+    output_suffix = steg_mapping.get("output_suffix", DEFAULT_OUTPUT_SUFFIX)
+    custom_output = (
+        steg_mapping.get("enabled") is True
+        and isinstance(output_suffix, str)
+        and bool(output_suffix)
+        and output_suffix != DEFAULT_OUTPUT_SUFFIX
+    )
+    if custom_output:
+        try:
+            pdfs = custom_secure_sources(pdfs, output_suffix)
+        except (OSError, ValueError) as exc:
+            logger.error("Could not admit custom secure PDF outputs for %s: %s", project_qualified_name, exc)
+            return 1
+        if not pdfs:
+            logger.warning("No PDFs found in %s", pdf_dir)
+            return 2
 
     paper = config_yaml.get("paper")
     paper_mapping = paper if isinstance(paper, dict) else {}
@@ -176,18 +205,18 @@ def apply_steganography_to_project(
     keywords = config_yaml.get("keywords", [])
     if not isinstance(keywords, list):
         keywords = []
-    steg_mapping = _effective_steganography_config(repo_root, config_yaml, force_secure=force_secure)
 
     if processor_factory is None:  # pragma: no cover - heavy reportlab path
         SteganographyConfig, SteganographyProcessor = _load_steganography()
         steg_config = SteganographyConfig.from_dict(steg_mapping)
-        processor = SteganographyProcessor(steg_config)
+        processor = SteganographyProcessor(steg_config, repo_root=repo_root, protect_output=custom_output)
     else:
         processor = processor_factory(steg_mapping)
 
+    process_options = {"deterministic": deterministic} if deterministic is not None else {}
     success_count = 0
     for pdf_path in pdfs:
-        manifest_path = pdf_path.with_suffix(".hashes.json")
+        manifest_path = hash_manifest_path(pdf_path)
         manifest_mtime_before = manifest_path.stat().st_mtime_ns if manifest_path.exists() else None
         try:
             result = processor.process(
@@ -196,6 +225,7 @@ def apply_steganography_to_project(
                 authors=authors,
                 keywords=keywords,
                 author_emails=author_emails,
+                **process_options,
             )
             if force_secure:
                 result_path = Path(result) if isinstance(result, (str, Path)) else None
@@ -282,6 +312,7 @@ def run_secure_pipeline(
             processor_factory=processor_factory,
             force_secure=True,
             strict_config=True,
+            deterministic=options.deterministic,
         )
         if rc == 1:
             overall_status = 1
