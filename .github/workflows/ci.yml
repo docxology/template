@@ -143,6 +143,9 @@ jobs:
           dependency-group: installed-build
       - run: uv sync --locked --group installed-build
       - uses: ./.github/actions/setup-meta-provider
+      - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: converter
       - name: Prepare genuine PDF raster tools for behavioral controls
         run: |
           set -euo pipefail
@@ -150,9 +153,6 @@ jobs:
           sudo apt-get install -y --no-install-recommends poppler-utils
           pdftoppm -v
           pdffonts -v
-      - uses: ./.github/actions/setup-acceptance-documents
-        with:
-          mode: converter
       - name: Prepare actual TeX for the selected routine compiler controls
         if: matrix.tex
         run: |
