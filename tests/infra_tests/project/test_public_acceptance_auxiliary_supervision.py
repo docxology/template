@@ -481,3 +481,64 @@ def test_interrupted_supervisor_still_cleans_detached_owned_children(tmp_path: P
             wrapper.wait(timeout=5)
         for pid, code in zip(owned_pids, (command, detached), strict=False):
             _remove_owned_control(pid, code)
+
+
+@pytest.mark.skipif(sys.platform != "linux", reason="procfs is required for the non-dumpable control")
+def test_preexisting_non_dumpable_process_is_outside_guardian_start_scope() -> None:
+    import select
+
+    environment, token = build_bounded_run_env({"PATH": os.defpath})
+    body = """
+import ctypes,os,time
+libc=ctypes.CDLL(None,use_errno=True)
+libc.prctl.argtypes=[ctypes.c_int,*([ctypes.c_ulong]*4)]
+libc.prctl.restype=ctypes.c_int
+if libc.prctl(4,0,0,0,0)!=0:
+    raise OSError(ctypes.get_errno(),'PR_SET_DUMPABLE failed')
+print(os.getpid(),flush=True)
+time.sleep(30)
+"""
+    restricted = subprocess.Popen(
+        [sys.executable, "-I", "-c", body],
+        env=environment,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    try:
+        assert restricted.stdout is not None
+        ready = bytearray()
+        deadline = time.monotonic() + 10
+        while b"\n" not in ready:
+            remaining = deadline - time.monotonic()
+            assert remaining > 0, "non-dumpable child did not become ready"
+            assert select.select([restricted.stdout], [], [], remaining)[0]
+            chunk = os.read(restricted.stdout.fileno(), 64)
+            assert chunk, "non-dumpable child exited before readiness"
+            ready.extend(chunk)
+            assert len(ready) <= 64
+        assert ready == f"{restricted.pid}\n".encode()
+        assert restricted.poll() is None
+        birth = time.monotonic()
+        # A pre-existing non-dumpable daemon cannot hold this run's token and is
+        # outside the guardian start scope, so it cannot fail final census.
+        assert (
+            observe_bounded_run_processes(
+                token,
+                deadline=time.monotonic() + 10,
+                started_monotonic=birth + 5,
+            )
+            == set()
+        )
+        # The same unreadable newer child remains a strict refusal when it is
+        # inside the guardian start scope.
+        with pytest.raises(RuntimeError) as refused:
+            observe_bounded_run_processes(token, deadline=time.monotonic() + 10, started_monotonic=birth - 1)
+        assert isinstance(refused.value.__cause__, PermissionError)
+        assert refused.value.__cause__.errno == 13
+    finally:
+        if restricted.stdout is not None:
+            restricted.stdout.close()
+        restricted.kill()
+        restricted.wait(timeout=5)
