@@ -26734,15 +26734,17 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-      "source_sha256": "4b2c20477f0d4f777f44507b98b7051e28c86214f9963fc52a5be62de743d742",
+      "source_sha256": "064d54e57feded15217d539ea68b3c88f7cb69f62a698f0f9775573678721bb0",
       "families": [
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_cold_selected_root_runtime_overrides_missing_or_wrong_ambient_nomination",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_popen_environment_matches_held_source_commitment_and_refuses_changed_digest",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_genuine_pandoc_terminal_success_and_fail_closed_controls",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_missing_root_nomination_still_blocks_actual_prepared_runtime",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_time",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_keeps_existing_phase_ceiling_with_a_later_original_deadline",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline"
       ],
-      "family_observations_sha256": "c59efd9e784b268c3e25070d22a2bdd2dc1c9bcee4dc131a004dfa5620d0941a",
+      "family_observations_sha256": "d63211a2712bf33fb24c6e8782b1a93aa16a0f0b0ab668e468ef38149a2849c4",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26751,7 +26753,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "4b2c20477f0d4f777f44507b98b7051e28c86214f9963fc52a5be62de743d742",
+          "source_sha256": "064d54e57feded15217d539ea68b3c88f7cb69f62a698f0f9775573678721bb0",
           "line": 1
         }
       ]
@@ -28045,7 +28047,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-      "source_sha256": "d494837fe5f69c975a6ef6abae2052cabedfd0cfe2e607ba05b47166a026000a",
+      "source_sha256": "6c04ed821c46860553bd5f287694b86a394c8882cde554d41ebcd623ebaa5415",
       "families": [
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_arbitrary_worker_module_is_refused_before_any_execution",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_data_packet_cannot_open_a_source_owner_stage_directory_or_reader",
@@ -28062,9 +28064,11 @@
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_scope_data_nomination_refuses_missing_pair_unknown_scope_and_outside_lane",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_scope_nomination_is_optional_paired_data_and_preserves_physical_identity",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_scope_nomination_refuses_symbolic_parent_directory",
-        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_script_conventions_are_data_with_distinct_pipeline_and_native_run_ids"
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_script_conventions_are_data_with_distinct_pipeline_and_native_run_ids",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_standalone_mermaid_analysis_leaf_rejects_identity_mismatches",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_standalone_mermaid_requires_exact_analysis_leaf_not_parent_or_render"
       ],
-      "family_observations_sha256": "f63c3026f8edd9ba51a9f8dd38e29a1690c93e31d35e1611a6ed7380697e3c23",
+      "family_observations_sha256": "0dd4b05fe7ac0ca211e558523843d97e9850ec0618d25834e245c9ce6efcb813",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -28073,7 +28077,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-          "source_sha256": "d494837fe5f69c975a6ef6abae2052cabedfd0cfe2e607ba05b47166a026000a",
+          "source_sha256": "6c04ed821c46860553bd5f287694b86a394c8882cde554d41ebcd623ebaa5415",
           "line": 1
         }
       ]
