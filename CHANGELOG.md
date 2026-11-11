@@ -43,7 +43,8 @@ locks.
 - Preserve the reviewed Ubuntu APT mirror allowlist while appending lower-priority
   EC2 regional fallbacks so hosted document setup can continue through primary
   archive DNS failures. Run converter preparation before CI's raster and TeX APT
-  installs so those steps use the same policy.
+  installs so those steps use the same policy, and bound each connection attempt
+  so a stalled mirror falls through to the next reviewed row.
 ### Fixes carried forward from main
 
 - Apply generated project-test exclusions to the native pytest session's actual

@@ -149,16 +149,16 @@ jobs:
       - name: Prepare genuine PDF raster tools for behavioral controls
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends poppler-utils
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends poppler-utils
           pdftoppm -v
           pdffonts -v
       - name: Prepare actual TeX for the selected routine compiler controls
         if: matrix.tex
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex lmodern texlive-fonts-recommended
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends texlive-xetex lmodern texlive-fonts-recommended
           xelatex --version
           kpsewhich article.cls
           kpsewhich pzdr.tfm
