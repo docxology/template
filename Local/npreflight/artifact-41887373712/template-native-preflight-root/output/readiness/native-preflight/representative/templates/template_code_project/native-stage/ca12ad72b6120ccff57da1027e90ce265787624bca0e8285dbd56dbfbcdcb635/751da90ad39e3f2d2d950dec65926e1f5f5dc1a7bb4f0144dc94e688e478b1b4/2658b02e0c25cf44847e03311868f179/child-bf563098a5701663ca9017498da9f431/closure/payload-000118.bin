@@ -1,0 +1,53 @@
+"""OS-appropriate installation command generation.
+
+Standalone module with no infrastructure dependencies — safe to import from
+exceptions.py without creating circular import cycles.
+"""
+
+import shutil
+from collections.abc import Callable
+
+
+def build_install_commands(
+    dependency: str,
+    *,
+    system: str | None = None,
+    which: Callable[[str], str | None] = shutil.which,
+) -> list[str]:
+    """Return OS-appropriate installation commands for a dependency.
+
+    Args:
+        dependency: The package/tool name to install.
+        system: Override the platform system name (e.g. ``"darwin"``).
+            Defaults to ``platform.system().lower()``.
+        which: Executable resolver; injectable for deterministic platform tests.
+    """
+    import platform
+
+    commands: list[str] = []
+    if system is None:
+        system = platform.system().lower()
+    else:
+        system = system.lower()
+
+    if system == "linux":
+        if which("apt-get"):
+            commands.append(f"sudo apt-get update && sudo apt-get install -y {dependency}")
+        elif which("yum"):
+            commands.append(f"sudo yum install -y {dependency}")
+        elif which("dnf"):
+            commands.append(f"sudo dnf install -y {dependency}")
+        elif which("pacman"):
+            commands.append(f"sudo pacman -S {dependency}")
+        else:
+            commands.append(f"# Install {dependency} using your package manager")
+    elif system == "darwin":
+        if which("brew"):
+            commands.append(f"brew install {dependency}")
+        else:
+            commands.append(f"# Install {dependency} using Homebrew: brew install {dependency}")
+    else:
+        commands.append(f"# Install {dependency} using your system's package manager")
+
+    commands.append(f"which {dependency}  # Verify installation")
+    return commands

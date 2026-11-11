@@ -1,0 +1,1 @@
+{"analysis_nonce": "f90b043b48284efab7830e4663e9a235", "completion_authorized": false, "original_exit_code": 0, "pid": 35114, "request_digest": "1ab3820b28d957969ae100b7dc4f9c26e125d00aac2bc22a95f1d79d914fd58b", "run_id": "c1d845afd8ca444ca4629e4f89d5239a", "schema": "template-analysis-original-checkpoint/1", "stage_key": "hydration:scripts/z_generate_manuscript_variables.py"}

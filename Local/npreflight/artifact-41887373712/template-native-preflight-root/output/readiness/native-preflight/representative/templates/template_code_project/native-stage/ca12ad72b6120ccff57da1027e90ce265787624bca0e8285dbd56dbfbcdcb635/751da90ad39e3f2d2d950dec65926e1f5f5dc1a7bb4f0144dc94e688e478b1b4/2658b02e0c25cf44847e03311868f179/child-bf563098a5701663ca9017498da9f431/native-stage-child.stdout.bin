@@ -1,0 +1,13 @@
+
+==================================================
+STAGE 03: Render PDF (Project: templates/template_code_project)
+==================================================
+  Resource usage (PDF rendering stage start): Memory: 564 MB
+Executing PDF rendering pipeline for project 'templates/template_code_project'...
+Hydrating manuscript variables before render: z_generate_manuscript_variables.py
+Using manuscript hydration interpreter: /home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/bin/python
+Manuscript hydration timed_out (original child exit 0): Child decided 124 while its own clock was intact (the clauses above name the expired envelope); actual native ToolAPI retention exceeded its original finite deadline; analysis deadline passed during finalisation (not the cause of a completed stage); evidence deadline passed during finalisation (not the cause of a completed stage)
+PDF rendering failed - check logs for details
+  Resource usage (PDF rendering stage end): Memory: 573 MB
+STAGE_CHILD_OBSERVATION_V1 c82527a4192730829cb83b09562b1980f98ff4c3bcdd812c21886845793cb345 ba89dba76d0111c1019bae9859c4b040a12d30debd4967a1e02c18c3e7825291 3ffb2b6780f4457f8fd0744da48f522d bf563098a5701663ca9017498da9f431 124
+STAGE_CHILD_CLOSURE_V1 2ab576c0024e6006e1078426c73803b94afee7d34054e7b6be93dd7eb770456e

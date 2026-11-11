@@ -1,0 +1,66 @@
+{
+  "caller_deadline_monotonic": 12386.719108468,
+  "command": [
+    "/usr/bin/pdffonts",
+    "-v"
+  ],
+  "custody_refused": false,
+  "diagnostic": "",
+  "environment_digest": "8da1980dff361f9c13b8550f597f3be0aae9686bd469ad2fa0082485e266bed3",
+  "executable": "/usr/bin/pdffonts",
+  "executable_identity_after": {
+    "ctime_ns": 1793816988019998500,
+    "device": 2049,
+    "inode": 91811,
+    "links": 1,
+    "mode": 33261,
+    "mtime_ns": 1792150126000000000,
+    "size": 23064
+  },
+  "executable_identity_before": {
+    "ctime_ns": 1793816988019998500,
+    "device": 2049,
+    "inode": 91811,
+    "links": 1,
+    "mode": 33261,
+    "mtime_ns": 1792150126000000000,
+    "size": 23064
+  },
+  "executable_observation_after": {
+    "path": "/usr/bin/pdffonts",
+    "schema_version": "template-native-executable-observation-v1",
+    "sha256": "16e9eff7a0751b868e6a06bff8c993663186328dfdf909acc0cd1952171f9379"
+  },
+  "executable_observation_before": {
+    "path": "/usr/bin/pdffonts",
+    "schema_version": "template-native-executable-observation-v1",
+    "sha256": "16e9eff7a0751b868e6a06bff8c993663186328dfdf909acc0cd1952171f9379"
+  },
+  "executable_sha256": "16e9eff7a0751b868e6a06bff8c993663186328dfdf909acc0cd1952171f9379",
+  "exit_code": 0,
+  "native_process_artifact": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/tool-version-3.native-process.json",
+    "sha256": "8a82f9a3731c0d76f3d4c73ed858c5f982f573d7e9025f29ba7b678aaad627dc"
+  },
+  "original_deadline_monotonic": 2003.239817419,
+  "original_exit_code": 0,
+  "owner_pid": 13077,
+  "pid": 17476,
+  "purpose": "tool-version-3",
+  "raw_stderr": {
+    "bytes": 144,
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/tool-version-3.stderr.bin",
+    "sha256": "eb8a8db4f312699827ca4d7c2d095275e9bd42440a219fc48ae95cd10bb23fbd"
+  },
+  "raw_stdout": {
+    "bytes": 0,
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/tool-version-3.stdout.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+  "schema_version": "template-native-tool-execution-v3",
+  "stderr": "pdffonts version 24.02.0\nCopyright 2005-2024 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011, 2022 Glyph & Cog, LLC\n",
+  "stdout": "",
+  "timed_out": false,
+  "tool": "pdffonts"
+}

@@ -1,0 +1,433 @@
+"""Helpers for breakable monospace spans and code blocks in generated LaTeX."""
+
+from __future__ import annotations
+
+import re
+import string
+
+_TEXTTT_RE = re.compile(r"\\texttt\{(?P<value>[^{}]+)\}")
+_PANDOC_REF_RE = re.compile(r"\{\[\}@(?P<target>[^{}]+)\{\]\}")
+_BREAKTT_PREAMBLE = r"""
+\IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{}
+\providecommand{\seqsplit}[1]{#1}
+\protected\def\breakseq#1{\seqsplit{#1}}
+\protected\def\breaktt#1{\begingroup\ttfamily\seqsplit{#1}\endgroup}
+""".strip()
+# fvextra adds break opportunities during typesetting, without changing code
+# bytes or reducing the font. Pandoc groups highlighted tokens inside macros;
+# wrapping inside those groups is necessary for a long YAML string to fit.
+# Lowercase verbatim is otherwise independent of FancyVerb's global settings.
+VERBATIM_WRAP_PREAMBLE = r"""
+\usepackage{fvextra}
+\fvset{breaklines=true,breakanywhere=true,breaknonspaceingroup=true,breaksymbolleft={},breaksymbolright={},breakanywheresymbolpre={},breakanywheresymbolpost={}}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+""".strip()
+
+_BREAKABLE_LITERALS = (
+    r"MILD\_SURPRISE",
+    "CATASTROPHIC",
+)
+LONG_TEXTTT_BREAK_MIN_CHARACTERS = 16
+_SIMPLE_TEXTTT_SOURCE_CHARACTERS = frozenset(string.ascii_letters + string.digits + ' !"#$%&()*+,-./:;=?@_')
+_SIMPLE_LATEX_TEXTTT_ESCAPE_RE = re.compile(r"\\([#$%&_])")
+_SIMPLE_LATEX_TEXTTT_CONTROL_SPACE_RE = re.compile(r"\\ ")
+
+
+def long_texttt_source_is_breakable(
+    value: str,
+    *,
+    min_chars: int = LONG_TEXTTT_BREAK_MIN_CHARACTERS,
+) -> bool:
+    """Return whether Pandoc emits a ``texttt`` body this pass can rewrite.
+
+    This allow-list is the exact printable-ASCII subset that Pandoc serializes
+    inside one simple, brace-free ``\\texttt{...}`` body. Apostrophes, square
+    brackets, and the other TeX-special literals become braced commands. Pandoc
+    serializes an ordinary source space as the brace-free control-space
+    ``\\ ``; the downstream decoder and source predicate intentionally share
+    that exact case. Ordinary identifiers, paths, punctuation, spaces, and
+    simple escapes such as underscores remain eligible.
+    """
+
+    return len(value) >= min_chars and all(character in _SIMPLE_TEXTTT_SOURCE_CHARACTERS for character in value)
+
+
+def _simple_latex_texttt_source(value: str) -> str | None:
+    """Recover source characters from one regex-safe Pandoc ``texttt`` body.
+
+    The outer matcher deliberately excludes braces. Pandoc's simple escapes
+    for ``#``, ``$``, ``%``, ``&``, and ``_`` therefore remain the only TeX
+    syntax accepted here. A residual backslash means the serialized body is
+    outside the same narrow contract used by the source-AST estimator.
+    """
+
+    source = _SIMPLE_LATEX_TEXTTT_CONTROL_SPACE_RE.sub(" ", value)
+    source = _SIMPLE_LATEX_TEXTTT_ESCAPE_RE.sub(r"\1", source)
+    return None if "\\" in source else source
+
+
+def _ensure_breaktt_preamble(tex_content: str) -> str:
+    if r"\protected\def\breaktt" in tex_content:
+        return tex_content
+    begin_doc = tex_content.find(r"\begin{document}")
+    if begin_doc <= 0:
+        return tex_content
+    return tex_content[:begin_doc] + _BREAKTT_PREAMBLE + "\n" + tex_content[begin_doc:]
+
+
+def make_long_texttt_breakable(
+    tex_content: str,
+    *,
+    min_chars: int = LONG_TEXTTT_BREAK_MIN_CHARACTERS,
+) -> tuple[str, int]:
+    r"""Convert long ``\texttt{...}`` spans to a breakable monospace macro.
+
+    Pandoc emits inline code as ``\texttt{...}``, which is intentionally
+    unbreakable.  That is desirable for short identifiers but a common source
+    of overfull boxes in narrow table columns and dense slides — not only for
+    paths and globs but also for long separator-less CamelCase identifiers
+    (e.g. ``MutatingSubsystemRule``, ``SingletonAccessRule``), which carry no
+    slash/underscore/dot to break on and therefore run off the right margin.
+    This function rewrites every monospace span above a small length threshold
+    and injects the macro required to typeset it. ``\seqsplit`` only *adds*
+    break opportunities — a span that already fits is rendered unchanged and no
+    characters are inserted — so spans that copy cleanly stay copyable.
+    """
+    replacements = 0
+
+    def _replace(match: re.Match[str]) -> str:
+        nonlocal replacements
+        value = match.group("value")
+        source = _simple_latex_texttt_source(value)
+        if source is None or not long_texttt_source_is_breakable(source, min_chars=min_chars):
+            return match.group(0)
+        replacements += 1
+        return rf"\breaktt{{{value}}}"
+
+    updated = _TEXTTT_RE.sub(_replace, tex_content)
+    if replacements:
+        updated = _ensure_breaktt_preamble(updated)
+    return updated, replacements
+
+
+_PANDOC_PARAGRAPH_COLUMN = (
+    r">\{\\(?:raggedright|raggedleft|centering)\\arraybackslash\}"
+    r"p\{\(\\linewidth - [0-9]{1,3}\\tabcolsep\) \* \\real\{(?:0\.[0-9]{1,6}|1\.0{1,6})\}\}"
+)
+_PANDOC_PARAGRAPH_COLUMNS = re.compile(r"@\{\}\s*(?:" + _PANDOC_PARAGRAPH_COLUMN + r"\s*){2,32}@\{\}")
+_PLAIN_TABLE_CELL = re.compile(r"(?:[A-Za-z0-9 .,;:!?()/=+@'\"-]|\\_)*")
+_PLAIN_TABLE_TOKEN = re.compile(r"(?<![A-Za-z0-9\\])[A-Za-z0-9]+(?:[./]|\\_)[A-Za-z0-9./-]*(?:(?:\\_)[A-Za-z0-9./-]*)*")
+_TABLE_STRUCTURE = frozenset(
+    (
+        r"\toprule\noalign{}",
+        r"\midrule\noalign{}",
+        r"\bottomrule\noalign{}",
+        r"\endfirsthead",
+        r"\endhead",
+        r"\endlastfoot",
+        r"\endfoot",
+    )
+)
+_RAW_TEX_ENVIRONMENTS = frozenset(("verbatim", "Verbatim", "Highlighting", "lstlisting", "minted"))
+_TEX_COMMAND = re.compile(r"\\(?:[A-Za-z]+|.)")
+_TEX_ENVIRONMENT = re.compile(r"\\(begin|end)\{([^{}\\\r\n]{1,64})\}")
+_PANDOC_TABLE_COMMANDS = frozenset(
+    (
+        r"\begin",
+        r"\end",
+        r"\caption",
+        r"\label",
+        r"\tabularnewline",
+        r"\toprule",
+        r"\midrule",
+        r"\bottomrule",
+        r"\noalign",
+        r"\raggedright",
+        r"\raggedleft",
+        r"\centering",
+        r"\linewidth",
+        r"\endfirsthead",
+        r"\endhead",
+        r"\endfoot",
+        r"\endlastfoot",
+        r"\_",
+        r"\\",
+    )
+)
+
+
+def _simple_table_body(text: str) -> bool:
+    """Abstain on math, comments, raw content or unknown commands anywhere."""
+    if "$" in text or "%" in text:
+        return False
+    if any(match[0] not in _PANDOC_TABLE_COMMANDS for match in _TEX_COMMAND.finditer(text)):
+        return False
+    if not all(match[1] == "minipage" for match in re.finditer(r"\\(?:begin|end)\{([^{}]*)\}", text)):
+        return False
+    depth = 0
+    environments = 0
+    index = 0
+    while index < len(text):
+        if text[index] == "\\":
+            environment = _TEX_ENVIRONMENT.match(text, index)
+            if environment:
+                environments += 1 if environment[1] == "begin" else -1
+                if not 0 <= environments <= 8:
+                    return False
+                index = environment.end()
+                continue
+            command = _TEX_COMMAND.match(text, index)
+            if command:
+                if command[0] in (r"\begin", r"\end"):
+                    return False
+                if command[0] == r"\\" and (depth or environments):
+                    return False
+                index = command.end()
+                continue
+        if text[index] == "{":
+            depth += 1
+        elif text[index] == "}":
+            depth -= 1
+        if not 0 <= depth <= 8:
+            return False
+        index += 1
+    return depth == environments == 0
+
+
+def _unescaped_delimiter(text: str, delimiter: str, start: int) -> int:
+    while start < len(text):
+        if text.startswith(delimiter, start):
+            return start
+        if text[start] == "%":
+            newline = text.find("\n", start)
+            if newline < 0:
+                return -1
+            start = newline + 1
+        else:
+            start += 2 if text[start] == "\\" else 1
+    return -1
+
+
+def _balanced_table_columns(text: str, start: int) -> int | None:
+    """Read one finite, balanced column specification, never arbitrary TeX."""
+    depth = 0
+    for index in range(start, min(len(text), start + 4096)):
+        character = text[index]
+        if character == "{" and (index == 0 or text[index - 1] != "\\"):
+            depth += 1
+            if depth > 8:
+                return None
+        elif character == "}" and (index == 0 or text[index - 1] != "\\"):
+            depth -= 1
+            if depth == 0:
+                return index + 1
+    return None
+
+
+def _plain_paragraph_tables(text: str) -> list[tuple[int, int, int]]:
+    """Locate top-level Pandoc tables outside groups, math and raw environments."""
+    ranges: list[tuple[int, int, int]] = []
+    environments: list[str] = []
+    depth = 0
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character == "%":
+            end = text.find("\n", index)
+            index = len(text) if end < 0 else end + 1
+            continue
+        if character == "$" or text.startswith((r"\(", r"\["), index):
+            delimiter = "$$" if text.startswith("$$", index) else "$"
+            if character == "\\":
+                delimiter = r"\)" if text.startswith(r"\(", index) else r"\]"
+            end = _unescaped_delimiter(text, delimiter, index + (2 if delimiter != "$" else 1))
+            if end < 0:
+                break
+            index = end + len(delimiter)
+            continue
+        if character == "\\":
+            verb = re.match(r"\\verb\*?([^A-Za-z\s])", text[index : index + 8])
+            if verb:
+                end = text.find(verb[1], index + len(verb[0]))
+                if end < 0:
+                    break
+                index = end + 1
+                continue
+            environment = _TEX_ENVIRONMENT.match(text, index)
+            if environment:
+                operation, name = environment.groups()
+                after = index + len(environment[0])
+                if operation == "begin" and name.removesuffix("*") in _RAW_TEX_ENVIRONMENTS:
+                    end = text.find(r"\end{" + name + "}", after)
+                    if end < 0:
+                        break
+                    index = end + len(name) + 6
+                    continue
+                if operation == "begin" and name == "longtable" and depth == 0 and environments in ([], ["document"]):
+                    start = after + 2 if text.startswith("[]", after) else after
+                    if start < len(text) and text[start] == "{":
+                        columns_end = _balanced_table_columns(text, start)
+                        if columns_end is not None and _PANDOC_PARAGRAPH_COLUMNS.fullmatch(
+                            text[start + 1 : columns_end - 1]
+                        ):
+                            end = text.find(
+                                r"\end{longtable}",
+                                columns_end,
+                                columns_end + 1024 * 1024,
+                            )
+                            if end >= 0 and _simple_table_body(text[columns_end:end]):
+                                column_count = len(
+                                    re.findall(
+                                        _PANDOC_PARAGRAPH_COLUMN,
+                                        text[start + 1 : columns_end - 1],
+                                    )
+                                )
+                                ranges.append((columns_end, end, column_count))
+                                if len(ranges) >= 256:
+                                    break
+                                index = end + len(r"\end{longtable}")
+                                continue
+                if depth == 0:
+                    if operation == "begin":
+                        environments.append(name)
+                        if len(environments) > 32:
+                            break
+                    elif not environments or environments.pop() != name:
+                        break
+                index = after
+                continue
+            command = _TEX_COMMAND.match(text, index)
+            if command and command[0] in (r"\begin", r"\end"):
+                break  # An unfamiliar opener cannot establish a safe outer scope.
+            index += len(command[0]) if command else 1
+            continue
+        if character == "{":
+            depth += 1
+            if depth > 32:
+                break
+        elif character == "}":
+            depth -= 1
+            if depth < 0:
+                break
+        index += 1
+    return ranges
+
+
+def make_plain_table_paths_breakable(tex_content: str) -> tuple[str, int]:
+    """Add font-preserving breaks only to simple paths in Pandoc paragraph cells.
+
+    A bounded lexical scan excludes math, macro bodies and raw environments.
+    Exact paragraph-column syntax admits tables; a plain ASCII cell allowlist
+    excludes comments, commands and unfamiliar TeX. Natural-width tables and
+    prose are untouched. Characters, column widths and alignment never change.
+    """
+    if len(tex_content) > 16 * 1024 * 1024:
+        return tex_content, 0
+    replacements = 0
+
+    def token(match: re.Match[str]) -> str:
+        nonlocal replacements
+        value = match[0]
+        if len(value.replace(r"\_", "_")) < LONG_TEXTTT_BREAK_MIN_CHARACTERS:
+            return value
+        replacements += 1
+        return r"\breakseq{" + value + "}"
+
+    def row(value: str, column_count: int) -> str:
+        prefix_length = 0
+        for line in value.splitlines(keepends=True):
+            if not line.strip() or line.strip() in _TABLE_STRUCTURE:
+                prefix_length += len(line)
+            else:
+                break
+        cells = value[prefix_length:].split("&")
+        if len(cells) != column_count or not all(
+            _PLAIN_TABLE_CELL.fullmatch(cell.replace("\n", " ")) for cell in cells
+        ):
+            return value
+        return value[:prefix_length] + "&".join(_PLAIN_TABLE_TOKEN.sub(token, cell) for cell in cells)
+
+    for start, end, column_count in reversed(_plain_paragraph_tables(tex_content)):
+        rows = tex_content[start:end].split(r"\\")
+        body = r"\\".join([row(value, column_count) for value in rows[:-1]] + rows[-1:])
+        tex_content = tex_content[:start] + body + tex_content[end:]
+    if replacements:
+        tex_content = _ensure_breaktt_preamble(tex_content)
+    return tex_content, replacements
+
+
+def constrain_includegraphics_textheight(
+    tex_content: str,
+    fraction: str,
+    *,
+    first_fraction: str | None = None,
+) -> tuple[str, int]:
+    """Replace Pandoc's full-textheight image bounds with safe configured fractions.
+
+    The first source-owned figure is the graphical abstract in the combined paper path, so it can
+    receive a distinct front-matter bound while all later figures use the ordinary figure bound.
+    """
+    target = r"height=\textheight"
+    occurrences = tex_content.count(target)
+    if not occurrences:
+        return tex_content, 0
+    replacements = [first_fraction if first_fraction is not None else fraction] + [fraction] * (occurrences - 1)
+    parts = tex_content.split(target)
+    updated = parts[0]
+    for index, part in enumerate(parts[1:]):
+        updated += rf"height={replacements[index]}\textheight" + part
+    return updated, occurrences
+
+
+def _unnest_breakseq_in_breaktt(tex_content: str) -> str:
+    """Collapse ``\\breakseq`` inside ``\\breaktt`` back to its literal.
+
+    ``\\breaktt`` already wraps its argument in ``\\seqsplit``; a literal
+    rewritten by :func:`make_known_literals_breakable` inside that argument
+    nests ``\\seqsplit`` in ``\\seqsplit``, which loops XeTeX forever during
+    ship-out. A single level of breaking is sufficient: the inner literal
+    falls back to the breaktt-provided wrapping.
+    """
+
+    def _sub(match: re.Match[str]) -> str:
+        return re.sub(r"\\breakseq\{([^{}]*)\}", r"\1", match.group(0))
+
+    return re.sub(r"\\breaktt\{(?:[^{}]|\{[^{}]*\})*\}", _sub, tex_content)
+
+
+def make_known_literals_breakable(tex_content: str) -> tuple[str, int]:
+    """Make recurring long table labels breakable without changing wording."""
+    replacements = 0
+    updated = tex_content
+    for literal in _BREAKABLE_LITERALS:
+        pattern = re.compile(rf"(?<![A-Za-z]){re.escape(literal)}(?![A-Za-z])")
+
+        def _sub(_match: re.Match[str], value: str = literal) -> str:
+            return rf"\breakseq{{{value}}}"
+
+        updated, count = pattern.subn(_sub, updated)
+        replacements += count
+    updated = _unnest_breakseq_in_breaktt(updated)
+    if replacements:
+        updated = _ensure_breaktt_preamble(updated)
+    return updated, replacements
+
+
+def make_pandoc_reference_tokens_breakable(tex_content: str) -> tuple[str, int]:
+    """Make unresolved Pandoc cross-reference tokens breakable in slides.
+
+    Section slides are rendered one file at a time, so cross-section
+    references can legitimately remain as Pandoc's escaped ``{[}@key{]}``
+    tokens.  In Beamer these tokens are unbreakable enough to create
+    overfull hboxes in dense scientific frames, so render them through the
+    same protected break sequence macro used for long labels.
+    """
+
+    def _replace(match: re.Match[str]) -> str:
+        target = match.group("target")
+        return rf"\breakseq{{[@{target}]}}"
+
+    updated, replacements = _PANDOC_REF_RE.subn(_replace, tex_content)
+    if replacements:
+        updated = _ensure_breaktt_preamble(updated)
+    return updated, replacements

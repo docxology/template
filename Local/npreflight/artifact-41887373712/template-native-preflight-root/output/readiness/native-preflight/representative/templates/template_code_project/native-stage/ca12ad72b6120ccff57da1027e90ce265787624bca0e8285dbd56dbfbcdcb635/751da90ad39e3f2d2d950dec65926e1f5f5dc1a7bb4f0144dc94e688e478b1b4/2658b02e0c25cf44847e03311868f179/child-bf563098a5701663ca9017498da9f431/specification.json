@@ -1,0 +1,75 @@
+{
+  "closure_identity": [
+    2049,
+    10782423
+  ],
+  "cwd": "/home/runner/work/_temp/template-native-preflight-root",
+  "deadline_monotonic": 11878.252552525999,
+  "directory": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/751da90ad39e3f2d2d950dec65926e1f5f5dc1a7bb4f0144dc94e688e478b1b4/2658b02e0c25cf44847e03311868f179/child-bf563098a5701663ca9017498da9f431",
+  "directory_identity": [
+    2049,
+    10782422
+  ],
+  "implementation": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/751da90ad39e3f2d2d950dec65926e1f5f5dc1a7bb4f0144dc94e688e478b1b4/2658b02e0c25cf44847e03311868f179/child-bf563098a5701663ca9017498da9f431/implementation.json",
+    "sha256": "f8bc48975f634a29fa28fbef3eba32c4de0d78d551c759abf866326894d0aaaa"
+  },
+  "nonce": "bf563098a5701663ca9017498da9f431",
+  "parent_deadline_monotonic": 12386.719108468,
+  "parent_directory": "output/readiness/native-preflight/representative/templates/template_code_project",
+  "parent_pid": 13077,
+  "parent_platform": "Linux",
+  "pipeline_run_id": "c1d845afd8ca444ca4629e4f89d5239a",
+  "prefix_identity": [
+    2049,
+    10782424
+  ],
+  "protocol": "stage",
+  "request": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/native-stage/ca12ad72b6120ccff57da1027e90ce265787624bca0e8285dbd56dbfbcdcb635/751da90ad39e3f2d2d950dec65926e1f5f5dc1a7bb4f0144dc94e688e478b1b4/2658b02e0c25cf44847e03311868f179/child-bf563098a5701663ca9017498da9f431/request.json",
+    "sha256": "d9d2499091f3ddfb3bcc4043d3737c30e58f2b323cc451bb35ae8b3cf9cc40b5"
+  },
+  "request_digest": "5b8c0549899afb7afd4223a48cfda7833cd7d1481543c1fb024252b007e3a295",
+  "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+  "schema_version": "template-fixed-native-stage-child-v2",
+  "scope": "templates/template_code_project",
+  "script": {
+    "path": "scripts/pipeline/stage_03_render.py",
+    "sha256": "9a246bfdeb48c55f81ec41883c78a0d04e9644cd9e3c0b77665d7a3a5ad8b3d8"
+  },
+  "source": {
+    "current_mirror": {
+      "correspondence_kind": "actual-native-git-and-exact-pure-source",
+      "root": "/home/runner/work/_temp/template-native-preflight-root",
+      "root_identity": [
+        2049,
+        10223621
+      ],
+      "source_directory_identities_digest": "367f87267cdad9e75f067cb1d158f7f36638e1aa24957c2e944e851639b651fe",
+      "source_records_digest": "ac46b81dd265130208acb5a05c4c5668b8aa85f7e0c49fa1b1c491ab9520ae66"
+    },
+    "original_source": {
+      "commit": "a043a69116d501abb99bbc784e3d66b0ef7e57a2",
+      "root": "/home/runner/work/template/template",
+      "root_identity": [
+        2049,
+        8913518
+      ],
+      "source_identity": "21b5e39bada8cef43da0f4a1ae6e14d15859b1842156569f5105e4df9deb4194"
+    },
+    "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+    "schema_version": "template-native-external-source-observation-v2",
+    "scope": "templates/template_code_project",
+    "selected_sdk": {
+      "implementation_sha256": "f8bc48975f634a29fa28fbef3eba32c4de0d78d551c759abf866326894d0aaaa",
+      "package_root": "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/infrastructure"
+    }
+  },
+  "source_audit_roots": [
+    "/home/runner/work/_temp/template-native-preflight-scratch/installed/native-environment/lib/python3.14/site-packages/infrastructure",
+    "/home/runner/work/_temp/template-native-preflight-root/scripts",
+    "/home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/src",
+    "/home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/scripts"
+  ],
+  "stage_key": "render_pdf"
+}

@@ -1,0 +1,14 @@
+{
+  "complete_release_acceptance": false,
+  "elapsed_seconds": 5364.920848625,
+  "exit_code": 124,
+  "preparation_profile": "selected-project-and-local-providers",
+  "provider_scopes": [
+    "templates/template_code_project"
+  ],
+  "publication_authorized": false,
+  "reference_commit_nomination": "a043a69116d501abb99bbc784e3d66b0ef7e57a2",
+  "refused_because": "templates/template_code_project: fresh source-owned core execution did not complete; actual native producer final Source/SDK custody refused: native completed stage bindings changed after graph reconstruction (completed=0, expected=2, worker diagnostic: fresh source-owned core execution did not complete)",
+  "representative_scope": "templates/template_code_project",
+  "schema_version": "template-native-diagnostic-preflight-v2"
+}

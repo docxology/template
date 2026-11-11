@@ -1,0 +1,66 @@
+{
+  "caller_deadline_monotonic": 12386.719108468,
+  "command": [
+    "/usr/bin/xetex",
+    "--version"
+  ],
+  "custody_refused": false,
+  "diagnostic": "",
+  "environment_digest": "8da1980dff361f9c13b8550f597f3be0aae9686bd469ad2fa0082485e266bed3",
+  "executable": "/usr/bin/xetex",
+  "executable_identity_after": {
+    "ctime_ns": 1793816988337000916,
+    "device": 2049,
+    "inode": 93781,
+    "links": 1,
+    "mode": 33261,
+    "mtime_ns": 1711873654000000000,
+    "size": 709000
+  },
+  "executable_identity_before": {
+    "ctime_ns": 1793816988337000916,
+    "device": 2049,
+    "inode": 93781,
+    "links": 1,
+    "mode": 33261,
+    "mtime_ns": 1711873654000000000,
+    "size": 709000
+  },
+  "executable_observation_after": {
+    "path": "/usr/bin/xetex",
+    "schema_version": "template-native-executable-observation-v1",
+    "sha256": "6cf6e1f1e70406cc61dde25fe38b5bd758324e32fe6b5e6d92e34bb6048bae04"
+  },
+  "executable_observation_before": {
+    "path": "/usr/bin/xetex",
+    "schema_version": "template-native-executable-observation-v1",
+    "sha256": "6cf6e1f1e70406cc61dde25fe38b5bd758324e32fe6b5e6d92e34bb6048bae04"
+  },
+  "executable_sha256": "6cf6e1f1e70406cc61dde25fe38b5bd758324e32fe6b5e6d92e34bb6048bae04",
+  "exit_code": 0,
+  "native_process_artifact": {
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/tool-version-1.native-process.json",
+    "sha256": "4aaad66b3a560c7564e2c0c69007e65114e1477151f74d23ba0de63ba55f610b"
+  },
+  "original_deadline_monotonic": 1877.311447472,
+  "original_exit_code": 0,
+  "owner_pid": 13077,
+  "pid": 16769,
+  "purpose": "tool-version-1",
+  "raw_stderr": {
+    "bytes": 0,
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/tool-version-1.stderr.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw_stdout": {
+    "bytes": 819,
+    "path": "output/readiness/native-preflight/representative/templates/template_code_project/tool-version-1.stdout.bin",
+    "sha256": "c6da8d8ca1c1e52fc2633d1723bd2ec638501594e45166d2508b354f66e98471"
+  },
+  "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+  "schema_version": "template-native-tool-execution-v3",
+  "stderr": "",
+  "stdout": "XeTeX 3.141592653-2.6-0.999995 (TeX Live 2023/Debian)\nkpathsea version 6.3.5\nCopyright 2023 SIL International, Jonathan Kew and Khaled Hosny.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the XeTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the XeTeX source.\nPrimary author of XeTeX: Jonathan Kew.\nCompiled with ICU version 74.2; using 74.2\nCompiled with zlib version 1.3; using 1.3\nCompiled with FreeType2 version 2.13.2; using 2.13.2\nCompiled with Graphite2 version 1.3.14; using 1.3.14\nCompiled with HarfBuzz version 8.3.0; using 8.3.0\nCompiled with libpng version 1.6.43; using 1.6.43\nCompiled with pplib version v2.05 less toxic i hope\nCompiled with fontconfig version 2.15.0; using 2.15.0\n",
+  "timed_out": false,
+  "tool": "xelatex"
+}

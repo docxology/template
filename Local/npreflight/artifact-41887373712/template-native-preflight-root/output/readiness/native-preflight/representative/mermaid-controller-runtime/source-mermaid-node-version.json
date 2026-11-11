@@ -1,0 +1,66 @@
+{
+  "caller_deadline_monotonic": 12401.719108468,
+  "command": [
+    "/opt/hostedtoolcache/node/24.22.0/x64/bin/node",
+    "--version"
+  ],
+  "custody_refused": false,
+  "diagnostic": "",
+  "environment_digest": "efd2e5a3f55e89e819792aae962c177ffdeb75acf00843bfb08d1c783dc6745a",
+  "executable": "/opt/hostedtoolcache/node/24.22.0/x64/bin/node",
+  "executable_identity_after": {
+    "ctime_ns": 1793816936898602921,
+    "device": 2049,
+    "inode": 2381589,
+    "links": 1,
+    "mode": 33261,
+    "mtime_ns": 1793816936898602921,
+    "size": 126816376
+  },
+  "executable_identity_before": {
+    "ctime_ns": 1793816936898602921,
+    "device": 2049,
+    "inode": 2381589,
+    "links": 1,
+    "mode": 33261,
+    "mtime_ns": 1793816936898602921,
+    "size": 126816376
+  },
+  "executable_observation_after": {
+    "path": "/opt/hostedtoolcache/node/24.22.0/x64/bin/node",
+    "schema_version": "template-native-executable-observation-v1",
+    "sha256": "67ca5783febb8bf85736c79fcdd92c8d6d465a0eb2a082672bcdfa76a506751c"
+  },
+  "executable_observation_before": {
+    "path": "/opt/hostedtoolcache/node/24.22.0/x64/bin/node",
+    "schema_version": "template-native-executable-observation-v1",
+    "sha256": "67ca5783febb8bf85736c79fcdd92c8d6d465a0eb2a082672bcdfa76a506751c"
+  },
+  "executable_sha256": "67ca5783febb8bf85736c79fcdd92c8d6d465a0eb2a082672bcdfa76a506751c",
+  "exit_code": 0,
+  "native_process_artifact": {
+    "path": "output/readiness/native-preflight/representative/mermaid-controller-runtime/source-mermaid-node-version.native-process.json",
+    "sha256": "89bbee4606cad942eec3d1f641eaa74312e0893e15841b97e2d3db4f1e32c493"
+  },
+  "original_deadline_monotonic": 874.872813236,
+  "original_exit_code": 0,
+  "owner_pid": 10252,
+  "pid": 11231,
+  "purpose": "source-mermaid-node-version",
+  "raw_stderr": {
+    "bytes": 0,
+    "path": "output/readiness/native-preflight/representative/mermaid-controller-runtime/source-mermaid-node-version.stderr.bin",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw_stdout": {
+    "bytes": 9,
+    "path": "output/readiness/native-preflight/representative/mermaid-controller-runtime/source-mermaid-node-version.stdout.bin",
+    "sha256": "2b796b748c85883d00cfea9775eaa143435f0dc06c69311b444cf0dfc98214bc"
+  },
+  "run_id": "3ffb2b6780f4457f8fd0744da48f522d",
+  "schema_version": "template-native-tool-execution-v3",
+  "stderr": "",
+  "stdout": "v24.22.0\n",
+  "timed_out": false,
+  "tool": "/opt/hostedtoolcache/node/24.22.0/x64/bin/node"
+}

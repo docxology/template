@@ -1,0 +1,3 @@
+warning: Ignoring `UV_FROZEN` because `--locked` was provided
+Using CPython 3.14.4 interpreter at: /opt/hostedtoolcache/Python/3.14.4/x64/bin/python3.14
+Resolved 205 packages in 2ms

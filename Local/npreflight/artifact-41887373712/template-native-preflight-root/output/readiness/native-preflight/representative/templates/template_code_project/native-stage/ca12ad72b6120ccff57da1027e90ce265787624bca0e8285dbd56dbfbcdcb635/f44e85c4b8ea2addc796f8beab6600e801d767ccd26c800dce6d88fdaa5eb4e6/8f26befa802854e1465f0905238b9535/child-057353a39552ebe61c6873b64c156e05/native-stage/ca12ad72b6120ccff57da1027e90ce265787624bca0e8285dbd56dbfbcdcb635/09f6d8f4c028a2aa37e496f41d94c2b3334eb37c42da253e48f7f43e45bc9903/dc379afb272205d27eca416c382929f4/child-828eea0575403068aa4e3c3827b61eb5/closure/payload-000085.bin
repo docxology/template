@@ -1,0 +1,245 @@
+"""Secure credential management for testing and operations."""
+
+import os
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
+
+# Make dotenv optional - only required for credential-based testing
+_load_dotenv: Callable[..., bool] | None
+try:
+    from dotenv import load_dotenv as _dotenv_loader
+
+    DOTENV_AVAILABLE = True
+    _load_dotenv = _dotenv_loader
+except ImportError:
+    DOTENV_AVAILABLE = False
+    _load_dotenv = None
+
+# Platform API base URLs — extracted here so they are easy to override in tests
+# and visible to callers without instantiating CredentialManager.
+_ZENODO_SANDBOX_URL = "https://sandbox.zenodo.org/api"
+_ZENODO_PROD_URL = "https://zenodo.org/api"
+_GITHUB_API_URL = "https://api.github.com"
+
+_DOTENV_LOADED = False
+
+
+def _repo_root() -> Path:
+    """Repository root (``infrastructure/core/credentials.py`` -> parents[2])."""
+    return Path(__file__).resolve().parents[2]
+
+
+def _load_dotenv_fallback(env_file: Path | None = None) -> None:
+    """Minimal ``.env`` parser used when ``python-dotenv`` is not installed.
+
+    Loads every ``KEY=VALUE`` pair into ``os.environ`` without overwriting
+    existing entries. Honors a leading ``export`` and strips surrounding quotes.
+    A real environment variable always wins, so an explicit ``export`` still
+    takes precedence over the file.
+    """
+    candidates: tuple[Path, ...] = (env_file,) if env_file is not None else (Path.cwd() / ".env", _repo_root() / ".env")
+    seen: set[Path] = set()
+    for path in candidates:
+        path = path.resolve()
+        if path in seen or not path.is_file():
+            continue
+        seen.add(path)
+        for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            if line.startswith("export "):
+                line = line[len("export ") :]
+            key, _, value = line.partition("=")
+            key = key.strip()
+            if not key or os.getenv(key):
+                continue
+            os.environ[key] = value.strip().strip('"').strip("'")
+
+
+def ensure_dotenv_loaded(env_file: Path | None = None) -> None:
+    """Load the repository ``.env`` into ``os.environ`` once, best-effort.
+
+    CLI entrypoints such as ``scripts/publish/publish_project_release.py`` read tokens
+    via ``os.getenv``, but nothing loads ``.env`` for them — so a token that
+    lives only in ``.env`` (e.g. ``ZENODO_PROD_TOKEN``) is invisible until the
+    user manually ``export``s it. This helper closes that gap: it prefers
+    ``python-dotenv`` when the optional extra is installed and otherwise falls
+    back to a minimal parser. Neither path overwrites an existing ``os.environ``
+    entry, so an explicit ``export`` always wins.
+
+    Args:
+        env_file: Explicit ``.env`` path. Defaults to ``.env`` in both the
+            current working directory and the repository root. When given, the
+            call is not memoized (so tests can target temp files repeatedly).
+    """
+    global _DOTENV_LOADED
+    if _DOTENV_LOADED and env_file is None:
+        return
+    if DOTENV_AVAILABLE and _load_dotenv is not None:
+        if env_file is not None:
+            if env_file.exists():
+                _load_dotenv(env_file)
+        else:
+            _load_dotenv()  # searches upward from the cwd
+            root_env = _repo_root() / ".env"
+            if root_env.is_file():
+                _load_dotenv(root_env)  # python-dotenv never overrides existing env
+    else:
+        _load_dotenv_fallback(env_file)
+    if env_file is None:
+        _DOTENV_LOADED = True
+
+
+class CredentialManager:
+    """Manage credentials from .env and YAML config files.
+
+    Supports loading credentials from:
+    - Environment variables directly
+    - .env files
+    - YAML configuration files with environment variable substitution
+    """
+
+    def __init__(self, env_file: Path | None = None, config_file: Path | None = None):
+        """Initialize credential manager.
+
+        Args:
+            env_file: Path to .env file (optional, defaults to .env in root)
+            config_file: Path to YAML config file (optional)
+        """
+        # Load .env file (skipped silently when python-dotenv is not installed)
+        if DOTENV_AVAILABLE and _load_dotenv is not None:
+            if env_file and env_file.exists():
+                _load_dotenv(env_file)
+            else:
+                _load_dotenv()
+
+        # Load YAML config if provided
+        self.config = {}
+        if config_file and config_file.exists():
+            self.config = self._load_yaml_config(config_file)
+
+    def _load_yaml_config(self, config_file: Path) -> dict[str, Any]:
+        """Load YAML config and substitute environment variables."""
+        with open(config_file, "r", encoding="utf-8") as f:
+            config = yaml.safe_load(f)
+
+        # Recursively substitute ${VAR} with environment variables
+        return self._substitute_env_vars(config) or {}
+
+    def _substitute_env_vars(self, obj: Any) -> Any:
+        """Recursively substitute ${VAR} patterns with environment variables."""
+        if isinstance(obj, dict):
+            return {k: self._substitute_env_vars(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._substitute_env_vars(item) for item in obj]
+        elif isinstance(obj, str):
+            # Replace ${VAR} with environment variable value
+            if obj.startswith("${") and obj.endswith("}"):
+                var_name = obj[2:-1]
+                return os.getenv(var_name, obj)
+            return obj
+        return obj
+
+    def _get_credential(self, key: str, default: str | None = None) -> str | None:
+        """Get credential from environment or config.
+
+        Args:
+            key: Credential key name
+            default: Default value if not found
+
+        Returns:
+            Credential value or default
+        """
+        # Try environment variable first
+        value = os.getenv(key)
+        if value:
+            return value
+
+        # Try config file
+        if self.config:
+            # Support nested keys like "zenodo.token"
+            parts = key.lower().split(".")
+            current = self.config
+            for part in parts:
+                if isinstance(current, dict) and part in current:
+                    current = current[part]
+                else:
+                    return default
+            return current if isinstance(current, str) else default
+
+        return default
+
+    def get_zenodo_credentials(self, use_sandbox: bool = True) -> dict[str, Any]:
+        """Get Zenodo API credentials.
+
+        Args:
+            use_sandbox: Whether to use sandbox environment (default: True)
+
+        Returns:
+            Dictionary with token and environment info
+        """
+        token_env_var = "ZENODO_SANDBOX_TOKEN" if use_sandbox else "ZENODO_PROD_TOKEN"
+        token = self._get_credential(token_env_var)
+
+        return {
+            "token": token,
+            "use_sandbox": use_sandbox,
+            "base_url": _ZENODO_SANDBOX_URL if use_sandbox else _ZENODO_PROD_URL,
+        }
+
+    def get_github_credentials(self) -> dict[str, Any]:
+        """Get GitHub API credentials.
+
+        Returns:
+            Dictionary with token and repository info
+        """
+        return {
+            "token": self._get_credential("GITHUB_TOKEN"),
+            "repository": self._get_credential("GITHUB_REPO"),
+            "api_url": _GITHUB_API_URL,
+        }
+
+    def get_arxiv_credentials(self) -> dict[str, Any]:
+        """Get arXiv SWORD API credentials (optional).
+
+        Returns:
+            Dictionary with username and password (may be None)
+        """
+        return {
+            "username": self._get_credential("ARXIV_USERNAME"),
+            "password": self._get_credential("ARXIV_PASSWORD"),
+            "enabled": bool(self._get_credential("ARXIV_USERNAME")),
+        }
+
+    def has_zenodo_credentials(self, use_sandbox: bool = True) -> bool:
+        """Check if Zenodo credentials are available."""
+        creds = self.get_zenodo_credentials(use_sandbox)
+        return bool(creds.get("token"))
+
+    def has_github_credentials(self) -> bool:
+        """Check if GitHub credentials are available."""
+        creds = self.get_github_credentials()
+        return bool(creds.get("token") and creds.get("repository"))
+
+    def has_arxiv_credentials(self) -> bool:
+        """Check if arXiv credentials are available."""
+        creds = self.get_arxiv_credentials()
+        return bool(creds.get("enabled", False))
+
+
+def make_bearer_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using OAuth2 Bearer scheme."""
+    return {"Authorization": f"Bearer {token}"}
+
+
+def make_token_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using GitHub token scheme."""
+    return {"Authorization": f"token {token}"}

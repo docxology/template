@@ -1,0 +1,17 @@
+[STAGE-02] Discovering analysis scripts in projects/templates/template_code_project/...
+[STAGE-02] Using 5 config-declared analysis script(s) from manuscript/config.yaml
+Found: optimization_analysis.py (project: templates/template_code_project)
+Found: 04_benchmark_stage.py (project: templates/template_code_project)
+Found: build_dashboard.py (project: templates/template_code_project)
+Found: generate_api_docs.py (project: templates/template_code_project)
+Found: z_generate_manuscript_variables.py (project: templates/template_code_project)
+Generated 46 manuscript variables
+Saved 46 variables to /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/data/manuscript_variables.json
+Resolved 10 manuscript file(s) to /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/manuscript
+Wrote transmission pairing diagram: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/figures/transmission_pairing.png
+Wrote transmission manifest: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/data/transmission_manifest.json
+Wrote transmission integrity strip: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/figures/transmission_integrity_strip.png (808x306)
+Wrote transmission bookends: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/manuscript/00_00_transmission_begin.md, /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/manuscript/99_zz_transmission_end.md
+/home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/data/manuscript_variables.json
+STAGE_CHILD_OBSERVATION_V1 666e408083735d1c61e7656cb0c73a1bb9f3de7aa34cbe2d44bcda5b6e74d321 ec973f0d5e7491a5785c1be09fe3e8e270feaeb1898eab0422c83c95a94a8b41 3ffb2b6780f4457f8fd0744da48f522d 828eea0575403068aa4e3c3827b61eb5 0
+STAGE_CHILD_CLOSURE_V1 22816ddd31121fe7ba4f6e23770ee8e31defd7045e1d7dec7737d292fb44ae01
