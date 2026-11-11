@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.13" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>systems_overview.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <title>_combined_manuscript</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -244,7 +245,26 @@
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -253,9 +273,9 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
   })
@@ -284,8 +304,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -370,7 +390,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -388,8 +415,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -402,8 +427,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -631,10 +654,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -685,10 +716,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -717,13 +744,14 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:part_II_systems_overview">Systems Overview</h1>
+<h1 data-number="12" id="sec:part_II_systems_overview"><span
+class="header-section-number">12</span> Systems Overview</h1>
 <figure id="fig:part_II_systems_overview">
-<a class="figure-full-size-link" href="../figures/part_II_systems_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_II_systems_overview.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/part_II_systems_overview.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 7, Deterministic logistic trajectories at three positive growth rates with common initial state"><img src="../figures/part_II_systems_overview.png" style="width:90.0%"
 alt="Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Deterministic logistic trajectories at
-three positive growth rates with common initial state and
-capacity.</figcaption>
+<figcaption>Figure 7: Deterministic logistic
+trajectories at three positive growth rates with common initial state
+and capacity.</figcaption>
 </figure>
 <!-- alt: Three smooth S-shaped quantity-versus-time curves start at five units and approach a dashed capacity line at one hundred; higher rates reach the middle of the transition sooner. -->
 <!-- chapter-metadata-badge -->
@@ -732,31 +760,33 @@ capacity.</figcaption>
 unit’s vocabulary</p>
 </blockquote>
 <!-- curriculum-scaffold-start -->
-<h3 id="study-blueprint">Study Blueprint</h3>
+<h3 data-number="12.0.1" id="study-blueprint-6"><span
+class="header-section-number">12.0.1</span> Study Blueprint</h3>
 <ul>
 <li><strong>Big idea:</strong> A systems description combines a state,
 an update law, an observation rule and a declared environment.</li>
 <li><strong>Core concepts:</strong> <a
-href="#gl:system"><strong>system</strong></a>, <a
-href="#gl:state"><strong>state</strong></a>, <a
-href="#gl:boundary"><strong>boundary</strong></a>, <a
-href="#gl:feedback"><strong>feedback</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> <span class="citation"
-data-cites="eq:part_II_systems_overview_model">[@eq:part_II_systems_overview_model]</span>.</li>
+href="manuscript__glossary.html#gl:system"><strong>system</strong></a>, <a
+href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
+href="manuscript__glossary.html#gl:boundary"><strong>boundary</strong></a>, <a
+href="manuscript__glossary.html#gl:feedback"><strong>feedback</strong></a>.</li>
+<li><strong>Quantitative lens:</strong> eq. <a
+href="#eq:part_II_systems_overview_model">8</a>.</li>
 <li><strong>Data skill:</strong> Track state, update rule and
 measurement process as separate parts of a system record.</li>
 <li><strong>Common misconception to repair:</strong> A stable-looking
 observable is not sufficient evidence that the entire system is at
 equilibrium.</li>
-<li><strong>Primary lab:</strong> <span class="citation"
-data-cites="sec:lab_part_II_systems_overview">[@sec:lab_part_II_systems_overview]</span>.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_II_systems_overview">[@sec:q_part_II_systems_overview]</span>.</li>
+<li><strong>Primary lab:</strong> sec. <a
+href="part_II__lab_systems_overview.html#sec:lab_part_II_systems_overview">25</a>.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_II__q_systems_overview.html#sec:q_part_II_systems_overview">37</a>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.logistic_growth</code>.
 <!-- curriculum-scaffold-end --></li>
 </ul>
-<h2 id="learning-objectives">Learning Objectives</h2>
+<h2 data-number="12.1" id="learning-objectives-6"><span
+class="header-section-number">12.1</span> Learning Objectives</h2>
 <ol type="1">
 <li>Identify the four components of a systems description.</li>
 <li>Distinguish state constraints from observed trends.</li>
@@ -771,7 +801,8 @@ explanations can produce a flat line. A systems overview asks what
 changed inside the system, what crossed its boundary, and what the
 dashboard actually measured.</p>
 </blockquote>
-<h2 id="the-state-and-its-update">The state and its update</h2>
+<h2 data-number="12.2" id="the-state-and-its-update"><span
+class="header-section-number">12.2</span> The state and its update</h2>
 <p>The state is the information the model uses to determine subsequent
 change. For a one-variable logistic model, the state is the quantity at
 a time; its update law depends on the rate and capacity parameters. A
@@ -780,7 +811,8 @@ effects. There is no guarantee that every system can be summarized by
 one scalar. Choose the state for the question and horizon at hand, and
 state which influences the update law omits. An equation’s compactness
 should make those omissions easier to inspect.</p>
-<h2 id="the-environment-and-observation">The environment and
+<h2 data-number="12.3" id="the-environment-and-observation"><span
+class="header-section-number">12.3</span> The environment and
 observation</h2>
 <p>External inputs describe conditions outside the chosen boundary. An
 observation rule maps the modeled state to a recorded quantity. Neither
@@ -790,7 +822,8 @@ or because the underlying stock stabilizes. These cases require
 different follow-up observations. Document any instrument limit or
 changed eligibility rule before attributing a change in the plotted
 series to an internal system mechanism.</p>
-<h2 id="invariants-as-internal-checks">Invariants as internal
+<h2 data-number="12.4" id="invariants-as-internal-checks"><span
+class="header-section-number">12.4</span> Invariants as internal
 checks</h2>
 <p>With the declared logistic parameter domain and a non-negative time
 axis, the computed state remains positive and no larger than capacity.
@@ -800,7 +833,8 @@ domain or capacity. A model can obey all its internal invariants and
 still fail to predict observations. Keep the two checks separate:
 internal consistency is necessary for using the equation, while external
 comparison determines whether it is useful for the application.</p>
-<h2 id="equilibrium-needs-a-rule">Equilibrium needs a rule</h2>
+<h2 data-number="12.5" id="equilibrium-needs-a-rule"><span
+class="header-section-number">12.5</span> Equilibrium needs a rule</h2>
 <p>An equilibrium is a state with zero change under the specified update
 law. For logistic growth, the mathematical rate vanishes at zero and at
 capacity. The shipped closed-form helper deliberately accepts a strictly
@@ -810,23 +844,27 @@ the mathematical equation’s full state space. When discussing a model,
 distinguish properties of the equation from properties of the
 implemented domain. This prevents a valid software guard from being
 mistaken for a universal statement about all systems.</p>
-<h2 id="examine-interactions-before-enlarging-the-model">Examine
-interactions before enlarging the model</h2>
+<h2 data-number="12.6"
+id="examine-interactions-before-enlarging-the-model"><span
+class="header-section-number">12.6</span> Examine interactions before
+enlarging the model</h2>
 <p>Add a component when it resolves a specific inadequacy, such as an
 omitted input with a measurable effect. Additional states bring
 additional parameters, observations and identifiability questions. An
 elaborate diagram without an observation plan can make the original
-question harder to answer. Nyquist’s primary analysis
-[nyquist1932regeneration] illustrates that feedback stability requires
+question harder to answer. Nyquist’s primary analysis <span
+class="citation" data-cites="nyquist1932regeneration">(<a
+href="index.html#ref-nyquist1932regeneration" role="doc-biblioref">Nyquist
+1932</a>)</span> illustrates that feedback stability requires
 mathematical conditions, not simply a loop drawn with arrows. The lab
 uses the small logistic case to practice a complete systems record
 before any larger feedback or interaction model is proposed.</p>
-<h2 id="a-worked-formalism">A Worked Formalism</h2>
-<p><span
-class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\]</span>
-{#eq:part_II_systems_overview_model}</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_systems_overview_parameters" data-responsive-table="true">
-<caption>Quantities and conventions for this chapter’s worked
+<h2 data-number="12.7" id="a-worked-formalism-5"><span
+class="header-section-number">12.7</span> A Worked Formalism</h2>
+<p><span id="eq:part_II_systems_overview_model"><span
+class="math display">\[N(t)=\frac{K}{1+((K-N_0)/N_0)e^{-rt}}\qquad{(8)}\]</span></span></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table: Table 7: Quantities and conventions for this chapter’s worked example."><table id="tbl:part_II_systems_overview_parameters" data-responsive-table="true">
+<caption>Table 7: Quantities and conventions for this chapter’s worked
 example.</caption>
 <thead>
 <tr>
@@ -867,42 +905,43 @@ class="math inline">\(17.59\)</span> units. The state approaches <span
 class="math inline">\(100\)</span> as the exponential term approaches
 zero. These are predictions of a chosen model, not measured evidence
 that a real population or service has a fixed capacity.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> logistic_growth</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>time <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> logistic_growth(time, r<span class="op">=</span><span class="fl">0.7</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(values[<span class="dv">0</span>], <span class="fl">5.0</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(np.diff(values) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(values <span class="op">&lt;</span> <span class="fl">100.0</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(values)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textbook.models <span class="im">import</span> logistic_growth</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>time <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">2.0</span>, <span class="fl">5.0</span>])</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> logistic_growth(time, r<span class="op">=</span><span class="fl">0.7</span>, carrying_capacity<span class="op">=</span><span class="fl">100.0</span>, initial<span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(values[<span class="dv">0</span>], <span class="fl">5.0</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(np.diff(values) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(values <span class="op">&lt;</span> <span class="fl">100.0</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(values)</span></code></pre></div>
 <p>The equation is evaluated by the tested
 <code>textbook.models.logistic_growth</code>. The assertions above are
 independent expectations for this designed example; the displayed figure
-in <span class="citation"
-data-cites="fig:part_II_systems_overview">[@fig:part_II_systems_overview]</span>
-is a deterministic illustration with its own explicitly stated inputs,
-not evidence collected from the opening scenario.</p>
-<h2 id="assumptions-and-limits">Assumptions and Limits</h2>
+in fig. <a href="#fig:part_II_systems_overview">7</a> is a deterministic
+illustration with its own explicitly stated inputs, not evidence
+collected from the opening scenario.</p>
+<h2 data-number="12.8" id="assumptions-and-limits-5"><span
+class="header-section-number">12.8</span> Assumptions and Limits</h2>
 <p>The closed form assumes a constant positive rate and a fixed capacity
 with an initial state strictly above zero and no larger than capacity.
 It omits migration, changing resources and random shocks. A discrepancy
 can therefore reflect a failed assumption rather than a programming
 error. First inspect the units and initial value, then ask which omitted
 process could generate the observed discrepancy.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode mermaid"><code class="sourceCode mermaid"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">flowchart</span> <span class="cn">LR</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Q</span>[<span class="vs">Question and observation rule</span>] <span class="pp">--&gt;</span> <span class="dt">I</span>[<span class="vs">Declared inputs and units</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">I</span> <span class="pp">--&gt;</span> <span class="dt">M</span>[<span class="vs">Tested model</span>]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="pp">--&gt;</span> <span class="dt">P</span>[<span class="vs">Predicted quantities</span>]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">P</span> <span class="pp">--&gt;</span> <span class="dt">C</span>[<span class="vs">Independent comparison</span>]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">C</span> <span class="pp">--&gt;</span><span class="vs">|record a revision|</span> <span class="dt">Q</span></span></code></pre></div>
 <p>This diagram records the direction of a modeling workflow. An arrow
 names a relationship to specify; it does not add an unimplemented
 physical mechanism. Keep the original prediction when making the
 recorded revision.</p>
-<h2 id="summary">Summary</h2>
+<h2 data-number="12.9" id="summary-6"><span
+class="header-section-number">12.9</span> Summary</h2>
 <p>A systems description combines a state, an update law, an observation
 rule and a declared environment. The worked example makes a narrow
 quantitative claim that can be checked with exact inputs and a tested
@@ -911,23 +950,28 @@ the entire system is at equilibrium. State the assumptions, preserve the
 observation record and choose a comparison that can distinguish an
 arithmetic error from an inadequate model. Those habits make a result
 inspectable without expanding what its evidence establishes.</p>
-<h2 id="key-terms">Key Terms</h2>
-<p><a href="#gl:system"><strong>system</strong></a>, <a
-href="#gl:state"><strong>state</strong></a>, <a
-href="#gl:boundary"><strong>boundary</strong></a>, <a
-href="#gl:feedback"><strong>feedback</strong></a>.</p>
-<h2 id="further-reading">Further Reading</h2>
-<p>Nyquist [nyquist1932regeneration] analyzes stability for specified
-feedback systems; compare a formal condition with an informal loop
-diagram.</p>
-<h2 id="practice">Practice</h2>
+<h2 data-number="12.10" id="key-terms-6"><span
+class="header-section-number">12.10</span> Key Terms</h2>
+<p><a href="manuscript__glossary.html#gl:system"><strong>system</strong></a>, <a
+href="manuscript__glossary.html#gl:state"><strong>state</strong></a>, <a
+href="manuscript__glossary.html#gl:boundary"><strong>boundary</strong></a>, <a
+href="manuscript__glossary.html#gl:feedback"><strong>feedback</strong></a>.</p>
+<h2 data-number="12.11" id="further-reading-6"><span
+class="header-section-number">12.11</span> Further Reading</h2>
+<p>Nyquist <span class="citation"
+data-cites="nyquist1932regeneration">(<a
+href="index.html#ref-nyquist1932regeneration" role="doc-biblioref">Nyquist
+1932</a>)</span> analyzes stability for specified feedback systems;
+compare a formal condition with an informal loop diagram.</p>
+<h2 data-number="12.12" id="practice-6"><span
+class="header-section-number">12.12</span> Practice</h2>
 <ul>
-<li><strong>Lab:</strong> <span class="citation"
-data-cites="sec:lab_part_II_systems_overview">[@sec:lab_part_II_systems_overview]</span>
-— execute the worked computation and its boundary control.</li>
-<li><strong>Question bank:</strong> <span class="citation"
-data-cites="sec:q_part_II_systems_overview">[@sec:q_part_II_systems_overview]</span>
-— compare your reasoning with the supplied solutions.</li>
+<li><strong>Lab:</strong> sec. <a
+href="part_II__lab_systems_overview.html#sec:lab_part_II_systems_overview">25</a> — execute the worked
+computation and its boundary control.</li>
+<li><strong>Question bank:</strong> sec. <a
+href="part_II__q_systems_overview.html#sec:q_part_II_systems_overview">37</a> — compare your reasoning
+with the supplied solutions.</li>
 </ul>
 </main>
 </body>
