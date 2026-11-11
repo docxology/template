@@ -19,7 +19,7 @@ _VERBATIM_ENVIRONMENT_RE = re.compile(
 _INLINE_VERB_RE = re.compile(r"\\verb\*?(?P<delimiter>[^\w\s]).*?(?P=delimiter)", flags=re.DOTALL)
 _ENVIRONMENT_TOKEN_RE = re.compile(r"\\(?P<action>begin|end)\{(?P<environment>[^{}]+)\}")
 _DIRECT_HREF_IMAGE_PREFIX_RE = re.compile(
-    r"\\href\s*\{(?:\\.|[^{}])*\}\s*\{\s*$",
+    r"\\href\s*\{(?:\\.|[^{}\\])*\}\s*\{\s*$",
     flags=re.DOTALL,
 )
 

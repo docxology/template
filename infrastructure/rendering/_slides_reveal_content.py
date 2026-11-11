@@ -76,7 +76,7 @@ _VISIBLE_LABEL_SUFFIX_RE = re.compile(
 _RAW_TEX_REFERENCE_RE = re.compile(
     r"\\(?:ref|eqref|autoref|cref|Cref|pageref|nameref|subref)\{[^{}]+\}",
 )
-_SCRIPT_OR_STYLE_RE = re.compile(r"<(?:script|style)\b[^>]*>.*?</(?:script|style)>", flags=re.IGNORECASE | re.DOTALL)
+_SCRIPT_OR_STYLE_RE = re.compile(r"<(?:script|style)\b[^>]*>.*?</(?:script|style)\b[^>]*>", flags=re.IGNORECASE | re.DOTALL)
 _CODE_OR_PRE_RE = re.compile(
     r"<(?P<tag>pre|code)\b[^>]*>.*?</(?P=tag)>",
     flags=re.IGNORECASE | re.DOTALL,
