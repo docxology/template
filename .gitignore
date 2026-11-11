@@ -491,6 +491,9 @@ _agent_erg_archive_*/
 # committed by accident, regardless of which exemplar it sits under.
 **/.env
 **/.env.*
+!**/.env.template
+!**/.env.example
+!**/.env.sample
 **/.venv/
 **/venv/
 **/env/
