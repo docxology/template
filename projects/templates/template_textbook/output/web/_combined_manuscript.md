@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-0-start-->
+```
+
 # Front Matter {#sec:front_matter}
 
 ## About this book
@@ -45,12 +49,19 @@ license files for the governing text. Bibliography entries identify verified
 primary publications; they are not placeholders or invented reading suggestions.
 No ISBN or new publication identifier is asserted here.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-0-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-1-start-->
+```
 
 # Preface {#sec:preface}
 
@@ -110,12 +121,19 @@ publication deposit. Historical publication identifiers continue to identify
 the releases to which they were assigned. This source is an authored teaching
 record whose computations and interpretation can be inspected and improved.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-1-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-2-start-->
+```
 
 # Orientation and Methods {#sec:part_0_intro}
 
@@ -135,12 +153,19 @@ Read the chapter, work the paired lab in a fresh Python interpreter, and then
 answer the question bank before comparing your reasoning with its solutions.
 Retain units, assumptions and failed predictions in the study record.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-2-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-3-start-->
+```
 
 # Orientation to the Field {#sec:part_0_orientation}
 
@@ -261,20 +286,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The closed form assumes a constant positive rate and a fixed capacity with an initial state strictly above zero and no larger than capacity. It omits migration, changing resources and random shocks. A discrepancy can therefore reflect a failed assumption rather than a programming error. First inspect the units and initial value, then ask which omitted process could generate the observed discrepancy.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -301,12 +320,19 @@ Box [@box1976science] discusses model-building as an iterative scientific activi
 - **Lab:** [@sec:lab_part_0_orientation] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_0_orientation] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-3-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-4-start-->
+```
 
 # Core Methods and Tools {#sec:part_0_core_methods}
 
@@ -428,20 +454,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 Least squares here treats the input values as known and fits one straight line with equal observation weights. It does not model error in the inputs, dependence between observations or a changing variance. A large coefficient of determination is a statement about these fitted observations. Generalization requires additional data and an evaluation design appropriate to the question.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -468,12 +488,19 @@ Wilson and colleagues [@wilson2014best] address scientific software practices; S
 - **Lab:** [@sec:lab_part_0_core_methods] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_0_core_methods] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-4-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-5-start-->
+```
 
 # Quantitative Foundations {#sec:part_0_quantitative_foundations}
 
@@ -594,20 +621,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 This summary describes the supplied finite collection using the population divisor. It is not automatically an estimator of uncertainty in a larger population. Missing, censored or dependent observations require an explicit handling rule before summary statistics become interpretable. Keep that rule with the input data rather than silently discarding awkward observations.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -634,12 +655,19 @@ Shannon [@shannon1948mathematical] develops a precise communication model; contr
 - **Lab:** [@sec:lab_part_0_quantitative_foundations] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_0_quantitative_foundations] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-5-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-6-start-->
+```
 
 # Fundamentals {#sec:part_I_intro}
 
@@ -659,12 +687,19 @@ Read the chapter, work the paired lab in a fresh Python interpreter, and then
 answer the question bank before comparing your reasoning with its solutions.
 Retain units, assumptions and failed predictions in the study record.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-6-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-7-start-->
+```
 
 # First Principles {#sec:part_I_first_principles}
 
@@ -795,19 +830,13 @@ the test suite, so the prose and the code cannot silently disagree.
 
 ## How the pieces connect
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 graph TD
   A[Choose state variables] --> B[Write a rate rule]
   B --> C[Solve or simulate]
   C --> D[Predict long-run behaviour]
   D -->|compare to data| A
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This loop — choose, write, solve, predict, compare — is the first principle the
 rest of the book elaborates. Box discusses scientific model adequacy and revision [@box1976science]. May
@@ -842,12 +871,19 @@ and open to independent arithmetic checks.
   its parameters.
 - **Question bank:** [@sec:q_part_I_first_principles] — recall through synthesis.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-7-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-8-start-->
+```
 
 # Building Blocks {#sec:part_I_building_blocks}
 
@@ -966,20 +1002,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 This function is a static response curve: it relates an input to an output without a state or elapsed time. It cannot by itself explain adaptation, delays, oscillation or memory. Different exponents describe different shapes but do not uniquely identify a physical mechanism. Interpret the parameters within the declared model rather than treating a fitted shape as a causal discovery.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1006,12 +1036,19 @@ Box [@box1976science] discusses selective checks of model inadequacy; use those 
 - **Lab:** [@sec:lab_part_I_building_blocks] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_I_building_blocks] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-8-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-9-start-->
+```
 
 # Structure and Form {#sec:part_I_structure_and_form}
 
@@ -1127,20 +1164,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 Scaling changes representation, not the evidence that generated it. Bounds estimated from one dataset must not be silently recalculated when comparing it with another. The function normalizes one supplied collection; fitting bounds on training data and applying them to future data requires a separately declared transformation. A visually neat scale can conceal these differences unless original units and bounds are retained.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1167,12 +1198,19 @@ Wilkinson and colleagues [@wilkinson2016fair] describe metadata and reuse princi
 - **Lab:** [@sec:lab_part_I_structure_and_form] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_I_structure_and_form] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-9-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-10-start-->
+```
 
 # Core Systems {#sec:part_II_intro}
 
@@ -1192,12 +1230,19 @@ Read the chapter, work the paired lab in a fresh Python interpreter, and then
 answer the question bank before comparing your reasoning with its solutions.
 Retain units, assumptions and failed predictions in the study record.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-10-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-11-start-->
+```
 
 # Systems Overview {#sec:part_II_systems_overview}
 
@@ -1317,20 +1362,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The closed form assumes a constant positive rate and a fixed capacity with an initial state strictly above zero and no larger than capacity. It omits migration, changing resources and random shocks. A discrepancy can therefore reflect a failed assumption rather than a programming error. First inspect the units and initial value, then ask which omitted process could generate the observed discrepancy.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1357,12 +1396,19 @@ Nyquist [@nyquist1932regeneration] analyzes stability for specified feedback sys
 - **Lab:** [@sec:lab_part_II_systems_overview] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_II_systems_overview] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-11-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-12-start-->
+```
 
 # Dynamics and Change {#sec:part_II_dynamics_and_change}
 
@@ -1479,20 +1525,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The model assumes a constant fractional loss rate with no replenishment. For a feedback interpretation it also assumes a continuous, undelayed ideal controller with an unsaturated actuator. A changing rate, external input or measurement delay breaks the closed-form description. The function permits zero rate as a constant trajectory, but half-life requires a strictly positive rate.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1519,12 +1559,19 @@ Lorenz [@lorenz1963deterministic] studies one specific nonlinear flow model; May
 - **Lab:** [@sec:lab_part_II_dynamics_and_change] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_II_dynamics_and_change] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-12-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-13-start-->
+```
 
 # Regulation and Control {#sec:part_II_regulation_and_control}
 
@@ -1643,20 +1690,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 The model assumes a constant fractional loss rate with no replenishment. For a feedback interpretation it also assumes a continuous, undelayed ideal controller with an unsaturated actuator. A changing rate, external input or measurement delay breaks the closed-form description. The function permits zero rate as a constant trajectory, but half-life requires a strictly positive rate.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1683,12 +1724,19 @@ Nyquist [@nyquist1932regeneration] treats feedback stability for defined systems
 - **Lab:** [@sec:lab_part_II_regulation_and_control] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_II_regulation_and_control] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-13-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-14-start-->
+```
 
 # Applications and Synthesis {#sec:part_III_intro}
 
@@ -1708,12 +1756,19 @@ Read the chapter, work the paired lab in a fresh Python interpreter, and then
 answer the question bank before comparing your reasoning with its solutions.
 Retain units, assumptions and failed predictions in the study record.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-14-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-15-start-->
+```
 
 # Applied Models {#sec:part_III_applied_models}
 
@@ -1833,20 +1888,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 This function is a static response curve: it relates an input to an output without a state or elapsed time. It cannot by itself explain adaptation, delays, oscillation or memory. Different exponents describe different shapes but do not uniquely identify a physical mechanism. Interpret the parameters within the declared model rather than treating a fitted shape as a causal discovery.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -1873,12 +1922,19 @@ Box [@box1976science] offers primary guidance on confronting model inadequacy; c
 - **Lab:** [@sec:lab_part_III_applied_models] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_III_applied_models] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-15-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-16-start-->
+```
 
 # Case Studies {#sec:part_III_case_studies}
 
@@ -1996,20 +2052,14 @@ dose–response model could saturate (recall the
 [@sec:appendix_math_review]); a straight line would overpredict if the system
 approached a ceiling. The fixture does not establish which mechanism applies.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 graph LR
   A[Raw measurements] --> B[Group + average]
   B --> C[Fit a trend]
   C --> D{Within data range?}
   D -->|yes| E[Interpolate: defensible]
   D -->|no| F[Extrapolate: flag the risk]
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 > **Warning.** A linear fit through three averaged points reports $R^2 = 0.999$,
 > but that number describes how well the line passes through three dots — not how
@@ -2045,12 +2095,19 @@ summarise, fit, then state the limits.
   add a fourth condition and watch the fit change.
 - **Question bank:** [@sec:q_part_III_case_studies] — recall through synthesis.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-16-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-17-start-->
+```
 
 # Frontiers and Open Problems {#sec:part_III_frontiers}
 
@@ -2171,20 +2228,14 @@ own explicitly stated inputs, not evidence collected from the opening scenario.
 
 Scaling changes representation, not the evidence that generated it. Bounds estimated from one dataset must not be silently recalculated when comparing it with another. The function normalizes one supplied collection; fitting bounds on training data and applying them to future data requires a separately declared transformation. A visually neat scale can conceal these differences unless original units and bounds are retained.
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 flowchart LR
   Q[Question and observation rule] --> I[Declared inputs and units]
   I --> M[Tested model]
   M --> P[Predicted quantities]
   P --> C[Independent comparison]
   C -->|record a revision| Q
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 This diagram records the direction of a modeling workflow. An arrow names a
 relationship to specify; it does not add an unimplemented physical mechanism.
@@ -2211,12 +2262,19 @@ Turing [@turing1937computable] addresses formal computability; Taschuk and Wilso
 - **Lab:** [@sec:lab_part_III_frontiers] — execute the worked computation and its boundary control.
 - **Question bank:** [@sec:q_part_III_frontiers] — compare your reasoning with the supplied solutions.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-17-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-18-start-->
+```
 
 # Lab — Orientation to the Field {#sec:lab_part_0_orientation}
 
@@ -2291,12 +2349,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-18-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-19-start-->
+```
 
 # Lab — Core Methods and Tools {#sec:lab_part_0_core_methods}
 
@@ -2372,12 +2437,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-19-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-20-start-->
+```
 
 # Lab — Quantitative Foundations {#sec:lab_part_0_quantitative_foundations}
 
@@ -2451,12 +2523,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-20-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-21-start-->
+```
 
 # Lab — First Principles {#sec:lab_part_I_first_principles}
 
@@ -2552,12 +2631,19 @@ one. Overshoot followed by decline would contradict this particular monotone
 trajectory; possible revisions include a time-varying environment or another
 state variable, which would need separate assumptions and tests.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-21-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-22-start-->
+```
 
 # Lab — Building Blocks {#sec:lab_part_I_building_blocks}
 
@@ -2630,12 +2716,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-22-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-23-start-->
+```
 
 # Lab — Structure and Form {#sec:lab_part_I_structure_and_form}
 
@@ -2708,12 +2801,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-23-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-24-start-->
+```
 
 # Lab — Systems Overview {#sec:lab_part_II_systems_overview}
 
@@ -2788,12 +2888,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-24-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-25-start-->
+```
 
 # Lab — Dynamics and Change {#sec:lab_part_II_dynamics_and_change}
 
@@ -2867,12 +2974,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-25-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-26-start-->
+```
 
 # Lab — Regulation and Control {#sec:lab_part_II_regulation_and_control}
 
@@ -2946,12 +3060,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-26-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-27-start-->
+```
 
 # Lab — Applied Models {#sec:lab_part_III_applied_models}
 
@@ -3024,12 +3145,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-27-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-28-start-->
+```
 
 # Lab — Case Studies {#sec:lab_part_III_case_studies}
 
@@ -3123,12 +3251,19 @@ compare linear and saturating models on values excluded from fitting. The
 supplied row error bars are fixture annotations, not standard errors derived
 from the two replicates in this lab.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-28-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-29-start-->
+```
 
 # Lab — Frontiers and Open Problems {#sec:lab_part_III_frontiers}
 
@@ -3201,12 +3336,19 @@ boundary case should be tied to the documented input domain. A real evaluation
 would need an observation protocol, actual data and a comparison capable of
 challenging the model rather than another copy of its constructed example.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-29-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-30-start-->
+```
 
 # Question Bank — Orientation to the Field {#sec:q_part_0_orientation}
 
@@ -3245,12 +3387,19 @@ Begin a model by naming a question, a boundary and an observation that could cha
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-30-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-31-start-->
+```
 
 # Question Bank — Core Methods and Tools {#sec:q_part_0_core_methods}
 
@@ -3289,12 +3438,19 @@ A reproducible method separates input custody, transformation, evaluation and co
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-31-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-32-start-->
+```
 
 # Question Bank — Quantitative Foundations {#sec:q_part_0_quantitative_foundations}
 
@@ -3333,12 +3489,19 @@ A number is interpretable only with its units, observation rule and summary conv
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-32-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-33-start-->
+```
 
 # Question Bank — First Principles {#sec:q_part_I_first_principles}
 
@@ -3376,12 +3539,19 @@ italics; in a print build, move them to an answer key if you prefer.
    competition, a toxin, or a resource cap — would reduce $K$; the plateau tracks
    $K$, not the nominal resource supply. Accept reasoned alternatives.)*
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-33-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-34-start-->
+```
 
 # Question Bank — Building Blocks {#sec:q_part_I_building_blocks}
 
@@ -3420,12 +3590,19 @@ Reusable model components need explicit input domains, output meanings and limit
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-34-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-35-start-->
+```
 
 # Question Bank — Structure and Form {#sec:q_part_I_structure_and_form}
 
@@ -3464,12 +3641,19 @@ Representation exposes some relationships and suppresses others; retain the mapp
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-35-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-36-start-->
+```
 
 # Question Bank — Systems Overview {#sec:q_part_II_systems_overview}
 
@@ -3508,12 +3692,19 @@ A systems description combines a state, an update law, an observation rule and a
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-36-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-37-start-->
+```
 
 # Question Bank — Dynamics and Change {#sec:q_part_II_dynamics_and_change}
 
@@ -3552,12 +3743,19 @@ A dynamic law specifies how state changes with time; its rate and timescale must
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-37-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-38-start-->
+```
 
 # Question Bank — Regulation and Control {#sec:q_part_II_regulation_and_control}
 
@@ -3596,12 +3794,19 @@ Regulation is a declared relationship between a measured error and an action, wi
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-38-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-39-start-->
+```
 
 # Question Bank — Applied Models {#sec:q_part_III_applied_models}
 
@@ -3640,12 +3845,19 @@ Choose a model family by the question and evidence it can represent, then compar
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-39-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-40-start-->
+```
 
 # Question Bank — Case Studies {#sec:q_part_III_case_studies}
 
@@ -3688,12 +3900,19 @@ italics.
    especially higher ones, would reveal curvature/saturation and test whether the
    linear model generalises. Accept reasoned alternatives.)*
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-40-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-41-start-->
+```
 
 # Question Bank — Frontiers and Open Problems {#sec:q_part_III_frontiers}
 
@@ -3732,12 +3951,19 @@ An open problem becomes productive when its uncertainty is turned into a discrim
 A complete response distinguishes a designed arithmetic control from an empirical
 claim, names the quantities being compared and preserves the limits of the model.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-41-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-42-start-->
+```
 
 # Appendix A — Authoring and Verification {#sec:appendix_authoring_guide}
 
@@ -3782,12 +4008,19 @@ Run the isolated project test suite after source changes. Its model cases, confi
 
 Before accepting a chapter, verify its question, assumptions, numerical example, figure, citations, lab solution, and question answers. Preserve the source data and release history. Record the interpreter and commands used for local verification, identify missing rendering backends, and keep publication pending until the intended artifacts actually exist. This practice follows the reproducible computational workflow discussed by Sandve and colleagues [@sandve2013ten] and the tested software practices discussed by Wilson and colleagues [@wilson2014best].
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-42-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-43-start-->
+```
 
 # Appendix B — Notation and Symbols {#sec:appendix_notation}
 
@@ -3831,12 +4064,19 @@ An index enumerates observations; a parameter specifies a model. The six rows in
 
 See [@sec:appendix_math_review] for numerical examples and [@sec:appendix_formalisms] for mathematical domains.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-43-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-44-start-->
+```
 
 # Appendix C — Mathematical Review {#sec:appendix_math_review}
 
@@ -3926,12 +4166,19 @@ assert abs(stats["std"] - sqrt(5.)) < 1e-12
 
 A learner changes the time unit from days to hours but keeps the decay rate's numeric value unchanged. Will the predicted half-life describe the same process? No: the rate must be divided by twenty-four when time is measured in hours. The numeric half-life then multiplies by twenty-four. Check units before interpreting a change in a graph.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-44-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-45-start-->
+```
 
 # Appendix — Formalisms {#sec:appendix_formalisms}
 
@@ -4078,12 +4325,19 @@ Symbols used throughout are collected in the notation appendix
 [**gradient**](#gl:gradient) and [**threshold**](#gl:threshold) are in the master
 glossary.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-45-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-46-start-->
+```
 
 # Appendix — Format Gallery {#sec:appendix_format_gallery}
 
@@ -4265,7 +4519,7 @@ A multi-panel composite ([@fig:gallery_multipanel]):
 ![A 2×2 composite: line, scatter, bar, and histogram
 panels.](../figures/gallery/gallery_multipanel.png){#fig:gallery_multipanel width=85%}
 
-The full plot-type gallery lives in `../figures/gallery/` and includes:
+The full plot-type gallery lives in `output/figures/gallery/` and includes:
 line, scatter-with-fit, bar, grouped bar, horizontal bar, histogram, box,
 violin, heatmap, contour, quiver field, step, stacked area, error bars, log-log,
 pie, annotated, and multi-panel. The chapters use the model curves and instructional error bars; the remaining plots demonstrate alternative presentations.
@@ -4280,57 +4534,36 @@ builders in `src/mermaid/diagrams.py` support:
 
 Flowchart:
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 graph TD
   A[Inputs] --> B[Model]
   B --> C[Predictions]
   C -->|revise| A
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 Sequence:
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 sequenceDiagram
   participant Author
   participant Engine
   Author ->> Engine: edit config.yaml
   Engine -->> Author: rendered PDF
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 State:
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 stateDiagram-v2
   [*] --> Stub
   Stub --> Drafted: fill
   Drafted --> Reviewed: review
   Reviewed --> [*]: publish
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 Class:
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 classDiagram
   class ChapterRef {
     +str part_id
@@ -4338,24 +4571,15 @@ classDiagram
     +stem() str
   }
   ChapterRef --> TocEntry : numbered as
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 Entity-relationship:
 
-
-\begin{figure}[htbp]
-\centering
-\begin{verbatim}
+```mermaid
 erDiagram
   PART ||--o{ CHAPTER : contains
   CHAPTER ||--|| LAB : has
-\end{verbatim}
-\caption{Mermaid diagram}
-\end{figure}
-
+```
 
 Pie, Gantt, mindmap, timeline, quadrant, and user-journey diagrams are also
 supported — see `src/mermaid/diagram_specs.yaml` for a worked spec of each.
@@ -4467,12 +4691,19 @@ per project style; everything else uses Markdown. Unicode renders directly:
 α, β, γ, Δ, ∑, ∞, ≈, →. For PDF math, prefer LaTeX (`$\alpha$`) over raw Unicode
 in equations.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-46-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-47-start-->
+```
 
 # Master Glossary {#sec:glossary}
 
@@ -4539,12 +4770,19 @@ A stated value at which a decision rule changes or a model exhibits a specified 
 
 A quantity that can take different values across observations, states or inputs. Its role and units must be declared; storage as a numeric array does not make unlike variables scientifically interchangeable.
 
-
-
-```{=latex}
-\newpage
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-47-end-->
 ```
 
+
+
+---
+
+
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-48-start-->
+```
 
 # Appendix G — Index of Key Terms {#sec:appendix_index}
 
@@ -4570,3 +4808,7 @@ This authored index points to sections rather than page numbers, so its links re
 - **Variable** — changing inputs and unit conventions: [@sec:part_0_quantitative_foundations]; [@sec:appendix_notation].
 
 For verification and source custody, see [@sec:part_0_core_methods] and [@sec:appendix_authoring_guide]. For worked arithmetic, see [@sec:appendix_math_review]. For assumptions behind mathematical limits, see [@sec:appendix_formalisms].
+
+```{=html}
+<!--template-web-source-35767016a9501796d067f3d9b2c5593078fdd9f0277842513ab04c3c9e5de952-48-end-->
+```
