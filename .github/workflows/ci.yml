@@ -241,6 +241,10 @@ jobs:
       - name: Select the installed browser for the selected native consumer
         if: matrix.browser
         uses: ./.github/actions/check-browser
+      - name: Prepare locked dependencies for the offline installed loader fixture
+        if: matrix.module == 'tests/infra_tests/reporting/test_native_original_launch_correctness.py'
+        timeout-minutes: 10
+        uses: ./.github/actions/setup-native-loader-fixture
       - name: Prepare hash-required offline cache for the installed credential contract
         if: matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
         timeout-minutes: 10

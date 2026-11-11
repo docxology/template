@@ -48,6 +48,8 @@ locks.
 - Run the installed-SDK native-loader regression in its prepared full-module
   contract lane, preserving its complete selection and original clocks instead
   of truncating it at the routine smoke shard's 540-second deadline.
+  Prepare hash-verified locked dependencies before the offline body and declare
+  its Linux/compiler applicability without waiving either supported Python minor.
 
 ### Fixes carried forward from main
 

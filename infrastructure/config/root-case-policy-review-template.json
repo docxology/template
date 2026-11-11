@@ -26749,7 +26749,17 @@
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_genuine_pandoc_terminal_success_and_fail_closed_controls",
+          "lane": "core",
+          "obligations": [
+            "linux-proc",
+            "native-loader-build",
+            "pandoc"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
@@ -37980,6 +37990,11 @@
       "eligibility": null,
       "id": "pdfium-wheel",
       "kind": "external-fixture"
+    },
+    {
+      "eligibility": null,
+      "id": "native-loader-build",
+      "kind": "tool"
     }
   ]
 }

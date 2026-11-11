@@ -1,0 +1,24 @@
+name: Prepare the offline installed native-loader fixture
+description: Warm only Root's hash-verified runtime and rendering dependencies before the genuine offline test.
+runs:
+  using: composite
+  steps:
+    - name: Warm the exact locked cold-runtime dependencies
+      shell: bash
+      env:
+        UV_OFFLINE: '0'
+      run: |
+        set -euo pipefail
+        unset UV_FROZEN
+        interpreter="$GITHUB_WORKSPACE/.venv/bin/python"
+        scratch=$(mktemp -d "$RUNNER_TEMP/native-loader-fixture.XXXXXX")
+        trap 'rm -r -- "$scratch"' EXIT
+        uv export --directory "$GITHUB_WORKSPACE" --locked --no-default-groups \
+          --group rendering --no-emit-project --no-emit-local --no-header --no-annotate \
+          --output-file "$scratch/runtime.txt"
+        minor=$("$interpreter" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+        "$interpreter" -m infrastructure.project.locked_dependency_export \
+          --metadata-root "$GITHUB_WORKSPACE" --requirements "$scratch/runtime.txt" --minor "$minor"
+        uv venv --no-project --no-python-downloads --python "$interpreter" "$scratch/venv"
+        uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+          --python "$scratch/venv/bin/python" --requirements "$scratch/runtime.txt"

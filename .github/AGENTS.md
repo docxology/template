@@ -35,6 +35,10 @@ The CLI setting does not alter timeout defaults in nested producer environments.
 The installed-SDK native-loader correctness module uses a converter-prepared
 full contract lane, not a 540-second smoke shard. Its complete module selection,
 1,200-second original operation and 1,800-second pytest ceiling remain unchanged.
+Its cold SDK dependencies come from the hash-required Root lock and are warmed
+before the offline body; the same preparation precedes Linux Root originals.
+The glibc family remains mandatory on both Linux Python minors, with explicit
+compiler/build prerequisites, rather than becoming a passing Darwin skip.
 `platform-native-preflight.yml` adds an incomplete cold installed diagnostic;
 it prepares only the selected exemplar and its declared local providers, then
 uses the production Original/Current admissions without a duplicate all-project

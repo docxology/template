@@ -18,6 +18,7 @@ from infrastructure.core._bounded_kill import _RUN_IDS_ENV
 from infrastructure.core.pipeline.stages import PIPELINE_STAGE_TIMEOUT_SECONDS, _stage_launch_deadline
 from infrastructure.core.secrets import strip_secret_env
 from infrastructure.project.public_acceptance_evidence import bootstrap_command
+from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
 from infrastructure.reporting.native_environment_custody import capture_native_environment, validate_native_environment
 from infrastructure.reporting.native_format_acceptance_contracts import native_environment
 from infrastructure.reporting.native_original_supervisor import _worker_environment
@@ -377,20 +378,24 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     deadline = time.monotonic() + 1200
     mirror = _clone_complete_reference(complete_reference, tmp_path / "mirror", deadline=deadline)
     environment = dict(os.environ, UV_OFFLINE="1", UV_PYTHON_DOWNLOADS="never")
-    build_environment = dict(environment)
-    build_environment.pop("UV_OFFLINE")
+    runtime_requirements = tmp_path / "runtime-requirements.txt"
     artifacts = tmp_path / "artifacts"
     built = subprocess.run(
         [
             "uv",
             "build",
+            "--offline",
+            "--no-config",
+            "--no-build-isolation",
+            "--python",
+            sys.executable,
             "--wheel",
             "--no-create-gitignore",
             "--out-dir",
             str(artifacts),
         ],
         cwd=original,
-        env=build_environment,
+        env=environment,
         text=True,
         capture_output=True,
         timeout=90,
@@ -419,24 +424,74 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     )
     assert created.returncode == 0, created.stdout + created.stderr
     selected_python = installed / "bin/python"
+    exported = subprocess.run(
+        [
+            "uv",
+            "export",
+            "--offline",
+            "--locked",
+            "--no-default-groups",
+            "--group",
+            "rendering",
+            "--no-emit-project",
+            "--no-emit-local",
+            "--no-header",
+            "--no-annotate",
+            "--output-file",
+            str(runtime_requirements),
+        ],
+        cwd=original,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    assert exported.returncode == 0, exported.stdout + exported.stderr
+    normalize_locked_dependency_export(
+        original, runtime_requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
+    )
+    dependencies = subprocess.run(
+        [
+            "uv",
+            "pip",
+            "install",
+            "--offline",
+            "--no-config",
+            "--no-build-isolation",
+            "--no-deps",
+            "--require-hashes",
+            "--python",
+            str(selected_python),
+            "--requirements",
+            str(runtime_requirements),
+        ],
+        cwd=tmp_path,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=120,
+        check=False,
+    )
+    assert dependencies.returncode == 0, dependencies.stdout + dependencies.stderr
     installed_result = subprocess.run(
         [
             "uv",
             "pip",
             "install",
+            "--offline",
+            "--no-config",
             "--no-build",
-            "--force-reinstall",
+            "--no-deps",
             "--python",
             str(selected_python),
             str(wheels[0]),
-            "reportlab>=4.0.0",
-            "pdfplumber>=0.11.0",
         ],
         cwd=tmp_path,
-        env=build_environment,
+        env=environment,
         text=True,
         capture_output=True,
-        timeout=120,
+        timeout=30,
         check=False,
     )
     assert installed_result.returncode == 0, installed_result.stdout + installed_result.stderr
