@@ -1,21 +1,0 @@
-Cloning into '/home/runner/work/_temp/template-native-preflight-root'...
-Note: switching to 'a043a69116d501abb99bbc784e3d66b0ef7e57a2'.
-
-You are in 'detached HEAD' state. You can look around, make experimental
-changes and commit them, and you can discard any commits you make in this
-state without impacting any branches by switching back to a branch.
-
-If you want to create a new branch to retain commits you create, you may
-do so (now or later) by using -c with the switch command. Example:
-
-  git switch -c <new-branch-name>
-
-Or undo this operation with:
-
-  git switch -
-
-Turn off this advice by setting config variable advice.detachedHead to false
-
-Updating files:  56% (5484/9709)Updating files:  57% (5535/9709)Updating files:  58% (5632/9709)Updating files:  59% (5729/9709)Updating files:  60% (5826/9709)Updating files:  61% (5923/9709)Updating files:  62% (6020/9709)Updating files:  63% (6117/9709)Updating files:  64% (6214/9709)Updating files:  65% (6311/9709)Updating files:  66% (6408/9709)Updating files:  67% (6506/9709)Updating files:  68% (6603/9709)Updating files:  69% (6700/9709)Updating files:  70% (6797/9709)Updating files:  71% (6894/9709)Updating files:  72% (6991/9709)Updating files:  73% (7088/9709)Updating files:  74% (7185/9709)Updating files:  75% (7282/9709)Updating files:  76% (7379/9709)Updating files:  77% (7476/9709)Updating files:  78% (7574/9709)Updating files:  79% (7671/9709)Updating files:  80% (7768/9709)Updating files:  81% (7865/9709)Updating files:  82% (7962/9709)Updating files:  83% (8059/9709)Updating files:  84% (8156/9709)Updating files:  85% (8253/9709)Updating files:  86% (8350/9709)Updating files:  87% (8447/9709)Updating files:  88% (8544/9709)Updating files:  89% (8642/9709)Updating files:  90% (8739/9709)Updating files:  91% (8836/9709)Updating files:  92% (8933/9709)Updating files:  93% (9030/9709)Updating files:  94% (9127/9709)Updating files:  95% (9224/9709)Updating files:  96% (9321/9709)Updating files:  97% (9418/9709)Updating files:  98% (9515/9709)Updating files:  99% (9612/9709)Updating files: 100% (9709/9709)Updating files: 100% (9709/9709), done.
-Submodule 'infrastructure/steganography/kmyth' (https://github.com/docxology/kmyth.git) registered for path 'infrastructure/steganography/kmyth'
-Cloning into '/home/runner/work/_temp/template-native-preflight-root/infrastructure/steganography/kmyth'...

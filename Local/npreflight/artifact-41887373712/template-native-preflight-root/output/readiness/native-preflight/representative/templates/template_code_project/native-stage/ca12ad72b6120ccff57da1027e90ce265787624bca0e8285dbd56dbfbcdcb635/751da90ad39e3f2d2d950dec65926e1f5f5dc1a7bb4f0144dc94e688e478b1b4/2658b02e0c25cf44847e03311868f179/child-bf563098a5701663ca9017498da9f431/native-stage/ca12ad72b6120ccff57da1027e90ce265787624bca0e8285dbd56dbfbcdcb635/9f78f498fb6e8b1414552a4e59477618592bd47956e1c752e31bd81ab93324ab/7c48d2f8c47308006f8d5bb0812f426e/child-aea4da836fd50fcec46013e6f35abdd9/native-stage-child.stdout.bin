@@ -1,7 +1,0 @@
-Generated 46 manuscript variables
-Saved 46 variables to /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/data/manuscript_variables.json
-Resolved 10 manuscript file(s) to /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/manuscript
-Wrote transmission pairing diagram: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/figures/transmission_pairing.png
-Wrote transmission manifest: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/data/transmission_manifest.json
-Wrote transmission integrity strip: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/figures/transmission_integrity_strip.png (808x306)
-Wrote transmission bookends: /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/manuscript/00_00_transmission_begin.md, /home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/output/manuscript/99_zz_transmission_end.md

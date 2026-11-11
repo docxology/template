@@ -1,7 +1,0 @@
-  Step sizes [█████░░░░░░░░░░░░░░░░░░░░░░░░░] 1/6 (16%) ETA: 0s/home/runner/work/_temp/template-native-preflight-root/projects/templates/template_code_project/src/template_code_project/core/optimizer.py:124: RuntimeWarning: overflow encountered in matmul
-  quadratic_term = 0.5 * x.T @ A @ x
-Stopping gradient descent at iteration 877: non-finite objective
-  Step sizes [█████░░░░░░░░░░░░░░░░░░░░░░░░░] 1/6 (16%) ETA: 0s
-findfont: Failed to find font weight medium for DejaVu Sans, now using 400.
-findfont: Failed to find font weight medium for DejaVu Sans, now using 400.
-findfont: Failed to find font weight medium for DejaVu Sans, now using 400.

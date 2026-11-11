@@ -511,3 +511,6 @@ _agent_erg_archive_*/
 **/secrets.yml
 **/secrets.json
 **/.secrets
+
+# Local-only workspace trees (never tracked)
+Local/
