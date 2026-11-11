@@ -3918,7 +3918,7 @@ Configuration for steganographic PDF post-processing.
 *class — defined in `infrastructure.steganography.core`*
 
 ```python
-class SteganographyProcessor(config: SteganographyConfig | None=None, *, repo_root: Path | None=None)
+class SteganographyProcessor(config: SteganographyConfig | None=None, *, repo_root: Path | None=None, protect_output: bool=False)
 ```
 
 Orchestrates steganographic PDF post-processing.

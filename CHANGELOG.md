@@ -41,6 +41,15 @@ locks.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
+- Observe optional guardian-lifetime process ages with portable POSIX `ps etime`
+  on Darwin and Linux. Preserve the strict default census, unreadable newer-holder
+  refusal, original shared deadline and age margin; exercise real process-age
+  boundaries and Linux non-dumpable controls before and after the repair.
+- Emit pytest capability/discovery metadata through flushed protocol stdout,
+  preserving exact records without library `print` calls or logging substitution.
+- Regenerate the API reference from the current public `__all__` declarations;
+  preserve prose outside its canonical generated markers.
+
 ### Fixes carried forward from main
 
 - Make SDK GitHub publication create-only: refuse existing releases, including
