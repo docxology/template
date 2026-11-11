@@ -120,7 +120,13 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
+<<<<<<< HEAD
       "sha256": "a77cfad91598a4794882d0ff63f8e5968943ee2bdb1f5b9ea2aa0f1b72f3d9b8",
+||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
+      "sha256": "5d5b5dd6b9c2221246f71dba8bc7caac408c39deda98a00e5f9717eb6b6af3e2",
+=======
+      "sha256": "b8d1ea26d88f470bd6a2147216144e8f58239d010344e5cf4ea2552733a32f98",
+>>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
       "size_bytes": 1879,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -147,8 +153,16 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_sia_combined.pdf",
+<<<<<<< HEAD
       "sha256": "3293fc32b29fdc04bb36525bb1e408931ac5790576d03fea18a76f24fb50f4a2",
       "size_bytes": 223925,
+||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
+      "sha256": "7d8650ebcda09fc8bffa312a2996436181dfbcd1ae0068be628a4137607fd3c5",
+      "size_bytes": 204269,
+=======
+      "sha256": "991e12833d164f6fea20d37f85a13ba9eb70e46e4126347b9a85078bfd8e663c",
+      "size_bytes": 204273,
+>>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": "2026-11-09T14:02:38+00:00"

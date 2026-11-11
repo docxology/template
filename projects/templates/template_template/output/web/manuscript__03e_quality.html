@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
-  <title>A template/ approach to Reproducible Generative
-Research</title>
+  <title>03e_quality.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -239,91 +236,7 @@ Research</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <script data-template-mathjax-config>
-window.MathJax = window.MathJax || {};
-window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
-  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
-  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-});
-var templateMathOutput = window.MathJax.output || {};
-window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
-  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
-    width: "100%",
-    lineleading: 0.5
-  })
-});
-window.normalizeTemplateMathJaxAria = function () {
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[-]/.test(roleDescription)) {
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }
-  });
-};
-window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
-  ready: function () {
-    var measuredWidth = document.documentElement.clientWidth;
-    var reflowQueued = false;
-    window.MathJax.startup.defaultReady();
-    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
-      window.normalizeTemplateMathJaxAria
-    );
-    function reflowDisplayMath() {
-      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
-      reflowQueued = true;
-      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
-        .catch(function () { /* A later resize may retry a failed render. */ })
-        .then(async function () {
-          var width = document.documentElement.clientWidth;
-          try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
-            await window.MathJax.startup.document.rerenderPromise(110);
-            window.normalizeTemplateMathJaxAria();
-            window.templateMathJaxReflowError = null;
-          } catch (error) {
-            window.templateMathJaxReflowError = String(error);
-            console.error("MathJax viewport reflow failed", error);
-            throw error;
-          } finally {
-            measuredWidth = width;
-            reflowQueued = false;
-          }
-        })
-        .then(reflowDisplayMath);
-      // Keep failure observable to callers without an unhandled rejection.
-      window.templateMathJaxReflowPromise.catch(function () {});
-    }
-    window.addEventListener("resize", reflowDisplayMath);
-    // Also cover a resize that happened during the initial asynchronous render.
-    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
-  }
-});
-</script>
-<script defer=""
-  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -738,39 +651,30 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 data-number="3.8" id="quality-assurance"><span
-class="header-section-number">3.8</span> Quality Assurance</h2>
-<h3 data-number="3.8.1" id="zero-mock-testing-policy"><span
-class="header-section-number">3.8.1</span> Zero-Mock Testing Policy</h3>
+<h2 id="quality-assurance">Quality Assurance</h2>
+<h3 id="zero-mock-testing-policy">Zero-Mock Testing Policy</h3>
 <p>The repository policy prohibits mock frameworks such as
 <code>unittest.mock</code>, <code>MagicMock</code>, and
-<code>patch</code> decorators <span class="citation"
-data-cites="martin2008clean meszaros2007xunit">(<a
-href="index.html#ref-martin2008clean" role="doc-biblioref">Martin 2008</a>; <a
-href="index.html#ref-meszaros2007xunit" role="doc-biblioref">Meszaros
-2007</a>)</span>. A static gate rejects those imports, and a separate
-inventory surfaces semantic dependency-replacement patterns for review.
-Tests that require external services (Ollama or public networks) use
-explicit <code>pytest.mark</code> markers for conditional execution;
+<code>patch</code> decorators [martin2008clean; meszaros2007xunit]. A
+static gate rejects those imports, and a separate inventory surfaces
+semantic dependency-replacement patterns for review. Tests that require
+external services (Ollama or public networks) use explicit
+<code>pytest.mark</code> markers for conditional execution;
 deterministic network tests use real local HTTP servers. The
 philosophical motivation—analogizing excessive interaction mocking to
-Simmons et al.’s <em>researcher degrees of freedom</em> <span
-class="citation" data-cites="simmons2011falsepositive">(<a
-href="index.html#ref-simmons2011falsepositive" role="doc-biblioref">Simmons et al.
-2011</a>)</span> and the preregistration remedy <span class="citation"
-data-cites="nosek2018preregistration">(<a
-href="index.html#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
-2018</a>)</span>—is developed fully in the <a
-href="manuscript__05a_zeromock_tradeoff.html#the-zero-mock-tradeoff">Zero-Mock
+Simmons et al.’s <em>researcher degrees of freedom</em>
+[simmons2011falsepositive] and the preregistration remedy
+[nosek2018preregistration]—is developed fully in the <a
+href="https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Zero-Mock
 Tradeoff</a> discussion.</p>
 <p>The following example, drawn from this meta-project’s own suite,
 illustrates zero-mock compliance:</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_core_module_present(<span class="va">self</span>):</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Real filesystem, real YAML parsing — no MagicMock anywhere</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    modules <span class="op">=</span> discover_infrastructure_modules(REPO_ROOT)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    names <span class="op">=</span> [m.name <span class="cf">for</span> m <span class="kw">in</span> modules]</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="st">&quot;core&quot;</span> <span class="kw">in</span> names, <span class="ss">f&quot;&#39;core&#39; not found in </span><span class="sc">{</span>names<span class="sc">}</span><span class="ss">&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_core_module_present(<span class="va">self</span>):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Real filesystem, real YAML parsing — no MagicMock anywhere</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    modules <span class="op">=</span> discover_infrastructure_modules(REPO_ROOT)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    names <span class="op">=</span> [m.name <span class="cf">for</span> m <span class="kw">in</span> modules]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="st">&quot;core&quot;</span> <span class="kw">in</span> names, <span class="ss">f&quot;&#39;core&#39; not found in </span><span class="sc">{</span>names<span class="sc">}</span><span class="ss">&quot;</span></span></code></pre></div>
 <p>This test
 (<code>tests/core/test_meta.py::TestDiscoverInfrastructureModules::test_core_module_present</code>)
 exercises the real <code>discover_infrastructure_modules</code> function
@@ -778,8 +682,7 @@ against the real repository root. There are no mock objects substituting
 for the directory walk, no patched YAML parsers, and no synthetic return
 values—the test passes only if the infrastructure modules genuinely
 exist and are discoverable at their expected paths.</p>
-<h3 data-number="3.8.2" id="coverage-thresholds"><span
-class="header-section-number">3.8.2</span> Coverage Thresholds</h3>
+<h3 id="coverage-thresholds">Coverage Thresholds</h3>
 <p>The pipeline enforces two coverage tiers:</p>
 <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table data-responsive-table="true">
 <colgroup>
@@ -822,8 +725,7 @@ test run below its declared 90% floor fails before downstream
 publication stages. This manuscript deliberately does not quote an
 achieved coverage percentage unless a fresh coverage artifact supplies
 it.</p>
-<h3 data-number="3.8.3" id="test-suite-composition"><span
-class="header-section-number">3.8.3</span> Test Suite Composition</h3>
+<h3 id="test-suite-composition">Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
 <li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~13,093
@@ -843,8 +745,7 @@ tests, these exercise full pipeline stages against real manuscript
 inputs, validating end-to-end behavior from Markdown source to rendered
 PDF.</li>
 </ul>
-<h3 data-number="3.8.4" id="visualization-standards"><span
-class="header-section-number">3.8.4</span> Visualization Standards</h3>
+<h3 id="visualization-standards">Visualization Standards</h3>
 <p>All generated figures must meet accessibility requirements:</p>
 <ul>
 <li>Shared 16pt font constant for primary text elements, with compact

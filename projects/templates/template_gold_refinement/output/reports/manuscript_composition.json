@@ -1,9 +1,23 @@
 {
   "algorithm": "web-renderer-source-context-v2",
+<<<<<<< HEAD
   "binding_sha256": "ef33f97aebad1f5c6f7d583dec71e8e042040e08c555d12c5eb75aa541c89418",
+||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
+  "binding_sha256": "bcebe734070abb94d065e21c7a43e28cc63abd1254ffad5272adc3decc6cba83",
+=======
+  "binding_sha256": "a6e108064da83f3a8ce4a586abffe72abe4f76460207358c52940422fdd1ac28",
+>>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
   "combined_path": "output/web/_combined_manuscript.md",
+<<<<<<< HEAD
   "combined_sha256": "19863a0ce3ecca5f6e21aa4bc87e6536d85cec65ef5dd6e4002e8ed7b9e19d71",
   "combined_size_bytes": 106846,
+||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
+  "combined_sha256": "f8e6a43e30104dde98141657db04428fcbea7e604d79d4395c61a1e8e09daddc",
+  "combined_size_bytes": 106846,
+=======
+  "combined_sha256": "06ee362eeb899343476145f5416903390bb72aaf148117a325d75c06a3114504",
+  "combined_size_bytes": 106854,
+>>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {

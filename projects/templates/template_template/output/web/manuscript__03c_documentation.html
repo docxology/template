@@ -1,13 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Daniel Ari Friedman" />
-  <meta name="description" content="Architecture and Ergonomics from Configuration through Publication" />
-  <title>A template/ approach to Reproducible Generative
-Research</title>
+  <title>03c_documentation.md.web</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -239,91 +236,7 @@ Research</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
-  <script data-template-mathjax-config>
-window.MathJax = window.MathJax || {};
-window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
-  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
-  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
-});
-var templateMathOutput = window.MathJax.output || {};
-window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "scroll",
-  linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: false,
-    width: "100%",
-    lineleading: 0.5
-  })
-});
-window.normalizeTemplateMathJaxAria = function () {
-  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
-    var roleDescription = node.getAttribute("aria-roledescription") || "";
-    if (/[-]/.test(roleDescription)) {
-      node.setAttribute("aria-roledescription", "mathematical expression");
-    }
-  });
-};
-window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
-  ready: function () {
-    var measuredWidth = document.documentElement.clientWidth;
-    var reflowQueued = false;
-    window.MathJax.startup.defaultReady();
-    window.templateMathJaxReflowPromise = window.MathJax.startup.promise.then(
-      window.normalizeTemplateMathJaxAria
-    );
-    function reflowDisplayMath() {
-      if (reflowQueued || document.documentElement.clientWidth === measuredWidth) return;
-      reflowQueued = true;
-      window.templateMathJaxReflowPromise = window.templateMathJaxReflowPromise
-        .catch(function () { /* A later resize may retry a failed render. */ })
-        .then(async function () {
-          var width = document.documentElement.clientWidth;
-          try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
-            // after a viewport change rather than retaining old container widths.
-            await window.MathJax.startup.document.rerenderPromise(110);
-            window.normalizeTemplateMathJaxAria();
-            window.templateMathJaxReflowError = null;
-          } catch (error) {
-            window.templateMathJaxReflowError = String(error);
-            console.error("MathJax viewport reflow failed", error);
-            throw error;
-          } finally {
-            measuredWidth = width;
-            reflowQueued = false;
-          }
-        })
-        .then(reflowDisplayMath);
-      // Keep failure observable to callers without an unhandled rejection.
-      window.templateMathJaxReflowPromise.catch(function () {});
-    }
-    window.addEventListener("resize", reflowDisplayMath);
-    // Also cover a resize that happened during the initial asynchronous render.
-    window.templateMathJaxReflowPromise.then(reflowDisplayMath);
-  }
-});
-</script>
-<script defer=""
-  type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+  </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
 
@@ -738,10 +651,8 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h2 data-number="3.5"
-id="documentation-duality-and-ai-collaboration"><span
-class="header-section-number">3.5</span> Documentation Duality and AI
-Collaboration</h2>
+<h2 id="documentation-duality-and-ai-collaboration">Documentation
+Duality and AI Collaboration</h2>
 <p>The Documentation Duality standard pairs two files in documented
 source directories; the live inventory reports actual coverage:</p>
 <ul>
@@ -761,9 +672,7 @@ invariants. Second, it creates a self-documenting feedback loop: as AI
 agents modify the codebase, they update the corresponding
 <code>AGENTS.md</code> files, keeping documentation synchronized with
 implementation. Lau and Guo’s survey of 90 AI coding assistant systems
-<span class="citation" data-cites="lau2025aicoding">(<a
-href="index.html#ref-lau2025aicoding" role="doc-biblioref">Lau and Guo
-2025</a>)</span> identifies contextual code understanding as a primary
+[lau2025aicoding] identifies contextual code understanding as a primary
 bottleneck; the Documentation Duality standard addresses this by
 providing pre-structured context at every directory level.</p>
 <p>Root <code>AGENTS.md</code> defines shared architectural and testing
@@ -772,8 +681,7 @@ workflows, and confined local state; <code>.agents/AGENTS.md</code>
 documents that catalog. Per-directory <code>AGENTS.md</code> adds local
 contracts, and <code>README.md</code> supplies human navigation.
 <code>CLAUDE.md</code> is a client command reference.</p>
-<h2 data-number="3.6" id="agentic-skill-architecture"><span
-class="header-section-number">3.6</span> Agentic Skill Architecture</h2>
+<h2 id="agentic-skill-architecture">Agentic Skill Architecture</h2>
 <p>The <a
 href="#documentation-duality-and-ai-collaboration">Documentation
 Duality</a> standard addresses human and AI navigation at the directory
@@ -782,8 +690,7 @@ capability-specific <code>SKILL.md</code> descriptors add discoverable
 instructions and invocation examples to documented modules. A descriptor
 supplies context; executable tools remain separately registered
 interfaces.</p>
-<h3 data-number="3.6.1" id="the-three-tier-skill-protocol"><span
-class="header-section-number">3.6.1</span> The Three-Tier Skill
+<h3 id="the-three-tier-skill-protocol">The Three-Tier Skill
 Protocol</h3>
 <p><code>template/</code> implements a progression of agent-facing
 documentation, escalating in specificity from global constraints to
@@ -827,17 +734,14 @@ imports, usage pattern</td>
 </tbody>
 </table></div>
 <p>Tier 1 and Tier 2 have direct analogues in the prompt-engineering
-literature: system prompts and retrieval-augmented context <span
-class="citation" data-cites="lau2025aicoding">(<a
-href="index.html#ref-lau2025aicoding" role="doc-biblioref">Lau and Guo
-2025</a>)</span>. Tier 3 is novel. The <code>SKILL.md</code> files
+literature: system prompts and retrieval-augmented context
+[lau2025aicoding]. Tier 3 is novel. The <code>SKILL.md</code> files
 combine YAML discovery metadata with Markdown instructions. These
 descriptors complement the separately registered tools exposed through
-the Model Context Protocol <span class="citation"
-data-cites="anthropic2024mcp">(<a href="index.html#ref-anthropic2024mcp"
-role="doc-biblioref">Anthropic 2024</a>)</span>. The following presents
+the Model Context Protocol [anthropic2024mcp]. The following presents
 the metadata from <code>infrastructure/rendering/SKILL.md</code>, with
 its description folded into equivalent YAML for readability:</p>
+<<<<<<< HEAD
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> infrastructure-rendering</span></span>
@@ -848,18 +752,38 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  converting markdown to PDF, generating slides, or configuring LaTeX</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  rendering.</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+||||||| parent of e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> infrastructure-rendering</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="ch">&gt;-</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  Skill for the rendering infrastructure module providing multi-format</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  output generation including PDF manuscripts, HTML web pages, and</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">  Beamer/Reveal.js slides. Use when rendering research outputs,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  converting markdown to PDF, generating slides, or configuring LaTeX</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  rendering.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+=======
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> infrastructure-rendering</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span><span class="ch">&gt;-</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  Skill for the rendering infrastructure module providing multi-format</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  output generation including PDF manuscripts, HTML web pages, and</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  Beamer/Reveal.js slides. Use when rendering research outputs,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  converting markdown to PDF, generating slides, or configuring LaTeX</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">  rendering.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+>>>>>>> e97c2e6 (chore: regenerate publication copies for 5.1.0 platform version)
 <p>A skill loader reading this block discovers the module name and its
 natural-language activation condition. The Markdown body supplies Python
 imports and usage examples; the frontmatter does not itself register an
 executable MCP tool. This is the practical implementation of
-Toolformer-style self-documented tools <span class="citation"
-data-cites="schick2023toolformer">(<a href="index.html#ref-schick2023toolformer"
-role="doc-biblioref">Schick et al. 2023</a>)</span>—rather than a
-language model learning tool APIs from training data, the APIs are
-encoded directly in version-controlled, co-located skill files that
+Toolformer-style self-documented tools [schick2023toolformer]—rather
+than a language model learning tool APIs from training data, the APIs
+are encoded directly in version-controlled, co-located skill files that
 evolve with the codebase.</p>
-<h3 data-number="3.6.2" id="module-skill-coverage"><span
-class="header-section-number">3.6.2</span> Module Skill Coverage</h3>
+<h3 id="module-skill-coverage">Module Skill Coverage</h3>
 <p><code>discover_infrastructure_modules()</code> reports the actual
 <code>README.md</code>, <code>AGENTS.md</code>, <code>SKILL.md</code>,
 and <code>PAI.md</code> presence for each enumerated subdirectory.
@@ -870,8 +794,7 @@ provides an optional integration narrative.</p>
 <p>Promotion policy: new Layer‑1 directories must ship human +
 machine-readable docs (<code>README.md</code>, <code>AGENTS.md</code>)
 immediately; Tier‑3 SKILL assets follow once APIs stabilize.</p>
-<h3 data-number="3.6.3" id="mcp-server-mapping"><span
-class="header-section-number">3.6.3</span> MCP Server Mapping</h3>
+<h3 id="mcp-server-mapping">MCP Server Mapping</h3>
 <p>The opt-in <code>infrastructure.mcp_server</code> exposes the
 existing operation catalog, pipeline description, discovered skills, and
 curated CLI invocation through <code>list_operations</code>,
@@ -886,22 +809,16 @@ mapping.</p>
 while retaining the pipeline’s declared dependencies and acceptance
 gates. Discovery alone does not establish successful execution or
 publication. The <code>SKILL.md</code> files parallel Voyager’s skill
-library <span class="citation" data-cites="wang2023voyager">(<a
-href="index.html#ref-wang2023voyager" role="doc-biblioref">Wang et al.
-2023</a>)</span>—Voyager’s agent accumulates a growing library of
-executable Minecraft skills represented as JavaScript functions;
+library [wang2023voyager]—Voyager’s agent accumulates a growing library
+of executable Minecraft skills represented as JavaScript functions;
 <code>template/</code>’s agent accumulates a curated library of research
 pipeline skills represented as YAML-frontmattered <code>SKILL.md</code>
 files. In both cases, the skill representation is machine-readable,
 version-controlled, and self-describing. Wang et al.’s LLM agent survey
-<span class="citation" data-cites="wang2024llmagents">(<a
-href="index.html#ref-wang2024llmagents" role="doc-biblioref">L. Wang et al.
-2024</a>)</span> identifies tool use, planning, and memory as the three
-fundamental capabilities of autonomous agents; Yao et al.’s ReAct
-framework <span class="citation" data-cites="yao2023react">(<a
-href="index.html#ref-yao2023react" role="doc-biblioref">Yao et al.
-2023</a>)</span> demonstrates that interleaving reasoning traces with
-tool actions dramatically improves agent reliability in interactive
+[wang2024llmagents] identifies tool use, planning, and memory as the
+three fundamental capabilities of autonomous agents; Yao et al.’s ReAct
+framework [yao2023react] demonstrates that interleaving reasoning traces
+with tool actions dramatically improves agent reliability in interactive
 settings. The <code>template/</code> skill architecture maps cleanly
 onto these three capabilities: the <code>SKILL.md</code> descriptors
 supply the tool-use layer, the declarative DAG of <code>17</code>

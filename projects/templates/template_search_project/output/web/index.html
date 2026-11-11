@@ -1146,7 +1146,7 @@ against the auto-generated <code>references.bib</code>.</p>
 class="header-section-number">3.7</span> Diagnostic figures</h2>
 <p><code>scripts/y_generate_search_figures.py</code> (a thin
 orchestrator over <code>src/publish/figures.py</code>) writes three
-diagnostic plots into <code>../figures/</code> from
+diagnostic plots into <code>output/figures/</code> from
 <code>output/search/results.json</code>. Each figure uses Matplotlib’s
 <code>Agg</code> backend so the pipeline runs headlessly in CI; the
 colour palette is colourblind-safe (Wong, <em>Nature Methods</em>
@@ -1532,7 +1532,7 @@ plus extracted text.</li>
 (when enabled).</li>
 <li><code>output/llm/per_paper/&lt;safe_id&gt;.md</code> — one per-paper
 note per paper (when enabled).</li>
-<li><code>../figures/{papers_per_source,year_histogram,score_distribution}.png</code>
+<li><code>output/figures/{papers_per_source,year_histogram,score_distribution}.png</code>
 — diagnostic figures.</li>
 <li><code>output/data/manuscript_variables.json</code> — substitution
 table consumed by the resolver.</li>
