@@ -281,8 +281,8 @@ runs:
           fi
           "$chrome" --version
           echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends poppler-utils zbar-tools fonts-dejavu
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends poppler-utils zbar-tools fonts-dejavu
         else
           brew install poppler zbar
           export PATH="/Library/TeX/texbin:$PATH"

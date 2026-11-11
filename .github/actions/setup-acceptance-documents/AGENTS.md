@@ -56,6 +56,9 @@ append only the reviewed regional fallbacks. Refuse unknown or changing
 files/stanzas; do not rewrite other APT configuration. Run permanent byte-policy
 tests without host APT access and use a separate disposable Linux root-file
 control for filesystem behavior.
+Native reader/font APT commands and CI's routine/contract APT consumers retain
+the same one-retry, 20-second HTTP/HTTPS connection/idle bounds, allowing the
+reviewed mirror fallbacks to run without extending the owning job deadline.
 
 ## Frozen Linux TeX and tagged-PDF capability
 
