@@ -82,7 +82,9 @@ def _preexisting_process(pid: int, started_monotonic: float, deadline: float) ->
     return elapsed > time.monotonic() - started_monotonic + 0.5
 
 
-def observe_bounded_run_processes(run_token: str, *, deadline: float, started_monotonic: float | None = None) -> set[int]:
+def observe_bounded_run_processes(
+    run_token: str, *, deadline: float, started_monotonic: float | None = None
+) -> set[int]:
     """Strictly observe live same-owner token holders; this is no containment or reaping proof."""
     _census_remaining(deadline)
     if not isinstance(run_token, str) or len(run_token) != 32 or any(c not in "0123456789abcdef" for c in run_token):

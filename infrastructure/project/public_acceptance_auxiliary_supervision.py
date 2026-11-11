@@ -254,7 +254,9 @@ def _cleanup(
     if child is not None and run_token:
         try:
             cleanup["final_census_matched_pids"] = sorted(
-                observe_bounded_run_processes(run_token, deadline=deadline, started_monotonic=guardian.started_monotonic)
+                observe_bounded_run_processes(
+                    run_token, deadline=deadline, started_monotonic=guardian.started_monotonic
+                )
             )
             cleanup["final_census_succeeded"] = True
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:

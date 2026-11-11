@@ -523,11 +523,14 @@ time.sleep(30)
         birth = time.monotonic()
         # A pre-existing non-dumpable daemon cannot hold this run's token and is
         # outside the guardian start scope, so it cannot fail final census.
-        assert observe_bounded_run_processes(
-            token,
-            deadline=time.monotonic() + 10,
-            started_monotonic=birth + 5,
-        ) == set()
+        assert (
+            observe_bounded_run_processes(
+                token,
+                deadline=time.monotonic() + 10,
+                started_monotonic=birth + 5,
+            )
+            == set()
+        )
         # The same unreadable newer child remains a strict refusal when it is
         # inside the guardian start scope.
         with pytest.raises(RuntimeError) as refused:
