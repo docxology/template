@@ -6819,14 +6819,14 @@
     },
     {
       "path": "tests/infra_tests/core/test_ubuntu_apt_mirrors.py",
-      "source_sha256": "2b8afcbda054d58333e053719c77b528309b59f370e137d7bf6e994466dc18a0",
+      "source_sha256": "8527a941ef59e00c9afe8bb9d86461b51aee01b1b49123eba3ae5706fc3a0ba4",
       "families": [
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_extra_mirror_bytes_are_refused",
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_known_mirror_priorities_change_without_rewriting_urls",
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_read_bound_covers_only_the_finite_reviewed_host_policy",
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_unknown_or_malformed_mirror_rows_are_refused"
       ],
-      "family_observations_sha256": "e65d0d3cecf256c513ee5f752695e3d701d2aac5f3accb25496d6e1a570ec3f1",
+      "family_observations_sha256": "7a8e6396d6d3b13cb84706704c54b58ab7afc5f9735d0e150db8eb367092b659",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -6835,7 +6835,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ubuntu_apt_mirrors.py",
-          "source_sha256": "2b8afcbda054d58333e053719c77b528309b59f370e137d7bf6e994466dc18a0",
+          "source_sha256": "8527a941ef59e00c9afe8bb9d86461b51aee01b1b49123eba3ae5706fc3a0ba4",
           "line": 1
         }
       ]
