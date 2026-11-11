@@ -73,6 +73,7 @@ class BoundedRunGuardian:
     finished: bool = False
     cache: tempfile.TemporaryDirectory[str] | None = None
     startup_deadline_monotonic: float | None = None
+    started_monotonic: float | None = None
 
     def _release_cache(self) -> None:
         if self.cache is not None and self.process.poll() is not None:
@@ -171,6 +172,7 @@ def start_bounded_run_guardian(
         control_read, control_write = os.pipe()
         status_read, status_write = os.pipe()
         _start_wait_timeout(startup_deadline)
+        started_monotonic = time.monotonic()
         process = subprocess.Popen(
             [
                 sys.executable,
@@ -205,6 +207,7 @@ def start_bounded_run_guardian(
             status_fd=status_read,
             cache=cache,
             startup_deadline_monotonic=startup_deadline,
+            started_monotonic=started_monotonic,
         )
         _expect_status(
             status_read,
