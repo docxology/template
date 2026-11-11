@@ -199,3 +199,7 @@ the strict candidate command must refuse release acceptance.
   provenance boundaries, and explicit optional-tool skips.
 - When an item is complete, move its dated evidence to the changelog or review
   record and remove it from this file in the same change.
+
+## Workflowz review — 2026-11-10
+
+Coverage note: This read-only review was limited to the supplied excerpts of project guidance, README, root and exemplar manifests, Node/Python pins, and `infrastructure/core/logging/setup.py`; the packet explicitly contained no general source excerpts, no marker excerpts, and no TO-DO.md or CI contents. No concrete correctness, maintainability, documentation, validation, or dead-code improvement with exact visible evidence and a behavioral acceptance probe survived. Re-review on a concrete failure or source change, with the affected source, existing TODO, and relevant CI/runtime evidence included.
