@@ -32,6 +32,9 @@ locks.
 - Preserve exact integer-zero original exits in retained publication receipts;
   JSON booleans and floating-point zero cannot certify a successful producer.
   Source, command and original stream-byte bindings remain enforced.
+- Review Core families with explicit prerequisites for the jq, uv and Pandoc
+  commands they execute, preserving native obligations and complete census
+  membership. Collection and review metadata do not grant runtime acceptance.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
