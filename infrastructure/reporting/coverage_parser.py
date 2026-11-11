@@ -192,7 +192,7 @@ def extract_timeout_errors(stdout: str, stderr: str) -> list[TimeoutErrorInfo]:
             test_name = "Unknown"
             for j in range(max(0, i - 5), i):
                 prev_line = lines[j]
-                test_match = re.search(r"([^\s]+\.py(?:::[^\s]+)*)\s+(?:PASSED|FAILED|ERROR)", prev_line)
+                test_match = re.search(r"(\S+\.py(?:::\S+)?)\s+(?:PASSED|FAILED|ERROR)", prev_line)
                 if test_match:
                     test_name = test_match.group(1)
                     break

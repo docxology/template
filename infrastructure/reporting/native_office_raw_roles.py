@@ -34,8 +34,8 @@ def office_raw_source_roles(ast: bytes) -> tuple[dict[str, Any], ...]:
         if isinstance(raw, list) and len(raw) == 2 and all(isinstance(value, str) for value in raw):
             format_name, text = raw
             text = text.strip()
-            if format_name == "html" and re.fullmatch(r"<!--(?:(?!-->).)*-->", text, re.DOTALL):
-                description = re.fullmatch(r"<!--\s*alt:\s*(.*?)\s*-->", text, re.DOTALL)
+            if format_name == "html" and re.fullmatch(r"<!--(?:(?!--!?>).)*--!?>", text, re.DOTALL):
+                description = re.fullmatch(r"<!--\s*alt:\s*(.*?)\s*--!?>", text, re.DOTALL)
                 role.update(
                     kind="image-alternative" if description else "nonvisible-comment",
                     text=" ".join(description[1].split()) if description else text,
