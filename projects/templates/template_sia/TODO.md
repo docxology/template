@@ -1,7 +1,7 @@
 # template_sia TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -95,3 +95,46 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained open request
+
+- [ ] `SIA-FIG-DELTA-NULL-1` · P2 · Minor · Do not fabricate zero-valued improvement evidence for null metrics.
+  - Provenance: the [original owner review](https://github.com/docxology/template_sia/blob/4feb54b15cc838e0969182deeb5d8f71b567c7d0/TODO.md#workflowz-review--2026-11-10) cites null-to-`0.0` coercion in `src/figures/sia_improvement_delta.py:59` and pass-through nulls in `src/generation_records.py:34`.
+  - Current source: `src/template_sia/figures/sia_improvement_delta.py::write_sia_improvement_delta` consumes `template_sia.ledger.generation_records.generation_metrics`; the corresponding null-to-zero expression remains the specific finding. Generic P4 loop/figure coverage does not close it.
+  - Outcome: null/missing `metric_value` yields the existing `_write_placeholder` path or omission of the affected delta pairs, never a fabricated 0.0 bar or spurious negative delta.
+  - Behavioral probe from the prepared standalone project root:
+    ```bash
+    python -I - <<'PY'
+    import json
+    import shutil
+    import tempfile
+    from pathlib import Path
+    import yaml
+    from template_sia.figures.sia_improvement_delta import write_sia_improvement_delta
+    with tempfile.TemporaryDirectory() as directory:
+        project = Path(directory)
+        shutil.copytree(Path("manuscript"), project / "manuscript")
+        shutil.copytree(Path("tasks"), project / "tasks")
+        config = project / "manuscript" / "config.yaml"
+        settings = yaml.safe_load(config.read_text())
+        settings["project_config"]["sia"]["run_id"] = 1
+        config.write_text(yaml.safe_dump(settings))
+        summary = project / "output" / "runs" / "run_1" / "run_summary.json"
+        summary.parent.mkdir(parents=True)
+        rows = [
+            {"generation": 1, "evaluation": {"metric_name": "accuracy", "metric_value": None, "n_samples": 6}},
+            {"generation": 2, "evaluation": {"metric_name": "accuracy", "metric_value": 0.6, "n_samples": 6}},
+        ]
+        payload = {"run_id": 1, "live": False, "max_generations": 2, "task_dir": str(project / "tasks" / "mini_classify"), "generations": rows}
+        summary.write_text(json.dumps(payload))
+        null_png = write_sia_improvement_delta(project).read_bytes()
+        rows[0]["evaluation"]["metric_value"] = 0.0
+        summary.write_text(json.dumps(payload))
+        zero_png = write_sia_improvement_delta(project).read_bytes()
+        assert null_png != zero_png, "null metric rendered exactly as fabricated zero"
+        assert write_sia_improvement_delta(project).read_bytes() == zero_png
+    PY
+    python -I -m pytest tests/test_figures.py -q --no-cov
+    ```
+    Add the null/missing-metric regression alongside `test_write_sia_improvement_delta_single_generation` and independently inspect that no affected delta is annotated. The byte comparison is the null-versus-real-zero negative control, not a replacement for that content assertion.
+  - Dependencies/constraints: reuse `_write_placeholder`, preserve valid-data numeric formatting and deterministic/offline defaults, and retain the live-loop honesty invariant. Proving artifact: null/missing, actual-zero, valid-data, and placeholder/omitted-pair results from one source revision. This request remains unchecked.

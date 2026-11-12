@@ -27,6 +27,32 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep README, AGENTS, STANDALONE, and the per-directory README/AGENTS pairs aligned with the descriptor validator, verification, and figure modules.
 
+## Workflowz review — 2026-11-10
+
+These requests remain **open**, independently of the broader P4 acceptance rows.
+Their dated owner record is preserved at
+[`995db6122be90d7d7d2f4ba5c467b7d5fa27158b`, `TODO.md:60–64`](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/TODO.md#L60-L64).
+The probes below are repair acceptance criteria, not passing receipts; neither
+request is implemented or closed by retaining it here. Run them from a prepared
+standalone project root (or this canonical project's root with its checkout SDK
+binding), not the monorepo root.
+
+- [ ] **WFZ-DD-1 — P1 — Make malformed `fields` descriptors return findings instead of raising.** Size: Small.
+  - **Outcome:** `validate_descriptor` and `build_descriptor_report` handle a non-iterable `fields` value through the normal invalid-descriptor result path, while valid descriptors retain their existing fingerprints.
+  - **Evidence:** [`src/data_descriptor/descriptor.py:63–72`](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/src/data_descriptor/descriptor.py#L63-L72) iterates `fields` directly, even though report construction later guards non-list values at [`descriptor.py:96–103`](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/src/data_descriptor/descriptor.py#L96-L103). The current source owner is still `src/data_descriptor/descriptor.py`.
+  - **Next action:** Guard malformed field containers before fingerprint iteration and add a regression through the public validation/report APIs, retaining the normal findings vocabulary.
+  - **Proving artifact:** Failing-before/passing-after malformed-container regression and unchanged fingerprints for the valid fixture descriptors.
+  - **Acceptance probe:** `uv run python -c 'from data_descriptor.descriptor import build_descriptor_report; report = build_descriptor_report({"name":"n","version":"1","license":"CC-BY-4.0","files":[],"fields":None,"provenance":[]}); assert not report.valid; assert report.field_count == 0; assert report.findings'`
+  - **Negative control / dependencies / constraints:** The original review identifies a `TypeError` before repair; retain that failure as the regression's before-state rather than accepting an exception as an invalid report. Valid descriptors must retain deterministic fingerprint ordering. No external dependency is required; preserve the existing malformed-container validation vocabulary where applicable.
+
+- [ ] **WFZ-DD-2 — P2 — Distinguish an unsafe/non-file declared path from a genuinely absent file.** Size: Small.
+  - **Outcome:** A declared existing directory or other non-regular path receives a failing verification status rather than the non-failure `absent` classification, so metadata-only release semantics remain limited to files that are actually not present.
+  - **Evidence:** [`src/data_descriptor/verification.py:10–12`](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/src/data_descriptor/verification.py#L10-L12) defines absent files as legitimately referenced but not bundled, whereas [`verification.py:211–221`](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/src/data_descriptor/verification.py#L211-L221) combines `not path` and `not resolved.is_file()` into `STATUS_ABSENT`; [`verification_summary`, lines 164–176](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/src/data_descriptor/verification.py#L164-L176) aggregates the verification classifications. The current source owner is still `src/data_descriptor/verification.py`.
+  - **Next action:** Separate genuinely missing files from unsafe or existing non-file paths and ensure the latter contribute to the failing summary.
+  - **Proving artifact:** Directory/non-regular-path regressions, a failing verification summary, and passing controls for genuinely missing metadata-only files.
+  - **Acceptance probe:** `uv run python -c 'import tempfile; from pathlib import Path; from data_descriptor.verification import STATUS_ABSENT, verify_descriptor_files, verification_summary; root=Path(tempfile.mkdtemp()); (root/"fixtures").mkdir(); result=verify_descriptor_files({"files":[{"path":"fixtures","checksum":"sha256:"+"0"*64,"rows":0,"media_type":"text/csv"}]}, root)[0]; assert result.status != STATUS_ABSENT; assert verification_summary((result,))["mismatch"] == 1'`
+  - **Negative control / dependencies / constraints:** An existing directory must not be accepted as an absent metadata-only file. Preserve `absent` for genuinely missing files and retain the existing [symlink/escape checks at `verification.py:186–210`](https://github.com/docxology/template_data_descriptor/blob/995db6122be90d7d7d2f4ba5c467b7d5fa27158b/src/data_descriptor/verification.py#L186-L210). No new media reader or network access is required.
+
 ## Platform 4 acceptance scope
 
 The rows below describe remaining acceptance and repairs, not a claim that

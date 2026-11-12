@@ -12,10 +12,10 @@ Use this template for **book-length manuscripts**: units → chapters → labs �
 question banks declared in a single `config.yaml`, with auto-numbering,
 deterministic figure/diagram generation, and structural-contract tests that
 keep hundreds of pages from drifting. For a single-paper computational
-project see [`template_code_project`](../template_code_project/); for
+project see [`template_code_project`](https://github.com/docxology/template/tree/main/projects/templates/template_code_project); for
 editorial/prose review see
-[`template_prose_project`](../template_prose_project/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_prose_project`](https://github.com/docxology/template/tree/main/projects/templates/template_prose_project). Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -154,6 +154,27 @@ uv run --project projects/templates/template_textbook --locked --extra dev \
 # 5. Audit the complete canonical book
 uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py --require-complete
 ```
+
+### Standalone project commands
+
+From an independent project root, prepare the declared SDK/development
+dependencies using a real matching wheel; its intended version is not proof
+of a PyPI release. Do not use the checkout-only `tool.uv.sources` ancestor:
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python scripts/generate_figures.py
+.venv/bin/python scripts/generate_diagrams.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/audit_textbook_quality.py --require-complete
+```
+
+For a new draft only, `scripts/scaffold_chapter.py` is the local scaffolding
+entry point. Preserve the authored canonical book; do not generate over it or
+omit SDK-dependent test modules. Stage scripts under `scripts/pipeline/` and
+the repository drift checker remain monorepo-root commands.
 
 > Exit code 0 alone is not proof: confirm the suite collected more than zero
 > tests and that coverage met the floor. The default audit proves scaffold

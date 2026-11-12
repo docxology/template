@@ -6,6 +6,12 @@ Configuration lives in `manuscript/config.yaml`; preregistration fixtures live i
 
 ## Commands
 
+The block below runs from the monorepo root. For a standalone project root,
+use the genuine SDK/dev preparation and local script/test commands in
+[`README.md`](README.md#standalone-project-commands); preserve the explicit
+`RR-STANDALONE-FIGURES-1` acceptance obligation rather than treating these
+examples as an execution receipt.
+
 ```bash
 uv run pytest projects/templates/template_registered_report/tests --cov=projects/templates/template_registered_report/src --cov-fail-under=90
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_registered_report --project-only
@@ -19,4 +25,4 @@ Do not let post-run result prose rewrite preregistered intent. Keep confirmatory
 
 New registration drafts must explicitly declare `schema_version: "template-registered-report/2"` before freezing. Already-frozen records retain their original schema and verified hash; persistence preserves existing file bytes and requires a new versioned directory for changed intent.
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow the monorepo's [decision records guide](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.

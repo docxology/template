@@ -54,6 +54,7 @@ def _domain_paper(record: Any) -> Paper:
         doi=record.doi,
         authors=[Author(name) for name in record.authors],
         venue=record.venue,
+        citation_count=record.raw.get("is-referenced-by-count"),
         references=[
             "doi:" + row["DOI"].lower()
             for row in record.raw.get("reference", [])
@@ -111,19 +112,14 @@ def _fulltext_candidates(phase_candidates: dict[str, list[Any]]) -> list[Any]:
     return candidates
 
 
-def _declared_contact_email(project_root: Path) -> str | None:
+def _declared_contact_email(config: dict[str, Any]) -> str | None:
     """Return the project's own declared correspondence address, if any.
 
     OpenAlex and Crossref meter anonymous callers far more aggressively than
-    identified ones. The address is read from the frozen manuscript config the
-    run already consumes, so acceptance never invents an identity and never
-    reaches for an ambient environment value.
+    identified ones. Use the runner's admitted config so path replacement cannot
+    change the request identity; never invent an address or consult ambient
+    environment values.
     """
-    import yaml
-
-    config = yaml.safe_load((project_root / "manuscript/config.yaml").read_text(encoding="utf-8"))
-    if not isinstance(config, dict):
-        return None
     for row in config.get("authors") or []:
         if isinstance(row, dict) and row.get("corresponding") is True:
             email = row.get("email")
@@ -168,7 +164,7 @@ def run_live(
         selected_queries: dict[str, str] = {}
         selected_providers: dict[str, str] = {}
         phase_candidates: dict[str, list[Any]] = {}
-        contact_email = _declared_contact_email(project_root)
+        contact_email = _declared_contact_email(runner.config)
         for index, phase in enumerate(phases):
             config = runner.search_phases[phase]
             query = config["queries"][0]

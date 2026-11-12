@@ -5,9 +5,9 @@
 Prose-focused exemplar demonstrating end-to-end use of
 `infrastructure/prose/` and `infrastructure/reference/`. Standalone editorial
 workflow — fast and offline by default. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Layout
 
@@ -42,7 +42,7 @@ flowchart TB
 | `src/` | Domain-only: `prose_facade.py` protocols, checks, figures, reports — **zero** `infrastructure` imports |
 | `scripts/run_prose_pipeline.py` | Calls `infrastructure.prose.analyze_manuscript`, then `src.pipeline.run_prose_pipeline` |
 | `scripts/z_generate_manuscript_variables.py` | Calls `infrastructure.rendering.manuscript_injection` for resolved trees |
-| Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) |
+| Live counts | Link [`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md) |
 
 ## Key contracts
 
@@ -128,10 +128,10 @@ To target a different manuscript:
 ## See also
 
 * [`README.md`](README.md) — quick reference.
-* [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
+* [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Publishing module reference](https://github.com/docxology/template/blob/main/infrastructure/publishing/README.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md) · [Archival targets](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md)
 * [`docs/architecture.md`](docs/architecture.md) — module dependency graph.
 * [`docs/quickstart.md`](docs/quickstart.md) — getting started.
-* [`infrastructure/prose/AGENTS.md`](../../../infrastructure/prose/AGENTS.md) —
+* [`infrastructure/prose/AGENTS.md`](https://github.com/docxology/template/blob/main/infrastructure/prose/AGENTS.md) —
   underlying module agent guide.
-* [`infrastructure/reference/AGENTS.md`](../../../infrastructure/reference/AGENTS.md) —
+* [`infrastructure/reference/AGENTS.md`](https://github.com/docxology/template/blob/main/infrastructure/reference/AGENTS.md) —
   bibliography agent guide.

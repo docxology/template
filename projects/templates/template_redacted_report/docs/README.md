@@ -38,6 +38,19 @@ forks select their own policy for their own cleared fixtures.
 
 ## Verification workflow
 
+The block below runs from the **monorepo root**. For standalone SDK/dev setup,
+use [`README.md`](../README.md#standalone-project-commands); from the prepared
+project root the local writers are `python scripts/01_generate_release_artifacts.py`
+and `python scripts/02_build_figures.py`, and the full suite is
+`python -I -m pytest tests/ --cov=src --cov-fail-under=90`.
+Development proofs are opt-in (`python scripts/generate_dev_variants.py
+--no-steganography` for plain PDFs). Shared Stage 03/04 and drift scripts are
+monorepo files; installed provenance needs the genuine declared SDK, and Kmyth
+sealing separately needs the reviewed real toolchain.
+
+The [authored standalone bootstrap repair](https://github.com/docxology/template_redacted_report/blob/669131e7b962a21ba5d85c2483dcd2d05566ccc0/CHANGELOG.md#L11-L24)
+must survive source adoption; its historical record is not a fresh proof run.
+
 ```bash
 uv run pytest projects/templates/template_redacted_report/tests \
   --cov=projects/templates/template_redacted_report/src --cov-fail-under=90

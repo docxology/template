@@ -9,8 +9,8 @@
 
 ![12-page contact sheet](docs/contact-sheet.png)
 
-This is a canonical exemplar sibling of [`template_code_project`](../template_code_project/)
-and [`template_prose_project`](../template_prose_project/): same directory contract
+This is a canonical exemplar sibling of [`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project)
+and [`template_prose_project`](https://github.com/docxology/template/blob/main/projects/templates/template_prose_project): same directory contract
 (`src/` + `tests/` + optional `scripts/`/`manuscript/`), same orchestration
 hooks, same documentation conventions — but where those render a *manuscript*,
 this renders a *newspaper*.
@@ -22,9 +22,9 @@ multi-page broadsheets/tabloids with precise column geometry,
 typography-first constraints, and strict content/engine separation (YAML
 editions in `content/`, pure-Python ReportLab engine in `src/`). If you are
 producing a research manuscript rather than a designed layout, see
-[`template_code_project`](../template_code_project/) or
-[`template_prose_project`](../template_prose_project/) instead. Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project) or
+[`template_prose_project`](https://github.com/docxology/template/blob/main/projects/templates/template_prose_project) instead. Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -130,17 +130,25 @@ and section flags (`render.spot_color: true`).
 
 ## Quick start
 
+In the monorepo, first enter `projects/templates/template_newspaper/`; a
+standalone checkout's root is already that project directory. Prepare its own
+Python 3.14/3.15 environment with the genuine SDK wheel matching
+`pyproject.toml`, not its checkout-only `tool.uv.sources` ancestor:
+
 ```bash
-# From the repository root, with the workspace .venv active:
-cd projects/templates/template_newspaper
-
-# 1. generate figures (halftone engravings + grayscale charts)
-uv run python scripts/10_generate_figures.py
-
-# 2. render the 12-page PDF
-uv run python scripts/20_render_newspaper.py
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python scripts/10_generate_figures.py
+.venv/bin/python scripts/20_render_newspaper.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
 open output/pdf/the-triplicate.pdf
 ```
+
+The candidate SDK is not assumed published on PyPI. The engine uses ReportLab
+without an external PDF compiler; `pdftoppm` is a separate visual-review tool.
+Ruff and mypy are not in this project's `dev` extra: use the monorepo toolchain
+or prepare them explicitly rather than treating their absence as a layout pass.
 
 Or render programmatically:
 
@@ -148,11 +156,11 @@ Or render programmatically:
 from pathlib import Path
 from newspaper.engine import build_and_render
 
-result = build_and_render(Path("projects/templates/template_newspaper"))
+result = build_and_render(Path("."))  # project root; same in a standalone clone
 print(result.page_count, result.all_pages_fit)   # 12 True
 ```
 
-Run it through the repository orchestrator like any other project:
+Run it through the repository orchestrator from the **monorepo root**:
 
 ```bash
 ./run.sh --project templates/template_newspaper --pipeline

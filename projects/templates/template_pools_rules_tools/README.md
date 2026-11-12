@@ -2,11 +2,11 @@
 
 **Pools, Rules, and Tools: A Template-Integrated Resource Architecture**
 
-Run via the template monorepo from the repository root with `uv run python scripts/…`
-or project-local scripts under `projects/templates/template_pools_rules_tools/scripts/`.
+In a standalone export, this repository root is the project directory and its
+scripts are `scripts/<name>.py`. In the monorepo, run from its root and prefix
+project scripts/tests with `projects/templates/template_pools_rules_tools/`.
 Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` for forkable
-configuration. Preserve template integrity when forking this exemplar into a
-standalone checkout.
+configuration; preserve the declared public-resource export bundle.
 
 A meta-project exemplar demonstrating the integration of the top-level resource directories and public tool exemplars discovered at runtime:
 
@@ -62,7 +62,7 @@ template_pools_rules_tools/
 
 ## Quick Start
 
-From the repository root:
+From the **monorepo root**:
 
 ```bash
 # Run tests
@@ -74,6 +74,28 @@ uv run python projects/templates/template_pools_rules_tools/scripts/01_validate_
 # Run integration demo
 uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py
 ```
+
+From a standalone export root, prepare Python 3.14/3.15 with the genuine SDK
+wheel matching `pyproject.toml` and the complete declared
+`_template_resources/{fonds,rules,tools}/templates/` bundle:
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/01_validate_sources.py
+.venv/bin/python scripts/02_run_integration.py
+.venv/bin/python scripts/03_generate_manuscript.py
+.venv/bin/python scripts/04_validate_strong_rules.py
+```
+
+The source-only `tool.uv.sources` ancestor is not a standalone SDK provider,
+and an intended version is not an available PyPI release. Unlike the historical
+resource-less mirror, current exports/wheels carry their required public
+resources; missing resources remain a failed/blocked acceptance condition, not
+permission to drop tests or lower coverage. See [`STANDALONE.md`](STANDALONE.md)
+for resource custody and genuine installed execution outside the checkout.
 
 ## When to use this template
 

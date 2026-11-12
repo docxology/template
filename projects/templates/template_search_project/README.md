@@ -3,7 +3,7 @@
 A configurable, reproducible literature-search → BibTeX → LLM-synthesis
 pipeline built on `infrastructure/search/`, `infrastructure/reference/`,
 and `infrastructure/llm/`. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 The offline default and explicit bounded unpaid retrieval/full-text/local-model
 acceptance lane are documented in [unpaid acceptance](docs/unpaid-acceptance.md).
@@ -14,10 +14,10 @@ Use this template for **literature-review and evidence-synthesis pipelines**:
 multi-backend search (arXiv, Crossref, local corpora, optional Paperclip),
 deduplication, BibTeX generation, and LLM-assisted per-paper and corpus-level
 synthesis. If you are implementing algorithms with numerical experiments,
-start from [`template_code_project`](../template_code_project/) instead; for
+start from [`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project) instead; for
 prose-quality/editorial review see
-[`template_prose_project`](../template_prose_project/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_prose_project`](https://github.com/docxology/template/blob/main/projects/templates/template_prose_project). Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -349,12 +349,12 @@ Run manually from the project directory: `uv run python scripts/review`.
 ## Related Documentation
 
 * [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation / cross-reference conventions specific to this project.
-* [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
-* [`docs/modules/literature-search-and-references.md`](../../../docs/modules/literature-search-and-references.md)
-* [`docs/guides/literature-workflow-guide.md`](../../../docs/guides/literature-workflow-guide.md)
-* [`docs/architecture/discovery-export-synthesis.md`](../../../docs/architecture/discovery-export-synthesis.md)
-* [`docs/best-practices/literature-search-best-practices.md`](../../../docs/best-practices/literature-search-best-practices.md)
-* [`docs/security/literature-fetch-security.md`](../../../docs/security/literature-fetch-security.md)
+* [`../../../docs/guides/manuscript-semantics.md`](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
+* [`docs/modules/literature-search-and-references.md`](https://github.com/docxology/template/blob/main/docs/modules/literature-search-and-references.md)
+* [`docs/guides/literature-workflow-guide.md`](https://github.com/docxology/template/blob/main/docs/guides/literature-workflow-guide.md)
+* [`docs/architecture/discovery-export-synthesis.md`](https://github.com/docxology/template/blob/main/docs/architecture/discovery-export-synthesis.md)
+* [`docs/best-practices/literature-search-best-practices.md`](https://github.com/docxology/template/blob/main/docs/best-practices/literature-search-best-practices.md)
+* [`docs/security/literature-fetch-security.md`](https://github.com/docxology/template/blob/main/docs/security/literature-fetch-security.md)
 
 
 ## Optional hardening

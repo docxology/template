@@ -14,7 +14,10 @@ metrics:
     direction: maximize
 protocol: "Freeze the plan, run analysis comparison, then classify deviations before claims are written."
 expected_figures:
-  - fig:registration_flow
+  - fig:hypothesis_map
+  - fig:analysis_dag
+  - fig:deviation_timeline
+  - fig:permutation_result
 expected_tables:
   - tbl:deviation_ledger
 baselines:

@@ -7,7 +7,7 @@ Deterministic Self-Improvement Agent (SIA) harness exemplar. Layer 1 lives in
 and manuscript tokens. See [arXiv:2605.27276](https://arxiv.org/abs/2605.27276)
 for the upstream contract; this tree reimplements the harness only.
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Layout
 
@@ -37,7 +37,7 @@ outside its scope. Missing required tools or model block with exit 75 and a
 retained receipt. Fixture replay records real threshold variants but all score
 1.0 on the toy dataset, so it demonstrates deterministic replay and threshold
 robustness—not measured self-improvement. See
-[`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
+[`../../../infrastructure/sia/AGENTS.md`](https://github.com/docxology/template/blob/main/infrastructure/sia/AGENTS.md).
 `project_config.sia.approval_mode` is typed and defaults to `fixture_replay`;
 forks must select `live_proposal` or `live_apply` only alongside the sandbox,
 diff, rollback, and owner-receipt contract in `src/template_sia/loop/approval.py`.
@@ -73,7 +73,7 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia
 
 - [`README.md`](README.md)
 - [`manuscript/AGENTS.md`](manuscript/AGENTS.md)
-- [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md)
+- [`../../../infrastructure/sia/AGENTS.md`](https://github.com/docxology/template/blob/main/infrastructure/sia/AGENTS.md)
 
 #
 ## Agent skill
@@ -85,4 +85,4 @@ quick reference commands, and pitfalls.
 
 # Publishing
 
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
+- [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Publishing module reference](https://github.com/docxology/template/blob/main/infrastructure/publishing/README.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md) · [Archival targets](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md)

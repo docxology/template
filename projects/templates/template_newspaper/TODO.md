@@ -1,7 +1,7 @@
 # template_newspaper TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -83,3 +83,24 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained open requests
+
+The [immutable owner review](https://github.com/docxology/template_newspaper/blob/66d538eaaef5c7b44a2b67b2f6601378d687a651/TODO.md#L67-L71)
+is not superseded by generic P4 layout acceptance. Both requests remain unchecked.
+Run these probes from the standalone project root in the prepared project
+environment; `newspaper` is the current package, not a `src` compatibility import.
+
+- [ ] `WFZ-20261110-01` · P1 · Minor · Reject an invalid enabled spot color rather than silently rendering without it.
+  - Outcome: `render.spot_color: true` with malformed `render.spot_hex` fails loading or rendering with an actionable `spot_hex` configuration error. Valid hex still creates a ReportLab color; disabled spot color still returns `None`.
+  - Evidence: `src/newspaper/config.py:107-117` catches every `HexColor` error and returns `None`; `src/newspaper/engine.py` consumes that value. The immutable review preserves the original line evidence.
+  - Acceptance: `python -I -c 'from newspaper.config import NewspaperConfig; NewspaperConfig(spot_color=True, spot_hex="not-a-color").spot()'` must fail specifically for `spot_hex`, not an import or preparation error.
+  - Paired control: `python -I -c 'from newspaper.config import NewspaperConfig; assert NewspaperConfig(spot_color=True, spot_hex="#9E1B32").spot() is not None; assert NewspaperConfig(spot_color=False, spot_hex="not-a-color").spot() is None'` must succeed.
+  - Dependencies/constraints: existing PyYAML/ReportLab only; preserve disabled-spot behavior and deterministic rendering defaults. Proving artifact: a regression that rejects malformed enabled colors alongside the valid/disabled controls; generic render success cannot close the request.
+
+- [ ] `WFZ-20261110-02` · P1 · Minor · Parse render booleans strictly rather than truthiness-coercing quoted strings.
+  - Outcome: actual YAML booleans retain their values; non-boolean `draft_grid` or `spot_color` values raise a clear `ValueError`.
+  - Evidence: `src/newspaper/config.py:102-103` applies `bool(...)` to YAML values, so `"false"` becomes `True`.
+  - Acceptance / negative control: `python -I -c 'from newspaper.config import NewspaperConfig; NewspaperConfig.from_dict({"render": {"spot_color": "false"}})'` must fail for the invalid field/value; repeat for `draft_grid`.
+  - Paired control: `python -I -c 'from newspaper.config import NewspaperConfig; c=NewspaperConfig.from_dict({"render": {"draft_grid": True, "spot_color": False}}); assert c.draft_grid is True and c.spot_color is False; c=NewspaperConfig.from_dict({"render": {"draft_grid": False, "spot_color": False}}); assert c.draft_grid is False and c.spot_color is False'`.
+  - Dependencies/constraints: no new dependency; preserve actual YAML boolean support and strict unknown-key validation. Proving artifact: behavioral tests for both fields, with quoted `"false"` rejected and both real boolean values retained.

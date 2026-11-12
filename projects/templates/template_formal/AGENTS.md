@@ -2,11 +2,11 @@
 
 **This is an active project** in the `projects/` directory, discovered and
 executed by infrastructure discovery functions. Public exemplar roster and
-comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
-Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
+comparison: [`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
+Manuscript semantics: [`docs/guides/manuscript-semantics.md`](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md).
 
 Decision memory and verifier hardening follow
-[`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md):
+[`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md):
 use nearby `WHY:` comments only for surprising local choices, keep volatile
 counts generated, and add negative controls for verifier-like gates.
 
@@ -106,7 +106,7 @@ flowchart TB
 ## Installation/Setup
 
 Install the monorepo command environment from the **repository root** with
-`uv sync` (see root [`pyproject.toml`](../../../pyproject.toml)). For the complete
+`uv sync` (see root [`pyproject.toml`](https://github.com/docxology/template/blob/main/pyproject.toml)). For the complete
 isolated project development suite, prepare
 `uv sync --project projects/templates/template_formal --locked --extra dev --extra formal-tools`.
 The SDK dependency declared in `pyproject.toml` belongs to `formal-tools`; selecting `dev` alone does
@@ -217,6 +217,6 @@ See [README.md](README.md) for the project overview and quick start.
 
 ## See Also
 
-- [Root AGENTS.md](../../AGENTS.md) - Template documentation
-- [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
+- [Root AGENTS.md](https://github.com/docxology/template/blob/main/projects/AGENTS.md) - Template documentation
+- [`../../AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
 - [`manuscript/references.bib`](manuscript/references.bib) — full bibliography

@@ -1,7 +1,7 @@
 # template_pitch_deck TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -98,3 +98,58 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained open requests
+
+The [original bounded review](https://github.com/docxology/template-pitch-deck/blob/e05ff4fc974736eef8871039a7ec26aea55731c6/TODO.md#L74-L80)
+covered guidance, README, TODO, packaging, and 12 of 33 source candidates.
+Its two fail-closed diligence requests remain unchecked; P4 renderer or
+coverage receipts do not prove these particular outcomes. Historical flat
+module paths now map to `src/template_pitch_deck/`. Current
+`uncited_fact_slides(raw, repo_root)` requires an existing `Path`: the old
+`repo_root=None` non-emptiness-only mode is retired and must not be restored.
+Run the probes from the prepared standalone project root with its declared SDK
+and admitted complete-source DATA described in [`AGENTS.md`](AGENTS.md#standalone-complete-source-data).
+
+- [ ] `WR-01` · P2 · Minor · Reject non-file or repository-escaping `source` citations.
+  - Outcome: a directory citation or an escaping path, including a symlink escape, is not valid fact evidence; a real contained file still passes.
+  - Evidence: the original `src/diligence_audit.py:58` `.exists()` check is now `_citation_exists_on_disk` in `src/template_pitch_deck/diligence_audit.py`; directory existence alone does not establish a confined regular file.
+  - Acceptance / negative controls:
+    ```bash
+    python -I - <<'PY'
+    import tempfile
+    from pathlib import Path
+    from template_pitch_deck.diligence_audit import uncited_fact_slides
+    with tempfile.TemporaryDirectory() as directory:
+        outer = Path(directory)
+        root = outer / "repo"
+        (root / "docs").mkdir(parents=True)
+        (root / "evidence.md").write_text("real fixture evidence")
+        (outer / "outside.md").write_text("outside fixture evidence")
+        (root / "escape.md").symlink_to(outer / "outside.md")
+        slide = {"kind": "content", "title": "t", "bullets": ["{{INFRA_PYTHON_FILE_COUNT}} files"]}
+        for source in ("docs", "../outside.md", "escape.md"):
+            assert uncited_fact_slides({"slides": [{**slide, "source": source}]}, root), source
+        assert not uncited_fact_slides({"slides": [{**slide, "source": "evidence.md"}]}, root)
+    PY
+    python -I -m pytest tests/test_diligence_audit.py -q --no-cov
+    ```
+  - Dependencies/constraints: retain mandatory repository-root validation and offline defaults. Keep the existing absolute HTTP(S)-URL trust boundary without implying reachability or fetching the URL. Use regular-file and resolved containment checks, not an obsolete compatibility mode. Proving artifact: updated diligence tests with contained-file, directory, traversal, and symlink controls.
+
+- [ ] `WR-02` · P2 · Minor · Include speaker `notes` in fact-token citation scanning.
+  - Outcome: fact tokens appearing only in notes require a `source` on non-title slides. `src/template_pitch_deck/content_loader.py` already resolves and cliché-lints notes; `diligence_audit.slide_text_blob` must scan the same factual surface.
+  - Evidence: original `src/diligence_audit.py:22` omitted notes from `find_tokens`; the corresponding current `slide_text_blob` still assembles title, bullets, stat, and quote fields.
+  - Acceptance / negative control:
+    ```bash
+    python -I - <<'PY'
+    from pathlib import Path
+    from template_pitch_deck.diligence_audit import uncited_fact_slides
+    root = Path.cwd()
+    assert uncited_fact_slides({"slides": [{"kind": "content", "title": "t", "notes": "{{EXEMPLAR_COUNT}} exemplars"}]}, root)
+    assert not uncited_fact_slides({"slides": [{"kind": "content", "title": "t", "notes": "No fact tokens here"}]}, root)
+    assert not uncited_fact_slides({"slides": [{"kind": "title", "title": "{{PITCH_SUBJECT_TITLE}}"}]}, root)
+    PY
+    python -I -m pytest tests/test_diligence_audit.py tests/test_content_loader.py -q --no-cov
+    python scripts/30_audit_diligence.py
+    ```
+  - Dependencies/constraints: keep the title-kind exemption and document the complete scanned surface. Inspect actual `manuscript/deck_content_*.yaml`; if existing notes contain fact tokens, supply their real source citations in the same implementation change. Proving artifact: notes-only regressions plus the real diligence audit, not a callable-shape assertion.

@@ -3,7 +3,7 @@
 Research project demonstrating illegal-states-unrepresentable design — algebraic
 data types, session-typed protocol state machines, and affine-discipline
 resource handles — applied to a decentralized multiagent simulation. Exemplar
-roster: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+roster: [`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -16,9 +16,9 @@ between "mypy --strict proved this at edit-time/CI-time" and "this is a
 runtime-guarded discipline, not a compiler guarantee" — the honesty scoping
 is the point, not a caveat bolted on afterward. If your project is primarily
 numerical experiments and figures, see
-[`template_code_project`](../template_code_project/) instead; if it is
+[`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project) instead; if it is
 Active-Inference modeling without the type-theory framing, see
-[`template_active_inference`](../template_active_inference/); if it needs an
+[`template_active_inference`](https://github.com/docxology/template/blob/main/projects/templates/template_active_inference); if it needs an
 actual Lean/mathlib proof development (not an optional side-spec), that is
 outside this template's scope — see the repo's Lean skills.
 
@@ -230,7 +230,7 @@ uv run python scripts/pipeline/stage_01_test.py --project templates/template_for
 Illustrative archived output only (per ISA.md's authoritative-invocation
 binding — a bare root-venv `uv run pytest` is not equivalent, see `ISA.md`
 Changelog). Current collection and coverage values are generated in
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md):
+[`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md):
 
 ```text
 Required test coverage of 90% reached. Total coverage: <measured value>
@@ -300,10 +300,10 @@ quick reference commands, and pitfalls.
 
 ## See Also
 
-- [Root AGENTS.md](../../AGENTS.md) - Template documentation
-- [`template_code_project`](../template_code_project/) — numerical-research sibling exemplar
-- [`template_active_inference`](../template_active_inference/) — Active Inference sibling exemplar
-- [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
+- [Root AGENTS.md](https://github.com/docxology/template/blob/main/projects/AGENTS.md) - Template documentation
+- [`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project) — numerical-research sibling exemplar
+- [`template_active_inference`](https://github.com/docxology/template/blob/main/projects/templates/template_active_inference) — Active Inference sibling exemplar
+- [`../../AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
 
 For prepared hosted/exported execution, `TEMPLATE_FORMAL_TLC_JAR` may name an
 absolute external jar from the stable `v1.7.4` asset locator when no project cache

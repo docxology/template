@@ -8,7 +8,7 @@ Exemplar project demonstrating end-to-end use of the
 `projects/templates/template_code_project/` so the pipeline runner discovers
 and executes both projects with the same code.
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`manuscript/AGENTS.md`](manuscript/AGENTS.md), [`src/AGENTS.md`](src/template_search_project/AGENTS.md), [`tests/AGENTS.md`](tests/AGENTS.md), [`scripts/AGENTS.md`](scripts/AGENTS.md) (each with a [`README.md`](README.md) in the same directory).
 
@@ -207,7 +207,7 @@ This project's full-text acquisition is the narrow `FulltextFetcher` in
 `paper.pdf_url` PDF download only, with no Unpaywall/OA resolution across
 arbitrary DOIs — and `src/` has no workflow-graph decomposition or composite
 reproducibility score over that text.
-[`template_literature_meta_analysis`](../template_literature_meta_analysis/)
+[`template_literature_meta_analysis`](https://github.com/docxology/template/tree/main/projects/templates/template_literature_meta_analysis)
 is a candidate pattern to adopt here if this project's acquisition step
 grows to match: its `src/literature/fulltext_download.py` resolves full text
 via Unpaywall/OA/direct-PDF with graceful degradation, feeding
@@ -223,9 +223,9 @@ work — noted for future reference only.
 
 * [`README.md`](README.md) — quick reference.
 * [`docs/README.md`](docs/README.md) — project docs index.
-* [`docs/modules/literature-search-and-references.md`](../../../docs/modules/literature-search-and-references.md) — module overview.
-* [`docs/guides/literature-workflow-guide.md`](../../../docs/guides/literature-workflow-guide.md) — narrative tutorial.
-* [`infrastructure/search/AGENTS.md`](../../../infrastructure/search/AGENTS.md) and [`infrastructure/reference/AGENTS.md`](../../../infrastructure/reference/AGENTS.md) — infrastructure guides.
+* [`docs/modules/literature-search-and-references.md`](https://github.com/docxology/template/blob/main/docs/modules/literature-search-and-references.md) — module overview.
+* [`docs/guides/literature-workflow-guide.md`](https://github.com/docxology/template/blob/main/docs/guides/literature-workflow-guide.md) — narrative tutorial.
+* [`infrastructure/search/AGENTS.md`](https://github.com/docxology/template/blob/main/infrastructure/search/AGENTS.md) and [`infrastructure/reference/AGENTS.md`](https://github.com/docxology/template/blob/main/infrastructure/reference/AGENTS.md) — infrastructure guides.
 
 ## Optional gap-filler search (Monid)
 

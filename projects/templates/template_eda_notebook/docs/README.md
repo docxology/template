@@ -16,7 +16,7 @@ file index lives in [`AGENTS.md`](AGENTS.md).
 |---|---|---|
 | [`agent_instructions.md`](agent_instructions.md) | Hard rules for AI agents; verification checklist | AI agents, all developers |
 | [`architecture.md`](architecture.md) | Layer table, dependency direction, forbidden patterns, how-to-add-an-EDA-step | Developers |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, class inventory (live counts → [`COUNTS.md`](../../../../docs/_generated/COUNTS.md)) | Developers, testers |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, class inventory (live counts → [`COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)) | Developers, testers |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Manuscript → PDF flow; config.yaml controls | Content authors, developers |
 | [`style_guide.md`](style_guide.md) | Code-style rules: Zero-Mock, library purity, thin orchestrator, explicit paths, type hints, error messages | Developers |
 | [`syntax_guide.md`](syntax_guide.md) | Markdown links, figure label registry, citation syntax | Content authors |

@@ -32,12 +32,20 @@ uv run pytest projects/templates/template_registered_report/tests \
     --cov=projects/templates/template_registered_report/src --cov-fail-under=90
 ```
 
-Project-local scripts (see `scripts/README.md`):
+Project scripts, still invoked below from the **monorepo root** (see `scripts/README.md`):
 
 ```bash
 uv run python projects/templates/template_registered_report/scripts/generate_figures.py
 uv run python projects/templates/template_registered_report/scripts/generate_review_artifacts.py
 ```
+
+In a prepared standalone checkout, the actual local entry points are
+`python scripts/generate_figures.py` and
+`python scripts/generate_review_artifacts.py`, with
+`python -I -m pytest tests/ --cov=src --cov-fail-under=90` for the full suite.
+See [`README.md`](../README.md#standalone-project-commands) for genuine SDK/dev
+preparation and the still-unchecked `RR-STANDALONE-FIGURES-1` acceptance
+obligation; no vendored fallback or monorepo ancestor is the declared SDK.
 
 Forks: copy `manuscript/config.yaml.example` to `manuscript/config.yaml` and
 keep template-integrity checks green (per repo README).

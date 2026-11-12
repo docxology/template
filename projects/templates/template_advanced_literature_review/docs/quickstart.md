@@ -116,3 +116,9 @@ Final PDF: `projects/templates/template_advanced_literature_review/output/pdf/te
 | Inject manuscript variables | `uv run python scripts/05_inject_variables.py` |
 | Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_advanced_literature_review` |
 | Clean outputs | `rm -rf projects/templates/template_advanced_literature_review/output/` |
+
+Project-local paths (`scripts/<stage>.py`, `tests/`) are relative to this
+project's root; `scripts/pipeline/`, `scripts/audit/`, and `projects/...` paths
+are relative to the template **monorepo root**, not standalone files. An
+independent checkout needs the genuine declared SDK and committed-source Meta
+provider, in the [documented dependency order](../README.md#dependencies).

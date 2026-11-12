@@ -8,8 +8,10 @@ validation_gates:
   - confirmatory_claim_boundary
   - reproducibility
 figure_types:
-  - registration_flow
-  - deviation_matrix
+  - hypothesis_map
+  - analysis_dag
+  - deviation_timeline
+  - permutation_result
 citation_policy: official_or_scholarly
 llm_prompt_guidance: "Separate registered claims from exploratory interpretation and never backfill intent after results."
 review_gates:
