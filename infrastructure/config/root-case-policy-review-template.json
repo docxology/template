@@ -2955,7 +2955,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_execution_user.py",
-      "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+      "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
       "families": [
         "tests/infra_tests/core/test_ci_execution_user.py::test_actual_cold_copy_ignores_atime_and_preserves_source_identity",
         "tests/infra_tests/core/test_ci_execution_user.py::test_actual_platform_refuses_privileged_setup_without_hosted_authority",
@@ -2974,7 +2974,7 @@
         "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_binds_clean_initialized_and_uninitialized_submodules",
         "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_rejects_parent_as_checkout_source"
       ],
-      "family_observations_sha256": "cf6dea988d495340bf62579e95b2c3c3f844f90f101fc9e5cb846d4a3aa2557e",
+      "family_observations_sha256": "6fe3bc81f4693a1f01ae55acf8e2234d42cc8e9dcec4e88552a537c5ad4a2f25",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2998,18 +2998,48 @@
       "evidence": [
         {
           "path": "infrastructure/core/testing/_ci_execution_files.py",
-          "source_sha256": "ff1c9d689530473ff46f78a85c7a9429f049dd8aa46e6b00cc56e3393f8e3c82",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
           "line": 137
         },
         {
           "path": "infrastructure/core/testing/_ci_execution_files.py",
-          "source_sha256": "ff1c9d689530473ff46f78a85c7a9429f049dd8aa46e6b00cc56e3393f8e3c82",
-          "line": 317
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
+          "line": 327
         },
         {
           "path": "infrastructure/core/testing/_ci_execution_files.py",
-          "source_sha256": "ff1c9d689530473ff46f78a85c7a9429f049dd8aa46e6b00cc56e3393f8e3c82",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
+          "line": 345
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
           "line": 389
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
+          "line": 400
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
+          "line": 411
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
+          "line": 416
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "cf7ff4e311893401213a2e8aecf4a035f57f1def5b815648059c60b63a483305",
+          "line": 417
+        },
+        {
+          "path": "infrastructure/core/testing/ci_execution_user.py",
+          "source_sha256": "e97e864620b2f13e846de81831cd85bda0b618954bfc40de2f5d64cb708b1726",
+          "line": 351
         },
         {
           "path": "infrastructure/core/testing/ci_execution_user.py",
@@ -3017,34 +3047,79 @@
           "line": 447
         },
         {
-          "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
-          "line": 301
+          "path": "infrastructure/core/testing/ci_execution_user.py",
+          "source_sha256": "e97e864620b2f13e846de81831cd85bda0b618954bfc40de2f5d64cb708b1726",
+          "line": 449
+        },
+        {
+          "path": "infrastructure/core/testing/ci_execution_user.py",
+          "source_sha256": "e97e864620b2f13e846de81831cd85bda0b618954bfc40de2f5d64cb708b1726",
+          "line": 455
+        },
+        {
+          "path": "infrastructure/core/testing/ci_execution_user.py",
+          "source_sha256": "e97e864620b2f13e846de81831cd85bda0b618954bfc40de2f5d64cb708b1726",
+          "line": 464
         },
         {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
-          "line": 345
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 304
         },
         {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
-          "line": 375
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 334
         },
         {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
-          "line": 397
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 339
         },
         {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
-          "line": 456
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 340
         },
         {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
-          "line": 527
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 373
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 395
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 409
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 418
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 504
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 521
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 575
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "bb9ac88790560d017c64c5bb08a2c40ce585b5cf5a997a84f0595cd55c939366",
+          "line": 577
         }
       ]
     },
