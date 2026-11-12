@@ -30,7 +30,7 @@ jobs:
           set -euo pipefail
           sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
           sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends nix-bin nix-setup-systemd
-          sudo -n systemctl start nix-daemon.socket
+          sudo -n nix-store --init
           nix --version
       - name: Collect actual immutable compiler and provider outputs
         shell: bash
@@ -55,7 +55,7 @@ jobs:
           deadline = time.monotonic() + 9000
           reference = 'git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c'
           target = reference + '#packages.x86_64-linux.pandoc-with-crossref'
-          base = ['sudo', '-n', shutil.which('nix'), '--extra-experimental-features', 'nix-command flakes',
+          base = ['sudo', '-n', shutil.which('nix'), '--store', 'local', '--extra-experimental-features', 'nix-command flakes',
                   '--option', 'accept-flake-config', 'false', '--option', 'require-sigs', 'true',
                   '--option', 'max-jobs', '2', '--option', 'cores', '2',
                   '--option', 'substituters', 'https://cache.nixos.org https://cache.iog.io https://pandoc-crossref.cachix.org',
