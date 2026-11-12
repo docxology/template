@@ -76,7 +76,7 @@ jobs:
             plan_derivation = value.plan.drvPath; plan_output = value.plan.outPath;
             resolved_freeze = toString value.resolvedFreeze;
           }'''
-          local_arguments = ['--file', str(recipe), '--argstr', 'freezeFile', str(freeze)]
+          local_arguments = ['--file', str(recipe)]
           evaluated = json.loads(run('evaluation', ['eval', '--json', *local_arguments, '--apply', evaluation]))
           (root / 'evaluation.json').write_text(json.dumps(evaluated, indent=2) + '\n')
           graph = json.loads(run('recursive-derivations', ['derivation', 'show', '--recursive', evaluated['derivation'], evaluated['compiler_derivation'], evaluated['plan_derivation']]))

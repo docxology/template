@@ -1,6 +1,5 @@
-{ freezeFile, system ? "x86_64-linux" }:
-
 let
+  system = "x86_64-linux";
   upstream = builtins.getFlake
     "git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c";
   haskellNix = upstream.inputs.haskellNix;
@@ -14,7 +13,7 @@ let
     compiler-nix-name = "ghc9122";
     index-state = "2026-09-06T18:04:17Z";
     cabalProject = builtins.readFile "${upstream.outPath}/cabal.project";
-    cabalProjectFreeze = builtins.readFile freezeFile;
+    cabalProjectFreeze = builtins.readFile ./native-document-build.freeze;
     cabalProjectLocal = ''
       package pandoc-crossref
         flags: +enable_flaky_tests
