@@ -274,11 +274,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-11T09:21:28Z",
+  "timestamp": "2026-11-11T22:52:47Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "9a325ea625647d0542dbabbd6f7657eb90e9ef23b3c692f29badfb31adf5611c",
+      "sha256": "77df7986c5e945ef18c7f6f4e1142dcb9b70fdab338cc076c5e14740ca36fc22",
       "size_bytes": 12327
     },
     "combined_manuscript": {
@@ -336,7 +336,7 @@
       },
       "output": {
         "file_count": 38,
-        "sha256": "41780ab4c9db1cd213f20de39ac496b2db21cdd46c107bebc4f507f3900e8919"
+        "sha256": "c1aeaf81ce4f0bb2de5d92be6761e448995cbadcb13fc246c80910872aea2321"
       },
       "source": {
         "file_count": 28,
@@ -344,7 +344,7 @@
       },
       "stage": {
         "file_count": 1764,
-        "sha256": "504a965543a4729127300a2738700ffed95da43f1dee005f236b2b8b0886b0f7"
+        "sha256": "ad1890e57e262e6b6e7aeecaa4c7a8abbdf70e16b26f661621e85279a148a86b"
       }
     },
     "project": "templates/template_newspaper",
