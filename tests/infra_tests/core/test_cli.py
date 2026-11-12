@@ -141,7 +141,7 @@ class TestCLISubprocess:
             "components=source_fingerprint_components(root,root/'projects/templates/beta',definition_path=root/'infrastructure/core/pipeline/pipeline.yaml')\n"
             "runtime=components['tools'].get('analysis_runtime',{})\n"
             "sdk_records={}\n"
-            "for key,expected in runtime.get('installation_metadata',{}).items():\n"
+            "for key,expected in (runtime.get('installation_metadata',{}) if isinstance(runtime,dict) else {}).items():\n"
             "    index,relative=key.split('/',1)\n"
             "    declared=Path(relative)\n"
             "    if declared.name!='RECORD' or not declared.parent.name.startswith('research_project_template-'):\n"

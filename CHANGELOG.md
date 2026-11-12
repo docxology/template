@@ -46,6 +46,7 @@ locks.
   on both hosted platforms; retain UID/no-follow/link/privacy/byte boundaries.
   Observe bounded exact SDK RECORD bytes and their component hash separately
   from Source admission so unexplained metadata changes remain diagnosable.
+  Preserve the original component JSON for an unavailable analysis runtime.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report
