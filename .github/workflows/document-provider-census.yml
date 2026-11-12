@@ -1,0 +1,86 @@
+name: Linux locked native-loader fixture proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact reviewed production Source to check out; this workflow is diagnostic only
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-loader-fixture-proof-${{ github.run_id }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: 'true'
+  OLLAMA_SKIP_TEST_MODEL_PULL: '1'
+  MPLBACKEND: Agg
+
+jobs:
+  fixture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Require the exact selected Source
+        shell: bash
+        env:
+          SELECTED_SOURCE: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$SELECTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source_sha }}
+          submodules: true
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: '3.15'
+          dependency-group: installed-build
+      - name: Prepare the own locked Root interpreter
+        run: uv sync --locked --inexact --group dev --group installed-build --python '3.15'
+      - name: Select a fresh owned fixture cache, excluding previously built wheels
+        shell: bash
+        run: |
+          set -euo pipefail
+          cache=$(mktemp -d "$RUNNER_TEMP/native-loader-fixture-cache.XXXXXX")
+          chmod 700 "$cache"
+          echo "UV_CACHE_DIR=$cache" >> "$GITHUB_ENV"
+      - name: Exercise the actual Source-locked non-isolated fixture preparation
+        uses: ./.github/actions/setup-native-loader-fixture
+      - name: Retain observed Source and interpreter, not runtime acceptance
+        shell: bash
+        env:
+          SELECTED_SOURCE: ${{ inputs.source_sha }}
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import json, os, platform, subprocess, sys
+          from pathlib import Path
+          observed = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          assert observed == os.environ['SELECTED_SOURCE']
+          assert sys.version_info[:2] == (3, 15)
+          result = {
+              'role': 'actual Linux3.15 locked native-loader fixture preparation DATA only',
+              'runtime_acceptance_granted': False,
+              'workflow_revision': os.environ['GITHUB_SHA'],
+              'selected_source': os.environ['SELECTED_SOURCE'],
+              'observed_checkout': observed,
+              'python_version': platform.python_version(),
+              'fresh_fixture_cache': os.environ['UV_CACHE_DIR'],
+          }
+          path = Path(os.environ['RUNNER_TEMP']) / 'loader-fixture-preparation.json'
+          path.write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          PYTHON
+      - name: Retain actual diagnostic facts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: native-loader-fixture-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/loader-fixture-preparation.json
+          if-no-files-found: warn
+          retention-days: 30
