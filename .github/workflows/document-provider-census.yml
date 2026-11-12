@@ -1,8 +1,6 @@
-name: Native Linux document provider census
+name: Native Linux document provider and installed loader proof
 
 on:
-  push:
-    branches: [codex/v5.2.0-document-provider-census-*]
   workflow_dispatch:
 
 permissions:
@@ -12,130 +10,53 @@ concurrency:
   group: document-provider-census-${{ github.run_id }}
   cancel-in-progress: false
 
+env:
+  UV_FROZEN: "true"
+  OLLAMA_SKIP_TEST_MODEL_PULL: "1"
+  MPLBACKEND: Agg
+
 jobs:
-  collect:
+  genuine:
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Prepare reviewed Ubuntu acquisition policy
+          submodules: true
+      - uses: ./.github/actions/setup-python-env
+        with:
+          dependency-group: installed-build
+      - run: uv sync --locked --group installed-build
+      - uses: ./.github/actions/setup-meta-provider
+      - name: Prepare actual Source-selected dynamic Linux document tools
         uses: ./.github/actions/setup-acceptance-documents
         with:
           mode: converter
-          python-executable: /usr/bin/python3
-      - name: Prepare the signed native Nix client
-        run: |
-          set -euo pipefail
-          sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
-          sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends nix-bin nix-setup-systemd
-          sudo -n nix-store --init
-          nix --version
-      - name: Collect actual immutable compiler and provider outputs
+      - uses: ./.github/actions/setup-native-loader-fixture
+      - uses: ./.github/actions/setup-ci-execution-user
+      - name: Exercise the complete genuine installed SDK loader contract
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PYTHON'
-          import hashlib
-          import io
-          import json
-          import os
-          from pathlib import Path
-          import platform
-          import shutil
-          import struct
-          import subprocess
-          import tarfile
-          import time
-
-          assert platform.system() == 'Linux' and platform.machine() == 'x86_64'
-          root = Path('output/readiness/document-provider-census').resolve()
-          root.mkdir(parents=True)
-          deadline = time.monotonic() + 9000
-          reference = 'git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c'
-          target = reference + '#packages.x86_64-linux.pandoc-with-crossref'
-          base = ['sudo', '-n', shutil.which('nix'), '--store', 'local', '--extra-experimental-features', 'nix-command flakes',
-                  '--option', 'accept-flake-config', 'false', '--option', 'require-sigs', 'true',
-                  '--option', 'max-jobs', '2', '--option', 'cores', '2',
-                  '--option', 'substituters', 'https://cache.nixos.org https://cache.iog.io https://pandoc-crossref.cachix.org',
-                  '--option', 'extra-trusted-public-keys',
-                  'hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= pandoc-crossref.cachix.org-1:LI9ABFTkGpPCTkUTzoopVSSpb1a26RSTJNMsqVbDtPM=']
-
-          def run(label, command, *, native=False):
-              arguments = command if native else base + command
-              print(json.dumps({'phase': label, 'argv': arguments}), flush=True)
-              with (root / (label + '.stdout')).open('xb') as stdout:
-                  process = subprocess.run(arguments, stdout=stdout, stderr=subprocess.PIPE if native else None,
-                                           check=False, timeout=max(0.001, deadline-time.monotonic()))
-              if native:
-                  (root / (label + '.stderr')).write_bytes(process.stderr)
-              (root / (label + '.command.json')).write_text(json.dumps({'argv': arguments, 'returncode': process.returncode}) + '\n')
-              if process.returncode:
-                  raise SystemExit(process.returncode)
-              return (root / (label + '.stdout')).read_bytes()
-
-          metadata = json.loads(run('source', ['flake', 'metadata', '--json', '--no-write-lock-file', '--no-update-lock-file', reference]))
-          assert metadata['locked']['rev'] == 'e6c2ae3418dcf63f974802f8b7c105ebc299706c'
-          assert metadata['locked']['narHash'] == 'sha256-+RpgwW3AmNjTLVfMK7SYjFPi/DlxesuXUtsWGtnm9oM='
-          source = Path(metadata['path'])
-          digests = {}
-          for name in ('flake.nix', 'flake.lock', 'cabal.project', 'cabal.project.freeze', 'stack.yaml'):
-              content = (source / name).read_bytes()
-              digests[name] = hashlib.sha256(content).hexdigest()
-              (root / name).write_bytes(content)
-          assert digests['flake.lock'] == 'c5bb26db82bc1b56577fc46ca3f56b061168c6cef86f5ec3b969530b62c80758'
-          assert digests['cabal.project.freeze'] == '17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed'
-          assert [line for line in (source / 'stack.yaml').read_text().splitlines() if line.startswith('resolver:')] == ['resolver: ghc-9.8.4']
-          products = json.loads(run('build', ['build', '--json', '--no-write-lock-file', '--no-update-lock-file', '--out-link', str(root / 'nix-runtime'), target]))
-          assert len(products) == 1 and set(products[0]['outputs']) == {'out'}
-          product = products[0]
-          output = Path(product['outputs']['out'])
-          run('recursive-derivations', ['derivation', 'show', '--recursive', product['drvPath']])
-          run('runtime-closure', ['path-info', '--recursive', '--json', str(output)])
-          run('runtime-verification', ['store', 'verify', '--recursive', str(output)])
-          tools = {}
-          for name, version in (('pandoc', '3.11'), ('pandoc-crossref', 'v0.3.25a')):
-              binary = (output / 'bin' / name).resolve(strict=True)
-              body = binary.read_bytes()
-              assert body[:7] == b'\x7fELF\x02\x01\x01'
-              offset = struct.unpack_from('<Q', body, 32)[0]
-              width, count = struct.unpack_from('<HH', body, 54)
-              assert width == 56 and 0 < count <= 128
-              headers = [struct.unpack_from('<II6Q', body, offset + index*width) for index in range(count)]
-              interpreters = [body[row[2]:row[2]+row[5]] for row in headers if row[0] == 3]
-              assert len(interpreters) == 1 and interpreters[0].endswith(b'/ld-linux-x86-64.so.2\0')
-              stdout = run(name + '-version', [str(binary), '--version'], native=True).decode()
-              stderr = (root / (name + '-version.stderr')).read_text()
-              assert (stdout + stderr).startswith('pandoc 3.11\n' if name == 'pandoc' else 'pandoc-crossref v0.3.25 ')
-              tools[name] = {'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
-                             'pt_interp': interpreters[0][:-1].decode(), 'version_stdout': stdout, 'version_stderr': stderr,
-                             'rx_bytes': sum(row[5] for row in headers if row[0] == 1 and row[1]&1)}
-              archive_path = root / f'{name}-{version}-linux-x86_64-source.tar.xz'
-              with tarfile.open(archive_path, 'w:xz', format=tarfile.USTAR_FORMAT) as archive:
-                  member = tarfile.TarInfo(name)
-                  member.size, member.mode = len(body), 0o755
-                  archive.addfile(member, io.BytesIO(body))
-          result = {'schema_version': 'template-document-provider-census-v1', 'source_commit': os.environ['GITHUB_SHA'],
-                    'source': metadata, 'input_sha256': digests, 'compiler': 'ghc-9.8.4',
-                    'derivation': product['drvPath'], 'output': str(output), 'tools': tools,
-                    'native_runtime_acceptance': False, 'role': 'actual source-build pin collection only'}
-          (root / 'census.json').write_text(json.dumps(result, indent=2) + '\n')
-          print(json.dumps(result, indent=2))
-          PYTHON
-      - name: Retain actual source and compiler census
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/installed-loader.source"
+          status=0
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+            --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
+            .venv/bin/python -m pytest \
+            tests/infra_tests/reporting/test_native_original_launch_correctness.py \
+            -q --no-cov --timeout=1800 \
+            > "$RUNNER_TEMP/installed-loader.stdout" \
+            2> "$RUNNER_TEMP/installed-loader.stderr" || status=$?
+          printf '%s\n' "$status" > "$RUNNER_TEMP/installed-loader.exit-code"
+          cat "$RUNNER_TEMP/installed-loader.stdout"
+          cat "$RUNNER_TEMP/installed-loader.stderr"
+          exit "$status"
+      - name: Retain actual original stdout, stderr, exit and Source
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: linux-document-provider-census-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            output/readiness/document-provider-census/*.json
-            output/readiness/document-provider-census/*.stdout
-            output/readiness/document-provider-census/*.tar.xz
-            output/readiness/document-provider-census/*.stderr
-            output/readiness/document-provider-census/flake.nix
-            output/readiness/document-provider-census/flake.lock
-            output/readiness/document-provider-census/cabal.project*
-            output/readiness/document-provider-census/stack.yaml
-          if-no-files-found: error
+          name: linux-installed-loader-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/installed-loader.*
+          if-no-files-found: warn
           retention-days: 30
