@@ -3497,34 +3497,24 @@
     },
     {
       "path": "tests/infra_tests/core/test_cli.py",
-      "source_sha256": "7684516b047df53d6a3a98b3f46a4147c756a0ed294a504bdf584404a2c01b5a",
+      "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
       "families": [
-        "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_discover_command",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_inventory_command",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_multi_shared_verification_and_project_selection",
         "tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_pipeline_real_mode_selection",
-        "tests/infra_tests/core/test_cli.py::TestCreateParser::test_create_parser",
-        "tests/infra_tests/core/test_cli.py::TestCreateParser::test_inventory_subcommand",
-        "tests/infra_tests/core/test_cli.py::TestCreateParser::test_multi_project_subcommand",
-        "tests/infra_tests/core/test_cli.py::TestCreateParser::test_pipeline_subcommand",
-        "tests/infra_tests/core/test_cli.py::TestCreateParserFromCoreCli::test_parser_created",
-        "tests/infra_tests/core/test_cli.py::TestCreateParserFromCoreCli::test_parser_has_subcommands",
         "tests/infra_tests/core/test_cli.py::TestHandleDiscoverCommand::test_discover_empty_repo",
         "tests/infra_tests/core/test_cli.py::TestHandleDiscoverCommand::test_json_format",
         "tests/infra_tests/core/test_cli.py::TestHandleDiscoverCommand::test_json_format_empty",
-        "tests/infra_tests/core/test_cli.py::TestHandleDiscoverCommand::test_no_projects_text",
         "tests/infra_tests/core/test_cli.py::TestHandleDiscoverCommand::test_text_format_with_projects",
         "tests/infra_tests/core/test_cli.py::TestHandleInventoryCommand::test_empty_output_dir",
-        "tests/infra_tests/core/test_cli.py::TestHandleInventoryCommand::test_json_format",
         "tests/infra_tests/core/test_cli.py::TestHandleInventoryCommand::test_nonexistent_dir",
         "tests/infra_tests/core/test_cli.py::TestHandleInventoryCommand::test_with_files",
-        "tests/infra_tests/core/test_cli.py::TestMainFunction::test_main_help",
         "tests/infra_tests/core/test_cli.py::TestMainFunction::test_main_invalid_command",
         "tests/infra_tests/core/test_cli.py::TestMainFunctionFromCoreCli::test_discover_command_runs",
         "tests/infra_tests/core/test_cli.py::TestMainFunctionFromCoreCli::test_no_command_returns_1"
       ],
-      "family_observations_sha256": "39a4408c4a6750e32b9ff125c1c53a71ecb7105b2b170c05085fb235cb5db916",
+      "family_observations_sha256": "079cc72a7455520778adb55b3387bdd23000a0ed272004c51194934cc3dc6d2f",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -3533,13 +3523,88 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_cli.py",
-          "source_sha256": "7684516b047df53d6a3a98b3f46a4147c756a0ed294a504bdf584404a2c01b5a",
-          "line": 100
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 66
         },
         {
           "path": "tests/infra_tests/core/test_cli.py",
-          "source_sha256": "7684516b047df53d6a3a98b3f46a4147c756a0ed294a504bdf584404a2c01b5a",
-          "line": 194
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 101
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 152
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 161
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 201
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 220
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 253
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 269
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 281
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 292
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 310
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 324
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 336
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 345
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 359
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 375
+        },
+        {
+          "path": "tests/infra_tests/core/test_cli.py",
+          "source_sha256": "9f2d14102f570b5a47075762b6c73910001e20c4a5da6828f79b16864c8477b3",
+          "line": 384
         }
       ]
     },
