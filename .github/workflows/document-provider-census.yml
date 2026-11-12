@@ -1,0 +1,190 @@
+name: Exact Source native-loader diagnostic proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact reviewed production Source to check out; this workflow is diagnostic only
+        type: string
+        required: true
+      proof:
+        description: Actual preparation or complete installed SDK loader execution, never release acceptance
+        type: choice
+        options: [fixture, installed-loader]
+        default: fixture
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-loader-fixture-proof-${{ github.run_id }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: 'true'
+  OLLAMA_SKIP_TEST_MODEL_PULL: '1'
+  MPLBACKEND: Agg
+
+jobs:
+  fixture:
+    if: inputs.proof == 'fixture'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Require the exact selected Source
+        shell: bash
+        env:
+          SELECTED_SOURCE: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$SELECTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source_sha }}
+          submodules: true
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: '3.15'
+          dependency-group: installed-build
+      - name: Prepare the own locked Root interpreter
+        run: uv sync --locked --inexact --group dev --group installed-build --python '3.15'
+      - name: Select a fresh owned fixture cache, excluding previously built wheels
+        shell: bash
+        run: |
+          set -euo pipefail
+          cache=$(mktemp -d "$RUNNER_TEMP/native-loader-fixture-cache.XXXXXX")
+          chmod 700 "$cache"
+          echo "UV_CACHE_DIR=$cache" >> "$GITHUB_ENV"
+      - name: Exercise the actual Source-locked non-isolated fixture preparation
+        uses: ./.github/actions/setup-native-loader-fixture
+      - name: Retain observed Source and interpreter, not runtime acceptance
+        shell: bash
+        env:
+          SELECTED_SOURCE: ${{ inputs.source_sha }}
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import json, os, platform, subprocess, sys
+          from pathlib import Path
+          observed = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          assert observed == os.environ['SELECTED_SOURCE']
+          assert sys.version_info[:2] == (3, 15)
+          result = {
+              'role': 'actual Linux3.15 locked native-loader fixture preparation DATA only',
+              'runtime_acceptance_granted': False,
+              'workflow_revision': os.environ['GITHUB_SHA'],
+              'selected_source': os.environ['SELECTED_SOURCE'],
+              'observed_checkout': observed,
+              'python_version': platform.python_version(),
+              'fresh_fixture_cache': os.environ['UV_CACHE_DIR'],
+          }
+          path = Path(os.environ['RUNNER_TEMP']) / 'loader-fixture-preparation.json'
+          path.write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          PYTHON
+      - name: Retain actual diagnostic facts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: native-loader-fixture-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/loader-fixture-preparation.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  genuine:
+    if: inputs.proof == 'installed-loader'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    env:
+      SELECTED_SOURCE: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source_sha }}
+          persist-credentials: false
+          submodules: true
+      - uses: ./.github/actions/setup-python-env
+        with:
+          dependency-group: installed-build
+      - run: uv sync --locked --group installed-build
+      - uses: ./.github/actions/setup-meta-provider
+      - name: Prepare actual Source-selected dynamic Linux document tools
+        uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: converter
+      - uses: ./.github/actions/setup-native-loader-fixture
+      - uses: ./.github/actions/setup-ci-execution-user
+      - name: Exercise the complete genuine installed SDK loader contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD > "$RUNNER_TEMP/installed-loader.source"
+          [ "$(cat "$RUNNER_TEMP/installed-loader.source")" = "$SELECTED_SOURCE" ] || exit 1
+          status=0
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+            --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
+            .venv/bin/python -m pytest \
+            tests/infra_tests/reporting/test_native_original_launch_correctness.py \
+            -q --no-cov --timeout=1800 \
+            > "$RUNNER_TEMP/installed-loader.stdout" \
+            2> "$RUNNER_TEMP/installed-loader.stderr" || status=$?
+          printf '%s\n' "$status" > "$RUNNER_TEMP/installed-loader.exit-code"
+          cat "$RUNNER_TEMP/installed-loader.stdout"
+          cat "$RUNNER_TEMP/installed-loader.stderr"
+          exit "$status"
+      - name: Retain actual build bytes without authorizing refused executables
+        if: always()
+        shell: bash
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import hashlib, io, json, os, struct, subprocess, tarfile
+          from pathlib import Path
+          source = json.loads(Path("infrastructure/config/native-document-providers.json").read_bytes())
+          provider = source["providers"]["Linux-x86_64"]
+          output = Path(provider["build"]["output"])
+          directory = Path(os.environ["RUNNER_TEMP"])
+          observed_source = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          assert observed_source == os.environ["SELECTED_SOURCE"]
+          result = {"role": "actual build diagnostic DATA only", "runtime_acceptance": False,
+                    "source_sha": observed_source, "workflow_revision": os.environ["GITHUB_SHA"], "tools": {}}
+          for name, pin in provider["tools"].items():
+              executable = "pandoc" if name == "pandoc" else "pandoc-crossref"
+              nominated = output / "bin" / executable
+              if not nominated.is_file():
+                  result["tools"][name] = {"available": False}
+                  continue
+              physical = nominated.resolve(strict=True)
+              size = physical.stat().st_size
+              if not 0 < size <= 512 * 1024 * 1024:
+                  result["tools"][name] = {"available": True, "bytes": size, "over_bound": True}
+                  continue
+              body = physical.read_bytes()
+              observed = {"available": True, "path": str(physical), "bytes": len(body),
+                          "sha256": hashlib.sha256(body).hexdigest(),
+                          "expected_bytes": pin["binary_bytes"], "expected_sha256": pin["binary_sha256"]}
+              if body[:7] == b"\x7fELF\x02\x01\x01":
+                  offset = struct.unpack_from("<Q", body, 32)[0]
+                  width, count = struct.unpack_from("<HH", body, 54)
+                  if width == 56 and 0 < count <= 128 and offset + width * count <= len(body):
+                      headers = [struct.unpack_from("<II6Q", body, offset + index * width) for index in range(count)]
+                      observed["load_segments"] = [
+                          {"flags": row[1], "offset": row[2], "bytes": row[5],
+                           "sha256": hashlib.sha256(body[row[2]:row[2]+row[5]]).hexdigest()}
+                          for row in headers if row[0] == 1]
+              archive_path = directory / f"installed-loader.{executable}.observed.tar.xz"
+              with tarfile.open(archive_path, "w:xz", format=tarfile.USTAR_FORMAT) as archive:
+                  member = tarfile.TarInfo(executable)
+                  member.size, member.mode = len(body), 0o755
+                  archive.addfile(member, io.BytesIO(body))
+              result["tools"][name] = observed
+          (directory / "installed-loader.build-diagnostic.json").write_text(json.dumps(result, indent=2) + "\n")
+          print(json.dumps(result, indent=2))
+          PYTHON
+      - name: Retain actual original stdout, stderr, exit and Source
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: linux-installed-loader-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/installed-loader.*
+          if-no-files-found: warn
+          retention-days: 30
