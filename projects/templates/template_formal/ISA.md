@@ -753,3 +753,25 @@ Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-bac
   parent traversal and non-directory parents must refuse while preserving
   unrelated evidence. The Linux nonroot search-only-ancestor proof remains a
   separate control. Expiry or cleanup must never authorize a native tool result.
+
+
+## Durable local trial journaling criterion
+
+- [ ] **ISC-129**: Owned local trial agents may explicitly select SQLite WAL
+  with FULL synchronous durability and one committed transaction per observation.
+  SQLite must actually select WAL or refuse; there is no in-memory, NORMAL-sync
+  or per-batch-commit fallback. Ordinary database/agent callers keep their existing
+  journaling behavior. Independent real connections must observe committed rows
+  before the writer closes, and rollback must preserve earlier committed state.
+  All original seeded inventories, agent/tick counts, numerical assertions and
+  case deadlines remain intact; local timings do not establish hosted acceptance.
+
+
+## Independent portable process observation criterion
+
+- [ ] **ISC-130**: The timeout consumer's independent liveness oracle must
+  distinguish a genuinely live process from a terminated, unreaped child on
+  both supported POSIX platforms. Absence of Linux `/proc` must not turn a
+  confirmed Darwin zombie into a surviving descendant. Unknown observations
+  remain conservative; the actual detached-child timeout control and its
+  original deadline remain mandatory.

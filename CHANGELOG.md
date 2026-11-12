@@ -55,6 +55,32 @@ locks.
 - Supply health-gate controls with genuinely generated standalone metadata and
   its matching lock. Frozen consumers retain `UV_FROZEN`, the real `uv run`
   command and every complete zero-drift/exit/failure boundary.
+- Complete the health-gate fixture's permanent README/agent guide pair without
+  changing its standalone lock, parser inputs or strict health decisions.
+- Filter genuine PDFium profiling to the observed code identities before
+  inspecting parent frames. Preserve all original mutation controls, complete
+  Source custody, real providers, two workers and the 900-second case deadline.
+- Distinguish post-admission shared Source/environment custody loss from invalid
+  invocation through `SharedRuntimeCustodyError`. Retain one original component
+  observation, blocked exit 75 and typed worker/report completion, including
+  refusal before an executor initializes its output root. Hold the physical
+  output directory while appending worker logs; retain mandatory closing Source
+  and bytecode checks. Malformed storage, target and policy declarations remain
+  invalid.
+- Transport retained Linux pytest case diagnostics from the genuine execution
+  account without relocating workspaces or expanding its credential allowlist.
+  Exclude aliases, Source/caches and substituted physical entries; share the
+  existing readiness transport deadline, byte and entry ceilings. Diagnostic
+  custody does not grant hosted runtime, hardening or release acceptance.
+- Bind case copies to their original census metadata and keep staging private
+  until final validation. Prune traversal-only fixture aliases without following
+  them; retain genuine factory-level Git Trace2 without copying its Source tree.
+- Keep invalid final-report receipts failed when guardian cleanup also refuses
+  custody. Preserve the actual child exit and append cleanup evidence without
+  demoting a selection forgery to pending work.
+- Explicitly opt Formal's owned local trial databases into SQLite WAL with FULL
+  synchronous durability. Preserve per-observation commits, ordinary caller
+  defaults, complete seeded workloads and original case clocks.
 - Retain complete expected/observed and Source/Python/tool component digests when
   frozen execution identity refuses before launch or completion. Reuse one fresh
   observation and the existing worker diagnostic schema; do not expose environment

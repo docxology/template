@@ -72,6 +72,12 @@ control proving `Agent[BeliefState]` itself type-checks against this Protocol.
 (ISC-31); the `isinstance(agent_id, UUID)` check is the runtime half of that
 proof, reachable only if a caller bypasses mypy.
 
+`Agent(..., write_ahead_logging=True)` explicitly selects the storage layer's
+durable local WAL mode (ISC-129), without exposing the private connection or
+changing the default constructor's journaling behavior. Every
+`record_observation()` retains its own real committed transaction. The real
+independent-reader lifecycle control exercises both constructor choices.
+
 ## Tests
 
 `tests/agent/` — three files:

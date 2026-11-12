@@ -22,6 +22,7 @@ from infrastructure.core.pipeline.multi_project_parallel import (
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.core.pipeline.multi_project_runtime import validate_budget
+from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError
 
 logger = get_logger(__name__)
 
@@ -92,6 +93,9 @@ def execute_multi_project_parallel(
     except TimeoutError as e:
         logger.error("Parallel multi-project deadline expired: %s", e)
         return 124
+    except SharedRuntimeCustodyError as e:
+        logger.error("Frozen execution refused: %s", e)
+        return 75
     except ValueError as e:
         logger.error("Invalid parallel invocation: %s", e)
         return 2
@@ -192,6 +196,9 @@ def execute_multi_project(
     except TimeoutError as e:
         logger.error("Multi-project deadline expired: %s", e)
         return 124
+    except SharedRuntimeCustodyError as e:
+        logger.error("Frozen execution refused: %s", e)
+        return 75
     except ValueError as e:
         logger.error("Invalid multi-project invocation: %s", e)
         return 2

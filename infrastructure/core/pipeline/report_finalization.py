@@ -1,4 +1,9 @@
-"""Supervised final reports within the executor's finite run deadline."""
+"""Supervised final reports within the executor's finite run deadline.
+
+Only a ``succeeded`` receipt accepts report files. A ``blocked`` receipt binds
+one typed execution-custody refusal to the frozen selection and actual worker
+exit 75, with no accepted files or fabricated inner child exit.
+"""
 
 from __future__ import annotations
 
@@ -18,8 +23,9 @@ from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
 from infrastructure.core.pipeline.execution_custody import execution_guard_result
 from infrastructure.core.pipeline.fingerprints import canonical_digest, paths_digest
 from infrastructure.core.pipeline.execution_records import execution_record_payload
-from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
+from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
 from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.worker_transport import results_from_payload
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -81,6 +87,8 @@ def finalize_execution_reports(
     output = executor.config.runtime_output_dir
     receipt_path = output / ".pipeline" / "report_finalization.json"
     code: int | None = None
+    blocked: PipelineStageResult | None = None
+    cleanup_diagnostic = ""
     try:
         record_path = output / ".pipeline" / "execution.json"
         record_bytes = read_bytes_confined(output, record_path)
@@ -149,11 +157,77 @@ def finalize_execution_reports(
                 *results,
                 _failure(StageStatus.TIMED_OUT, "Final reporting exceeded its remaining run budget", code),
             ]
+        if child.custody_refused:
+            cleanup_diagnostic = f"Final reporting custody refused: {child.command_error or child.stderr[-2048:]}"
         if code is not None and code not in {0, 75} and child.custody_refused:
             return [
                 *results,
                 _failure(StageStatus.FAILED, f"Final reporting child failed before custody refusal: {code}", code),
             ]
+        if code == 75:
+            try:
+                payload = json.loads(read_bytes_confined(output, receipt_path))
+            except FileNotFoundError:
+                return [
+                    *results,
+                    _failure(
+                        StageStatus.BLOCKED,
+                        f"Final reporting custody refused: {child.command_error or child.stderr[-2048:]}",
+                        code,
+                    ),
+                ]
+            if (
+                not isinstance(payload, dict)
+                or payload.get("schema_version") != REPORT_RECEIPT_SCHEMA
+                or type(payload.get("shared_infrastructure")) is not bool
+                or payload["shared_infrastructure"] != executor.config.shared_infrastructure
+                or payload.get("project") != plan.project
+                or payload.get("run_id") != executor.run_id
+                or payload.get("plan_digest") != plan.digest
+                or payload.get("source_identity") != plan.source_identity
+                or payload.get("execution_record_digest") != record_digest
+                or payload.get("status") != "blocked"
+                or payload.get("expected_stage_keys") != list(plan.expected_stage_keys)
+                or type(payload.get("exit_code")) is not int
+                or payload["exit_code"] != code
+                or payload.get("files") != {}
+            ):
+                raise ValueError("Final report refusal does not bind this run and source")
+            refusals = results_from_payload(payload.get("stage_results"))
+            if len(refusals) != 1:
+                raise ValueError("Final report refusal requires one typed execution outcome")
+            refusal_run = RunResult.from_results(refusals, plan.expected_stage_keys)
+            refusal = refusals[0]
+            outcome = refusal.outcome
+            if (
+                refusal.stage_key != "execution"
+                or refusal.success
+                or refusal.stage_completed
+                or refusal_run.complete
+                or refusal_run.exit_code != 75
+                or refusal.exit_code != code
+                or outcome is None
+                or outcome.status is not StageStatus.BLOCKED
+                or outcome.child_exit_code is not None
+                or outcome.attempt_exit_codes
+                or outcome.receipt_validated
+                or outcome.in_process_completed
+                or refusal.error_message != outcome.diagnostic
+            ):
+                raise ValueError("Final report refusal contradicts its typed custody evidence")
+            blocked = _failure(StageStatus.BLOCKED, outcome.diagnostic, code)
+            if read_bytes_confined(output, record_path) != record_bytes:
+                return [*results, blocked, _failure(StageStatus.FAILED, "Execution record changed during reporting")]
+            if paths_digest((output,), stable_output=True) != original:
+                return [
+                    *results,
+                    blocked,
+                    _failure(StageStatus.BLOCKED, "Stable deliverables changed during reporting"),
+                ]
+            if child.custody_refused or child.command_error:
+                diagnostic = f"Final reporting custody refused: {child.command_error or child.stderr[-2048:]}"
+                return [*results, blocked, _failure(StageStatus.BLOCKED, diagnostic, code)]
+            return [*results, blocked]
         if child.custody_refused or child.returncode == 75:
             return [
                 *results,
@@ -211,9 +285,14 @@ def finalize_execution_reports(
             return [*results, guard]
         return results
     except KeyboardInterrupt:
-        return [*results, _failure(StageStatus.INTERRUPTED, "Final reporting interrupted", code)]
+        evidence = results if blocked is None else [*results, blocked]
+        return [*evidence, _failure(StageStatus.INTERRUPTED, "Final reporting interrupted", code)]
     except (OSError, ValueError) as exc:
-        return [*results, _failure(StageStatus.FAILED, f"Final report custody failed: {exc}", code)]
+        evidence = results if blocked is None else [*results, blocked]
+        diagnostic = f"Final report custody failed: {exc}"
+        if cleanup_diagnostic:
+            diagnostic = f"{cleanup_diagnostic}; {diagnostic}"
+        return [*evidence, _failure(StageStatus.FAILED, diagnostic, code)]
 
 
 __all__ = ["finalize_execution_reports"]

@@ -94,6 +94,12 @@ under a caller-supplied directory, even inside a 150-trial statistical-rigor
 batch or a multi-point sweep (each gets its own subdirectory to avoid path
 collisions across seeds).
 
+The trial harness explicitly opts each owned local agent database into durable
+WAL with FULL synchronous commits (ISC-129). Agent and database defaults remain
+unchanged; the coordinator still sees no storage handle. Trial inventories,
+seeds, ticks, numerical expectations and one-commit-per-observation semantics
+are unchanged. A local timing sample is not a hosted performance guarantee.
+
 ## Tests
 
 `tests/colony/` — twelve files, each paired to one or more modules above:

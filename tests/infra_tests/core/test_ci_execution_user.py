@@ -22,6 +22,7 @@ from infrastructure.core.testing._ci_execution_files import (
     _copy_cache,
     _detach,
     _export,
+    _export_pytest_case_diagnostics,
     _open_physical,
     _physical,
     _signature,
@@ -295,6 +296,123 @@ def test_artifact_export_refuses_real_symlinks_and_special_files(tmp_path: Path)
     with pytest.raises(ValueError, match="link/special"):
         _export(readiness, stage, time.monotonic() + 10)
     assert not any(stage.iterdir()) and outside.read_bytes() == b"private"
+
+
+def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_path: Path) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    originals = {
+        "pytest-8/popen-gw1/test_child_failure0/worker.stderr": b"original\x00stderr\n",
+        "pytest-8/popen-gw1/test_child_failure0/cli-observations/child/exit.json": b'{"returncode":7}\n',
+        "pytest-8/popen-gw1/complete-public-source-data0.git-stage.trace2.json": b'{"event":"exit","code":0}\n',
+        "pytest-7/test_guard1/runtime-observation.json": b'{"accepted":false}\n',
+        "pytest-7/test_guard1/output/readiness/evidence/native.stdout": b"original native refusal\n",
+        "pytest-7/test_guard1/output/readiness/evidence/html-python-source-owned0/closure.json": b'{"closed":false}\n',
+    }
+    for relative, payload in originals.items():
+        source = root / relative
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(payload)
+    private = base / "private"
+    private.mkdir()
+    (private / "private.stdout").write_bytes(b"must never be transported")
+    (private / "readiness/evidence").mkdir(parents=True)
+    (private / "readiness/evidence/never-copy.stderr").write_bytes(b"private aliased fixture bytes")
+    case = root / "pytest-8/popen-gw1/test_child_failure0"
+    (case / "checkout").symlink_to(private, target_is_directory=True)
+    (case / "output").symlink_to(private, target_is_directory=True)
+    source_fixture = root / "pytest-8/popen-gw1/complete-public-source-data0"
+    source_fixture.mkdir()
+    (source_fixture / "never-copy.stdout").write_bytes(b"private fixture Source bytes")
+    (case / "browser-profile").mkdir()
+    os.mkfifo(case / "browser-profile/never-read.stdout")
+    (root / "pytest-current").symlink_to(root / "pytest-8", target_is_directory=True)
+    before = {relative: _signature((root / relative).lstat()) for relative in originals}
+    assert _export_pytest_case_diagnostics(root, destination, time.monotonic() + 10, uid=os.getuid()) == sum(
+        len(payload) for payload in originals.values()
+    )
+    assert {
+        path.relative_to(destination).as_posix(): path.read_bytes() for path in destination.rglob("*") if path.is_file()
+    } == originals
+    assert {relative: _signature((root / relative).lstat()) for relative in originals} == before
+    assert not (destination / "pytest-current").exists()
+    assert not (destination / "pytest-8/popen-gw1/test_child_failure0/checkout").exists()
+    assert not (destination / "pytest-8/popen-gw1/test_child_failure0/output").exists()
+    assert not (destination / "pytest-8/popen-gw1/complete-public-source-data0").exists()
+    assert (private / "private.stdout").read_bytes() == b"must never be transported"
+
+
+def test_case_diagnostics_refuse_post_census_hardlinks_before_artifact_exposure(tmp_path: Path) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    source = root / "pytest-0/test_original0/original.stderr"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"original stderr")
+    private = base / "private"
+    private.write_bytes(b"private substituted bytes")
+    changed = False
+
+    def substitute(frame, event, _arg):
+        nonlocal changed
+        if frame.f_code is _stable_copy.__code__ and event == "call" and not changed:
+            changed = True
+            source.unlink()
+            os.link(private, source)
+        return None
+
+    previous = sys.gettrace()
+    try:
+        sys.settrace(substitute)
+        with pytest.raises(ValueError):
+            _export_pytest_case_diagnostics(root, destination, time.monotonic() + 10, uid=os.getuid())
+    finally:
+        sys.settrace(previous)
+    assert changed and not destination.exists()
+    assert private.read_bytes() == b"private substituted bytes"
+
+
+@pytest.mark.parametrize("kind", ("symlink", "hardlink", "fifo", "directory"))
+def test_case_diagnostics_refuse_physical_payload_substitution(tmp_path: Path, kind: str) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    case = root / "pytest-0/popen-gw0/test_refusal0"
+    case.mkdir(parents=True)
+    outside = base / "private"
+    outside.write_bytes(b"never copy substituted private bytes")
+    payload = case / "original.stderr"
+    if kind == "symlink":
+        payload.symlink_to(outside)
+    elif kind == "hardlink":
+        os.link(outside, payload)
+    elif kind == "fifo":
+        os.mkfifo(payload)
+    else:
+        payload.mkdir()
+    with pytest.raises(ValueError):
+        _export_pytest_case_diagnostics(root, destination, time.monotonic() + 10, uid=os.getuid())
+    assert not destination.exists() and outside.read_bytes() == b"never copy substituted private bytes"
+
+
+@pytest.mark.parametrize("boundary", ("bytes", "entries", "deadline", "owner"))
+def test_case_diagnostics_retain_combined_budget_and_account_boundaries(tmp_path: Path, boundary: str) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    case = root / "pytest-0/test_budget0"
+    case.mkdir(parents=True)
+    payload = case / "original.stdout"
+    payload.write_bytes(b"original")
+    before = _signature(payload.lstat())
+    with pytest.raises(ValueError):
+        _export_pytest_case_diagnostics(
+            root,
+            destination,
+            time.monotonic() - 1 if boundary == "deadline" else time.monotonic() + 10,
+            uid=os.getuid() + (boundary == "owner"),
+            byte_budget=7 if boundary == "bytes" else 100,
+            entry_budget=3 if boundary == "entries" else 100,
+        )
+    assert not destination.exists() and payload.read_bytes() == b"original"
+    assert _signature(payload.lstat()) == before
 
 
 def test_original_argv_output_and_nonzero_exit_survive_real_subprocess(

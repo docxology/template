@@ -133,3 +133,114 @@ def test_expired_aggregate_reporting_refuses_before_launch(tmp_path: Path) -> No
 
     assert _write_summary_reports(MultiProjectResult({}), [], tmp_path, deadline=time.monotonic() - 1) == 124
     assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.timeout(90)
+@pytest.mark.parametrize("entry_point", ["runner", "serial", "parallel", "matrix"])
+def test_frozen_shared_custody_refusal_preserves_original_diagnostic(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture, entry_point: str
+) -> None:
+    """Real post-resolution drift remains pending at every public consumer."""
+    import io
+    import json
+    import sys
+
+    from infrastructure.core.pipeline.outcomes import StageStatus
+    from infrastructure.core.pipeline.run_matrix import (
+        execute_run_plan,
+        format_report,
+        parse_run_config,
+        resolve_run_plan,
+        run_plan_exit_code,
+    )
+    from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError, validate_shared_runtime
+    from infrastructure.orchestration.pipeline_runner import MultiProjectInvocation, PipelineRunner
+    from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
+
+    names = ("templates/alpha", "templates/beta")
+    scaffold_pipeline(tmp_path, names)
+    evidence = {}
+    for name in names:
+        historical = tmp_path / "projects" / name / "output/.pipeline/execution.json"
+        historical.parent.mkdir()
+        historical.write_bytes(b'{"historical_control_evidence":true}\n')
+        evidence[historical] = historical.read_bytes()
+    declaration = tmp_path / "infrastructure/core/pipeline/pipeline.yaml"
+    original = declaration.read_bytes()
+    admitted_plans = []
+    refusals = []
+
+    def mutate_at_real_admission(frame, event, arg):
+        if frame.f_code is not validate_shared_runtime.__code__:
+            return None
+        config = frame.f_locals["config"]
+        if config.repo_root != tmp_path or not config.shared_infrastructure:
+            return None
+        if event == "call":
+            admitted_plans.append(frame.f_locals["plan"])
+            declaration.write_bytes(original + b"\n# Actual post-resolution Source mutation.\n")
+        elif event == "exception" and isinstance(arg[1], SharedRuntimeCustodyError):
+            refusals.append(str(arg[1]))
+            # Repair after the real refusal, before the consumer catches it.
+            # Reobservation must not replace the already captured diagnostic.
+            declaration.write_bytes(original)
+        return mutate_at_real_admission
+
+    matrix_results = None
+    previous_trace = sys.gettrace()
+    try:
+        sys.settrace(mutate_at_real_admission)
+        if entry_point == "runner":
+            runner = PipelineRunner(tmp_path, stream=io.StringIO())
+            exit_code = runner.run_multi(MultiProjectInvocation())
+            emitted = runner.stream.getvalue()
+        elif entry_point == "matrix":
+            plan = resolve_run_plan(
+                parse_run_config(
+                    "run_timeout_seconds: 90\ndefaults:\n  stages: [infra_tests, analysis]\n"
+                    "runs:\n  - project: templates/alpha\n  - project: templates/beta\n"
+                ),
+                tmp_path,
+            )
+            matrix_results = execute_run_plan(plan, tmp_path)
+            exit_code = run_plan_exit_code(plan, matrix_results)
+            emitted = format_report(matrix_results)
+            assert [(row.project, row.stage) for row in matrix_results] == [
+                (step.project, step.stage) for step in plan.steps
+            ]
+        else:
+            options = ["--run-timeout", "90"]
+            if entry_point == "parallel":
+                options += ["--parallel", "--max-workers", "1"]
+            exit_code = main(options, repo_root=tmp_path)
+            emitted = caplog.text
+    finally:
+        sys.settrace(previous_trace)
+        declaration.write_bytes(original)
+
+    assert exit_code == 75
+    assert len(admitted_plans) == len(refusals) == 1
+    assert refusals[0] in emitted
+    encoded = refusals[0].split("fingerprint_diagnostics=", 1)[1]
+    diagnostic, _ = json.JSONDecoder().raw_decode(encoded)
+    assert diagnostic["expected_total"] == admitted_plans[0].source_identity
+    assert diagnostic["observed_total"] != diagnostic["expected_total"]
+    assert set(diagnostic["components"]) == {"source", "python", "tools"}
+    assert all(
+        len(digest) == 64 and set(digest) <= set("0123456789abcdef")
+        for digest in (diagnostic["observed_total"], *diagnostic["components"].values())
+    )
+    assert not (tmp_path / "process_order.log").exists()
+    assert all(path.read_bytes() == content for path, content in evidence.items())
+    assert not any((tmp_path / "projects" / name / "output/data/analysis.json").exists() for name in names)
+    if matrix_results is not None:
+        assert all(not row.ok and row.outcome.status is StageStatus.BLOCKED for row in matrix_results)
+        assert all(row.outcome.child_exit_code is None for row in matrix_results)
+        shared = matrix_results[0].shared_result
+        assert shared is not None and shared.exit_code == 75
+        assert shared.run_result.expected_stage_keys == ("infra_tests",) and not shared.run_result.complete
+        assert len(shared.stage_results) == len(shared.run_result.outcomes) == 1
+        refusal = shared.stage_results[0]
+        assert refusal.stage_key == "execution" and refusal.error_message == refusals[0]
+        assert refusal.outcome.status is StageStatus.BLOCKED and refusal.outcome.child_exit_code is None
+        assert refusal.outcome.diagnostic == refusals[0]

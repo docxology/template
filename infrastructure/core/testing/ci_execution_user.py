@@ -444,15 +444,22 @@ def main(argv: list[str] | None = None) -> int:
             readiness = root / "output/readiness"
             _require(not readiness.is_symlink(), "symlinked readiness transport root refused")
             excluded: list[str] = []
-            total = (
-                _export(readiness, args.state.parent / "artifacts", time.monotonic() + 120, exclusions=excluded)
-                if readiness.exists()
-                else 0
+            deadline, artifacts = time.monotonic() + 120, args.state.parent / "artifacts"
+            total = _export(readiness, artifacts, deadline, exclusions=excluded) if readiness.exists() else 0
+            case_bytes = _files._export_pytest_case_diagnostics(
+                Path(data["home"]) / "tmp" / f"pytest-of-{ACCOUNT}",
+                artifacts / "pytest-case-diagnostics",
+                deadline,
+                uid=os.getuid(),
+                byte_budget=_files.MAX_BYTES - total,
+                entry_budget=_files.MAX_FILES - len(_entries(artifacts, deadline)),
             )
+            total += case_bytes
             sys.stdout.write(
                 json.dumps(
                     {
                         "transport_bytes": total,
+                        "pytest_case_diagnostic_bytes": case_bytes,
                         "excluded_pytest_scratch": len(excluded),
                         "exclusions_sha256": hashlib.sha256(json.dumps(excluded).encode()).hexdigest(),
                         "runtime_acceptance": False,

@@ -9,6 +9,7 @@ used through the explicitly-named, test-only
 from __future__ import annotations
 
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 
 import pytest
@@ -77,6 +78,28 @@ def test_query_builder_round_trips_a_real_row(tmp_path) -> None:  # type: ignore
     assert one.value.key == "temperature"
 
     database.connection.close()
+
+
+def test_durable_wal_keeps_full_sync_committed_visibility_and_rollback(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    db_path = tmp_path / "agent.sqlite3"
+    database = open_database(db_path, write_ahead_logging=True)
+    try:
+        create_schema(database, OBSERVATIONS_TABLE)
+        assert database.connection.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+        assert database.connection.execute("PRAGMA synchronous").fetchone()[0] == 2
+        builder = QueryBuilder(database=database, table=OBSERVATIONS_TABLE, row_factory=_observation_from_sqlite_row)
+        database.connection.execute("BEGIN")
+        assert isinstance(builder.insert({"key": "committed", "value": 1.25}), Ok)
+        database.connection.commit()
+        with closing(sqlite3.connect(str(db_path))) as reader:
+            assert reader.execute("SELECT key,value FROM observations").fetchall() == [("committed", 1.25)]
+        database.connection.execute("BEGIN")
+        assert isinstance(builder.insert({"key": "rolled_back", "value": 9.0}), Ok)
+        database.connection.rollback()
+    finally:
+        database.connection.close()
+    with closing(sqlite3.connect(str(db_path))) as reader:
+        assert reader.execute("SELECT key,value FROM observations").fetchall() == [("committed", 1.25)]
 
 
 def test_get_one_missing_row_returns_err_not_found(tmp_path) -> None:  # type: ignore[no-untyped-def]

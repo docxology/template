@@ -98,6 +98,20 @@ setup errors and skips; a completed-node selection receipt alone is not proof
 that a case passed. Linux transports JUnit through the existing fresh-account
 readiness exporter rather than expanding its environment allowlist.
 
+Linux also exports the fresh account's retained numbered `pytest-N` case trees
+into `pytest-case-diagnostics/`. The selected original diagnostic leaves match
+the macOS artifact scope, including captured copied-package subprocess streams.
+No-follow directory descriptors, execution-UID checks and single-link regular
+files exclude aliases, substituted files, fixture checkouts and browser caches.
+Readiness and case transport share the original 120-second deadline, 16 GiB byte
+ceiling and 300,000-entry ceiling; neither export grants runtime acceptance.
+Portable filesystem controls do not establish the hosted account transition.
+Selected leaf descriptors bind to their original census metadata. Copies remain
+private until the final roster/byte checks pass; failed staging stays below the
+execution account's private temporary root, outside the uploaded artifact path.
+Traversal-only fixture aliases are pruned, never followed. Native Git Trace2
+files are selected beside their numbered factory fixture, not inside its Source.
+
 On macOS, owned case workspaces live beneath the runner's temporary directory.
 Pytest's parent/worker fault handler emits a nonterminating stack observation
 after 90 seconds. Genuine PDFium children use only synchronous, fixed
@@ -117,9 +131,9 @@ existing staging timeout remain intact. See the
 [Git Trace2 contract](https://git-scm.com/docs/api-trace2) for event semantics;
 the last emitted event is not an exact blocked instruction.
 
-The macOS diagnostic artifact selects those fixture traces and genuine PDFium
+The diagnostic artifacts select those fixture traces and genuine PDFium
 stdout, stderr, exit, runtime-input and observation files, excluding pytest's
-`current` workspace aliases. It does not upload whole fixture clones, virtual
+`current` workspace aliases. They do not upload whole fixture clones, virtual
 environments or wheel payloads. Logs can contain run-local paths; review them
 before redistribution. Missing exits, partial records and failed runs remain
 missing or failed: these diagnostics do not grant Source admission, waive any

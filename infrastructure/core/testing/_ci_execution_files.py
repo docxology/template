@@ -10,6 +10,7 @@ import shutil
 import stat
 import subprocess  # nosec B404 - fixed argv helpers
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -17,6 +18,23 @@ RESERVE = 2 * 1024**3
 MAX_BYTES = 16 * 1024**3
 MAX_FILES = 300_000
 PHASE = "entry"
+
+_CASE_ROOT = r"pytest-[0-9]+/(?:popen-gw[0-9]+/)?test_[^/]*[0-9]+"
+_CASE_DIRECTORY = re.compile(
+    rf"(?:pytest-[0-9]+(?:/popen-gw[0-9]+)?|{_CASE_ROOT}(?:/(?:"
+    r"cli-observations(?:/[^/.][^/]*)?|audited-child|"
+    r"output(?:/readiness(?:/evidence(?:/html-python-source-[^/.][^/]*)?)?)?"
+    r"))?)"
+)
+_CASE_FILE = re.compile(
+    rf"(?:{_CASE_ROOT}/(?:[^/.][^/]*\.(?:stdout|stderr|exit)|runtime-(?:input|observation)\.json|"
+    r"actual-runtime\.exit\.json|"
+    r"cli-observations/[^/.][^/]*/(?:stdout|stderr|exit\.json|timeout\.json)|"
+    r"audited-child/(?:original-wrapper\.(?:stdout|stderr)|original-wrapper-exit\.json)|"
+    r"output/readiness/evidence/(?:[^/.][^/]*\.(?:json|stdout|stderr)|"
+    r"html-python-source-[^/.][^/]*/(?:plan|closure)\.json))"
+    r"|pytest-[0-9]+/(?:popen-gw[0-9]+/)?complete-public-source-data[0-9]+\.git-stage\.trace2\.json)"
+)
 
 
 def _phase(label: str) -> None:
@@ -106,8 +124,17 @@ def _open_physical(path: Path, flags: int) -> int:
         os.close(descriptor)
 
 
-def _stable_copy(source: Path, destination: Path, deadline: float, *, mode: int | None = None) -> int:
+def _stable_copy(
+    source: Path,
+    destination: Path,
+    deadline: float,
+    *,
+    mode: int | None = None,
+    expected_signature: tuple[int, ...] | None = None,
+) -> int:
     before = source.lstat()
+    if expected_signature is not None:
+        _require(_signature(before) == expected_signature, "copy source differs from its original census")
     _require(stat.S_ISREG(before.st_mode), "only physical regular files may be copied")
     _require(before.st_size <= MAX_BYTES, "execution profile byte bound exceeded")
     _require(
@@ -284,6 +311,112 @@ def _export(root: Path, destination: Path, deadline: float, *, exclusions: list[
     )
     if exclusions is not None:
         exclusions.extend(excluded)
+    return total
+
+
+def _pytest_case_entries(root: Path, deadline: float, uid: int, entry_budget: int) -> dict[Path, os.stat_result]:
+    """Observe only declared retained diagnostics through no-follow directory FDs."""
+    info = root.lstat()
+    _require(stat.S_ISDIR(info.st_mode) and info.st_uid == uid, "pytest diagnostic root owner/type refused")
+    entries = {root: info}
+    _require(len(entries) <= entry_budget, "combined artifact entry bound exceeded")
+
+    def refuse(error: OSError) -> None:
+        raise error
+
+    for directory, dirs, files, directory_fd in os.fwalk(root, follow_symlinks=False, onerror=refuse):
+        _remaining(deadline)
+        parent, retained = Path(directory), []
+        _require(
+            _signature(os.fstat(directory_fd)) == _signature(entries[parent]),
+            "pytest diagnostic directory changed during transport",
+        )
+        for names in (dirs, files):
+            for name in names:
+                _remaining(deadline)
+                source = parent / name
+                relative = source.relative_to(root).as_posix()
+                directory_match, file_match = _CASE_DIRECTORY.fullmatch(relative), _CASE_FILE.fullmatch(relative)
+                if not (directory_match or file_match):
+                    continue
+                info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+                if directory_match is not None and (info.st_uid != uid or not stat.S_ISDIR(info.st_mode)):
+                    continue
+                _require(
+                    info.st_uid == uid
+                    and (
+                        (directory_match is not None and stat.S_ISDIR(info.st_mode))
+                        or (file_match is not None and stat.S_ISREG(info.st_mode) and info.st_nlink == 1)
+                    ),
+                    "pytest diagnostic owner/link/special entry refused",
+                )
+                entries[source] = info
+                _require(len(entries) <= entry_budget, "combined artifact entry bound exceeded")
+                if directory_match is not None:
+                    retained.append(name)
+        dirs[:] = retained
+    return entries
+
+
+def _export_pytest_case_diagnostics(
+    root: Path,
+    destination: Path,
+    deadline: float,
+    *,
+    uid: int,
+    byte_budget: int = MAX_BYTES,
+    entry_budget: int = MAX_FILES,
+) -> int:
+    """Transport original selected leaves, never fixture Source, caches or aliases."""
+    _remaining(deadline)
+    _physical(root.parent)
+    _physical(destination.parent)
+    _require(not destination.exists() and not destination.is_symlink(), "fresh pytest diagnostic transport required")
+    _require(
+        not destination.is_relative_to(root) and not root.is_relative_to(destination),
+        "overlapping pytest diagnostic transport refused",
+    )
+    _require(0 <= byte_budget <= MAX_BYTES and 0 <= entry_budget <= MAX_FILES, "artifact budget refused")
+    try:
+        root.lstat()
+    except FileNotFoundError:
+        return 0
+    _physical(root)
+    before = _pytest_case_entries(root, deadline, uid, entry_budget)
+    total = sum(info.st_size for info in before.values() if stat.S_ISREG(info.st_mode))
+    _require(total <= byte_budget, "combined artifact byte bound exceeded")
+    # Preserve failed copies privately; never expose them through the artifact root.
+    stage = Path(tempfile.mkdtemp(prefix=".pytest-case-diagnostics-", dir=root.parent))
+    for source, info in before.items():
+        _remaining(deadline)
+        target = stage / source.relative_to(root)
+        if stat.S_ISDIR(info.st_mode):
+            if target != stage:
+                target.mkdir(mode=0o755)
+        else:
+            _stable_copy(source, target, deadline, mode=0o644, expected_signature=_signature(info))
+    after = _pytest_case_entries(root, deadline, uid, entry_budget)
+    _require(
+        before.keys() == after.keys()
+        and all(_signature(info) == _signature(after[path]) for path, info in before.items()),
+        "pytest diagnostic roster/bytes/types changed during transport",
+    )
+    destination.mkdir(mode=0o700)
+    descriptor = _open_physical(destination, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for source in stage.iterdir():
+            _remaining(deadline)
+            os.rename(source, destination / source.name)
+        _remaining(deadline)
+        _require(
+            _signature(os.fstat(descriptor)) == _signature(destination.lstat()),
+            "pytest diagnostic publication directory changed",
+        )
+        os.fchmod(descriptor, 0o755)
+    finally:
+        os.close(descriptor)
+    _remaining(deadline)
+    stage.rmdir()
     return total
 
 

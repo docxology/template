@@ -322,6 +322,7 @@ def run_colony_trial(config: ColonyTrialConfig, db_dir: Path) -> ColonyTrialResu
             new_agent_id(),
             trial_dir / f"agent_{index}.sqlite3",
             BeliefState(mean=preference_means[index], variance=config.preference_variance),
+            write_ahead_logging=True,
         )
         for index in range(config.num_agents)
     ]

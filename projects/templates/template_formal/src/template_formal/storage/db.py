@@ -97,7 +97,9 @@ class Database:
     connection: sqlite3.Connection
 
 
-def open_database(path: Path, *, isolation_level: IsolationLevel = "deferred") -> Database:
+def open_database(
+    path: Path, *, isolation_level: IsolationLevel = "deferred", write_ahead_logging: bool = False
+) -> Database:
     """Open (creating if absent) a real on-disk SQLite file for one agent.
 
     Args:
@@ -105,6 +107,9 @@ def open_database(path: Path, *, isolation_level: IsolationLevel = "deferred") -
             ``:memory:`` — use :func:`open_fast_test_database` for that.
         isolation_level: The default isolation level future transactions
             on this database begin with.
+        write_ahead_logging: Explicit durable WAL for an owned local database.
+            Require SQLite to select WAL and retain FULL synchronous commits;
+            otherwise preserve the provider's existing journaling behavior.
 
     Returns:
         A :class:`Database` wrapping an open connection.
@@ -115,12 +120,22 @@ def open_database(path: Path, *, isolation_level: IsolationLevel = "deferred") -
             mypy's static check (e.g. via ``# type: ignore`` or an
             untyped boundary) — this is the runtime half of ISC-15's
             paired static+dynamic proof.
+        RuntimeError: If explicitly requested WAL is unavailable.
     """
     if isolation_level not in _VALID_ISOLATION_LEVELS:
         raise ValueError(f"invalid isolation level: {isolation_level!r}")
     connection = sqlite3.connect(str(path), isolation_level=None)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
+    if write_ahead_logging:
+        try:
+            mode = connection.execute("PRAGMA journal_mode = WAL").fetchone()
+            if mode is None or mode[0] != "wal":
+                raise RuntimeError("Requested durable SQLite WAL is unavailable")
+            connection.execute("PRAGMA synchronous = FULL")
+        except BaseException:
+            connection.close()
+            raise
     return Database(path=path, isolation_level=isolation_level, connection=connection)
 
 

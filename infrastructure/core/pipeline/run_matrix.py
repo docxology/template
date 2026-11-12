@@ -40,6 +40,7 @@ from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, Stage
 from infrastructure.core.pipeline.execution_session import compose_run_deadline
 from infrastructure.core.pipeline.multi_project_runtime import ProjectExecutionSpec, freeze_shared_plan, validate_budget
 from infrastructure.core.pipeline.multi_project_support import SharedInfrastructureResult, run_shared_infrastructure
+from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError
 from infrastructure.core.pipeline.target_contracts import canonical_target_contract
 from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.project.discovery import validate_project_slug
@@ -296,7 +297,7 @@ def _project_steps(selection: ExecutionPlan, run: RunResult | None, missing_stat
 def execute_run_plan(
     plan: RunPlan, repo_root: Path, *, fail_fast: bool = False, resume: bool | None = None
 ) -> list[StepResult]:
-    """Run fresh shared verification once, then exact project selections/resume."""
+    """Run exact selections, retaining an unstarted shared custody refusal as pending (75)."""
     if not plan.execution_plans and plan.shared_infrastructure is None:
         raise RunConfigError("Execution requires resolved immutable project plans")
     selected_resume = plan.resume if resume is None else resume
@@ -309,8 +310,18 @@ def execute_run_plan(
     aborted = False
     pending_status = StageStatus.ABORTED
     if plan.shared_infrastructure is not None:
-        shared = run_shared_infrastructure(plan.shared_infrastructure, deadline=deadline)
-        shared_rows = _project_steps(plan.shared_infrastructure.plan, shared.run_result, StageStatus.ABORTED)
+        try:
+            shared = run_shared_infrastructure(plan.shared_infrastructure, deadline=deadline)
+        except SharedRuntimeCustodyError as exc:
+            rows = [exc.as_stage_result()]
+            shared = SharedInfrastructureResult(
+                tuple(rows), RunResult.from_results(rows, plan.shared_infrastructure.plan.expected_stage_keys)
+            )
+        shared_rows = _project_steps(
+            plan.shared_infrastructure.plan,
+            shared.run_result,
+            StageStatus.BLOCKED if shared.exit_code == 75 else StageStatus.ABORTED,
+        )
         for row in shared_rows:
             row.project, row.shared_result = "root", shared
         results.extend(shared_rows)

@@ -111,9 +111,23 @@ class _RuntimeObservation:
             source_module.inventory.__code__: "git",
             source_module.NativeSourceContext._verify_current_source.__code__: "current",
         }
+        self.observed_code_ids = {id(code) for code in self.direct_codes}
+        self.observed_code_ids.update(
+            (
+                id(self.guard_code),
+                id(self.data_code),
+                id(data_module.validate_runtime_owner.__code__),
+                id(installed_module._installed.__code__),
+            )
+        )
 
     def __call__(self, frame: FrameType, event: str, argument: Any) -> None:
+        # Complete Source traversal emits many irrelevant profiler events.
+        if event != "call" and (event != "return" or argument is None):
+            return
         code = frame.f_code
+        if id(code) not in self.observed_code_ids:
+            return
         parent = frame.f_back
         parent_code = None if parent is None else parent.f_code
         label = None

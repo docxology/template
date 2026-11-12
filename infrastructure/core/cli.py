@@ -21,6 +21,7 @@ from collections.abc import Sequence
 
 from infrastructure.core.logging.utils import get_logger, setup_logger
 from infrastructure.core.errors import CLI_COMMAND_FAILED, CLI_UNKNOWN_COMMAND
+from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError
 
 # Re-export public API so existing imports continue to work
 from infrastructure.core.cli_parser import create_parser
@@ -82,6 +83,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     except TimeoutError as e:
         logger.error("Core CLI deadline expired: %s", e)
         return 124
+    except SharedRuntimeCustodyError as e:
+        logger.error("Frozen execution refused: %s", e)
+        return 75
     except ValueError as e:
         logger.error("Invalid invocation: %s", e)
         return 2

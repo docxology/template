@@ -3,13 +3,34 @@
 from __future__ import annotations
 
 from dataclasses import asdict, replace
+import json
 from pathlib import Path
 
 from infrastructure.core.pipeline.fingerprints import canonical_digest
+from infrastructure.core.pipeline.outcomes import StageOutcome, StageStatus
 from infrastructure.core.pipeline.plan import ExecutionPlan, PlannedStage
 from infrastructure.core.pipeline.plan_custody import FrozenPlanSources
 from infrastructure.core.pipeline.target_contracts import effective_stage_declaration
-from infrastructure.core.pipeline.types import PipelineConfig, StagePolicy
+from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult, StagePolicy
+
+
+class SharedRuntimeCustodyError(ValueError):
+    """A frozen shared plan lost Source/environment custody, not invocation syntax."""
+
+    def as_stage_result(self) -> PipelineStageResult:
+        """Retain this original refusal as a typed row without revalidation."""
+        diagnostic = str(self)
+        return PipelineStageResult(
+            0,
+            "Execution contract",
+            False,
+            0.0,
+            75,
+            diagnostic,
+            stage_completed=False,
+            stage_key="execution",
+            outcome=StageOutcome("execution", StageStatus.BLOCKED, child_exit_code=None, diagnostic=diagnostic),
+        )
 
 
 def validate_shared_runtime(config: PipelineConfig, plan: ExecutionPlan) -> None:
@@ -36,7 +57,27 @@ def validate_shared_runtime(config: PipelineConfig, plan: ExecutionPlan) -> None
     # never compile or substitute a new execution plan inside a worker.
     sources = FrozenPlanSources.capture(config)
     if sources.source_identity != plan.source_identity or sources.environment_identity != plan.environment_identity:
-        raise ValueError("Shared plan source or environment differs from its admitted declaration")
+        expected = plan.source_identity
+        expected_label = (
+            expected
+            if isinstance(expected, str)
+            and len(expected) == 64
+            and all(char in "0123456789abcdef" for char in expected)
+            else "<invalid-sha256>"
+        )
+        diagnostic = {
+            "expected_total": expected_label,
+            "observed_total": sources.source_identity,
+            "components": dict(sources.source_components),
+        }
+        reason = (
+            "Consumed source changed after plan resolution; start a fresh run"
+            if sources.source_identity != plan.source_identity
+            else "Effective child environment changed after plan resolution; start a fresh run"
+        )
+        raise SharedRuntimeCustodyError(
+            reason + "; fingerprint_diagnostics=" + json.dumps(diagnostic, sort_keys=True, separators=(",", ":"))
+        )
     declarations = tuple(effective_stage_declaration(stage) for stage in sources.dag().sorted_stages())
     if canonical_digest([asdict(stage) for stage in declarations]) != plan.definition_identity:
         raise ValueError("Shared plan definition differs from the admitted canonical declarations")
