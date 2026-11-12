@@ -46,7 +46,7 @@ def read(connection: socket.socket, size: int, deadline: float) -> bytes:
 def frame(connection: socket.socket, deadline: float) -> tuple[dict[str, Any] | None, int | None]:
     connection.settimeout(remaining(deadline))
     close_on_exec = getattr(socket, "MSG_CMSG_CLOEXEC", None)
-    if type(close_on_exec) is not int:
+    if not isinstance(close_on_exec, int) or isinstance(close_on_exec, bool):
         raise ValueError("loader callback requires the actual Linux close-on-exec descriptor ABI")
     raw, ancillary, flags, _ = connection.recvmsg(HEADER.size, socket.CMSG_SPACE(4), close_on_exec)
     received: list[int] = []
