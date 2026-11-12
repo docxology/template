@@ -29,7 +29,7 @@
 #define MAX_EVENTS 32768
 #define MAX_SEGMENTS 128
 #define MAX_IMAGE (512ULL * 1024 * 1024)
-#define MAX_MEMORY (128ULL * 1024 * 1024)
+#define MAX_MEMORY (256ULL * 1024 * 1024)
 #define MAGIC "TLDOBS1"
 #define HELLO 1
 #define OPEN 2
@@ -40,9 +40,9 @@
 
 /* Exact protocol words are explicitly encoded, never native-struct padding. */
 static int channel = -1;
-static uint64_t sequence, objects, active, deadline_ns, owner_pid;
+static uint64_t sequence, objects, active, deadline_ns, owner_pid, kernel_object_id;
 static char token[64], environment[MAX_ENV];
-static unsigned char busy;
+static unsigned char busy, preinitialized, terminal_sent;
 
 static long call6(long n, long a, long b, long c, long d, long e, long f) {
 #if defined(__x86_64__)
@@ -193,8 +193,11 @@ static void header(uint64_t kind, uint64_t id, uint64_t base, uint64_t ns,
     struct cmsghdr *c = CMSG_FIRSTHDR(&message);
     c->cmsg_level = SOL_SOCKET; c->cmsg_type = SCM_RIGHTS; c->cmsg_len = CMSG_LEN(sizeof(int));
     copy(CMSG_DATA(c), &descriptor, sizeof descriptor);
-    ready(POLLOUT);
-    long n = call6(__NR_sendmsg, channel, (long)&message, MSG_NOSIGNAL, 0, 0, 0);
+    long n;
+    do {
+        ready(POLLOUT);
+        n = call6(__NR_sendmsg, channel, (long)&message, MSG_NOSIGNAL | MSG_DONTWAIT, 0, 0, 0);
+    } while (n == -11 || n == -4);
     if (n <= 0 || n > (long)sizeof frame) fail();
     send_all(frame + n, sizeof frame - (size_t)n);
 }
@@ -202,7 +205,8 @@ static void enter(void) {
     /* A reentrant loader callback cannot be represented by a complete serial
        observation and is a refusal, never silently dropped or deadlocked. */
     if (__atomic_test_and_set(&busy, __ATOMIC_ACQUIRE)) fail();
-    if ((uint64_t)call6(__NR_getpid, 0, 0, 0, 0, 0, 0) != owner_pid || now() >= deadline_ns) fail();
+    if (terminal_sent || (uint64_t)call6(__NR_getpid, 0, 0, 0, 0, 0, 0) != owner_pid ||
+        now() >= deadline_ns) fail();
 }
 static void leave(void) { __atomic_clear(&busy, __ATOMIC_RELEASE); }
 
@@ -234,9 +238,17 @@ static void initialize(void) {
     struct sockaddr_un address;
     zero(&address, sizeof address); address.sun_family = AF_UNIX;
     copy(address.sun_path, path, n);
-    channel = (int)call6(__NR_socket, AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, 0, 0, 0);
-    if (channel < 0 || call6(__NR_connect, channel, (long)&address,
-                            offsetof(struct sockaddr_un, sun_path) + n + 1, 0, 0, 0) != 0) fail();
+    channel = (int)call6(__NR_socket, AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0, 0, 0, 0);
+    if (channel < 0) fail();
+    long connected = call6(__NR_connect, channel, (long)&address,
+                           offsetof(struct sockaddr_un, sun_path) + n + 1, 0, 0, 0);
+    if (connected == -115) {
+        ready(POLLOUT);
+        int error = 0;
+        socklen_t error_size = sizeof error;
+        if (call6(__NR_getsockopt, channel, SOL_SOCKET, SO_ERROR, (long)&error,
+                  (long)&error_size, 0) != 0 || error_size != sizeof error || error) fail();
+    } else if (connected != 0) fail();
     enter(); header(HELLO, 0, 0, 0, 0, 0, -1); acknowledge(); leave();
 }
 unsigned int la_version(unsigned int version) {
@@ -265,6 +277,8 @@ unsigned int la_objopen(struct link_map *map, Lmid_t namespace_id, uintptr_t *co
         if (n != (long)sizeof eh) fail();
     } else {
         if (!map->l_addr || !equal(path, "linux-vdso.so.", 14)) fail();
+        if (kernel_object_id) fail();
+        kernel_object_id = id;
         copy(&eh, (const void *)(uintptr_t)map->l_addr, sizeof eh);
     }
     if (!equal((const char *)eh.e_ident, "\177ELF", 4) || eh.e_ident[EI_CLASS] != ELFCLASS64 ||
@@ -303,15 +317,25 @@ unsigned int la_objopen(struct link_map *map, Lmid_t namespace_id, uintptr_t *co
     leave(); return 0; /* No symbol binding callbacks, no redirection. */
 }
 void la_activity(uintptr_t *cookie, unsigned int flag) {
-    enter(); header(ACTIVITY, cookie ? *cookie : 0, flag, 0, 0, 0, -1); acknowledge(); leave();
+    enter(); header(ACTIVITY, cookie ? *cookie : 0, flag, 0, 0, 0, -1); acknowledge();
+    /* glibc _dl_fini reports its final consistency boundary after objclose.
+       Authenticate that boundary before DONE; never emit a frame after DONE. */
+    if (flag == LA_ACT_CONSISTENT && preinitialized && active == (kernel_object_id ? 1ULL : 0ULL)) {
+        terminal_sent = 1;
+        header(DONE, 0, 0, 0, 0, 0, -1); acknowledge();
+    }
+    leave();
 }
 void la_preinit(uintptr_t *cookie) {
-    enter(); header(PREINIT, cookie ? *cookie : 0, 0, 0, 0, 0, -1); acknowledge(); leave();
+    enter();
+    if (preinitialized) fail();
+    header(PREINIT, cookie ? *cookie : 0, 0, 0, 0, 0, -1); acknowledge();
+    preinitialized = 1; leave();
 }
 unsigned int la_objclose(uintptr_t *cookie) {
     enter();
     if (!cookie || !*cookie || !active) fail();
     header(CLOSE, *cookie, 0, 0, 0, 0, -1); acknowledge(); --active;
-    if (!active) { header(DONE, 0, 0, 0, 0, 0, -1); acknowledge(); }
+    if (*cookie == kernel_object_id) kernel_object_id = 0;
     leave(); return 0;
 }

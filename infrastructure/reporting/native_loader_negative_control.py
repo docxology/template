@@ -94,7 +94,7 @@ def _refusal(raw: dict[str, Any], *, owner_pid: int, command: list[str], caller_
         or raw.get("original_exit_code") != 125
         or raw.get("accepted") is not False
         or raw.get("timed_out") is not False
-        or raw.get("schema_version") != "template-original-native-loader-tool-process-v3"
+        or raw.get("schema_version") != "template-original-native-loader-tool-process-v4"
         or not raw["operation_begin"]["monotonic"]
         < raw["operation_end"]["monotonic"]
         < raw["original_deadline_monotonic"]

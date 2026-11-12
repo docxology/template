@@ -88,8 +88,8 @@ flowchart TB
 `test-infra` retains its 90-minute hosted budget and unchanged per-case
 timeouts. Its Linux/macOS cells invoke the shared
 [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml)
-once before the tests; pinned archive verification, native package preparation,
-and actual executable probes remain required.
+once before the tests; Source-pinned Linux builds or exact macOS archives,
+native package preparation and actual executable probes remain required.
 
 ### Quality Gates
 

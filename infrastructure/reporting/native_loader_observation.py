@@ -20,6 +20,7 @@ from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_crossref_protocol import peer_pid, process_birth
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader
+from infrastructure.reporting.native_loader_maps import terminal_kernel_residents
 from infrastructure.reporting.native_loader_protocol import (
     CHUNK,
     MAX_EVENTS,
@@ -39,7 +40,7 @@ from infrastructure.reporting.native_loader_protocol import (
 if TYPE_CHECKING:
     from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
 
-SCHEMA = "template-consuming-native-loader-lifecycle-v3"
+SCHEMA = "template-consuming-native-loader-lifecycle-v4"
 ENV_KEYS = {
     "LD_AUDIT",
     "LD_PRELOAD",
@@ -314,10 +315,11 @@ class NativeLoaderObservation:
                 while True:
                     value, descriptor = frame(connection, self.deadline)
                     if value is None:
-                        if not self.done or not self.preinit or self.active or set(self.closed) != set(self.seen):
+                        if not self.done or not self.preinit:
                             raise ValueError(
                                 "loader channel premature EOF preceded its validated terminal callback/closed roster"
                             )
+                        terminal_kernel_residents(self.seen, self.active, self.closed)
                         self.eof = True
                         break
                     if self.done:
@@ -362,8 +364,15 @@ class NativeLoaderObservation:
                                 rows = self._map_event(live, value["sequence"])
                                 value["complete_executable_map_census"] = self._census(rows, live)
                             elif value["kind"] == "done":
-                                if self.done or self.active or not self.preinit or set(self.closed) != set(self.seen):
-                                    raise ValueError("loader terminal callback omits an actual opened/closed image")
+                                if (
+                                    self.done
+                                    or not self.preinit
+                                    or len(self.events) < 2
+                                    or self.events[-2]["kind"] != "activity"
+                                    or self.events[-2]["base"] != 0
+                                ):
+                                    raise ValueError("loader terminal callback lacks its final consistency boundary")
+                                terminal_kernel_residents(self.seen, self.active, self.closed)
                                 self.done = True
                             elif value["kind"] == "hello" and len(self.events) != 1:
                                 raise ValueError("loader repeated its Source launch initialization")
@@ -390,7 +399,7 @@ class NativeLoaderObservation:
                     raise ValueError(
                         "loader channel closure lacks actual signed normal consuming-process OS termination"
                     )
-                residents = list(self.active)
+                residents = terminal_kernel_residents(self.seen, self.active, self.closed)
                 for object_id, descriptor in self.descriptors.items():
                     _unchanged_body(self.seen[object_id]["body"], descriptor, self.deadline)
                 self.resident_terminal = {
@@ -420,6 +429,8 @@ class NativeLoaderObservation:
         except OSError:
             pass
         self.server.close()
+        Path(self.address).unlink(missing_ok=True)
+        self.socket_directory.cleanup()
 
     def finish(self, result: dict[str, Any]) -> dict[str, str]:
         """Called after actual OS reaping; enclosing ToolAPI must still close guardian."""

@@ -45,12 +45,12 @@ from infrastructure.reporting.native_tool_producer import (
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
-SCHEMA = "template-source-owned-crossref-filter-v3"
+SCHEMA = "template-source-owned-crossref-filter-v4"
 WORKER = "infrastructure.reporting.native_crossref_worker"
 _KEY = object()
 BLOCKERS = (
     "crossref actual loaded native-library closure requires independent admission",
-    "crossref official Source-pinned archive to extracted executable body requires independent admission",
+    "crossref Source-pinned provider archive to extracted executable body requires independent admission",
 )
 
 
@@ -298,19 +298,22 @@ def prepare_source_crossref_filter(
     if selected is None:
         raise ValueError("filter lacks its independently nominated current crossref executable")
     crossref = file_observation(Path(selected).resolve(strict=True))
-    official_archive = None
+    provider_archive = None
     if platform.system() == "Linux":
-        from infrastructure.reporting.native_crossref_archive import _pin, PIN_SOURCE, observe_crossref_official_archive
+        from infrastructure.reporting.native_crossref_archive import observe_crossref_provider_archive
+        from infrastructure.reporting.native_document_provider_contracts import PIN_SOURCE, select_document_tool
 
-        action = source.current_source_reader.read(PIN_SOURCE)
+        pin_source = source.current_source_reader.read(PIN_SOURCE)
         host = {"system": platform.system(), "machine": platform.machine()}
-        pin = _pin(action.content, host)
+        pin = select_document_tool(pin_source.content, host, "crossref")
         archive_root = env.get("RUNNER_TEMP")
         if not archive_root or not Path(archive_root).is_absolute():
-            raise ValueError("Source native Linux filter lacks the actual setup-action archive directory nomination")
-        official_archive = observe_crossref_official_archive(
+            raise ValueError(
+                "Source native Linux filter lacks the actual prepared provider archive directory nomination"
+            )
+        provider_archive = observe_crossref_provider_archive(
             source,
-            directory / "official-archive",
+            directory / "provider-archive",
             Path(archive_root) / "template-acceptance-document-archives" / pin["asset"],
             Path(crossref["path"]),
             reader,
@@ -359,7 +362,7 @@ def prepare_source_crossref_filter(
                 "deadline_monotonic": deadline,
                 "caller_deadline_monotonic": owner.deadline,
                 "crossref": crossref,
-                "official_archive": official_archive,
+                "provider_archive": provider_archive,
                 "socket_address": endpoint,
                 "closure_identity": [identity.st_dev, identity.st_ino],
                 "expected_exit": 0,

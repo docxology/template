@@ -13,7 +13,12 @@ from typing import Any
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_loader_build import SOURCE, elf_segments
 from infrastructure.reporting.native_loader_observation import SCHEMA
-from infrastructure.reporting.native_loader_maps import census_images, executable_census, parse_maps
+from infrastructure.reporting.native_loader_maps import (
+    census_images,
+    executable_census,
+    parse_maps,
+    terminal_kernel_residents,
+)
 from infrastructure.reporting.native_loader_protocol import mapped_segment
 from infrastructure.reporting.native_loader_protocol import CHUNK, MAX_EVENTS, MAX_TOTAL, chunks_content
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -27,6 +32,7 @@ MODULES = (
     "reporting/native_loader_observation.py",
     "reporting/native_loader_maps.py",
     "reporting/native_loader_qualification.py",
+    "reporting/native_document_elf.py",
     "reporting/native_loader_compilation_replay.py",
     "reporting/native_loader_helper_memory.py",
     "reporting/native_environment_custody.py",
@@ -250,8 +256,14 @@ def validate_native_loader_data(
                 raise ValueError("loader original preinit omitted its complete kernel executable map census")
             preinit = True
         elif kind == "done":
-            if active or not preinit:
-                raise ValueError("loader original terminal callback left an unclosed image")
+            if (
+                not preinit
+                or sequence < 2
+                or events[sequence - 2]["kind"] != "activity"
+                or events[sequence - 2]["base"] != 0
+            ):
+                raise ValueError("loader original terminal callback lacks its final consistency boundary")
+            terminal_kernel_residents(opened, active, closed)
             terminal_done = True
         elif kind == "hello":
             if sequence != 1:
@@ -304,15 +316,15 @@ def validate_native_loader_data(
     ):
         raise ValueError("loader actual consuming main image differs from its directly nominated executable body")
     terminal = raw.get("resident_terminal")
+    residents = terminal_kernel_residents(opened, active, closed)
     if (
         not preinit
-        or active
         or raw["opened"] != list(opened)
         or raw["closed"] != closed
         or not isinstance(terminal, dict)
         or terminal.get("kind") != "actual-parent-Popen-signed-OS-reaping"
         or terminal.get("original_exit_code") != native["original_exit_code"]
-        or terminal.get("resident_object_ids") != list(active)
+        or terminal.get("resident_object_ids") != residents
         or type(terminal.get("observed_monotonic")) not in {float, int}
         or not math.isfinite(terminal["observed_monotonic"])
         or not previous <= terminal["observed_monotonic"] < native["original_deadline_monotonic"]

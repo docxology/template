@@ -45,7 +45,7 @@ if TYPE_CHECKING:
 
 SCHEMA = "template-original-native-tool-process-v1"
 STDIN_SCHEMA = "template-original-native-tool-stdin-process-v2"
-LOADER_SCHEMA = "template-original-native-loader-tool-process-v3"
+LOADER_SCHEMA = "template-original-native-loader-tool-process-v4"
 # Even six-byte JSON escaping of the complete text stays inside one 64 MiB artifact.
 MAX_STREAM_BYTES = 8 * 1024 * 1024
 _LIVE_OWNER_KEY = object()
@@ -95,13 +95,17 @@ class NativeLiveToolProcess:
         if (
             not self._active
             or self._owner_pid != os.getpid()
-            or self._process.poll() is not None
             or not isinstance(actual_arguments, (list, tuple))
             or tuple(actual_arguments) != self._command
             or not self._guardian.armed
-            or self._guardian.process.poll() is not None
         ):
             raise ValueError("native interaction lost its actual live original process")
+        outcome = self._process.poll()
+        if outcome is not None:
+            raise ValueError(f"native interaction lost its actual live original process (signed OS exit {outcome})")
+        guardian_outcome = self._guardian.process.poll()
+        if guardian_outcome is not None:
+            raise ValueError(f"native interaction lost its actual live guardian (signed OS exit {guardian_outcome})")
 
     def observe_original_os_exit(self) -> int:
         """Reap after a validated terminal transition without requiring a live poll.
@@ -243,6 +247,8 @@ def run_native_tool_process(
             loader.collect(loader_owner)
         except BaseException as error:
             loader_errors.append(error)
+            if loader is not None:
+                loader.abort()
 
     def monitor_streams() -> None:
         while not monitor_stop.wait(0.05):
@@ -417,9 +423,9 @@ def run_native_tool_process(
             payload["timed_out"] = isinstance(error, (TimeoutError, subprocess.TimeoutExpired))
         finally:
             _preflight_worker_phase("cleanup-begin", purpose, deadline)
+            if loader is not None:
+                loader.abort()
             if loader_thread is not None and loader_thread.is_alive():
-                if loader is not None:
-                    loader.abort()
                 loader_thread.join(timeout=max(0.0, deadline - time.monotonic()))
                 if loader_thread.is_alive():
                     payload["diagnostics"].append("actual Source loader thread did not close inside original deadline")

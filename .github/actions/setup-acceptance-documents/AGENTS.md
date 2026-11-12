@@ -1,9 +1,10 @@
 # setup-acceptance-documents contract
 
-This composite action only orchestrates preparation of official document prerequisites.
+This composite action orchestrates Source-pinned document prerequisites.
 Do not call it on a shared workstation. It uses fresh `RUNNER_TEMP` storage
-and the disposable hosted runner's user font/tool directories. Third-party
-archives and model blobs must retain their exact source-pinned hashes and lengths.
+and the disposable hosted runner's user font/tool directories. Official assets
+retain exact Source-pinned compressed hashes and lengths; Linux document builds
+retain exact Source-pinned executable bodies and immutable compiler/dependency inputs.
 
 The model action binds an unoccupied loopback port, disables cloud operations
 and implicit model acquisition, and records its owned daemon PID and birth.
@@ -18,12 +19,38 @@ routine infrastructure smoke selects converter and separately prepares its
 declared readers and TeX. Ordinary project cells explicitly select native for EDA and
 converter elsewhere, according to their actual source-declared tests.
 
-Cache only official archives, with OS, architecture, validated mode and source
-identity in the key. Validate exact length and SHA-256 again before every use;
-cached data cannot supply test outcomes or acceptance.
+Cache only complete document/font/TeX archives, with OS, architecture, validated
+mode, manifest and preparation source identities in the key. macOS document
+archives retain exact official compressed length/SHA-256 pins. Linux archives
+contain one unchanged executable member whose complete body must equal the
+Source manifest's binary length/SHA-256; compression and worker JSON are not
+authenticity. Validate bounded physical archives and members before every use.
+Cached data cannot supply test outcomes or acceptance.
 
 Run `actionlint` after edits and retain genuine failed preparation diagnostics.
 See [README.md](README.md) for usage.
+
+The single pin source is `infrastructure/config/native-document-providers.json`,
+interpreted by the pure closed-union `native_document_provider_contracts` API.
+Do not duplicate its platform archive pins in shell. Linux x86_64 uses only the
+upstream commit-pinned `pandoc-with-crossref` flake with its frozen GHC 9.8.4,
+haskell.nix/Hackage lock and Cabal freeze. `native_document_preparation` checks
+the actual complete source NAR, lock/freeze, compiler declaration, evaluated
+derivation/output, recursive derivations, completed build and runtime closure.
+Resolve Nix symlinks to actual executable bodies; match the whole Source pin and
+use the shared `native_document_elf.require_glibc_executable` eligibility check.
+Never patch a binary to create loader observations, substitute a wrapper,
+downgrade a version, or admit the static official Linux release.
+
+If Nix is absent, use the reviewed Ubuntu mirror guard and bounded signed Noble
+`nix-bin`/`nix-setup-systemd` packages, not an unpinned remote installer. Initialize
+the local store; sudo preparation does not depend on systemd daemon/socket startup.
+Keep signature verification and only the reviewed NixOS, IOG and crossref Cachix
+caches without flake-supplied settings. Retain the Nix output GC root and full
+runtime closure, not just copies of the two binaries.
+Preparation command/derivation/body records explicitly grant no native authority;
+Original/Current Source, full body correspondence and every existing native
+loader/map/memory/lifecycle/readback requirement remain mandatory.
 
 Linux callers in either mode, and all native callers, must first prepare their selected locked Python environment.
 `python-executable` defaults to `.venv/bin/python`; common acceptance explicitly

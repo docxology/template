@@ -1,0 +1,80 @@
+{
+  "schema_version": "template-native-document-providers-v1",
+  "providers": {
+    "Linux-x86_64": {
+      "kind": "nix-source-build",
+      "build": {
+        "flake_url": "git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c#packages.x86_64-linux.pandoc-with-crossref",
+        "revision": "e6c2ae3418dcf63f974802f8b7c105ebc299706c",
+        "nar_hash": "sha256-+RpgwW3AmNjTLVfMK7SYjFPi/DlxesuXUtsWGtnm9oM=",
+        "flake_lock_sha256": "c5bb26db82bc1b56577fc46ca3f56b061168c6cef86f5ec3b969530b62c80758",
+        "freeze_sha256": "17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed",
+        "compiler": "ghc-9.8.4",
+        "derivation": "/nix/store/g2fid7wndkkqp9b4f93whbyrapxm2wj8-pandoc-with-crossref.drv",
+        "output": "/nix/store/9w5yy7rgmpl2jn0by1qjpmv1kf9341f9-pandoc-with-crossref"
+      },
+      "tools": {
+        "pandoc": {
+          "version": "3.11",
+          "asset": "pandoc-3.11-linux-x86_64-source.tar.xz",
+          "member": "pandoc",
+          "binary_sha256": "247981edba708bff1704ddabd7efec2764816b1d82f5a6714be31cdf64bf7417",
+          "binary_bytes": 278368016
+        },
+        "crossref": {
+          "version": "v0.3.25a",
+          "asset": "pandoc-crossref-v0.3.25a-linux-x86_64-source.tar.xz",
+          "member": "pandoc-crossref",
+          "binary_sha256": "3a02d3ed92bbc342d47a73db34542554243d8a2830c8642f6d1f7f7d3c89b1df",
+          "binary_bytes": 61661368
+        }
+      }
+    },
+    "Darwin-arm64": {
+      "kind": "official-archives",
+      "tools": {
+        "pandoc": {
+          "version": "3.11",
+          "asset": "pandoc-3.11-arm64-macOS.zip",
+          "member": "pandoc-3.11-arm64/bin/pandoc",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-arm64-macOS.zip",
+          "format": "zip",
+          "archive_sha256": "15806bedf9517bfead72e88fe6a6696635c3691efbb6e152173440e9c5bb50b4",
+          "archive_bytes": 41832712
+        },
+        "crossref": {
+          "version": "v0.3.25a",
+          "asset": "pandoc-crossref-macOS-ARM64.tar.xz",
+          "member": "pandoc-crossref",
+          "url": "https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.25a/pandoc-crossref-macOS-ARM64.tar.xz",
+          "format": "tar.xz",
+          "archive_sha256": "ce3571bd8bc335fa26bea46b390381a61bdf464bbf83fe4c7277160ba124a6fa",
+          "archive_bytes": 18539672
+        }
+      }
+    },
+    "Darwin-x86_64": {
+      "kind": "official-archives",
+      "tools": {
+        "pandoc": {
+          "version": "3.11",
+          "asset": "pandoc-3.11-x86_64-macOS.zip",
+          "member": "pandoc-3.11-x86_64/bin/pandoc",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-x86_64-macOS.zip",
+          "format": "zip",
+          "archive_sha256": "3b1c1b57f160112c821d02f23d946ede8b7f57a6ccf4632a25a512d334a9291f",
+          "archive_bytes": 26145603
+        },
+        "crossref": {
+          "version": "v0.3.25a",
+          "asset": "pandoc-crossref-macOS-X64.tar.xz",
+          "member": "pandoc-crossref",
+          "url": "https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.25a/pandoc-crossref-macOS-X64.tar.xz",
+          "format": "tar.xz",
+          "archive_sha256": "03e84e3fd03beb2b36ac2ed5bc2608825d759f33e657bec05af8be8b16ca7690",
+          "archive_bytes": 4579604
+        }
+      }
+    }
+  }
+}

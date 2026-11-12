@@ -50,6 +50,15 @@ locks.
   of truncating it at the routine smoke shard's 540-second deadline.
   Prepare hash-verified locked dependencies before the offline body and declare
   its Linux/compiler applicability without waiving either supported Python minor.
+- Prepare Linux Pandoc and Crossref from immutable upstream source and frozen
+  GHC/dependency inputs, retaining exact Source-selected executable and provider
+  archive correspondence instead of asking static binaries for glibc callbacks.
+  Keep official macOS archives pinned. Authenticate the final loader-consistency
+  boundary and all file-backed closes; retain the kernel vDSO until the actual
+  original OS exit rather than fabricating a close callback.
+  Observe the complete Source-pinned Pandoc executable image under a finite
+  256 MiB code-image ceiling; retain the 512 MiB backing-file and 1 GiB cohort
+  ceilings and existing observation clocks without truncating evidence.
 
 ### Fixes carried forward from main
 

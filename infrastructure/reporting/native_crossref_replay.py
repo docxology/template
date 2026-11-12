@@ -335,7 +335,7 @@ class CrossrefFilterReaderOperation:
             "deadline_monotonic",
             "caller_deadline_monotonic",
             "crossref",
-            "official_archive",
+            "provider_archive",
             "socket_address",
             "closure_identity",
             "expected_exit",
@@ -598,14 +598,14 @@ class CrossrefFilterReaderOperation:
                 "input",
                 "output",
                 "tool_artifacts",
-                "official_archive",
+                "provider_archive",
                 "loader_qualifications",
                 "source_exit_intent",
                 "version",
                 "output_format",
                 "blockers",
             }
-            or payload["official_archive"] != spec["official_archive"]
+            or payload["provider_archive"] != spec["provider_archive"]
             or len(payload["tool_artifacts"]) != (6 if payload["loader_qualifications"] is not None else 2)
         ):
             raise ValueError("crossref actual original tool/input/output cohort differs")
@@ -671,7 +671,7 @@ class CrossrefFilterReaderOperation:
             host = reader.read(original.process_relative).json_object()["host_before"]
         if host["system"] == "Linux":
             from infrastructure.reporting.native_loader_qualification import replay_native_loader_qualification
-            from infrastructure.reporting.native_crossref_archive import replay_crossref_official_archive
+            from infrastructure.reporting.native_crossref_archive import replay_crossref_provider_archive
 
             if not isinstance(qualifications, list) or len(qualifications) != 2 or payload["blockers"]:
                 raise ValueError("Source Linux Crossref lacks its two real loader/archive obligations")
@@ -688,16 +688,16 @@ class CrossrefFilterReaderOperation:
                     raise ValueError("Crossref loader pair differs from its exact actual baseline invocation")
             if stage is not None:
                 from infrastructure.reporting.native_stage_crossref_archive_replay import (
-                    replay_stage_crossref_official_archive,
+                    replay_stage_crossref_provider_archive,
                 )
 
-                replay_stage_crossref_official_archive(
-                    self, spec["official_archive"], payload["tool_artifacts"][5], reader
+                replay_stage_crossref_provider_archive(
+                    self, spec["provider_archive"], payload["tool_artifacts"][5], reader
                 )
             else:
-                replay_crossref_official_archive(
+                replay_crossref_provider_archive(
                     self.source,
-                    spec["official_archive"],
+                    spec["provider_archive"],
                     payload["tool_artifacts"][5],
                     self.parent_reader,
                     tool_reader=reader,
@@ -706,7 +706,7 @@ class CrossrefFilterReaderOperation:
                     deadline=self.deadline,
                 )
         elif (
-            qualifications is not None or spec["official_archive"] is not None or payload["blockers"] != list(BLOCKERS)
+            qualifications is not None or spec["provider_archive"] is not None or payload["blockers"] != list(BLOCKERS)
         ):
             raise ValueError("unsupported consuming host cannot claim Linux loader/archive qualification")
         self.verify()
