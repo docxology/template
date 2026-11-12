@@ -1,4 +1,4 @@
-name: Retained native document ELF differential
+name: Source-corrected native package-cache qualification
 
 on:
   workflow_dispatch:
@@ -16,9 +16,9 @@ jobs:
     timeout-minutes: 180
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 2
       matrix:
-        replica: [1, 2, 3, 4]
+        replica: [1, 2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -44,10 +44,12 @@ jobs:
           from pathlib import Path
           root = Path('output/readiness/deterministic-document-providers').resolve()
           root.mkdir(parents=True)
+          started = time.monotonic()
           deadline = time.monotonic() + 9000
           reference = 'git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c'
           recipe = Path('infrastructure/config/native-document-build.nix').resolve()
           freeze = Path('infrastructure/config/native-document-build.freeze').resolve()
+          patch = Path('infrastructure/config/native-document-ghc-pkg-cache-order.patch').resolve()
           base = ['sudo', '-n', shutil.which('nix'), '--store', 'local', '--extra-experimental-features', 'nix-command flakes',
                   '--option', 'accept-flake-config', 'false', '--option', 'require-sigs', 'true',
                   '--option', 'max-jobs', '2', '--option', 'cores', '2',
@@ -117,8 +119,83 @@ jobs:
           assert hashlib.sha256((upstream / 'cabal.project.freeze').read_bytes()).hexdigest() == '17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed'
           (root / 'native-document-build.nix').write_bytes(recipe.read_bytes())
           (root / 'native-document-build.freeze').write_bytes(freeze.read_bytes())
+          (root / patch.name).write_bytes(patch.read_bytes())
           with tarfile.open(root / 'immutable-upstream-source.tar.xz', 'w:xz') as archive:
               archive.add(upstream, arcname=upstream.name)
+          local_arguments = ['--file', str(recipe)]
+          prototype = json.loads(run('prototype-evaluation', [
+              'eval', '--json', *local_arguments, '--apply', '''value: {
+                compiler_derivation = value.prototypeCompiler.drvPath; compiler_output = value.prototypeCompiler.outPath;
+                utility_derivation = value.prototypeCacheUtility.drvPath; utility_output = value.prototypeCacheUtility.outPath;
+                source_derivation = value.prototypeCacheSource.drvPath; source_output = value.prototypeCacheSource.outPath;
+                stock_compiler_output = value.prototypeStockCompiler.outPath;
+              }''',
+          ]))
+          write_json('prototype-evaluation.json', prototype)
+          prototype_graph = json.loads(run('prototype-recursive-derivations', [
+              'derivation', 'show', '--recursive', prototype['compiler_derivation'],
+              prototype['utility_derivation'], prototype['source_derivation'],
+          ]))
+          held_patch_hash = hashlib.sha256(patch.read_bytes()).hexdigest()
+          patched_inputs = prototype_graph[prototype['source_derivation']]['inputSrcs']
+          matching_patches = [Path(path) for path in patched_inputs if Path(path).name.endswith(patch.name)]
+          assert len(matching_patches) == 1
+          assert hashlib.sha256(matching_patches[0].read_bytes()).hexdigest() == held_patch_hash
+          write_json('prototype-source-binding.json', {
+              'held_patch_sha256': held_patch_hash, 'actual_patch_path': str(matching_patches[0]),
+              'source_output': prototype['source_output'], 'utility_derivation': prototype['utility_derivation'],
+              'role': 'actual source-build provenance only; no executable pin admission',
+          })
+          try:
+              run('prototype-build', [
+                  'build', '--json', '--keep-failed', '--print-build-logs',
+                  '--out-link', str(root / 'prototype-runtime'), *local_arguments,
+                  'prototypeCompiler', 'prototypeCacheUtility', 'prototypeCacheSource',
+              ])
+          finally:
+              run('prototype-all-local-nix-buildlogs', [
+                  'sudo', '-n', 'tar', '--create', '--file', str(root / 'prototype-all-local-nix-buildlogs.tar'),
+                  '--directory', '/nix/var/log/nix', 'drvs',
+              ], native=True, allow_failure=True)
+              run('prototype-utility-buildlog', ['log', prototype['utility_derivation']], allow_failure=True)
+              run('prototype-compiler-buildlog', ['log', prototype['compiler_derivation']], allow_failure=True)
+          compiler_files = {}
+          compiler_caches = {}
+          retained_digests = set()
+          with tarfile.open(root / 'actual-compiler-elf-bodies.tar.xz', 'w:xz', dereference=True) as archive:
+              for key in ('compiler_output', 'utility_output', 'stock_compiler_output'):
+                  directory = Path(prototype[key])
+                  for candidate in sorted(directory.rglob('*')):
+                      if not candidate.is_file():
+                          continue
+                      with candidate.open('rb') as handle:
+                          prefix = handle.read(4)
+                          handle.seek(0)
+                          if prefix != b'\x7fELF' and candidate.name != 'package.cache':
+                              continue
+                          digest = hashlib.file_digest(handle, 'sha256').hexdigest()
+                      entry = {'path': str(candidate), 'resolved_path': str(candidate.resolve(strict=True)),
+                               'bytes': candidate.stat().st_size, 'sha256': digest}
+                      if candidate.name == 'package.cache':
+                          compiler_caches[str(candidate)] = entry
+                      else:
+                          compiler_files[str(candidate)] = entry
+                      if digest not in retained_digests:
+                          retained_digests.add(digest)
+                          archive.add(candidate, arcname=digest, recursive=False)
+          write_json('actual-compiler-elf-bodies-index.json', compiler_files)
+          write_json('actual-compiler-package-cache-index.json', compiler_caches)
+          with tarfile.open(root / 'actual-cache-utility-source.tar.xz', 'w:xz') as archive:
+              for name in ('Main.hs', 'ghc-pkg.cabal.in'):
+                  candidate = Path(prototype['source_output']) / 'utils/ghc-pkg' / name
+                  archive.add(candidate, arcname=name)
+              archive.add(patch, arcname=patch.name)
+          run('actual-ghc-pkg-version', [str(Path(prototype['compiler_output']) / 'bin/ghc-pkg'), '--version'], native=True)
+          run('actual-compiler-path-info', ['path-info', '--recursive', '--json', prototype['compiler_output']])
+          write_json('prototype-preparation-timing.json', {
+              'elapsed_seconds': time.monotonic()-started, 'production_outer_seconds': 4500,
+              'within_production_outer_so_far': time.monotonic()-started <= 4500,
+          })
           evaluation = '''value: {
             derivation = value.provider.drvPath; output = value.provider.outPath;
             compiler_derivation = value.compiler.drvPath; compiler_output = value.compiler.outPath;
@@ -131,6 +208,10 @@ jobs:
           evaluated = json.loads(run('evaluation', ['eval', '--json', *local_arguments, '--apply', evaluation]))
           (root / 'evaluation.json').write_text(json.dumps(evaluated, indent=2) + '\n')
           graph = json.loads(run('recursive-derivations', ['derivation', 'show', '--recursive', evaluated['derivation'], evaluated['compiler_derivation'], evaluated['plan_derivation']]))
+          assert evaluated['compiler_output'] == prototype['compiler_output']
+          assert evaluated['compiler_derivation'] == prototype['compiler_derivation']
+          assert prototype['compiler_output'] in graph[evaluated['pandoc_derivation']]['env']['nativeBuildInputs'].split()
+          assert prototype['compiler_output'] in graph[evaluated['crossref_derivation']]['env']['nativeBuildInputs'].split()
           derivation_index = []
           with tarfile.open(root / 'exact-recursive-derivations.tar.xz', 'w:xz') as archive:
               for path in sorted(graph):
@@ -181,6 +262,7 @@ jobs:
           output = Path(evaluated['output'])
           existing_inputs = set()
           static_inputs = set()
+          package_caches = set()
           source_inputs = set()
           for path, value in graph.items():
               env = value.get('env', {})
@@ -196,8 +278,15 @@ jobs:
                       if candidate.is_dir():
                           static_inputs.update(candidate.rglob('*.a'))
                           static_inputs.update(candidate.rglob('*.conf'))
+                          package_caches.update(candidate.rglob('package.cache'))
+              if '-exe-' in env.get('name', ''):
+                  for item in value.get('outputs', {}).values():
+                      candidate = Path(item.get('path', '/nonexistent'))
+                      if candidate.is_dir():
+                          package_caches.update(candidate.rglob('package.cache'))
           run('realized-build-input-path-info', ['path-info', '--json', *sorted(existing_inputs)])
-          for label, paths in [('actual-static-library-inputs', static_inputs), ('actual-source-and-builder-inputs', source_inputs)]:
+          for label, paths in [('actual-static-library-inputs', static_inputs), ('actual-source-and-builder-inputs', source_inputs),
+                               ('actual-component-package-caches', package_caches)]:
               index = []
               with tarfile.open(root / (label + '.tar.xz'), 'w:xz', dereference=True) as archive:
                   for path in sorted(paths):
@@ -224,6 +313,13 @@ jobs:
           compiler = Path(evaluated['compiler_output'])
           assert run('compiler-version', [str(compiler / 'bin/ghc'), '--numeric-version'], native=True).decode().strip() == '9.12.2'
           assert '-fobject-determinism' in run('compiler-options', [str(compiler / 'bin/ghc'), '--show-options'], native=True).decode().splitlines()
+          prepared_elapsed = time.monotonic()-started
+          write_json('complete-provider-preparation-timing.json', {
+              'elapsed_seconds': prepared_elapsed, 'production_outer_seconds': 4500,
+              'within_production_outer': prepared_elapsed <= 4500,
+              'includes_diagnostic_compiler_and_input_archiving': True,
+              'excludes_earlier_APT_acquisition': True,
+          })
           tools = {}
           for name, version in [('pandoc', '3.11'), ('pandoc-crossref', 'v0.3.25a')]:
               binary = (output / 'bin' / name).resolve(strict=True)
@@ -252,12 +348,14 @@ jobs:
               retain_body('component-rebuild-check', 'pandoc', Path(evaluated['pandoc_output'] + '.check') / 'bin/pandoc')
               retain_build_logs('component-rebuild')
           rebuild = json.loads((root / 'pandoc-component-reproducibility.command.json').read_bytes())
-          result = {'schema_version': 'template-deterministic-document-provider-census-v2', 'role': 'retained actual independent source-build and targeted component differential only',
+          result = {'schema_version': 'template-deterministic-document-provider-census-v3', 'role': 'actual source-corrected ghc-pkg serialization qualification only',
                     'runtime_acceptance': False, 'source_commit': os.environ['GITHUB_SHA'], 'replica': os.environ['REPLICA'],
                     'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
-                    'producer_base_commit': '8524c7d2af827439336a5cde8e9dde537293011f',
+                    'producer_base_commit': '696591e863ce41c0003615e37a794d270b0fc51a',
                     'retained_complete_bodies': body_observations, 'pandoc_component_rebuild': rebuild,
                     'upstream_source': source['locked'], 'compiler': 'ghc-9.12.2', 'ghc_options': ['-fobject-determinism'],
+                    'compiler_pipeline_prototype': prototype, 'cache_source_patch_sha256': held_patch_hash,
+                    'complete_preparation_seconds': prepared_elapsed, 'fits_production_outer_4500': prepared_elapsed <= 4500,
                     'recipe_sha256': hashlib.sha256(recipe.read_bytes()).hexdigest(), 'freeze_sha256': hashlib.sha256(freeze.read_bytes()).hexdigest(),
                     'resolved_freeze_sha256': hashlib.sha256(resolved_freeze).hexdigest(), **evaluated, 'tools': tools}
           (root / 'census.json').write_text(json.dumps(result, indent=2) + '\n')
@@ -276,6 +374,7 @@ jobs:
             output/readiness/deterministic-document-providers/*.stderr
             output/readiness/deterministic-document-providers/*.nix
             output/readiness/deterministic-document-providers/*.freeze
+            output/readiness/deterministic-document-providers/*.patch
             output/readiness/deterministic-document-providers/*.tar.xz
             output/readiness/deterministic-document-providers/*.tar
           if-no-files-found: error
