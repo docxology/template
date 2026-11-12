@@ -301,6 +301,29 @@ thirty days. This diagnostic does not install policy, execute other Root cases,
 or grant full Root, native, scientific or release acceptance. The genuine four
 target run is still required to establish this capability on hosted toolchains.
 
+## Formal macOS process consumers
+
+[`formal-process-probe.yml`](formal-process-probe.yml) runs two existing real
+consumers on macOS with Python3.14/3.15: live-versus-terminated-unreaped process
+observation and timeout cleanup of an owned detached descendant. Scoped branch
+pushes run it automatically when its workflow, Formal runtime/test/locks, or the
+shared core/Root locks change. Tag pushes do not trigger it; independent runs
+never cancel each other. Once registered, manual dispatch accepts the exact
+published branch commit as `source_sha` and refuses a different checkout.
+
+The own isolated environment uses the locked `dev` and `formal-tools` extras,
+including the genuine current SDK required by Formal's conftest. Each target
+retains the actual source/interpreter/package origin, argv and source hashes,
+binary stdout/stderr, original exit, JUnit and passed probe record for thirty
+days. Require exactly both unchanged cases, zero failures/errors/skips and the
+original one-second operation/120-second case clocks. Unknown process
+observations remain conservative; no local process-policy bypass is required.
+
+The probe does not replace complete release-profile scientific tests or their
+90% coverage floor, four-target Root collection, native or release acceptance.
+GitHub's [manual-event registration contract](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch)
+explains why scoped branch pushes provide the initial pre-Main verification.
+
 ## Mandatory manual-probe and census guards
 
 The tagged-PDF probe and policy-census workflows test each required dispatch,

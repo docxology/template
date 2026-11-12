@@ -606,3 +606,20 @@ The complete job requires successful matrix production before setup.
 A cell or transport DATA alone cannot establish whole-roster or release
 acceptance. Successful native-cell artifacts request 30 days of retention.
 Retainers check each actual expiry at retrieval time.
+
+## Formal process-consumer qualification
+
+`formal-process-probe.yml` admits exact-source scoped branch pushes or explicit
+manual dispatch, on Darwin3.14/3.15. Prepare the own locked `dev` and
+`formal-tools` extras, not a nonexistent `dev` dependency group or an unqualified
+SDK fallback. Execute only the two declared existing process consumers with the
+original one-second operation and120-second pytest case clocks. Require the
+original exit0, exactly two JUnit cases with zero failures/errors/skips, actual
+source/interpreter/package origin and retained original streams/probe record.
+
+Independent run-ID concurrency never cancels another run; tag pushes do not
+trigger this diagnostic. Original records may establish Formal ISC130 only with
+genuine corresponding Linux evidence and unchanged consumer Source. They do not
+establish complete project coverage, the90% release-profile floor, Root/native
+or release acceptance. Preserve local execution-policy refusals; use the genuine
+hosted platform rather than an alternate process-query API to bypass them.
