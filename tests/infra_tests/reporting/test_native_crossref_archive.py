@@ -233,8 +233,19 @@ def _source_record():
         "revision",
         "nar_hash",
         "flake_lock_sha256",
+        "upstream_freeze_sha256",
+        "upstream_compiler",
+        "recipe_path",
+        "recipe_sha256",
+        "freeze_path",
         "freeze_sha256",
+        "resolved_freeze_sha256",
         "compiler",
+        "ghc_options",
+        "compiler_derivation",
+        "compiler_output",
+        "plan_derivation",
+        "plan_output",
         "derivation",
         "output",
     ],
@@ -248,7 +259,8 @@ def test_retained_provider_pin_cannot_replace_any_source_compiler_or_dependency_
         "source_binding": record["source_binding"],
     }
     _validate_record(record, **expected)
-    record["pin"]["build"][field] += "-tampered"
+    value = record["pin"]["build"][field]
+    record["pin"]["build"][field] = value + ["-tampered"] if type(value) is list else value + "-tampered"
     with pytest.raises(ValueError, match="Source/platform/pin"):
         _validate_record(record, **expected)
 

@@ -51,8 +51,9 @@ locks.
   Prepare hash-verified locked dependencies before the offline body and declare
   its Linux/compiler applicability without waiving either supported Python minor.
 - Prepare Linux Pandoc and Crossref from immutable upstream source and frozen
-  GHC/dependency inputs, retaining exact Source-selected executable and provider
-  archive correspondence instead of asking static binaries for glibc callbacks.
+  GHC 9.12.2/dependency inputs and project-wide object determinism, retaining
+  exact Source-selected executable and provider archive correspondence instead
+  of asking static binaries for glibc callbacks.
   Keep official macOS archives pinned. Authenticate the final loader-consistency
   boundary and all file-backed closes; retain the kernel vDSO until the actual
   original OS exit rather than fabricating a close callback.

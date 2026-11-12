@@ -12,13 +12,18 @@ native for EDA and converter for the other capability-matrix cells.
 [`infrastructure/config/native-document-providers.json`](../../../infrastructure/config/native-document-providers.json)
 is the single pin source. macOS retains the exact official release archives,
 lengths, SHA-256 digests and selected executable members. Linux x86_64 builds
-the upstream
-[`pandoc-with-crossref` flake at the immutable reviewed commit](https://github.com/lierdakil/pandoc-crossref/tree/e6c2ae3418dcf63f974802f8b7c105ebc299706c):
-its locked haskell.nix/Hackage inputs, GHC 9.8.4 and complete Cabal freeze select
-the compiler and dependencies, never an unpinned host GHC or latest package set.
-The client fixes source-build work at two concurrent jobs and two cores, matching
-the native pin producer rather than inheriting runner-wide concurrency. A
-derivation/store path alone never replaces the whole-executable body pin.
+the [Root-owned recipe](../../../infrastructure/config/native-document-build.nix)
+against the [immutable reviewed upstream commit](https://github.com/lierdakil/pandoc-crossref/tree/e6c2ae3418dcf63f974802f8b7c105ebc299706c).
+Its upstream haskell.nix/Hackage lock remains pinned. The adjacent complete Root
+Cabal freeze selects GHC 9.12.2's actual boot packages while preserving every
+nonboot version pin; `-fobject-determinism` applies to every compiled project
+package/component, not only executable `Main`. GHC 9.8.4's upstream declaration
+and original freeze remain separately authenticated: that compiler does not
+provide deterministic object generation and cannot supply stable whole-body pins.
+No unpinned host GHC or latest package set is admitted. Source builds use two
+concurrent jobs and two cores; a derivation/store path never replaces the complete
+executable's Source-owned hash and length.
+
 The strict shared parser rejects unsupported hosts and malformed fields in any
 manifest branch; there is no official-static-Linux or version fallback.
 
@@ -32,9 +37,11 @@ users on this disposable runner; no systemd daemon/socket startup is required.
 Only the reviewed signed NixOS, IOG and crossref Cachix caches are selected;
 flake-supplied configuration and the optional undo.it cache are not accepted.
 
-The Source preparation CLI checks the actual source revision and complete NAR,
-lock/freeze byte digests, compiler declaration, evaluated derivation and output,
-recursive compiler/dependency derivations, completed build and verified runtime
+The Source preparation CLI holds and hashes the Root recipe and freeze before
+acquisition, then evaluates private copies of those exact bytes. It checks the
+actual upstream revision and complete NAR, original lock/freeze and compiler
+declaration, evaluated compiler/plan/provider derivations and outputs, recursive
+dependency derivations, resolved freeze, completed build and verified runtime
 closure. Each actual executable must match its Source-declared whole-body
 SHA-256 and length and have a real installed glibc ELF `PT_INTERP`; no binary
 instrumentation or wrapper is substituted. Canonical single-member `tar.xz`

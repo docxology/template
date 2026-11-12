@@ -164,8 +164,10 @@ observations alone do not establish complete execution or a universal speedup.
 ## Release acceptance modules
 
 Linux document qualification requires real glibc-linked executables from the
-Source-pinned compiler/dependency recipe; static release binaries cannot emit
-`LD_AUDIT` callbacks. The v4 lifecycle authenticates the final consistency census
+Source-pinned GHC 9.12.2 recipe and complete dependency freeze, with project-wide
+object determinism; static release binaries cannot emit `LD_AUDIT` callbacks.
+Root recipe/freeze bytes, upstream provenance and resolved plan are independently
+bound. The v4 lifecycle authenticates the final consistency census
 and every file-backed close before `DONE`. The kernel vDSO remains explicitly
 resident until the same original process's signed OS exit; no glibc close is
 invented for it. EOF, live Source/peer custody, complete map/memory/body checks

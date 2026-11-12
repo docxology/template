@@ -10,11 +10,13 @@ from pathlib import PurePosixPath
 from typing import Any
 
 PIN_SOURCE = "infrastructure/config/native-document-providers.json"
-SCHEMA = "template-native-document-providers-v1"
+SCHEMA = "template-native-document-providers-v2"
 MAX_MANIFEST_BYTES = 128 * 1024
 MAX_ARCHIVE_BYTES = 64 * 1024 * 1024
 MAX_BINARY_BYTES = 512 * 1024 * 1024
 SOURCE_REVISION = "e6c2ae3418dcf63f974802f8b7c105ebc299706c"
+BUILD_RECIPE = "infrastructure/config/native-document-build.nix"
+BUILD_FREEZE = "infrastructure/config/native-document-build.freeze"
 _STORE_PATH = r"/nix/store/[0-9abcdfghijklmnpqrsvwxyz]{32}-[A-Za-z0-9+._?=-]+"
 _HOSTS = {"Linux-x86_64", "Darwin-arm64", "Darwin-x86_64"}
 
@@ -58,21 +60,47 @@ def _member(value: Any) -> None:
 def _build(value: Any) -> None:
     _fields(
         value,
-        {"flake_url", "revision", "nar_hash", "flake_lock_sha256", "freeze_sha256", "compiler", "derivation", "output"},
+        {
+            "flake_url",
+            "revision",
+            "nar_hash",
+            "flake_lock_sha256",
+            "upstream_freeze_sha256",
+            "upstream_compiler",
+            "recipe_path",
+            "recipe_sha256",
+            "freeze_path",
+            "freeze_sha256",
+            "resolved_freeze_sha256",
+            "compiler",
+            "compiler_derivation",
+            "compiler_output",
+            "plan_derivation",
+            "plan_output",
+            "ghc_options",
+            "derivation",
+            "output",
+        },
         "source build",
     )
-    if value["revision"] != SOURCE_REVISION or value["compiler"] != "ghc-9.8.4":
-        raise ValueError("document provider source revision or compiler is not the reviewed immutable recipe")
-    sources = {
-        f"github:lierdakil/pandoc-crossref/{SOURCE_REVISION}",
-        f"git+https://github.com/lierdakil/pandoc-crossref?rev={SOURCE_REVISION}",
-    }
-    targets = {"packages.x86_64-linux.pandoc-with-crossref", "pandoc-with-crossref"}
-    if type(value["flake_url"]) is not str or value["flake_url"] not in {
-        source + "#" + target for source in sources for target in targets
-    }:
-        raise ValueError("document provider flake must pin the reviewed commit and explicit dynamic target")
-    for field in ("flake_lock_sha256", "freeze_sha256"):
+    if (
+        value["revision"] != SOURCE_REVISION
+        or value["upstream_compiler"] != "ghc-9.8.4"
+        or value["compiler"] != "ghc-9.12.2"
+        or value["ghc_options"] != ["-fobject-determinism"]
+    ):
+        raise ValueError("document provider source/compiler/options differ from the reviewed deterministic recipe")
+    if value["flake_url"] != f"git+https://github.com/lierdakil/pandoc-crossref?rev={SOURCE_REVISION}":
+        raise ValueError("document provider flake must pin the exact reviewed upstream source")
+    if value["recipe_path"] != BUILD_RECIPE or value["freeze_path"] != BUILD_FREEZE:
+        raise ValueError("document provider build inputs must name the exact reviewed Root recipe and freeze")
+    for field in (
+        "flake_lock_sha256",
+        "upstream_freeze_sha256",
+        "recipe_sha256",
+        "freeze_sha256",
+        "resolved_freeze_sha256",
+    ):
         _digest(value[field], field)
     nar = value["nar_hash"]
     if type(nar) is not str or not nar.startswith("sha256-"):
@@ -83,11 +111,14 @@ def _build(value: Any) -> None:
         raise ValueError("document provider source NAR hash is malformed") from error
     if len(decoded) != 32 or base64.b64encode(decoded).decode("ascii") != nar[7:]:
         raise ValueError("document provider source NAR hash is noncanonical")
-    for field in ("derivation", "output"):
+    for field in ("derivation", "output", "compiler_derivation", "compiler_output", "plan_derivation", "plan_output"):
         path = value[field]
-        suffix = r"-pandoc-with-crossref\.drv" if field == "derivation" else r"-pandoc-with-crossref"
-        if type(path) is not str or re.fullmatch(_STORE_PATH, path) is None or re.search(suffix + r"$", path) is None:
+        derivation = field.endswith("derivation")
+        if type(path) is not str or re.fullmatch(_STORE_PATH, path) is None or path.endswith(".drv") != derivation:
             raise ValueError(f"document provider {field} is not an exact reviewed Nix store path")
+        suffix = "-pandoc-with-crossref" if field in {"derivation", "output"} else "-ghc-9.12.2"
+        if not field.startswith("plan_") and not path.endswith(suffix + (".drv" if derivation else "")):
+            raise ValueError(f"document provider {field} selects a different named build component")
 
 
 def _tool(value: Any, name: str, host: str, kind: str) -> None:
