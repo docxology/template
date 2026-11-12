@@ -72,6 +72,28 @@ receipts bind that input. The strict reader reconstructs all manuscript sections
 slide/reveal pairs and pitch-deck short/medium/long PDF/PPTX variants from source.
 Inventory-only `validated: true` records cannot pass.
 
+Original native stdout/stderr observations use
+`template-native-stream-observation-v1`: their absolute producer `path` is a
+historical label, never an artifact edge or a reader-side filesystem nomination.
+The ToolAPI wrapper separately binds the retained public stream bytes with exact
+repository-relative `path`/`sha256`/`bytes` objects. Portable readback checks those
+bytes against the versioned original hash, size, basename and decoded text after
+the producer is gone. Strict closure still rejects absolute/traversal artifact
+bindings and retains every wrapper, process and stream; neither transport nor
+versioned observation DATA grants original execution custody.
+
+Linux consuming-loader qualification uses an inherited read-only descriptor for
+the exact held compiler output: `LD_AUDIT=/proc/self/fd/<fd>`. This avoids
+[glibc's bounded audit-name buffer](https://github.com/bminor/glibc/blob/glibc-2.40/elf/dl-main.h),
+which silently omits names of 255 bytes or more, including real nested stage
+paths. Only the audited child inherits the descriptor; ordinary children and its
+guardian do not. The v5 native process and loader lifecycle bind the descriptor
+to the original compiler inode. Independent readback still requires complete
+callbacks, mapped helper/body equality, the terminal roster and signed OS exit;
+a short path, environment commitment or serialized descriptor alone grants no
+acceptance. The descriptor closes with owned observation cleanup, without
+changing the executable, compiler output, callbacks or existing clocks.
+
 The v2 native execution record also compiles ordered content obligations from
 the frozen, currently validated consumed manuscript bytes. Its deliberately
 limited projection supports plain paragraphs, ATX headings and plain list items.

@@ -45,7 +45,7 @@ if TYPE_CHECKING:
 
 SCHEMA = "template-original-native-tool-process-v1"
 STDIN_SCHEMA = "template-original-native-tool-stdin-process-v2"
-LOADER_SCHEMA = "template-original-native-loader-tool-process-v4"
+LOADER_SCHEMA = "template-original-native-loader-tool-process-v5"
 # Even six-byte JSON escaping of the complete text stays inside one 64 MiB artifact.
 MAX_STREAM_BYTES = 8 * 1024 * 1024
 _LIVE_OWNER_KEY = object()
@@ -336,6 +336,10 @@ def run_native_tool_process(
                 process_env = loader.prepare_env(process_env, deadline=deadline, purpose=purpose)
                 payload["schema_version"] = LOADER_SCHEMA
                 payload["loader_stdin"] = stdin_stream is not None
+                payload["library_descriptor"] = {
+                    "descriptor": loader.inherited_library_descriptor(),
+                    "identity": dict(loader.compiled.identity),
+                }
             from infrastructure.reporting.native_environment_custody import capture_native_environment
 
             _preflight_worker_phase("environment-begin", purpose, deadline)
@@ -355,6 +359,7 @@ def run_native_tool_process(
                 stdout=stdout,
                 stderr=stderr,
                 start_new_session=True,
+                pass_fds=() if loader is None else (loader.inherited_library_descriptor(),),
             )
             _preflight_worker_phase("worker-popen-returned", purpose, deadline, pid=process.pid)
             payload["pid"] = process.pid

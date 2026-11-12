@@ -293,6 +293,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
             ["--version"],
             "pandoc-terminal-success",
         )
+        assert len(os.fsencode(compiled.library)) >= 255
     except BaseException:
         failure_path = runtime.directory / "pandoc-terminal-success.native-process.json"
         if failure_path.exists():
@@ -354,14 +355,18 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         )
         == lifecycle
     )
-    for mutation in ("missing-done", "post-done-frame"):
+    for mutation in ("missing-done", "post-done-frame", "library-descriptor", "library-inode"):
         changed = deepcopy(lifecycle)
         if mutation == "missing-done":
             changed["events"].pop()
-        else:
+        elif mutation == "post-done-frame":
             post_done = deepcopy(changed["events"][-1])
             post_done["sequence"] = len(changed["events"]) + 1
             changed["events"].append(post_done)
+        elif mutation == "library-descriptor":
+            changed["library_descriptor"]["descriptor"] += 1
+        else:
+            changed["library_descriptor"]["identity"]["inode"] += 1
         binding = write_json(mirror, runtime.directory / (mutation + ".lifecycle.json"), changed)
         with raises(ValueError):
             validate_native_loader_data(
@@ -462,7 +467,11 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
         pytest.skip("genuine Pandoc and the Source-selected C compiler are required")
     original, commit, fingerprint = complete_reference
     deadline = time.monotonic() + 1200
-    mirror = _clone_complete_reference(complete_reference, tmp_path / "mirror", deadline=deadline)
+    # Real stage/compiler paths exceeded glibc's 254-byte audit-name limit,
+    # while the former shallow --version fixture never exercised that boundary.
+    nested = tmp_path / ("render-" + "r" * 80) / ("stage-" + "s" * 80)
+    nested.mkdir(parents=True)
+    mirror = _clone_complete_reference(complete_reference, nested / "mirror", deadline=deadline)
     environment = dict(os.environ, UV_OFFLINE="1", UV_PYTHON_DOWNLOADS="never")
     runtime_requirements = tmp_path / "runtime-requirements.txt"
     artifacts = tmp_path / "artifacts"

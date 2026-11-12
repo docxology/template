@@ -70,6 +70,7 @@ def validate_native_loader_data(
         "compiler",
         "purpose",
         "owner_pid",
+        "library_descriptor",
         "consuming_process",
         "command",
         "original_deadline_monotonic",
@@ -88,6 +89,7 @@ def validate_native_loader_data(
         set(raw) != fields
         or raw.get("schema_version") != SCHEMA
         or raw.get("owner_pid") != native.get("owner_pid")
+        or raw.get("library_descriptor") != native.get("library_descriptor")
         or raw.get("consuming_process", {}).get("pid") != native.get("pid")
         or raw.get("consuming_process", {}).get("ppid") != native.get("owner_pid")
         or raw.get("command") != native.get("command")
@@ -114,6 +116,15 @@ def validate_native_loader_data(
         original_deadline=original_deadline,
         original_completion=original_completion,
     )
+    descriptor = raw["library_descriptor"]
+    if (
+        not isinstance(descriptor, dict)
+        or set(descriptor) != {"descriptor", "identity"}
+        or type(descriptor["descriptor"]) is not int
+        or not 3 <= descriptor["descriptor"] < 2**31
+        or descriptor["identity"] != compiler["library_identity"]
+    ):
+        raise ValueError("loader inherited descriptor differs from its exact original compiler inode")
     events = raw.get("events")
     if not isinstance(events, list) or not 0 < len(events) <= MAX_EVENTS or events[0].get("kind") != "hello":
         raise ValueError("loader complete original callback cohort is absent or unbounded")

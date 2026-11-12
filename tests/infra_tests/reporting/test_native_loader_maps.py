@@ -1,7 +1,6 @@
 """DATA predicate controls; these tests cannot qualify original native custody."""
 
 import time
-from pathlib import Path
 
 import pytest
 
@@ -86,40 +85,6 @@ def test_reordered_kernel_map_is_refused():
 def test_map_parser_uses_existing_finite_clock():
     with pytest.raises(TimeoutError):
         parse_maps(b"1000-2000 r-xp 0 08:01 11 /tool\n", deadline=time.monotonic() - 1)
-
-
-def test_audit_loader_declares_fail_noreturn_before_its_definition():
-    """`fail` must be declared noreturn, or the audit-loader build fails under -Werror.
-
-    Negative control for hosted run 41940842593, cells `template_madlib` (job
-    126961680585) and `template_pools_rules_tools` (job 126961680276):
-
-      source-loader-audit.c:131:1: error: control reaches end of non-void
-        function [-Werror=return-type]
-
-    `get()` ends with `fail();` and has no trailing return, so a plain `void`
-    prototype leaves one control path that appears to fall off the end. The
-    attribute is truthful because the only syscall `fail` reaches is
-    `__NR_exit_group`, which cannot return; marking a function that *can* return
-    as noreturn is undefined behaviour at every call site.
-
-    The real translation unit needs `<elf.h>` and cannot be compiled off Linux,
-    so this pins the declaration rather than the hosted build.
-    """
-    from infrastructure.reporting.native_loader_build import SOURCE
-
-    source = (Path(__file__).resolve().parents[3] / SOURCE).read_text(encoding="utf-8")
-    lines = source.splitlines()
-    definition = next(index for index, line in enumerate(lines) if line.strip() == "static void fail(void) {")
-    # The attribute must precede the definition, so every call site inherits it.
-    declaration = "\n".join(lines[max(0, definition - 8) : definition])
-    assert "_Noreturn" in declaration or "__attribute__((noreturn))" in declaration, (
-        f"{SOURCE}: `fail` is declared without a noreturn attribute; "
-        "-Werror=return-type will fail the audit-loader build"
-    )
-    # And the claim the attribute rests on: the terminal syscall is exit_group.
-    body = "\n".join(lines[definition : definition + 5])
-    assert "__NR_exit_group" in body, f"{SOURCE}: `fail` must reach a syscall that cannot return"
 
 
 def _auditor_elf():

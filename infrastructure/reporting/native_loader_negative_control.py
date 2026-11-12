@@ -27,7 +27,7 @@ from infrastructure.reporting.native_pdf_citation_runtime import (
     file_observation,
 )
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
-from infrastructure.reporting.native_tool_process import run_native_tool_process
+from infrastructure.reporting.native_tool_process import LOADER_SCHEMA, run_native_tool_process
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
 
@@ -94,7 +94,7 @@ def _refusal(raw: dict[str, Any], *, owner_pid: int, command: list[str], caller_
         or raw.get("original_exit_code") != 125
         or raw.get("accepted") is not False
         or raw.get("timed_out") is not False
-        or raw.get("schema_version") != "template-original-native-loader-tool-process-v4"
+        or raw.get("schema_version") != LOADER_SCHEMA
         or not raw["operation_begin"]["monotonic"]
         < raw["operation_end"]["monotonic"]
         < raw["original_deadline_monotonic"]

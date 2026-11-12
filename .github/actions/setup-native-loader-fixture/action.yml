@@ -1,5 +1,5 @@
 name: Prepare the offline installed native-loader fixture
-description: Warm only Root's hash-verified runtime and rendering dependencies before the genuine offline test.
+description: Warm Root's hash-verified build tools before runtime and rendering dependencies for the genuine offline test.
 runs:
   using: composite
   steps:
@@ -20,5 +20,11 @@ runs:
         "$interpreter" -m infrastructure.project.locked_dependency_export \
           --metadata-root "$GITHUB_WORKSPACE" --requirements "$scratch/runtime.txt" --minor "$minor"
         uv venv --no-project --no-python-downloads --python "$interpreter" "$scratch/venv"
+        # Non-isolated sdist builds use this fresh environment, not Root's venv.
+        uv export --directory "$GITHUB_WORKSPACE" --locked --only-group installed-build \
+          --no-emit-project --no-emit-local --no-header --no-annotate \
+          --output-file "$scratch/build.txt"
+        uv pip sync --no-config --no-build --require-hashes \
+          --python "$scratch/venv/bin/python" "$scratch/build.txt"
         uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
           --python "$scratch/venv/bin/python" --requirements "$scratch/runtime.txt"

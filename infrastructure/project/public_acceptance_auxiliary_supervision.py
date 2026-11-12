@@ -279,6 +279,59 @@ def _cleanup(
     return cleanup
 
 
+class _SandboxTransferApi:
+    """Hold one explicit credential only for the selected transfer's fixed reads."""
+
+    def __init__(
+        self,
+        command: list[str],
+        root: Path,
+        deadline: float,
+        repository: str,
+        artifact_id: str,
+        gh_token: str | None,
+    ) -> None:
+        if (
+            not isinstance(repository, str)
+            or re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) is None
+            or not isinstance(artifact_id, str)
+            or re.fullmatch(r"[1-9][0-9]*", artifact_id) is None
+        ):
+            raise ValueError("scoped transfer API requires an exact repository and artifact ID")
+        if not isinstance(gh_token, str) or not gh_token:
+            raise ValueError("sandbox transfer requires explicit existing GH_TOKEN nomination")
+        gh = shutil.which("gh")
+        if gh is None:
+            raise ValueError("actual scoped artifact API read requires existing gh CLI")
+        if command not in (
+            [gh, "api", "--hostname", "github.com", f"repos/{repository}/actions/artifacts/{artifact_id}"],
+            [gh, "api", "--hostname", "github.com", f"repos/{repository}"],
+        ):
+            raise ValueError("scoped transfer API refuses arbitrary commands, hosts or endpoints")
+        self._command, self._root, self._deadline = tuple(command), root, deadline
+        self._value = gh_token
+
+    def credential(self, command: list[str], root: Path, deadline: float) -> str:
+        if tuple(command) != self._command or root != self._root or deadline != self._deadline:
+            raise ValueError("scoped transfer API differs from its nominated command/root/clock")
+        return self._value
+
+
+def supervise_sandbox_transfer_api(
+    command: list[str],
+    root: Path,
+    directory: Path,
+    deadline: float,
+    *,
+    repository: str,
+    artifact_id: str,
+    gh_token: str | None,
+) -> dict[str, Any]:
+    """Nominate only GH_TOKEN for a fixed github.com transfer API child."""
+    held = _SandboxTransferApi(command, root, deadline, repository, artifact_id, gh_token)
+    return supervise(list(command), root, directory, deadline, _sandbox_api=held)
+
+
 def supervise(
     command: list[str],
     root: Path,
@@ -289,10 +342,13 @@ def supervise(
     bootstrap_payload: dict[str, Any] | None = None,
     print_originals: list[Any] | None = None,
     stream_diagnostics: bool = False,
+    _sandbox_api: _SandboxTransferApi | None = None,
 ) -> dict[str, Any]:
     """Observe the original child and token-bound cleanup under one finite clock."""
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
         raise ValueError("original auxiliary deadline must be finite")
+    if _sandbox_api is not None and type(_sandbox_api) is not _SandboxTransferApi:
+        raise ValueError("scoped transfer API requires its fixed credential nomination")
     if environment is not None:
         from infrastructure.core.secrets import is_secret_env_name
 
@@ -375,6 +431,10 @@ def supervise(
             if guardian is None:
                 raise ValueError("auxiliary execution requires its independent POSIX cleanup guardian")
             _remaining(deadline)
+            if _sandbox_api is not None:
+                # The guardian and ordinary children keep the sanitized environment.
+                # Only this validated API child receives the explicit existing token.
+                child_environment["GH_TOKEN"] = _sandbox_api.credential(command, root, deadline)
             child = subprocess.Popen(
                 command,
                 cwd=root,

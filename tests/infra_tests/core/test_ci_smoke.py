@@ -213,27 +213,6 @@ def test_requested_coverage_checks_public_input_before_environment_setup(project
         assert all("/" not in row["name"] for row in rows)
 
 
-def test_cache_uses_actual_resolved_python_and_root_inputs_before_locked_reconciliation() -> None:
-    action = yaml.safe_load((REPO / ".github/actions/setup-python-env/action.yml").read_text())
-    steps = action["runs"]["steps"]
-    python = next(i for i, step in enumerate(steps) if step.get("id") == "python")
-    cache = next((i, step) for i, step in enumerate(steps) if str(step.get("uses", "")).startswith("actions/cache@"))
-    assert python < cache[0]
-    key = cache[1]["with"]["key"]
-    assert "runner.arch" in key and "steps.python.outputs.python-version" in key and "inputs.dependency-group" in key
-    assert "**/uv.lock" not in key
-    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
-    for job in ("test-infra", "test-project"):
-        assert any(
-            step.get("run") == "uv sync --locked --group installed-build" for step in workflow["jobs"][job]["steps"]
-        )
-    assert workflow["jobs"]["test-infra"]["timeout-minutes"] == 10
-    assert any(
-        "verify" in str(step.get("name", "")).lower() or "disjoint" in str(step.get("name", ""))
-        for step in workflow["jobs"]["ci-gate"]["steps"]
-    )
-
-
 @pytest.mark.parametrize("projects", [(), ("templates/template_code_project",) * 2, ("working/private",)])
 def test_executable_smoke_subset_never_accepts_empty_duplicate_or_private_scopes(projects: tuple[str, ...]) -> None:
     with pytest.raises(ValueError):

@@ -64,7 +64,9 @@ bytecode cache is removed after process-group cleanup. Its observed original pat
 remains in runtime facts. Hash equality establishes byte consistency; source
 origin relies on the exact-commit reviewed producer and hosted handoff context.
 
-The approved GitHub Actions transfer uses the existing repository/run and token:
+The approved GitHub Actions transfer uses the existing repository/run and a
+step-scoped `GH_TOKEN: ${{ github.token }}` with the existing `actions: read` and
+`contents: read` permissions; no broader credential or permission is required:
 
 ```bash
 python -m infrastructure.project.public_acceptance_auxiliary_cli \
@@ -90,6 +92,19 @@ HEAD and scoped GitHub artifact/repository API responses, requires exact origina
 upload ID/digest/repository/run/commit, and reads retrieved ZIP bytes. The transfer
 validator additionally requires the reader's independently admitted Root export.
 No local simulation or asserted remote-success flag can satisfy this contract.
+
+`--emit-transfer` requires that explicit existing `GH_TOKEN`; it refuses a missing
+nomination rather than falling back to `GITHUB_TOKEN` or ambient `gh auth` state.
+Only the two exact `github.com` reads for the nominated repository and uploaded
+artifact receive `GH_TOKEN`, overlaid after ordinary environment sanitization at
+the actual API-child launch. The checkout observation, other auxiliary children,
+and cleanup guardians remain credential-free. Nomination consumes `GH_TOKEN` from
+the controller's ambient environment before source checks and child launches.
+The producer does not serialize the token or a credential-bearing environment
+into receipts. These reads
+retain the original v3 supervision, executable/stream bindings, cleanup admission,
+and the same absolute transfer deadline; the independent transfer validator is
+unchanged.
 
 After the installed matrix completes, prepare its current non-root runtime
 providers with `--prepare-runtime-providers --installed-receipt <receipt>`. The

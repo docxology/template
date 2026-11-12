@@ -40,7 +40,7 @@ from infrastructure.reporting.native_loader_protocol import (
 if TYPE_CHECKING:
     from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
 
-SCHEMA = "template-consuming-native-loader-lifecycle-v4"
+SCHEMA = "template-consuming-native-loader-lifecycle-v5"
 ENV_KEYS = {
     "LD_AUDIT",
     "LD_PRELOAD",
@@ -64,6 +64,7 @@ class NativeLoaderObservation:
     socket_directory: tempfile.TemporaryDirectory[str]
     address: str
     server: socket.socket
+    _library_fd: int | None
     prepared: bool
     eof: bool
     total_body: int
@@ -112,6 +113,28 @@ class NativeLoaderObservation:
         self.environment_injections: dict[str, str] | None = None
         self.resident_terminal: dict[str, Any] | None = None
         self.connection: socket.socket | None = None
+        self._library_fd = None
+        # glibc silently ignores LD_AUDIT names >= NAME_MAX. Hold a short
+        # descriptor nomination before paired children commit their environments.
+        try:
+            self._library_fd = os.open(self.compiled.library, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+            self.inherited_library_descriptor()
+        except BaseException:
+            self.abort()
+            raise
+
+    def inherited_library_descriptor(self) -> int:
+        """Nominate only the held compiler inode to this one actual child."""
+        remaining(self.deadline)
+        descriptor = self._library_fd
+        if (
+            self.owner_pid != os.getpid()
+            or descriptor is None
+            or descriptor < 3
+            or identity(descriptor) != self.compiled.identity
+        ):
+            raise ValueError("loader inherited library lost its actual held compiler descriptor")
+        return descriptor
 
     def prepare_env(self, env: dict[str, str], *, deadline: float, purpose: str) -> dict[str, str]:
         """Called inside the actual supervisor after sanitation, before Popen."""
@@ -418,23 +441,32 @@ class NativeLoaderObservation:
             self.socket_directory.cleanup()
 
     def abort(self) -> None:
-        """Close owned IPC only; ordinary ToolAPI/guardian owns process cleanup."""
-        if self.connection is not None:
+        """Close owned IPC/descriptors; ordinary ToolAPI owns process cleanup."""
+        try:
+            if self.connection is not None:
+                try:
+                    self.connection.shutdown(socket.SHUT_RDWR)
+                except OSError:
+                    pass
             try:
-                self.connection.shutdown(socket.SHUT_RDWR)
+                self.server.shutdown(socket.SHUT_RDWR)
             except OSError:
                 pass
-        try:
-            self.server.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
-        self.server.close()
-        Path(self.address).unlink(missing_ok=True)
-        self.socket_directory.cleanup()
+            self.server.close()
+            Path(self.address).unlink(missing_ok=True)
+            self.socket_directory.cleanup()
+        finally:
+            descriptor, self._library_fd = self._library_fd, None
+            if descriptor is not None:
+                os.close(descriptor)
 
     def finish(self, result: dict[str, Any]) -> dict[str, str]:
         """Called after actual OS reaping; enclosing ToolAPI must still close guardian."""
         self.compiled.verify(deadline=self.deadline)
+        library_descriptor = {
+            "descriptor": self.inherited_library_descriptor(),
+            "identity": dict(self.compiled.identity),
+        }
         if (
             not self.eof
             or not self.done
@@ -443,6 +475,7 @@ class NativeLoaderObservation:
             or tuple(result["command"]) != self.command
             or result["pid"] != self.peer["pid"]
             or result["owner_pid"] != self.owner_pid
+            or result.get("library_descriptor") != library_descriptor
             or result["original_exit_code"] != 0
         ):
             raise ValueError("loader callbacks lack the same actual consuming tool's signed normal OS exit")
@@ -456,6 +489,7 @@ class NativeLoaderObservation:
             "compiler": self.compiled.binding,
             "purpose": self.purpose,
             "owner_pid": self.owner_pid,
+            "library_descriptor": library_descriptor,
             "consuming_process": self.peer,
             "command": list(self.command),
             "original_deadline_monotonic": self.deadline,
