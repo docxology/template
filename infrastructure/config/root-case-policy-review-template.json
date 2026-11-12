@@ -13797,7 +13797,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_capabilities.py",
-      "source_sha256": "d9f45460e37044203349f7f8c7a450426f9a0dc691111dd65118945970b99b59",
+      "source_sha256": "3770282ae82e7e8f459f70417042b56eb95ce0124fd508c202da0e1beaff81b8",
       "families": [
         "tests/infra_tests/project/test_public_capabilities.py::test_analysis_allowlist_fails_closed_on_escaping_entrypoint",
         "tests/infra_tests/project/test_public_capabilities.py::test_analysis_allowlist_retains_missing_producer_diagnostic",
@@ -13807,10 +13807,10 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_ci_python_floor_must_include_every_canonical_version",
         "tests/infra_tests/project/test_public_capabilities.py::test_ci_workflow_consumes_only_the_capability_matrix",
         "tests/infra_tests/project/test_public_capabilities.py::test_disabled_formats_and_no_hydrator_are_valid_without_live_tokens",
-        "tests/infra_tests/project/test_public_capabilities.py::test_document_archive_cache_refuses_corruption_before_use",
+        "tests/infra_tests/project/test_public_capabilities.py::test_document_font_archive_cache_refuses_corruption_before_use",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_publishes_only_validated_mode",
-        "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_python_prerequisite_is_native_only",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_rejects_invalid_mode_before_setup",
+        "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_requires_locked_python_for_native_or_linux",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_must_be_confined_without_symlinks",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_must_compile",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_rejects_main_call_in_dead_nested_branch",
@@ -13821,7 +13821,6 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_package_identity_is_bound_after_name_normalization",
         "tests/infra_tests/project/test_public_capabilities.py::test_package_identity_rejects_invalid_and_duplicate_normalized_names",
         "tests/infra_tests/project/test_public_capabilities.py::test_platform_binding_and_runtime_range_must_match",
-        "tests/infra_tests/project/test_public_capabilities.py::test_project_and_infra_matrices_provision_the_pinned_document_toolchain",
         "tests/infra_tests/project/test_public_capabilities.py::test_public_capability_inventory_classifies_skip_contracts",
         "tests/infra_tests/project/test_public_capabilities.py::test_public_capability_inventory_covers_all_canonical_exemplars",
         "tests/infra_tests/project/test_public_capabilities.py::test_public_capability_inventory_reports_missing_structure",
@@ -13832,7 +13831,7 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_skip_decorator_requires_a_reason",
         "tests/infra_tests/project/test_public_capabilities.py::test_skipif_condition_is_not_mistaken_for_a_reason"
       ],
-      "family_observations_sha256": "984981cd16fa5baa7fdf2d45a65790d6172f168042d0923f3cc3157cb4f09853",
+      "family_observations_sha256": "64eccb8caa169f80991b4f0fe65de39536694ea7b42844fba986a90de883341b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25875,6 +25874,75 @@
       ]
     },
     {
+      "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
+      "source_sha256": "d49f63688568bfba7d7fc42228dbdb980376138d42bdfb5497c0cefac46aefb3",
+      "families": [
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_decoder_cannot_replace_the_original_finite_clock",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_parser_preserves_finite_metadata_and_original_clock_bounds",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_source_selection_cannot_admit_an_unsupported_host",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_changed_member_cannot_be_authorized_by_the_transport_that_contains_it",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_complete_source_transport_cannot_omit_or_append_xz_bytes",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_declared_tar_extent_cannot_weaken_the_native_executable_payload_bound",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_missing_nonexecutable_unsafe_or_duplicate_members_are_refused",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_official_provider_keeps_complete_pinned_archive_correspondence",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_physical_observations_retain_the_complete_body_and_refuse_symlinks",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_receipt_or_version_data_cannot_create_original_provider_custody",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_record_pointers_cannot_create_external_replay_or_renderer_authority",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_retained_provider_pin_cannot_replace_any_source_compiler_or_dependency_pin",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_body_pin_not_an_archive_producer_digest_is_authoritative",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_member_must_match_both_source_body_pins",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_transport_cannot_add_incidental_receipts_or_other_members",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_transport_retains_the_complete_exact_member",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_unapproved_provider_kinds_have_no_archive_admission"
+      ],
+      "family_observations_sha256": "5d80d45a801647c5973fb56a8df51e6c55429cafda3ab16b19366e54bb1653c0",
+      "decision": {
+        "lane": "core",
+        "obligations": []
+      },
+      "exceptions": [],
+      "evidence": [
+        {
+          "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
+          "source_sha256": "d49f63688568bfba7d7fc42228dbdb980376138d42bdfb5497c0cefac46aefb3",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+      "source_sha256": "327f46bdffdfca2262f7c09443e1a65b5382ced88e24259a9406b116b4c5cce4",
+      "families": [
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_actual_nix_derivation_cannot_override_source_build_pins",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_cli_rejects_malformed_source_before_acquisition",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_duplicate_manifest_fields_are_rejected_at_every_depth",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_malformed_pin_in_any_union_branch_is_rejected",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_manifest_is_bounded_unambiguous_utf8_json",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_official_archive_keeps_complete_archive_authenticity",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_official_zip_aliases_cannot_replace_the_selected_regular_body",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_physical_glibc_check_refuses_a_wrapper",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_real_elf_interpreter_structure_preserves_both_reviewed_abis",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_source_archive_rejects_tampered_complete_transport_or_body",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_static_musl_wrappers_and_malformed_interp_are_not_dynamic_glibc",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_tampered_cache_cannot_trigger_build_or_publish_a_path",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_tool_selector_has_no_caller_selected_fallback",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_unknown_host_cannot_choose_a_provider"
+      ],
+      "family_observations_sha256": "114e38a257eaada292238802873c32f2b1fa37824eb88bf22602d00a823d692c",
+      "decision": {
+        "lane": "core",
+        "obligations": []
+      },
+      "exceptions": [],
+      "evidence": [
+        {
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "327f46bdffdfca2262f7c09443e1a65b5382ced88e24259a9406b116b4c5cce4",
+          "line": 1
+        }
+      ]
+    },
+    {
       "path": "tests/infra_tests/reporting/test_native_format_acceptance.py",
       "source_sha256": "b0eb20b3c001039d3a931c080872686c9957899ba7de0aae655612160244c2d8",
       "families": [
@@ -26734,7 +26802,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-      "source_sha256": "83919dc0ed4c7e1c076822271a8c96456a59299502ea563f726afd99df8b0229",
+      "source_sha256": "e43e6da051b9edc5501edb30c2213ee525c2b68f5f96616189dc441833c4b1de",
       "families": [
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_cold_selected_root_runtime_overrides_missing_or_wrong_ambient_nomination",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_popen_environment_matches_held_source_commitment_and_refuses_changed_digest",
@@ -26742,9 +26810,10 @@
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_missing_root_nomination_still_blocks_actual_prepared_runtime",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_time",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_keeps_existing_phase_ceiling_with_a_later_original_deadline",
-        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline"
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_terminal_roster_refuses_unclosed_or_aliased_images"
       ],
-      "family_observations_sha256": "70105d2ed21ffc3f74a38bec05dc8e73828f81f7e77786e5c8b6269a25c76249",
+      "family_observations_sha256": "608a48752e2145d542f821b5e4df9a35186c1c72b76bec4b43d62305125e8f10",
       "decision": {
         "lane": "core",
         "obligations": []
