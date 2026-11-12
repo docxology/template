@@ -104,6 +104,9 @@ locks.
 - Retire source-text, forwarding, log-wording, minimum-count and tautological
   test pins; retain the real hydration, enumeration and standalone-source
   consumer regressions.
+- Re-author the complete Root case policy from four fresh same-job originals
+  and explicit module decisions. Preserve independent original census bindings;
+  policy serialization and collection do not grant runtime acceptance.
 
 ### Fixes carried forward from main
 
