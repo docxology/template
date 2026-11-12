@@ -121,11 +121,11 @@ jobs:
     name: "Infrastructure Smoke (${{ matrix.shard }})"
     needs: detect-projects
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       # Independent hosted shards can fill available runner slots without
-      # changing their selections, per-job budgets, or artifact contracts.
+      # changing their selections, smoke-execution budgets, or artifact contracts.
       max-parallel: 16
       matrix: ${{ fromJSON(needs.detect-projects.outputs.infra) }}
     steps:
@@ -169,6 +169,7 @@ jobs:
           name: functional-selection
       - uses: ./.github/actions/setup-ci-execution-user
       - name: Run exact functional shard with original pytest observations
+        timeout-minutes: 10
         env:
           SHARD: ${{ matrix.shard }}
         run: |
@@ -324,7 +325,7 @@ jobs:
     # contracts already run in the infra and contract jobs.
     if: needs.detect-projects.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: ${{ matrix.project == 'templates/template_search_project' && 75 || 10 }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.detect-projects.outputs.matrix) }}
@@ -347,6 +348,7 @@ jobs:
         with:
           mode: converter
       - name: Run focused behavioral tests
+        timeout-minutes: 10
         env:
           TEMPLATE_CI_JUNIT_DIRECTORY: ${{ runner.temp }}/functional-project
           PROJECT: ${{ matrix.project }}

@@ -377,11 +377,7 @@ def _source_build(
     ):
         raise ValueError("actual completed Nix build differs from the exact declared derivation/output")
     output = Path(build["output"])
-    if (
-        output.resolve(strict=True) != output
-        or not output.is_dir()
-        or runtime_link.resolve(strict=True) != output
-    ):
+    if output.resolve(strict=True) != output or not output.is_dir() or runtime_link.resolve(strict=True) != output:
         raise ValueError("actual Nix output/retained runtime GC root differs from the declared build")
     closure = _json_command(
         command + ["path-info", "--recursive", "--json", str(output)],
