@@ -65,6 +65,9 @@ template_pools_rules_tools/
 From the **monorepo root**:
 
 ```bash
+# Run the shared manuscript pipeline without optional live/LLM stages
+uv run python scripts/runner/execute_pipeline.py --project templates/template_pools_rules_tools --mode core
+
 # Run tests
 uv run pytest projects/templates/template_pools_rules_tools/tests/ -v
 
