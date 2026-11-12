@@ -25875,7 +25875,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
-      "source_sha256": "d49f63688568bfba7d7fc42228dbdb980376138d42bdfb5497c0cefac46aefb3",
+      "source_sha256": "58372632ecc74e7799792de1aed444182184ec716ec30b9c2320b5eb8940283a",
       "families": [
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_decoder_cannot_replace_the_original_finite_clock",
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_parser_preserves_finite_metadata_and_original_clock_bounds",
@@ -25895,7 +25895,7 @@
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_transport_retains_the_complete_exact_member",
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_unapproved_provider_kinds_have_no_archive_admission"
       ],
-      "family_observations_sha256": "5d80d45a801647c5973fb56a8df51e6c55429cafda3ab16b19366e54bb1653c0",
+      "family_observations_sha256": "27f9703f010eb4045243cab7022d7f057103e19e128bebd4a7c22810f163fe9d",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25904,16 +25904,17 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
-          "source_sha256": "d49f63688568bfba7d7fc42228dbdb980376138d42bdfb5497c0cefac46aefb3",
+          "source_sha256": "58372632ecc74e7799792de1aed444182184ec716ec30b9c2320b5eb8940283a",
           "line": 1
         }
       ]
     },
     {
       "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
-      "source_sha256": "327f46bdffdfca2262f7c09443e1a65b5382ced88e24259a9406b116b4c5cce4",
+      "source_sha256": "43f031b9e8bf8825d49853f09f6e7899cda971f3cb0d1297e2a8b615a1c67dd7",
       "families": [
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_actual_nix_derivation_cannot_override_source_build_pins",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_changed_root_build_input_cannot_trigger_acquisition",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_cli_rejects_malformed_source_before_acquisition",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_duplicate_manifest_fields_are_rejected_at_every_depth",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_malformed_pin_in_any_union_branch_is_rejected",
@@ -25928,7 +25929,7 @@
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_tool_selector_has_no_caller_selected_fallback",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_unknown_host_cannot_choose_a_provider"
       ],
-      "family_observations_sha256": "114e38a257eaada292238802873c32f2b1fa37824eb88bf22602d00a823d692c",
+      "family_observations_sha256": "b2498fd2d977f5df78d367063ddd7dd6a34382b250eebb4859a1fdf9ad0d6023",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25937,7 +25938,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
-          "source_sha256": "327f46bdffdfca2262f7c09443e1a65b5382ced88e24259a9406b116b4c5cce4",
+          "source_sha256": "43f031b9e8bf8825d49853f09f6e7899cda971f3cb0d1297e2a8b615a1c67dd7",
           "line": 1
         }
       ]
