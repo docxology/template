@@ -64,6 +64,8 @@ locks.
   ceilings and existing observation clocks without truncating evidence.
   Match the pin producer's bounded two-job/two-core source-build execution and
   construct nonempty platform arguments under macOS system Bash 3.
+- Accept the real stdlib Linux `MsgFlag` for `MSG_CMSG_CLOEXEC`, preserving
+  close-on-exec descriptor transport instead of rejecting its integer enum.
 
 ### Fixes carried forward from main
 
