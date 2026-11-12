@@ -1292,7 +1292,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_multi_project_cli.py",
-      "source_sha256": "772f01f49508fce66d3f89faaae3ab7f4e714db47fbf7631b881db87db9c54cf",
+      "source_sha256": "93e95f60151148d0515baea00e17a8e7fd16a59224c5af103ee52b8aaa0a93ba",
       "families": [
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_all_flags_combined",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestBuildArgParser::test_live_mode",
@@ -1309,9 +1309,10 @@
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::TestMain::test_removed_report_flag_is_invocation_error",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_cli_actual_qualified_completion_and_summary",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_expired_aggregate_reporting_refuses_before_launch",
+        "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_frozen_shared_custody_refusal_preserves_original_diagnostic",
         "tests/infra_tests/core/pipeline/test_multi_project_cli.py::test_invalid_run_budget_before_discovery"
       ],
-      "family_observations_sha256": "01e6d025165afceb3714eaa1545e9cf9ae85ab8fbd57d0a32717a201f1feb183",
+      "family_observations_sha256": "247f7816dd891ce579294d48b99e259d1e6f33ea23dd626435f480e9da5d3f2c",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1319,19 +1320,19 @@
       "exceptions": [],
       "evidence": [
         {
-          "path": "tests/infra_tests/core/pipeline/test_multi_project_cli.py",
-          "source_sha256": "772f01f49508fce66d3f89faaae3ab7f4e714db47fbf7631b881db87db9c54cf",
-          "line": 109
+          "path": "infrastructure/core/pipeline/multi_project_cli.py",
+          "source_sha256": "9180ed83d0db0a4c96d352290dc6b155ba93016139711287b4c25243adfcb203",
+          "line": 199
         },
         {
           "path": "tests/infra_tests/core/pipeline/test_multi_project_cli.py",
-          "source_sha256": "772f01f49508fce66d3f89faaae3ab7f4e714db47fbf7631b881db87db9c54cf",
-          "line": 119
+          "source_sha256": "93e95f60151148d0515baea00e17a8e7fd16a59224c5af103ee52b8aaa0a93ba",
+          "line": 173
         },
         {
           "path": "tests/infra_tests/core/pipeline/test_multi_project_cli.py",
-          "source_sha256": "772f01f49508fce66d3f89faaae3ab7f4e714db47fbf7631b881db87db9c54cf",
-          "line": 130
+          "source_sha256": "93e95f60151148d0515baea00e17a8e7fd16a59224c5af103ee52b8aaa0a93ba",
+          "line": 221
         }
       ]
     },
@@ -1820,7 +1821,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-      "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
+      "source_sha256": "21331fde8f32008c90d764972ca17e6c40ab35fd2f319d7e294d8dc79e47c0bd",
       "families": [
         "tests/infra_tests/core/pipeline/test_prepared_multi_project.py::test_actual_prepared_transport_preserves_exact_plans_and_once_only_shared_gate",
         "tests/infra_tests/core/pipeline/test_prepared_multi_project.py::test_actual_prepared_workers_refuse_changed_definition_without_recompiling",
@@ -1828,7 +1829,7 @@
         "tests/infra_tests/core/pipeline/test_prepared_multi_project.py::test_prepared_custom_key_cannot_repeat_the_shared_infrastructure_role",
         "tests/infra_tests/core/pipeline/test_prepared_multi_project.py::test_prepared_identity_refusal_precedes_all_runtime_writes"
       ],
-      "family_observations_sha256": "ed31371ba6a354239712f7c1137eb0a6368fcbd7241e515f76db95d149dc7c39",
+      "family_observations_sha256": "f5a1a4b09098184b277e09b3c40f09874a06e5b8ac872cd63105e299d36fe97f",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1837,55 +1838,31 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 35
+          "source_sha256": "21331fde8f32008c90d764972ca17e6c40ab35fd2f319d7e294d8dc79e47c0bd",
+          "line": 188
         },
         {
           "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 131
+          "source_sha256": "21331fde8f32008c90d764972ca17e6c40ab35fd2f319d7e294d8dc79e47c0bd",
+          "line": 201
         },
         {
           "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 145
-        },
-        {
-          "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 169
-        },
-        {
-          "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 187
-        },
-        {
-          "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 203
-        },
-        {
-          "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 226
-        },
-        {
-          "path": "tests/infra_tests/core/pipeline/test_prepared_multi_project.py",
-          "source_sha256": "ddc51a20b448d5824a40500f62474a84b168b26648e95f476715fcc150386d96",
-          "line": 230
+          "source_sha256": "21331fde8f32008c90d764972ca17e6c40ab35fd2f319d7e294d8dc79e47c0bd",
+          "line": 225
         }
       ]
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_report_custody_review.py",
-      "source_sha256": "eafd4070613b528e0bc25d552a2151b831eebc7fe3f2cc775b459188c7015af6",
+      "source_sha256": "faf10c23abe0dc276d6cfc9f81cc76ab1bfda8072403b5cc3f62f6a1cafd4a05",
       "families": [
+        "tests/infra_tests/core/pipeline/test_report_custody_review.py::test_actual_report_worker_custody_receipt_is_blocked_not_accepted",
         "tests/infra_tests/core/pipeline/test_report_custody_review.py::test_actual_reporting_exit_cannot_be_demoted_by_absent_receipt",
         "tests/infra_tests/core/pipeline/test_report_custody_review.py::test_real_source_change_before_reporting_launch_preserves_previous_receipt",
         "tests/infra_tests/core/pipeline/test_report_custody_review.py::test_report_caller_refuses_a_link_above_its_nominated_root"
       ],
-      "family_observations_sha256": "d3c2256aca46fa8a521252147c4297c40272ca898ef00d8022fd8e35d613fc42",
+      "family_observations_sha256": "ee1366a76eb49581c21da16fe3b070478870793200a00e7f85427e498c5f5bfc",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1893,9 +1870,29 @@
       "exceptions": [],
       "evidence": [
         {
+          "path": "infrastructure/core/pipeline/report_finalization.py",
+          "source_sha256": "76594aac2b34e45e31e7299c4990df9f605a1712a01677ba6d3a2c87717638c8",
+          "line": 180
+        },
+        {
+          "path": "infrastructure/core/pipeline/report_finalization.py",
+          "source_sha256": "76594aac2b34e45e31e7299c4990df9f605a1712a01677ba6d3a2c87717638c8",
+          "line": 198
+        },
+        {
           "path": "tests/infra_tests/core/pipeline/test_report_custody_review.py",
-          "source_sha256": "eafd4070613b528e0bc25d552a2151b831eebc7fe3f2cc775b459188c7015af6",
-          "line": 1
+          "source_sha256": "faf10c23abe0dc276d6cfc9f81cc76ab1bfda8072403b5cc3f62f6a1cafd4a05",
+          "line": 118
+        },
+        {
+          "path": "tests/infra_tests/core/pipeline/test_report_custody_review.py",
+          "source_sha256": "faf10c23abe0dc276d6cfc9f81cc76ab1bfda8072403b5cc3f62f6a1cafd4a05",
+          "line": 165
+        },
+        {
+          "path": "tests/infra_tests/core/pipeline/test_report_custody_review.py",
+          "source_sha256": "faf10c23abe0dc276d6cfc9f81cc76ab1bfda8072403b5cc3f62f6a1cafd4a05",
+          "line": 179
         }
       ]
     },
@@ -1984,14 +1981,15 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py",
-      "source_sha256": "0ada3f811f45e75dc87ffe703fab64728e225262fe2fead22e016405edce14ba",
+      "source_sha256": "59b9aabc79b7f433a6e32291e4e0579f87dc3cd677697203a9411ab600d0a37a",
       "families": [
         "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py::test_actual_serial_and_parallel_resume_keep_fresh_shared_gate_and_project_cache",
         "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py::test_actual_shared_gate_preserves_all_ordinary_project_run_files",
+        "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py::test_actual_worker_custody_receipt_retains_original_observation_through_cleanup",
         "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py::test_actual_worker_refuses_storage_role_before_any_executor_or_child",
         "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py::test_pipeline_configuration_refuses_untyped_execution_policy"
       ],
-      "family_observations_sha256": "138ca2d2a773f8167569e957eff824ff21014aa07a04be4bcd9070404d98621c",
+      "family_observations_sha256": "2fc5d1cc8674fee4b392273ccba86c007b1cdc46d68e470ad5c26b95afb4f4cc",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1999,9 +1997,24 @@
       "exceptions": [],
       "evidence": [
         {
+          "path": "infrastructure/core/pipeline/multi_project_runtime.py",
+          "source_sha256": "32a18cc1feed0dd498c40527bad602be6446220be2fee75ddce82a0e7175a8c7",
+          "line": 315
+        },
+        {
+          "path": "infrastructure/core/pipeline/multi_project_runtime.py",
+          "source_sha256": "32a18cc1feed0dd498c40527bad602be6446220be2fee75ddce82a0e7175a8c7",
+          "line": 372
+        },
+        {
           "path": "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py",
-          "source_sha256": "0ada3f811f45e75dc87ffe703fab64728e225262fe2fead22e016405edce14ba",
-          "line": 1
+          "source_sha256": "59b9aabc79b7f433a6e32291e4e0579f87dc3cd677697203a9411ab600d0a37a",
+          "line": 206
+        },
+        {
+          "path": "tests/infra_tests/core/pipeline/test_shared_runtime_namespace.py",
+          "source_sha256": "59b9aabc79b7f433a6e32291e4e0579f87dc3cd677697203a9411ab600d0a37a",
+          "line": 235
         }
       ]
     },
@@ -2695,7 +2708,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
-      "source_sha256": "36358a465f85eeac9071dd6c7f2a6442098e56825841cc670267ddfa7463cbda",
+      "source_sha256": "bd04cfc59d272462950244e2479f71c8b783d1c8b722fa1729c53a1a37bc384e",
       "families": [
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_abrupt_caller_exit_still_cleans_descendant_and_own_cache",
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_changed_loaded_source_is_typed_refusal_before_private_startup",
@@ -2707,7 +2720,7 @@
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_ready_unarmed_guardian_close_reaps_and_removes_cache",
         "tests/infra_tests/core/test_bounded_run_guardian.py::test_source_change_still_cleans_detached_child_and_refuses_success"
       ],
-      "family_observations_sha256": "8a4ace4ff7aaed05b3d731c65d24c45437fef9f97792d85f632d6288e08d759e",
+      "family_observations_sha256": "89225ec58ff297ce664ba74ddeeedca8e8c00a8ed2e920d4a1acbee63a71cbef",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2716,18 +2729,28 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
-          "source_sha256": "36358a465f85eeac9071dd6c7f2a6442098e56825841cc670267ddfa7463cbda",
-          "line": 19
+          "source_sha256": "bd04cfc59d272462950244e2479f71c8b783d1c8b722fa1729c53a1a37bc384e",
+          "line": 24
         },
         {
           "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
-          "source_sha256": "36358a465f85eeac9071dd6c7f2a6442098e56825841cc670267ddfa7463cbda",
-          "line": 71
+          "source_sha256": "bd04cfc59d272462950244e2479f71c8b783d1c8b722fa1729c53a1a37bc384e",
+          "line": 38
         },
         {
           "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
-          "source_sha256": "36358a465f85eeac9071dd6c7f2a6442098e56825841cc670267ddfa7463cbda",
-          "line": 118
+          "source_sha256": "bd04cfc59d272462950244e2479f71c8b783d1c8b722fa1729c53a1a37bc384e",
+          "line": 41
+        },
+        {
+          "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
+          "source_sha256": "bd04cfc59d272462950244e2479f71c8b783d1c8b722fa1729c53a1a37bc384e",
+          "line": 121
+        },
+        {
+          "path": "tests/infra_tests/core/test_bounded_run_guardian.py",
+          "source_sha256": "bd04cfc59d272462950244e2479f71c8b783d1c8b722fa1729c53a1a37bc384e",
+          "line": 222
         }
       ]
     },
@@ -2932,11 +2955,15 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_execution_user.py",
-      "source_sha256": "6e77d698f9106bc57d7b86806f4a32a56d746a211c629331b1138a95de0cecba",
+      "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
       "families": [
         "tests/infra_tests/core/test_ci_execution_user.py::test_actual_cold_copy_ignores_atime_and_preserves_source_identity",
         "tests/infra_tests/core/test_ci_execution_user.py::test_actual_platform_refuses_privileged_setup_without_hosted_authority",
         "tests/infra_tests/core/test_ci_execution_user.py::test_artifact_export_refuses_real_symlinks_and_special_files",
+        "tests/infra_tests/core/test_ci_execution_user.py::test_case_diagnostics_keep_numbered_failures_without_traversing_source",
+        "tests/infra_tests/core/test_ci_execution_user.py::test_case_diagnostics_refuse_physical_payload_substitution",
+        "tests/infra_tests/core/test_ci_execution_user.py::test_case_diagnostics_refuse_post_census_hardlinks_before_artifact_exposure",
+        "tests/infra_tests/core/test_ci_execution_user.py::test_case_diagnostics_retain_combined_budget_and_account_boundaries",
         "tests/infra_tests/core/test_ci_execution_user.py::test_environment_carries_declared_runtime_data_without_credentials",
         "tests/infra_tests/core/test_ci_execution_user.py::test_failed_readiness_evidence_exports_exactly_without_runtime_admission",
         "tests/infra_tests/core/test_ci_execution_user.py::test_hardlink_detachment_keeps_donor_bytes_owner_and_mode",
@@ -2947,7 +2974,7 @@
         "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_binds_clean_initialized_and_uninitialized_submodules",
         "tests/infra_tests/core/test_ci_execution_user.py::test_real_git_rejects_parent_as_checkout_source"
       ],
-      "family_observations_sha256": "08f123c51ee9a34808de3f3d72ffa19a42e86b6bb5f889e1d09c5f0112425be7",
+      "family_observations_sha256": "cf6dea988d495340bf62579e95b2c3c3f844f90f101fc9e5cb846d4a3aa2557e",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2970,14 +2997,54 @@
       ],
       "evidence": [
         {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "ff1c9d689530473ff46f78a85c7a9429f049dd8aa46e6b00cc56e3393f8e3c82",
+          "line": 137
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "ff1c9d689530473ff46f78a85c7a9429f049dd8aa46e6b00cc56e3393f8e3c82",
+          "line": 317
+        },
+        {
+          "path": "infrastructure/core/testing/_ci_execution_files.py",
+          "source_sha256": "ff1c9d689530473ff46f78a85c7a9429f049dd8aa46e6b00cc56e3393f8e3c82",
+          "line": 389
+        },
+        {
           "path": "infrastructure/core/testing/ci_execution_user.py",
-          "source_sha256": "9ae61fbbdbe6544365f5c4b228e12e848c0b9d7052151217ed39680980cfeed1",
-          "line": 150
+          "source_sha256": "e97e864620b2f13e846de81831cd85bda0b618954bfc40de2f5d64cb708b1726",
+          "line": 447
         },
         {
           "path": "tests/infra_tests/core/test_ci_execution_user.py",
-          "source_sha256": "6e77d698f9106bc57d7b86806f4a32a56d746a211c629331b1138a95de0cecba",
-          "line": 409
+          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+          "line": 301
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+          "line": 345
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+          "line": 375
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+          "line": 397
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+          "line": 456
+        },
+        {
+          "path": "tests/infra_tests/core/test_ci_execution_user.py",
+          "source_sha256": "debb1eb06260f91b4787ae3bc5cb0ff887c39d272cdb76b4045b40997b2ae517",
+          "line": 527
         }
       ]
     },
@@ -11659,11 +11726,6 @@
       "exceptions": [],
       "evidence": [
         {
-          "path": "infrastructure/core/pipeline/multi_project_runtime.py",
-          "line": 102,
-          "source_sha256": "12ecd04b898af0c4b27e6a6360d91d3ad05116efe0cd7800a2ef7bd0a7b6d54f"
-        },
-        {
           "path": "infrastructure/core/pipeline/multi_project_support.py",
           "line": 60,
           "source_sha256": "3347cb70dae8332cde93311c4dfcda15565b4a48680e9cfbea2316446a9f89b9"
@@ -11677,16 +11739,6 @@
           "path": "infrastructure/orchestration/commands.py",
           "line": 74,
           "source_sha256": "b4ec03998e2d13fadae50113bce9af8843e1d723764310f5b834e8ff2ba379a0"
-        },
-        {
-          "path": "infrastructure/orchestration/pipeline_runner.py",
-          "source_sha256": "adb49a0385d6644c32c0aa2984d3ab7448c76c26d16d38111da659bf3a75e610",
-          "line": 52
-        },
-        {
-          "path": "infrastructure/orchestration/pipeline_runner.py",
-          "source_sha256": "adb49a0385d6644c32c0aa2984d3ab7448c76c26d16d38111da659bf3a75e610",
-          "line": 145
         },
         {
           "path": "tests/infra_tests/orchestration/_pipeline_fixture.py",
@@ -11737,6 +11789,16 @@
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
           "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
           "line": 152
+        },
+        {
+          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 153
+        },
+        {
+          "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
+          "source_sha256": "1d955f1e27e4a9f0225a14f56c10703eae3be0cc8983699d4e7bb9e270a2dc00",
+          "line": 166
         },
         {
           "path": "tests/infra_tests/orchestration/test_pipeline_runner.py",
@@ -28535,11 +28597,11 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
-      "source_sha256": "92d3b4e359497ebd59c2fa09d4a1b31b2c6cc0c15f487705e9dcdf201569ab4e",
+      "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
       "families": [
         "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py::test_genuine_pdfium_runtime_guard"
       ],
-      "family_observations_sha256": "3e2c77af53ddd126f79bcd436d67ecc712c57012091824e34410a4561f58dc62",
+      "family_observations_sha256": "bc65927ac1b0ce20687afbe42342eca008f4556971d6cb597ddc0494f88e487d",
       "decision": {
         "lane": "external-fixture",
         "obligations": [
@@ -28549,24 +28611,39 @@
       "exceptions": [],
       "evidence": [
         {
-          "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
-          "source_sha256": "92d3b4e359497ebd59c2fa09d4a1b31b2c6cc0c15f487705e9dcdf201569ab4e",
-          "line": 262
+          "path": "infrastructure/config/root-case-prerequisites.json",
+          "source_sha256": "31f4791c9e72000a454ea4fdf625372148db42e8f67160fdd065d992b7423384",
+          "line": 376
         },
         {
           "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
-          "source_sha256": "92d3b4e359497ebd59c2fa09d4a1b31b2c6cc0c15f487705e9dcdf201569ab4e",
-          "line": 311
+          "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
+          "line": 114
         },
         {
           "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
-          "source_sha256": "92d3b4e359497ebd59c2fa09d4a1b31b2c6cc0c15f487705e9dcdf201569ab4e",
-          "line": 443
+          "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
+          "line": 126
         },
         {
           "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
-          "source_sha256": "92d3b4e359497ebd59c2fa09d4a1b31b2c6cc0c15f487705e9dcdf201569ab4e",
-          "line": 519
+          "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
+          "line": 213
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
+          "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
+          "line": 455
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
+          "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
+          "line": 469
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
+          "source_sha256": "c41ea270978a790cff43e0612a75df9fe2637beb98da6053360c9371ec00cf11",
+          "line": 556
         }
       ]
     },
