@@ -1,0 +1,232 @@
+name: Actual unchanged-clock native case diagnostics
+on:
+  push:
+    branches: [codex/sdk-original8-native-diagnostics-20261112-9a20c57e]
+permissions:
+  contents: read
+cache-mode: read
+concurrency:
+  group: current-native-case-${{ github.run_id }}
+  cancel-in-progress: false
+jobs:
+  native-originals:
+    name: "Original failed cases (${{ matrix.os }}, Python ${{ matrix.python-version }})"
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      # Override the repository's .python-version so uv uses the interpreter
+      # selected by this matrix cell, including its moving patch release.
+      UV_PYTHON: ${{ matrix.python-version }}
+    # The validated matrix covers every supported runtime on every CI event.
+    strategy:
+      fail-fast: false
+      # Keep the existing OS/runtime coverage and partition every selected
+      # module completely. Independent runner cells bound shared CPU pressure.
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            python-version: "3.14"
+            shard: original-linux314
+            original-nodes: >-
+              tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
+              tests/infra_tests/publishing/test_publication_refresh.py::test_actual_per_project_sequence_preserves_order_and_stops_after_first_refusal[0]
+              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics[project]
+          - os: ubuntu-24.04
+            python-version: "3.15"
+            shard: original-linux315
+            original-nodes: >-
+              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics[project]
+          - os: macos-latest
+            python-version: "3.15"
+            shard: original-darwin315
+            original-nodes: >-
+              tests/infra_tests/orchestration/test_pipeline_runner.py::test_cli_all_project_resume_preserves_checkpoint_refusal
+              tests/infra_tests/reporting/test_pdf_raw_natbib_source.py::test_source_citation_looking_fragment_in_residual_raw_markup_stays_blocked
+              tests/infra_tests/publishing/test_composed_acceptance.py::test_a_composed_receipt_refuses_when_a_hosted_origin_cannot_be_resolved
+              tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py::test_genuine_pdfium_runtime_guard[loaded-positive]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          # Genuine diagnostic Source: current candidate bytes plus this workflow only.
+          # Not whole candidate CI, policy, Main or release qualification.
+          submodules: true
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --locked --group public-exemplars --group installed-build
+
+      - name: Prepare exact Source-locked PDFium wheel fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          wheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \
+            --repo-root "$PWD" --temporary-root "$RUNNER_TEMP")
+          echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
+
+      - name: Warm locked offline wheels for fresh-environment tests
+        # A restored `.venv` can satisfy the sync above without downloading,
+        # and setup-uv prunes registry wheels from its cache. Infra tests that
+        # build fresh environments with `uv sync --locked --offline` need every
+        # locked default-group wheel for this interpreter, so warm them through
+        # the same lockfile installer while the network is allowed. The root
+        # project's editable build backend resolves through build isolation and
+        # is not hash-pinned by uv.lock. The scratch environment is discarded;
+        # only the cache remains.
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          scratch=$(mktemp -d "$RUNNER_TEMP/uv-offline-warm.XXXXXX")
+          UV_PROJECT_ENVIRONMENT="$scratch/venv" uv sync --frozen --no-python-downloads \
+            --python .venv/bin/python
+          uv export --locked --only-group installed-build --no-emit-project \
+            --no-header --no-annotate --output-file "$scratch/native-build-requirements.txt"
+          .venv/bin/python -B - "$scratch/native-runtime-requirements.txt" <<'PYTHON'
+          import shutil
+          import subprocess
+          import sys
+          from pathlib import Path
+          from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
+          from infrastructure.reporting.native_installed_preparation import native_runtime_export_command
+
+          root = Path.cwd()
+          requirements = Path(sys.argv[1])
+          uv = shutil.which("uv")
+          assert uv is not None, "native runtime preparation requires uv"
+          command = native_runtime_export_command(Path(uv), root, requirements, python=Path(sys.executable))
+          subprocess.run(command, check=True)
+          normalize_locked_dependency_export(
+              root, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
+          )
+          PYTHON
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$scratch/native-build-environment"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$scratch/native-build-environment/bin/python" \
+            "$scratch/native-build-requirements.txt"
+          # Match native cache preparation: only Source-locked build tools are
+          # importable by sdist backends; runtime packages go to a separate target.
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$scratch/native-build-environment/bin/python" \
+            --target "$scratch/prepared-dependencies" \
+            --requirements "$scratch/native-runtime-requirements.txt"
+          rm -rf "$scratch"
+
+      - name: Verify selected Python minor
+        run: |
+          uv run python -c \
+            'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
+
+      - name: Fix macOS socket.getfqdn timeout
+        if: runner.os == 'macOS'
+        run: sudo scutil --set HostName "$(hostname)"
+
+      - uses: ./.github/actions/setup-acceptance-documents
+
+      - name: Prepare actual MathJax viewport browser tools
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          export PLAYWRIGHT_BROWSERS_PATH="$PWD/.tmp/playwright-browsers"
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
+
+      - uses: ./.github/actions/setup-ci-execution-user
+        if: runner.os == 'Linux'
+
+      - name: Assert immutable selected product Source
+        run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
+      - name: Run infrastructure tests
+        env:
+          # Coverage instrumentation is memory-intensive on macOS; keep that
+          # runner deterministic while retaining wider auto-parallelism on Linux.
+          TEMPLATE_CI_XDIST_WORKERS: ${{ matrix.os == 'macos-latest' && '2' || 'auto' }}
+          # Preserve original Linux314 coverage instrumentation for these exact cases.
+          # This diagnostic subset is not whole-shard coverage or full qualification.
+          INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04') && '--cov=infrastructure --cov-report= --cov-fail-under=0' || '' }}
+          ORIGINAL_NODES: ${{ matrix.original-nodes }}
+        # Keep every selected case, but do not serialize long native controls on
+        # one worker or requeue completed scopes after a crash. The Linux payload
+        # uses a fresh UID and explicit runtime DATA, not the runner's environment.
+        run: |
+          read -r -a original_nodes <<< "$ORIGINAL_NODES"
+          executor=()
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            executor=(.venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+              --state "$RUNNER_TEMP/template-ci-execution/state.json" --)
+          fi
+          diagnostics=()
+          if [[ "$RUNNER_OS" == macOS ]]; then
+            diagnostics=(--basetemp "$RUNNER_TEMP/template-infra-case-workspaces"
+              -o faulthandler_timeout=90 -o faulthandler_exit_on_timeout=false)
+          fi
+          # shellcheck disable=SC2086  # INFRA_COV_FLAGS is intentionally word-split
+          "${executor[@]}" /usr/bin/env COVERAGE_FILE=.coverage.infra UV_PYTHON="$PWD/.venv/bin/python" .venv/bin/python -m pytest "${original_nodes[@]}" \
+            -n "$TEMPLATE_CI_XDIST_WORKERS" \
+            --dist load --maxschedchunk=1 \
+            --benchmark-disable \
+            $INFRA_COV_FLAGS \
+            "${diagnostics[@]}" \
+            --junitxml="output/readiness/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml" \
+            --durations=10 \
+            -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
+            --timeout=120
+
+      - name: Export original Linux infrastructure readiness bytes
+        if: ${{ always() && runner.os == 'Linux' }}
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
+
+      - name: Preserve partial infrastructure controller diagnostics
+        if: ${{ always() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: infra-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
+          path: ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/diagnostics/shard-${{ matrix.shard }}.json
+          if-no-files-found: warn
+
+      - name: Preserve original infrastructure case outcomes and native diagnostics
+        if: ${{ always() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: infra-case-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
+          path: |
+            ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml
+            ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/pytest-case-diagnostics/
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.exit
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/actual-runtime.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/runtime-input.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/runtime-observation.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/complete-public-source-data[0-9]*.git-stage.trace2.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/timeout.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper-exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/html-python-source-*/plan.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/html-python-source-*/closure.json
+          if-no-files-found: warn
