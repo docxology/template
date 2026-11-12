@@ -71,6 +71,14 @@ def test_unknown_host_cannot_choose_a_provider(host: dict) -> None:
         (("providers", "FreeBSD-x86_64"), {}),
         (("providers", "Linux-x86_64", "kind"), "official-archives"),
         (("providers", "Linux-x86_64", "build", "compiler"), "ghc-latest"),
+        (("providers", "Linux-x86_64", "build", "compiler"), "ghc-9.8.4"),
+        (("providers", "Linux-x86_64", "build", "upstream_compiler"), "ghc-9.12.2"),
+        (("providers", "Linux-x86_64", "build", "ghc_options"), []),
+        (("providers", "Linux-x86_64", "build", "recipe_path"), "../unreviewed.nix"),
+        (("providers", "Linux-x86_64", "build", "freeze_path"), "/tmp/unreviewed.freeze"),
+        (("providers", "Linux-x86_64", "build", "resolved_freeze_sha256"), "A" * 64),
+        (("providers", "Linux-x86_64", "build", "compiler_output"), "/nix/store/../ghc-9.12.2"),
+        (("providers", "Linux-x86_64", "build", "plan_derivation"), "/tmp/unreviewed.drv"),
         (("providers", "Linux-x86_64", "build", "revision"), "0" * 40),
         (("providers", "Linux-x86_64", "build", "nar_hash"), "sha256-not-a-hash"),
         (("providers", "Linux-x86_64", "build", "flake_url"), "github:lierdakil/pandoc-crossref#pandoc-with-crossref"),
@@ -193,6 +201,30 @@ def test_tampered_cache_cannot_trigger_build_or_publish_a_path(tmp_path: Path) -
         prepare_document_providers(_REPO, archives, destination, host=_LINUX, deadline=time.monotonic() + 10)
     assert not destination.exists()
     assert {path.name for path in tmp_path.iterdir()} == {"archives"}
+
+
+@pytest.mark.parametrize("changed", ["recipe", "freeze"])
+def test_changed_root_build_input_cannot_trigger_acquisition(tmp_path: Path, changed: str) -> None:
+    source = tmp_path / "source"
+    manifest = source / PIN_SOURCE
+    manifest.parent.mkdir(parents=True)
+    document = _manifest()
+    manifest.write_bytes(_content(document))
+    for name in ("recipe", "freeze"):
+        relative = document["providers"]["Linux-x86_64"]["build"][name + "_path"]
+        body = (_REPO / relative).read_bytes()
+        (source / relative).write_bytes(body + b"\n# changed after pinning\n" if name == changed else body)
+    archives, destination = tmp_path / "archives", tmp_path / "destination"
+    with pytest.raises(ValueError, match="Root recipe/freeze"):
+        prepare_document_providers(
+            source,
+            archives,
+            destination,
+            host=_LINUX,
+            nix=tmp_path / "must-not-launch",
+            deadline=time.monotonic() + 10,
+        )
+    assert not archives.exists() and not destination.exists()
 
 
 def test_cli_rejects_malformed_source_before_acquisition(tmp_path: Path) -> None:

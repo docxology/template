@@ -1,32 +1,45 @@
 {
-  "schema_version": "template-native-document-providers-v1",
+  "schema_version": "template-native-document-providers-v2",
   "providers": {
     "Linux-x86_64": {
       "kind": "nix-source-build",
       "build": {
-        "flake_url": "git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c#packages.x86_64-linux.pandoc-with-crossref",
+        "flake_url": "git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c",
         "revision": "e6c2ae3418dcf63f974802f8b7c105ebc299706c",
         "nar_hash": "sha256-+RpgwW3AmNjTLVfMK7SYjFPi/DlxesuXUtsWGtnm9oM=",
         "flake_lock_sha256": "c5bb26db82bc1b56577fc46ca3f56b061168c6cef86f5ec3b969530b62c80758",
-        "freeze_sha256": "17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed",
-        "compiler": "ghc-9.8.4",
-        "derivation": "/nix/store/g2fid7wndkkqp9b4f93whbyrapxm2wj8-pandoc-with-crossref.drv",
-        "output": "/nix/store/9w5yy7rgmpl2jn0by1qjpmv1kf9341f9-pandoc-with-crossref"
+        "upstream_freeze_sha256": "17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed",
+        "upstream_compiler": "ghc-9.8.4",
+        "recipe_path": "infrastructure/config/native-document-build.nix",
+        "recipe_sha256": "20f4301500230ab06feb24563c3e49929b3823c7fa77ef89707b879e1060e18a",
+        "freeze_path": "infrastructure/config/native-document-build.freeze",
+        "freeze_sha256": "f6ac8c89ae23485e9e4252d4b200067c2157483b39154cf35040b5dd9cb32c0b",
+        "resolved_freeze_sha256": "7a6b8e716308221a0e87106cc3c5139b37a956289aca3a68ead983fa86cd335d",
+        "compiler": "ghc-9.12.2",
+        "ghc_options": [
+          "-fobject-determinism"
+        ],
+        "compiler_derivation": "/nix/store/nn8p5anspi1gb3p0lnalc92cmmwv68gp-ghc-9.12.2.drv",
+        "compiler_output": "/nix/store/39qcff2rb2sqkaw1lyzz85nf3w0w91lj-ghc-9.12.2",
+        "plan_derivation": "/nix/store/p28f1cql9cng2sy3aw44a88fakbmfyc5-haskell-project-plan-to-nix-pkgs.drv",
+        "plan_output": "/nix/store/8cl24dnv7hfv22dmhp27f9c4ggmsj3l7-haskell-project-plan-to-nix-pkgs",
+        "derivation": "/nix/store/8qnn1lkq8mk9ldlag644lcwbwa9cl1v9-pandoc-with-crossref.drv",
+        "output": "/nix/store/n7ncgrdw3b8hj1knpj0srri4i92gvbx9-pandoc-with-crossref"
       },
       "tools": {
         "pandoc": {
           "version": "3.11",
           "asset": "pandoc-3.11-linux-x86_64-source.tar.xz",
           "member": "pandoc",
-          "binary_sha256": "247981edba708bff1704ddabd7efec2764816b1d82f5a6714be31cdf64bf7417",
-          "binary_bytes": 278368016
+          "binary_sha256": "47a6d85b785667efffc00c4f1775c2cb14ab52b4e4802d75f2b46c6640785ed5",
+          "binary_bytes": 276278664
         },
         "crossref": {
           "version": "v0.3.25a",
           "asset": "pandoc-crossref-v0.3.25a-linux-x86_64-source.tar.xz",
           "member": "pandoc-crossref",
-          "binary_sha256": "3a02d3ed92bbc342d47a73db34542554243d8a2830c8642f6d1f7f7d3c89b1df",
-          "binary_bytes": 61661368
+          "binary_sha256": "1b22a99aa3752115564021a45d49f626c57a5f67fd2dcbacbea92fe25c3f4bc0",
+          "binary_bytes": 62202552
         }
       }
     },

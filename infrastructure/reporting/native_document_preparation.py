@@ -249,18 +249,23 @@ def _source_build(
     archives: Path,
     destination: Path,
     *,
+    build_inputs: dict[str, bytes],
     nix: Path,
     nix_sudo: bool,
     machine: str,
     deadline: float,
 ) -> dict[str, Any]:
     build = provider["build"]
+    for relative, body in build_inputs.items():
+        atomic_write_bytes_confined(destination, destination / Path(relative).name, body, mode=0o600)
+    recipe = destination / Path(build["recipe_path"]).name
+    local_arguments = ["--file", str(recipe)]
     command = (["sudo", "-n"] if nix_sudo else []) + [
         str(nix),
         *(["--store", "local"] if nix_sudo else []),
         *_NIX_OPTIONS,
     ]
-    source_url = build["flake_url"].split("#", 1)[0]
+    source_url = build["flake_url"]
     metadata = _json_command(
         command + ["flake", "metadata", "--json", "--no-write-lock-file", "--no-update-lock-file", source_url],
         destination,
@@ -290,32 +295,62 @@ def _source_build(
     )
     if actual_nar != build["nar_hash"]:
         raise ValueError("actual complete Nix source tree differs from its Source-pinned NAR hash")
-    for name, field in (("flake.lock", "flake_lock_sha256"), ("cabal.project.freeze", "freeze_sha256")):
+    for name, field in (("flake.lock", "flake_lock_sha256"), ("cabal.project.freeze", "upstream_freeze_sha256")):
         body = read_physical_file(source / name, limit=MAX_MANIFEST_BYTES)
         if hashlib.sha256(body).hexdigest() != build[field]:
             raise ValueError("actual Nix source lock/freeze differs from the exact frozen dependency recipe")
         atomic_write_bytes_confined(destination, destination / name, body, mode=0o600)
     compiler = read_physical_file(source / "stack.yaml", limit=MAX_MANIFEST_BYTES).decode("utf-8")
-    if [row for row in compiler.splitlines() if row.startswith("resolver:")] != ["resolver: " + build["compiler"]]:
-        raise ValueError("actual upstream source does not select the exact declared compiler")
-    for attribute, expected in (("drvPath", build["derivation"]), ("outPath", build["output"])):
-        actual = _run(
-            command
-            + ["eval", "--raw", "--no-write-lock-file", "--no-update-lock-file", build["flake_url"] + "." + attribute],
-            destination,
-            "nix-" + attribute,
-            deadline=deadline,
-            limit=4096,
-        ).decode("utf-8")
-        if actual != expected:
-            raise ValueError("actual Nix derivation/output evaluation differs from the Source build pin")
+    if [row for row in compiler.splitlines() if row.startswith("resolver:")] != [
+        "resolver: " + build["upstream_compiler"]
+    ]:
+        raise ValueError("actual upstream source does not select its separately declared upstream compiler")
+    evaluation = """value: {
+      derivation = value.provider.drvPath; output = value.provider.outPath;
+      compiler_derivation = value.compiler.drvPath; compiler_output = value.compiler.outPath;
+      plan_derivation = value.plan.drvPath; plan_output = value.plan.outPath;
+      resolved_freeze = toString value.resolvedFreeze;
+    }"""
+    evaluated = _json_command(
+        command
+        + ["eval", "--json", "--no-write-lock-file", "--no-update-lock-file", *local_arguments, "--apply", evaluation],
+        destination,
+        "nix-evaluation",
+        deadline=deadline,
+    )
+    expected_fields = (
+        "derivation",
+        "output",
+        "compiler_derivation",
+        "compiler_output",
+        "plan_derivation",
+        "plan_output",
+    )
+    if (
+        type(evaluated) is not dict
+        or set(evaluated) != {*expected_fields, "resolved_freeze"}
+        or any(evaluated[field] != build[field] for field in expected_fields)
+        or type(evaluated["resolved_freeze"]) is not str
+    ):
+        raise ValueError("actual Nix compiler/plan/provider evaluation differs from the complete Source build pin")
     graph = _json_command(
-        command + ["derivation", "show", "--recursive", build["derivation"]],
+        command
+        + [
+            "derivation",
+            "show",
+            "--recursive",
+            build["derivation"],
+            build["compiler_derivation"],
+            build["plan_derivation"],
+        ],
         destination,
         "nix-recursive-derivations",
         deadline=deadline,
     )
-    _require_derivation_graph(graph, build)
+    for prefix in ("", "compiler_", "plan_"):
+        _require_derivation_graph(
+            graph, {"derivation": build[prefix + "derivation"], "output": build[prefix + "output"]}
+        )
     outputs = _json_command(
         command
         + [
@@ -325,7 +360,8 @@ def _source_build(
             "--no-update-lock-file",
             "--out-link",
             str(destination / "nix-runtime"),
-            build["flake_url"],
+            *local_arguments,
+            "provider",
         ],
         destination,
         "nix-build",
@@ -365,6 +401,13 @@ def _source_build(
         "nix-runtime-verification",
         deadline=deadline,
     )
+    resolved_freeze = Path(evaluated["resolved_freeze"])
+    if not resolved_freeze.is_absolute() or not resolved_freeze.is_relative_to("/nix/store"):
+        raise ValueError("actual resolved dependency freeze is outside the installed Nix store")
+    resolved_body = read_physical_file(resolved_freeze, limit=MAX_MANIFEST_BYTES)
+    if hashlib.sha256(resolved_body).hexdigest() != build["resolved_freeze_sha256"]:
+        raise ValueError("actual resolved dependency freeze differs from the exact Source plan")
+    atomic_write_bytes_confined(destination, destination / "resolved-cabal.project.freeze", resolved_body, mode=0o600)
     observed: dict[str, Any] = {}
     for name, pin in provider["tools"].items():
         executable = "pandoc" if name == "pandoc" else "pandoc-crossref"
@@ -429,6 +472,13 @@ def prepare_document_providers(
     reader = SnapshotReader(source_root, operation_deadline=deadline)
     source_pin = reader.read(PIN_SOURCE, max_bytes=MAX_MANIFEST_BYTES)
     provider = select_document_provider(source_pin.content, host)
+    build_inputs: dict[str, bytes] = {}
+    if provider["kind"] == "nix-source-build":
+        for name in ("recipe", "freeze"):
+            snapshot = reader.read(provider["build"][name + "_path"], max_bytes=MAX_MANIFEST_BYTES)
+            if snapshot.sha256 != provider["build"][name + "_sha256"]:
+                raise ValueError("document Root recipe/freeze differs from the complete Source build pin")
+            build_inputs[provider["build"][name + "_path"]] = snapshot.content
     archives = _directory(archives, fresh=False)
     # Refuse restored tampering before any download, build or tool execution.
     for pin in provider["tools"].values():
@@ -450,6 +500,7 @@ def prepare_document_providers(
             provider,
             archives,
             destination,
+            build_inputs=build_inputs,
             nix=Path(found),
             nix_sudo=nix_sudo,
             machine=host["machine"],
@@ -477,11 +528,15 @@ def prepare_document_providers(
     if not reader.unchanged():
         raise ValueError("document Source pin changed during actual preparation")
     provenance = {
-        "schema_version": "template-document-provider-preparation-v1",
+        "schema_version": "template-document-provider-preparation-v2",
         "host": host,
         "pin_source": PIN_SOURCE,
         "pin_sha256": source_pin.sha256,
         "provider": provider,
+        "build_inputs": {
+            path: {"sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)}
+            for path, body in build_inputs.items()
+        },
         "tools": tools,
         "runtime_acceptance": False,
         "role": "actual document provider preparation only",
