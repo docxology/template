@@ -27,8 +27,7 @@ let
     cp Main.hs "$out/nix-support/ghc-pkg-Main.hs"
     cp ${./native-document-ghc-pkg-cache-order.patch} "$out/nix-support/source.patch"
   '';
-  correctedCompiler = stockCompiler.overrideAttrs (_old: {
-    name = "ghc-9.12.2-stable-package-cache";
+  correctedCompiler = pkgs.haskell-nix.haskellLib.makeCompilerDeps (stockCompiler.overrideAttrs (_old: {
     phases = [ "buildPhase" ];
     nativeBuildInputs = [ pkgs.xorg.lndir ];
     buildInputs = [];
@@ -48,11 +47,10 @@ let
       rm -f "$out/lib/ghc-9.12.2/lib/package.conf.d/package.cache.lock"
       "$out/bin/ghc-pkg" --global-package-db="$out/lib/ghc-9.12.2/lib/package.conf.d" recache
     '';
-  });
+  }));
   project = pkgs.haskell-nix.cabalProject' {
     src = upstream.outPath;
     compiler-nix-name = "ghc9122";
-    ghcOverride = correctedCompiler;
     index-state = "2026-09-06T18:04:17Z";
     cabalProject = builtins.readFile "${upstream.outPath}/cabal.project";
     cabalProjectFreeze = builtins.readFile ./native-document-build.freeze;
@@ -63,6 +61,7 @@ let
     modules = [
       ({ lib, ... }: {
         doHaddock = lib.mkForce false;
+        ghc.package = lib.mkForce correctedCompiler;
         # Applies to every compiled package and component, including library SRTs.
         ghcOptions = [ "-fobject-determinism" ];
         packages.pandoc-cli.components.exes.pandoc.keepConfigFiles = true;
