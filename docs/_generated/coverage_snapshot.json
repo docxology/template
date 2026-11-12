@@ -1,8 +1,8 @@
 {
-  "measured_at": "2026-11-09",
+  "measured_at": "2026-11-12",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "91.16 %",
+      "coverage_pct": "91.15 %",
       "source_hash": "7288d5e294dee5066e511395ef6a032e756281c6cf43f9ca0c061c0049b99aa6"
     },
     "template_advanced_literature_review": {
@@ -22,7 +22,7 @@
       "source_hash": "132826ef39ef9ae5a8904328d84ad9be21205d3fbaa87d8e21bf565b35edb33f"
     },
     "template_code_project": {
-      "coverage_pct": "94.04 %",
+      "coverage_pct": "94.13 %",
       "source_hash": "7f0ad8367b4159e646dd7b748a3908b5765296e1be73cff01788ef1b350d2ebc"
     },
     "template_data_descriptor": {
@@ -58,7 +58,7 @@
       "source_hash": "cad5b85cea7c5c5e19ac882f7dd4f2c6bf3fb167ec4414a5a130d131e3159efd"
     },
     "template_newspaper": {
-      "coverage_pct": "99.08 %",
+      "coverage_pct": "99.25 %",
       "source_hash": "32ab9a8bd09fd46065be588ff3b490a6ce674b1647cd0fc48a94862df4f39a7d"
     },
     "template_pitch_deck": {
@@ -82,7 +82,7 @@
       "source_hash": "ee84e45cf8efefc95c424de6cef541a86603035ffee2acd22010b5b8a432c1a9"
     },
     "template_search_project": {
-      "coverage_pct": "92.00 %",
+      "coverage_pct": "91.89 %",
       "source_hash": "9bf5422eb8a75243f733782ddaa5f1716f2694511e041f01be6a00c06aac8166"
     },
     "template_sia": {
@@ -90,7 +90,7 @@
       "source_hash": "058896cfd9e3301b47eec27aba2a9fefee9a1f9d5bc4858dfb0bea0c8f6eabba"
     },
     "template_storybook": {
-      "coverage_pct": "95.57 %",
+      "coverage_pct": "95.38 %",
       "source_hash": "380ce30758bea5b2d9a5220b9b98775f97b455a897da021d82afc608165e6e22"
     },
     "template_template": {
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "a5c1d5a76c9e8d7f9c5280c8b40d941b4a7e282c",
+  "source_commit": "2d7060f70eb3b7cac9e2d622f0082393fd05e271",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
