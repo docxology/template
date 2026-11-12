@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 581,
+  "fact_count": 582,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 163,
     "citation": 4,
     "figure": 9,
-    "number": 398,
+    "number": 399,
     "section": 7
   },
-  "omitted_fact_count": 381,
+  "omitted_fact_count": 382,
   "sample_facts": [
     {
       "active": true,
@@ -2417,7 +2417,7 @@
     "artifact": 179,
     "bibliography": 4,
     "configuration": 20,
-    "generated_metric": 362,
+    "generated_metric": 363,
     "project_source": 16
   }
 }
