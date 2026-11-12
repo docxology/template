@@ -59,6 +59,8 @@ locks.
   Observe the complete Source-pinned Pandoc executable image under a finite
   256 MiB code-image ceiling; retain the 512 MiB backing-file and 1 GiB cohort
   ceilings and existing observation clocks without truncating evidence.
+  Match the pin producer's bounded two-job/two-core source-build execution and
+  construct nonempty platform arguments under macOS system Bash 3.
 
 ### Fixes carried forward from main
 

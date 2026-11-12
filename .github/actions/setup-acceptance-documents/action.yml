@@ -164,14 +164,13 @@ runs:
         archives="$RUNNER_TEMP/template-acceptance-document-archives"
         preparation=$(mktemp -d "$RUNNER_TEMP/template-document-preparation.XXXXXX")
         destination="$preparation/bin"
-        nix_arguments=()
+        arguments=(--source-root "$GITHUB_WORKSPACE" --archives "$archives" --destination "$destination")
         if [ "$RUNNER_OS" = Linux ]; then
-          nix_arguments=(--nix-executable "$(command -v nix)" --nix-sudo)
+          arguments+=(--nix-executable "$(command -v nix)" --nix-sudo)
         fi
         "$preparation_python" -I -B -c \
           'import runpy, sys; sys.path.insert(0, sys.argv.pop(1)); runpy.run_module("infrastructure.reporting.native_document_preparation", run_name="__main__")' \
-          "$GITHUB_WORKSPACE" --source-root "$GITHUB_WORKSPACE" --archives "$archives" \
-          --destination "$destination" "${nix_arguments[@]}"
+          "$GITHUB_WORKSPACE" "${arguments[@]}"
         echo "$destination" >> "$GITHUB_PATH"
         echo "TEMPLATE_DOCUMENT_PROVIDER_PROVENANCE=$destination/document-provider-provenance.json" >> "$GITHUB_ENV"
     - name: Prepare the frozen tagging-capable Linux TeX distribution

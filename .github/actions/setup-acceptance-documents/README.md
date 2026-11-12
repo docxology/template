@@ -16,6 +16,9 @@ the upstream
 [`pandoc-with-crossref` flake at the immutable reviewed commit](https://github.com/lierdakil/pandoc-crossref/tree/e6c2ae3418dcf63f974802f8b7c105ebc299706c):
 its locked haskell.nix/Hackage inputs, GHC 9.8.4 and complete Cabal freeze select
 the compiler and dependencies, never an unpinned host GHC or latest package set.
+The client fixes source-build work at two concurrent jobs and two cores, matching
+the native pin producer rather than inheriting runner-wide concurrency. A
+derivation/store path alone never replaces the whole-executable body pin.
 The strict shared parser rejects unsupported hosts and malformed fields in any
 manifest branch; there is no official-static-Linux or version fallback.
 
