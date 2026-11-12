@@ -26,6 +26,14 @@ locks.
 - Retire parser-internal/default/wording smoke tests instead of repinning their
   incidental assertions. Keep real CLI mutation/error/discovery consumers, and
   isolate the missing-repository boundary in its own disposable fixture.
+- Supervise fingerprint-observer descendants through the existing bounded
+  executor before continuing, preserving the two-second observation and
+  110-second CLI deadlines, original/effective exits and explicit UTF-8 capture.
+  Retire remaining prose-only discovery and success-only JSON inventory smoke
+  cases; retain data-bearing discovery/inventory and real error boundaries.
+- Skip optional UV version probes when no `VIRTUAL_ENV` entry can be removed;
+  preserve the resulting environment and every existing present-entry behavior
+  without caching source observations or changing execution deadlines.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report

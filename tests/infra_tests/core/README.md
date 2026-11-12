@@ -232,9 +232,14 @@ uv run pytest tests/infra_tests/core/ \
 
 The real mutation controls in `test_cli.py` retain independent before/after
 fingerprint programs under `cli-observations/source-{before,after}/`, using the
-existing original stdout/stderr/exit-or-timeout layout and artifact allowlist.
-Each observation has a two-second diagnostic bound; the original CLI110-second
-and whole-case bounds, mutation assertions and refusal predicates stay intact.
+existing stdout/stderr/exit-or-timeout layout and artifact allowlist. The SDK
+supervisor captures UTF-8 text with replacement decoding; records explicitly
+preserve that capture mode, effective/original exits and custody failures.
+Each observation's startup, arming and command share the same two-second
+whole-operation deadline. The existing bounded executor owns descendant cleanup
+before returning; a launched observer's cleanup/custody error fails closed before
+further work. The original CLI's 110-second wait, class marks, mutation assertions and
+refusal predicates stay intact.
 Only an exact aggregate-total match binds an observation's source/Python/tool
 components to the corresponding original CLI identity. These records are
 adjacent-process evidence, not substituted admission or release qualification.

@@ -186,8 +186,10 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 ### CLI Consumed-Source Custody (`test_cli.py`)
 
-- Preserve the actual shared/project mutation, original110-second CLI bound and all byte/order/refusal assertions.
-- Retain bounded independent source/Python/tool observations through the existing `cli-observations` stream/exit/timeout allowlist, without new product telemetry or additional file publication permissions.
+- Preserve the actual shared/project mutation, original 110-second CLI wait, class marks and all byte/order/refusal assertions.
+- Use the existing bounded executor and a sanitized guardian environment for each observer's two-second whole-operation deadline; startup/arming share that deadline and owned descendant cleanup must complete before returning.
+- Retain actual UTF-8 supervisor text with explicit replacement-decoding metadata, effective/original exits, timeouts and custody errors through the existing `cli-observations` allowlist. Do not add publication permissions or production telemetry.
+- Fail closed before proceeding if a launched observer reports command/cleanup or custody failure; never infer that unreadable ownership means no surviving descendants.
 - A before/after observation becomes evidence for a CLI identity only when its aggregate digest matches that original identity exactly. Preserve observation failures/timeouts; never relabel them or use an observation as admission authority.
 
 ### Configuration Testing

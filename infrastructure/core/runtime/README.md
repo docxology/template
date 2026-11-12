@@ -13,6 +13,11 @@ profiles without the process-memory access required by `profiling.sampling`.
 These diagnostic profiles do not replace the supported Python 3.14/3.15 release
 gates or authorize cache reuse, changed timeouts, or coverage exceptions.
 
+`get_subprocess_env` probes `uv --version` only when a `VIRTUAL_ENV` entry is
+present and could be removed. Environments without that entry are preserved
+without launching optional UV; when present, the existing availability-based
+removal behavior is unchanged. This check does not resolve or acquire packages.
+
 ## Files
 
 - `_python_env.py` — Python environment helpers; Stage-02 scripts must resolve

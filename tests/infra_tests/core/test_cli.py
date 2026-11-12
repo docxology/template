@@ -104,6 +104,7 @@ class TestCLISubprocess:
 
     @pytest.mark.parametrize("mutation_stage", ["shared", "project"])
     def test_cli_frozen_source_refusal_retains_complete_diagnostics(self, tmp_path: Path, mutation_stage: str) -> None:
+        from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
         from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
         scaffold_pipeline(tmp_path, ("templates/alpha", "templates/beta"))
@@ -148,18 +149,29 @@ class TestCLISubprocess:
             directory = tmp_path / "cli-observations" / label
             directory.mkdir(parents=True)
             command = [sys.executable, "-B", "-c", observation, str(tmp_path)]
-            try:
-                observed = subprocess.run(command, env=environment, capture_output=True, timeout=2)
-            except subprocess.TimeoutExpired as error:
-                (directory / "stdout").write_bytes(error.stdout or b"")
-                (directory / "stderr").write_bytes(error.stderr or b"")
-                (directory / "timeout.json").write_text(
-                    json.dumps({"command": error.cmd, "timeout": error.timeout}) + "\n"
-                )
-            else:
-                (directory / "stdout").write_bytes(observed.stdout)
-                (directory / "stderr").write_bytes(observed.stderr)
-                (directory / "exit.json").write_text(json.dumps({"returncode": observed.returncode}) + "\n")
+            observed = run_bounded_subprocess(
+                command,
+                cwd=Path(__file__).resolve().parents[3],
+                env=environment,
+                timeout=2,
+                guardian_env=build_bounded_env(),
+            )
+            (directory / "stdout").write_text(observed.stdout, encoding="utf-8")
+            (directory / "stderr").write_text(observed.stderr, encoding="utf-8")
+            details = {
+                "command": command,
+                "timeout": 2,
+                "returncode": observed.returncode,
+                "original_returncode": observed.original_returncode,
+                "timed_out": observed.timed_out,
+                "custody_refused": observed.custody_refused,
+                "command_error": observed.command_error,
+                "capture_encoding": "utf-8",
+                "capture_errors": "replace",
+            }
+            (directory / ("timeout.json" if observed.timed_out else "exit.json")).write_text(json.dumps(details) + "\n")
+            if observed.pid is not None and (observed.command_error or observed.custody_refused):
+                raise RuntimeError(f"Fingerprint observer cleanup refused: {observed.command_error}")
 
         observe_source("source-before")
         result = subprocess.run(
@@ -240,45 +252,6 @@ class TestCLISubprocess:
             combined_output = result.stdout + result.stderr
             assert "test.pdf" in combined_output
 
-    def test_cli_discover_command(self):
-        """Test discover command execution via CLI."""
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            repo_root = Path(tmp_dir) / "repo"
-            repo_root.mkdir()
-
-            # Create projects directory with a test project
-            projects_dir = repo_root / "projects"
-            projects_dir.mkdir()
-
-            project_dir = projects_dir / "test_project"
-            project_dir.mkdir()
-            (project_dir / "src").mkdir()
-            (project_dir / "tests").mkdir()
-            (project_dir / "manuscript").mkdir()
-
-            (project_dir / "src" / "__init__.py").write_text("")
-            (project_dir / "tests" / "__init__.py").write_text("")
-
-            # Test CLI execution via subprocess
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "infrastructure.core.cli",
-                    "discover",
-                    "--repo-root",
-                    str(repo_root),
-                    "--format",
-                    "text",
-                ],
-                capture_output=True,
-                text=True,
-                timeout=30,
-            )
-
-            assert result.returncode == 0
-            assert "Found 1 projects" in result.stdout
-
 
 @pytest.mark.timeout(60)
 class TestMainFunction:
@@ -350,19 +323,6 @@ class TestHandleDiscoverCommand:
         assert isinstance(data, list)
         assert any(p["name"] == "gamma" for p in data)
 
-    def test_no_projects_text(self, tmp_path, capsys):
-        # Empty projects dir
-        (tmp_path / "projects").mkdir()
-
-        args = argparse.Namespace(
-            repo_root=tmp_path,
-            format="text",
-        )
-        exit_code = handle_discover_command(args)
-        assert exit_code == 0
-        out = capsys.readouterr().out
-        assert "No valid projects" in out or "Found 0" in out
-
     def test_json_format_empty(self, tmp_path, capsys):
         (tmp_path / "projects").mkdir()
 
@@ -413,20 +373,6 @@ class TestHandleInventoryCommand:
         assert exit_code == 0
         out = capsys.readouterr().out
         assert "paper.pdf" in out
-
-    def test_json_format(self, tmp_path, capsys):
-        out_dir = tmp_path / "output"
-        data_dir = out_dir / "data"
-        data_dir.mkdir(parents=True)
-        (data_dir / "results.json").write_text('{"key": "value"}')
-
-        args = argparse.Namespace(
-            output_dir=out_dir,
-            categories=None,
-            format="json",
-        )
-        exit_code = handle_inventory_command(args)
-        assert exit_code == 0
 
     def test_nonexistent_dir(self, tmp_path, capsys):
         args = argparse.Namespace(
