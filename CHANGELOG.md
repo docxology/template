@@ -66,6 +66,20 @@ locks.
   construct nonempty platform arguments under macOS system Bash 3.
 - Accept the real stdlib Linux `MsgFlag` for `MSG_CMSG_CLOEXEC`, preserving
   close-on-exec descriptor transport instead of rejecting its integer enum.
+- Keep native Office raw comments within the first actual `-->` or `--!>`
+  terminator. Mixed visible HTML cannot become nonvisible metadata or an image
+  alternative; the independent source oracle and actual Lua producer retain
+  the same finite boundary. Preserve escaped braces in linked slide-image
+  targets instead of treating an escaped closer as a direct image wrapper.
+- Reconcile authored standalone navigation, execution-context warnings, dated
+  review records and unchecked Workflowz requests into canonical exemplar
+  sources before exact export. Remove unexercised passing-test counts and
+  retain immutable review provenance rather than silently replacing it.
+- Advance the pinned Kmyth fork through its reviewed main correction, preserving
+  the existing macOS baseline while removing a missing logging format argument,
+  restoring the intended SGX release C flags and selecting network-test headers
+  from their own directory. Retire only the software-verified vendor requests;
+  no TPM or SGX hardware acceptance is inferred.
 
 ### Fixes carried forward from main
 

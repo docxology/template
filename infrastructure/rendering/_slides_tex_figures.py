@@ -14,8 +14,10 @@ _PROJECTED_FLOAT_RE = re.compile(
     flags=re.DOTALL,
 )
 _ENVIRONMENT_TOKEN_RE = re.compile(r"\\(?P<action>begin|end)\{(?P<environment>[^{}]+)\}")
+# An escaped target character is indivisible: never backtrack its backslash
+# into the ordinary branch and reinterpret an escaped brace as a closer.
 _DIRECT_HREF_IMAGE_PREFIX_RE = re.compile(
-    r"\\href\s*\{(?:\\.|[^{}])*\}\s*\{\s*$",
+    r"\\href\s*\{(?:\\.|[^{}\\])*\}\s*\{\s*$",
     flags=re.DOTALL,
 )
 

@@ -1,4 +1,4 @@
--- Preserve the declared cross-format roles of raw TeX in native Office books.
+-- Preserve the declared cross-format roles of raw source in native Office books.
 -- Unknown raw forms remain untouched and therefore remain an acceptance obligation.
 local target = nil
 
@@ -33,6 +33,15 @@ local function header(raw)
   return pandoc.Header(levels[command], pandoc.Inlines{pandoc.Str(title)}, pandoc.Attr(label or '', {'unnumbered'}))
 end
 
+local function comment_description(raw)
+  raw = raw:match('^%s*(.-)%s*$')
+  local body = raw:match('^<!%-%-(.-)%-%-!?>$')
+  -- Both HTML terminators end the comment. A later closing marker cannot
+  -- turn intervening visible source into an image alternative.
+  if not body or body:find('%-%-!?>') then return nil end
+  return body:match('^%s*alt:%s*(.-)%s*$')
+end
+
 function Pandoc(doc)
   target = FORMAT
   if target == 'json' then target = pandoc.utils.stringify(doc.meta['office-native-target'] or '') end
@@ -50,7 +59,7 @@ function Pandoc(doc)
   end
   for _, block in ipairs(doc.blocks) do
     if block.t == 'RawBlock' and block.format == 'html' then
-      local description = block.text:match('^<!%-%-%s*alt:%s*(.-)%s*%-%->$')
+      local description = comment_description(block.text)
       if description then
         if alternative then error('native Office source alt has no following image') end
         alternative = description:gsub('%s+', ' ')

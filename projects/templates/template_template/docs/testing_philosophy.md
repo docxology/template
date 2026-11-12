@@ -76,9 +76,12 @@ and `paths.locate_repo_root`, `ImportError` branches in
 
 - **Project source**: 90%+ coverage for `projects/templates/template_template/src/`
 - **Enforcement**: The pipeline halts at Stage 01 if coverage drops below threshold
-- **Current**: 130 tests across 5 files, all passing (re-verify via `grep -c "^\s*def test_" tests/test_*.py`)
+- **Measured results**: use [monorepo generated counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md) and the project's generated `output/data/metrics.json`; do not infer collection, coverage or a successful run from counting test definitions.
 
 ## Running Tests
+
+These qualified commands run from the **monorepo root**. For standalone execution,
+follow the [SDK/DATA preparation contract](../README.md#standalone-complete-source-data).
 
 ```bash
 # Quick run
@@ -98,4 +101,4 @@ PYTHONPATH=. uv run pytest projects/templates/template_template/tests/core/test_
 2. Import from `template_template.<cluster>.<module>` (the `src/` is on `PYTHONPATH` via conftest)
 3. Use real data — no mocks, no fakes, no stubs
 4. Assert against real repository state
-5. Update `docs/VERIFICATION.md` test count if changed
+5. Refresh the owning generated counts/metrics and retain the actual run receipt; do not copy test totals into verification prose
