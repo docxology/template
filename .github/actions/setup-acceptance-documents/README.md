@@ -47,7 +47,9 @@ SHA-256 and length and have a real installed glibc ELF `PT_INTERP`; no binary
 instrumentation or wrapper is substituted. Canonical single-member `tar.xz`
 archives retain those unchanged binaries. Compression bytes and build JSON are
 transport/provenance, not authenticity: the pinned executable body is authoritative.
-The Nix output GC root and full runtime closure remain installed for execution.
+The Nix output GC root remains in its separate private runtime directory, outside
+the public tool assets handed to the isolated CI user. The full store closure
+stays installed; the execution profile still refuses escaping asset symlinks.
 Preparation failures block observation and never certify an acceptance gate.
 
 In native mode, the action prepares pinned Pandoc and crossref before the shared system-dependency

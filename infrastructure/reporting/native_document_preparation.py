@@ -256,6 +256,8 @@ def _source_build(
     deadline: float,
 ) -> dict[str, Any]:
     build = provider["build"]
+    # Keep the store GC root outside public tool assets; their escape refusal is unchanged.
+    runtime_link = Path(tempfile.mkdtemp(prefix="template-document-runtime-")).resolve(strict=True) / "nix-runtime"
     for relative, body in build_inputs.items():
         atomic_write_bytes_confined(destination, destination / Path(relative).name, body, mode=0o600)
     recipe = destination / Path(build["recipe_path"]).name
@@ -359,7 +361,7 @@ def _source_build(
             "--no-write-lock-file",
             "--no-update-lock-file",
             "--out-link",
-            str(destination / "nix-runtime"),
+            str(runtime_link),
             *local_arguments,
             "provider",
         ],
@@ -378,7 +380,7 @@ def _source_build(
     if (
         output.resolve(strict=True) != output
         or not output.is_dir()
-        or (destination / "nix-runtime").resolve(strict=True) != output
+        or runtime_link.resolve(strict=True) != output
     ):
         raise ValueError("actual Nix output/retained runtime GC root differs from the declared build")
     closure = _json_command(

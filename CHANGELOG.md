@@ -54,6 +54,8 @@ locks.
   GHC 9.12.2/dependency inputs and project-wide object determinism, retaining
   exact Source-selected executable and provider archive correspondence instead
   of asking static binaries for glibc callbacks.
+  Keep its GC root outside the public execution asset tree without weakening
+  the isolated CI user's escaping-link refusal.
   Keep official macOS archives pinned. Authenticate the final loader-consistency
   boundary and all file-backed closes; retain the kernel vDSO until the actual
   original OS exit rather than fabricating a close callback.

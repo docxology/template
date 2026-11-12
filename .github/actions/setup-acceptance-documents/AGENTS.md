@@ -49,8 +49,10 @@ If Nix is absent, use the reviewed Ubuntu mirror guard and bounded signed Noble
 `nix-bin`/`nix-setup-systemd` packages, not an unpinned remote installer. Initialize
 the local store; sudo preparation does not depend on systemd daemon/socket startup.
 Keep signature verification and only the reviewed NixOS, IOG and crossref Cachix
-caches without flake-supplied settings. Retain the Nix output GC root and full
-runtime closure, not just copies of the two binaries.
+caches without flake-supplied settings. Retain the Nix output GC root in a
+separate private runtime directory, never inside the public tool asset tree:
+the isolated execution profile must keep refusing escaping links. Retain the
+full installed runtime closure, not just copies of the two binaries.
 Preparation command/derivation/body records explicitly grant no native authority;
 Original/Current Source, full body correspondence and every existing native
 loader/map/memory/lifecycle/readback requirement remain mandatory.
