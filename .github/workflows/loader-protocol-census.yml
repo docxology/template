@@ -1,0 +1,70 @@
+name: Actual Linux loader descriptor transport DATA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  descriptor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+        with:
+          dependency-group: installed-build
+      - name: Exercise actual MsgFlag and kernel close-on-exec transport
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import array, fcntl, hashlib, json, os, socket, tempfile, time
+          from pathlib import Path
+          from infrastructure.reporting import native_loader_protocol as protocol
+          flag = socket.MSG_CMSG_CLOEXEC
+          assert isinstance(flag, socket.MsgFlag) and isinstance(flag, int)
+          content = b'complete actual Linux descriptor transport DATA\n'
+          with tempfile.TemporaryDirectory(prefix='loader-descriptor-data-') as temporary:
+              source = Path(temporary) / 'physical-body'
+              source.write_bytes(content)
+              sent = os.open(source, os.O_RDONLY | os.O_CLOEXEC)
+              left, right = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM)
+              received = None
+              try:
+                  header = protocol.HEADER.pack(b'TLDOBS1\0', 1, os.getpid(), time.monotonic_ns(),
+                                                2, 7, 0, 0, 0, 0, 1, b'descriptor-DATA-only')
+                  assert left.sendmsg([header], [(socket.SOL_SOCKET, socket.SCM_RIGHTS,
+                                                 array.array('i', [sent]))]) == len(header)
+                  frame, received = protocol.frame(right, time.monotonic() + 10)
+                  assert frame['kind'] == 'open' and frame['id'] == 7 and received is not None
+                  assert fcntl.fcntl(received, fcntl.F_GETFD) & fcntl.FD_CLOEXEC
+                  assert not os.get_inheritable(received)
+                  assert os.read(received, len(content) + 1) == content
+                  left.shutdown(socket.SHUT_WR)
+                  assert protocol.frame(right, time.monotonic() + 10) == (None, None)
+              finally:
+                  if received is not None:
+                      os.close(received)
+                  os.close(sent)
+                  left.close()
+                  right.close()
+          result = {
+              'source_commit': os.environ['GITHUB_SHA'], 'module_origin': protocol.__file__,
+              'actual_flag_type': type(flag).__module__ + '.' + type(flag).__qualname__,
+              'actual_flag_value': int(flag), 'received_descriptor_cloexec': True,
+              'physical_body_sha256': hashlib.sha256(content).hexdigest(),
+              'complete_stream_eof': True, 'runtime_acceptance': False,
+              'role': 'Actual Linux socket/descriptor DATA smoke only; no Source owner or native authority created',
+          }
+          output = Path('output/readiness/loader-descriptor-data.json')
+          output.parent.mkdir(parents=True)
+          output.write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          PYTHON
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: loader-descriptor-data-${{ github.run_id }}-${{ github.run_attempt }}
+          path: output/readiness/loader-descriptor-data.json
+          if-no-files-found: error
