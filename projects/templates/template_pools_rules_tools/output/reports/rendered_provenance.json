@@ -67,7 +67,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "0aaf25722af528ae4ad30404b9d5d7481a8b92ab1ee3d78bbffd814eac7a9e6e",
+      "sha256": "6624ea6d16a150fba8ff8ab41eaef67a264de4dd2760a85704a9862b668b4bb1",
       "size_bytes": 12008
     }
   },
