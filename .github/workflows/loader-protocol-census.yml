@@ -2,6 +2,11 @@ name: Actual Linux loader descriptor transport DATA
 
 on:
   workflow_dispatch:
+  push:
+    branches: [codex/v5.2.0-document-provider-census-20261112]
+    paths:
+      - .github/workflows/loader-protocol-census.yml
+      - infrastructure/reporting/native_loader_protocol.py
 
 permissions:
   contents: read
