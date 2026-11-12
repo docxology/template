@@ -526,6 +526,12 @@ jobs:
             ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stderr
             ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/exit.json
             ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/timeout.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.exit.json
             ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stdout
             ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stderr
             ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper-exit.json

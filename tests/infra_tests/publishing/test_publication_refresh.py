@@ -310,6 +310,8 @@ def test_actual_manifested_addition_refuses_changed_bytes_links_and_modes(
 
 
 def _assert_observed_custody(receipt: dict, original: int) -> None:
+    from infrastructure.project.public_acceptance_auxiliary_validation import _supervision_diagnostic
+
     assert receipt["original_exit_code"] == original
     process = receipt["process"]
     cleanup = process["cleanup"]
@@ -330,7 +332,7 @@ def _assert_observed_custody(receipt: dict, original: int) -> None:
         assert receipt["returncode"] == (original if original else 1)
         assert receipt["returncode"] != 0
     else:
-        assert process["accepted"] is True and cleanup["verified"] is True
+        assert process["accepted"] is True and cleanup["verified"] is True, _supervision_diagnostic(process)
         assert receipt["returncode"] == original
 
 

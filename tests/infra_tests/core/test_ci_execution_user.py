@@ -306,6 +306,8 @@ def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_p
     originals = {
         "pytest-8/popen-gw1/test_child_failure0/worker.stderr": b"original\x00stderr\n",
         "pytest-8/popen-gw1/test_child_failure0/cli-observations/child/exit.json": b'{"returncode":7}\n',
+        "pytest-8/popen-gw1/test_child_failure0/operator/diagnostics/exemplar-config.exit.json": b'{"original_exit_code":0,"returncode":1}\n',
+        "pytest-8/popen-gw1/test_child_failure0/sequence/diagnostics/observed-analysis.stderr": b"original custody refusal\n",
         "pytest-8/popen-gw1/complete-public-source-data0.git-stage.trace2.json": b'{"event":"exit","code":0}\n',
         "pytest-7/test_guard1/runtime-observation.json": b'{"accepted":false}\n',
         "pytest-7/test_guard1/output/readiness/evidence/native.stdout": b"original native refusal\n",
@@ -326,6 +328,8 @@ def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_p
     source_fixture = root / "pytest-8/popen-gw1/complete-public-source-data0"
     source_fixture.mkdir()
     (source_fixture / "never-copy.stdout").write_bytes(b"private fixture Source bytes")
+    (case / "operator/credentials.stdout").write_bytes(b"private non-diagnostic producer data")
+    (case / "operator/diagnostics/private-source.py").write_bytes(b"private producer Source")
     (case / "browser-profile").mkdir()
     os.mkfifo(case / "browser-profile/never-read.stdout")
     (root / "pytest-current").symlink_to(root / "pytest-8", target_is_directory=True)

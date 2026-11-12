@@ -245,13 +245,34 @@ def _labels(
     pdf: bytes, native_text: str, occurrences: tuple[CitationOccurrence, ...], deadline: float
 ) -> list[dict[str, Any]]:
     import pdfplumber
+    from pdfminer.layout import LTChar, LTContainer
 
     budget(deadline)
     with pdfplumber.open(BytesIO(pdf)) as document:
         if not document.pages or len(document.pages) > 500:
             raise ValueError("citation reference exceeds existing native page bounds")
-        if sum(len(page.chars) for page in document.pages) > 2_000_000:
-            raise ValueError("citation reference exceeds existing native glyph bounds")
+        # Count the same underlying glyphs without allocating pdfplumber's full
+        # per-character geometry dictionaries when only the census is consumed.
+        glyph_count = 0
+        visited = 0
+        for page in document.pages:
+            budget(deadline)
+            layouts = [iter(page.layout)]
+            while layouts:
+                try:
+                    item = next(layouts[-1])
+                except StopIteration:
+                    layouts.pop()
+                    continue
+                visited += 1
+                if visited % 1024 == 0:
+                    budget(deadline)
+                if isinstance(item, LTContainer):
+                    layouts.append(iter(item))
+                elif isinstance(item, LTChar):
+                    glyph_count += 1
+                    if glyph_count > 2_000_000:
+                        raise ValueError("citation reference exceeds existing native glyph bounds")
         if len(native_text) > 2_000_000:
             raise ValueError("citation reference native text exceeds existing glyph bounds")
         text = native_text

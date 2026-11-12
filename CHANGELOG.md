@@ -34,6 +34,18 @@ locks.
 - Skip optional UV version probes when no `VIRTUAL_ENV` entry can be removed;
   preserve the resulting environment and every existing present-entry behavior
   without caching source observations or changing execution deadlines.
+- Avoid resolving native Source-directory ancestry twice before the existing
+  held no-follow witness. Keep physical identities, search-only access,
+  substitution refusals and every original closing Source/deadline check.
+- Retain bounded publication-supervision refusal facts in real consumer
+  diagnostics without accepting rejected children or changing original exits.
+- Count citation-reference glyphs through the same PDF parser layout objects
+  without allocating unused per-character geometry dictionaries; retain all
+  page/glyph limits, source checks and the original finite deadline.
+- Export only explicit publication-supervision diagnostic streams/exit JSON
+  on both hosted platforms; retain UID/no-follow/link/privacy/byte boundaries.
+  Observe bounded exact SDK RECORD bytes and their component hash separately
+  from Source admission so unexplained metadata changes remain diagnosable.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report

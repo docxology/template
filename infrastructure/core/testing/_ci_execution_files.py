@@ -22,6 +22,7 @@ PHASE = "entry"
 _CASE_ROOT = r"pytest-[0-9]+/(?:popen-gw[0-9]+/)?test_[^/]*[0-9]+"
 _CASE_DIRECTORY = re.compile(
     rf"(?:pytest-[0-9]+(?:/popen-gw[0-9]+)?|{_CASE_ROOT}(?:/(?:"
+    r"(?:operator|sequence)(?:/diagnostics)?|"
     r"cli-observations(?:/[^/.][^/]*)?|audited-child|"
     r"output(?:/readiness(?:/evidence(?:/html-python-source-[^/.][^/]*)?)?)?"
     r"))?)"
@@ -29,6 +30,7 @@ _CASE_DIRECTORY = re.compile(
 _CASE_FILE = re.compile(
     rf"(?:{_CASE_ROOT}/(?:[^/.][^/]*\.(?:stdout|stderr|exit)|runtime-(?:input|observation)\.json|"
     r"actual-runtime\.exit\.json|"
+    r"(?:operator|sequence)/diagnostics/[^/.][^/]*\.(?:stdout|stderr|exit\.json)|"
     r"cli-observations/[^/.][^/]*/(?:stdout|stderr|exit\.json|timeout\.json)|"
     r"audited-child/(?:original-wrapper\.(?:stdout|stderr)|original-wrapper-exit\.json)|"
     r"output/readiness/evidence/(?:[^/.][^/]*\.(?:json|stdout|stderr)|"

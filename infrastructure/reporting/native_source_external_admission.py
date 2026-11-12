@@ -99,7 +99,9 @@ def _verify_selected_sdk(bindings: NativeExternalSourceBindings, fresh_pycache_p
 def _anchored_directory_identity(path: Path, deadline: float) -> tuple[int, int]:
     """Observe a real directory through the existing held ancestor policy."""
     remaining(deadline)
-    if not path.is_absolute() or path.absolute() != path.resolve(strict=True):
+    # The held no-follow chain below already rejects aliased ancestors.
+    # Do not resolve that same chain again before opening its actual handles.
+    if not path.is_absolute() or ".." in path.parts:
         raise ValueError("current source directory witness refuses an aliased locator")
     if path == Path(path.anchor):
         return _physical_directory(path)
