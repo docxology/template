@@ -1,0 +1,130 @@
+name: Formal macOS process consumers
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - .github/workflows/formal-process-probe.yml
+      - projects/templates/template_formal/src/**
+      - projects/templates/template_formal/tests/test_tool_acceptance.py
+      - projects/templates/template_formal/pyproject.toml
+      - projects/templates/template_formal/uv.lock
+      - infrastructure/core/**
+      - pyproject.toml
+      - uv.lock
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact dispatch commit; must equal this workflow revision
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: formal-process-probe-${{ github.run_id }}
+  cancel-in-progress: false
+
+env:
+  UV_FROZEN: "true"
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  process-consumers:
+    name: Formal process consumers (darwin, ${{ matrix.python }})
+    runs-on: macos-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.14", "3.15"]
+    env:
+      MINOR: ${{ matrix.python }}
+      UV_PYTHON: ${{ matrix.python }}
+    steps:
+      - name: Admit the exact workflow revision
+        shell: bash
+        env:
+          REQUESTED_SOURCE: ${{ inputs.source_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ] || exit 1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Prove the actual checkout
+        run: |
+          set -euo pipefail
+          [ "$(git rev-parse HEAD)" = "$GITHUB_SHA" ] || exit 1
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Prepare the own locked Formal development environment
+        run: |
+          set -euo pipefail
+          export UV_PROJECT_ENVIRONMENT="$RUNNER_TEMP/formal-process-environment"
+          printf 'UV_PROJECT_ENVIRONMENT=%s\n' "$UV_PROJECT_ENVIRONMENT" >> "$GITHUB_ENV"
+          uv sync --locked --project projects/templates/template_formal --extra dev --extra formal-tools --python "$MINOR"
+      - name: Run both unchanged real process consumers and refuse skips
+        id: probe
+        timeout-minutes: 6
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          uv run --locked --no-sync --project projects/templates/template_formal python -B - <<'PYTHON'
+          import hashlib, json, os, platform, subprocess, sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          import template_formal
+
+          root = Path(os.environ["GITHUB_WORKSPACE"]).resolve(strict=True)
+          project = root / "projects/templates/template_formal"
+          assert platform.system() == "Darwin"
+          assert f"{sys.version_info.major}.{sys.version_info.minor}" == os.environ["MINOR"]
+          assert Path(template_formal.__file__).resolve(strict=True) == project / "src/template_formal/__init__.py"
+          source = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+          assert source == os.environ["GITHUB_SHA"]
+          out = Path(os.environ["RUNNER_TEMP"]) / ("formal-process-" + os.environ["MINOR"])
+          out.mkdir(mode=0o700, exist_ok=False)
+          names = ["test_process_running_distinguishes_unreaped_child_from_live_parent", "test_real_timeout_kills_detached_descendant"]
+          nodes = ["tests/test_tool_acceptance.py::" + name for name in names]
+          argv = [sys.executable, "-B", "-m", "pytest", "--timeout=120", "--junitxml", str(out / "junit.xml"), *nodes]
+          files = ["pyproject.toml", "uv.lock", "src/template_formal/tool_acceptance.py", "tests/test_tool_acceptance.py"]
+          hashes = {name: hashlib.sha256((project / name).read_bytes()).hexdigest() for name in files}
+          context = {"source_sha": source, "python": platform.python_version(), "project_root": str(project), "package_origin": str(Path(template_formal.__file__).resolve()), "argv": argv, "source_hashes": hashes, "runtime_acceptance": False, "scope": "two existing process consumers only; full release-profile coverage remains separate"}
+          (out / "invocation.json").write_text(json.dumps(context, indent=2) + "\n")
+          env = dict(os.environ, PYTEST_ADDOPTS="", PYTHONDONTWRITEBYTECODE="1")
+          with (out / "stdout.raw").open("xb") as stdout, (out / "stderr.raw").open("xb") as stderr:
+              completed = subprocess.run(argv, cwd=project, env=env, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr, check=False)
+          (out / "exit-code").write_text(f"{completed.returncode}\n")
+          assert completed.returncode == 0, f"original pytest exit: {completed.returncode}"
+          assert {name: hashlib.sha256((project / name).read_bytes()).hexdigest() for name in files} == hashes
+          document = ET.parse(out / "junit.xml").getroot()
+          assert document.tag == "testsuites" and len(document) == 1
+          suite = document[0]
+          assert all(suite.get(key) == value for key, value in {"tests": "2", "failures": "0", "errors": "0", "skipped": "0"}.items())
+          cases = list(suite.iter("testcase"))
+          assert len(cases) == 2 and {case.get("name") for case in cases} == set(names)
+          assert not any(list(case.iter(tag)) for case in cases for tag in ("failure", "error", "skipped"))
+          (out / "probe.json").write_text(json.dumps({"source_sha": source, "passed": True, "cases": names, "runtime_acceptance": False}) + "\n")
+          PYTHON
+      - name: Retain original process-consumer diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: formal-process-darwin-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/formal-process-${{ matrix.python }}/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Require both original unskipped consumers
+        if: always()
+        env:
+          PROBE_OUTCOME: ${{ steps.probe.outcome }}
+        run: |
+          set -euo pipefail
+          [ "$PROBE_OUTCOME" = success ] || exit 1
+          echo 'Two process consumers establish no full project coverage, Root, native or release acceptance.' >> "$GITHUB_STEP_SUMMARY"

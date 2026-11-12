@@ -81,6 +81,9 @@ locks.
 - Explicitly opt Formal's owned local trial databases into SQLite WAL with FULL
   synchronous durability. Preserve per-observation commits, ordinary caller
   defaults, complete seeded workloads and original case clocks.
+- Add an exact-source macOS process probe for Formal's existing live/unreaped
+  and detached-descendant consumers on both supported Python minors. Retain
+  original streams, exit and exact unskipped JUnit; full coverage remains separate.
 - Retain complete expected/observed and Source/Python/tool component digests when
   frozen execution identity refuses before launch or completion. Reuse one fresh
   observation and the existing worker diagnostic schema; do not expose environment
