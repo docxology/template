@@ -80,6 +80,14 @@ locks.
   restoring the intended SGX release C flags and selecting network-test headers
   from their own directory. Retire only the software-verified vendor requests;
   no TPM or SGX hardware acceptance is inferred.
+- Canonicalize package-cache serialization in the actual GHC 9.12.2 `ghc-pkg`
+  source, preserving frozen library versions and object determinism while
+  removing independently observed executable linker-order drift. Authenticate
+  the tracked compiler patch alongside recipe and freeze in the closed v3
+  provider manifest; retain exact complete executable pins and unchanged clocks.
+- Remove the superseded unconditional missing-oracle checklist and its
+  self-pinning test. Document the actual Source-compiled complete oracle graph,
+  keeping component status adaptation separate from full acceptance authority.
 
 ### Fixes carried forward from main
 

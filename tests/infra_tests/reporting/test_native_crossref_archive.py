@@ -239,6 +239,8 @@ def _source_record():
         "recipe_sha256",
         "freeze_path",
         "freeze_sha256",
+        "compiler_patch_path",
+        "compiler_patch_sha256",
         "resolved_freeze_sha256",
         "compiler",
         "ghc_options",

@@ -33,13 +33,18 @@ See [README.md](README.md) for usage.
 The single pin source is `infrastructure/config/native-document-providers.json`,
 interpreted by the pure closed-union `native_document_provider_contracts` API.
 Do not duplicate platform archive pins in shell. Linux x86_64 uses the held,
-hash-pinned Root recipe and complete freeze against the immutable upstream
-commit and haskell.nix/Hackage lock. Root selects GHC 9.12.2 with project-wide
-`-fobject-determinism`; upstream's GHC 9.8.4 declaration and original freeze
-remain separately authenticated, not rewritten. `native_document_preparation`
-evaluates private copies of the held inputs and checks actual source NAR,
-compiler/plan/provider paths, recursive derivations, resolved freeze, completed
-build and verified runtime closure.
+hash-pinned Root recipe, complete freeze and tracked compiler patch against the
+immutable upstream commit and haskell.nix/Hackage lock. The v3 closed manifest
+authenticates all three held inputs before acquisition or build. Root retains
+GHC 9.12.2 and project-wide `-fobject-determinism`; its real rebuilt `ghc-pkg`
+canonicalizes package-cache serialization by installed unit ID. Keep the
+standard compiler dependency metadata, `ghc.package` binding and both executable
+`keepConfigFiles` settings from the qualified recipe. Do not sort linker flags,
+rewrite cache bytes or substitute a fake command. Upstream's GHC 9.8.4 declaration
+and original freeze remain separately authenticated, not rewritten.
+`native_document_preparation` evaluates private copies of the held inputs and
+checks actual source NAR, compiler/plan/provider paths, recursive derivations,
+resolved freeze, completed build and verified runtime closure.
 Resolve Nix symlinks to actual executable bodies; match the whole Source pin and
 use the shared `native_document_elf.require_glibc_executable` eligibility check.
 Never patch a binary to create loader observations, substitute a wrapper,

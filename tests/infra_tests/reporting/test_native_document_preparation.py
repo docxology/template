@@ -76,6 +76,8 @@ def test_unknown_host_cannot_choose_a_provider(host: dict) -> None:
         (("providers", "Linux-x86_64", "build", "ghc_options"), []),
         (("providers", "Linux-x86_64", "build", "recipe_path"), "../unreviewed.nix"),
         (("providers", "Linux-x86_64", "build", "freeze_path"), "/tmp/unreviewed.freeze"),
+        (("providers", "Linux-x86_64", "build", "compiler_patch_path"), "/tmp/unreviewed.patch"),
+        (("providers", "Linux-x86_64", "build", "compiler_patch_sha256"), "A" * 64),
         (("providers", "Linux-x86_64", "build", "resolved_freeze_sha256"), "A" * 64),
         (("providers", "Linux-x86_64", "build", "compiler_output"), "/nix/store/../ghc-9.12.2"),
         (("providers", "Linux-x86_64", "build", "plan_derivation"), "/tmp/unreviewed.drv"),
@@ -203,19 +205,21 @@ def test_tampered_cache_cannot_trigger_build_or_publish_a_path(tmp_path: Path) -
     assert {path.name for path in tmp_path.iterdir()} == {"archives"}
 
 
-@pytest.mark.parametrize("changed", ["recipe", "freeze"])
+@pytest.mark.parametrize("changed", ["recipe", "freeze", "compiler_patch", "missing_compiler_patch"])
 def test_changed_root_build_input_cannot_trigger_acquisition(tmp_path: Path, changed: str) -> None:
     source = tmp_path / "source"
     manifest = source / PIN_SOURCE
     manifest.parent.mkdir(parents=True)
     document = _manifest()
     manifest.write_bytes(_content(document))
-    for name in ("recipe", "freeze"):
+    for name in ("recipe", "freeze", "compiler_patch"):
+        if name == "compiler_patch" and changed == "missing_compiler_patch":
+            continue
         relative = document["providers"]["Linux-x86_64"]["build"][name + "_path"]
         body = (_REPO / relative).read_bytes()
         (source / relative).write_bytes(body + b"\n# changed after pinning\n" if name == changed else body)
     archives, destination = tmp_path / "archives", tmp_path / "destination"
-    with pytest.raises(ValueError, match="Root recipe/freeze"):
+    with pytest.raises((ValueError, FileNotFoundError)):
         prepare_document_providers(
             source,
             archives,

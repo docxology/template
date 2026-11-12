@@ -472,10 +472,10 @@ def prepare_document_providers(
     provider = select_document_provider(source_pin.content, host)
     build_inputs: dict[str, bytes] = {}
     if provider["kind"] == "nix-source-build":
-        for name in ("recipe", "freeze"):
+        for name in ("recipe", "freeze", "compiler_patch"):
             snapshot = reader.read(provider["build"][name + "_path"], max_bytes=MAX_MANIFEST_BYTES)
             if snapshot.sha256 != provider["build"][name + "_sha256"]:
-                raise ValueError("document Root recipe/freeze differs from the complete Source build pin")
+                raise ValueError("document Root build input differs from the complete Source build pin")
             build_inputs[provider["build"][name + "_path"]] = snapshot.content
     archives = _directory(archives, fresh=False)
     # Refuse restored tampering before any download, build or tool execution.

@@ -10,13 +10,14 @@ from pathlib import PurePosixPath
 from typing import Any
 
 PIN_SOURCE = "infrastructure/config/native-document-providers.json"
-SCHEMA = "template-native-document-providers-v2"
+SCHEMA = "template-native-document-providers-v3"
 MAX_MANIFEST_BYTES = 128 * 1024
 MAX_ARCHIVE_BYTES = 64 * 1024 * 1024
 MAX_BINARY_BYTES = 512 * 1024 * 1024
 SOURCE_REVISION = "e6c2ae3418dcf63f974802f8b7c105ebc299706c"
 BUILD_RECIPE = "infrastructure/config/native-document-build.nix"
 BUILD_FREEZE = "infrastructure/config/native-document-build.freeze"
+BUILD_COMPILER_PATCH = "infrastructure/config/native-document-ghc-pkg-cache-order.patch"
 _STORE_PATH = r"/nix/store/[0-9abcdfghijklmnpqrsvwxyz]{32}-[A-Za-z0-9+._?=-]+"
 _HOSTS = {"Linux-x86_64", "Darwin-arm64", "Darwin-x86_64"}
 
@@ -71,6 +72,8 @@ def _build(value: Any) -> None:
             "recipe_sha256",
             "freeze_path",
             "freeze_sha256",
+            "compiler_patch_path",
+            "compiler_patch_sha256",
             "resolved_freeze_sha256",
             "compiler",
             "compiler_derivation",
@@ -92,13 +95,20 @@ def _build(value: Any) -> None:
         raise ValueError("document provider source/compiler/options differ from the reviewed deterministic recipe")
     if value["flake_url"] != f"git+https://github.com/lierdakil/pandoc-crossref?rev={SOURCE_REVISION}":
         raise ValueError("document provider flake must pin the exact reviewed upstream source")
-    if value["recipe_path"] != BUILD_RECIPE or value["freeze_path"] != BUILD_FREEZE:
-        raise ValueError("document provider build inputs must name the exact reviewed Root recipe and freeze")
+    if (
+        value["recipe_path"] != BUILD_RECIPE
+        or value["freeze_path"] != BUILD_FREEZE
+        or value["compiler_patch_path"] != BUILD_COMPILER_PATCH
+    ):
+        raise ValueError(
+            "document provider build inputs must name the exact reviewed Root recipe, freeze and compiler patch"
+        )
     for field in (
         "flake_lock_sha256",
         "upstream_freeze_sha256",
         "recipe_sha256",
         "freeze_sha256",
+        "compiler_patch_sha256",
         "resolved_freeze_sha256",
     ):
         _digest(value[field], field)
