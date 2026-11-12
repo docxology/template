@@ -49,6 +49,12 @@ _NIX_OPTIONS = (
     "--option",
     "require-sigs",
     "true",
+    "--option",
+    "max-jobs",
+    "2",
+    "--option",
+    "cores",
+    "2",
 )
 
 
@@ -371,8 +377,13 @@ def _source_build(
         ):
             raise ValueError("actual Nix executable resolves outside the retained store closure")
         body = read_physical_file(physical, limit=MAX_BINARY_BYTES, executable=True)
-        if len(body) != pin["binary_bytes"] or hashlib.sha256(body).hexdigest() != pin["binary_sha256"]:
-            raise ValueError("actual source-built executable differs from the Source-authoritative body pin")
+        actual_sha256 = hashlib.sha256(body).hexdigest()
+        if len(body) != pin["binary_bytes"] or actual_sha256 != pin["binary_sha256"]:
+            raise ValueError(
+                f"actual source-built {executable} differs from the Source-authoritative body pin: "
+                f"bytes={len(body)} expected={pin['binary_bytes']}; "
+                f"sha256={actual_sha256} expected={pin['binary_sha256']}"
+            )
         interpreter = require_glibc_executable(physical, machine=machine)
         tool_pin = {**pin, "kind": provider["kind"], "build": build}
         cached = _archive(archives, tool_pin, deadline=deadline)
