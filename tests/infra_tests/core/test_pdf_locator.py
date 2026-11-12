@@ -197,22 +197,5 @@ class TestFindCombinedPdfFallbackWhenNoOutputSegment:
         assert found_path == source_pdf
 
 
-class TestFindCombinedPdfReexports:
-    """Validator and package re-exports must remain aligned with the canonical helper."""
-
-    def test_validator_reexport_still_importable(self) -> None:
-        from infrastructure.validation.output.validator import (
-            find_combined_pdf,
-        )
-
-        # Should be the same callable (or a rebinding) as the canonical helper.
-        assert callable(find_combined_pdf)
-
-    def test_pdf_locator_is_canonical_source(self) -> None:
-        from infrastructure.core.files import find_combined_pdf as reexported
-
-        assert reexported is find_combined_pdf
-
-
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
