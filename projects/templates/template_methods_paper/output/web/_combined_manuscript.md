@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-0-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-0-start-->
 ```
 
 # Abstract {#sec:abstract}
@@ -53,12 +53,12 @@ repository's configured project coverage gate, generates 18 artifacts
 (1 figures, 7 data files,
 10 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `0bfa8a91262ffb45`, build timestamp
-`2026-11-12T06:53:59Z`) into [@sec:reproducibility].
+`2026-11-12T19:27:50Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-0-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-0-end-->
 ```
 
 
@@ -68,7 +68,7 @@ metadata (configuration hash `0bfa8a91262ffb45`, build timestamp
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-1-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-1-start-->
 ```
 
 # Introduction {#sec:introduction}
@@ -167,7 +167,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
   mistaken for a general-purpose protocol-execution system.
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-1-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-1-end-->
 ```
 
 
@@ -177,7 +177,7 @@ that the DSL's vocabulary generalizes beyond wet-lab protocols, as
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-2-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-2-start-->
 ```
 
 # Methodology {#sec:methodology}
@@ -322,7 +322,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
    [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-2-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-2-end-->
 ```
 
 
@@ -332,7 +332,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-3-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-3-start-->
 ```
 
 # Results {#sec:results}
@@ -424,7 +424,7 @@ structure and provenance rather than transcribing values that would drift
 the moment the example methods changed.
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-3-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-3-end-->
 ```
 
 
@@ -434,7 +434,7 @@ the moment the example methods changed.
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-4-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-4-start-->
 ```
 
 # Conclusion {#sec:conclusion}
@@ -520,7 +520,7 @@ The pipeline compiled both worked example methods, wrote
 together with `config.yaml` into PDF.
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-4-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-4-end-->
 ```
 
 
@@ -530,7 +530,7 @@ together with `config.yaml` into PDF.
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-5-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-5-start-->
 ```
 
 # Experimental Setup {#sec:experimental_setup}
@@ -620,7 +620,7 @@ This table is descriptive documentation only; it is not executed as code
 during the build.
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-5-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-5-end-->
 ```
 
 
@@ -630,7 +630,7 @@ during the build.
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-6-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-6-start-->
 ```
 
 # Reproducibility {#sec:reproducibility}
@@ -706,11 +706,11 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `0bfa8a91262ffb45` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-11-12T06:53:59Z` records when the variables were generated
+`2026-11-12T19:27:50Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-6-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-6-end-->
 ```
 
 
@@ -720,7 +720,7 @@ SHA-256 of `manuscript/config.yaml` at build time, and
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-7-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-7-start-->
 ```
 
 # Scope, Related Work, and Positioning {#sec:scope}
@@ -804,7 +804,7 @@ generated-variable-injected prose — remain visible rather than buried under
 a compiler implementation at BPL's full scale.
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-7-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-7-end-->
 ```
 
 
@@ -814,7 +814,7 @@ a compiler implementation at BPL's full scale.
 
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-8-start-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-8-start-->
 ```
 
 # References {#sec:references}
@@ -829,5 +829,5 @@ uv run python -m infrastructure.reference.citation.cli validate \
 ```
 
 ```{=html}
-<!--template-web-source-b4bb236b8c9482814a1b844c324bfb8193312b3425695b28856abd45f8a1dacc-8-end-->
+<!--template-web-source-9463eae52b6b9ca7182b436f30a91fd690928350fa3fa41c45a1070405db0b40-8-end-->
 ```
