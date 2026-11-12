@@ -228,6 +228,17 @@ uv run pytest tests/infra_tests/core/ \
 
 ## Debugging
 
+### Frozen-Source CLI Refusals
+
+The real mutation controls in `test_cli.py` retain independent before/after
+fingerprint programs under `cli-observations/source-{before,after}/`, using the
+existing original stdout/stderr/exit-or-timeout layout and artifact allowlist.
+Each observation has a two-second diagnostic bound; the original CLI110-second
+and whole-case bounds, mutation assertions and refusal predicates stay intact.
+Only an exact aggregate-total match binds an observation's source/Python/tool
+components to the corresponding original CLI identity. These records are
+adjacent-process evidence, not substituted admission or release qualification.
+
 ### Verbose Output
 
 ```bash

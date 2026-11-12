@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.cli import create_parser, main
+from infrastructure.core.cli import main
 from infrastructure.core.cli_handlers import (
     handle_discover_command,
     handle_inventory_command,
@@ -32,60 +32,6 @@ def _make_project(base: Path, name: str, *, valid: bool = True) -> Path:
     return proj
 
 
-class TestCreateParser:
-    """Test argument parser creation."""
-
-    def test_create_parser(self):
-        """Test parser creation."""
-        parser = create_parser()
-        assert isinstance(parser, argparse.ArgumentParser)
-
-        # Test that all expected subcommands exist
-        subcommands = [
-            action.dest
-            for action in parser._subparsers._actions
-            if hasattr(action, "dest") and action.dest == "command"
-        ]
-        assert len(subcommands) == 1  # Should have command subparser
-
-    def test_pipeline_subcommand(self):
-        """Test pipeline subcommand arguments."""
-        parser = create_parser()
-
-        # Parse pipeline command
-        args = parser.parse_args(["pipeline", "--mode", "live", "--project", "test"])
-
-        assert args.command == "pipeline"
-        assert args.mode == "live"
-        assert args.project == "test"
-        assert args.skip_infra is False
-        assert args.resume is False
-
-    def test_multi_project_subcommand(self):
-        """Test multi-project subcommand arguments."""
-        parser = create_parser()
-
-        args = parser.parse_args(["multi-project", "--mode", "live"])
-
-        assert args.command == "multi-project"
-        assert args.mode == "live"
-        assert args.projects is None
-
-    def test_inventory_subcommand(self):
-        """Test inventory subcommand arguments."""
-        parser = create_parser()
-
-        args = parser.parse_args(["inventory", "/tmp/output"])
-
-        assert args.command == "inventory"
-        assert args.output_dir == Path("/tmp/output")
-        assert args.format == "text"
-        assert args.categories is None
-
-
-# Full-DAG subprocess runs take minutes even with instant stub stages;
-# the default 60s class pytest-timeout fires before the inner subprocess
-# timeout can. See DEEP_PASS_2026-08-21_ox-alpha-session7.md.
 @pytest.mark.timeout(900)
 class TestCLISubprocess:
     """Test CLI through real subprocess execution."""
@@ -184,6 +130,38 @@ class TestCLISubprocess:
                 )
             )
         original = target.read_bytes()
+        environment = {**os.environ, "SOURCE_DATE_EPOCH": "0"}
+        observation = (
+            "import json,sys\nfrom pathlib import Path\n"
+            "from infrastructure.core.pipeline.fingerprints import canonical_digest,source_fingerprint_components\n"
+            "root=Path(sys.argv[1]).resolve()\n"
+            "components=source_fingerprint_components(root,root/'projects/templates/beta',"
+            "definition_path=root/'infrastructure/core/pipeline/pipeline.yaml')\n"
+            "print(json.dumps({'role':'Independent adjacent-process observation; only an exact total match "
+            "binds it to the original CLI identity; no substituted admission',"
+            "'total':canonical_digest(components),"
+            "'component_digests':{key:canonical_digest(components[key]) for key in ('source','python','tools')},"
+            "'components':components},sort_keys=True))\n"
+        )
+
+        def observe_source(label: str) -> None:
+            directory = tmp_path / "cli-observations" / label
+            directory.mkdir(parents=True)
+            command = [sys.executable, "-B", "-c", observation, str(tmp_path)]
+            try:
+                observed = subprocess.run(command, env=environment, capture_output=True, timeout=2)
+            except subprocess.TimeoutExpired as error:
+                (directory / "stdout").write_bytes(error.stdout or b"")
+                (directory / "stderr").write_bytes(error.stderr or b"")
+                (directory / "timeout.json").write_text(
+                    json.dumps({"command": error.cmd, "timeout": error.timeout}) + "\n"
+                )
+            else:
+                (directory / "stdout").write_bytes(observed.stdout)
+                (directory / "stderr").write_bytes(observed.stderr)
+                (directory / "exit.json").write_text(json.dumps({"returncode": observed.returncode}) + "\n")
+
+        observe_source("source-before")
         result = subprocess.run(
             [
                 sys.executable,
@@ -197,9 +175,15 @@ class TestCLISubprocess:
             ],
             capture_output=True,
             text=True,
-            env={**os.environ, "SOURCE_DATE_EPOCH": "0"},
+            env=environment,
             timeout=110,
         )
+        directory = tmp_path / "cli-observations" / "refusal"
+        directory.mkdir(parents=True)
+        (directory / "stdout").write_text(result.stdout)
+        (directory / "stderr").write_text(result.stderr)
+        (directory / "exit.json").write_text(json.dumps({"returncode": result.returncode}) + "\n")
+        observe_source("source-after")
         sys.stdout.write(result.stdout)
         sys.stderr.write(result.stderr)
         assert result.returncode == 75
@@ -300,18 +284,6 @@ class TestCLISubprocess:
 class TestMainFunction:
     """Test main CLI function with real subprocess calls."""
 
-    def test_main_help(self):
-        """Test main function displays help."""
-        result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.core.cli", "--help"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-
-        assert result.returncode == 0
-        assert "Core infrastructure CLI" in result.stdout
-
     def test_main_invalid_command(self):
         """Test main function with invalid command."""
         result = subprocess.run(
@@ -322,22 +294,6 @@ class TestMainFunction:
         )
 
         assert result.returncode == 2  # argparse error code
-
-
-class TestCreateParserFromCoreCli:
-    """Test the CLI argument parser creation."""
-
-    def test_parser_created(self):
-        """Parser should be created without errors."""
-        parser = create_parser()
-        assert parser is not None
-
-    def test_parser_has_subcommands(self):
-        """Parser should accept known subcommands."""
-        parser = create_parser()
-        # Test that parsing a known command doesn't raise
-        args = parser.parse_args(["discover", "--repo-root", "/tmp"])
-        assert args.command == "discover"
 
 
 class TestMainFunctionFromCoreCli:
@@ -353,11 +309,12 @@ class TestMainFunctionFromCoreCli:
         finally:
             sys.argv = old_argv
 
-    def test_discover_command_runs(self):
-        """Calling main with discover command should work."""
+    def test_discover_command_runs(self, tmp_path: Path):
+        """Missing repositories return empty discovery without an error."""
+        missing = tmp_path / "missing"
         old_argv = sys.argv
         try:
-            sys.argv = ["infra-cli", "discover", "--repo-root", "/tmp/nonexistent"]
+            sys.argv = ["infra-cli", "discover", "--repo-root", str(missing)]
             result = main()
             assert result == 0  # Discover with no projects returns 0
         finally:

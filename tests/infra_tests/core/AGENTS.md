@@ -184,6 +184,12 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 ## Key Test Files
 
+### CLI Consumed-Source Custody (`test_cli.py`)
+
+- Preserve the actual shared/project mutation, original110-second CLI bound and all byte/order/refusal assertions.
+- Retain bounded independent source/Python/tool observations through the existing `cli-observations` stream/exit/timeout allowlist, without new product telemetry or additional file publication permissions.
+- A before/after observation becomes evidence for a CLI identity only when its aggregate digest matches that original identity exactly. Preserve observation failures/timeouts; never relabel them or use an observation as admission authority.
+
 ### Configuration Testing
 
 **`test_config_loader_*.py`:**

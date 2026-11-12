@@ -14,6 +14,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - Module-specific exceptions (Literature, LLM, Rendering, Publishing)
 - Exception utility functions for context formatting
 
+**_optional_deps.py**
+- Own optional-provider loading centrally; psutil-only callers must not eagerly import NumPy.
+- Resolve `np` on demand to the actual provider or existing `ImportError` absence result; preserve the public exports and unknown-attribute errors.
+
 **logging/utils.py**
 - Unified Python logging with consistent formatting
 - Environment-based configuration (LOG_LEVEL 0-3)

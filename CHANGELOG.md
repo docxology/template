@@ -16,6 +16,16 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Resolve optional NumPy only for scientific consumers, keeping psutil-only
+  logging and resource-monitor imports independent of numerical providers.
+  Preserve actual provider identity and existing optional-import semantics.
+- Retain original before/after fingerprint-program streams for frozen-Source
+  CLI controls through the existing bounded diagnostic artifact allowlist.
+  Exact total matches identify corresponding components without substituting
+  adjacent-process observations for admission or release evidence.
+- Retire parser-internal/default/wording smoke tests instead of repinning their
+  incidental assertions. Keep real CLI mutation/error/discovery consumers, and
+  isolate the missing-repository boundary in its own disposable fixture.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report
