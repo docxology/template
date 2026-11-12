@@ -1,4 +1,4 @@
-name: Independent deterministic Linux document provider builds
+name: Retained native document ELF differential
 
 on:
   workflow_dispatch:
@@ -16,8 +16,9 @@ jobs:
     timeout-minutes: 180
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
-        replica: [1, 2]
+        replica: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -33,7 +34,7 @@ jobs:
           sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
           sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends nix-bin nix-setup-systemd
           sudo -n nix-store --init
-      - name: Build the complete frozen deterministic providers
+      - name: Build and retain actual frozen provider bodies before comparison
         shell: bash
         env:
           REPLICA: ${{ matrix.replica }}
@@ -53,15 +54,61 @@ jobs:
                   '--option', 'substituters', 'https://cache.nixos.org https://cache.iog.io https://pandoc-crossref.cachix.org',
                   '--option', 'extra-trusted-public-keys',
                   'hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= pandoc-crossref.cachix.org-1:LI9ABFTkGpPCTkUTzoopVSSpb1a26RSTJNMsqVbDtPM=']
-          def run(label, arguments, native=False):
+          def write_json(name, value):
+              (root / name).write_text(json.dumps(value, indent=2) + '\n')
+          def run(label, arguments, native=False, allow_failure=False):
               command = arguments if native else base + arguments
-              print(json.dumps({'phase': label, 'argv': command}), flush=True)
-              with (root / (label + '.stdout')).open('xb') as stdout:
-                  process = subprocess.run(command, stdout=stdout, check=False, timeout=max(0.001, deadline-time.monotonic()))
-              (root / (label + '.command.json')).write_text(json.dumps({'argv': command, 'returncode': process.returncode}) + '\n')
-              if process.returncode:
+              record = {'argv': command, 'started_unix': time.time(), 'returncode': None}
+              print(json.dumps({'phase': label, **record}), flush=True)
+              started = time.monotonic()
+              try:
+                  with (root / (label + '.stdout')).open('xb') as stdout, (root / (label + '.stderr')).open('xb') as stderr:
+                      process = subprocess.run(command, stdout=stdout, stderr=stderr, check=False,
+                                               timeout=max(0.001, deadline-time.monotonic()))
+                  record['returncode'] = process.returncode
+              except subprocess.TimeoutExpired:
+                  record['timed_out'] = True
+                  raise
+              finally:
+                  record['elapsed_seconds'] = time.monotonic() - started
+                  write_json(label + '.command.json', record)
+                  print(json.dumps({'phase_complete': label, **record}), flush=True)
+              if process.returncode and not allow_failure:
                   raise SystemExit(process.returncode)
               return (root / (label + '.stdout')).read_bytes()
+          allowed_environment = {
+              'PATH', 'LANG', 'LC_ALL', 'LC_CTYPE', 'TZ', 'HOME', 'USER', 'SHELL', 'TMPDIR',
+              'SOURCE_DATE_EPOCH', 'NIX_BUILD_CORES', 'NIX_PATH', 'ImageOS', 'ImageVersion',
+              'RUNNER_OS', 'RUNNER_ARCH', 'GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_SHA',
+          }
+          write_json('runner-environment.json', {key: value for key, value in os.environ.items() if key in allowed_environment})
+          environment = subprocess.run(['sudo', '-n', '/usr/bin/env', '-0'], check=True, capture_output=True,
+                                       timeout=max(0.001, deadline-time.monotonic())).stdout
+          write_json('nix-client-environment.json', {
+              key: value for entry in environment.decode().split('\0') if '=' in entry
+              for key, value in [entry.split('=', 1)] if key in allowed_environment
+          })
+          configuration_command = base + ['show-config', '--json']
+          configuration = subprocess.run(configuration_command, check=True, capture_output=True,
+                                         timeout=max(0.001, deadline-time.monotonic()))
+          selected_configuration = {
+              'sandbox', 'sandbox-fallback', 'sandbox-paths', 'build-users-group', 'max-jobs', 'cores',
+              'system', 'extra-platforms', 'builders', 'substitute', 'substituters', 'require-sigs',
+              'trusted-public-keys', 'extra-sandbox-paths', 'filter-syscalls', 'use-cgroups',
+          }
+          write_json('nix-build-configuration.json', {
+              'argv': configuration_command, 'returncode': configuration.returncode,
+              'selected_values': {key: value for key, value in json.loads(configuration.stdout).items()
+                                  if key in selected_configuration},
+          })
+          for label, command in [
+              ('nix-client-version', [shutil.which('nix'), '--version']),
+              ('runner-kernel', ['uname', '-a']), ('runner-cpu', ['lscpu']),
+              ('host-python-version', ['python3', '--version']), ('host-linker-version', ['ld', '--version']),
+              ('host-compiler-version', ['gcc', '--version']), ('host-tar-version', ['tar', '--version']),
+              ('host-package-versions', ['dpkg-query', '-W', 'nix-bin', 'binutils', 'gcc', 'libc6', 'xz-utils']),
+          ]:
+              run(label, command, native=True)
           source = json.loads(run('source', ['flake', 'metadata', '--json', '--no-write-lock-file', '--no-update-lock-file', reference]))
           assert source['locked']['rev'] == 'e6c2ae3418dcf63f974802f8b7c105ebc299706c'
           assert source['locked']['narHash'] == 'sha256-+RpgwW3AmNjTLVfMK7SYjFPi/DlxesuXUtsWGtnm9oM='
@@ -70,20 +117,106 @@ jobs:
           assert hashlib.sha256((upstream / 'cabal.project.freeze').read_bytes()).hexdigest() == '17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed'
           (root / 'native-document-build.nix').write_bytes(recipe.read_bytes())
           (root / 'native-document-build.freeze').write_bytes(freeze.read_bytes())
+          with tarfile.open(root / 'immutable-upstream-source.tar.xz', 'w:xz') as archive:
+              archive.add(upstream, arcname=upstream.name)
           evaluation = '''value: {
             derivation = value.provider.drvPath; output = value.provider.outPath;
             compiler_derivation = value.compiler.drvPath; compiler_output = value.compiler.outPath;
             plan_derivation = value.plan.drvPath; plan_output = value.plan.outPath;
+            pandoc_derivation = value.pandoc.drvPath; pandoc_output = value.pandoc.outPath;
+            crossref_derivation = value.crossref.drvPath; crossref_output = value.crossref.outPath;
             resolved_freeze = toString value.resolvedFreeze;
           }'''
           local_arguments = ['--file', str(recipe)]
           evaluated = json.loads(run('evaluation', ['eval', '--json', *local_arguments, '--apply', evaluation]))
           (root / 'evaluation.json').write_text(json.dumps(evaluated, indent=2) + '\n')
           graph = json.loads(run('recursive-derivations', ['derivation', 'show', '--recursive', evaluated['derivation'], evaluated['compiler_derivation'], evaluated['plan_derivation']]))
-          products = json.loads(run('provider-build', ['build', '--json', '--out-link', str(root / 'provider-runtime'), *local_arguments, 'provider']))
+          derivation_index = []
+          with tarfile.open(root / 'exact-recursive-derivations.tar.xz', 'w:xz') as archive:
+              for path in sorted(graph):
+                  body = Path(path).read_bytes()
+                  member = tarfile.TarInfo(Path(path).name)
+                  member.size, member.mode = len(body), 0o444
+                  archive.addfile(member, io.BytesIO(body))
+                  derivation_index.append({'path': path, 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest()})
+          write_json('exact-recursive-derivations-index.json', derivation_index)
+          body_observations = {}
+          def retain_body(label, name, candidate):
+              key = label + '-' + name
+              observation = {'candidate': str(candidate), 'available': candidate.is_file()}
+              body_observations[key] = observation
+              if observation['available']:
+                  binary = candidate.resolve(strict=True)
+                  body = binary.read_bytes()
+                  observation.update({'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
+                                      'elf_prefix_hex': body[:16].hex()})
+                  with tarfile.open(root / (key + '.tar.xz'), 'w:xz', format=tarfile.USTAR_FORMAT) as archive:
+                      member = tarfile.TarInfo(name)
+                      member.size, member.mode = len(body), 0o755
+                      archive.addfile(member, io.BytesIO(body))
+              write_json('retained-complete-bodies.json', body_observations)
+          def retain_build_logs(label):
+              run(label + '-all-local-nix-buildlogs', [
+                  'sudo', '-n', 'tar', '--create', '--file', str(root / (label + '-all-local-nix-buildlogs.tar')),
+                  '--directory', '/nix/var/log/nix', 'drvs',
+              ], native=True, allow_failure=True)
+              for index, path in enumerate(sorted(graph)):
+                  name = graph[path].get('env', {}).get('name', '')
+                  if name.startswith('pandoc') or path in (
+                      evaluated['compiler_derivation'], evaluated['plan_derivation'], evaluated['derivation'],
+                  ):
+                      run(f'{label}-component-log-{index}-{name}', ['log', path], allow_failure=True)
+          try:
+              products = json.loads(run('provider-build', [
+                  'build', '--json', '--keep-failed', '--print-build-logs',
+                  '--out-link', str(root / 'provider-runtime'), *local_arguments, 'provider',
+              ]))
+          finally:
+              # Diagnostic copies precede every executable/version/closure comparison; no body is admitted here.
+              retain_body('initial', 'pandoc', Path(evaluated['pandoc_output']) / 'bin/pandoc')
+              retain_body('initial', 'pandoc-crossref', Path(evaluated['crossref_output']) / 'bin/pandoc-crossref')
+              retain_build_logs('initial')
           assert len(products) == 1 and products[0]['drvPath'] == evaluated['derivation']
           assert products[0]['outputs'] == {'out': evaluated['output']}
           output = Path(evaluated['output'])
+          existing_inputs = set()
+          static_inputs = set()
+          source_inputs = set()
+          for path, value in graph.items():
+              env = value.get('env', {})
+              existing_inputs.update(item for item in value.get('inputSrcs', []) if Path(item).exists())
+              existing_inputs.update(item['path'] for item in value.get('outputs', {}).values()
+                                     if item.get('path') and Path(item['path']).exists())
+              source_inputs.update(Path(item) for item in value.get('inputSrcs', []) if Path(item).is_file())
+              if env.get('name', '').startswith('pandoc') and Path(env.get('src', '/nonexistent')).exists():
+                  source_inputs.add(Path(env['src']))
+              if '-lib-' in env.get('name', '') or path == evaluated['compiler_derivation']:
+                  for item in value.get('outputs', {}).values():
+                      candidate = Path(item.get('path', '/nonexistent'))
+                      if candidate.is_dir():
+                          static_inputs.update(candidate.rglob('*.a'))
+                          static_inputs.update(candidate.rglob('*.conf'))
+          run('realized-build-input-path-info', ['path-info', '--json', *sorted(existing_inputs)])
+          for label, paths in [('actual-static-library-inputs', static_inputs), ('actual-source-and-builder-inputs', source_inputs)]:
+              index = []
+              with tarfile.open(root / (label + '.tar.xz'), 'w:xz', dereference=True) as archive:
+                  for path in sorted(paths):
+                      archive.add(path, arcname=str(path).removeprefix('/'), recursive=path.is_dir())
+                      entry = {'path': str(path), 'directory': path.is_dir()}
+                      if path.is_file():
+                          with path.open('rb') as handle:
+                              entry.update({'bytes': path.stat().st_size, 'sha256': hashlib.file_digest(handle, 'sha256').hexdigest()})
+                      index.append(entry)
+              write_json(label + '-index.json', index)
+          run('compiler-info', [str(Path(evaluated['compiler_output']) / 'bin/ghc'), '--info'], native=True)
+          for index, (path, value) in enumerate(sorted(graph.items())):
+              name = value.get('env', {}).get('name', '')
+              if name.startswith(('gcc-wrapper-', 'binutils-wrapper-')):
+                  for item in value.get('outputs', {}).values():
+                      for command in ('gcc', 'ld', 'ar', 'strip'):
+                          candidate = Path(item.get('path', '/nonexistent')) / 'bin' / command
+                          if candidate.is_file():
+                              run(f'actual-build-tool-{index}-{command}', [str(candidate), '--version'], native=True)
           run('runtime-closure', ['path-info', '--recursive', '--json', str(output)])
           run('runtime-verification', ['store', 'verify', '--recursive', str(output)])
           resolved_freeze = Path(evaluated['resolved_freeze']).read_bytes()
@@ -109,17 +242,28 @@ jobs:
               tools[name] = {'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
                              'pt_interp': interpreters[0][:-1].decode(), 'rx_bytes': sum(row[5] for row in headers if row[0] == 1 and row[1]&1),
                              'version_stdout': version_output}
-              with tarfile.open(root / f'{name}-{version}-linux-x86_64-source.tar.xz', 'w:xz', format=tarfile.USTAR_FORMAT) as archive:
-                  member = tarfile.TarInfo(name)
-                  member.size, member.mode = len(body), 0o755
-                  archive.addfile(member, io.BytesIO(body))
-          result = {'schema_version': 'template-deterministic-document-provider-census-v1', 'role': 'actual independent source-build comparison only',
+          try:
+              run('pandoc-component-reproducibility', [
+                  'build', '--rebuild', '--keep-failed', '--no-link', '--json', '--print-build-logs',
+                  *local_arguments, 'pandoc',
+              ], allow_failure=True)
+          finally:
+              # Nix 2.18 retains a differing --rebuild output at <output>.check with --keep-failed.
+              retain_body('component-rebuild-check', 'pandoc', Path(evaluated['pandoc_output'] + '.check') / 'bin/pandoc')
+              retain_build_logs('component-rebuild')
+          rebuild = json.loads((root / 'pandoc-component-reproducibility.command.json').read_bytes())
+          result = {'schema_version': 'template-deterministic-document-provider-census-v2', 'role': 'retained actual independent source-build and targeted component differential only',
                     'runtime_acceptance': False, 'source_commit': os.environ['GITHUB_SHA'], 'replica': os.environ['REPLICA'],
+                    'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+                    'producer_base_commit': '8524c7d2af827439336a5cde8e9dde537293011f',
+                    'retained_complete_bodies': body_observations, 'pandoc_component_rebuild': rebuild,
                     'upstream_source': source['locked'], 'compiler': 'ghc-9.12.2', 'ghc_options': ['-fobject-determinism'],
                     'recipe_sha256': hashlib.sha256(recipe.read_bytes()).hexdigest(), 'freeze_sha256': hashlib.sha256(freeze.read_bytes()).hexdigest(),
                     'resolved_freeze_sha256': hashlib.sha256(resolved_freeze).hexdigest(), **evaluated, 'tools': tools}
           (root / 'census.json').write_text(json.dumps(result, indent=2) + '\n')
           print(json.dumps(result, indent=2))
+          if rebuild['returncode']:
+              raise SystemExit(rebuild['returncode'])
           PYTHON
       - name: Retain complete independent build evidence
         if: always()
@@ -129,8 +273,10 @@ jobs:
           path: |
             output/readiness/deterministic-document-providers/*.json
             output/readiness/deterministic-document-providers/*.stdout
+            output/readiness/deterministic-document-providers/*.stderr
             output/readiness/deterministic-document-providers/*.nix
             output/readiness/deterministic-document-providers/*.freeze
             output/readiness/deterministic-document-providers/*.tar.xz
+            output/readiness/deterministic-document-providers/*.tar
           if-no-files-found: error
           retention-days: 30
