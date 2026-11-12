@@ -88,6 +88,22 @@ locks.
 - Remove the superseded unconditional missing-oracle checklist and its
   self-pinning test. Document the actual Source-compiled complete oracle graph,
   keeping component status adaptation separate from full acceptance authority.
+- Resolve Redacted's standalone utilities through their prepared SDK instead of
+  injecting a monorepo ancestor into Python's import path.
+- Keep all Pools public figure defaults inside their actual project and bind
+  figure provenance to the real producer namespace.
+- Read Textbook figure alternatives from authored chapter metadata, preserving
+  the explicit legacy mapping while refusing missing or blank alternatives.
+- Preserve undefined citation-network metrics as `N/A` through strict JSON and
+  manuscript hydration instead of treating unavailable values as finite numbers.
+- Bind Advanced Literature Review's polite contact identity to admitted
+  configuration bytes, preserve actual citation-count eligibility and remove its
+  false MIT classifier without changing the project's CC-BY license.
+- Restore Registered Report's four actual generated figure declarations without
+  changing frozen study permissions or implying deposition authority.
+- Retire source-text, forwarding, log-wording, minimum-count and tautological
+  test pins; retain the real hydration, enumeration and standalone-source
+  consumer regressions.
 
 ### Fixes carried forward from main
 
