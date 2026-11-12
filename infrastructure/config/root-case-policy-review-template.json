@@ -2624,7 +2624,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_contracts.py",
-      "source_sha256": "2352c9c59b8dc5713e09759bd30a156ac27b51cd16cbb6b61fee263dfb94f1e3",
+      "source_sha256": "76d94e9cfdcd2e903bec11c45968a53800af71ae85d2ea8657e4e325b08e614e",
       "families": [
         "tests/infra_tests/core/test_ci_contracts.py::test_acceptance_workflow_never_calls_python_before_the_readiness_action",
         "tests/infra_tests/core/test_ci_contracts.py::test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted",
@@ -2634,10 +2634,9 @@
         "tests/infra_tests/core/test_ci_contracts.py::test_native_union_gate_names_an_undeclared_cell",
         "tests/infra_tests/core/test_ci_contracts.py::test_paper_compilers_are_required_and_pure_cases_remain_in_smoke",
         "tests/infra_tests/core/test_ci_contracts.py::test_paper_source_changes_retain_both_compiler_contracts",
-        "tests/infra_tests/core/test_ci_contracts.py::test_readiness_action_creates_its_interpreter_before_deriving_cache_scopes",
-        "tests/infra_tests/core/test_ci_contracts.py::test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcome"
+        "tests/infra_tests/core/test_ci_contracts.py::test_readiness_action_creates_its_interpreter_before_deriving_cache_scopes"
       ],
-      "family_observations_sha256": "044e631a89a44e9d8ba97c472d678a675d1bedf5a552f58166d983022c0c7670",
+      "family_observations_sha256": "6dfa7a356e35347677509c4ceb3110fa68e84679a63adc58d39a2acb71282a22",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2668,8 +2667,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_contracts.py",
-          "line": 27,
-          "source_sha256": "2352c9c59b8dc5713e09759bd30a156ac27b51cd16cbb6b61fee263dfb94f1e3"
+          "source_sha256": "76d94e9cfdcd2e903bec11c45968a53800af71ae85d2ea8657e4e325b08e614e",
+          "line": 1
         }
       ]
     },
@@ -2885,10 +2884,9 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_smoke.py",
-      "source_sha256": "19db3af2fb67c60648fefd8c10c861e33b22a5cf46e3d78af580c208989a2d95",
+      "source_sha256": "a5c790daeaf8a0cfc28834a9069d4a54381e496aef6634c10c538bb50a062050",
       "families": [
         "tests/infra_tests/core/test_ci_smoke.py::test_actual_fast_gate_requires_success_from_every_declared_job",
-        "tests/infra_tests/core/test_ci_smoke.py::test_cache_uses_actual_resolved_python_and_root_inputs_before_locked_reconciliation",
         "tests/infra_tests/core/test_ci_smoke.py::test_every_public_project_has_real_behavioral_tests",
         "tests/infra_tests/core/test_ci_smoke.py::test_executable_smoke_subset_never_accepts_empty_duplicate_or_private_scopes",
         "tests/infra_tests/core/test_ci_smoke.py::test_external_symlinked_public_project_roots_are_refused",
@@ -2898,7 +2896,7 @@
         "tests/infra_tests/core/test_ci_smoke.py::test_requested_coverage_checks_public_input_before_environment_setup",
         "tests/infra_tests/core/test_ci_smoke.py::test_search_render_smoke_gets_converter_only_preparation_before_execution"
       ],
-      "family_observations_sha256": "410910f96a4cd0e56627fd40f2d38541d1e5712068df8d2a8d003fafa8006aab",
+      "family_observations_sha256": "adb66375c2743f019bc86cde4c009790aa9b6a9c8ffc6671201b2fa78a4ce535",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2915,7 +2913,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_smoke.py",
-          "source_sha256": "19db3af2fb67c60648fefd8c10c861e33b22a5cf46e3d78af580c208989a2d95",
+          "source_sha256": "a5c790daeaf8a0cfc28834a9069d4a54381e496aef6634c10c538bb50a062050",
           "line": 1
         }
       ]
@@ -13350,8 +13348,9 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
-      "source_sha256": "f9ae7ec3556eb3a9a21ad68e07701aa4d9add827ee4aa1f67ab93f33287d9a2a",
+      "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
       "families": [
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_actual_scoped_transfer_only_fixed_api_children_receive_nominated_token",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_concurrent_supervisors_have_distinct_tokens_without_environment_mutation",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_deadline_must_be_finite_before_evidence_or_launch",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_detached_descendants_cannot_survive_or_kill_a_foreign_sibling",
@@ -13361,19 +13360,52 @@
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_oversized_actual_stream_is_bounded_and_cannot_pass",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_real_fd_exhaustion_cannot_turn_failed_census_into_cleanup_acceptance",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_scoped_transfer_refuses_arbitrary_commands_hosts_and_endpoints",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_scoped_transfer_requires_explicit_token_without_ambient_auth_fallback",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_strict_census_observes_token_holders_without_killing_them"
       ],
-      "family_observations_sha256": "0a9aef9e0c9275cb53613b2d204862680510762e6498cf71421d00d967eb5021",
+      "family_observations_sha256": "0222004b0004e81a49228b460517a5f6e73cced719fa8315d99fc8c11b9952c1",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_actual_scoped_transfer_only_fixed_api_children_receive_nominated_token",
+          "lane": "core",
+          "obligations": [
+            "gh-cli",
+            "git"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_scoped_transfer_refuses_arbitrary_commands_hosts_and_endpoints",
+          "lane": "core",
+          "obligations": [
+            "gh-cli"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
-          "source_sha256": "f9ae7ec3556eb3a9a21ad68e07701aa4d9add827ee4aa1f67ab93f33287d9a2a",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
+          "line": 93
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
+          "line": 144
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
+          "line": 183
         }
       ]
     },
@@ -23384,7 +23416,7 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_slides_tex_figures.py",
-      "source_sha256": "73c187331bf60e51caf0f8dde58d6ee18b7269edbeb1dbd516f567bbfb377341",
+      "source_sha256": "b7043e9bd9f85f85716c23a30102f4098b50acac6e03e6a9e421169ffbfa205d",
       "families": [
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_accessible_bare_and_linked_projection_images_preserve_aspect_ratio",
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_accessible_figure_latex_is_idempotent_and_leaves_unbounded_images_alone",
@@ -23394,9 +23426,10 @@
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_already_correct",
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_basic",
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_handles_pandoc_alt_text_brackets",
-        "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_multiple"
+        "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_multiple",
+        "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_linked_projection_requires_an_unescaped_target_closer"
       ],
-      "family_observations_sha256": "b33e70464bd6503cc60a34f9ac3a00216fdcaee8f04b5627cd4aecc63ca8c986",
+      "family_observations_sha256": "af2e922858ee770e34b72acfbb062bec0a07e8b9243c91640c5530c06c44c2f9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -23413,8 +23446,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_slides_tex_figures.py",
-          "source_sha256": "73c187331bf60e51caf0f8dde58d6ee18b7269edbeb1dbd516f567bbfb377341",
+          "source_sha256": "b7043e9bd9f85f85716c23a30102f4098b50acac6e03e6a9e421169ffbfa205d",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_slides_tex_figures.py",
+          "source_sha256": "b7043e9bd9f85f85716c23a30102f4098b50acac6e03e6a9e421169ffbfa205d",
+          "line": 185
         }
       ]
     },
@@ -24044,7 +24082,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-      "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729",
+      "source_sha256": "84ef39656ca074cb50663218549599336e5255d866ac5ade2a914708101c972f",
       "families": [
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_actual_small_device_filesystem_refuses_reserve_without_writing",
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_actual_successive_imports_advance_one_fixed_whole_transport_budget",
@@ -24065,7 +24103,7 @@
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_shared_importer_refuses_invalid_or_exhausted_whole_member_census",
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_shared_importer_refuses_invalid_prior_decoded_census"
       ],
-      "family_observations_sha256": "5bf6c79e834ef29dbdb25abc151c76b1f8bba5ff76c66fc3c37bb2f409c4b2d1",
+      "family_observations_sha256": "11e25d23eefe9d1ba90b2dc63719e641c9344d934ff40439c64a8e3735ae82e5",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -24073,109 +24111,14 @@
       "exceptions": [],
       "evidence": [
         {
-          "line": 154,
           "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
+          "source_sha256": "84ef39656ca074cb50663218549599336e5255d866ac5ade2a914708101c972f",
+          "line": 1
         },
         {
-          "line": 253,
           "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 186,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 301,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 369,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 406,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 134,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 475,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 442,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 345,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 209,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 223,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 164,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 64,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 101,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 81,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 286,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 238,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "path": "infrastructure/reporting/readiness_artifact_graph.py",
-          "line": 12,
-          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
-        },
-        {
-          "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 86,
-          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
-        },
-        {
-          "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 100,
-          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
+          "source_sha256": "84ef39656ca074cb50663218549599336e5255d866ac5ade2a914708101c972f",
+          "line": 209
         }
       ]
     },
@@ -25875,7 +25818,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
-      "source_sha256": "58372632ecc74e7799792de1aed444182184ec716ec30b9c2320b5eb8940283a",
+      "source_sha256": "64b512e607987836f84906840d770bb73f863f67e372ea641f5318475f4cd3b6",
       "families": [
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_decoder_cannot_replace_the_original_finite_clock",
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_parser_preserves_finite_metadata_and_original_clock_bounds",
@@ -25895,7 +25838,7 @@
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_transport_retains_the_complete_exact_member",
         "tests/infra_tests/reporting/test_native_crossref_archive.py::test_unapproved_provider_kinds_have_no_archive_admission"
       ],
-      "family_observations_sha256": "27f9703f010eb4045243cab7022d7f057103e19e128bebd4a7c22810f163fe9d",
+      "family_observations_sha256": "b69c9264b576dd39563368667b3fcacff06267037197d6a9079969656ce1a7b9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25904,14 +25847,19 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
-          "source_sha256": "58372632ecc74e7799792de1aed444182184ec716ec30b9c2320b5eb8940283a",
+          "source_sha256": "64b512e607987836f84906840d770bb73f863f67e372ea641f5318475f4cd3b6",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
+          "source_sha256": "64b512e607987836f84906840d770bb73f863f67e372ea641f5318475f4cd3b6",
+          "line": 229
         }
       ]
     },
     {
       "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
-      "source_sha256": "43f031b9e8bf8825d49853f09f6e7899cda971f3cb0d1297e2a8b615a1c67dd7",
+      "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
       "families": [
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_actual_nix_derivation_cannot_override_source_build_pins",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_changed_root_build_input_cannot_trigger_acquisition",
@@ -25929,7 +25877,7 @@
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_tool_selector_has_no_caller_selected_fallback",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_unknown_host_cannot_choose_a_provider"
       ],
-      "family_observations_sha256": "b2498fd2d977f5df78d367063ddd7dd6a34382b250eebb4859a1fdf9ad0d6023",
+      "family_observations_sha256": "9911cc7d1a8d15a881c2a93ef38f360fba93650cf967cb5b6afb8ca5a1a6a792",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25938,14 +25886,24 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
-          "source_sha256": "43f031b9e8bf8825d49853f09f6e7899cda971f3cb0d1297e2a8b615a1c67dd7",
+          "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
+          "line": 66
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
+          "line": 208
         }
       ]
     },
     {
       "path": "tests/infra_tests/reporting/test_native_format_acceptance.py",
-      "source_sha256": "b0eb20b3c001039d3a931c080872686c9957899ba7de0aae655612160244c2d8",
+      "source_sha256": "2f5129b130831f4e20f4a83d774d73936f53882d96ed02f1d87d13f3aabd6452",
       "families": [
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_actual_child_outcome_survives_confined_persistence_refusal",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_actual_cli_oversized_timer_refuses_before_admission",
@@ -25961,10 +25919,9 @@
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_private_directory_refuses_linked_ancestor_without_external_side_effect",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_raster_tools_consume_held_pdf_bytes_after_original_output_changes",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_source_digest_excludes_outputs_but_binds_authored_directory_changes",
-        "tests/infra_tests/reporting/test_native_format_acceptance.py::test_visual_oracles_remain_required_after_native_conformance",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_zero_page_and_empty_html_fail_actual_native_parsers"
       ],
-      "family_observations_sha256": "d917ab119dd41f2d270d427775a232fee923aa99623f60206091d0bd5913defd",
+      "family_observations_sha256": "f69347fdb74d53aadf7f303c72e2736f3c414fcc5d6b3a5e5606f7cb0454ad8f",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25981,8 +25938,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_format_acceptance.py",
-          "source_sha256": "b0eb20b3c001039d3a931c080872686c9957899ba7de0aae655612160244c2d8",
-          "line": 81
+          "source_sha256": "2f5129b130831f4e20f4a83d774d73936f53882d96ed02f1d87d13f3aabd6452",
+          "line": 1
         }
       ]
     },
@@ -26304,10 +26261,9 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_loader_maps.py",
-      "source_sha256": "924d7ab6d946d3b1e7ff86640f63198862cda99ca482e251156bc2fb183995c7",
+      "source_sha256": "53a4cc4b54f9e3e2dc55773d5713b95de37bc32052ee0f7233b4433fa72a1ba2",
       "families": [
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_actual_map_mismatch_cannot_qualify",
-        "tests/infra_tests/reporting/test_native_loader_maps.py::test_audit_loader_declares_fail_noreturn_before_its_definition",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_auditor_complete_source_elf_ranges_match_actual_kernel_body",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_auditor_source_code_cannot_admit_wrong_or_extra_mapping",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_complete_callback_kernel_mapping_is_reconstructed",
@@ -26316,7 +26272,7 @@
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_reloaded_live_image_supersedes_closed_lifetime_without_aliasing",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_reordered_kernel_map_is_refused"
       ],
-      "family_observations_sha256": "11729c3568aa4272fa69989bddcfce4832b554350788c8845eabb161d5c9b32e",
+      "family_observations_sha256": "d3ba63dcf1a7ca1012653098890c69a2215f81cbb70d0249b4e078db6a2201d2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26325,8 +26281,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_loader_maps.py",
-          "source_sha256": "924d7ab6d946d3b1e7ff86640f63198862cda99ca482e251156bc2fb183995c7",
-          "line": 38
+          "source_sha256": "53a4cc4b54f9e3e2dc55773d5713b95de37bc32052ee0f7233b4433fa72a1ba2",
+          "line": 1
         }
       ]
     },
@@ -26498,16 +26454,16 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_office_epub_interfaces.py",
-      "source_sha256": "c958d6e8e780bb256925c2ac2c3d69e0ed162c0129fd33c0afc5ffa7975cc9a7",
+      "source_sha256": "c0c93cf0bdb094657b168586b63762f24f905595be5ebf01589e294b64d132e6",
       "families": [
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_failure_and_unknown_role_survive_status_adaptation",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_forged_status_and_observation_alias_are_rejected",
-        "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_status_is_adapted_without_granting_full_acceptance",
+        "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_status_adaptation_preserves_observer_record",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_epub_missing_or_changed_spine_cannot_be_hidden_by_complete_office_layout",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_reference_source_residuals_cannot_be_cleared_by_equal_packages",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_source_reference_spine_uses_actual_ordered_epub_bytes"
       ],
-      "family_observations_sha256": "c0ba7d2819d19c581af1a443a70aff921918096c49200f1ba2c0aa9190744069",
+      "family_observations_sha256": "6af38c23baa117635e3e877977dffa1739355b1972b156eda68778716d51c0ae",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26516,21 +26472,29 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_office_epub_interfaces.py",
-          "source_sha256": "c958d6e8e780bb256925c2ac2c3d69e0ed162c0129fd33c0afc5ffa7975cc9a7",
+          "source_sha256": "c0c93cf0bdb094657b168586b63762f24f905595be5ebf01589e294b64d132e6",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_epub_interfaces.py",
+          "source_sha256": "c0c93cf0bdb094657b168586b63762f24f905595be5ebf01589e294b64d132e6",
+          "line": 75
         }
       ]
     },
     {
       "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
-      "source_sha256": "5a230e9ab41c2fe5b556b05ff4077389f0f22b9f475bd5538c11bb92a9cb722e",
+      "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
       "families": [
+        "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_filter_and_independent_oracle_agree_on_comment_alternatives",
+        "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_package_cannot_witness_dropped_mixed_raw_html",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_source_writer_and_reader_reject_independent_scientific_mutants",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_docx_bookmark_names_match_both_pinned_pandoc_writers",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_independent_expression_tree_preserves_signs_scripts_fractions_and_array_cells",
+        "tests/infra_tests/reporting/test_native_office_full_source.py::test_raw_html_roles_require_one_complete_comment",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_raw_source_roles_cannot_excuse_visible_content_as_nonvisible_metadata"
       ],
-      "family_observations_sha256": "2ce0beb20695a4637934a1feb012ffb90d5cbb3371846b96b6438cb06ac9145d",
+      "family_observations_sha256": "45eaff3fa1698714788cb5d6b084d21ff8ad5da23d27dfe26fb051c24e0e3e08",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -26541,12 +26505,32 @@
       },
       "exceptions": [
         {
+          "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_filter_and_independent_oracle_agree_on_comment_alternatives",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_package_cannot_witness_dropped_mixed_raw_html",
+          "lane": "core",
+          "obligations": [
+            "pandoc",
+            "native-format-python"
+          ]
+        },
+        {
           "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_docx_bookmark_names_match_both_pinned_pandoc_writers",
           "lane": "core",
           "obligations": []
         },
         {
           "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_independent_expression_tree_preserves_signs_scripts_fractions_and_array_cells",
+          "lane": "core",
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_raw_html_roles_require_one_complete_comment",
           "lane": "core",
           "obligations": []
         },
@@ -26559,8 +26543,23 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
-          "source_sha256": "5a230e9ab41c2fe5b556b05ff4077389f0f22b9f475bd5538c11bb92a9cb722e",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
+          "line": 89
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
+          "line": 118
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
+          "line": 180
         }
       ]
     },
@@ -26803,7 +26802,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-      "source_sha256": "e43e6da051b9edc5501edb30c2213ee525c2b68f5f96616189dc441833c4b1de",
+      "source_sha256": "73b3211d25115d3a276c4dd37a3334fa46f697318d1522eb71c2425e3b05d32f",
       "families": [
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_cold_selected_root_runtime_overrides_missing_or_wrong_ambient_nomination",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_popen_environment_matches_held_source_commitment_and_refuses_changed_digest",
@@ -26814,7 +26813,7 @@
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_terminal_roster_refuses_unclosed_or_aliased_images"
       ],
-      "family_observations_sha256": "608a48752e2145d542f821b5e4df9a35186c1c72b76bec4b43d62305125e8f10",
+      "family_observations_sha256": "14dff10f17f61159a547d6e108804354760f5dd21508ce408fdfea648c1549f4",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26833,8 +26832,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "e43e6da051b9edc5501edb30c2213ee525c2b68f5f96616189dc441833c4b1de",
+          "source_sha256": "73b3211d25115d3a276c4dd37a3334fa46f697318d1522eb71c2425e3b05d32f",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
+          "source_sha256": "73b3211d25115d3a276c4dd37a3334fa46f697318d1522eb71c2425e3b05d32f",
+          "line": 460
         }
       ]
     },
@@ -27430,12 +27434,12 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_portable_custody.py",
-      "source_sha256": "57928b7f07235c89b8243a958872ef9516c5b1c0c3d5514d6b9a405797f5e573",
+      "source_sha256": "258d771d18f9444b608926811655946c6b3969b3836556f734a62b89b35b906d",
       "families": [
         "tests/infra_tests/reporting/test_native_portable_custody.py::test_actual_tool_receipt_relocated_reader_and_tamper",
         "tests/infra_tests/reporting/test_native_portable_custody.py::test_original_bootstrap_reconstruction_preserves_root_and_hook"
       ],
-      "family_observations_sha256": "e4e796c65e5be236adbe30d93099bc8181a2a432c61bd0a6526cef73717a0407",
+      "family_observations_sha256": "3c341add6871d6864c3a060ea9df692768664ba34102cc70ca0b62196912ac03",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -27444,8 +27448,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_portable_custody.py",
-          "source_sha256": "57928b7f07235c89b8243a958872ef9516c5b1c0c3d5514d6b9a405797f5e573",
+          "source_sha256": "258d771d18f9444b608926811655946c6b3969b3836556f734a62b89b35b906d",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_portable_custody.py",
+          "source_sha256": "258d771d18f9444b608926811655946c6b3969b3836556f734a62b89b35b906d",
+          "line": 53
         }
       ]
     },
