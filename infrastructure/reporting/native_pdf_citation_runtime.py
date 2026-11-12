@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 import re
 import shutil
 import time
@@ -19,6 +20,7 @@ from infrastructure.core.files.secure_write import (
     atomic_write_bytes_confined,
     read_bytes_confined,
 )
+from infrastructure.core.pipeline.fingerprint_files import anchored_parent, digest_file
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.reporting.native_format_acceptance_checks import (
@@ -55,15 +57,19 @@ def budget(deadline: float) -> float:
 
 
 def file_observation(path: Path) -> dict[str, Any]:
-    """Observe installed dependency bytes through confined no-follow reads."""
+    """Observe exact dependency versions through freshly confined no-follow paths."""
     selected = path.resolve(strict=True)
-    content = read_bytes_confined(selected.parent, selected, max_bytes=512 * 1024 * 1024)
-    return {
-        "path": str(selected),
-        "name": selected.name,
-        "sha256": hashlib.sha256(content).hexdigest(),
-        "bytes": len(content),
-    }
+    with anchored_parent(selected) as parent:
+        if parent is None:
+            raise FileNotFoundError(selected)
+        observed = os.stat(selected.name, dir_fd=parent, follow_symlinks=False)
+        digest = digest_file(selected, parent, selected.name, observed, max_bytes=512 * 1024 * 1024)
+        return {
+            "path": str(selected),
+            "name": selected.name,
+            "sha256": digest,
+            "bytes": observed.st_size,
+        }
 
 
 class CitationRuntime:

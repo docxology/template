@@ -79,6 +79,9 @@ locks.
   retaining private staging and the original cross-account upload boundary.
 - Keep shared-runtime Source digests and canonical-stage declarations in distinct
   typed locals without changing custody, storage, target or policy validation.
+- Reuse guarded exact-file-version digests for citation dependencies and native
+  executables instead of repeatedly materializing their bytes. Retain fresh
+  no-follow observations, all process/custody checks and original finite clocks.
 - Keep invalid final-report receipts failed when guardian cleanup also refuses
   custody. Preserve the actual child exit and append cleanup evidence without
   demoting a selection forgery to pending work.

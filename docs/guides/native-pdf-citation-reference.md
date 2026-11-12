@@ -52,6 +52,14 @@ retention/callbacks, before return. Executable, generated-input, process and
 artifact checks stay separate. All observation and retention work consumes the
 original caller/tool clocks; eliminating duplicate reads does not extend them.
 
+Digest-only dependency and executable observations reuse the existing bounded
+fingerprint helper's digest only for the same path, device/inode, size,
+nanosecond modification/change clocks and mode. Every boundary still freshly
+checks physical no-follow ancestry, the named file and the byte ceiling; a
+changed observation invalidates reuse. Retaining dependency copies still reads
+and hashes their actual bytes. No before/after check, process, artifact or
+original deadline is omitted or renewed.
+
 [native_pdf_citation_replay.py](../../infrastructure/reporting/native_pdf_citation_replay.py)
 regenerates the reference on the current reader from independently reconstructed
 source inputs. It checks original actual tool outcomes and retained dependency
