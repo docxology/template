@@ -5609,14 +5609,12 @@
     },
     {
       "path": "tests/infra_tests/core/test_pdf_locator.py",
-      "source_sha256": "337f0c049ae0690013b5570576fd79a3418c41cbe854b40bebce8eee449d3162",
+      "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
       "families": [
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfFallbackWhenNoOutputSegment::test_fallback_source_layout",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfGenerationLayout::test_finds_pdf_in_pdf_subdir",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfPostCopyLayout::test_finds_pdf_at_root_of_output_dir",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfPostCopyLayout::test_ignores_empty_root_pdf_and_falls_through",
-        "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfReexports::test_pdf_locator_is_canonical_source",
-        "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfReexports::test_validator_reexport_still_importable",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfRobustnessAgainstNestedOutputDirs::test_parent_output_dir_does_not_corrupt_source_lookup",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfSourceLayout::test_finds_pdf_for_qualified_nested_project_name",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindCombinedPdfSourceLayout::test_finds_pdf_in_source_project_layout",
@@ -5627,7 +5625,7 @@
         "tests/infra_tests/core/test_pdf_locator.py::TestFindLastOutputSegmentIndex::test_returns_none_when_no_output_segment",
         "tests/infra_tests/core/test_pdf_locator.py::TestFindLastOutputSegmentIndex::test_returns_single_occurrence_index"
       ],
-      "family_observations_sha256": "5b113970756bad6ba031bea5e9f383ffb327f5a3a9e6229032c81d18f9ed44d0",
+      "family_observations_sha256": "feb09399b6aa6ef7910d7fb7f29e304cbda44800fa577a70b8a1715af6de5076",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -5636,8 +5634,68 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_pdf_locator.py",
-          "source_sha256": "337f0c049ae0690013b5570576fd79a3418c41cbe854b40bebce8eee449d3162",
-          "line": 1
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 23
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 29
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 38
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 57
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 64
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 71
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 86
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 107
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 124
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 140
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 148
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 176
+        },
+        {
+          "path": "tests/infra_tests/core/test_pdf_locator.py",
+          "source_sha256": "5e8616cd2fe4948467a9de6527bbb2385bef815bd7c4a42922291b555856a07e",
+          "line": 197
         }
       ]
     },
