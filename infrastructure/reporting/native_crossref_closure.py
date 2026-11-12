@@ -16,10 +16,11 @@ def validate_crossref_child_closure(
     *,
     deadline: float,
 ) -> dict[str, Any]:
+    from infrastructure.reporting.native_crossref_filter import SCHEMA
     from infrastructure.reporting.native_print_child_custody import _ControlRole, _closure
 
     role = _ControlRole(
-        "template-source-owned-crossref-filter-v2",
+        SCHEMA,
         "infrastructure.reporting.native_crossref_worker",
         "crossref-filter",
         "",

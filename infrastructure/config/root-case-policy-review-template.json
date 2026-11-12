@@ -13842,7 +13842,7 @@
         {
           "path": "tests/infra_tests/project/test_public_capabilities.py",
           "line": 1,
-          "source_sha256": "d9f45460e37044203349f7f8c7a450426f9a0dc691111dd65118945970b99b59"
+          "source_sha256": "3770282ae82e7e8f459f70417042b56eb95ce0124fd508c202da0e1beaff81b8"
         }
       ]
     },
@@ -16073,7 +16073,7 @@
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
-          "source_sha256": "31f4791c9e72000a454ea4fdf625372148db42e8f67160fdd065d992b7423384",
+          "source_sha256": "c4f171b41ef68bcdfa23274ebe4bae996bca65226ed2b138cf4c2b9e321d4335",
           "line": 1
         }
       ]
@@ -16752,7 +16752,7 @@
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
-          "source_sha256": "31f4791c9e72000a454ea4fdf625372148db42e8f67160fdd065d992b7423384",
+          "source_sha256": "c4f171b41ef68bcdfa23274ebe4bae996bca65226ed2b138cf4c2b9e321d4335",
           "line": 219
         },
         {
@@ -26763,7 +26763,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "83919dc0ed4c7e1c076822271a8c96456a59299502ea563f726afd99df8b0229",
+          "source_sha256": "e43e6da051b9edc5501edb30c2213ee525c2b68f5f96616189dc441833c4b1de",
           "line": 1
         }
       ]

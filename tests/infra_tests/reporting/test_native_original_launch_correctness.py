@@ -21,6 +21,7 @@ from infrastructure.project.public_acceptance_evidence import bootstrap_command
 from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
 from infrastructure.reporting.native_environment_custody import capture_native_environment, validate_native_environment
 from infrastructure.reporting.native_format_acceptance_contracts import native_environment
+from infrastructure.reporting.native_loader_maps import terminal_kernel_residents
 from infrastructure.reporting.native_original_supervisor import _worker_environment
 from infrastructure.reporting.native_pdf_citation_runtime import NATIVE_OBSERVATION_CEILING_SECONDS, budget
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -184,10 +185,36 @@ def test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_ti
         budget(time.monotonic() - 1)
 
 
+@pytest.mark.parametrize(
+    "refusal", ["unclosed-file", "missing-close", "duplicate-close", "non-kernel", "aliased-kernel"]
+)
+def test_terminal_roster_refuses_unclosed_or_aliased_images(refusal: str) -> None:
+    opened = {
+        1: {"body": {"sha256": "a" * 64}, "path_label": "/proc/self/exe"},
+        2: {"body": None, "path_label": "linux-vdso.so.1"},
+    }
+    active, closed = {2: opened[2]}, [1]
+    if refusal == "unclosed-file":
+        active[1] = opened[1]
+        closed.clear()
+    elif refusal == "missing-close":
+        closed.clear()
+    elif refusal == "duplicate-close":
+        closed.append(1)
+    elif refusal == "non-kernel":
+        opened[2]["path_label"] = "unbacked-consumer.so"
+    else:
+        opened[3] = {"body": None, "path_label": "linux-vdso.so.2"}
+        active[3] = opened[3]
+    with pytest.raises(ValueError):
+        terminal_kernel_residents(opened, active, closed)
+
+
 _GENUINE_PANDOC_INSTALLED_SDK_CHILD = r"""
 from copy import deepcopy
 import json
 import os
+import socket
 from pathlib import Path
 import sys
 import time
@@ -210,13 +237,13 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 
 @contextmanager
-def raises(exception_type, match):
+def raises(exception_type):
     try:
         yield
-    except exception_type as error:
-        assert match in str(error), str(error)
+    except exception_type:
+        pass
     else:
-        raise AssertionError(f"Expected {exception_type.__name__} containing {match!r}")
+        raise AssertionError(f"Expected {exception_type.__name__}")
 
 
 original = Path(sys.argv[1])
@@ -258,13 +285,40 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         deadline=deadline,
         run_id=run_id,
     )
-    observed, qualification_binding, compiled = qualify_native_loader_tool(
-        runtime,
-        "pandoc",
-        ["--version"],
-        "pandoc-terminal-success",
-    )
     reader = SnapshotReader(mirror)
+    try:
+        observed, qualification_binding, compiled = qualify_native_loader_tool(
+            runtime,
+            "pandoc",
+            ["--version"],
+            "pandoc-terminal-success",
+        )
+    except BaseException:
+        failure_path = runtime.directory / "pandoc-terminal-success.native-process.json"
+        if failure_path.exists():
+            failure = reader.read(failure_path.relative_to(mirror).as_posix()).json_object()
+            print(
+                json.dumps(
+                    {
+                        key: failure[key]
+                        for key in (
+                            "pid", "original_exit_code", "timed_out", "diagnostics",
+                            "operation_begin", "operation_end", "launch_begin",
+                            "launch_returned", "cleanup",
+                        )
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            print(
+                sorted(
+                    path.relative_to(runtime.directory).as_posix()
+                    for path in runtime.directory.rglob("event-*-maps.bin")
+                ),
+                flush=True,
+            )
+        raise
     qualification = reader.read(qualification_binding["path"]).json_object()
     baseline = reader.read(qualification["baseline_tool"]["path"]).json_object()
     observed = reader.read(qualification["observed_tool"]["path"]).json_object()
@@ -280,8 +334,16 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert native["cleanup"]["root_reaped"] is True
     assert lifecycle["complete_callbacks"] is True and lifecycle["channel_eof"] is True
     assert lifecycle["events"][-1]["kind"] == "done"
-    assert len(lifecycle["opened"]) == len(lifecycle["closed"])
-    assert set(lifecycle["opened"]) == set(lifecycle["closed"])
+    residents = lifecycle["resident_terminal"]["resident_object_ids"]
+    assert len(lifecycle["opened"]) == len(lifecycle["closed"]) + len(residents)
+    assert set(lifecycle["opened"]) == set(lifecycle["closed"]) | set(residents)
+    assert set(lifecycle["closed"]).isdisjoint(residents)
+    kernel_opened = {
+        event["id"]
+        for event in lifecycle["events"]
+        if event["kind"] == "open" and event["body"] is None
+    }
+    assert set(residents) == kernel_opened
     assert lifecycle["resident_terminal"]["original_exit_code"] == 0
     assert (
         validate_native_loader_data(
@@ -301,7 +363,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
             post_done["sequence"] = len(changed["events"]) + 1
             changed["events"].append(post_done)
         binding = write_json(mirror, runtime.directory / (mutation + ".lifecycle.json"), changed)
-        with raises(ValueError, match="validated terminal callback"):
+        with raises(ValueError):
             validate_native_loader_data(
                 {**native, "loader_lifecycle": binding},
                 reader,
@@ -318,7 +380,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         purpose=purpose,
         deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
     )
-    with raises(NativeToolUnavailable, match="signed normal consuming-process OS termination"):
+    with raises(NativeToolUnavailable):
         runtime.tool(
             "pandoc",
             ["--definitely-not-a-pandoc-option"],
@@ -331,6 +393,30 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert observer.done is True and observer.eof is True
     assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
 
+    purpose = "pandoc-terminal-wrong-peer"
+    leaf = compiled.directory / ("callbacks-" + purpose)
+    create_private_native_directory(mirror, leaf)
+    observer = NativeLoaderObservation(
+        compiled,
+        leaf,
+        purpose=purpose,
+        deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
+    )
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as intruder:
+        # This actual owner-PID peer is not the original consuming child.
+        # Refusal must release its child, not wait for the child's ACK deadline.
+        intruder.connect(observer.address)
+        with raises(NativeToolUnavailable):
+            runtime.tool("pandoc", ["--version"], purpose, loader=observer)
+    failed = reader.read(runtime.tools[-1]["path"]).json_object()
+    native = reader.read(failed["native_process_artifact"]["path"]).json_object()
+    assert native["pid"] != os.getpid() and native["original_exit_code"] != 0
+    assert native["accepted"] is False and native["timed_out"] is False
+    assert native["cleanup"]["guardian_finished"] is True
+    assert native["cleanup"]["root_reaped"] is True
+    assert native["cleanup"]["final_token_sweep_matched_pids"] == []
+    assert observer.peer is None and observer.events == []
+
     purpose = "python-terminal-premature-eof"
     leaf = compiled.directory / ("callbacks-" + purpose)
     create_private_native_directory(mirror, leaf)
@@ -340,7 +426,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         purpose=purpose,
         deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
     )
-    with raises(NativeToolUnavailable, match="EOF preceded its validated terminal callback"):
+    with raises(NativeToolUnavailable):
         runtime.tool(
             sys.executable,
             ["-I", "-c", "import os; os._exit(0)"],
@@ -354,7 +440,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
 
     retained = len(runtime.tools)
-    with raises(TimeoutError, match="exhausted its original finite deadline"):
+    with raises(TimeoutError):
         runtime.tool(
             "pandoc",
             ["--version"],

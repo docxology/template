@@ -7,13 +7,17 @@ scientific acceptance; retained DATA never creates either live capability.
 
 from __future__ import annotations
 
+import platform
+import shutil
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
+from infrastructure.reporting.native_document_elf import require_glibc_executable
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
+from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader, compile_native_loader
 from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
 from infrastructure.reporting.native_pdf_citation_runtime import (
@@ -26,7 +30,7 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 if TYPE_CHECKING:
     from infrastructure.reporting.native_crossref_pair import SourceCrossrefPair
 
-SCHEMA = "template-native-tool-loader-qualification-v3"
+SCHEMA = "template-native-tool-loader-qualification-v4"
 _FIELDS = frozenset(
     {
         "schema_version",
@@ -132,6 +136,13 @@ def qualify_native_loader_tool(
             or arguments.count(str(runtime.root / crossref_pair.launcher["path"])) != 1
         ):
             raise ValueError("filtered parent pair changed its identical selected environment/launcher argv")
+    selected_executable = shutil.which(name, path=runtime.env.get("PATH"))
+    if selected_executable is None:
+        raise NativeToolUnavailable(f"{name} is not installed in the selected qualification environment")
+    try:
+        require_glibc_executable(Path(selected_executable).resolve(strict=True), machine=platform.machine())
+    except ValueError as error:
+        raise NativeToolUnavailable(f"{name} is not a supported consuming glibc executable: {error}") from error
     inputs = tuple(dict.fromkeys((*input_paths, *((stdin_path,) if stdin_path is not None else ()))))
     held_inputs = [_file(path, reader) for path in inputs]
     if len(set(path.absolute() for path in output_paths)) != len(output_paths):
