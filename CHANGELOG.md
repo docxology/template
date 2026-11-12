@@ -75,6 +75,10 @@ locks.
 - Bind case copies to their original census metadata and keep staging private
   until final validation. Prune traversal-only fixture aliases without following
   them; retain genuine factory-level Git Trace2 without copying its Source tree.
+- Inherit diagnostic publication read/search permissions from the artifact parent,
+  retaining private staging and the original cross-account upload boundary.
+- Keep shared-runtime Source digests and canonical-stage declarations in distinct
+  typed locals without changing custody, storage, target or policy validation.
 - Keep invalid final-report receipts failed when guardian cleanup also refuses
   custody. Preserve the actual child exit and append cleanup evidence without
   demoting a selection forgery to pending work.

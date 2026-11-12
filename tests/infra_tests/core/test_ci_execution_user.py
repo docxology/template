@@ -298,8 +298,10 @@ def test_artifact_export_refuses_real_symlinks_and_special_files(tmp_path: Path)
     assert not any(stage.iterdir()) and outside.read_bytes() == b"private"
 
 
-def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_path: Path) -> None:
+@pytest.mark.parametrize("reader_mode", (0o700, 0o750, 0o755))
+def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_path: Path, reader_mode: int) -> None:
     base = tmp_path.resolve(strict=True)
+    base.chmod(reader_mode)
     root, destination = base / "pytest-of-owner", base / "case-artifacts"
     originals = {
         "pytest-8/popen-gw1/test_child_failure0/worker.stderr": b"original\x00stderr\n",
@@ -335,6 +337,7 @@ def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_p
         path.relative_to(destination).as_posix(): path.read_bytes() for path in destination.rglob("*") if path.is_file()
     } == originals
     assert {relative: _signature((root / relative).lstat()) for relative in originals} == before
+    assert stat.S_IMODE(destination.stat().st_mode) == reader_mode
     assert not (destination / "pytest-current").exists()
     assert not (destination / "pytest-8/popen-gw1/test_child_failure0/checkout").exists()
     assert not (destination / "pytest-8/popen-gw1/test_child_failure0/output").exists()

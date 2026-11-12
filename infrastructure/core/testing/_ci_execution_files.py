@@ -412,7 +412,9 @@ def _export_pytest_case_diagnostics(
             _signature(os.fstat(descriptor)) == _signature(destination.lstat()),
             "pytest diagnostic publication directory changed",
         )
-        os.fchmod(descriptor, 0o755)
+        # Publication must not add POSIX readers beyond the artifact parent.
+        publication_mode = 0o700 | (stat.S_IMODE(destination.parent.stat().st_mode) & 0o055)
+        os.fchmod(descriptor, publication_mode)
     finally:
         os.close(descriptor)
     _remaining(deadline)

@@ -93,7 +93,7 @@ def validate_shared_runtime(config: PipelineConfig, plan: ExecutionPlan) -> None
     if control.hitl_mode == "custom" and ordinal in control.custom_gate_stages:
         policy = replace(policy, pause_after=True)
     identities = {declaration.name: declaration.key for declaration in declarations}
-    expected = PlannedStage(
+    expected_stage = PlannedStage(
         "infra_tests",
         stage.name,
         Path(stage.script.replace("{project}", config.project_name)).as_posix() if stage.script else None,
@@ -107,7 +107,7 @@ def validate_shared_runtime(config: PipelineConfig, plan: ExecutionPlan) -> None
         stage.allow_skip,
     )
     if (
-        plan.stages != (expected,)
+        plan.stages != (expected_stage,)
         or plan.hitl_mode != control.hitl_mode
         or plan.smart_pause_action != control.smart_pause_action
     ):
