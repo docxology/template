@@ -69,6 +69,11 @@ locks.
 - Require published pip-api0.0.35 or newer for the required pip-audit scanner
   on supported Python; regenerate only that locked package, preserving the
   installer security floor and all other dependency records.
+- Retire shell syntax, Source-text, forwarding and exact dry-run wording pins;
+  keep actual CLI root-resolution, listing and fail-closed execution consumers.
+- Avoid compression and pack delta-search in disposable complete-source DATA
+  fixtures; retain native clone transport, independent Source inventories,
+  negative consumers, original setup clocks and worker selection.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report

@@ -1,10 +1,9 @@
-name: Actual current CLI external stack and fixture DATA
+name: Current original CLI and citation native DATA
 on:
   push:
     branches: [codex/sdk-original8-native-diagnostics-20261112-9a20c57e]
 permissions:
   contents: read
-cache-mode: read
 concurrency:
   group: current-native-case-${{ github.run_id }}
   cancel-in-progress: false
@@ -19,19 +18,25 @@ jobs:
       # Override the repository's .python-version so uv uses the interpreter
       # selected by this matrix cell, including its moving patch release.
       UV_PYTHON: ${{ matrix.python-version }}
-    # The validated matrix covers every supported runtime on every CI event.
+    # Diagnose only the original remaining Darwin consumers, not the full matrix.
     strategy:
       fail-fast: false
-      # Keep the existing OS/runtime coverage and partition every selected
-      # module completely. Independent runner cells bound shared CPU pressure.
+      # Preserve the original worker count; separate the independent failed scopes.
       matrix:
         include:
           - os: macos-latest
             python-version: "3.15"
-            scope: cli-external-stack-DATA
-            shard: currentff-fresh-cli-darwin315
+            scope: cli-originals
+            shard: current1e28-cli-darwin315
             original-nodes: >-
               tests/infra_tests/orchestration/test_pipeline_runner.py::test_cli_all_project_resume_preserves_checkpoint_refusal
+          - os: macos-latest
+            python-version: "3.15"
+            scope: citation-originals
+            shard: current1e28-citations-darwin315
+            original-nodes: >-
+              tests/infra_tests/reporting/test_pdf_raw_natbib_source.py::test_genuine_raw_natbib_and_reader_citation_complete_source_positive
+              tests/infra_tests/reporting/test_pdf_raw_natbib_source.py::test_source_citation_looking_fragment_in_residual_raw_markup_stays_blocked
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -104,27 +109,6 @@ jobs:
             --requirements "$scratch/native-runtime-requirements.txt"
           rm -rf "$scratch"
 
-      - name: Prove actual locked pip-audit startup and parser on selected Python
-        run: |
-          set -euo pipefail
-          .venv/bin/python -B -m pip_audit --version
-          .venv/bin/python -B - <<'PYTHON'
-          import importlib.metadata
-          import json
-          import tempfile
-          from pathlib import Path
-          import pip_api
-
-          assert importlib.metadata.version("pip-api") == "0.0.35"
-          with tempfile.TemporaryDirectory() as temporary:
-              path = Path(temporary) / "requirements.txt"
-              path.write_text("numpy>=1.22\nrequests==2.32.5; python_version >= '3.14'\n")
-              parsed = pip_api.parse_requirements(str(path))
-              assert str(parsed["numpy"].specifier) == ">=1.22"
-              assert str(parsed["requests"].specifier) == "==2.32.5"
-              print(json.dumps({"role": "Actual published pip-api35 required scanner startup/parser, not vulnerability-clean or wholeSDK qualification", "pip_api": importlib.metadata.version("pip-api"), "pip_audit": importlib.metadata.version("pip-audit"), "actual_specifiers": {name: str(value.specifier) for name, value in parsed.items()}}, sort_keys=True))
-          PYTHON
-
       - name: Verify selected Python minor
         run: |
           uv run python -c \
@@ -150,16 +134,6 @@ jobs:
 
       - name: Assert immutable selected product Source
         run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-
-      - name: Prepare external own process sampler outside product Source
-        shell: bash
-        run: |
-          .venv/bin/python -B - <<'PYTHON'
-          import base64,os
-          from pathlib import Path
-          path=Path(os.environ["RUNNER_TEMP"])/"sdk-currentff-external-CLI-observer.py"
-          path.write_bytes(base64.b64decode("aW1wb3J0IGhhc2hsaWIsanNvbixvcyxzaGxleCxzdGF0LHN1YnByb2Nlc3Msc3lzLHRpbWUKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnBpZD1pbnQoc3lzLmFyZ3ZbMV0pO2Jhc2U9UGF0aChzeXMuYXJndlsyXSk7b3V0PVBhdGgoc3lzLmFyZ3ZbM10pO291dC5ta2Rpcihtb2RlPTBvNzAwKTtzdGFydD10aW1lLm1vbm90b25pYygpO3VpZD1vcy5nZXR1aWQoKQpyZWNvcmQ9eydyb2xlJzonRXh0ZXJuYWwgb3duIG9yaWdpbmFsIHB5dGVzdCBkZXNjZW5kYW50IHN0YWNrL2ZpeHR1cmUgREFUQSBvbmx5OyBubyBpbmplY3RlZCBjaGlsZCBvYnNlcnZlci9wcm9maWxlciwgY29tbWFuZC9kZWFkbGluZS93b3JrZXIgY2hhbmdlLCBTb3VyY2UgZWRpdCBvciBydW50aW1lL3JlbGVhc2UgZ3JhbnQnLCdweXRlc3RfcGlkJzpwaWQsJ3VpZCc6dWlkLCdzbmFwc2hvdHMnOltdLCdzYW1wbGVzJzpbXSwnY29waWVkX2ZpeHR1cmVfREFUQSc6W10sJ2Vycm9ycyc6W10sJ29yaWdpbmFsX2NoaWxkX3N0b3BwZWRfYnlfb2JzZXJ2ZXInOkZhbHNlfTtiaXJ0aD1Ob25lO3NlZW49e307c2FtcGxlZD17fTtzYW1wbGVfY291bnQ9MAoKZGVmIHNhdmUoKToKICAgIChvdXQvJ2FjdHVhbC1leHRlcm5hbC1vd25lZC1DTEktREFUQS5qc29uJykud3JpdGVfdGV4dChqc29uLmR1bXBzKHJlY29yZCxpbmRlbnQ9Mixzb3J0X2tleXM9VHJ1ZSkrJ1xuJykKCmRlZiBzbmFwc2hvdCgpOgogICAgcmVzdWx0PXN1YnByb2Nlc3MucnVuKFsnL2Jpbi9wcycsJy1heG8nLCdwaWQ9LHBwaWQ9LHVpZD0sbHN0YXJ0PSxjb21tYW5kPSddLHN0ZGluPXN1YnByb2Nlc3MuREVWTlVMTCxjYXB0dXJlX291dHB1dD1UcnVlLGNoZWNrPUZhbHNlKQogICAgaWYgcmVzdWx0LnJldHVybmNvZGU6CiAgICAgICAgcmVjb3JkWydlcnJvcnMnXS5hcHBlbmQoeydwc19leGl0JzpyZXN1bHQucmV0dXJuY29kZSwnc3RkZXJyJzpyZXN1bHQuc3RkZXJyLmRlY29kZShlcnJvcnM9J3JlcGxhY2UnKX0pO3JldHVybiB7fQogICAgcm93cz17fQogICAgZm9yIGxpbmUgaW4gcmVzdWx0LnN0ZG91dC5kZWNvZGUoZXJyb3JzPSdyZXBsYWNlJykuc3BsaXRsaW5lcygpOgogICAgICAgIGZpZWxkcz1saW5lLnNwbGl0KE5vbmUsOCkKICAgICAgICBpZiBsZW4oZmllbGRzKSE9OTpjb250aW51ZQogICAgICAgIGNoaWxkLHBhcmVudCxvd25lcj1tYXAoaW50LGZpZWxkc1s6M10pCiAgICAgICAgaWYgb3duZXI9PXVpZDpyb3dzW2NoaWxkXT17J3BpZCc6Y2hpbGQsJ3BwaWQnOnBhcmVudCwndWlkJzpvd25lciwnYmlydGgnOicgJy5qb2luKGZpZWxkc1szOjhdKSwnYXJndic6ZmllbGRzWzhdfQogICAgcmV0dXJuIHJvd3MKCnNhdmUoKQp0cnk6CiAgICB3aGlsZSB0aW1lLm1vbm90b25pYygpLXN0YXJ0PDE4MDoKICAgICAgICByb3dzPXNuYXBzaG90KCk7cm9vdD1yb3dzLmdldChwaWQpCiAgICAgICAgaWYgcm9vdCBpcyBOb25lOnJlY29yZFsncm9vdF9kaXNhcHBlYXJlZCddPVRydWU7YnJlYWsKICAgICAgICBpZiBiaXJ0aCBpcyBOb25lOgogICAgICAgICAgICBhc3NlcnQgJ3B5dGVzdCcgaW4gc2hsZXguc3BsaXQocm9vdFsnYXJndiddKSBhbmQgcm9vdFsndWlkJ109PXVpZAogICAgICAgICAgICBiaXJ0aD1yb290WydiaXJ0aCddO3JlY29yZFsnYWN0dWFsX29yaWdpbmFsX3B5dGVzdF9iaXJ0aCddPWJpcnRoCiAgICAgICAgaWYgcm9vdFsnYmlydGgnXSE9YmlydGg6cmVjb3JkWydlcnJvcnMnXS5hcHBlbmQoeydyb290X2JpcnRoX2NoYW5nZWQnOlRydWV9KTticmVhawogICAgICAgIGRlc2NlbmRhbnRzPXtwaWR9CiAgICAgICAgZm9yIF8gaW4gcmFuZ2UoNTEyKToKICAgICAgICAgICAgYWRkZWQ9e2tleSBmb3Iga2V5LHJvdyBpbiByb3dzLml0ZW1zKCkgaWYgcm93WydwcGlkJ10gaW4gZGVzY2VuZGFudHN9LWRlc2NlbmRhbnRzCiAgICAgICAgICAgIGlmIG5vdCBhZGRlZDpicmVhawogICAgICAgICAgICBkZXNjZW5kYW50cy51cGRhdGUoYWRkZWQpCiAgICAgICAgZWxzZTpyYWlzZSBWYWx1ZUVycm9yKCdPd24gcHJvY2Vzcy10cmVlIG9ic2VydmF0aW9uIGV4Y2VlZHMgYm91bmQnKQogICAgICAgIG5vdz10aW1lLm1vbm90b25pYygpO3JlY29yZFsnc25hcHNob3RzJ10uYXBwZW5kKHsnZWxhcHNlZCc6bm93LXN0YXJ0LCdyb3dzJzpbcm93c1trZXldIGZvciBrZXkgaW4gc29ydGVkKGRlc2NlbmRhbnRzKSBpZiBrZXkgaW4gcm93c119KTtzYXZlKCkKICAgICAgICBmcmVzaF9kZXNjZW5kYW50cz1zZXQoKQogICAgICAgIGZvciBjYW5kaWRhdGUgaW4gZGVzY2VuZGFudHM6CiAgICAgICAgICAgIGlmIGNhbmRpZGF0ZSBub3QgaW4gcm93czpjb250aW51ZQogICAgICAgICAgICB0b2tlbnM9c2hsZXguc3BsaXQocm93c1tjYW5kaWRhdGVdWydhcmd2J10pCiAgICAgICAgICAgIG1vZHVsZT10b2tlbnNbdG9rZW5zLmluZGV4KCctbScpKzFdIGlmICctbScgaW4gdG9rZW5zIGFuZCB0b2tlbnMuaW5kZXgoJy1tJykrMTxsZW4odG9rZW5zKSBlbHNlICcnCiAgICAgICAgICAgIGlmIG1vZHVsZT09J2luZnJhc3RydWN0dXJlLm9yY2hlc3RyYXRpb24nIGFuZCAnLS1hbGwtcHJvamVjdHMnIGluIHRva2VucyBhbmQgJy0tcmVzdW1lJyBub3QgaW4gdG9rZW5zOmZyZXNoX2Rlc2NlbmRhbnRzLmFkZChjYW5kaWRhdGUpCiAgICAgICAgZm9yIF8gaW4gcmFuZ2UoNTEyKToKICAgICAgICAgICAgYWRkZWQ9e2tleSBmb3Iga2V5LHJvdyBpbiByb3dzLml0ZW1zKCkgaWYgcm93WydwcGlkJ10gaW4gZnJlc2hfZGVzY2VuZGFudHN9LWZyZXNoX2Rlc2NlbmRhbnRzCiAgICAgICAgICAgIGlmIG5vdCBhZGRlZDpicmVhawogICAgICAgICAgICBmcmVzaF9kZXNjZW5kYW50cy51cGRhdGUoYWRkZWQpCiAgICAgICAgZm9yIGNoaWxkIGluIHNvcnRlZChkZXNjZW5kYW50cyk6CiAgICAgICAgICAgIGlmIGNoaWxkIG5vdCBpbiByb3dzIG9yIGNoaWxkPT1waWQgb3Igc2FtcGxlX2NvdW50Pj0zMjpjb250aW51ZQogICAgICAgICAgICByb3c9cm93c1tjaGlsZF07YXJndj1zaGxleC5zcGxpdChyb3dbJ2FyZ3YnXSk7a2V5PShjaGlsZCxyb3dbJ2JpcnRoJ10pO3NlZW4uc2V0ZGVmYXVsdChrZXksbm93KTthZ2U9bm93LXNlZW5ba2V5XTtjb3VudD1zYW1wbGVkLmdldChrZXksMCkKICAgICAgICAgICAgbW9kdWxlPWFyZ3ZbYXJndi5pbmRleCgnLW0nKSsxXSBpZiAnLW0nIGluIGFyZ3YgYW5kIGFyZ3YuaW5kZXgoJy1tJykrMTxsZW4oYXJndikgZWxzZSAnJwogICAgICAgICAgICBjbGk9bW9kdWxlPT0naW5mcmFzdHJ1Y3R1cmUub3JjaGVzdHJhdGlvbicgYW5kICctLXJlc3VtZScgbm90IGluIGFyZ3YgYW5kICctLWFsbC1wcm9qZWN0cycgaW4gYXJndgogICAgICAgICAgICB3b3JrZXI9Y2hpbGQgaW4gZnJlc2hfZGVzY2VuZGFudHMgYW5kIG5vdCBjbGkgYW5kIFBhdGgoYXJndlswXSkubmFtZS5sb3dlcigpLnN0YXJ0c3dpdGgoJ3B5dGhvbicpCiAgICAgICAgICAgIHRocmVzaG9sZD0oMC4zNSwzLDcsMTIsMTgsMjQpW2NvdW50XSBpZiBjbGkgYW5kIGNvdW50PDYgZWxzZSAoMC4zNSwyKVtjb3VudF0gaWYgd29ya2VyIGFuZCBjb3VudDwyIGVsc2UgTm9uZQogICAgICAgICAgICBpZiB0aHJlc2hvbGQgaXMgTm9uZSBvciBhZ2U8dGhyZXNob2xkOmNvbnRpbnVlCiAgICAgICAgICAgIGZyZXNoPXNuYXBzaG90KCkuZ2V0KGNoaWxkKQogICAgICAgICAgICBpZiBmcmVzaCBpcyBOb25lIG9yIGZyZXNoWydiaXJ0aCddIT1yb3dbJ2JpcnRoJ10gb3IgZnJlc2hbJ3VpZCddIT11aWQ6Y29udGludWUKICAgICAgICAgICAgZGVzdGluYXRpb249b3V0LygncHl0aG9uLXN0YWNrLScrc3RyKGNoaWxkKSsnLScrc3RyKGNvdW50KSsnLnR4dCcpO2NvbW1hbmQ9W3N5cy5leGVjdXRhYmxlLCctQicsJy1tJywncHJvZmlsaW5nLnNhbXBsaW5nJywnZHVtcCcsJy0tYWxsLXRocmVhZHMnLCctLW5hdGl2ZScsc3RyKGNoaWxkKV07cmVzdWx0PXN1YnByb2Nlc3MucnVuKGNvbW1hbmQsc3RkaW49c3VicHJvY2Vzcy5ERVZOVUxMLGNhcHR1cmVfb3V0cHV0PVRydWUsY2hlY2s9RmFsc2UpO2Rlc3RpbmF0aW9uLndyaXRlX2J5dGVzKHJlc3VsdC5zdGRvdXQpO3NhbXBsZWRba2V5XT1jb3VudCsxO3NhbXBsZV9jb3VudCs9MQogICAgICAgICAgICBvYnNlcnZhdGlvbj17J3BpZCc6Y2hpbGQsJ2JpcnRoJzpyb3dbJ2JpcnRoJ10sJ2FyZ3YnOmFyZ3YsJ2VsYXBzZWQnOnRpbWUubW9ub3RvbmljKCktc3RhcnQsJ2FjdHVhbF9leHRlcm5hbF9vYnNlcnZlcl9hcmd2Jzpjb21tYW5kLCdhY3R1YWxfbm9uYmxvY2tpbmdfc2luZ2xlX3NuYXBzaG90JzpUcnVlLCdyZXR1cm5jb2RlJzpyZXN1bHQucmV0dXJuY29kZSwnc3Rkb3V0JzpyZXN1bHQuc3Rkb3V0LmRlY29kZShlcnJvcnM9J3JlcGxhY2UnKSwnc3RkZXJyJzpyZXN1bHQuc3RkZXJyLmRlY29kZShlcnJvcnM9J3JlcGxhY2UnKSwnZmlsZSc6ZGVzdGluYXRpb24ubmFtZX0KICAgICAgICAgICAgaWYgZGVzdGluYXRpb24uaXNfZmlsZSgpOgogICAgICAgICAgICAgICAgaW5mbz1kZXN0aW5hdGlvbi5sc3RhdCgpO2Fzc2VydCBzdGF0LlNfSVNSRUcoaW5mby5zdF9tb2RlKSBhbmQgaW5mby5zdF9ubGluaz09MSBhbmQgaW5mby5zdF9zaXplPD0yKjEwMjQqMTAyNDtyYXc9ZGVzdGluYXRpb24ucmVhZF9ieXRlcygpO29ic2VydmF0aW9uLnVwZGF0ZShieXRlcz1sZW4ocmF3KSxTSEEyNTY9aGFzaGxpYi5zaGEyNTYocmF3KS5oZXhkaWdlc3QoKSkKICAgICAgICAgICAgcmVjb3JkWydzYW1wbGVzJ10uYXBwZW5kKG9ic2VydmF0aW9uKTtzYXZlKCkKICAgICAgICB0aW1lLnNsZWVwKDAuMjUpCiAgICByZWNvcmRbJ29ic2VydmF0aW9uX2xpZmV0aW1lX3NlY29uZHMnXT10aW1lLm1vbm90b25pYygpLXN0YXJ0CiAgICBpZiB0aW1lLm1vbm90b25pYygpLXN0YXJ0Pj0xODA6cmVjb3JkWydlcnJvcnMnXS5hcHBlbmQoeydleHRlcm5hbF9vYnNlcnZlcl9idWRnZXRfZWxhcHNlZCc6VHJ1ZX0pCmZpbmFsbHk6CiAgICBhbGxvd2VkPVsncHJvY2Vzc19vcmRlci5sb2cnXQogICAgZm9yIGxhYmVsIGluICgncmVzdW1lJywnZnJlc2gnKToKICAgICAgICBhbGxvd2VkICs9IFsnY2xpLW9ic2VydmF0aW9ucy8nK2xhYmVsKycvJytuYW1lIGZvciBuYW1lIGluICgnc3Rkb3V0Jywnc3RkZXJyJywnZXhpdC5qc29uJywndGltZW91dC5qc29uJyldCiAgICBmb3IgcHJvamVjdCBpbiAoJ2FscGhhJywnYmV0YScpOgogICAgICAgIGFsbG93ZWQgKz0gWydwcm9qZWN0cy8nK3Byb2plY3QrJy9vdXRwdXQvLnBpcGVsaW5lL2V4ZWN1dGlvbi5qc29uJywncHJvamVjdHMvJytwcm9qZWN0Kycvb3V0cHV0L2xvZ3MvcGlwZWxpbmUubG9nJ10KICAgIHRvdGFsPTAKICAgIGZvciBmaXh0dXJlIGluIHNvcnRlZChiYXNlLmdsb2IoJ3BvcGVuLWd3WzAtOV0qL3Rlc3RfY2xpX2FsbF9wcm9qZWN0X3Jlc3VtZV9wclswLTldKicpKToKICAgICAgICBpZiBmaXh0dXJlLmlzX3N5bWxpbmsoKSBvciBub3QgZml4dHVyZS5pc19kaXIoKTpjb250aW51ZQogICAgICAgIGZvciByZWxhdGl2ZSBpbiBhbGxvd2VkOgogICAgICAgICAgICB0YXJnZXQ9Zml4dHVyZS9yZWxhdGl2ZQogICAgICAgICAgICB0cnk6YmVmb3JlPXRhcmdldC5sc3RhdCgpCiAgICAgICAgICAgIGV4Y2VwdCBGaWxlTm90Rm91bmRFcnJvcjpjb250aW51ZQogICAgICAgICAgICBpZiBub3Qgc3RhdC5TX0lTUkVHKGJlZm9yZS5zdF9tb2RlKSBvciBiZWZvcmUuc3RfbmxpbmshPTEgb3IgYmVmb3JlLnN0X3NpemU+MTAyNCoxMDI0OnJlY29yZFsnZXJyb3JzJ10uYXBwZW5kKHsndW5yZXRhaW5lZF9maXh0dXJlX21lbWJlcic6cmVsYXRpdmV9KTtjb250aW51ZQogICAgICAgICAgICByYXc9dGFyZ2V0LnJlYWRfYnl0ZXMoKTthZnRlcj10YXJnZXQubHN0YXQoKTtpZGVudGl0eT1sYW1iZGEgdmFsdWU6dHVwbGUoZ2V0YXR0cih2YWx1ZSxrKSBmb3IgayBpbiAoJ3N0X2RldicsJ3N0X2lubycsJ3N0X21vZGUnLCdzdF9ubGluaycsJ3N0X3NpemUnLCdzdF9tdGltZV9ucycsJ3N0X2N0aW1lX25zJykpCiAgICAgICAgICAgIGlmIGlkZW50aXR5KGJlZm9yZSkhPWlkZW50aXR5KGFmdGVyKTpyZWNvcmRbJ2Vycm9ycyddLmFwcGVuZCh7J3Vuc3RhYmxlX2ZpeHR1cmVfbWVtYmVyJzpyZWxhdGl2ZX0pO2NvbnRpbnVlCiAgICAgICAgICAgIHRvdGFsKz1sZW4ocmF3KQogICAgICAgICAgICBpZiB0b3RhbD4xNioxMDI0KjEwMjQ6cmFpc2UgVmFsdWVFcnJvcignT3duIGZpeHR1cmUgZGlhZ25vc3RpYyBEQVRBIGJvdW5kIGV4Y2VlZGVkJykKICAgICAgICAgICAgbG9jYWw9UGF0aCgnZml4dHVyZS1EQVRBJykvZml4dHVyZS5wYXJlbnQubmFtZS9maXh0dXJlLm5hbWUvcmVsYXRpdmU7ZGVzdGluYXRpb249b3V0L2xvY2FsO2Rlc3RpbmF0aW9uLnBhcmVudC5ta2RpcihwYXJlbnRzPVRydWUsZXhpc3Rfb2s9VHJ1ZSk7ZGVzdGluYXRpb24ud3JpdGVfYnl0ZXMocmF3KTtyZWNvcmRbJ2NvcGllZF9maXh0dXJlX0RBVEEnXS5hcHBlbmQoeydvcmlnaW5hbF9maXh0dXJlX21lbWJlcic6c3RyKHRhcmdldCksJ2xvY2FsJzpzdHIobG9jYWwpLCdieXRlcyc6bGVuKHJhdyksJ1NIQTI1Nic6aGFzaGxpYi5zaGEyNTYocmF3KS5oZXhkaWdlc3QoKX0pCiAgICBzYXZlKCkK"))
-          PYTHON
 
       - name: Run infrastructure tests
         env:
@@ -195,24 +169,29 @@ jobs:
             --junitxml="output/readiness/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml" \
             --durations=10 \
             -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
-            --timeout=120 &
-          original_pytest=$!
-          .venv/bin/python -B "$RUNNER_TEMP/sdk-currentff-external-CLI-observer.py" \
-            "$original_pytest" "$RUNNER_TEMP/template-infra-case-workspaces" \
-            "$RUNNER_TEMP/sdk-currentff-external-CLI-DATA" &
-          external_observer=$!
-          if wait "$original_pytest"; then original_status=0; else original_status=$?; fi
-          if wait "$external_observer"; then observer_status=0; else observer_status=$?; fi
-          printf 'Original pytest exit: %s; external DATA observer exit: %s\n' "$original_status" "$observer_status"
-          exit "$original_status"
+            --timeout=120
 
-      - name: Retain bounded original CLI external stack and fixture DATA
+      - name: Retain named original records after the original pytest result
+        if: always()
+        env:
+          ORIGINAL_SCOPE: ${{ matrix.scope }}
+          CANDIDATE_SOURCE: 1e28b4f02dce8e47ecfa395541e013242dab459c
+        shell: bash
+        run: |
+          set -euo pipefail
+          .venv/bin/python -B - "$RUNNER_TEMP/retain-current-original-case-DATA.py" <<'PYTHON'
+          import base64,sys
+          from pathlib import Path
+          Path(sys.argv[1]).write_bytes(base64.b64decode("IiIiUmV0YWluIG5hbWVkIHB1YmxpYyBTREsgY29udHJvbCBvcmlnaW5hbHMgYWZ0ZXIgcHl0ZXN0LCBuZXZlciBydW50aW1lIGF1dGhvcml0eS4iIiIKaW1wb3J0IGhhc2hsaWIsanNvbixvcyxyZSxzdGF0LHN5cyx0aW1lCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aApzeXMucGF0aC5pbnNlcnQoMCxvcy5lbnZpcm9uWydHSVRIVUJfV09SS1NQQUNFJ10pCmZyb20gaW5mcmFzdHJ1Y3R1cmUuY29yZS50ZXN0aW5nIGltcG9ydCBfY2lfZXhlY3V0aW9uX2ZpbGVzIGFzIHRyYW5zcG9ydApzY29wZSxiYXNlX3RleHQsb3V0X3RleHQ9c3lzLmFyZ3ZbMTo0XTtiYXNlPVBhdGgoYmFzZV90ZXh0KTtvdXQ9UGF0aChvdXRfdGV4dCk7YXNzZXJ0IHNjb3BlIGluIHsnY2xpLW9yaWdpbmFscycsJ2NpdGF0aW9uLW9yaWdpbmFscyd9IGFuZCBiYXNlLmlzX2Fic29sdXRlKCkgYW5kIG91dC5pc19hYnNvbHV0ZSgpIGFuZCBiYXNlIT1vdXQgYW5kIG5vdCBvdXQuaXNfcmVsYXRpdmVfdG8oYmFzZSkgYW5kIG5vdCBiYXNlLmlzX3JlbGF0aXZlX3RvKG91dCkgYW5kIG5vdCBvcy5wYXRoLmxleGlzdHMob3V0KQpiYXNlPXRyYW5zcG9ydC5fcGh5c2ljYWwoYmFzZSk7b3V0LnBhcmVudC5ta2RpcihwYXJlbnRzPVRydWUsZXhpc3Rfb2s9VHJ1ZSk7dHJhbnNwb3J0Ll9waHlzaWNhbChvdXQucGFyZW50KTtvdXQubWtkaXIobW9kZT0wbzcwMCk7ZGF0YT1vdXQvJ29yaWdpbmFscyc7ZGF0YS5ta2Rpcihtb2RlPTBvNzAwKTtkZWFkbGluZT10aW1lLm1vbm90b25pYygpKzYwO3VpZD1vcy5nZXR1aWQoKTttYXhpbXVtX2ZpbGU9OCoxMDI0KioyO21heGltdW1fdG90YWw9NjQqMTAyNCoqMjttYXhpbXVtX2VudHJpZXM9NDA5Njt2aXNpdGVkPTA7dG90YWw9MApyZWNvcmQ9eydyb2xlJzonUG9zdC1jYXNlIGluZGVwZW5kZW50bHkgc3RhYmxlIG5hbWVkIG9yaWdpbmFsLWZpbGUgREFUQSBvbmx5OyBub3QgYSBjb2hlcmVudCBsaXZlIGZpbGVzeXN0ZW0gc25hcHNob3QsIG5hdGl2ZSBhZG1pc3Npb24sIG9yaWdpbmFsLWZhaWx1cmUgY2F1c2FsIHByb29mIG9yIHJlbGVhc2UgYWNjZXB0YW5jZScsJ2FjdHVhbF9zY29wZSc6c2NvcGUsJ2FjdHVhbF9kaWFnbm9zdGljX1NvdXJjZSc6b3MuZW52aXJvbi5nZXQoJ0dJVEhVQl9TSEEnKSwnYWN0dWFsX2NhbmRpZGF0ZV9Tb3VyY2UnOm9zLmVudmlyb24uZ2V0KCdDQU5ESURBVEVfU09VUkNFJyksJ2FjdHVhbF9ydW4nOm9zLmVudmlyb24uZ2V0KCdHSVRIVUJfUlVOX0lEJyksJ2FjdHVhbF9hdHRlbXB0Jzpvcy5lbnZpcm9uLmdldCgnR0lUSFVCX1JVTl9BVFRFTVBUJyksJ2xpbWl0cyc6eydzZWNvbmRzJzo2MCwnZmlsZV9ieXRlcyc6bWF4aW11bV9maWxlLCd0b3RhbF9ieXRlcyc6bWF4aW11bV90b3RhbCwnZW50cmllcyc6bWF4aW11bV9lbnRyaWVzfSwnYWN0dWFsX3Jvb3QnOnN0cihiYXNlKSwnZmlsZXMnOltdLCdtaXNzaW5nJzpbXSwncmVmdXNhbHMnOltdfTtyZWNvcmRfcGF0aD1vdXQvJ2FjdHVhbC1ib3VuZGVkLW9yaWdpbmFsLWNhc2UtREFUQS5qc29uJwpkZWYgcmVtYWluaW5nKCk6CiB0cmFuc3BvcnQuX3JlbWFpbmluZyhkZWFkbGluZSkKIGdsb2JhbCB2aXNpdGVkCiB2aXNpdGVkKz0xCiBpZiB2aXNpdGVkPm1heGltdW1fZW50cmllczpyYWlzZSBWYWx1ZUVycm9yKCdwb3N0LWNhc2UgZGlhZ25vc3RpYyBlbnRyeSBib3VuZCBleGNlZWRlZCcpCmRlZiBvd25lZF9kaXJlY3RvcnkocGF0aCk6CiByZW1haW5pbmcoKTtpbmZvPXBhdGgubHN0YXQoKQogaWYgaW5mby5zdF91aWQhPXVpZCBvciBub3Qgc3RhdC5TX0lTRElSKGluZm8uc3RfbW9kZSkgb3IgcGF0aC5yZXNvbHZlKHN0cmljdD1UcnVlKSE9cGF0aDpyYWlzZSBWYWx1ZUVycm9yKCdwb3N0LWNhc2UgZGlyZWN0b3J5IG93bmVyL3R5cGUvYWxpYXMgcmVmdXNlZCcpCiByZXR1cm4gcGF0aApkZWYgcmV0YWluKHBhdGgpOgogZ2xvYmFsIHRvdGFsCiByZW1haW5pbmcoKTtyZWxhdGl2ZT1wYXRoLnJlbGF0aXZlX3RvKGJhc2UpCiB0cnk6aW5mbz1wYXRoLmxzdGF0KCkKIGV4Y2VwdCBGaWxlTm90Rm91bmRFcnJvcjpyZWNvcmRbJ21pc3NpbmcnXS5hcHBlbmQocmVsYXRpdmUuYXNfcG9zaXgoKSk7cmV0dXJuCiB0YXJnZXQ9ZGF0YS9yZWxhdGl2ZQogdHJ5OgogIGlmIGluZm8uc3RfdWlkIT11aWQgb3Igbm90IHN0YXQuU19JU1JFRyhpbmZvLnN0X21vZGUpIG9yIGluZm8uc3RfbmxpbmshPTE6cmFpc2UgVmFsdWVFcnJvcigncG9zdC1jYXNlIG5vbnJlZ3VsYXIvb3duZXIvaGFyZGxpbmsgcmVmdXNlZCcpCiAgaWYgaW5mby5zdF9zaXplPm1heGltdW1fZmlsZSBvciB0b3RhbCtpbmZvLnN0X3NpemU+bWF4aW11bV90b3RhbDpyYWlzZSBWYWx1ZUVycm9yKCdwb3N0LWNhc2UgZGlhZ25vc3RpYyBieXRlIGJvdW5kIGV4Y2VlZGVkJykKICB0YXJnZXQucGFyZW50Lm1rZGlyKHBhcmVudHM9VHJ1ZSxleGlzdF9vaz1UcnVlKTt0cmFuc3BvcnQuX3BoeXNpY2FsKHRhcmdldC5wYXJlbnQpCiAgY29waWVkPXRyYW5zcG9ydC5fc3RhYmxlX2NvcHkocGF0aCx0YXJnZXQsZGVhZGxpbmUsbW9kZT0wbzYwMCxleHBlY3RlZF9zaWduYXR1cmU9dHJhbnNwb3J0Ll9zaWduYXR1cmUoaW5mbykpCiAgd2l0aCB0YXJnZXQub3BlbigncmInKSBhcyBzdHJlYW06ZGlnZXN0PWhhc2hsaWIuZmlsZV9kaWdlc3Qoc3RyZWFtLCdzaGEyNTYnKS5oZXhkaWdlc3QoKQogIHRvdGFsKz1jb3BpZWQ7cmVjb3JkWydmaWxlcyddLmFwcGVuZCh7J3BhdGgnOnJlbGF0aXZlLmFzX3Bvc2l4KCksJ2J5dGVzJzpjb3BpZWQsJ3NoYTI1Nic6ZGlnZXN0LCdzb3VyY2Vfb2JzZXJ2YXRpb24nOmxpc3QodHJhbnNwb3J0Ll9zaWduYXR1cmUoaW5mbykpLCdzdGFibGVfY29weSc6VHJ1ZX0pCiBleGNlcHQgRXhjZXB0aW9uIGFzIGVycm9yOgogICMgT25seSB0aGlzIGZyZXNoIHByaXZhdGUgZGVzdGluYXRpb24gYmVsb25ncyB0byB0aGUgY29sbGVjdG9yOyBmYWlsZWQgYnl0ZXMKICAjIG5ldmVyIGJlY29tZSBwYXJ0IG9mIHRoZSB1cGxvYWRlZCBkaWFnbm9zdGljIG9yaWdpbmFsIHJvc3Rlci4KICBpZiBvcy5wYXRoLmxleGlzdHModGFyZ2V0KTp0YXJnZXQudW5saW5rKCkKICByZWNvcmRbJ3JlZnVzYWxzJ10uYXBwZW5kKHsncGF0aCc6cmVsYXRpdmUuYXNfcG9zaXgoKSwnZXJyb3InOnJlcHIoZXJyb3IpfSkKdHJ5OgogZm9yIHdvcmtlciBpbiBzb3J0ZWQoYmFzZS5pdGVyZGlyKCkpOgogIHJlbWFpbmluZygpCiAgaWYgcmUuZnVsbG1hdGNoKHIncG9wZW4tZ3dbMC05XSsnLHdvcmtlci5uYW1lKSBpcyBOb25lOmNvbnRpbnVlCiAgb3duZWRfZGlyZWN0b3J5KHdvcmtlcikKICBmb3IgZml4dHVyZSBpbiBzb3J0ZWQod29ya2VyLml0ZXJkaXIoKSk6CiAgIHJlbWFpbmluZygpO3BhdHRlcm49cid0ZXN0X2NsaV9hbGxfcHJvamVjdF9yZXN1bWVfcHJbMC05XSsnIGlmIHNjb3BlPT0nY2xpLW9yaWdpbmFscycgZWxzZSByJ29yaWdpbmFsLXJhdy1uYXRiaWJbMC05XSsnCiAgIGlmIHJlLmZ1bGxtYXRjaChwYXR0ZXJuLGZpeHR1cmUubmFtZSkgaXMgTm9uZTpjb250aW51ZQogICBvd25lZF9kaXJlY3RvcnkoZml4dHVyZSkKICAgaWYgc2NvcGU9PSdjbGktb3JpZ2luYWxzJzoKICAgIHJldGFpbihmaXh0dXJlLydwcm9jZXNzX29yZGVyLmxvZycpCiAgICBmb3IgbGFiZWwgaW4gKCdyZXN1bWUnLCdmcmVzaCcpOgogICAgIGZvciBuYW1lIGluICgnc3Rkb3V0Jywnc3RkZXJyJywnZXhpdC5qc29uJywndGltZW91dC5qc29uJyk6cmV0YWluKGZpeHR1cmUvJ2NsaS1vYnNlcnZhdGlvbnMnL2xhYmVsL25hbWUpCiAgICBmb3IgcHJvamVjdCBpbiAoJ2FscGhhJywnYmV0YScpOgogICAgIG91dHB1dD1maXh0dXJlLydwcm9qZWN0cycvcHJvamVjdC8nb3V0cHV0JwogICAgIGZvciBuYW1lIGluICgnZXhlY3V0aW9uLmpzb24nLCdyZXBvcnRfZmluYWxpemF0aW9uLmpzb24nLCdjaGVja3BvaW50Lmpzb24nKTpyZXRhaW4ob3V0cHV0LycucGlwZWxpbmUnL25hbWUpCiAgICAgZm9yIG5hbWUgaW4gKCdwaXBlbGluZS5sb2cnLCdtdWx0aV9wcm9qZWN0X3dvcmtlci5sb2cnKTpyZXRhaW4ob3V0cHV0Lydsb2dzJy9uYW1lKQogICBlbHNlOgogICAgY2l0YXRpb25zPWZpeHR1cmUvJ291dHB1dC9yZWFkaW5lc3MvY2l0YXRpb25zJwogICAgaWYgbm90IGNpdGF0aW9ucy5leGlzdHMoKTpyZWNvcmRbJ21pc3NpbmcnXS5hcHBlbmQoY2l0YXRpb25zLnJlbGF0aXZlX3RvKGJhc2UpLmFzX3Bvc2l4KCkpO2NvbnRpbnVlCiAgICBvd25lZF9kaXJlY3RvcnkoY2l0YXRpb25zKQogICAgZGVmIGZhaWwoZXJyb3IpOnJhaXNlIGVycm9yCiAgICBmb3IgZGlyZWN0b3J5LGRpcnMsbmFtZXMgaW4gb3Mud2FsayhjaXRhdGlvbnMsZm9sbG93bGlua3M9RmFsc2Usb25lcnJvcj1mYWlsKToKICAgICBwYXJlbnQ9b3duZWRfZGlyZWN0b3J5KFBhdGgoZGlyZWN0b3J5KSk7ZGVwdGg9bGVuKHBhcmVudC5yZWxhdGl2ZV90byhjaXRhdGlvbnMpLnBhcnRzKQogICAgIGlmIGRlcHRoPjEyOnJhaXNlIFZhbHVlRXJyb3IoJ2NpdGF0aW9uIGRpYWdub3N0aWMgZGVwdGggYm91bmQgZXhjZWVkZWQnKQogICAgIGFsbG93ZWQ9W10KICAgICBmb3IgbmFtZSBpbiBkaXJzOgogICAgICBjaGlsZD1wYXJlbnQvbmFtZTtvd25lZF9kaXJlY3RvcnkoY2hpbGQpO2FsbG93ZWQuYXBwZW5kKG5hbWUpCiAgICAgZGlyc1s6XT1hbGxvd2VkCiAgICAgZm9yIG5hbWUgaW4gbmFtZXM6CiAgICAgIHJlbWFpbmluZygpCiAgICAgIGlmIG5hbWUuZW5kc3dpdGgoKCcuanNvbicsJy5zdGRvdXQuYmluJywnLnN0ZGVyci5iaW4nKSk6cmV0YWluKHBhcmVudC9uYW1lKQogcmVjb3JkWydhY3R1YWxfdG90YWxfYnl0ZXMnXT10b3RhbDtyZWNvcmRbJ2FjdHVhbF9vYnNlcnZlZF9lbnRyaWVzJ109dmlzaXRlZDtyZWNvcmRbJ2FjdHVhbF9yZXRhaW5lZF9pbmRlcGVuZGVudGx5X3N0YWJsZV9maWxlX2NvdW50J109bGVuKHJlY29yZFsnZmlsZXMnXSk7cmVjb3JkWydzdGF0dXMnXT0ncmV0YWluZWQtbmFtZWQtb3JpZ2luYWwtREFUQS13aXRoLWV4cGxpY2l0LW1pc3Npbmctb3ItcmVmdXNlZC1maWxlcycKZXhjZXB0IEJhc2VFeGNlcHRpb24gYXMgZXJyb3I6CiByZWNvcmQudXBkYXRlKHN0YXR1cz0ncG9zdC1jYXNlLWNvbGxlY3Rpb24tZmFpbGVkLW9yaWdpbmFsLXRlc3QtcmVzdWx0LXVuY2hhbmdlZCcsYWN0dWFsX2Vycm9yPXJlcHIoZXJyb3IpKTtyYWlzZQpmaW5hbGx5OgogcmVjb3JkWydhY3R1YWxfdG90YWxfYnl0ZXMnXT10b3RhbDtyZWNvcmRbJ2FjdHVhbF9vYnNlcnZlZF9lbnRyaWVzJ109dmlzaXRlZDtyZWNvcmRfcGF0aC53cml0ZV90ZXh0KGpzb24uZHVtcHMocmVjb3JkLHNvcnRfa2V5cz1UcnVlLGluZGVudD0yKSsnXG4nKTtwcmludChqc29uLmR1bXBzKHsnc2NvcGUnOnNjb3BlLCdzdGF0dXMnOnJlY29yZC5nZXQoJ3N0YXR1cycpLCdzdGFibGVfZmlsZXMnOmxlbihyZWNvcmRbJ2ZpbGVzJ10pLCdtaXNzaW5nJzpsZW4ocmVjb3JkWydtaXNzaW5nJ10pLCdyZWZ1c2Fscyc6bGVuKHJlY29yZFsncmVmdXNhbHMnXSksJ2J5dGVzJzp0b3RhbH0sc29ydF9rZXlzPVRydWUpKQo="))
+          PYTHON
+          .venv/bin/python -B "$RUNNER_TEMP/retain-current-original-case-DATA.py"             "$ORIGINAL_SCOPE" "$RUNNER_TEMP/template-infra-case-workspaces"             "$RUNNER_TEMP/current-original-case-DATA-$ORIGINAL_SCOPE"
+
+      - name: Upload bounded independently stable original case DATA
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: current32d-external-Python-line-and-fixture-DATA-${{ github.run_id }}
-          path: ${{ runner.temp }}/sdk-currentff-external-CLI-DATA/
-          # This directory contains only the explicit bounded observer allowlist.
+          name: current-failed-consumer-originals-${{ matrix.scope }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/current-original-case-DATA-${{ matrix.scope }}/
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14

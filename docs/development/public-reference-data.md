@@ -17,3 +17,11 @@ Native commands share the original remaining finite clock. The existing synchron
 The three explicit environment fields `TEMPLATE_PUBLIC_REFERENCE_ROOT`, `TEMPLATE_PUBLIC_REFERENCE_COMMIT` and `TEMPLATE_PUBLIC_REFERENCE_FINGERPRINT` are admitted together by `reference_binding`. No supplied fields means no DATA binding; a partial binding is invalid. This is a preparation contract, not proof inferred from an ambient sibling directory. Own-project integration must retain final source-data verification and all existing numerical/domain/format controls.
 
 The proposed Root controls copy real complete canonical public source and stable deliverables, preserve empty directories and the actual pinned submodule via a local-only clone of its existing native checkout, create an actual owned native Git commit, and use that harness binding. They retain genuine SDK identity and prove data-shadow code executes in an ordinary owned child before guarded refusal. Actual nested pin/blob/index/missing-checkout controls, index flags, partial roster, raw source additions/deletions/renames/tampering, restored edits, physical Root replacement, wrong external identities, unsupported archives and a live private-filename-open audit control must refuse. Fixture commits are explicit owned controls; they are not the production candidate or installed-wheel acceptance. After source review/application, run these real controls and separately run both full own suites against the admitted clean candidate outside their source checkouts.
+
+Disposable complete-reference test repositories disable Git object compression
+and pack delta-search only in their own repository metadata (`core.compression=0`,
+`pack.window=0`). This avoids unnecessary storage work without changing object
+identities or Source bytes. Per-case Root and pinned-submodule copies retain the
+normal `--no-local --no-hardlinks` transport, independent native and canonical
+inventories, empty-directory topology, final Source checks and original clocks.
+Targeted fixture success does not replace complete hosted or release acceptance.
