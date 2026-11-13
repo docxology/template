@@ -80,8 +80,9 @@ The Core module provides fundamental foundation utilities used across the entire
 - Health status reporting
 
 **health.py** / **health_gates.py**
-- Unified repository health check entry point (`uv run python -m infrastructure.core.health`)
+- Unified repository health check entry point (`uv run --no-sync python -m infrastructure.core.health`)
 - `health_gates.build_gate_specs` owns the gate argv table; `health.py` re-exports it and runs the CLI
+- Every gate uses the selected prepared `sys.executable`; module tools run with `-m`. Health execution never installs or reconciles dependencies in the shared runtime.
 - Aggregates every per-CLI quality gate (mypy, ruff, ruff-format, bandit, no-mocks, `__all__` audit, docs-lint, stage-table & api-reference idempotence, architecture-overview presence) into a single typed `HealthReport`
 - Subprocess-only orchestrator — exit code is the sole pass/fail signal; stdout/stderr captured for diagnostics only
 - `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`, and bounded `--workers` concurrency (`1` keeps serial diagnostics)

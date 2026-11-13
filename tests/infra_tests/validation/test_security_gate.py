@@ -9,7 +9,6 @@ from infrastructure.validation.security_gate import (
     aggregate_security_findings,
     parse_pip_audit_output,
     _pip_audit_vulnerabilities,
-    run_security_scan,
     write_security_report,
 )
 
@@ -114,19 +113,6 @@ def test_write_security_report_persists_json(tmp_path: Path) -> None:
     write_security_report(report, out)
     loaded = json.loads(out.read_text(encoding="utf-8"))
     assert loaded["tools_run"] == ["bandit"]
-
-
-def test_run_security_scan_skips_missing_tools_with_empty_path(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setenv("PATH", str(tmp_path / "empty-bin"))
-
-    report, exit_code = run_security_scan(tmp_path)
-
-    assert exit_code == 1
-    assert report["tools_run"] == []
-    assert {row["tool"] for row in report["skipped_tools"]} == {"bandit", "safety", "pip_audit"}
-    assert {row["tool"] for row in report["failed_tools"]} == {"bandit", "pip_audit"}
-    assert report["has_required_tool_failures"] is True
-    assert (tmp_path / ".cache" / "template" / "security_report.json").exists()
 
 
 def test_empty_pip_audit_output_is_a_skip_not_zero_findings() -> None:

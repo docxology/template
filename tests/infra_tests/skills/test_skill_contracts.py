@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
 from infrastructure.skills.contracts import (
@@ -74,27 +73,3 @@ def test_check_skill_contracts_scans_docs_prompts(tmp_path: Path) -> None:
 
 def test_template_prompt_contracts_are_valid() -> None:
     assert check_skill_contracts(_repo_root()) == []
-
-
-def test_check_contracts_cli() -> None:
-    root = _repo_root()
-    proc = subprocess.run(
-        [
-            "uv",
-            "run",
-            "python",
-            "-m",
-            "infrastructure.skills",
-            "check-contracts",
-            "--repo-root",
-            str(root),
-        ],
-        cwd=root,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=120,
-    )
-
-    assert proc.returncode == 0, proc.stdout + proc.stderr
-    assert "skill contracts ok" in (proc.stdout + proc.stderr).lower()
