@@ -714,7 +714,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
-      "source_sha256": "478c6273e749c0bbcd0962267811725c43f4a8f6a68149da82a578c9b0c72bd1",
+      "source_sha256": "996fa60af8cc77f79b0b620f31ea1c898e9fbe315e89930aa26e783f1f374567",
       "families": [
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_direct_boundary_requires_the_planned_key_or_keyless_display_fallback",
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_duplicate_validation_display_name_is_rejected_before_child_execution",
@@ -725,7 +725,7 @@
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_resume_after_validation_preserves_committed_aggregate",
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_validation_seals_aggregate_before_core_and_full_downstream_stages"
       ],
-      "family_observations_sha256": "baf517e5bb12f7b7c3a2f887d70d81cd98bb6a0f6033c9fc120d25287770563d",
+      "family_observations_sha256": "23c1fbf2f344abd594b759f9c5b6f17384f5b4aabf930c93233674f1a2eca2e7",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -734,14 +734,14 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
-          "source_sha256": "478c6273e749c0bbcd0962267811725c43f4a8f6a68149da82a578c9b0c72bd1",
+          "source_sha256": "996fa60af8cc77f79b0b620f31ea1c898e9fbe315e89930aa26e783f1f374567",
           "line": 1
         }
       ]
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_cache_identity.py",
-      "source_sha256": "4dc0ba7979f03576906fe650e371f12de25af7bf55308fcc77970fae35b67fed",
+      "source_sha256": "6690997fed821c2e3c1d4f7c18aa2d22b9a09afcfeddb149040d848e889019f1",
       "families": [
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_authored_input_named_output_does_not_inherit_control_filtering",
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_complete_resume_cannot_reuse_another_environment",
@@ -760,7 +760,7 @@
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_runtime_exclusions_follow_actual_output_locations",
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_source_nested_output_runtime_name_is_consumed"
       ],
-      "family_observations_sha256": "88cc6820b0f088e1f6a5d9add3ac85f996feadb1f1c724a43be13fd2414beaa6",
+      "family_observations_sha256": "a054802b5a234f946f0512e19b7885ac900877257ef7a2e60059fe0f15cb21a0",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -791,7 +791,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_cache_identity.py",
-          "source_sha256": "4dc0ba7979f03576906fe650e371f12de25af7bf55308fcc77970fae35b67fed",
+          "source_sha256": "6690997fed821c2e3c1d4f7c18aa2d22b9a09afcfeddb149040d848e889019f1",
           "line": 1
         }
       ]
@@ -847,11 +847,11 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_distribution_identity.py",
-      "source_sha256": "c77c95bf0b76f8dbe5fc2e09f535756bcfa30a0c20aaa86cc5aa93a1b2e9e95e",
+      "source_sha256": "d02d578f456b5b0f9fe1afa72286108056d377642adf087af0410fb74ec23cd9",
       "families": [
         "tests/infra_tests/core/pipeline/test_distribution_identity.py::test_actual_metadata_and_pkg_info_match_stdlib_without_persistent_reuse"
       ],
-      "family_observations_sha256": "bafd2a2c018c4e1ffcfc5568dd5dbc71ee29c5e8c7b39a402b70a3e833abd374",
+      "family_observations_sha256": "79bb02d53f556a60d28dbb46ffa0095197e3f3c3085ae3eadb53f802ba986688",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -860,7 +860,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_distribution_identity.py",
-          "source_sha256": "c77c95bf0b76f8dbe5fc2e09f535756bcfa30a0c20aaa86cc5aa93a1b2e9e95e",
+          "source_sha256": "d02d578f456b5b0f9fe1afa72286108056d377642adf087af0410fb74ec23cd9",
           "line": 1
         }
       ]
@@ -890,7 +890,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_execution_records.py",
-      "source_sha256": "0061607f3f74e5d413d325ab8067bdea8cec1054be84a4a84ff59a1ce16f0109",
+      "source_sha256": "3fee3c0aa0ba4f73276db790507c086426018cf5f2be5110f1eb893990e0e5c8",
       "families": [
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_cached_record_and_resume_keep_input_output_identity",
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_failed_fresh_run_cannot_rebind_checkpoint_to_changed_output",
@@ -902,7 +902,7 @@
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_resume_checks_consumed_repository_document_bytes",
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_resume_rejection_preserves_unexecuted_analysis_and_checkpoint"
       ],
-      "family_observations_sha256": "8e66fb7cf1e02451b0f2dabdd6ccbefc0564644a4a7e54e30c611d8abb959185",
+      "family_observations_sha256": "aad950f25d2f89e9bbd694938e5dadedebb4ff0bc63edf377cca8e09d92cedbe",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -911,7 +911,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_execution_records.py",
-          "source_sha256": "0061607f3f74e5d413d325ab8067bdea8cec1054be84a4a84ff59a1ce16f0109",
+          "source_sha256": "3fee3c0aa0ba4f73276db790507c086426018cf5f2be5110f1eb893990e0e5c8",
           "line": 1
         }
       ]
@@ -1110,7 +1110,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_incremental_executor.py",
-      "source_sha256": "1bf50847537e6d4141334abce23412ea72d4225df7efcee72d72bf104bf3e186",
+      "source_sha256": "473ca79a5e6eed25cb160cc7b8a6504e2413f64db4efc816ea6c0d505eeeb5b7",
       "families": [
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestDefaultOff::test_every_stage_runs_on_repeat_when_disabled",
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestIncrementalSkip::test_missing_output_forces_rerun",
@@ -1118,7 +1118,7 @@
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestIncrementalSkip::test_only_downstream_reruns_when_only_its_own_input_changes",
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestIncrementalSkip::test_repeat_run_skips_unchanged_stages"
       ],
-      "family_observations_sha256": "f4f5211d82fbe065163672dc8d05d7ac70b77481e31ab16a8ab72f5cecdb5f94",
+      "family_observations_sha256": "6fed3dea18ef95e447c8c827010da7c310a44578020a189e33c4d8a2f298c987",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1127,7 +1127,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_incremental_executor.py",
-          "source_sha256": "1bf50847537e6d4141334abce23412ea72d4225df7efcee72d72bf104bf3e186",
+          "source_sha256": "473ca79a5e6eed25cb160cc7b8a6504e2413f64db4efc816ea6c0d505eeeb5b7",
           "line": 1
         }
       ]
@@ -1200,7 +1200,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_modularity_boundaries.py",
-      "source_sha256": "39f4a1fd70c7a0a6b9c6252522a971f64e2dadc24aa8eff2c928b7ee81fdb8e6",
+      "source_sha256": "8db24ee0c96174bfc2613771d85a86fe5868b53f5f3e0b8e29e1c66a6f418649",
       "families": [
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_built_wheel_contains_canonical_pipeline_yaml",
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_canonical_entrypoints_export_their_own_implementations",
@@ -1209,7 +1209,7 @@
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_missing_repository_yaml_uses_packaged_canonical_dag",
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_removed_root_entrypoints_are_absent"
       ],
-      "family_observations_sha256": "0753a960db41bb1c6a99c1af4511ed9619aedebf61c5d355fefe141201ca45b5",
+      "family_observations_sha256": "b971dc846bbafae1ddde3e8e5e4b0dfc01793b846fce2c86019bdd7aec82dad2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1218,7 +1218,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_modularity_boundaries.py",
-          "source_sha256": "39f4a1fd70c7a0a6b9c6252522a971f64e2dadc24aa8eff2c928b7ee81fdb8e6",
+          "source_sha256": "8db24ee0c96174bfc2613771d85a86fe5868b53f5f3e0b8e29e1c66a6f418649",
           "line": 1
         }
       ]
@@ -1400,7 +1400,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_opt_in_tags.py",
-      "source_sha256": "3a7711865ff0809197fe04d056852f5872b865b6b099089736f912f3a43ea865",
+      "source_sha256": "12ce8113f930e78f3e1cefb6d299675226030f2b7726ad1fb86c7ec4ab398055",
       "families": [
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_default_yaml_declares_docxplus_as_opt_in",
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_executor_total_stages_matches_preview",
@@ -1412,7 +1412,7 @@
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_synthetic_opt_in_tag_is_omitted_from_preview",
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_vocabulary_and_menu_counts_follow_yaml"
       ],
-      "family_observations_sha256": "51b2a8ba06460f6e62165037947cf4f8b01982b5433a858787f983078403d1ff",
+      "family_observations_sha256": "53bfa3b05f7cbda5da075025716907b2aea03edf4fe81ad6de2a48256f500042",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1421,7 +1421,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_opt_in_tags.py",
-          "source_sha256": "3a7711865ff0809197fe04d056852f5872b865b6b099089736f912f3a43ea865",
+          "source_sha256": "12ce8113f930e78f3e1cefb6d299675226030f2b7726ad1fb86c7ec4ab398055",
           "line": 1
         }
       ]
@@ -1482,7 +1482,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_plan_compilation.py",
-      "source_sha256": "7143ac34730bca8e134daf14c6d5ae1c2c329eb61d5509c67da225dbffdaa0f4",
+      "source_sha256": "b182f9c8d87f5253f8f7cd74476fbafd1c32497db9a9bd9a684e4d7f8eae744f",
       "families": [
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_actual_infrastructure_target_honors_skip_infra_with_custom_key",
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_analysis_selection_rejects_invalid_deadline_without_outputs",
@@ -1503,7 +1503,7 @@
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_retired_or_arbitrary_method_refuses_before_execution",
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_script_target_requires_bounded_real_repository_python_file"
       ],
-      "family_observations_sha256": "1221208fee56bde6ed0e5583cacd7750e0a86e4ba4ba85e1913db1d4aee01ee3",
+      "family_observations_sha256": "a0978c346e10c68b1ebdd8551dbd8c20f6c3f6d676797b815c47bef48abe4802",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1512,7 +1512,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_plan_compilation.py",
-          "source_sha256": "7143ac34730bca8e134daf14c6d5ae1c2c329eb61d5509c67da225dbffdaa0f4",
+          "source_sha256": "b182f9c8d87f5253f8f7cd74476fbafd1c32497db9a9bd9a684e4d7f8eae744f",
           "line": 1
         }
       ]
@@ -1545,7 +1545,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_plugins.py",
-      "source_sha256": "3aa0adf90e147bbd9cc0d4ef93ac2661cf5ac883750fdb99551f78cc2ad605b5",
+      "source_sha256": "b8c8695ed9d519bcc9174d1661e4e4cfa0f4af52c13aaa3d68efd9a29de97adb",
       "families": [
         "tests/infra_tests/core/pipeline/test_plugins.py::TestLoadPluginStagesDefaultOff::test_empty_file_returns_empty",
         "tests/infra_tests/core/pipeline/test_plugins.py::TestLoadPluginStagesDefaultOff::test_empty_plugins_block_returns_empty",
@@ -1569,7 +1569,7 @@
         "tests/infra_tests/core/pipeline/test_plugins.py::test_plugin_contract_and_hooks_survive_merge",
         "tests/infra_tests/core/pipeline/test_plugins.py::test_plugin_requires_explicit_identity_and_contract"
       ],
-      "family_observations_sha256": "ca7683b81d698db941dec4f6692485115f22505eb46e1fa93472f17398ad60b8",
+      "family_observations_sha256": "42ab23f041bfc761f304cc1d37a089024ada9f70210faf3a82a4b98e3422c903",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1578,21 +1578,21 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_plugins.py",
-          "source_sha256": "3aa0adf90e147bbd9cc0d4ef93ac2661cf5ac883750fdb99551f78cc2ad605b5",
+          "source_sha256": "b8c8695ed9d519bcc9174d1661e4e4cfa0f4af52c13aaa3d68efd9a29de97adb",
           "line": 1
         }
       ]
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_plugins_executor.py",
-      "source_sha256": "bea71d19f733ff905262ef8ba2dc0dd148965c0621ade3eca6232c3c39bd6a2a",
+      "source_sha256": "f43ead6848dfe294867edcf7dc6c415d0cff50614aa21e31d2cf244f91f41c5c",
       "families": [
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorDefaultOff::test_no_plugin_file_means_unchanged_plan",
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorPluginMerge::test_invalid_plugin_missing_runner_rejected",
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorPluginMerge::test_invalid_plugin_rejected",
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorPluginMerge::test_plugin_stage_runs_in_built_plan"
       ],
-      "family_observations_sha256": "37b842d692e13cda45876ab79d75c4a6c3085162b66a63512ff53d087b66ea6e",
+      "family_observations_sha256": "e7ae2b93480d0a6264720b018473b44be7572e07040c85d318bca08613f8ad92",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1601,7 +1601,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_plugins_executor.py",
-          "source_sha256": "bea71d19f733ff905262ef8ba2dc0dd148965c0621ade3eca6232c3c39bd6a2a",
+          "source_sha256": "f43ead6848dfe294867edcf7dc6c415d0cff50614aa21e31d2cf244f91f41c5c",
           "line": 1
         }
       ]
@@ -2712,7 +2712,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_infra.py",
-      "source_sha256": "49067bf6f32d8d0cfdf9c8c5b429ad233a70919b0a00f759ff18e75de19bbba9",
+      "source_sha256": "883f25b752d687a25f078b73fd0a06650cb6996c50e02b23ab0f7a9e28b01665",
       "families": [
         "tests/infra_tests/core/test_ci_infra.py::test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source_owners",
         "tests/infra_tests/core/test_ci_infra.py::test_aggregate_receipt_checks_exact_selected_file_and_member_union",
@@ -2724,7 +2724,7 @@
         "tests/infra_tests/core/test_ci_infra.py::test_shard_manifest_refuses_missing_duplicate_empty_and_extra_work",
         "tests/infra_tests/core/test_ci_infra.py::test_shard_seconds_target_refuses_invalid_values"
       ],
-      "family_observations_sha256": "c34911aba5cc849cbcf0cc4e7c490ded3dc376a6dfaf521ce46ad948f7f79c62",
+      "family_observations_sha256": "50f05799dde8cdc4728f4cf07f9253e48056cde138dfc685553cac7d3f54108b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2733,7 +2733,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_infra.py",
-          "source_sha256": "49067bf6f32d8d0cfdf9c8c5b429ad233a70919b0a00f759ff18e75de19bbba9",
+          "source_sha256": "883f25b752d687a25f078b73fd0a06650cb6996c50e02b23ab0f7a9e28b01665",
           "line": 1
         }
       ]
@@ -8270,7 +8270,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_cli.py",
-      "source_sha256": "f3e130470d416ed9335c1b771e24050f08c6c5dec90dcc6a82250c82bf7d5df5",
+      "source_sha256": "495aa6d2a826abaaf076978965e39cc7b06e723fb170404b7a525e50d531faa4",
       "families": [
         "tests/infra_tests/llm/test_cli.py::TestCLIArgumentParsing::test_check_command_parsing",
         "tests/infra_tests/llm/test_cli.py::TestCLIArgumentParsing::test_main_no_args_exits",
@@ -8283,11 +8283,9 @@
         "tests/infra_tests/llm/test_cli.py::TestCLISchemaCommand::test_schema_emits_valid_json_and_exits_zero",
         "tests/infra_tests/llm/test_cli.py::TestCLITemplateCommand::test_template_list",
         "tests/infra_tests/llm/test_cli.py::TestCLITemplateCommand::test_template_no_name_no_list",
-        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_check_command_success",
-        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_models_command_success",
-        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_query_command_basic"
+        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_check_command_success"
       ],
-      "family_observations_sha256": "fa72c1b7b254e3393e01ce2bc4caca22732058a2f88699fa169a90fe7fe4e04c",
+      "family_observations_sha256": "d5622ae920ea06f0d4309c03c4e9bc5ba096b12c679209a1e1168b147179a61b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -8299,26 +8297,12 @@
           "obligations": [
             "local-ollama"
           ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_models_command_success",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_query_command_basic",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_cli.py",
-          "source_sha256": "f3e130470d416ed9335c1b771e24050f08c6c5dec90dcc6a82250c82bf7d5df5",
+          "source_sha256": "495aa6d2a826abaaf076978965e39cc7b06e723fb170404b7a525e50d531faa4",
           "line": 1
         }
       ]
@@ -8539,7 +8523,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_core.py",
-      "source_sha256": "f676d8655354b76a1c1202e77ba14c3b88b72c1ef08211695f6e5b79e3a93a0d",
+      "source_sha256": "396b4fc8bd1a9e53527fbe4b013695fe15a25b3fccc76ce1a7f8f124a8c87a26",
       "families": [
         "tests/infra_tests/llm/test_core.py::TestClientHelperMethods::test_check_connection_returns_bool",
         "tests/infra_tests/llm/test_core.py::TestClientHelperMethods::test_check_connection_with_reason_returns_tuple",
@@ -8562,35 +8546,16 @@
         "tests/infra_tests/llm/test_core.py::TestLLMClientPropertiesPure::test_config_property",
         "tests/infra_tests/llm/test_core.py::TestLLMClientPropertiesPure::test_config_stored_on_client",
         "tests/infra_tests/llm/test_core.py::TestLLMClientPropertiesPure::test_context_property",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_apply_template",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_context_maintained_across_queries",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_get_available_models",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_basic",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_long",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_raw",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_short",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_structured",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_with_options",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_reset_context_clears_history",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_seed_reproducibility",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_stream_query",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_config_response_mode_limits",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_empty_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_long_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_multiple_resets",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_context_maintained",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_long",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_raw",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_short",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_with_options",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_num_ctx",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_override_num_ctx",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_repeat_penalty",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_top_k",
         "tests/infra_tests/llm/test_core.py::TestResponseMode::test_response_mode_string_comparison",
         "tests/infra_tests/llm/test_core.py::TestResponseMode::test_response_mode_values",
-        "tests/infra_tests/llm/test_core.py::TestResponseModeDetails::test_response_mode_comparison",
-        "tests/infra_tests/llm/test_core.py::TestResponseModeDetails::test_response_mode_str",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptInjection::test_reset_reinjects_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptInjection::test_set_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptInjection::test_set_system_prompt_clears_context",
@@ -8600,136 +8565,16 @@
         "tests/infra_tests/llm/test_core.py::TestSystemPromptManagementPure::test_set_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptManagementPure::test_system_prompt_preserved_on_reset"
       ],
-      "family_observations_sha256": "d840463f34247e10eba136572a70c829f59fdd02516c2f4fd5254f6fcae0691e",
+      "family_observations_sha256": "bfab9d6fdc4c7d37b597805888c6ce271d4284e4d8ebd7bab17c32dda431029a",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_apply_template",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_context_maintained_across_queries",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_get_available_models",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_basic",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_long",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_raw",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_short",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_structured",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_with_options",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_reset_context_clears_history",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_seed_reproducibility",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_stream_query",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_context_maintained",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_long",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_raw",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_short",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_with_options",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_core.py",
-          "source_sha256": "f676d8655354b76a1c1202e77ba14c3b88b72c1ef08211695f6e5b79e3a93a0d",
+          "source_sha256": "396b4fc8bd1a9e53527fbe4b013695fe15a25b3fccc76ce1a7f8f124a8c87a26",
           "line": 1
         }
       ]
@@ -8847,7 +8692,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_llm_core.py",
-      "source_sha256": "4c66c17a34a8cab092cb1d2b41a119ff6588854696ee40291bb637e7d8e4045e",
+      "source_sha256": "fd264bf99f0905149c173cbe3f271401fd35a6192f2c1019b37490e682999d6d",
       "families": [
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientContextManagement::test_context_add_message",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientContextManagement::test_context_multiple_messages",
@@ -8865,9 +8710,6 @@
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientInit::test_init_default",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientInit::test_init_with_config",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientInit::test_init_with_fallback_models",
-        "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_apply_template",
-        "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_adds_to_context",
-        "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_basic",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientSystemPrompt::test_inject_system_prompt_idempotent",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientSystemPrompt::test_no_auto_inject",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientSystemPrompt::test_system_prompt_content",
@@ -8879,38 +8721,16 @@
         "tests/infra_tests/llm/test_llm_core.py::TestResponseMode::test_response_mode_is_string_enum",
         "tests/infra_tests/llm/test_llm_core.py::TestResponseMode::test_response_modes"
       ],
-      "family_observations_sha256": "7ea692bc6ac3f8fbaaabb04680b922d160a4490788906e6c98439db5be3f6eb5",
+      "family_observations_sha256": "3e5217f9cbafc977a55f8c56f31b5a3e564595e68325c9a0a325889b5f1a3d1d",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [
-        {
-          "id": "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_apply_template",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_adds_to_context",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_basic",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_llm_core.py",
-          "source_sha256": "4c66c17a34a8cab092cb1d2b41a119ff6588854696ee40291bb637e7d8e4045e",
+          "source_sha256": "fd264bf99f0905149c173cbe3f271401fd35a6192f2c1019b37490e682999d6d",
           "line": 1
         }
       ]
@@ -8989,29 +8809,6 @@
         {
           "path": "tests/infra_tests/llm/test_llm_review.py",
           "source_sha256": "0b3f2eeb4d8b6825a2105f617e82d612314bdbad827b0875ab804243d992b506",
-          "line": 1
-        }
-      ]
-    },
-    {
-      "path": "tests/infra_tests/llm/test_llm_review_integration.py",
-      "source_sha256": "9fdfef1dc50fe55532ea07fc449ee27a8b2c56df7176d1bf6f9061a08e551456",
-      "families": [
-        "tests/infra_tests/llm/test_llm_review_integration.py::TestLLMReviewIntegration::test_generate_review_with_real_llm",
-        "tests/infra_tests/llm/test_llm_review_integration.py::TestLLMReviewIntegration::test_select_and_start_ollama_model"
-      ],
-      "family_observations_sha256": "faa78a52ad642f601285b7c567957ba624ea8828bc98f8c7fb7f945331ca611e",
-      "decision": {
-        "lane": "live-unpaid",
-        "obligations": [
-          "local-ollama"
-        ]
-      },
-      "exceptions": [],
-      "evidence": [
-        {
-          "path": "tests/infra_tests/llm/test_llm_review_integration.py",
-          "source_sha256": "9fdfef1dc50fe55532ea07fc449ee27a8b2c56df7176d1bf6f9061a08e551456",
           "line": 1
         }
       ]
@@ -9448,28 +9245,16 @@
     },
     {
       "path": "tests/infra_tests/llm/test_ollama_utils.py",
-      "source_sha256": "399faf9487cd225e7a9f540b5d3c1dc2e05ff352775d85330f19d9daf29768c8",
+      "source_sha256": "4ad64f9dc04cf8619eea180fa9f51fac7354e9218c831651a991856167f4ebda",
       "families": [
         "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_no_server",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_partial_match",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_returns_tuple",
         "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_timeout",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_with_server",
         "tests/infra_tests/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_are_strings",
         "tests/infra_tests/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_is_list",
         "tests/infra_tests/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_not_empty",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_no_auto_start",
         "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_returns_true",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_entries",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_name_field",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_returns_list",
         "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelInfo::test_get_model_info_nonexistent",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelInfo::test_get_model_info_returns_dict",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_has_entries",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_returns_list",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_returns_bool",
         "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_bad_url",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_default_url",
         "tests/infra_tests/llm/test_ollama_utils.py::TestOllamaUtilsWithoutServer::test_ensure_ollama_ready_no_server_no_auto_start",
         "tests/infra_tests/llm/test_ollama_utils.py::TestOllamaUtilsWithoutServer::test_get_available_models_no_server",
         "tests/infra_tests/llm/test_ollama_utils.py::TestOllamaUtilsWithoutServer::test_get_available_models_retries",
@@ -9478,79 +9263,24 @@
         "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_already_loaded",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_check_loaded_first",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_no_server",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_returns_tuple",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_with_server",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_failure_on_nonzero_exit",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_returns_false_when_ollama_missing",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_success_on_zero_exit",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_timeout",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestRealOllamaSmoke::test_real_local_ollama_smoke",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_fallback",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_partial_match",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_returns_string",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_with_preferences",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestSelectSmallFastModel::test_select_small_fast_model_returns_string",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSmallFastPreferenceMatches::test_matches_gemma_prefix",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSmallFastPreferenceMatches::test_matches_smollm2",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSmallFastPreferenceMatches::test_no_match_only_large"
       ],
-      "family_observations_sha256": "eeb598d195b34f45b6e76ac2e2f8ea74ac6d27b3be888071d4e0b36454a9a3aa",
+      "family_observations_sha256": "353afdce0b2b4171fc8bd6551ce12f1f56e5a0e396329c0084afabf80187268e",
       "decision": {
         "lane": "core",
         "obligations": []
       },
       "exceptions": [
         {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_partial_match",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_returns_tuple",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_with_server",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_no_auto_start",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
           "id": "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_returns_true",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_entries",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_name_field",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_returns_list",
           "lane": "live-unpaid",
           "obligations": [
             "local-ollama"
@@ -9564,42 +9294,7 @@
           ]
         },
         {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelInfo::test_get_model_info_returns_dict",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_has_entries",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_returns_list",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_returns_bool",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
           "id": "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_bad_url",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_default_url",
           "lane": "live-unpaid",
           "obligations": [
             "local-ollama"
@@ -9613,42 +9308,7 @@
           ]
         },
         {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_returns_tuple",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_with_server",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestRealOllamaSmoke::test_real_local_ollama_smoke",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_fallback",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
           "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_partial_match",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_returns_string",
           "lane": "live-unpaid",
           "obligations": [
             "local-ollama"
@@ -9660,19 +9320,12 @@
           "obligations": [
             "local-ollama"
           ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectSmallFastModel::test_select_small_fast_model_returns_string",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_ollama_utils.py",
-          "source_sha256": "399faf9487cd225e7a9f540b5d3c1dc2e05ff352775d85330f19d9daf29768c8",
+          "source_sha256": "4ad64f9dc04cf8619eea180fa9f51fac7354e9218c831651a991856167f4ebda",
           "line": 1
         }
       ]
@@ -10051,7 +9704,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_review_generators.py",
-      "source_sha256": "27509200c5d40ebc930b4a29539950bf544ff64f526485dff5a76fd16199d3b6",
+      "source_sha256": "8f9ae3209b0f8aa2f872274580bf4f114d19467088178c104dbc0d6bf833cc80",
       "families": [
         "tests/infra_tests/llm/test_review_generators.py::TestExtractManuscriptText::test_extracts_text_from_real_pdf",
         "tests/infra_tests/llm/test_review_generators.py::TestExtractManuscriptText::test_file_not_found",
@@ -10070,8 +9723,6 @@
         "tests/infra_tests/llm/test_review_generators.py::TestGenerationHelpers::test_build_off_topic_retry_prompt",
         "tests/infra_tests/llm/test_review_generators.py::TestGenerationHelpers::test_deduplicate_response_highly_repetitive",
         "tests/infra_tests/llm/test_review_generators.py::TestGenerationHelpers::test_deduplicate_response_non_repetitive",
-        "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_executive_summary_real_ollama",
-        "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_review_with_metrics_real_ollama",
         "tests/infra_tests/llm/test_review_generators.py::TestTemplateBasedGenerators::test_generate_executive_summary_calls_llm",
         "tests/infra_tests/llm/test_review_generators.py::TestTemplateBasedGenerators::test_generate_improvement_suggestions_calls_llm",
         "tests/infra_tests/llm/test_review_generators.py::TestTemplateBasedGenerators::test_generate_methodology_review_calls_llm",
@@ -10087,35 +9738,18 @@
         "tests/infra_tests/llm/test_review_generators.py::TestWarmupModelOffline::test_warmup_model_already_loaded_skips_preload",
         "tests/infra_tests/llm/test_review_generators.py::TestWarmupModelOffline::test_warmup_no_model_loaded_triggers_preload"
       ],
-      "family_observations_sha256": "c14aa6ebc4ab09723d6738d16712be909e6e3e3e04daf968ab4ad7bf15890189",
+      "family_observations_sha256": "5c990f1601a0e7ff728b4b8eec81507b9e08c62b17a2378ffd6b704db678b9f8",
       "decision": {
         "lane": "core",
         "obligations": [
           "python-format-distributions"
         ]
       },
-      "exceptions": [
-        {
-          "id": "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_executive_summary_real_ollama",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama",
-            "python-format-distributions"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_review_with_metrics_real_ollama",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama",
-            "python-format-distributions"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_review_generators.py",
-          "source_sha256": "27509200c5d40ebc930b4a29539950bf544ff64f526485dff5a76fd16199d3b6",
+          "source_sha256": "8f9ae3209b0f8aa2f872274580bf4f114d19467088178c104dbc0d6bf833cc80",
           "line": 1
         }
       ]
@@ -14371,9 +14005,10 @@
     },
     {
       "path": "tests/infra_tests/project/test_root_case_lanes.py",
-      "source_sha256": "017036e813a2611e22e5937b6d80ec2597806b01a8640ba60c10c1d180aa17a2",
+      "source_sha256": "81ac3369d1bb1062f374fada2e1d416ca572fa7b311d5739810415ee048e2384",
       "families": [
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_case_timer_is_typed_and_early_callback_or_failure_text_is_not_timeout",
+        "tests/infra_tests/project/test_root_case_lanes.py::test_actual_independent_external_chunks_overlap_and_refuse_rehashed_excess_concurrency",
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_lane_deadline_or_interruption_cleans_launched_detached_child",
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_skip_teardown_or_concurrent_source_edit_refuses_success",
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_source_owned_core_selection_and_all_original_phases",
@@ -14385,7 +14020,7 @@
         "tests/infra_tests/project/test_root_case_lanes.py::test_real_case_physical_root_replacement_refuses_writes_with_identical_source_bytes",
         "tests/infra_tests/project/test_root_case_lanes.py::test_required_live_lane_stays_blocked_without_execution"
       ],
-      "family_observations_sha256": "f79a39a10163a2428d0efd5156ec45185d8c187746897db8cabee31001dd4106",
+      "family_observations_sha256": "015afb4359c5b3654ffe4cc0e7bb41816bef1c821c40eda498f54e70b25ee781",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -14394,7 +14029,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_root_case_lanes.py",
-          "source_sha256": "017036e813a2611e22e5937b6d80ec2597806b01a8640ba60c10c1d180aa17a2",
+          "source_sha256": "81ac3369d1bb1062f374fada2e1d416ca572fa7b311d5739810415ee048e2384",
           "line": 1
         }
       ]
@@ -26802,7 +26437,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-      "source_sha256": "73b3211d25115d3a276c4dd37a3334fa46f697318d1522eb71c2425e3b05d32f",
+      "source_sha256": "d0590afbfd7a2ac505a4f244ceae323b1196a79c04c051ea0f724de089b15f2d",
       "families": [
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_cold_selected_root_runtime_overrides_missing_or_wrong_ambient_nomination",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_popen_environment_matches_held_source_commitment_and_refuses_changed_digest",
@@ -26813,7 +26448,7 @@
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_terminal_roster_refuses_unclosed_or_aliased_images"
       ],
-      "family_observations_sha256": "14dff10f17f61159a547d6e108804354760f5dd21508ce408fdfea648c1549f4",
+      "family_observations_sha256": "46e1687965fc1af14a1d13daced72b5cd96f6a6402ebc3c1f100fe86e8d09112",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26832,13 +26467,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "73b3211d25115d3a276c4dd37a3334fa46f697318d1522eb71c2425e3b05d32f",
+          "source_sha256": "d0590afbfd7a2ac505a4f244ceae323b1196a79c04c051ea0f724de089b15f2d",
           "line": 1
         },
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "73b3211d25115d3a276c4dd37a3334fa46f697318d1522eb71c2425e3b05d32f",
-          "line": 460
+          "source_sha256": "d0590afbfd7a2ac505a4f244ceae323b1196a79c04c051ea0f724de089b15f2d",
+          "line": 573
         }
       ]
     },
@@ -37324,36 +36959,27 @@
     },
     {
       "path": "tests/integration/test_module_interoperability.py",
-      "source_sha256": "9a104878cdaf3a03430632cc6b59fdbe333db429b38cdc4fb4cd474b56c20730",
+      "source_sha256": "366da0d4123f9b690e47ef352e4292caf8444b710e2038c169dd2722036332df",
       "families": [
         "tests/integration/test_module_interoperability.py::TestModuleInteroperability::test_configuration_independence",
         "tests/integration/test_module_interoperability.py::TestModuleInteroperability::test_shared_exception_handling",
         "tests/integration/test_module_interoperability.py::TestModuleInteroperability::test_shared_logging",
         "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_full_research_pipeline_metadata",
-        "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_health_check_to_llm_workflow",
         "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_rendering_metadata_workflow",
         "tests/integration/test_module_interoperability.py::TestWrapperScripts::test_literature_cli_exists",
         "tests/integration/test_module_interoperability.py::TestWrapperScripts::test_publishing_cli_exists",
         "tests/integration/test_module_interoperability.py::TestWrapperScripts::test_rendering_cli_exists"
       ],
-      "family_observations_sha256": "ab5ac3c8769628d25b6de4a090581255a109903bf6fc9e7d13c2710ccb198438",
+      "family_observations_sha256": "2bddc454c6cb1eaadab35488af5222e9c5533217e96d628a6efcb8e8fa3469a8",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [
-        {
-          "id": "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_health_check_to_llm_workflow",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/integration/test_module_interoperability.py",
-          "source_sha256": "9a104878cdaf3a03430632cc6b59fdbe333db429b38cdc4fb4cd474b56c20730",
+          "source_sha256": "366da0d4123f9b690e47ef352e4292caf8444b710e2038c169dd2722036332df",
           "line": 1
         }
       ]
