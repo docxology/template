@@ -13,6 +13,7 @@ from typing import Any, Literal
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.output.prose_quality import load_project_config_yaml
+from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
 
 logger = get_logger(__name__)
 
@@ -328,8 +329,9 @@ def verify_project_claims(
 ) -> ClaimVerificationReport:
     """Verify project claims."""
     project_root = Path(project_root)
+    generated_inputs = declared_generated_manuscript_inputs(project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
-    if not manuscript_dir.is_dir():
+    if generated_inputs is None and not manuscript_dir.is_dir():
         return ClaimVerificationReport(skipped=True, reason="manuscript directory missing")
     config = load_project_config_yaml(manuscript_dir) or {}
     validation = config.get("validation") or {}
@@ -343,7 +345,8 @@ def verify_project_claims(
     if verifier is None:
         return ClaimVerificationReport(skipped=True, reason="exa api key missing")
     claims: list[str] = []
-    for md_file in sorted(manuscript_dir.rglob("*.md")):
+    inputs = generated_inputs if generated_inputs is not None else sorted(manuscript_dir.rglob("*.md"))
+    for md_file in inputs:
         try:
             text = md_file.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):

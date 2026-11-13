@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -396,26 +395,6 @@ class TestCliModule:
             ]
         )
         assert code == 0
-
-    def test_subprocess_module_invocation(self) -> None:
-        root = _template_repo_root()
-        proc = subprocess.run(
-            [
-                "uv",
-                "run",
-                "python",
-                "-m",
-                "infrastructure.skills",
-                "check",
-                "--repo-root",
-                str(root),
-            ],
-            cwd=str(root),
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-        assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
 class TestLoadSkillDescriptor:

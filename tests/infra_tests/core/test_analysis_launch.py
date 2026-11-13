@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.analysis_launch import analysis_receipt_path, analysis_stage_key, launch_analysis_script
+from infrastructure.core.execution_boundary import build_bounded_run_env, terminate_bounded_run_processes
 from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint, tool_reuse_refusal
 from infrastructure.core.pipeline.outcomes import StageStatus
 from infrastructure.core.pipeline.executor import PipelineExecutor
@@ -253,8 +254,10 @@ def test_actual_os_interruption_removes_detached_writer_and_preserves_provenance
         "result=launch_analysis_script(script,repo,project,cmd,env,time.monotonic()+60)\n"
         "print(json.dumps(result.to_dict()),flush=True)\n"
     )
+    caller_env, cleanup_token = build_bounded_run_env(os.environ.copy())
     caller = subprocess.Popen(
         [sys.executable, "-I", "-c", driver, str(implementation), str(repo), str(project), str(script)],
+        env=caller_env,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -284,14 +287,12 @@ def test_actual_os_interruption_removes_detached_writer_and_preserves_provenance
         with pytest.raises(ProcessLookupError):
             os.kill(detached, 0)
     finally:
-        if caller.poll() is None:
-            os.killpg(caller.pid, signal.SIGKILL)
-            caller.wait(timeout=10)
-        if detached is not None:
-            try:
-                os.kill(detached, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
+        try:
+            if caller.poll() is None:
+                caller.kill()
+                caller.wait(timeout=10)
+        finally:
+            terminate_bounded_run_processes(cleanup_token)
 
 
 def test_nested_basename_keys_and_receipt_paths_do_not_collide(tmp_path: Path) -> None:

@@ -32,8 +32,10 @@ import pytest
 
 from infrastructure.core.execution_boundary import (
     build_bounded_env,
+    build_bounded_run_env,
     classify_lifecycle_link,
     run_bounded_subprocess,
+    terminate_bounded_run_processes,
     validate_hook_root,
 )
 
@@ -365,10 +367,11 @@ class TestRunBoundedSubprocess:
             "raise SystemExit(78)\n"
         )
         repo_root = Path(__file__).resolve().parents[3]
+        helper_env, cleanup_token = build_bounded_run_env(os.environ.copy())
         helper = subprocess.Popen(
             [sys.executable, "-c", helper_code, str(tmp_path), root_code, child_code],
             cwd=repo_root,
-            env=os.environ.copy(),
+            env=helper_env,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -376,7 +379,6 @@ class TestRunBoundedSubprocess:
         )
         root_pid: int | None = None
         child_pid: int | None = None
-        cleanup_needed = True
         try:
             deadline = time.monotonic() + 10
             while not (root_pid_path.is_file() and child_pid_path.is_file()):
@@ -401,19 +403,15 @@ class TestRunBoundedSubprocess:
                     timeout=5,
                 ).stdout.strip()
                 assert not state or state.startswith("Z"), f"PID {pid} survived interrupt cleanup in state {state}"
-            cleanup_needed = False
             time.sleep(2.2)
             assert not marker.exists()
         finally:
-            if helper.poll() is None:
-                helper.kill()
-                helper.wait(timeout=5)
-            if cleanup_needed and root_pid is not None:
-                with contextlib.suppress(ProcessLookupError):
-                    os.kill(root_pid, signal.SIGKILL)
-            if cleanup_needed and child_pid is not None:
-                with contextlib.suppress(ProcessLookupError):
-                    os.kill(child_pid, signal.SIGKILL)
+            try:
+                if helper.poll() is None:
+                    helper.kill()
+                    helper.wait(timeout=5)
+            finally:
+                terminate_bounded_run_processes(cleanup_token)
 
     def test_retired_callable_option_refuses_before_launch(self, tmp_path: Path) -> None:
         called = []

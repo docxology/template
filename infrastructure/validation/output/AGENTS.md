@@ -6,10 +6,15 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 ## Files
 
+- `__init__.py` - stable public providers resolve lazily through the established
+  SDK export map, with explicit typing imports and cached provider identities.
+  Importing leaf artifact readers must not initialize unrelated prose/claim
+  checks or require a pre-imported rendered-snapshot package.
+
 - `validator.py` - output structure validation (`validate_copied_outputs`, `validate_output_structure`, ...); all provenance-bound counts, sizes, and largest-file fields derive from `collect_stable_output_inventory()`. Public exemplars declare `stable-shippable-output-v1`; explicitly resolved non-template projects may declare `stable-local-output-v1`. Both exclude runtime/build/control and hidden-path residue. Dynamic categories and root bundles are retained, and Stage 5 reuses an inventory mapped to the canonical source-output context rather than scanning the ignored mirror directly.
 - `pipeline.py` - Stage 4 orchestration facade (`validate_pdfs`, `validate_manuscript_output_markdown`, `execute_validation_pipeline`)
 - `report.py` - Validation-report construction, recommendations, and persistence (`generate_validation_report`; split from `pipeline.py`)
-- `render_formats.py` - shared Stage 4/5 effective-format loading, exact canonical deliverable validation, disabled-output rejection, and copied-tree filtering
+- `render_formats.py` - shared Stage 4/5 effective-format loading, exact canonical deliverable validation, disabled-output rejection, and copied-tree filtering. Configuration-only consumers stay dependency-light; import manuscript and renderer validators only within their actual validation paths.
 - `pdf_checks.py` - PDF structure and transmission bookend checks
 - `markdown_checks.py` - manuscript markdown wrapper and diagnostic report handling
 - `design.py` - domain profile, experiment plan, and AutoResearch overlay validation
@@ -24,7 +29,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 ### `pipeline.py`
 
-- `validate_manuscript_output_markdown(project_name)` — pipeline wrapper; resolves `projects/{name}/manuscript/` and calls content `validate_markdown()`. **Not** the same symbol as content `validate_markdown(dir, repo_root)`.
+- `validate_manuscript_output_markdown(project_name)` — pipeline wrapper; inspects the declared generated input roster or the ordinary authored tree through content `validate_markdown()`. Markdown notes remain advisory; invalid generated declarations and validator failures do not pass.
 - `validate_pdfs(project_name)` — PDF validation for project output dir
 - `execute_validation_pipeline(project_name)` — runs PDF + markdown checks for Stage 4
 - `validate_claim_verification(project_root)` — optional report-only web claim verification over manuscript Markdown

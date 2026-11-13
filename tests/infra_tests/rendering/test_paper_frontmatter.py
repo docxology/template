@@ -237,7 +237,10 @@ def test_configured_cover_refuses_before_combined_output(tmp_path: Path, mutatio
         resolve_paper_layout(m, tuple(files))
 
 
-@pytest.mark.parametrize("mutation", ["none", "order", "parent", "page", "unclosed", "missing"])
+@pytest.mark.parametrize(
+    "mutation",
+    ["none", "order", "parent", "page", "unclosed", "missing", "nested-template", "self-closing-template"],
+)
 def test_html_element_placement_uses_structural_regions(tmp_path: Path, mutation: str) -> None:
     from infrastructure.rendering._paper_frontmatter_render import place_frontmatter_html
 
@@ -263,15 +266,26 @@ def test_html_element_placement_uses_structural_regions(tmp_path: Path, mutation
         text = text.removesuffix("</html>")
     elif mutation == "missing":
         text = text.replace(toc, "")
+    elif mutation in {"nested-template", "self-closing-template"}:
+        closing_flag = "/" if mutation == "self-closing-template" else ""
+        inert = (
+            f'<template id="kept-template"{closing_flag}>'
+            '<nav id="TOC">Inert contents</nav><template>'
+            '<div id="paper-body">Nested inert body</div></template></template>'
+        )
+        text = text.replace("<h1>Body</h1>", "<h1>Body</h1>" + inert)
     target = tmp_path / "output/web/index.html"
     target.parent.mkdir(parents=True)
     target.write_text(text)
-    if mutation == "none":
+    if mutation in {"none", "nested-template", "self-closing-template"}:
         place_frontmatter_html(target, layout)
         structure = _Structure(target.read_text())
         assert structure.one("paper-cover").start < structure.one("paper-frontmatter").start
         assert structure.one("paper-frontmatter").end < structure.one("TOC").start < structure.one("paper-body").start
         assert (target.parent / "assets/paper-cover.png").read_bytes() == (m / "image.png").read_bytes()
+        if mutation != "none":
+            assert inert in target.read_text()
+            assert structure.one("kept-template").parent == structure.one("paper-body").start
     else:
         with pytest.raises(RenderingError):
             place_frontmatter_html(target, layout)
@@ -348,7 +362,9 @@ def _native_project(tmp_path: Path, *, overflow: bool = False):
         names.append(source_name)
         caption = f"Engineering panel {name}. Complete caption retained at ordinary text size. Terminal caption {name}."
         if overflow and index == 0:
-            caption += " Overflow content must fail rather than shrink or clip." * 220
+            # Authored Markdown hard breaks make the excess height deterministic,
+            # without making paragraph line-breaking complexity the negative control.
+            caption += "  \nOverflow content must fail rather than shrink or clip." * 220
         (manuscript / source_name).write_text(
             f"# Panel {name}\n\n![{caption}](../output/figures/{filename}){{#fig:plate-{name.lower()}}}\n",
             encoding="utf-8",

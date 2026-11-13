@@ -315,3 +315,15 @@ class TestValidateMarkdown:
 
         assert exit_code == 0
         assert problems == []
+
+
+def test_explicit_markdown_roster_rejects_symlink_escape(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    outside = tmp_path / "outside.md"
+    outside.write_text("# Unconsumed external content\n", encoding="utf-8")
+    selected = manuscript / "selected.md"
+    selected.symlink_to(outside)
+
+    with pytest.raises(ValueError):
+        validate_markdown(manuscript, tmp_path, manuscript_files=[selected])

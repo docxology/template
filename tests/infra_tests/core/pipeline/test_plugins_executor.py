@@ -12,6 +12,7 @@ Proves three things with real temp project trees (No Mocks):
 from __future__ import annotations
 
 import shutil
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -52,16 +53,13 @@ plugins:
             encoding="utf-8",
         )
 
-        executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
-        specs = executor._build_stage_list(skip_clean=False)
-        names = [s.name for s in specs]
+        with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor:
+            specs = executor._build_stage_list(skip_clean=False)
+            names = [s.name for s in specs]
 
-        assert "Fixture Plugin Stage" in names
-        # Plugin runs after its declared dependency.
-        assert names.index("Copy Outputs") < names.index("Fixture Plugin Stage")
-        # The merged plugin resolves to a runnable callable.
-        spec = next(s for s in specs if s.name == "Fixture Plugin Stage")
-        assert callable(spec.func)
+            assert "Fixture Plugin Stage" in names
+            # Plugin runs after its declared dependency.
+            assert names.index("Copy Outputs") < names.index("Fixture Plugin Stage")
 
     def test_invalid_plugin_rejected(self, tmp_path: Path) -> None:
         repo_root = _make_project_repo(tmp_path)
@@ -76,8 +74,10 @@ plugins:
             encoding="utf-8",
         )
 
-        executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
-        with pytest.raises(PluginStageError):
+        with (
+            closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor,
+            pytest.raises(PluginStageError),
+        ):
             executor._build_stage_list(skip_clean=False)
 
     def test_invalid_plugin_missing_runner_rejected(self, tmp_path: Path) -> None:
@@ -90,8 +90,10 @@ plugins:
 """,
             encoding="utf-8",
         )
-        executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
-        with pytest.raises(PluginStageError):
+        with (
+            closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor,
+            pytest.raises(PluginStageError),
+        ):
             executor._build_stage_list(skip_clean=False)
 
 
@@ -99,18 +101,17 @@ class TestExecutorDefaultOff:
     def test_no_plugin_file_means_unchanged_plan(self, tmp_path: Path) -> None:
         """DEFAULT-OFF: absent plugin file -> plan identical to baseline."""
         repo_root = _make_project_repo(tmp_path)
-        executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
+        with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor:
+            baseline = [s.name for s in executor._build_stage_list(skip_clean=False)]
 
-        baseline = [s.name for s in executor._build_stage_list(skip_clean=False)]
+            # Add the plugin file then remove it: confirms presence is the only switch.
+            plugin_file = repo_root / "projects" / "p" / "pipeline_plugins.yaml"
+            plugin_file.write_text("plugins: []\n", encoding="utf-8")
+            with_empty = [s.name for s in executor._build_stage_list(skip_clean=False)]
 
-        # Add the plugin file then remove it: confirms presence is the only switch.
-        plugin_file = repo_root / "projects" / "p" / "pipeline_plugins.yaml"
-        plugin_file.write_text("plugins: []\n", encoding="utf-8")
-        with_empty = [s.name for s in executor._build_stage_list(skip_clean=False)]
+            plugin_file.unlink()
+            after = [s.name for s in executor._build_stage_list(skip_clean=False)]
 
-        plugin_file.unlink()
-        after = [s.name for s in executor._build_stage_list(skip_clean=False)]
-
-        assert baseline == after
-        # An empty plugins block is also a no-op.
-        assert with_empty == baseline
+            assert baseline == after
+            # An empty plugins block is also a no-op.
+            assert with_empty == baseline

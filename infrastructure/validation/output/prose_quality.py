@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.content.ai_writing import analyze_prose
+from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
 
 logger = get_logger(__name__)
 
@@ -44,21 +46,29 @@ def prose_quality_enabled(project_root: Path) -> bool:
 def validate_prose_quality(project_root: Path) -> bool:
     """Run the report-only AI-writing fingerprint scan over manuscript Markdown."""
     log_substep("Analyzing prose quality (AI-writing fingerprints)...", logger)
+    generated_inputs = declared_generated_manuscript_inputs(project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
-    if not manuscript_dir.is_dir():
-        logger.warning("Prose quality: manuscript directory not found at %s", manuscript_dir)
-        return True
+    inputs: Iterable[Path]
+    if generated_inputs is None:
+        if not manuscript_dir.is_dir():
+            logger.warning("Prose quality: manuscript directory not found at %s", manuscript_dir)
+            return True
+        inputs = sorted(manuscript_dir.glob("*.md"))
+    else:
+        inputs = generated_inputs
 
     flagged = 0
-    for md_file in sorted(manuscript_dir.glob("*.md")):
+    for md_file in inputs:
         try:
             report = analyze_prose(md_file.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError) as exc:
-            logger.warning("Prose quality: could not read %s: %s", md_file.name, exc)
+            name = md_file.relative_to(project_root).as_posix() if generated_inputs is not None else md_file.name
+            logger.warning("Prose quality: could not read %s: %s", name, exc)
             continue
         if report.has_flags:
             flagged += 1
-            logger.info("  %s (%d words):", md_file.name, report.word_count)
+            name = md_file.relative_to(project_root).as_posix() if generated_inputs is not None else md_file.name
+            logger.info("  %s (%d words):", name, report.word_count)
             for flag in report.flags:
                 logger.info("    - %s", flag)
 

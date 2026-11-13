@@ -42,8 +42,10 @@ def validate_citations(
     md_paths: list[str],
     repo_root: str | Path,
     bib_file: str | Path | list[str | Path] | None = None,
+    *,
+    include_documentation: bool = False,
 ) -> list[DiagnosticEvent]:
-    """Verify every ``[@key]`` citation resolves in the project's BibTeX file(s)."""
+    """Verify citations; explicit consumed rosters may include documentation names."""
     repo_root_path = Path(repo_root)
     problems: list[DiagnosticEvent] = []
     if not md_paths:
@@ -78,7 +80,7 @@ def validate_citations(
 
     for path in md_paths:
         path_obj = Path(path)
-        if path_obj.name in NON_RENDERED_MANUSCRIPT_FILES:
+        if not include_documentation and path_obj.name in NON_RENDERED_MANUSCRIPT_FILES:
             continue
         text = path_obj.read_text(encoding="utf-8")
         try:

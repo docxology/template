@@ -74,7 +74,7 @@ jobs:
 
       # Root tag/notes/artwork identity plus each exemplar's intended-versus-
       # published version agreement across pyproject, CITATION, codemeta and
-      # .zenodo.json. On a tag push the tag must equal the declared version.
+      # .zenodo.json. A tag-ref manual dispatch must match the declared version.
       - name: Release version identity
         env:
           RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
@@ -146,8 +146,8 @@ jobs:
       - name: Prepare genuine PDF raster tools for behavioral controls
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends poppler-utils
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 update
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends poppler-utils
           pdftoppm -v
           pdffonts -v
       - uses: ./.github/actions/setup-acceptance-documents
@@ -157,8 +157,8 @@ jobs:
         if: matrix.tex
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex lmodern texlive-fonts-recommended
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 update
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends texlive-xetex lmodern texlive-fonts-recommended
           xelatex --version
           kpsewhich article.cls
           kpsewhich pzdr.tfm
@@ -230,8 +230,8 @@ jobs:
         if: matrix.tex
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 update
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
           xelatex --version
           bibtex --version
           kpsewhich plainnat.bst

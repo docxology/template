@@ -11,11 +11,12 @@ its Source behavior and pending qualification. The
 
 **Final metadata must precede expensive release evidence.** Freeze the final
 implementation, dependency locks and authored release materials. Run the
-Source-owned publication producers in provider order. The default refresh
-derives fifteen publication-copy projects from tracked ownership, runs canonical
-Stage 02 and refresh for Pitch, and revalidates unchanged output bytes for the
-nine-project complement. Pitch consumes Root version facts and generated
-`COUNTS.md` in its charts and decks.
+Source-owned publication producers in current provider order. Current Source
+regenerates all 25 canonical public scopes in `refresh` mode. Genuine Pitch
+Stage 02 analysis precedes its refresh; unchanged-output rebinds require explicit
+`rebind-only` mode. Derive the exact plan from tracked ownership rather than a
+prose list. Require the unchanged all-project
+exemplar-config guard and both strict publication audits on the committed tree.
 
 Measure genuine release-profile coverage for all 25 canonical exemplars at
 committed Source `C` after the initial publication outputs settle. While `HEAD`
@@ -52,6 +53,23 @@ GitHub Release. A fresh authenticated GitHub observation on 2026-11-05 found
 [5.0.0](https://github.com/docxology/template/releases/tag/v5.0.0) as the latest
 published GitHub Release and no GitHub Release at `v5.0.2`; that observation is
 separate from this candidate's unperformed acceptance.
+
+Publication is create-only. The workflow checks every release page, including
+drafts, and refuses a matching tag before `gh release create --verify-tag`. It
+uses the already verified tag, authored notes and admitted assets; it does not
+edit an existing release, replace its assets or implicitly create a tag. A failed
+attempt does not authorize overwriting existing work. Acceptance and the
+separate archival-consent requirement remain unchanged.
+
+## External archival consent
+
+This repository's active GitHub release-to-Zenodo integration automatically
+archives public GitHub releases ([Zenodo documentation](https://help.zenodo.org/docs/github/archive-software/github-upload/)).
+Publishing is therefore external archival, not merely an asset upload. Obtain
+explicit authorization for that side effect as well as satisfying every
+verification, policy and review gate. Do not disable the hook or consume another
+operator's pending approval to force progress; source integration and native
+qualification alone do not authorize publication.
 
 ## Historical 5.0 release train
 
@@ -172,8 +190,9 @@ before the final Source freeze. The command creates no tag, release or acceptanc
    reader authenticates the complete indexed collection and its logical readiness
    bytes; a flat rebuilt archive or an index alone cannot replace that admission.
 4. Create the matching root tag only after acceptance passes, then manually
-   dispatch the release workflow with that handoff. A root 4+ tag push alone is
-   blocked. The dedicated [required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml)
+   dispatch the release workflow with that handoff. Creating or pushing a tag
+   alone does not start this publication workflow or execute its acceptance gates.
+   The dedicated [required acceptance workflow](../../.github/workflows/platform-required-acceptance.yml)
    produces the complete bundle only after every original requirement passes;
    partial CI receipts cannot authorize this step.
    Set `RELEASE_TAG` to the verified existing tag whose dereferenced commit

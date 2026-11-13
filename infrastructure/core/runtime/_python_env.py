@@ -141,7 +141,7 @@ def get_subprocess_env(
     if redact_secrets:
         env = strip_secret_env(env)
     # Unset VIRTUAL_ENV when using uv to avoid warnings about absolute paths
-    if check_uv_available() and "VIRTUAL_ENV" in env:
+    if "VIRTUAL_ENV" in env and check_uv_available():
         env.pop("VIRTUAL_ENV", None)
     return env
 

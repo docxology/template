@@ -177,8 +177,9 @@ Set `P4_SEARCH_ROOT` and `P4_AUTO_ROOT` to the absolute canonical Search and
 Autopoiesis checkout directories. Set `P4_CENSUS_DIR` to a fresh directory under
 `output/readiness/`; use the finite original census and outer process budgets.
 Run slow Root controls with explicit marker selection as shown and supervise
-the overall command with a finite outer guardian. Set `P4_PYTHON312`, `P4_PYTHON313`, and `P4_PYTHON314` to the absolute prepared
-environment executables and `P4_META_PROVIDER_WHEEL` to the actual admitted wheel
+the overall command with a finite outer guardian. Set `P4_PYTHON314` and
+`P4_PYTHON315` to the absolute prepared environment executables and
+`P4_META_PROVIDER_WHEEL` to the actual admitted wheel
 using [`docs/development/public-runtime-matrix.md`](docs/development/public-runtime-matrix.md).
 Installed-wheel and rendering procedures are separate in
 [`docs/development/installed-wheel-matrix.md`](docs/development/installed-wheel-matrix.md).

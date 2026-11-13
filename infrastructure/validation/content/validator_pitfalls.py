@@ -15,14 +15,16 @@ PANDOC_TABLE_ESCAPED_PIPE_PATTERN = re.compile(r"\\\|")
 NON_RENDERED_MANUSCRIPT_FILES: frozenset[str] = frozenset({"AGENTS.md", "README.md", "preamble.md"})
 
 
-def validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:
-    """Flag markdown patterns Pandoc converts to LaTeX ``\\mid`` in text mode."""
+def validate_pandoc_pitfalls(
+    md_paths: list[str], repo_root: str | Path, *, include_documentation: bool = False
+) -> list[DiagnosticEvent]:
+    """Flag Pandoc pitfalls, including documentation names only when consumed."""
     repo_root_path = Path(repo_root)
     problems: list[DiagnosticEvent] = []
 
     for path in md_paths:
         path_obj = Path(path)
-        if path_obj.name in NON_RENDERED_MANUSCRIPT_FILES:
+        if not include_documentation and path_obj.name in NON_RENDERED_MANUSCRIPT_FILES:
             continue
         text = path_obj.read_text(encoding="utf-8")
         try:

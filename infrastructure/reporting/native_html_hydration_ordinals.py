@@ -22,6 +22,7 @@ from infrastructure.rendering.manuscript_hydration_replay import require_shared_
 from infrastructure.rendering._paper_frontmatter import declared_frontmatter
 from infrastructure.rendering._web_source_context import compose_web_source_context
 from infrastructure.rendering.manuscript_ordinal_anchors import (
+    OrdinalAnchor,
     annotate_manuscript_ordinals,
     require_complete_ordinal_ast_equivalence,
     require_unannotated_parser_bytes,
@@ -38,6 +39,7 @@ from infrastructure.reporting.native_format_semantic_source import (
     semantic_owned_sources,
     semantic_parser_options,
     semantic_lua_filters,
+    semantic_contract_ast,
 )
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
 from infrastructure.reporting.native_hydration_reconstruction import observe_native_hydration_reconstruction
@@ -238,6 +240,25 @@ def _body_arguments(
     return arguments, inputs, nominated
 
 
+def _contract_ordinal_positions(
+    root: Path,
+    scope: str,
+    artifact: NativeArtifact,
+    sources: tuple[tuple[str, bytes], ...],
+    annotated_ast: bytes,
+    actual_ast: bytes,
+    anchors: tuple[OrdinalAnchor, ...],
+) -> tuple[tuple[dict[str, Any], ...], tuple[dict[str, Any], ...]]:
+    """Keep full parser custody and independently map its exact owned projection."""
+    complete = require_complete_ordinal_ast_equivalence(annotated_ast, actual_ast, anchors)
+    # Both projections use the original source roster, never annotated boundary
+    # digests or a value-based search for the selected containing role.
+    projected = semantic_contract_ast(root, scope, artifact, sources, actual_ast)
+    annotated_projected = semantic_contract_ast(root, scope, artifact, sources, annotated_ast)
+    owned = require_complete_ordinal_ast_equivalence(annotated_projected, projected, anchors)
+    return complete, owned
+
+
 def observe_html_hydration_ordinals(
     scope: str,
     artifact: NativeArtifact,
@@ -367,7 +388,9 @@ def observe_html_hydration_ordinals(
             if any(result[key] != original_tool[key] for key in ("executable", "executable_sha256")):
                 raise ValueError("HTML annotated body changed the actual Source-selected parser bytes")
             local_ast = runtime.freeze("html-ordinal-source.ast.json", result["stdout"].encode())
-            positions = require_complete_ordinal_ast_equivalence(result["stdout"].encode(), ast.content, anchors)
+            positions, contract_positions = _contract_ordinal_positions(
+                reader.root, scope, artifact, sources, result["stdout"].encode(), ast.content, anchors
+            )
             raw_content = original_source_bytes(
                 semantic_owned_sources(
                     reader.root,
@@ -406,6 +429,7 @@ def observe_html_hydration_ordinals(
                             "parser_byte_range": list(span),
                             "parser_carrier_byte_range": [span[0] - len(anchor.prefix), span[1] + len(anchor.suffix)],
                             "ast": position,
+                            "contract_ast": contract_position,
                             "original_parser_byte_range": list(raw_span),
                             "original_parser_carrier_byte_range": [
                                 raw_span[0] - len(anchor.prefix),
@@ -413,8 +437,15 @@ def observe_html_hydration_ordinals(
                             ],
                             "original_ast": raw_position,
                         }
-                        for token, span, position, raw_span, raw_position, anchor in zip(
-                            occurrences, ranges, positions, raw_ranges, raw_positions, anchors, strict=True
+                        for token, span, position, contract_position, raw_span, raw_position, anchor in zip(
+                            occurrences,
+                            ranges,
+                            positions,
+                            contract_positions,
+                            raw_ranges,
+                            raw_positions,
+                            anchors,
+                            strict=True,
                         )
                     ],
                 }
@@ -606,7 +637,9 @@ def replay_html_hydration_ordinals(
             or ordinal["annotated_original_tool"] not in ordinal["tool_bindings"]
         ):
             raise ValueError("HTML annotated readback changed genuine ToolAPI/parser identity")
-        positions = require_complete_ordinal_ast_equivalence(local_ast.content, ast.content, anchors)
+        positions, contract_positions = _contract_ordinal_positions(
+            reader.root, scope, artifact, sources, local_ast.content, ast.content, anchors
+        )
         raw_positions = require_complete_ordinal_ast_equivalence(raw_local_ast.content, raw_ast.content, anchors)
         expected = [
             {
@@ -614,6 +647,7 @@ def replay_html_hydration_ordinals(
                 "parser_byte_range": list(span),
                 "parser_carrier_byte_range": [span[0] - len(anchor.prefix), span[1] + len(anchor.suffix)],
                 "ast": position,
+                "contract_ast": contract_position,
                 "original_parser_byte_range": list(raw_span),
                 "original_parser_carrier_byte_range": [
                     raw_span[0] - len(anchor.prefix),
@@ -621,8 +655,8 @@ def replay_html_hydration_ordinals(
                 ],
                 "original_ast": raw_position,
             }
-            for token, span, position, raw_span, raw_position, anchor in zip(
-                tokens, ranges, positions, raw_ranges, raw_positions, anchors, strict=True
+            for token, span, position, contract_position, raw_span, raw_position, anchor in zip(
+                tokens, ranges, positions, contract_positions, raw_ranges, raw_positions, anchors, strict=True
             )
         ]
         if ordinal["occurrences"] != expected:
@@ -728,8 +762,11 @@ def html_native_endpoints(
     roles = selected_ast_roles(ast, mapping)
     results = []
     residuals: list[str] = []
-    filtered_ast = _held(observer["semantic_source"]["body"]["ast"], reader).content
-    projected_roles = [] if ordinal_occurrence is None else selected_ast_roles(filtered_ast, ordinal_occurrence["ast"])
+    projected_roles = []
+    if ordinal_occurrence is not None:
+        projected = ordinal_occurrence["contract_ast"]
+        if projected["boundary_kind"] == "containing-table":
+            projected_roles = [{"kind": "Table", "ast_path": projected["container_ast_path"]}]
     original_contract = observer["semantic_source"]["body"]["original_source"]["survival"]["contract"]
     original_math = observer["semantic_source"]["body"]["original_source"]["survival"]["contract"][
         "mathematical_sources"

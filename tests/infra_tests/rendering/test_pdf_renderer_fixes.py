@@ -11,39 +11,43 @@ Follows No Mocks Policy - all tests use real data and real execution.
 import shutil
 import unicodedata
 
+from pypdf import PdfReader
 import pytest
 
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
-from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+from infrastructure.rendering._pdf_latex_bibliography import process_bibliography
+from infrastructure.rendering._pdf_latex_pipeline import compile_latex_manuscript
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 
 
+@pytest.mark.timeout(90)
 class TestBibliographyProcessing:
     """Test bibliography processing functionality."""
 
     @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
     def test_process_bibliography_success(self, tmp_path):
-        """Test successful bibliography processing with real bibtex.
-
-        Local-only coverage: CI installs pandoc but not TeX Live, so this
-        skips on GitHub runners and is enforced on developer machines.
-        """
-        # Create necessary files
+        """A real BibTeX run must resolve the cited source into its bibliography."""
         tex_file = tmp_path / "test.tex"
-        aux_file = tmp_path / "pdf" / "test.aux"
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
         bib_file = tmp_path / "references.bib"
+        (pdf_dir / "test.aux").write_text(
+            "\\relax\n\\citation{test}\n\\bibstyle{plain}\n\\bibdata{references}\n",
+            encoding="utf-8",
+        )
+        bib_file.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
 
-        tex_file.write_text("\\documentclass{article}\n\\begin{document}\n\\end{document}")
-        (tmp_path / "pdf").mkdir(exist_ok=True)
-        aux_file.write_text("some aux content")
-        bib_file.write_text("@article{test,\n  title={Test}\n}")
-
-        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
-        assert isinstance(result, bool)
-        # The bib file must have been copied next to the aux file either way.
-        assert (tmp_path / "pdf" / "references.bib").exists()
+        assert process_bibliography(tex_file, pdf_dir, [bib_file]) is True
+        bibliography = (pdf_dir / "test.bbl").read_text(encoding="utf-8")
+        assert "\\bibitem{test}" in bibliography
+        assert "Boundary Evidence" in bibliography
 
     def test_process_bibliography_missing_bib_file(self, tmp_path):
         """Test bibliography processing with missing bib file."""
@@ -58,19 +62,34 @@ class TestBibliographyProcessing:
         (tmp_path / "pdf").mkdir(exist_ok=True)
         assert process_bibliography(tex_file, tmp_path / "pdf", []) is False
 
-    def test_process_bibliography_copies_all_bib_files(self, tmp_path):
+    @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
+    def test_process_bibliography_resolves_all_database_files(self, tmp_path):
         pdf_dir = tmp_path / "pdf"
         pdf_dir.mkdir()
         tex_file = tmp_path / "test.tex"
-        tex_file.write_text("% stub\n")
-        (pdf_dir / "test.aux").write_text("\\bibdata{references,extra}\n")
+        (pdf_dir / "test.aux").write_text(
+            "\\relax\n\\citation{a,b}\n\\bibstyle{plain}\n\\bibdata{references,extra}\n",
+            encoding="utf-8",
+        )
         bib_a = tmp_path / "references.bib"
         bib_b = tmp_path / "extra.bib"
-        bib_a.write_text("@article{a,title={A},year={2024}}\n")
-        bib_b.write_text("@article{b,title={B},year={2024}}\n")
-        process_bibliography(tex_file, pdf_dir, [bib_a, bib_b])
-        assert (pdf_dir / "references.bib").exists()
-        assert (pdf_dir / "extra.bib").exists()
+        bib_a.write_text(
+            "@book{a,author={Evidence, Casey},title={First Database},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        bib_b.write_text(
+            "@book{b,author={Evidence, Casey},title={Second Database},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+
+        assert process_bibliography(tex_file, pdf_dir, [bib_a, bib_b]) is True
+        bibliography = (pdf_dir / "test.bbl").read_text(encoding="utf-8")
+        assert "\\bibitem{a}" in bibliography
+        assert "\\bibitem{b}" in bibliography
+        assert "First Database" in bibliography
+        assert "Second Database" in bibliography
 
     def test_process_bibliography_missing_aux_file(self, tmp_path):
         """Test bibliography processing with missing auxiliary file."""
@@ -84,20 +103,175 @@ class TestBibliographyProcessing:
         result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
         assert result is False
 
-    def test_process_bibliography_bibtex_warning(self, tmp_path):
-        """Test bibliography processing handles bibtex warnings gracefully."""
+    @pytest.mark.skipif(shutil.which("bibtex") is None, reason="bibtex not installed")
+    def test_process_bibliography_rejects_native_failure(self, tmp_path):
         tex_file = tmp_path / "test.tex"
-        aux_file = tmp_path / "pdf" / "test.aux"
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
         bib_file = tmp_path / "references.bib"
+        (pdf_dir / "test.aux").write_text(
+            "\\relax\n\\citation{test}\n\\bibstyle{absent-ageint-regression-style-17c487}\n\\bibdata{references}\n",
+            encoding="utf-8",
+        )
+        bib_file.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
 
-        tex_file.write_text("test")
-        (tmp_path / "pdf").mkdir(exist_ok=True)
-        aux_file.write_text("aux content")
-        bib_file.write_text("@article{test, title={Test}}")
+        assert process_bibliography(tex_file, pdf_dir, [bib_file]) is False
 
-        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
-        assert isinstance(result, bool)
-        assert (tmp_path / "pdf" / "references.bib").exists()
+    @pytest.mark.skipif(
+        shutil.which("bibtex") is None or shutil.which("xelatex") is None,
+        reason="native BibTeX and XeLaTeX are required",
+    )
+    def test_failed_bibliography_does_not_replace_a_published_pdf(self, tmp_path):
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
+        tex = pdf_dir / "_combined_manuscript.tex"
+        markdown = tmp_path / "source.md"
+        markdown.write_text("# Native bibliography boundary\n", encoding="utf-8")
+        bib_file = tmp_path / "references.bib"
+        bib_file.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        valid_source = (
+            "\\documentclass{article}\n\\begin{document}\n"
+            "Native bibliography boundary.\n\\nocite{*}\n"
+            "\\bibliographystyle{plain}\n\\bibliography{references}\n\\end{document}\n"
+        )
+        tex.write_text(valid_source, encoding="utf-8")
+        published = pdf_dir / "book.pdf"
+        compile_latex_manuscript(tex, markdown, pdf_dir, published, [bib_file], True, [markdown])
+        original = published.read_bytes()
+        text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(published).pages).split())
+        assert "Boundary Evidence" in text
+
+        tex.write_text(
+            valid_source.replace("{plain}", "{absent-ageint-regression-style-17c487}"),
+            encoding="utf-8",
+        )
+        with pytest.raises(RenderingError):
+            compile_latex_manuscript(tex, markdown, pdf_dir, published, [bib_file], True, [markdown])
+
+        assert published.read_bytes() == original
+
+    @pytest.mark.skipif(
+        any(shutil.which(tool) is None for tool in ("pandoc", "xelatex")),
+        reason="native Pandoc and XeLaTeX are required",
+    )
+    def test_unused_bibliography_does_not_require_processing(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        source = manuscript / "chapter.md"
+        source.write_text("# Uncited draft\n\nNo scholarly citations requested.\n", encoding="utf-8")
+        (manuscript / "references.bib").write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        renderer = PDFRenderer(
+            RenderingConfig(
+                manuscript_dir=str(manuscript),
+                output_dir=str(tmp_path / "output"),
+                pdf_dir=str(tmp_path / "output/pdf"),
+            )
+        )
+
+        rendered = renderer.render_combined([source], manuscript, "unused")
+        text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(rendered).pages).split())
+        assert "No scholarly citations requested." in text
+        assert "Boundary Evidence" not in text
+
+    @pytest.mark.skipif(
+        shutil.which("bibtex") is None or shutil.which("xelatex") is None,
+        reason="native BibTeX and XeLaTeX are required",
+    )
+    def test_citations_in_included_auxiliary_files_are_resolved(self, tmp_path):
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
+        tex = pdf_dir / "_combined_manuscript.tex"
+        markdown = tmp_path / "source.md"
+        markdown.write_text("# Included citation fixture\n", encoding="utf-8")
+        bibliography = tmp_path / "references.bib"
+        bibliography.write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        (pdf_dir / "cited.tex").write_text("Included source \\cite{test}.\n", encoding="utf-8")
+        tex.write_text(
+            "\\documentclass{article}\n\\begin{document}\n\\include{cited}\n"
+            "\\bibliographystyle{plain}\n\\bibliography{references}\n\\end{document}\n",
+            encoding="utf-8",
+        )
+
+        rendered = compile_latex_manuscript(
+            tex, markdown, pdf_dir, pdf_dir / "book.pdf", [bibliography], True, [markdown]
+        )
+        text = " ".join(" ".join(page.extract_text() or "" for page in PdfReader(rendered).pages).split())
+        assert "Included source" in text
+        assert "Boundary Evidence" in text
+
+
+@pytest.mark.timeout(90)
+class TestPDFPublicationSafety:
+    @pytest.mark.skipif(
+        any(shutil.which(tool) is None for tool in ("pandoc", "xelatex", "bibtex")),
+        reason="native Pandoc, XeLaTeX and BibTeX are required",
+    )
+    def test_rejected_source_preserves_the_prior_public_pdf(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        source = manuscript / "chapter.md"
+        source.write_text("# Published fixture\n\nSource [@test].\n", encoding="utf-8")
+        (manuscript / "references.bib").write_text(
+            "@book{test,author={Evidence, Casey},title={Boundary Evidence},"
+            "publisher={Synthetic Fixture Press},year={2026}}\n",
+            encoding="utf-8",
+        )
+        renderer = PDFRenderer(
+            RenderingConfig(
+                manuscript_dir=str(manuscript),
+                output_dir=str(tmp_path / "output"),
+                pdf_dir=str(tmp_path / "output/pdf"),
+            )
+        )
+        published = renderer.render_combined([source], manuscript, "publication")
+        original = published.read_bytes()
+        source.write_text("# Rejected revision\n\nSource [@absent_fixture_key].\n", encoding="utf-8")
+
+        with pytest.raises(RenderingError):
+            renderer.render_combined([source], manuscript, "publication")
+
+        assert published.read_bytes() == original
+
+    @pytest.mark.skipif(shutil.which("xelatex") is None, reason="native XeLaTeX is required")
+    @pytest.mark.parametrize("stale_temporary", [False, True])
+    def test_zero_page_compile_cannot_republish_old_pdf(self, tmp_path, stale_temporary):
+        tex = tmp_path / "_combined_manuscript.tex"
+        markdown = tmp_path / "source.md"
+        markdown.write_text("# Native publication fixture\n", encoding="utf-8")
+        tex.write_text(
+            "\\documentclass{article}\n\\begin{document}\nReal prior publication.\n\\end{document}\n",
+            encoding="utf-8",
+        )
+        published = tmp_path / "book.pdf"
+        compile_latex_manuscript(tex, markdown, tmp_path, published, [], False, [markdown])
+        original = published.read_bytes()
+        if stale_temporary:
+            shutil.copy2(published, tmp_path / "_combined_manuscript.pdf")
+        tex.write_text(
+            "\\documentclass{article}\n\\begin{document}\n\\end{document}\n",
+            encoding="utf-8",
+        )
+
+        with pytest.raises(RenderingError):
+            compile_latex_manuscript(tex, markdown, tmp_path, published, [], False, [markdown])
+
+        assert published.read_bytes() == original
 
 
 class TestFigurePathResolution:
@@ -226,9 +400,6 @@ class TestCitationProcessing:
 
         # A real final compiler failure must propagate even if a partial PDF exists.
         result = renderer.render_combined([md_file], tmp_path / "manuscript")
-        assert result.exists(), f"render_combined returned {result} but no file exists"
-        assert result.suffix == ".pdf"
-        assert result.stat().st_size > 0
         bibliography = (tmp_path / "output" / "pdf" / "_combined_manuscript.bbl").read_text()
         assert r"\bibitem" in bibliography and "{test}" in bibliography
         from pypdf import PdfReader

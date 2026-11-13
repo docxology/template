@@ -92,6 +92,10 @@ jobs:
           uv export --project projects/templates/template_autoresearch_project \
             --locked --no-default-groups --no-emit-project --no-emit-local \
             --no-header --no-annotate --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
+          .venv/bin/python -B -m infrastructure.project.locked_dependency_export \
+            --metadata-root projects/templates/template_autoresearch_project \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
+            --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
           for kind in build runtime; do
             uv venv --no-project --no-python-downloads --python .venv/bin/python \
               "$RUNNER_TEMP/autoresearch-$kind-preparation"
@@ -109,6 +113,8 @@ jobs:
       - name: Prepare the selected pinned Lean toolchain
         if: inputs.coverage-project == 'templates/template_active_inference' || inputs.coverage-project == 'templates/template_formal'
         timeout-minutes: 15
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           bash scripts/shell/prepare_ci_lean.sh

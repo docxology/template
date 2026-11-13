@@ -7,12 +7,11 @@ boundary as original process outcomes, not a remote execution attestation.
 
 from __future__ import annotations
 
-import hashlib
 import re
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.files.secure_write import read_bytes_confined
+from infrastructure.core.pipeline.fingerprint_files import digest_path
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_acceptance_evidence import bootstrap_command
 
@@ -32,7 +31,7 @@ def _absolute(value: object) -> Path:
 def executable_observation(executable: Path) -> dict[str, str]:
     """Observe exact installed bytes without copying executable distributions."""
     path = executable.resolve(strict=True)
-    digest = hashlib.sha256(read_bytes_confined(path.parent, path, max_bytes=512 * 1024 * 1024)).hexdigest()
+    digest = digest_path(path.parent, path, max_bytes=512 * 1024 * 1024)
     return {"schema_version": EXECUTABLE_SCHEMA, "path": str(executable.absolute()), "sha256": digest}
 
 

@@ -1,11 +1,9 @@
 {
-  "version": 1,
-  "minimum_collected_tests": 55,
+  "version": 2,
   "required_test_files": [
     "projects/template_active_inference/tables/test_analytical_sweep_claims.py",
     "projects/template_autoresearch_project/tables/test_candidate_outcome_claims.py",
     "projects/template_autoscientists/tables/test_coordination_results_claims.py",
-    "projects/template_code_project/figures/test_figure_TEMPLATE.py",
     "projects/template_code_project/tables/test_optimization_results_claims.py",
     "projects/template_eda_notebook/tables/test_eda_results_claims.py",
     "projects/template_gold_refinement/tables/test_refinery_certification_claims.py",

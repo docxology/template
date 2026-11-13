@@ -16,12 +16,13 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.testing.ci_execution_user import _environment, _git, _hosted, _payload
+from infrastructure.core.testing.ci_execution_user import _environment, _git, _hosted, _payload, _source_identity
 from infrastructure.core.testing._ci_execution_files import (
     _checkout_link,
     _copy_cache,
     _detach,
     _export,
+    _export_pytest_case_diagnostics,
     _open_physical,
     _physical,
     _signature,
@@ -297,6 +298,130 @@ def test_artifact_export_refuses_real_symlinks_and_special_files(tmp_path: Path)
     assert not any(stage.iterdir()) and outside.read_bytes() == b"private"
 
 
+@pytest.mark.parametrize("reader_mode", (0o700, 0o750, 0o755))
+def test_case_diagnostics_keep_numbered_failures_without_traversing_source(tmp_path: Path, reader_mode: int) -> None:
+    base = tmp_path.resolve(strict=True)
+    base.chmod(reader_mode)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    originals = {
+        "pytest-8/popen-gw1/test_child_failure0/worker.stderr": b"original\x00stderr\n",
+        "pytest-8/popen-gw1/test_child_failure0/cli-observations/child/exit.json": b'{"returncode":7}\n',
+        "pytest-8/popen-gw1/test_child_failure0/operator/diagnostics/exemplar-config.exit.json": b'{"original_exit_code":0,"returncode":1}\n',
+        "pytest-8/popen-gw1/test_child_failure0/sequence/diagnostics/observed-analysis.stderr": b"original custody refusal\n",
+        "pytest-8/popen-gw1/complete-public-source-data0.git-stage.trace2.json": b'{"event":"exit","code":0}\n',
+        "pytest-7/test_guard1/runtime-observation.json": b'{"accepted":false}\n',
+        "pytest-7/test_guard1/output/readiness/evidence/native.stdout": b"original native refusal\n",
+        "pytest-7/test_guard1/output/readiness/evidence/html-python-source-owned0/closure.json": b'{"closed":false}\n',
+    }
+    for relative, payload in originals.items():
+        source = root / relative
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(payload)
+    private = base / "private"
+    private.mkdir()
+    (private / "private.stdout").write_bytes(b"must never be transported")
+    (private / "readiness/evidence").mkdir(parents=True)
+    (private / "readiness/evidence/never-copy.stderr").write_bytes(b"private aliased fixture bytes")
+    case = root / "pytest-8/popen-gw1/test_child_failure0"
+    (case / "checkout").symlink_to(private, target_is_directory=True)
+    (case / "output").symlink_to(private, target_is_directory=True)
+    source_fixture = root / "pytest-8/popen-gw1/complete-public-source-data0"
+    source_fixture.mkdir()
+    (source_fixture / "never-copy.stdout").write_bytes(b"private fixture Source bytes")
+    (case / "operator/credentials.stdout").write_bytes(b"private non-diagnostic producer data")
+    (case / "operator/diagnostics/private-source.py").write_bytes(b"private producer Source")
+    (case / "browser-profile").mkdir()
+    os.mkfifo(case / "browser-profile/never-read.stdout")
+    (root / "pytest-current").symlink_to(root / "pytest-8", target_is_directory=True)
+    before = {relative: _signature((root / relative).lstat()) for relative in originals}
+    assert _export_pytest_case_diagnostics(root, destination, time.monotonic() + 10, uid=os.getuid()) == sum(
+        len(payload) for payload in originals.values()
+    )
+    assert {
+        path.relative_to(destination).as_posix(): path.read_bytes() for path in destination.rglob("*") if path.is_file()
+    } == originals
+    assert {relative: _signature((root / relative).lstat()) for relative in originals} == before
+    assert stat.S_IMODE(destination.stat().st_mode) == reader_mode
+    assert not (destination / "pytest-current").exists()
+    assert not (destination / "pytest-8/popen-gw1/test_child_failure0/checkout").exists()
+    assert not (destination / "pytest-8/popen-gw1/test_child_failure0/output").exists()
+    assert not (destination / "pytest-8/popen-gw1/complete-public-source-data0").exists()
+    assert (private / "private.stdout").read_bytes() == b"must never be transported"
+
+
+def test_case_diagnostics_refuse_post_census_hardlinks_before_artifact_exposure(tmp_path: Path) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    source = root / "pytest-0/test_original0/original.stderr"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"original stderr")
+    private = base / "private"
+    private.write_bytes(b"private substituted bytes")
+    changed = False
+
+    def substitute(frame, event, _arg):
+        nonlocal changed
+        if frame.f_code is _stable_copy.__code__ and event == "call" and not changed:
+            changed = True
+            source.unlink()
+            os.link(private, source)
+        return None
+
+    previous = sys.gettrace()
+    try:
+        sys.settrace(substitute)
+        with pytest.raises(ValueError):
+            _export_pytest_case_diagnostics(root, destination, time.monotonic() + 10, uid=os.getuid())
+    finally:
+        sys.settrace(previous)
+    assert changed and not destination.exists()
+    assert private.read_bytes() == b"private substituted bytes"
+
+
+@pytest.mark.parametrize("kind", ("symlink", "hardlink", "fifo", "directory"))
+def test_case_diagnostics_refuse_physical_payload_substitution(tmp_path: Path, kind: str) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    case = root / "pytest-0/popen-gw0/test_refusal0"
+    case.mkdir(parents=True)
+    outside = base / "private"
+    outside.write_bytes(b"never copy substituted private bytes")
+    payload = case / "original.stderr"
+    if kind == "symlink":
+        payload.symlink_to(outside)
+    elif kind == "hardlink":
+        os.link(outside, payload)
+    elif kind == "fifo":
+        os.mkfifo(payload)
+    else:
+        payload.mkdir()
+    with pytest.raises(ValueError):
+        _export_pytest_case_diagnostics(root, destination, time.monotonic() + 10, uid=os.getuid())
+    assert not destination.exists() and outside.read_bytes() == b"never copy substituted private bytes"
+
+
+@pytest.mark.parametrize("boundary", ("bytes", "entries", "deadline", "owner"))
+def test_case_diagnostics_retain_combined_budget_and_account_boundaries(tmp_path: Path, boundary: str) -> None:
+    base = tmp_path.resolve(strict=True)
+    root, destination = base / "pytest-of-owner", base / "case-artifacts"
+    case = root / "pytest-0/test_budget0"
+    case.mkdir(parents=True)
+    payload = case / "original.stdout"
+    payload.write_bytes(b"original")
+    before = _signature(payload.lstat())
+    with pytest.raises(ValueError):
+        _export_pytest_case_diagnostics(
+            root,
+            destination,
+            time.monotonic() - 1 if boundary == "deadline" else time.monotonic() + 10,
+            uid=os.getuid() + (boundary == "owner"),
+            byte_budget=7 if boundary == "bytes" else 100,
+            entry_budget=3 if boundary == "entries" else 100,
+        )
+    assert not destination.exists() and payload.read_bytes() == b"original"
+    assert _signature(payload.lstat()) == before
+
+
 def test_original_argv_output_and_nonzero_exit_survive_real_subprocess(
     tmp_path: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
@@ -404,3 +529,53 @@ def test_real_git_binds_clean_initialized_and_uninitialized_submodules(tmp_path:
     assert git(parent, "submodule", "status", "--recursive").startswith(b"+")
     with pytest.raises(ValueError, match="tracked checkout changes"):
         _git(parent, time.monotonic() + 10)
+
+
+def test_real_git_rejects_parent_as_checkout_source(tmp_path: Path) -> None:
+    root = tmp_path.resolve(strict=True)
+    environment = {
+        "PATH": "/usr/bin:/bin",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_TERMINAL_PROMPT": "0",
+        "GIT_AUTHOR_NAME": "Execution profile fixture",
+        "GIT_AUTHOR_EMAIL": "execution-profile@example.invalid",
+        "GIT_COMMITTER_NAME": "Execution profile fixture",
+        "GIT_COMMITTER_EMAIL": "execution-profile@example.invalid",
+    }
+
+    def git(*arguments: str) -> bytes:
+        return subprocess.run(
+            [
+                "/usr/bin/git",
+                "-c",
+                "core.fsmonitor=false",
+                "-c",
+                "core.hooksPath=/dev/null",
+                "-c",
+                "commit.gpgsign=false",
+                "-C",
+                str(root),
+                *arguments,
+            ],
+            env=environment,
+            capture_output=True,
+            timeout=10,
+            check=True,
+        ).stdout
+
+    git("init", "--quiet")
+    (root / "tracked").write_bytes(b"original Source\n")
+    git("add", "tracked")
+    git("commit", "--quiet", "-m", "Original Source")
+    expected = git("rev-parse", "HEAD").decode().strip()
+    (root / "tracked").write_bytes(b"different child Source\n")
+    git("add", "tracked")
+    git("commit", "--quiet", "-m", "Different child Source")
+    actual = git("rev-parse", "HEAD").decode().strip()
+    assert git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:] == [expected]
+
+    with pytest.raises(ValueError, match="checkout differs from GitHub Source identity"):
+        _source_identity(root, time.monotonic() + 10, expected)
+
+    assert _source_identity(root, time.monotonic() + 10, actual)["head"] == actual

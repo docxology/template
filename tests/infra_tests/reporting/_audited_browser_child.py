@@ -62,23 +62,51 @@ def _run(workspace: Path, request: dict[str, Any], ast: bytes | None = None) -> 
     output = workspace / "observation.json"
     request_path = workspace / "request.json"
     request_path.write_text(json.dumps({**request, "output": str(output)}, sort_keys=True))
+    command = (
+        sys.executable,
+        "-I",
+        "-X",
+        f"pycache_prefix={prefix}",
+        "-c",
+        bytecode_audit_bootstrap((REPO / "infrastructure",), prefix) + _CHILD,
+        str(REPO),
+        str(request_path),
+    )
     result = run_bounded_subprocess(
-        (
-            sys.executable,
-            "-I",
-            "-X",
-            f"pycache_prefix={prefix}",
-            "-c",
-            bytecode_audit_bootstrap((REPO / "infrastructure",), prefix) + _CHILD,
-            str(REPO),
-            str(request_path),
-        ),
+        command,
         cwd=workspace,
         env=build_bounded_env(),
         timeout=max(1.0, request["deadline"] - time.monotonic() + 30),
     )
-    assert result.returncode == result.original_returncode == 0, (result.command_error, result.stderr[-4000:])
+    retention_error: OSError | None = None
+    try:
+        (workspace / "original-wrapper.stdout").write_text(result.stdout, encoding="utf-8")
+        (workspace / "original-wrapper.stderr").write_text(result.stderr, encoding="utf-8")
+        (workspace / "original-wrapper-exit.json").write_text(
+            json.dumps(
+                {
+                    "command": command,
+                    "returncode": result.returncode,
+                    "original_returncode": result.original_returncode,
+                    "timed_out": result.timed_out,
+                    "custody_refused": result.custody_refused,
+                    "command_error": result.command_error,
+                },
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+    except OSError as error:
+        retention_error = error
+    assert result.returncode == result.original_returncode == 0, (
+        result.command_error,
+        result.stderr[-4000:],
+        str(retention_error) if retention_error is not None else None,
+    )
     assert result.timed_out is result.custody_refused is False
+    if retention_error is not None:
+        raise retention_error
     observation: dict[str, Any] = json.loads(output.read_text())
     return observation
 

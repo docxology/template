@@ -1,12 +1,24 @@
+```{=html}
+<!--template-web-source-a4c87068b0ef76b3aaddf0536bdd745f615fda48ce4c2f21383c62c1587b9178-0-start-->
+```
+
 # Abstract
 
 This exemplar demonstrates a complete disclosure-control pipeline for sanitized public release reports. The methodology combines classification-ceiling enforcement, source-protection validation, mosaic-risk scoring, and TPM-backed sealed sidecars across a sixteen-variant visual proof matrix. Four redaction styles—blackout, whiteout, grayout, and blur—are rendered across four PDF backgrounds—white, gray, black, and blur—yielding sixteen base proof PDFs. Each receives nine steganographic security methods including SHA-256/SHA-512 hash manifests, diagonal watermark overlays, footer provenance stamps, invisible text, QR and Code128 barcodes, PDF Info and XMP metadata, and embedded manifest attachments. Optional Kmyth TPM sealing wraps each hash manifest and steganography PDF in a `.ski` sidecar sealed against the TPM2-TSS storage hierarchy, bound to PCR selections and policy or-values. The release gate requires three reviewer roles—originator, classification reviewer, and release authority—each providing a non-empty rationale. A source-safe redaction ledger records SHA-256 hashes of each redacted span without exposing source text, and a segment hash manifest compares source and public SHA-256 digests for reproducible audit. The comprehensive release packet is built in memory; canonical public JSON separates a text-free audit from the hashed ledger so neither artifact exposes narrative or source spans. This exemplar confirms that visual presentation choices remain orthogonal to the release gate: the same source-safe decisions drive every output variant.
+
+```{=html}
+<!--template-web-source-a4c87068b0ef76b3aaddf0536bdd745f615fda48ce4c2f21383c62c1587b9178-0-end-->
+```
 
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a4c87068b0ef76b3aaddf0536bdd745f615fda48ce4c2f21383c62c1587b9178-1-start-->
+```
 
 # Introduction
 
@@ -32,7 +44,7 @@ This exemplar is limited to lawful redaction, declassification support, public-r
 
 The pipeline architecture consists of two layers. Layer one performs text-level disclosure control: each segment is audited against a public classification ceiling, redaction spans are validated for non-overlap, orphan decisions are flagged, and source-control coverage is enforced. Layer two applies visual redaction treatments, steganographic provenance overlays, and optional Kmyth TPM sidecar sealing.
 
-![Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual layer renders the 4x4 proof matrix with optional steganography and Kmyth TPM sidecars.](../figures/redaction_flow.png){#fig:redaction_flow}
+![Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual layer renders the 4x4 proof matrix with optional steganography and Kmyth TPM sidecars.](../output/figures/redaction_flow.png){#fig:redaction_flow}
 
 [@fig:redaction_flow] traces the full pipeline: typed fixture load, ceiling and span validation, source-control coverage and mosaic checks, the in-memory sanitized packet, the two text-free public projections, and the visual proof chain.
 
@@ -76,11 +88,19 @@ On macOS, which lacks a hardware TPM, a software TPM emulator (swtpm) and an mss
 
 The kmyth-seal binary was patched to call `Tss2_Sys_FlushContext` for the storage key handle before freeing TPM2 resources. Without this patch, consecutive kmyth-seal invocations exhaust the swtpm transient object slots (typically three), causing "out of memory for object contexts" errors on the second seal.
 
+```{=html}
+<!--template-web-source-a4c87068b0ef76b3aaddf0536bdd745f615fda48ce4c2f21383c62c1587b9178-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-a4c87068b0ef76b3aaddf0536bdd745f615fda48ce4c2f21383c62c1587b9178-2-start-->
+```
 
 # Results
 
@@ -162,7 +182,7 @@ The development proof matrix produces sixteen base PDFs (four redaction styles �
 - Hash manifest filename and SHA-256.
 - Kmyth sidecar count and filenames (when Kmyth is available).
 
-![Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction decisions.](../figures/disclosure_control_matrix.png){#fig:disclosure_control_matrix}
+![Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction decisions.](../output/figures/disclosure_control_matrix.png){#fig:disclosure_control_matrix}
 
 [@fig:disclosure_control_matrix] renders the sixteen style-background combinations; only the visual token and the page background differ between cells.
 
@@ -210,3 +230,7 @@ The FlushContext patch to kmyth-seal is a critical fix for batch sealing workflo
 - The swtpm software TPM does not provide hardware-level tamper resistance; production deployments should use a hardware TPM.
 - The mssim proxy adds latency to each TPM command; batch sealing of thirty-two sidecars takes approximately thirty seconds.
 - PDF password encryption is optional and uses AES-256; the password is not stored in the variant matrix.
+
+```{=html}
+<!--template-web-source-a4c87068b0ef76b3aaddf0536bdd745f615fda48ce4c2f21383c62c1587b9178-2-end-->
+```

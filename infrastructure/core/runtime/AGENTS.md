@@ -8,6 +8,8 @@ The `infrastructure/core/runtime/` package contains runtime helpers for environm
 
 - `_python_env.py` - Python environment helpers, confined analysis-script paths,
   and fail-closed analysis subprocess environments
+  `get_subprocess_env` only probes optional UV when a `VIRTUAL_ENV` entry
+  can be removed; no-entry environments require no UV subprocess.
 - `python_binding.py` - lexical selected interpreter and installed dependency
   declaration identity, with actual worker runtime observation and conservative
   canonical analysis cache/resume refusal (see README for proof boundaries)

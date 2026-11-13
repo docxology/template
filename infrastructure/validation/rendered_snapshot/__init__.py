@@ -31,6 +31,7 @@ from infrastructure.rendering.manuscript_composition import (
 )
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.output.artifacts import read_artifact_manifest
+from infrastructure.validation.rendered_snapshot._inputs import declared_generated_manuscript_inputs
 from infrastructure.validation.rendered_snapshot._records import (
     _fingerprint,
     _project_records,
@@ -65,7 +66,7 @@ class EvidenceFile:
 
 @dataclass(frozen=True)
 class ManuscriptConsumption:
-    """Canonical source mapped to a hydrated input or actual combined artifact."""
+    """Actual render input, with an authored-source mapping only when established."""
 
     rendered_path: str
     rendered_sha256: str
@@ -212,6 +213,24 @@ def _manuscript_consumption(
     project_root: Path,
     project: str,
 ) -> tuple[tuple[ManuscriptConsumption, ...], EvidenceFile, EvidenceFile]:
+    generated_inputs = declared_generated_manuscript_inputs(project_root)
+    if generated_inputs is not None:
+        _, composition_file, combined_file = _validate_composition(project_root, project, list(generated_inputs))
+        # The compiler owns this complete roster, not a per-filename hydration
+        # of authored sections. Even matching filenames cannot prove authorship.
+        return (
+            tuple(
+                ManuscriptConsumption(
+                    rendered_path=path.relative_to(project_root).as_posix(),
+                    rendered_sha256=compute_sha256(path),
+                    source_path=None,
+                    source_sha256=None,
+                )
+                for path in generated_inputs
+            ),
+            composition_file,
+            combined_file,
+        )
     source_root = resolve_source_manuscript_dir(project_root)
     source_paths = discover_manuscript_files(source_root)
     source_by_relative = {path.relative_to(source_root).as_posix(): path for path in source_paths}
@@ -399,6 +418,7 @@ __all__ = [
     "RenderedSnapshotError",
     "VALIDATED_INPUTS_SCHEMA_VERSION",
     "build_current_rendered_snapshot",
+    "declared_generated_manuscript_inputs",
     "read_committed_validation_report",
     "rendered_manuscript_paths",
     "validate_green_report_payload",

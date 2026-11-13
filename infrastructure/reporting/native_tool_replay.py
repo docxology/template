@@ -26,6 +26,7 @@ from infrastructure.reporting.native_tool_process import (
     STDIN_SCHEMA,
     LOADER_SCHEMA,
 )
+from infrastructure.reporting.native_tool_process_inputs import STREAM_OBSERVATION_SCHEMA
 from infrastructure.reporting.release_readiness_snapshot import (
     ArtifactSnapshot,
     SnapshotReader,
@@ -469,7 +470,8 @@ def validate_native_tool_data(
         observed = reader.read(retained["path"])
         if (
             not isinstance(original_stream, dict)
-            or set(original_stream) != {"path", "sha256", "bytes"}
+            or set(original_stream) != {"schema_version", "path", "sha256", "bytes"}
+            or original_stream["schema_version"] != STREAM_OBSERVATION_SCHEMA
             or type(retained["bytes"]) is not int
             or retained["bytes"] < 0
             or observed.sha256 != retained["sha256"]

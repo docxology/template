@@ -159,14 +159,22 @@ def validate_math(md_paths: List[str], repo_root: str | Path) -> List[Diagnostic
 #### validate_markdown (function)
 ```python
 def validate_markdown(
-    markdown_dir: str | Path, repo_root: str | Path, strict: bool = False
-) -> Tuple[List[DiagnosticEvent], int]:
+    markdown_dir: str | Path,
+    repo_root: str | Path,
+    strict: bool = False,
+    *,
+    manuscript_files: Iterable[Path] | None = None,
+    extra_search_dirs: list[str | Path] | None = None,
+) -> tuple[list[DiagnosticEvent], int]:
     """markdown validation for research manuscripts.
 
     Args:
         markdown_dir: Directory containing markdown files
         repo_root: Repository root directory
         strict: Enable strict validation mode (default: False)
+        manuscript_files: Exact consumed roster of regular files confined to
+            markdown_dir; None retains ordinary authored discovery.
+        extra_search_dirs: Explicit project figure roots for image lookup.
 
     Returns:
         Tuple of (diagnostic_events, exit_code)
@@ -493,12 +501,13 @@ Pipeline-stage output validation orchestrator (`scripts/pipeline/stage_04_valida
 
 #### validate_manuscript_output_markdown (function)
 ```python
-def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
+def validate_manuscript_output_markdown(project_name: str = "project", *, repo_root: Path = _REPO_ROOT) -> bool:
     """Validate manuscript markdown for a project during the output pipeline.
 
-    Resolves ``projects/{project_name}/manuscript/``, then calls content
-    ``validate_markdown(manuscript_dir, repo_root)``. Returns True when the
-    manuscript dir is missing or validation passes.
+    Uses the admitted generated roster when explicitly declared, otherwise the
+    resolved authored manuscript tree. Invalid generated declarations fail;
+    ordinary missing authored directories and Markdown advisory notes retain
+    their existing non-blocking policy.
 
     Not the same as content ``validate_markdown(dir, repo_root)`` — use this
     name only for the pipeline wrapper; use content ``validate_markdown`` for
@@ -569,7 +578,14 @@ def validate_output_structure(
 
 #### validate_figure_registry (function)
 ```python
-def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+def validate_figure_registry(
+    registry_path: Path,
+    manuscript_dir: Path,
+    *,
+    require_accessibility: bool = False,
+    additional_manuscript_dirs: Iterable[Path] = (),
+    manuscript_files: Iterable[Path] | None = None,
+) -> tuple[bool, list[str]]:
     """Validate that every ``\\ref{}`` / ``\\label{}`` figure key in
     ``manuscript_dir`` is present in the registry at ``registry_path``.
 
@@ -584,6 +600,11 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
     Items in the list shape that lack a ``label`` field are skipped with a
     warning rather than aborting validation; an unexpected top-level JSON
     type produces a single descriptive load error.
+
+    manuscript_files optionally limits the primary scan to a confined consumed
+    roster; None retains authored recursive discovery. Additional manuscript
+    directories remain explicit independent scan roots. require_accessibility
+    requires registered references to carry explicit alt text.
 
     Returns:
         ``(success, issues)`` — ``success`` is ``True`` iff every reference

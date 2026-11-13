@@ -457,7 +457,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T11:03:37Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes",
       "source_field": "$.combined_size_bytes",
@@ -465,11 +465,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "62538"
+      "value": "62546"
     },
     {
       "active": true,
-      "checked_at": "2026-11-08T11:03:37Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/reports/manuscript_composition.json:$.combined_size_bytes (numeric variant)",
       "source_field": "$.combined_size_bytes",
@@ -477,7 +477,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "625.38"
+      "value": "625.46"
     },
     {
       "active": true,
@@ -1334,6 +1334,78 @@
     {
       "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "section",
+      "source": "manuscript/07_conclusion.md",
+      "source_field": "",
+      "source_path": "manuscript/07_conclusion.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:conclusion"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "section",
+      "source": "manuscript/03_pools.md",
+      "source_field": "",
+      "source_path": "manuscript/03_pools.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:pools"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "section",
+      "source": "manuscript/06_integration.md",
+      "source_field": "",
+      "source_path": "manuscript/06_integration.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:integration"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "section",
+      "source": "manuscript/05_tools.md",
+      "source_field": "",
+      "source_path": "manuscript/05_tools.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:tools"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "section",
+      "source": "manuscript/04_rules.md",
+      "source_field": "",
+      "source_path": "manuscript/04_rules.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "sec:rules"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "figure",
+      "source": "manuscript/03_pools.md",
+      "source_field": "",
+      "source_path": "manuscript/03_pools.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:taxonomy"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
       "source": "manuscript/06_integration.md",
       "source_field": "",
@@ -1383,6 +1455,18 @@
       "active": true,
       "checked_at": "2026-08-08T23:12:32Z",
       "kind": "figure",
+      "source": "manuscript/02_introduction.md",
+      "source_field": "",
+      "source_path": "manuscript/02_introduction.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:architecture"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-08T23:12:32Z",
+      "kind": "figure",
       "source": "manuscript/05_tools.md",
       "source_field": "",
       "source_path": "manuscript/05_tools.md",
@@ -1402,30 +1486,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:rulehier"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "figure",
-      "source": "manuscript/02_introduction.md",
-      "source_field": "",
-      "source_path": "manuscript/02_introduction.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "fig:architecture"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "figure",
-      "source": "manuscript/03_pools.md",
-      "source_field": "",
-      "source_path": "manuscript/03_pools.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "fig:taxonomy"
     },
     {
       "active": true,
@@ -1642,66 +1702,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "fig:tool_contract"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "section",
-      "source": "manuscript/06_integration.md",
-      "source_field": "",
-      "source_path": "manuscript/06_integration.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:integration"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "section",
-      "source": "manuscript/05_tools.md",
-      "source_field": "",
-      "source_path": "manuscript/05_tools.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:tools"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "section",
-      "source": "manuscript/07_conclusion.md",
-      "source_field": "",
-      "source_path": "manuscript/07_conclusion.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:conclusion"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "section",
-      "source": "manuscript/04_rules.md",
-      "source_field": "",
-      "source_path": "manuscript/04_rules.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:rules"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-08T23:12:32Z",
-      "kind": "section",
-      "source": "manuscript/03_pools.md",
-      "source_field": "",
-      "source_path": "manuscript/03_pools.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:pools"
     },
     {
       "active": true,

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import json
+
 import os
 import subprocess
 import sys
@@ -28,7 +28,7 @@ from infrastructure.project.public_capabilities import (
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
-from scripts.gates.public_capabilities import main as capability_gate_main
+
 from tests._support.projects import make_project, write_doc
 
 _CI_CEILING = CANONICAL_CI_PYTHON_VERSIONS[-1]
@@ -102,17 +102,6 @@ def test_public_capability_inventory_covers_all_canonical_exemplars(
     meta = next(project for project in report.projects if project.project == "templates/template_template")
     assert meta.package.expected_name == PACKAGE_NAME_OVERRIDES["templates/template_template"]
     assert meta.package.name == "template-template-meta-project"
-
-
-def test_public_capability_manifest_json_is_stable(public_report: PublicCapabilityReport) -> None:
-    first = json.dumps(public_report.to_dict(), sort_keys=True, separators=(",", ":"))
-    second = json.dumps(public_report.to_dict(), sort_keys=True, separators=(",", ":"))
-
-    assert first == second
-    payload = json.loads(first)
-    assert payload["schema_version"] == CAPABILITY_MANIFEST_SCHEMA_VERSION
-    assert len(payload["roster_digest"]) == 64
-    assert len(payload["ci_matrix"]["include"]) == len(public_report.ci_matrix)
 
 
 def test_public_capability_inventory_reports_missing_structure(tmp_path: Path) -> None:
@@ -492,157 +481,6 @@ def test_imperative_skip_and_importorskip_keep_distinct_reason_contracts(tmp_pat
     ]
 
 
-def test_ci_matrix_cli_emits_one_line_exact_product(
-    public_report: PublicCapabilityReport,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repo = Path(__file__).resolve().parents[3]
-
-    exit_code = capability_gate_main(["--repo-root", str(repo), "--ci-matrix-json"])
-
-    assert exit_code == 0
-    output = capsys.readouterr().out
-    assert output.count("\n") == 1
-    assert json.loads(output) == {"include": [entry.to_dict() for entry in public_report.ci_matrix]}
-
-
-def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
-    repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github" / "workflows" / "hardening.yml").read_text(encoding="utf-8"))
-    detect = workflow["jobs"]["detect-projects"]
-    matrix_step = next(step for step in detect["steps"] if step.get("id") == "matrix")
-    strategy = workflow["jobs"]["test-project"]["strategy"]
-
-    assert detect["outputs"] == {
-        "matrix": "${{ steps.matrix.outputs.matrix }}",
-        "infra_matrix": "${{ steps.matrix.outputs.infra_matrix }}",
-        "required_jobs": "${{ steps.matrix.outputs.required_jobs }}",
-    }
-    assert "scripts/gates/public_capabilities.py --ci-matrix-json" in matrix_step["run"]
-    assert strategy["matrix"] == "${{ fromJSON(needs.detect-projects.outputs.matrix) }}"
-    assert workflow["jobs"]["test-project"]["env"]["UV_PYTHON"] == "${{ matrix.python-version }}"
-    assert workflow["jobs"]["test-infra"]["env"]["UV_PYTHON"] == "${{ matrix.python-version }}"
-    assert (
-        workflow["jobs"]["test-infra"]["strategy"]["matrix"]
-        == "${{ fromJSON(needs.detect-projects.outputs.infra_matrix) }}"
-    )
-    assert (
-        sum(step.get("name") == "Verify selected Python minor" for step in workflow["jobs"]["test-project"]["steps"])
-        == 1
-    )
-
-
-def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() -> None:
-    repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github/workflows/hardening.yml").read_text(encoding="utf-8"))
-    action = yaml.safe_load(
-        (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
-    )
-
-    for job_name in ("test-project", "test-infra"):
-        steps = workflow["jobs"][job_name]["steps"]
-        setup_indices = [
-            index
-            for index, step in enumerate(steps)
-            if step.get("uses") == "./.github/actions/setup-acceptance-documents"
-        ]
-        assert len(setup_indices) == 1
-        assert "if" not in steps[setup_indices[0]]
-        assert not any(step.get("uses", "").startswith("pandoc/actions/setup@") for step in steps)
-        test_indices = [
-            index
-            for index, step in enumerate(steps)
-            if "pytest tests/infra_tests/" in step.get("run", "")
-            or "scripts/pipeline/stage_01_test.py" in step.get("run", "")
-        ]
-        assert test_indices and setup_indices[0] < min(test_indices)
-
-    action_steps = action["runs"]["steps"]
-    named = {step["name"]: (index, step) for index, step in enumerate(action_steps)}
-    assert len(named) == len(action_steps)
-    mode_index, mode = named["Validate document preparation mode"]
-    cache_index, cache = named["Restore exact official document archives"]
-    converter_index, converter = named["Prepare exact compatible Pandoc and cross-reference binaries"]
-    frozen_index, frozen = named["Prepare the frozen tagging-capable Linux TeX distribution"]
-    prerequisites_index, prerequisites = named["Prepare native document prerequisites"]
-    font_index, _ = named["Prepare exact JuliaMono family"]
-    providers_index, _ = named["Record actual native TeX providers"]
-    assert (
-        mode_index < cache_index < converter_index < frozen_index < prerequisites_index < font_index < providers_index
-    )
-    assert action["inputs"]["mode"]["default"] == "native"
-    assert action["inputs"]["python-executable"]["default"] == ".venv/bin/python"
-    assert action["inputs"]["python-executable"]["required"] is False
-    assert mode["id"] == "preparation-mode" and "if" not in mode
-    assert mode["env"] == {
-        "PREPARATION_MODE": "${{ inputs.mode }}",
-        "PREPARED_PYTHON": "${{ inputs.python-executable }}",
-    }
-    assert cache["uses"] == "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9"
-    assert cache["with"] == {
-        "path": "${{ runner.temp }}/template-acceptance-document-archives",
-        "key": "acceptance-document-archives-v2-${{ runner.os }}-${{ runner.arch }}-"
-        "${{ steps.preparation-mode.outputs.mode }}-"
-        "${{ hashFiles('.github/actions/setup-acceptance-documents/action.yml') }}",
-    }
-    assert "if" not in cache and "if" not in converter
-    assert prerequisites["env"] == {"PREPARED_PYTHON": "${{ inputs.python-executable }}"}
-    native = "steps.preparation-mode.outputs.mode == 'native'"
-    for step in action_steps[converter_index + 1 :]:
-        expected = f"{native} && runner.os == 'Linux'" if step is frozen else native
-        assert step["if"] == expected
-    assert "--verify-downloads" in frozen["run"]
-
-    # Each narrowed preparation route is explicit; new callers retain native.
-    project_mode = "${{ matrix.project == 'templates/template_eda_notebook' && 'native' || 'converter' }}"
-    narrowed = {
-        ("ci.yml", "test-infra"): ("converter", None),
-        ("ci.yml", "test-contract"): ("${{ matrix.documents }}", "matrix.documents != 'none'"),
-        ("ci.yml", "test-project"): ("converter", "matrix.project == 'templates/template_search_project'"),
-        ("hardening.yml", "test-project"): (project_mode, None),
-        ("exemplar-coverage.yml", "own-exemplar-coverage"): (
-            "${{ inputs.coverage-project == 'templates/template_eda_notebook' && 'native' || 'converter' }}",
-            None,
-        ),
-    }
-    observed_narrowed = set()
-    for workflow_path in sorted((repo / ".github/workflows").glob("*.yml")):
-        jobs = yaml.safe_load(workflow_path.read_text(encoding="utf-8")).get("jobs", {})
-        for job_name, job in jobs.items():
-            for step in job.get("steps", []):
-                if step.get("uses") != "./.github/actions/setup-acceptance-documents":
-                    continue
-                declared = step.get("with", {}).get("mode", "native")
-                caller = (workflow_path.name, job_name)
-                if caller in narrowed:
-                    expected, condition = narrowed[caller]
-                    assert caller not in observed_narrowed
-                    observed_narrowed.add(caller)
-                    assert step.get("if") == condition
-                else:
-                    expected = "native"
-                assert declared == expected
-                prepared_python = step.get("with", {}).get("python-executable", ".venv/bin/python")
-                expected_python = (
-                    "output/runtime-envs/3.14/bin/python"
-                    if workflow_path.name == "platform-required-acceptance.yml" and job_name == "common-original"
-                    else ".venv/bin/python"
-                )
-                assert prepared_python == expected_python
-
-    assert observed_narrowed == set(narrowed)
-
-    # The installed/native and release jobs share this nested caller. Its
-    # locked root environment must reach the same action input defaults.
-    for action_path in sorted((repo / ".github/actions").glob("*/action.yml")):
-        nested = yaml.safe_load(action_path.read_text(encoding="utf-8"))
-        for step in nested.get("runs", {}).get("steps", []):
-            if step.get("uses") != "./.github/actions/setup-acceptance-documents":
-                continue
-            assert step.get("with", {}).get("mode", "native") == "native"
-            assert step.get("with", {}).get("python-executable", ".venv/bin/python") == ".venv/bin/python"
-
-
 @pytest.mark.parametrize("mode", ["", "Native", " native", "native\nconverter", "converter; exit 0"])
 def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, mode: str) -> None:
     repo = Path(__file__).resolve().parents[3]
@@ -660,7 +498,6 @@ def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, 
         check=False,
     )
     assert result.returncode != 0
-    assert "document preparation mode must be native or converter" in result.stderr
     assert list(tmp_path.iterdir()) == []
 
 

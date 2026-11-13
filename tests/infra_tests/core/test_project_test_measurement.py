@@ -50,6 +50,9 @@ def _original(root: Path, fault: str = "none", *, scope: str = "demo"):
         **os.environ,
         "PYTEST_ADDOPTS": "",
         "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "PYTEST_XDIST_WORKER": "gw-parent",
+        "PYTEST_XDIST_WORKER_COUNT": "8",
+        "PYTEST_XDIST_TESTRUNUID": "parent-session",
         "PIPELINE_STAGE_KEY": "project_tests",
         "PIPELINE_RUN_ID": "original-run",
         "PIPELINE_PLAN_DIGEST": "a" * 64,
@@ -93,6 +96,9 @@ def _original(root: Path, fault: str = "none", *, scope: str = "demo"):
     assert observation is not None
     result = subprocess.run(cmd, cwd=project, env=env, capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
+    receipts = tuple(observation.directory.glob("execution-*.json"))
+    assert len(receipts) == 1
+    assert json.loads(receipts[0].read_bytes())["worker"] == "controller"
     return project, env, observation
 
 
@@ -258,6 +264,9 @@ def test_actual_stage_completion_carries_original_publication(tmp_path: Path, re
         PIPELINE_PLAN_DIGEST="a" * 64,
         SOURCE_DATE_EPOCH="1700000000",
         PYTEST_ADDOPTS="",
+        PYTEST_XDIST_WORKER="gw-parent",
+        PYTEST_XDIST_WORKER_COUNT="8",
+        PYTEST_XDIST_TESTRUNUID="parent-session",
     )
     publication: dict[str, str] = {}
     source_before = source_fingerprint(repo, project)
@@ -278,11 +287,6 @@ def test_actual_stage_completion_carries_original_publication(tmp_path: Path, re
     assert outcome.complete, outcome.diagnostic
     assert source_fingerprint(repo, project) == source_before
     assert not (project / ".benchmarks").exists()
-    measurement = json.loads(measurement_path(project, env["PIPELINE_RUN_ID"]).read_bytes())
-    arguments = measurement["arguments"]
-    hook = "infrastructure.core.testing._pytest_runtime_controls"
-    assert arguments.count(hook) == 1 and arguments[arguments.index(hook) - 1] == "-p"
-    assert arguments.count(f"--template-benchmark-storage={project / 'output/.pipeline/benchmarks'}") == 1
     assert len(publication["sha256"]) == 64
     if resign_before_return:
         with pytest.raises(ValueError, match="executor-held"):

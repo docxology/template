@@ -24,7 +24,7 @@ def preparation_progress(group: str, phase: str, deadline: float, scope: str | N
         or (scope is not None and scope not in PUBLIC_PROJECT_NAMES)
     ):
         raise ValueError("native preparation progress requires finite public phase labels")
-    print(
+    sys.stderr.write(
         json.dumps(
             {
                 "schema_version": "template-native-preparation-progress-v1",
@@ -37,10 +37,10 @@ def preparation_progress(group: str, phase: str, deadline: float, scope: str | N
             },
             sort_keys=True,
             allow_nan=False,
-        ),
-        file=sys.stderr,
-        flush=True,
+        )
+        + "\n"
     )
+    sys.stderr.flush()
 
 
 def export_timing_progress(phase: str, ordinal: int, scope: str, deadline: float) -> None:
@@ -75,6 +75,7 @@ def export_timing_progress(phase: str, ordinal: int, scope: str, deadline: float
         # Two records per existing scope fit one16-KiB diagnostic allowance.
         maximum = 16 * 1024 // (2 * (len(PUBLIC_PROJECT_NAMES) + 1))
         if len(record.encode("utf-8")) + 1 <= maximum:
-            print(record, file=sys.stderr, flush=True)
+            sys.stderr.write(record + "\n")
+            sys.stderr.flush()
     except (OSError, ValueError):
         pass

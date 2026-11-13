@@ -42,7 +42,7 @@ def _diagnostic_warning(error: Exception) -> None:
     if not _progress_error:
         _progress_error = True
         try:
-            print(f"pytest progress diagnostic disabled: {type(error).__name__}: {str(error)[:512]}", file=sys.stderr)
+            sys.stderr.write(f"pytest progress diagnostic disabled: {type(error).__name__}: {str(error)[:512]}\n")
         except Exception:
             pass
 
@@ -110,7 +110,11 @@ def pytest_sessionstart(session: Any) -> None:
     nonce = os.environ.get(NONCE_ENV)
     _enabled = bool(nonce and os.environ.get(DIRECTORY_ENV) and os.environ.get(_ACTIVE_ENV) != nonce)
     _progress_nonce = str(nonce or "")
-    _progress_worker = os.environ.get("PYTEST_XDIST_WORKER", "controller")
+    # A separately launched controller inherits its parent's xdist environment.
+    # Only this live pytest Config's workerinput identifies an actual worker.
+    _progress_worker = (
+        session.config.workerinput["workerid"] if hasattr(session.config, "workerinput") else "controller"
+    )
     if _enabled:
         # Child pytest invocations inside tested subprocess contracts must not
         # masquerade as another original Stage-01/project controller receipt.
@@ -210,7 +214,7 @@ def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
     value = {
         "schema_version": "template-pytest-execution/v1",
         "nonce": nonce,
-        "worker": os.environ.get("PYTEST_XDIST_WORKER", "controller"),
+        "worker": _progress_worker,
         "selected": sorted(qualify(node) for node in _selected),
         "collected": sorted(qualify(node) for node in _collected),
         "deselected": sorted(qualify(node) for node in _deselected),

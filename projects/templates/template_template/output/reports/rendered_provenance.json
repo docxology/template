@@ -142,22 +142,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "5a544807de78d6923c8d97f982e77e617ec2dd5890b21c4c3bdceaff0a64402f",
+      "sha256": "7befcf5cc9fed84bd8abe2afb4d3a4bc91a4bbd82970e758ca5ecb096c0cc85c",
       "size_bytes": 54559
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "39c4bec1a2b13d087d126da50dc59c5bc509da986e80b7481ecca49f3d8eac67",
-      "size_bytes": 125175
+      "sha256": "0e2de1716bfbe60f331826b685bbbd24fbeeaf3dc973b6b1d056e3a099e8812a",
+      "size_bytes": 125231
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "1935a1826d724bfdf33fb66e71b8d38caa81f2d78268c3b70ecc78562a76dab8",
+      "sha256": "4117bea437bd540b495676e783bca06c84f5d83959d6aa076a3cd98f08558b7e",
       "size_bytes": 5162
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "214da7e14e460107cbbcd4d27f7f6fbde35222779ae993ab438eaa51bf9789b5",
+      "sha256": "de87bf01e2e2fa68bc7d92f507f14d9a83ba3d792421702582b1ad93994a2fdc",
       "size_bytes": 16827
     }
   },
@@ -165,19 +165,19 @@
   "fingerprints": {
     "config": {
       "file_count": 17,
-      "sha256": "5a11a5f3bbaa9c61aa026409ed44bafeec4b7a374c3724031a5c117770dca431"
+      "sha256": "f6226cd1ab0773936a5966bca0ea988f22e17bafe124c77a35125461b9fb5055"
     },
     "output": {
       "file_count": 164,
-      "sha256": "e660618ea3b5cf900fd45d7b37aec1e498c848f192e7464ce373d2f6dd0f869d"
+      "sha256": "319ca2d82b00a6de7a651b22e1bd7d31d78fc7eaff52504dd6796f0d9f0d1a92"
     },
     "source": {
       "file_count": 47,
       "sha256": "53565643e35bc8262df5c8f53808becabf8dfa97055ed37d9f2da3ab77898cfb"
     },
     "stage": {
-      "file_count": 1761,
-      "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
+      "file_count": 1764,
+      "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
     }
   },
   "project": "templates/template_template",

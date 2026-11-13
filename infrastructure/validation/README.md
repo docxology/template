@@ -6,6 +6,34 @@ The package facade resolves stable exports on first use. Importing a validation
 leaf does not initialize unrelated document, repository-audit, or rendering
 providers; explicit facade imports still return the original provider objects.
 
+## Rendered-input commitments
+
+`rendered_snapshot` normally maps hydrated sections back to canonical authored
+manuscript files. Compiler-owned manuscripts instead opt in through the existing
+standalone `# Generated manuscript ordering` comment in
+`output/manuscript/config.yaml`. That nonempty, resolved YAML configuration must
+declare valid ordering entries and select actual renderer inputs; malformed,
+missing-file, empty-roster and escaped-path declarations fail closed. A
+`# Project-resolved config` marker alone owns configuration, not the manuscript
+roster.
+
+For this opt-in, `declared_generated_manuscript_inputs(project_root)` returns the
+renderer-discovered ordered paths without refreshing configuration. Snapshot and
+receipt rows bind those actual input bytes with null authored-source fields,
+even when an authored template happens to share a filename. The consumed
+generated config joins the config fingerprint; ordered composition, combined
+Markdown and stable-output checks remain required. These are rendering-input
+commitments, not a claim of manual authorship, source-to-output freshness or
+scientific provenance; the project's compiler/provenance validation must establish
+those independently.
+
+Stage 04 Markdown, figure, evidence-label, bibliography, prose and claim readers
+share that selected roster, including deep paths. Unconsumed generated residue
+and authored templates cannot supply labels or bibliography keys for it.
+Transmission checks use the consumed generated configuration. Existing opt-in
+and severity policies remain unchanged: prose and claim verification reports are
+diagnostic, not factual acceptance gates.
+
 ## Architecture Overview
 
 ```mermaid
@@ -108,6 +136,37 @@ flowchart LR
     class Analysis analysis
     class Output output
 ```
+
+## Evidence registry inputs
+
+The registry checks actual declared cross-reference labels and bibliography
+keys; an internal-reference prefix such as `sec:` is not evidence by itself.
+For authored manuscripts, collectors use the canonical `manuscript/` or
+`docs/manuscript/` source tree. A project-owned
+`output/manuscript/config.yaml` carrying `# Generated manuscript ordering`
+instead selects the same ordered generated inputs as the renderer. Only labels
+in those selected files are registered, not labels in leftover generated files
+or the replaced authored roster. Bibliography keys then come from BibTeX files
+in that generated manuscript tree. `# Project-resolved config` alone owns
+configuration values, not a replacement manuscript roster.
+
+Generated evidence still must belong to the stable output inventory: public
+callers retain Git-shippable admission, while authorized private lifecycle
+callers may select stable-local mode. The generated roster records rendering
+inputs, not a claim that generated text is authored source.
+
+Measured prose counts need a producer artifact, not a numeric exemption.
+For example, a project analysis producer can write a numeric
+`stats.authored_teaching_note_count` field in
+`output/data/curriculum_outline.json`. Existing JSON collection registers it
+with `source_tier="generated_metric"`,
+`source_path="output/data/curriculum_outline.json"`, and
+`source_field="$.stats.authored_teaching_note_count"`; no extra registry
+configuration is required. Write the computed count as a JSON number, not a
+string. Scalar summary fields remain discoverable even when a neighboring
+corpus list exceeds the collector's bounded-list limit. A passing token check
+establishes artifact-backed support, not independent verification of the
+producer's measurement method.
 
 ## Usage Patterns
 

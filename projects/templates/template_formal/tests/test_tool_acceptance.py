@@ -6,6 +6,7 @@ import json
 import hashlib
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -45,7 +46,35 @@ def _process_running(pid: int) -> bool:
             return stat.read_text().rsplit(")", 1)[1].split()[0] != "Z"
         except (OSError, IndexError):
             return True
+    if sys.platform == "darwin":
+        try:
+            observed = subprocess.run(
+                ["/bin/ps", "-p", str(pid), "-o", "stat="],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=1,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return True
+        state = observed.stdout.strip()
+        if observed.returncode == 0 and state:
+            return state[0] != "Z"
     return True
+
+
+def test_process_running_distinguishes_unreaped_child_from_live_parent() -> None:
+    with subprocess.Popen(
+        [sys.executable, "-I", "-c", "import os; os._exit(0)"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    ) as child:
+        assert child.stdout is not None
+        # Kernel-closed stdout synchronizes exit without reaping the child.
+        child.stdout.read()
+        assert _process_running(os.getpid())
+        assert not _process_running(child.pid)
+    assert child.returncode == 0
 
 
 def _copy(root: Path) -> Path:

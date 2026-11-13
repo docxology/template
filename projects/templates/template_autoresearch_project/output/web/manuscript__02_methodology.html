@@ -209,6 +209,69 @@ window.MathJax.output = Object.assign({}, templateMathOutput, {
     lineleading: 0.5
   })
 });
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
+  })
+});
 window.normalizeTemplateMathJaxAria = function () {
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -680,7 +743,7 @@ by the validated run artifacts. The project scripts remain thin
 dispatchers; reusable behavior writes
 <code>output/data/autoresearch_loop.json</code>,
 <code>output/data/ml_task_results.json</code>,
-<code>../figures/figure_registry.json</code>,
+<code>output/figures/figure_registry.json</code>,
 <code>output/data/autoresearch_phase_ledger.json</code>, and
 <code>output/data/manuscript_variable_provenance.json</code>.</p>
 <h2 data-number="3.1" id="sec:task-data"><span
@@ -1146,7 +1209,7 @@ class="header-section-number">3.6</span> Evidence And Scoring</h2>
 <code>output/reports/ml_benchmark_score.json</code>,
 <code>output/data/benchmark_boundary.json</code>,
 <code>output/data/figure_quality_report.json</code>, and registered
-figures through <code>../figures/figure_registry.json</code>. The
+figures through <code>output/figures/figure_registry.json</code>. The
 diagnostic payloads preserve probabilities, confidence and margin
 summaries, class metrics, calibration bins, confusion-pair summaries,
 train/test gaps, deterministic no-retrain perturbation scores, bootstrap

@@ -28,33 +28,21 @@ from infrastructure.reporting.release_readiness_profile import (
     required_profile,
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
-
-REPO_ROOT = Path(__file__).resolve().parents[3]
-
-
-def _require_stage_closure() -> None:
-    """Skip when this checkout has no substantiable stage closure.
-
-    Every control here admits or refuses a *scope-owned* gate, so it needs a
-    real class binding. On a checkout that declares ``kmyth`` without
-    initializing it the closure is unavailable by design and admission refuses
-    with a named cause instead of widening, so there is nothing to admit. The
-    refusal itself is pinned in ``test_evidence_class_composition.py``, which
-    needs no closure.
-    """
-    if stage_digest(REPO_ROOT) is None:
-        pytest.skip(
-            "the stage closure is unavailable in this checkout"
-            f" ({unavailable_cause(REPO_ROOT)}); run"
-            " `git submodule update --init infrastructure/steganography/kmyth`"
-        )
+from tests.infra_tests.project.test_public_reference import complete_reference as complete_reference
 
 
-def _scope_owned_requirement() -> Requirement:
+def _require_stage_closure(root: Path) -> None:
+    """Require the complete owned fixture before exercising its binding gate."""
+    assert stage_digest(root) is not None, (
+        f"the owned complete public reference must substantiate its stage closure ({unavailable_cause(root)})"
+    )
+
+
+def _scope_owned_requirement(root: Path) -> Requirement:
     """Return one real scope-owned requirement compiled from current Source."""
-    _require_stage_closure()
-    fingerprint = source_fingerprint(REPO_ROOT)
-    requirements, faults = required_profile(REPO_ROOT, SnapshotReader(REPO_ROOT), fingerprint)
+    _require_stage_closure(root)
+    fingerprint = source_fingerprint(root)
+    requirements, faults = required_profile(root, SnapshotReader(root), fingerprint)
     assert not faults, faults
     return next(
         requirement
@@ -63,15 +51,15 @@ def _scope_owned_requirement() -> Requirement:
     )
 
 
-def _payload(requirement: Requirement, *, with_binding: bool = True) -> dict[str, object]:
-    fingerprint = source_fingerprint(REPO_ROOT)
+def _payload(root: Path, requirement: Requirement, *, with_binding: bool = True) -> dict[str, object]:
+    fingerprint = source_fingerprint(root)
     payload: dict[str, object] = {"source_fingerprint": fingerprint}
     if with_binding:
-        payload["class_binding"] = class_binding(requirement, REPO_ROOT, repository_fingerprint=fingerprint).to_dict()
+        payload["class_binding"] = class_binding(requirement, root, repository_fingerprint=fingerprint).to_dict()
     return payload
 
 
-def _current(requirement_id: str) -> Requirement:
+def _current(root: Path, requirement_id: str) -> Requirement:
     """Recompile the requirement at the *current* tree, as ``collect_profile`` does.
 
     Reusing the ``Requirement`` compiled before a tree edit would compare the
@@ -79,23 +67,23 @@ def _current(requirement_id: str) -> Requirement:
     evidence. ``collect_profile`` recompiles the profile on every admission pass,
     so these controls must too.
     """
-    fingerprint = source_fingerprint(REPO_ROOT)
-    requirements, faults = required_profile(REPO_ROOT, SnapshotReader(REPO_ROOT), fingerprint)
+    fingerprint = source_fingerprint(root)
+    requirements, faults = required_profile(root, SnapshotReader(root), fingerprint)
     assert not faults, faults
     return next(requirement for requirement in requirements if requirement.id == requirement_id)
 
 
-def _admits(requirement_id: str, payload: dict[str, object]) -> bool:
+def _admits(root: Path, requirement_id: str, payload: dict[str, object]) -> bool:
     try:
-        _check_class_binding(_current(requirement_id), payload, REPO_ROOT, source_fingerprint(REPO_ROOT))
+        _check_class_binding(_current(root, requirement_id), payload, root, source_fingerprint(root))
     except ValueError:
         return False
     return True
 
 
 @contextmanager
-def _mutated(relative: str) -> Iterator[None]:
-    path = REPO_ROOT / relative
+def _mutated(root: Path, relative: str) -> Iterator[None]:
+    path = root / relative
     original = path.read_bytes()
     path.write_bytes(original + b"\n# class composition probe\n")
     try:
@@ -108,68 +96,81 @@ def _mutated(relative: str) -> Iterator[None]:
     "relative",
     ["docs/maintenance/release-boundary.md", "projects/templates/template_sia/uv.lock"],
 )
-def test_unrelated_scope_change_keeps_evidence_current(relative: str) -> None:
+def test_unrelated_scope_change_keeps_evidence_current(
+    relative: str, complete_reference: tuple[Path, str, str]
+) -> None:
     """A documentation edit or another exemplar's lock must not stale evidence."""
-    requirement = _scope_owned_requirement()
-    payload = _payload(requirement)
-    assert _admits(requirement.id, payload)
-    with _mutated(relative):
-        assert _admits(requirement.id, payload), (
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    payload = _payload(root, requirement)
+    assert _admits(root, requirement.id, payload)
+    with _mutated(root, relative):
+        assert _admits(root, requirement.id, payload), (
             f"{relative} staled unrelated scope-owned evidence; the universal fingerprint is back"
         )
 
 
-def test_shared_implementation_change_refuses_evidence() -> None:
+def test_shared_implementation_change_refuses_evidence(complete_reference: tuple[Path, str, str]) -> None:
     """A stage edit must refuse the same evidence, or the gate was weakened."""
-    requirement = _scope_owned_requirement()
-    payload = _payload(requirement)
-    assert _admits(requirement.id, payload)
-    with _mutated("infrastructure/reporting/readiness_receipts.py"):
-        assert not _admits(requirement.id, payload), (
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    payload = _payload(root, requirement)
+    assert _admits(root, requirement.id, payload)
+    with _mutated(root, "infrastructure/reporting/readiness_receipts.py"):
+        assert not _admits(root, requirement.id, payload), (
             "a shared-implementation edit left scope-owned evidence admitted; the stage closure is not bound"
         )
 
 
-def test_changed_exemplar_source_refuses_its_own_evidence() -> None:
+def test_changed_exemplar_source_refuses_its_own_evidence(complete_reference: tuple[Path, str, str]) -> None:
     """Evidence must refuse once its own exemplar's source moves."""
-    requirement = _scope_owned_requirement()
-    payload = _payload(requirement)
-    assert _admits(requirement.id, payload)
-    with _mutated(f"projects/{requirement.scope}/pyproject.toml"):
-        assert not _admits(requirement.id, payload), "evidence survived a change to its own exemplar"
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    payload = _payload(root, requirement)
+    assert _admits(root, requirement.id, payload)
+    with _mutated(root, f"projects/{requirement.scope}/pyproject.toml"):
+        assert not _admits(root, requirement.id, payload), "evidence survived a change to its own exemplar"
 
 
-def test_retained_receipt_without_class_binding_keeps_universal_strictness() -> None:
+def test_retained_receipt_without_class_binding_keeps_universal_strictness(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """A pre-separable-class artifact is still refused on any repository-wide change."""
-    requirement = _scope_owned_requirement()
-    legacy = _payload(requirement, with_binding=False)
-    assert _admits(requirement.id, legacy), "an unmodified retained artifact must still be admitted"
-    with _mutated("docs/maintenance/release-boundary.md"):
-        assert not _admits(requirement.id, legacy), (
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    legacy = _payload(root, requirement, with_binding=False)
+    assert _admits(root, requirement.id, legacy), "an unmodified retained artifact must still be admitted"
+    with _mutated(root, "docs/maintenance/release-boundary.md"):
+        assert not _admits(root, requirement.id, legacy), (
             "a retained artifact without class bindings must keep the historical strictness"
         )
 
 
 @pytest.mark.parametrize("field", ["sha256", "members"])
-def test_tampered_class_binding_is_refused(field: str) -> None:
+def test_tampered_class_binding_is_refused(field: str, complete_reference: tuple[Path, str, str]) -> None:
     """A class binding whose recorded value was altered must be refused."""
-    requirement = _scope_owned_requirement()
-    payload = _payload(requirement)
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    payload = _payload(root, requirement)
     binding = payload["class_binding"]
     assert isinstance(binding, dict)
     binding[field] = "0" * 64 if field == "sha256" else ["fabricated"]
-    assert not _admits(requirement.id, payload), f"a tampered {field} must be refused"
+    assert not _admits(root, requirement.id, payload), f"a tampered {field} must be refused"
 
 
-def test_malformed_class_binding_is_refused() -> None:
+def test_malformed_class_binding_is_refused(complete_reference: tuple[Path, str, str]) -> None:
     """A structurally invalid class binding must be refused, not ignored."""
-    requirement = _scope_owned_requirement()
-    payload = _payload(requirement)
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    payload = _payload(root, requirement)
     payload["class_binding"] = {"sha256": "0" * 64}
-    assert not _admits(requirement.id, payload)
+    assert not _admits(root, requirement.id, payload)
 
 
-def test_missing_artifact_fingerprint_without_binding_is_refused() -> None:
+def test_missing_artifact_fingerprint_without_binding_is_refused(
+    complete_reference: tuple[Path, str, str],
+) -> None:
     """An artifact carrying neither a binding nor a matching digest must fail."""
-    requirement = _scope_owned_requirement()
-    assert not _admits(requirement.id, {"source_fingerprint": "0" * 64})
+    root = complete_reference[0]
+    requirement = _scope_owned_requirement(root)
+    assert not _admits(root, requirement.id, {"source_fingerprint": "0" * 64})

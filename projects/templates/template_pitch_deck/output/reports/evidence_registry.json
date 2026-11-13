@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 581,
+  "fact_count": 582,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 163,
     "citation": 4,
     "figure": 9,
-    "number": 398,
+    "number": 399,
     "section": 7
   },
-  "omitted_fact_count": 381,
+  "omitted_fact_count": 382,
   "sample_facts": [
     {
       "active": true,
@@ -1993,7 +1993,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-11T05:33:17Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.infrastructure_python[2][1]",
       "source_field": "$.infrastructure_python[2][1]",
@@ -2017,7 +2017,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-11T05:33:17Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.infrastructure_python[2][1] (numeric variant)",
       "source_field": "$.infrastructure_python[2][1]",
@@ -2341,7 +2341,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-07T07:01:20Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[22][1]",
       "source_field": "$.exemplar_coverage[22][1]",
@@ -2349,11 +2349,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "992"
+      "value": "990"
     },
     {
       "active": true,
-      "checked_at": "2026-11-07T07:01:20Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[22][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[22][1]",
@@ -2361,7 +2361,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "9.92"
+      "value": "9.9"
     },
     {
       "active": true,
@@ -2417,7 +2417,7 @@
     "artifact": 179,
     "bibliography": 4,
     "configuration": 20,
-    "generated_metric": 362,
+    "generated_metric": 363,
     "project_source": 16
   }
 }

@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import signal
 import subprocess
 import sys
 from pathlib import Path
@@ -22,7 +21,7 @@ def _run_copy(tmp_path: Path, body: str, *args: str, observer_timeout: float = 3
     shutil.copytree(
         ROOT / "infrastructure",
         root / "infrastructure",
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".mypy_cache", ".ruff_cache"),
+        ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc", ".mypy_cache", ".ruff_cache"),
     )
     prefix = tmp_path / "parent-bytecode"
     prefix.mkdir(mode=0o700)
@@ -39,6 +38,9 @@ def _run_copy(tmp_path: Path, body: str, *args: str, observer_timeout: float = 3
     result = subprocess.run(
         command, cwd=tmp_path, capture_output=True, text=True, timeout=observer_timeout, check=False
     )
+    (tmp_path / "actual-runtime.stdout").write_text(result.stdout, encoding="utf-8")
+    (tmp_path / "actual-runtime.stderr").write_text(result.stderr, encoding="utf-8")
+    (tmp_path / "actual-runtime.exit.json").write_text(json.dumps({"returncode": result.returncode}) + "\n")
     assert result.returncode == 0, (result.stdout, result.stderr)
     return json.loads(result.stdout)
 
@@ -234,25 +236,19 @@ child = subprocess.Popen([sys.executable,'-I','-c',root_code,child_code],
                          env=dict(os.environ,TEMPLATE_BOUNDED_RUN_IDS=token),
                          stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True)
 guardian.arm(root_pid=child.pid,run_token=token)
-print(json.dumps({'cache':str(Path(guardian.cache.name).resolve()),'root_pid':child.pid}),flush=True)
+print(json.dumps({'cache':str(Path(guardian.cache.name).resolve())}),flush=True)
 os._exit(0)
 """,
     )
     import time
 
     cache = Path(result["cache"])
-    try:
-        deadline = time.monotonic() + 10
-        while cache.exists() and time.monotonic() < deadline:
-            time.sleep(0.02)
-        assert not cache.exists(), "orphan guardian did not remove its owned bytecode scratch"
-        time.sleep(1.6)
-        assert not (tmp_path / "dead-caller-detached-leak").exists()
-    finally:
-        try:
-            os.kill(result["root_pid"], signal.SIGKILL)
-        except ProcessLookupError:
-            pass
+    deadline = time.monotonic() + 10
+    while cache.exists() and time.monotonic() < deadline:
+        time.sleep(0.02)
+    assert not cache.exists(), "orphan guardian did not remove its owned bytecode scratch"
+    time.sleep(1.6)
+    assert not (tmp_path / "dead-caller-detached-leak").exists()
 
 
 def test_expired_deadline_refuses_startup_without_creating_guardian_scratch(tmp_path: Path) -> None:

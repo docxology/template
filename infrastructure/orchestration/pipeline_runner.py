@@ -24,6 +24,7 @@ from infrastructure.core.pipeline.execution_session import compose_run_deadline,
 from infrastructure.core.pipeline.multi_project_runtime import freeze_project_plans, freeze_shared_plan
 from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.multi_project import format_multi_project_outcome_lines
+from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError
 from infrastructure.orchestration.stage_logger import (
     setup_multiproject_log,
     setup_stage_log,
@@ -104,6 +105,9 @@ class PipelineRunner:
             prepared = prepare_pipeline_run(config, deadline_monotonic=deadline)
             stage_names = tuple(stage.name for stage in prepared.plan.stages)
             which = f"{invocation.mode} pipeline"
+        except SharedRuntimeCustodyError as exc:
+            self._emit(f"Frozen execution refused: {exc}")
+            return 75
         except ValueError as exc:
             self._emit(f"Invalid pipeline invocation: {exc}")
             return 2
@@ -127,6 +131,9 @@ class PipelineRunner:
             return 124
         except KeyboardInterrupt:
             return 130
+        except SharedRuntimeCustodyError as exc:
+            self._emit(f"Frozen execution refused: {exc}")
+            return 75
         except Exception as exc:  # noqa: BLE001 — bubble up as failure code
             logger.error("Pipeline execution failed: %s", exc, exc_info=True)
             self._emit(f"FAILED: {exc}")
@@ -143,7 +150,7 @@ class PipelineRunner:
         return int(outcome.exit_code)
 
     def run_multi(self, invocation: MultiProjectInvocation) -> int:
-        """Execute the all-projects orchestration."""
+        """Execute all projects, retaining frozen custody refusals as pending (75)."""
         projects = discover_projects(self.repo_root)
         if not projects:
             self._emit("No projects discovered under projects/")
@@ -171,6 +178,9 @@ class PipelineRunner:
             setup_multiproject_log(self.repo_root)
             orchestrator = self.orchestrator_factory(config)
             result = orchestrator.execute_prepared_projects(specs, shared)
+        except SharedRuntimeCustodyError as exc:
+            self._emit(f"Frozen execution refused: {exc}")
+            return 75
         except ValueError as exc:
             self._emit(f"Invalid multi-project invocation: {exc}")
             return 2

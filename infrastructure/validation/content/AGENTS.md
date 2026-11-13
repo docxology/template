@@ -12,6 +12,8 @@ LaTeX/pandoc warnings.
 - `pdf_validator.py` - PDF text and structure validation
 - `markdown_validator.py` - markdown structure validation, including
   Pandoc-pitfall and citation-key checks
+- `manuscript_config.py` - provider-free project-owned config markers and
+  hydration-token inspection shared by rendering and validation
 - `figure_validator.py` - figure-registry validation plus the selected
   paper/book cover-alt contract used by tagged-PDF rendering and publication
   audit
@@ -64,17 +66,17 @@ replaces the other.
 | Function | Severity returned | Purpose |
 |---|---|---|
 | `discover_markdown_files(root, scope=...)` | `tree` / `repo` / `link_audit` | Sorted markdown paths (canonical discovery API). |
-| `collect_symbols(paths)` | — | Set of `\label{}` and `{#anchor}` names. |
+| `collect_symbols(paths)` | — | Equation labels and Pandoc ID tokens, before or after classes/key-value attributes; quoted hash text is not an ID. |
 | `validate_images(paths, root)` | ERROR | Referenced images resolve on disk. |
 | `validate_refs(paths, root, labels, anchors)` | ERROR / WARNING | `\eqref` and `(#anchor)` resolve; bare URLs / non-informative link text. |
 | `validate_math(paths, root)` | WARNING / ERROR | Allows isolated Pandoc `$$` display blocks; flags inline/unbalanced `$$`, raw `\[`/`\]`, and equation-label issues. |
-| `validate_pandoc_pitfalls(paths, root)` | WARNING | Bare `\|word\|` in prose and `\|` inside Markdown table cells (Pandoc converts both to `\mid`). |
-| `validate_citations(paths, root, bib_file=None)` | ERROR | Every `[@key]` resolves across the manuscript ``*.bib`` union (or explicit ``bib_file`` list). |
-| `validate_markdown(dir, root, strict=False)` | aggregate | Runs all of the above. |
+| `validate_pandoc_pitfalls(paths, root, *, include_documentation=False)` | WARNING | Bare `\|word\|` in prose and `\|` inside Markdown table cells (Pandoc converts both to `\mid`). |
+| `validate_citations(paths, root, bib_file=None, *, include_documentation=False)` | ERROR | Every `[@key]` resolves across the manuscript ``*.bib`` union (or explicit ``bib_file`` list). |
+| `validate_markdown(dir, root, strict=False, *, manuscript_files=None, extra_search_dirs=None)` | aggregate | Explicit regular-file rosters are confined to `dir`, use its root bibliography and include consumed documentation-named files; optional image roots supply project context. `None` retains authored discovery. |
 
-`AGENTS.md`, `README.md` and `preamble.md` are skipped by
-`validate_pandoc_pitfalls` and `validate_citations` since they are not
-combined into the rendered manuscript.
+Ordinary calls skip `AGENTS.md`, `README.md` and `preamble.md` in the Pandoc and
+citation checks. An explicit consumed roster overrides those basename exclusions;
+selected files are rendered inputs regardless of their names.
 
 ## Diagnostic codes
 

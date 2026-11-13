@@ -90,6 +90,20 @@ Standalone repositories are publication mirrors for source, DOI metadata, and
 tracked rendered artifacts. Use the monorepo above when you need the full shared
 infrastructure, pipeline stages, or cross-template validation.
 
+### Python and dependency compatibility
+
+This project requires Python >=3.14 and tests Python 3.14/3.15. Its lock uses
+PyMDP 1.0.5 with JAX/JAXlib 0.11.1. PyMDP 1.0.4 caps JAX/JAXlib below 0.11.1,
+and the resulting jaxlib 0.11.0 lock cannot install on the tested Python 3.15
+environment. Keep the direct `jaxlib>=0.11.1` wheel-compatibility floor rather
+than disabling the declared Python 3.15 gate.
+
+Dependency changes need the independent Bayes, normalized-policy and finite-EFE
+contracts in [`tests/test_pymdp_api_contract.py`](tests/test_pymdp_api_contract.py)
+and the real simulation CLI on both tested minors. Package-version metadata
+alone is not runtime compatibility evidence; these checks do not establish
+scientific effectiveness.
+
 ## Why sheaf composition?
 
 The problem: N tracks evolve independently (an analyst edits the closed-form
@@ -296,12 +310,17 @@ and cannot be promoted by the deterministic fixture checks alone.
 
 Every Python `def` and `class` under `src/` and `scripts/` is documented in the
 generated reference [`docs/reference/method-inventory.md`](docs/reference/method-inventory.md).
-Regenerate it after method, script, or module changes, then check it before
-reporting verification status:
+During Source authoring, regenerate it after method, script, or module changes,
+then check and commit the reference before freezing inputs for verification:
 
 ```bash
+uv run python scripts/generate_method_inventory.py
 uv run python scripts/generate_method_inventory.py --check
 ```
+
+The `--check` command is read-only and must reject stale committed references.
+A later full-verification producer does not substitute for authored freshness;
+do not regenerate before a failing test merely to conceal the original failure.
 
 ## Documentation verification
 

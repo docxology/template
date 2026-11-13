@@ -55,11 +55,19 @@ dependence on hosted runner availability and pricing.
 
 This guide documents the **`act`-based local reproduction path**, which decouples the workflow YAML (the documentation of intent) from the GitHub Actions runtime (the current implementation).
 
+Hardening's Linux infrastructure lanes additionally require the existing fresh
+unprivileged execution-account profile, tool access, original PID namespace and
+strict process census. A root-only container or missing account/ACL/sudo
+capability can refuse before pytest starts. Do not relabel the runner, remove
+checks or reinterpret that refusal as success. Use focused local diagnosis,
+retain its limits, and qualify the full boundary on the actual hosted runner.
+
 ## What this provides
 
-- Run any GitHub Actions job locally without pushing
-- Validate workflow changes without burning CI minutes
-- Portability hedge: if CI moves to Forgejo, GitLab, sovereign-cloud, etc., the YAML is the documentation of intent and `act` is the runtime-independent verifier
+- Run supported Linux jobs locally before pushing.
+- Diagnose workflow changes with their declared tools and runtime constraints.
+- Keep YAML intent, local reproduction and actual hosted acceptance distinct;
+  `act` does not establish equivalent macOS, Windows or native custody behavior.
 
 ## Prerequisites
 
@@ -141,7 +149,7 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | CI job | Reproducible via act? | Notes |
 | --- | --- | --- |
 | `lint` (ruff + mypy; also runs the four-pool `check_tracked_all.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
-| `test-infra` (matrix: ubuntu py3.14/3.15 + macos py3.15) | ✅ Yes (ubuntu legs) | Four complete shards per environment; set `--matrix python-version:3.X`. Linux 3.14 shards retain coverage data; `coverage-infra` owns the complete-union threshold |
+| `test-infra` (matrix: ubuntu py3.14/3.15 + macos py3.15) | Conditional Linux reproduction | Requires the fresh execution-account profile; arbitrary containers are not equivalent. Four complete shards per environment retain their selected minor, `load --maxschedchunk=1` and original clocks. Linux 3.14 exports coverage under that account before original-byte artifact transport |
 | `coverage-infra` | Hosted artifact boundary | Merges all four same-revision Linux 3.14 shard selection/data artifacts, validates the complete disjoint case union and enforces ≥60%. Reproduce it using the actual hosted artifacts; the existing unpartitioned local infrastructure command remains available |
 | `test-project` (matrix: per-project × py3.14/3.15) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
 | `security` (bandit + pip-audit) | ✅ Yes | Fully Linux-portable |
@@ -156,7 +164,7 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | `test-integration` (run.sh + secure_run.sh + pipeline CLI) | ✅ Yes | Fully Linux-portable; needs `verify-no-mocks`; mirrors `test-regression` (CI-WIRING-1) |
 | `fep-lean` (gauss + lake, conditional) | ✅ Yes | Linux-only, `if: needs.detect.outputs.fep_lean == 'true'`; heavy (60 min timeout) |
 | `setup-hook-windows-smoke` | ❌ No | Runs on `windows-latest` — `act` only reproduces Linux containers; treat the real CI run as source of truth (same caveat as the macOS jobs above) |
-| `test-infra-slow` (`pytest.mark.slow` lane, manual Optional Hardening only) | ✅ Yes | `uv run pytest tests/infra_tests/ -m slow` locally; heavy real-render suite (pandoc + TeX Live), no coverage upload |
+| `test-infra-slow` (`pytest.mark.slow` lane, manual Optional Hardening only) | Conditional Linux reproduction | Requires the same account/census boundary and copied Active runtime. Focused local `uv run pytest tests/infra_tests/ -m slow` diagnoses real pandoc/TeX controls, but does not reproduce hosted custody or upload coverage |
 
 ## Fallback: fail-closed direct commands
 

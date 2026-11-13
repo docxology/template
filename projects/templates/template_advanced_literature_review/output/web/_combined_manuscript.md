@@ -705,7 +705,7 @@ corpus, with growth computed on its dated temporal subset; identifier and full-t
 coverage below use the retrieved fixture.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Exoplanet Atmospheres. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2023, peaking in 2023.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
+![Publication growth curve for Exoplanet Atmospheres. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2023, peaking in 2023.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
 
 ## RQ1: Field Size and Growth
 
@@ -749,15 +749,15 @@ review and a documented coverage assessment.
 | Theoretical Modeling | 10 | 14.3% |
 
 <!-- FIGURE: field_summary.png -->
-![Field summary dashboard for Exoplanet Atmospheres. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../figures/field_summary.png "Field Summary"){#fig:field_summary}
+![Field summary dashboard for Exoplanet Atmospheres. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../output/figures/field_summary.png "Field Summary"){#fig:field_summary}
 
 <!-- FIGURE: subfield_distribution.png -->
-![Subfield distribution for Exoplanet Atmospheres. The 4-bucket taxonomy shows the relative weight of each configured sub-area, with Observational Methods dominant at 51.4\%.](../figures/subfield_distribution.png "Subfield Distribution"){#fig:subfield_distribution}
+![Subfield distribution for Exoplanet Atmospheres. The 4-bucket taxonomy shows the relative weight of each configured sub-area, with Observational Methods dominant at 51.4\%.](../output/figures/subfield_distribution.png "Subfield Distribution"){#fig:subfield_distribution}
 
 \newpage
 
 <!-- FIGURE: subfield_timeline.png -->
-![Subfield timeline for Exoplanet Atmospheres. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../figures/subfield_timeline.png "Subfield Timeline"){#fig:subfield_timeline}
+![Subfield timeline for Exoplanet Atmospheres. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../output/figures/subfield_timeline.png "Subfield Timeline"){#fig:subfield_timeline}
 
 ## Identifier and Full-Text Coverage
 
@@ -791,7 +791,7 @@ the retained corpus and should not be generalized to citation behavior in the fi
 | 500+ | 0 |
 
 <!-- FIGURE: citation_distribution.png -->
-![Citation distribution for Exoplanet Atmospheres. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The distribution is a descriptive property of the retained corpus.](../figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
+![Citation distribution for Exoplanet Atmospheres. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The distribution is a descriptive property of the retained corpus.](../output/figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
 
 \newpage
 
@@ -809,7 +809,7 @@ the retained corpus and should not be generalized to citation behavior in the fi
 | The Astronomical Journal | 5 |
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for Exoplanet Atmospheres. The horizontal bar chart shows the venues with the most retained records; it describes this corpus rather than the complete field.](../figures/top_venues.png "Top Venues"){#fig:top_venues}
+![Top publication venues for Exoplanet Atmospheres. The horizontal bar chart shows the venues with the most retained records; it describes this corpus rather than the complete field.](../output/figures/top_venues.png "Top Venues"){#fig:top_venues}
 
 **Table 5. Top authors by publication count.**
 
@@ -827,7 +827,7 @@ the retained corpus and should not be generalized to citation behavior in the fi
 | 10 | F. Lindgren | 3 |
 
 <!-- FIGURE: author_productivity.png -->
-![Author productivity for Exoplanet Atmospheres. The horizontal bar chart shows authors with the most retained records; names and counts depend on source coverage and deduplication.](../figures/author_productivity.png "Author Productivity"){#fig:author_productivity}
+![Author productivity for Exoplanet Atmospheres. The horizontal bar chart shows authors with the most retained records; names and counts depend on source coverage and deduplication.](../output/figures/author_productivity.png "Author Productivity"){#fig:author_productivity}
 
 ```{=html}
 <!--template-web-source-d4e2853765ee172764eea0e8b59e81ce7fc968491b5389add85046ee5c30e4ca-10-end-->
@@ -908,7 +908,7 @@ configured subfield taxonomy; fixture-derived topics describe synthetic text pat
 not the scientific field.
 
 <!-- FIGURE: topic_term_bars.png -->
-![Topic-term bar charts for Exoplanet Atmospheres. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../figures/topic_term_bars.png "Topic-Term Weights"){#fig:topic_term_bars}
+![Topic-term bar charts for Exoplanet Atmospheres. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../output/figures/topic_term_bars.png "Topic-Term Weights"){#fig:topic_term_bars}
 
 ## Document Embeddings
 
@@ -918,10 +918,10 @@ vectors, so the derived similarity matrix, nearest-neighbour lists, clusters, an
 two-dimensional projection are all reproducible.
 
 <!-- FIGURE: pca_embeddings.png -->
-![PCA projection of document embeddings for Exoplanet Atmospheres. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../figures/pca_embeddings.png "PCA Embeddings"){#fig:pca_embeddings}
+![PCA projection of document embeddings for Exoplanet Atmospheres. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../output/figures/pca_embeddings.png "PCA Embeddings"){#fig:pca_embeddings}
 
 <!-- FIGURE: dendrogram.png -->
-![Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters.](../figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
+![Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters.](../output/figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
 
 ## Term Analysis
 
@@ -929,7 +929,7 @@ The TF-IDF term heatmap reveals which terms discriminate between subfields: term
 high between-subfield variance (rather than high global mean) are selected for display.
 
 <!-- FIGURE: term_heatmap.png -->
-![Term heatmap for Exoplanet Atmospheres. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms.](../figures/term_heatmap.png "Term Heatmap"){#fig:term_heatmap}
+![Term heatmap for Exoplanet Atmospheres. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms.](../output/figures/term_heatmap.png "Term Heatmap"){#fig:term_heatmap}
 
 \newpage
 
@@ -947,7 +947,7 @@ be interpreted.
 | JWST | 17 |
 
 <!-- FIGURE: entity_bar_chart.png -->
-![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
+![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../output/figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
 
 \clearpage
 
@@ -994,13 +994,13 @@ reveal the most closely related works in the corpus.
 | `doi:10.5555/exoplanet atmospheres.0002` | `doi:10.5555/exoplanet atmospheres.0068` | 1.0000 |
 
 <!-- FIGURE: similarity_heatmap.png -->
-![Document similarity for Exoplanet Atmospheres. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
+![Document similarity for Exoplanet Atmospheres. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../output/figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
 
 <!-- FIGURE: word_cloud.png -->
-![Term cloud for Exoplanet Atmospheres. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary.](../figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
+![Term cloud for Exoplanet Atmospheres. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary.](../output/figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
 
 <!-- FIGURE: cooccurrence_matrix.png -->
-![Term co-occurrence matrix for Exoplanet Atmospheres. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../figures/cooccurrence_matrix.png "Term Co-occurrence"){#fig:cooccurrence_matrix}
+![Term co-occurrence matrix for Exoplanet Atmospheres. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../output/figures/cooccurrence_matrix.png "Term Co-occurrence"){#fig:cooccurrence_matrix}
 
 These embeddings support semantic retrieval over the corpus and the visual map of the
 literature's topical geography.
@@ -1081,10 +1081,10 @@ connect threads of the retrieved literature, but their role should be checked ag
 their source type and content.
 
 <!-- FIGURE: citation_network.png -->
-![Citation network for Exoplanet Atmospheres. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (13 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../figures/citation_network.png "Citation Network"){#fig:citation_network}
+![Citation network for Exoplanet Atmospheres. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (13 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../output/figures/citation_network.png "Citation Network"){#fig:citation_network}
 
 <!-- FIGURE: degree_distribution.png -->
-![Degree distribution for the Exoplanet Atmospheres citation network. The histogram shows the frequency of each in-degree value on linear axes, describing the observed citation-count distribution in this corpus.](../figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
+![Degree distribution for the Exoplanet Atmospheres citation network. The histogram shows the frequency of each in-degree value on linear axes, describing the observed citation-count distribution in this corpus.](../output/figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
 
 The heavy-tailed degree distribution is characteristic of citation networks: a small
 number of highly-cited papers anchor the structure, while the long tail of low-degree

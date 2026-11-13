@@ -56,6 +56,10 @@ install a Lean toolchain. The single `TLC_URL`/`TLC_BYTES`/`TLC_SHA256` tuple in
 `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`.
 These full bytes match two independent download paths on 2026-10-13 UTC.
 Both hosted shell preparations read those literals without importing the SDK.
+The primary locator is the official immutable asset API with octet-stream
+content negotiation. Hosted shell acquisition scopes the existing GitHub token
+to that step only; never export it to model checks or runtime case workers.
+Two transport routes corroborate pinned bytes, not independent upstream builds.
 The JAR manifest names commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`. The
 rolling v1.8.0 pre-release was rebuilt in place three times between 2026-10-08
 and 2026-10-13, so its earlier pins are historical and it is no longer pinned.

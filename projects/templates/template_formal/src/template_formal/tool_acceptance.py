@@ -23,7 +23,7 @@ from ._tool_sources import materialize, snapshot_file, snapshot_tree
 
 LEAN_TOOLCHAIN = "leanprover/lean4:v4.35.0"
 _LEAN_VERSION = LEAN_TOOLCHAIN.split(":v", 1)[1]
-TLC_URL = "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar"
+TLC_URL = "https://api.github.com/repos/tlaplus/tlaplus/releases/assets/184694200"
 # Stable v1.7.4 asset 184694200 (unchanged since 2024-08-08), commit 5a47802b5c391f59ecdd44117981f4ff8c0656ba.
 # Full bytes matched through two download paths on 2026-10-13 UTC. The v1.8.0 tag is a rolling pre-release.
 TLC_BYTES = 2274532
@@ -143,6 +143,8 @@ def _acquire_jar(root: Path, deadline: float) -> ToolCheck:
                 "curl",
                 "--fail",
                 "--location",
+                "--header",
+                "Accept: application/octet-stream",
                 "--proto",
                 "=https",
                 "--proto-redir",

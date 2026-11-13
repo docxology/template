@@ -261,22 +261,24 @@ wheels = [
 
 [[package]]
 name = "inferactively-pymdp"
-version = "1.0.3"
+version = "1.0.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "equinox" },
     { name = "jax" },
     { name = "jaxlib" },
+    { name = "jaxtyping" },
     { name = "matplotlib" },
     { name = "mctx" },
     { name = "multimethod" },
     { name = "networkx" },
     { name = "numpy" },
+    { name = "opt-einsum" },
     { name = "seaborn" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7d/88/1d1a61975980d74d3b9aa04eb2b6016e0cf436d589b5422403f81654b1ac/inferactively_pymdp-1.0.3.tar.gz", hash = "sha256:077a2d07053446fb9de6c9b47bf91d3869600c177344754f7047cf507ad1897d", size = 701268, upload-time = "2026-06-15T15:40:18.328Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a4/47/e165cacac83517d523e93e486290bc4b11e7a6544f251466846a8617a3b0/inferactively_pymdp-1.0.5.tar.gz", hash = "sha256:c58461217fe16d9bf4c4df8e49411d36fff8ae067f4b42225f5c69c4832963a7", size = 718158, upload-time = "2026-11-07T15:10:10.374Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d0/15/33ba02e28445e571cc207712a271802165b05e6baa53d115b1b61bf7cc45/inferactively_pymdp-1.0.3-py3-none-any.whl", hash = "sha256:b8b36cc0c92354efde2b2653cffb4d0d9666bbd2e750d240a3626fc0585280ab", size = 636622, upload-time = "2026-06-15T15:40:16.415Z" },
+    { url = "https://files.pythonhosted.org/packages/91/8f/d106043c9b409dc6f0b5614811173f72f404d18d25b6b1a115eba3e288d6/inferactively_pymdp-1.0.5-py3-none-any.whl", hash = "sha256:5e423a331894c7d4dbda1d935d7b592556dfea229d99890aec02d5216e9f1d84", size = 642033, upload-time = "2026-11-07T15:10:08.618Z" },
 ]
 
 [[package]]
@@ -1044,6 +1046,7 @@ version = "0.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "inferactively-pymdp" },
+    { name = "jaxlib" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pillow" },
@@ -1066,7 +1069,8 @@ dev = [
 requires-dist = [
     { name = "coverage", marker = "extra == 'dev'", specifier = ">=7.13.2" },
     { name = "defusedxml", marker = "extra == 'dev'", specifier = ">=0.7.1" },
-    { name = "inferactively-pymdp", specifier = "==1.0.3" },
+    { name = "inferactively-pymdp", specifier = "==1.0.5" },
+    { name = "jaxlib", specifier = ">=0.11.1" },
     { name = "matplotlib", specifier = ">=3.7.0" },
     { name = "numpy", specifier = ">=1.24.0" },
     { name = "pillow", specifier = ">=13.0.0" },

@@ -121,7 +121,8 @@ FONT_BODIES: dict[str, dict[str, Any]] = {
 }
 LICENSE_SHA256 = "a0c060f758d33ee59a674cd7b45914a560d0a5935968af5e87b0c6981fd89ddc"
 FONT_BUFFER_SCHEMA = "template-source-web-font-buffer-v1"
-LZMA_DECODER_SHA256 = "850305b783d09b71731f6f293d1f1ed58180892ff0e68c73475873b510f753a3"
+# Locally bounded synchronous adaptation; the asset retains its upstream identity and MIT notice.
+LZMA_DECODER_SHA256 = "bee9d119528a3f2bbb030c3e92fd894677ac51883b7f6af608cc4a81035222fd"
 LZMA_LICENSE_SHA256 = "2a85a87a012b6f2099902bc20e94f4292c222a80f66072ecf5151d1377377385"
 
 
@@ -205,9 +206,10 @@ def _compressed_font_stream(raw: bytes) -> bytes:
     packed = lzma.compress(raw, format=lzma.FORMAT_ALONE, preset=6)
     if packed[:5] != b"\x5d\x00\x00\x80\x00" or len(packed) > 4 * 1024 * 1024:
         raise ValueError("Source font transport has unsupported LZMA properties or size")
-    # FORMAT_ALONE streams normally use an unknown length. Pin the actual length
-    # so the browser decoder has a finite, verified output bound before decoding.
-    return packed[:5] + len(raw).to_bytes(8, "little") + packed[13:]
+    # Keep the encoder's unknown-size header and its matching end marker intact.
+    # Rewriting only the size makes older liblzma reject the still-present marker.
+    # The local decoder enforces the independently checked face-cohort bound.
+    return packed
 
 
 def _source_web_font_decoder() -> tuple[str, str]:
@@ -261,12 +263,12 @@ def _source_web_font_loader() -> str:
         "if(expected>6*1024*1024||stream.bytes!==expected||typeof stream.data!=='string'||"
         "stream.data.length>Math.ceil(4*1024*1024/3)*4)throw Error('Invalid Source font stream size');\n"
         "const encoded=Uint8Array.from(atob(stream.data),c=>c.charCodeAt(0));\n"
-        "if(encoded.length<13||encoded.length>4*1024*1024)throw Error('Invalid Source LZMA stream');\n"
+        "if(encoded.length<18||encoded.length>4*1024*1024)throw Error('Invalid Source LZMA stream');\n"
         "const header=new DataView(encoded.buffer);\n"
         "if(encoded[0]!==0x5d||header.getUint32(1,true)!==8388608||"
-        "header.getUint32(9,true)!==0||header.getUint32(5,true)!==expected)"
+        "header.getUint32(9,true)!==0xffffffff||header.getUint32(5,true)!==0xffffffff)"
         "throw Error('Unsupported Source LZMA header');\n"
-        "const decoded=decoder.decompress(encoded);\n"
+        "const decoded=decoder.decompress(encoded,expected);\n"
         "if(!Array.isArray(decoded)||decoded.length!==expected)throw Error('Source font stream changed');\n"
         "packedRaw=Uint8Array.from(decoded);\n"
         "}\n"

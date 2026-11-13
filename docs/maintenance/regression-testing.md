@@ -76,28 +76,31 @@ If a value changes, the failure must be **investigated** — is the change corre
 
 ## Directory layout
 
-The tree below is the live shape plus target naming convention. The
-`template_code_project/tables/test_optimization_results_claims.py` file is populated;
-other illustrative `test_figure_*` and `test_table_*` names show the intended expansion.
+The tree below shows populated regression lanes. Add a figure or table case only
+when a declared claim has an actual producer-backed assertion; non-collected
+scaffolds do not count as required regression evidence.
 
 ```
 tests/regression/
 ├── README.md                          (philosophy + how to add a regression case)
 ├── __init__.py
-├── conftest.py                        (fixtures for deterministic re-execution)
+├── conftest.py                        (fixtures and mandatory selection)
+├── manifest.json                     (required populated test files)
 ├── projects/
 │   ├── template_code_project/
 │   │   ├── __init__.py
-│   │   ├── figures/                   (one test file per manuscript figure)
-│   │   │   └── test_figure_TEMPLATE.py (non-collected scaffold)
 │   │   └── tables/                    (one test file per manuscript table)
 │   │       └── test_optimization_results_claims.py
 │   └── template_prose_project/
-│       └── (same shape)
-└── pinned_values/                     (committed ground-truth values, JSON)
+│       └── tables/test_editorial_report_claims.py (bibliography integrity, no wording pins)
+└── pinned_values/                     (declared quantitative baselines, JSON)
     ├── template_code_project.json
-    └── template_prose_project.json
+    └── ...                           (other bound projects in claim_bindings.json)
 ```
+
+The manifest requires each declared file to contribute selected cases. Source
+presence or a large suite count cannot substitute for running a required lane;
+missing or deselected mandatory files refuse collection.
 
 ## How to add a regression case
 
@@ -177,6 +180,12 @@ def test_solution_accuracy_claims_rederive_from_quadratic(load_pinned_values: An
 - **Numeric coefficients / rates / effect sizes**: tolerance documented per pin. Default to 3 significant figures (e.g., tolerance = `1e-4` for a value like 0.4271).
 - **p-values**: pin the value but tolerance is more permissive (1e-3) because numerical instability is normal at small p; if the value changes by orders of magnitude, fail.
 - **NEVER** use a percentage tolerance that's so wide a real regression would pass.
+
+These tolerances apply to declared domain quantities and controlled-data
+outcomes, not incidental manuscript wording. Derive editorial counts and
+readability from current Source instead of freezing them. Prose bibliography
+resolution remains a regression invariant; a copy edit alone is not grounds
+for adding or repinning a numerical claim.
 
 ## Workflow: changing a value
 

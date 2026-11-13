@@ -10,6 +10,7 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
+from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
 
 logger = get_logger(__name__)
 
@@ -31,12 +32,23 @@ def validate_manuscript_output_markdown(
     """Validate manuscript markdown for Stage 04 without failing on advisory notes."""
     log_substep("Validating markdown files...", logger)
 
-    manuscript_dir = resolve_source_manuscript_dir(project_root)
+    try:
+        generated_inputs = declared_generated_manuscript_inputs(project_root)
+    except (OSError, RuntimeError, ValueError) as exc:
+        logger.warning("Markdown input declaration error: %s", exc)
+        return False
+    manuscript_dir = (
+        project_root / "output" / "manuscript"
+        if generated_inputs is not None
+        else resolve_source_manuscript_dir(project_root)
+    )
     if not manuscript_dir.exists():
         logger.warning("Manuscript directory not found at expected location: %s", manuscript_dir)
         return True
 
-    markdown_files = discover_markdown_files(manuscript_dir, scope="tree")
+    markdown_files = (
+        generated_inputs if generated_inputs is not None else discover_markdown_files(manuscript_dir, scope="tree")
+    )
     if not markdown_files:
         logger.warning("No markdown files found")
         return True
@@ -46,7 +58,16 @@ def validate_manuscript_output_markdown(
     try:
         logger.info("Running markdown validation...")
         validate_md = validator or validator_loader()
-        problems, _exit_code = validate_md(manuscript_dir, repo_root, strict=False)
+        if generated_inputs is None:
+            problems, _exit_code = validate_md(manuscript_dir, repo_root, strict=False)
+        else:
+            problems, _exit_code = validate_md(
+                manuscript_dir,
+                repo_root,
+                strict=False,
+                manuscript_files=generated_inputs,
+                extra_search_dirs=[project_root / "output/figures", project_root / "figures"],
+            )
 
         if not problems:
             DiagnosticReporter(

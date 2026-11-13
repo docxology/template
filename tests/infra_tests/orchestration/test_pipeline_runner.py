@@ -94,7 +94,7 @@ def test_multi_invalid_mode_is_invocation_error(tmp_path: Path) -> None:
 
 
 def _run_real_multi_cli(root: Path, label: str, *options: str) -> subprocess.CompletedProcess[bytes]:
-    """Run the actual CLI and retain its original streams beside the owned fixture."""
+    """Run the actual CLI and retain original streams, including an expired deadline."""
     environment = dict(os.environ)
     for key in (
         "TEMPLATE_SKIP_LINK_SYNC",
@@ -103,28 +103,46 @@ def _run_real_multi_cli(root: Path, label: str, *options: str) -> subprocess.Com
         "TEMPLATE_SKIP_TOOL_LINK_SYNC",
     ):
         environment[key] = "1"
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-B",
-            "-m",
-            "infrastructure.orchestration",
-            "--repo-root",
-            str(root),
-            "pipeline",
-            "--all-projects",
-            "--skip-infra",
-            *options,
-        ],
-        cwd=Path(__file__).resolve().parents[3],
-        env=environment,
-        stdin=subprocess.DEVNULL,
-        capture_output=True,
-        timeout=30,
-        check=False,
-    )
     directory = root / "cli-observations" / label
     directory.mkdir(parents=True)
+    command = [
+        sys.executable,
+        "-B",
+        "-m",
+        "infrastructure.orchestration",
+        "--repo-root",
+        str(root),
+        "pipeline",
+        "--all-projects",
+        "--skip-infra",
+        *options,
+    ]
+    try:
+        result = subprocess.run(
+            command,
+            cwd=Path(__file__).resolve().parents[3],
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        (directory / "stdout").write_bytes(error.stdout or b"")
+        (directory / "stderr").write_bytes(error.stderr or b"")
+        (directory / "timeout.json").write_text(
+            json.dumps(
+                {
+                    "command": error.cmd,
+                    "timeout": error.timeout,
+                    "stdout_available": error.stdout is not None,
+                    "stderr_available": error.stderr is not None,
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        raise
     (directory / "stdout").write_bytes(result.stdout)
     (directory / "stderr").write_bytes(result.stderr)
     (directory / "exit.json").write_text(json.dumps({"returncode": result.returncode}) + "\n", encoding="utf-8")

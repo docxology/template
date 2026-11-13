@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.13" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
@@ -14,10 +14,7 @@ Coordination</title>
     */
     html {
       color: #1a1a1a;
-      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
-      background-color: light-dark(#fdfdfd, #1a1a1a);
-      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -42,16 +39,11 @@ Coordination</title>
     }
     @media print {
       html {
-        color-scheme: light only;
+        background-color: white;
       }
-      html, body, pre, code {
+      body {
         background-color: transparent;
-      }
-      body, a, a:visited, blockquote {
         color: black;
-      }
-      pre, code {
-        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -64,8 +56,11 @@ Coordination</title>
     p {
       margin: 1em 0;
     }
-    a, a:visited {
-      color: inherit;
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
     }
     img {
       max-width: 100%;
@@ -94,11 +89,8 @@ Coordination</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid;
-      border-color: #e6e6e6;
-      border-color: light-dark(#e6e6e6, #4c4c4c);
+      border-left: 2px solid #e6e6e6;
       color: #606060;
-      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -122,7 +114,7 @@ Coordination</title>
     }
     hr {
       border: none;
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -139,11 +131,11 @@ Coordination</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
     }
     th {
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -275,11 +267,74 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
   })
 });
 window.normalizeTemplateMathJaxAria = function () {
@@ -306,8 +361,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -392,7 +447,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -410,8 +472,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -424,8 +484,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -653,10 +711,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -707,10 +773,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -837,6 +899,7 @@ class="toc-section-number">9</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>Recent work on <em>AutoScientists</em> <span class="citation"
@@ -877,7 +940,9 @@ component’s contribution, and the language-model proposer is a clean
 plug-in seam: a deterministic rule-based agent drives the reproducible
 figures, and a bounded local model proposer (served by Ollama) can be
 swapped in without touching the coordination loop.</p>
+
 <hr />
+
 <h1 data-number="2" id="sec:introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <h2 data-number="2.1" id="motivation"><span
@@ -968,7 +1033,9 @@ and the per-mechanism ablation with the numbers our scripts actually
 produce (sec. <a href="#sec:results">4</a>), states the scope and limits
 of those claims (sec. <a href="#sec:scope">7</a>), and documents
 reproduction (sec. <a href="#sec:reproducibility">6</a>).</p>
+
 <hr />
+
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
 <p>The testbed is a single coordination loop over a fixed budget of
@@ -986,16 +1053,20 @@ reproducible.</p>
 <p>For a parameter vector <span class="math inline">\(x \in
 \mathbb{R}^d\)</span> with optimum at the origin, the
 <strong>clean</strong> (noise-free) value is</p>
-<p><span class="math display">\[f(x) = -\sum_{i=1}^{d} \left[ x_i^2 +
-\rho\,\bigl(1 - \cos(2\pi x_i)\bigr) \right],\]</span></p>
+<p><span class="math display">\[
+f(x) = -\sum_{i=1}^{d} \left[ x_i^2 + \rho\,\bigl(1 - \cos(2\pi
+x_i)\bigr) \right],
+\]</span></p>
 <p>a smooth global peak at <span class="math inline">\(x = 0\)</span>
 (where <span class="math inline">\(f = 0\)</span>) minus shallow cosine
 ripples of amplitude <span class="math inline">\(\rho\)</span> that
 create deceptive local optima along each axis. Higher is better. A
 single noisy <strong>observation</strong> adds a seeded, zero-centred
 perturbation:</p>
-<p><span class="math display">\[\tilde{f}(x, s) = f(x) + \varepsilon(x,
-s), \qquad |\varepsilon| \le \sigma_{\text{noise}},\]</span></p>
+<p><span class="math display">\[
+\tilde{f}(x, s) = f(x) + \varepsilon(x, s), \qquad |\varepsilon| \le
+\sigma_{\text{noise}},
+\]</span></p>
 <p>where <span class="math inline">\(\varepsilon(x, s)\)</span> is
 derived deterministically from a hash of the rounded <span
 class="math inline">\(x\)</span> and the seed <span
@@ -1105,7 +1176,9 @@ budgets.</li>
 arms under equal ceilings. Its scoped local numerical results are
 separate from the deterministic manuscript figures and do not establish
 general scientific-agent superiority.</p>
+
 <hr />
+
 <h1 data-number="4" id="sec:results"><span
 class="header-section-number">4</span> Results</h1>
 <p>All numbers below are produced by the analysis scripts in
@@ -1134,7 +1207,7 @@ comparison, not a speedup. Produced by
 </figure>
 <p>The summary in <code>output/data/search_comparison.json</code>
 reports the decisive quantities:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 16%" />
@@ -1211,7 +1284,7 @@ noise. Removing noise-band confirmation inflates the gap roughly
 thirteenfold while the clean metric is unchanged. Produced by
 <code>run_ablation.py</code>.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 16%" />
@@ -1342,7 +1415,9 @@ unchanged.</li>
 ablatable, but do not by themselves change any measured quantity on this
 objective — a result we report rather than obscure.</li>
 </ol>
+
 <hr />
+
 <h1 data-number="5" id="sec:setup"><span
 class="header-section-number">5</span> Experimental Setup</h1>
 <h2 data-number="5.1" id="objective-and-budget"><span
@@ -1397,18 +1472,20 @@ class="header-section-number">5.4</span> Outputs</h2>
 <p>Two thin orchestrator scripts produce all results:</p>
 <ul>
 <li><code>scripts/run_search_comparison.py</code> →
-<code>../figures/search_comparison.png</code>,
+<code>output/figures/search_comparison.png</code>,
 <code>output/data/search_comparison.json</code>.</li>
 <li><code>scripts/run_ablation.py</code> →
-<code>../figures/ablation.png</code>,
-<code>../figures/ablation_efficiency.png</code>,
+<code>output/figures/ablation.png</code>,
+<code>output/figures/ablation_efficiency.png</code>,
 <code>output/data/ablation.json</code>.</li>
 </ul>
 <p>Each script imports all computation from <code>src/</code>, runs the
 configurations, and writes a figure plus a machine-readable summary. The
 numbers quoted in sec. <a href="#sec:results">4</a> are read directly
 from those JSON files.</p>
+
 <hr />
+
 <h1 data-number="6" id="sec:reproducibility"><span
 class="header-section-number">6</span> Reproducibility</h1>
 <p>Every figure and number in this manuscript is regenerable from a
@@ -1470,7 +1547,9 @@ and is covered by
 <code>tests/infra_tests/scientific/test_confirmation.py</code>. The
 project keeps its own standalone copy so the exemplar runs
 self-contained.</p>
+
 <hr />
+
 <h1 data-number="7" id="sec:scope"><span
 class="header-section-number">7</span> Scope and Related Work</h1>
 <h2 data-number="7.1" id="what-this-exemplar-claims"><span
@@ -1554,7 +1633,9 @@ emphasis on regenerable figures, fixed seeds, and a tested core follows
 the reproducible-research tradition <span class="citation"
 data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
 role="doc-biblioref">Peng 2011</a>)</span>.</p>
+
 <hr />
+
 <h1 data-number="8" id="sec:conclusion"><span
 class="header-section-number">8</span> Conclusion</h1>
 <p>This exemplar re-implements the AutoScientists coordination
@@ -1594,7 +1675,9 @@ it without touching the coordination loop. The honest-testbed framing is
 the contribution — a small, fully reproducible instrument for
 attributing coordination effects to mechanisms and for distinguishing
 real gains from noise.</p>
+
 <hr />
+
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
@@ -1609,6 +1692,7 @@ and contains the required fields per entry type:</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> infrastructure.reference.citation.cli validate <span class="dt">\</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    projects/templates/template_autoscientists/manuscript/references.bib <span class="at">--strict</span></span></code></pre></div>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-cohen1988statistical" class="csl-entry" role="listitem">

@@ -16,7 +16,11 @@ from infrastructure.core.pipeline.control import control_config_from_dict, merge
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
 from infrastructure.core.pipeline.execution_environment import effective_environment_identity
-from infrastructure.core.pipeline.fingerprints import canonical_digest, source_fingerprint
+from infrastructure.core.pipeline.fingerprints import (
+    canonical_digest,
+    source_fingerprint,
+    source_fingerprint_components,
+)
 from infrastructure.core.pipeline.plugins import PLUGIN_STAGES_FILENAME, merge_plugin_stages, parse_plugin_stages
 from infrastructure.core.pipeline.types import PipelineConfig, PipelineControlConfig
 
@@ -87,6 +91,7 @@ class FrozenPlanSources:
     paths: tuple[Path, Path, Path | None, Path]
     contents: tuple[tuple[Path, bytes | None], ...]
     source_identity: str
+    source_components: tuple[tuple[str, str], ...]
     environment_identity: str
     configuration_identity: str
     explicit_control: PipelineControlConfig | None
@@ -98,7 +103,10 @@ class FrozenPlanSources:
         frozen_config = deepcopy(config)
         copied = deepcopy(explicit)
         paths = _paths(frozen_config)
-        source = source_fingerprint(frozen_config.repo_root, frozen_config.project_dir, definition_path=paths[0])
+        components = source_fingerprint_components(
+            frozen_config.repo_root, frozen_config.project_dir, definition_path=paths[0]
+        )
+        source = canonical_digest(components)
         environment = effective_environment_identity(
             frozen_config.repo_root, frozen_config.project_dir, mode=frozen_config.mode
         )
@@ -108,6 +116,7 @@ class FrozenPlanSources:
             paths,
             tuple((path, _read(path)) for path in unique),
             source,
+            tuple((name, canonical_digest(components[name])) for name in ("source", "python", "tools")),
             environment,
             configuration,
             copied,

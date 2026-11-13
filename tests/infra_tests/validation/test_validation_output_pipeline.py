@@ -13,6 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 import infrastructure.validation.output.pipeline as mod
 from infrastructure.validation.output.pipeline import (
@@ -21,6 +23,113 @@ from infrastructure.validation.output.pipeline import (
     validate_pdfs,
     verify_outputs_exist,
 )
+
+
+def test_generated_markdown_diagnostics_exclude_undeclared_residue(tmp_path: Path) -> None:
+    from infrastructure.validation.content.manuscript_config import GENERATED_ORDERING_MARKER
+
+    project = tmp_path / "projects" / "active" / "generated"
+    authored = project / "manuscript"
+    authored.mkdir(parents=True)
+    (authored / "intro.md").write_text("# Neutral template\n", encoding="utf-8")
+    generated = project / "output" / "manuscript"
+    generated.mkdir(parents=True)
+    (generated / "config.yaml").write_text(
+        f"{GENERATED_ORDERING_MARKER}\nfront_matter:\n  files:\n    - selected.md\n",
+        encoding="utf-8",
+    )
+    selected = generated / "selected.md"
+    selected.write_text("# Generated\n\n![Broken](missing-selected.png)\n", encoding="utf-8")
+    (generated / "residue.md").write_text("# Stale\n\n![Broken](missing-residue.png)\n", encoding="utf-8")
+
+    assert mod.validate_manuscript_output_markdown("generated", repo_root=tmp_path)
+    diagnostics = (project / "output/reports/diagnostics.json").read_text(encoding="utf-8")
+    assert "missing-selected.png" in diagnostics
+    assert "missing-residue.png" not in diagnostics
+
+    selected.write_text("# Generated\n\nClean consumed content.\n", encoding="utf-8")
+    assert mod.validate_manuscript_output_markdown("generated", repo_root=tmp_path)
+    assert not (project / "output/reports/diagnostics.json").exists()
+
+
+def test_generated_figure_references_reject_selected_but_not_residue(tmp_path: Path) -> None:
+    from infrastructure.validation.content.manuscript_config import GENERATED_ORDERING_MARKER
+    from infrastructure.validation.content.figure_validator import validate_figure_registry
+    from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
+
+    generated = tmp_path / "output/manuscript"
+    generated.mkdir(parents=True)
+    (generated / "config.yaml").write_text(
+        f"{GENERATED_ORDERING_MARKER}\nfront_matter:\n  files:\n    - selected.md\n",
+        encoding="utf-8",
+    )
+    selected = generated / "selected.md"
+    selected.write_text("# Generated\n\nSee @fig:selected.\n", encoding="utf-8")
+    (generated / "residue.md").write_text("# Residue\n\nSee @fig:residue.\n", encoding="utf-8")
+    registry = tmp_path / "output/figures/figure_registry.json"
+    registry.parent.mkdir(parents=True)
+    registry.write_text("{}", encoding="utf-8")
+    roster = declared_generated_manuscript_inputs(tmp_path)
+    passed, issues = validate_figure_registry(registry, generated, manuscript_files=roster)
+    assert not passed
+    assert any("fig:selected" in issue for issue in issues)
+
+    selected.write_text("# Generated\n\nNo figures.\n", encoding="utf-8")
+    assert validate_figure_registry(registry, generated, manuscript_files=roster) == (True, [])
+
+
+def test_generated_missing_declared_input_cannot_pass_neutral_markdown(tmp_path: Path) -> None:
+    from infrastructure.validation.content.manuscript_config import GENERATED_ORDERING_MARKER
+
+    project = tmp_path / "projects/active/generated"
+    authored = project / "manuscript"
+    authored.mkdir(parents=True)
+    (authored / "intro.md").write_text("# Neutral template\n", encoding="utf-8")
+    generated = project / "output/manuscript"
+    generated.mkdir(parents=True)
+    (generated / "residue.md").write_text("# Stale output\n", encoding="utf-8")
+    (generated / "config.yaml").write_text(
+        f"{GENERATED_ORDERING_MARKER}\nfront_matter:\n  files:\n    - missing.md\n",
+        encoding="utf-8",
+    )
+    assert not mod.validate_manuscript_output_markdown("generated", repo_root=tmp_path)
+
+
+@pytest.mark.parametrize("filename", ("chapter.md", "README.md", "AGENTS.md", "preamble.md"))
+def test_generated_deep_markdown_uses_consumed_root_context(tmp_path: Path, filename: str) -> None:
+    project = tmp_path / "projects/active/generated"
+    (project / "manuscript").mkdir(parents=True)
+    manuscript = project / "output/manuscript"
+    deep = manuscript / "volume/part/chapters"
+    deep.mkdir(parents=True)
+    (manuscript / "anchor.md").write_text("# Unconsumed selection anchor\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        f"# Generated manuscript ordering\nunits:\n  - directory: volume/part/chapters\n    chapters: [{filename}]\n",
+        encoding="utf-8",
+    )
+    (manuscript / "references.bib").write_text("@misc{approved_reference,title={Approved}}\n", encoding="utf-8")
+    (deep / filename).write_text(
+        "# Consumed chapter\n\nUse [@approved_reference] and [@missing_reference].\n\n"
+        "Mean |signal| needs math delimiters.\n\n![Plot](plot.svg)\n",
+        encoding="utf-8",
+    )
+    figures = project / "output/figures"
+    figures.mkdir()
+    (figures / "plot.svg").write_text(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1"/></svg>\n',
+        encoding="utf-8",
+    )
+
+    assert mod.validate_manuscript_output_markdown("generated", repo_root=tmp_path)
+    report = project / "output/reports/diagnostics.json"
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert {event["code"] for event in payload["events"]} == {
+        "BIBTEX.UNDEFINED_KEY",
+        "MARKDOWN.PANDOC_BARE_PIPE",
+    }
+    diagnostics = report.read_text(encoding="utf-8")
+    assert "@missing_reference" in diagnostics
+    assert "@approved_reference" not in diagnostics
 
 
 def _minimal_structural_pdf() -> bytes:

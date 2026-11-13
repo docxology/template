@@ -32,6 +32,11 @@ complete source roster to produce the combined index and create or replace
 every corresponding split page in project context. A preceding preview call
 is not required. Do not publish isolated previews as a finalized split edition.
 
+Set `RenderingConfig.manuscript_dir` to the actual manuscript root. Section
+destinations distinguish complete paths within that root, including nested and
+sanitized names, while preserving ordinary flat safe names. Use actual produced
+page destinations rather than guessing filenames from a source basename.
+
 Finalized links retain live local destinations, point to the actual produced
 section page for a unique remote destination, and use `index.html` for
 combined-only destinations such as its table of contents. Unknown or ambiguous
@@ -39,6 +44,12 @@ destinations remain visible defects. Explicit document, external, and asset
 links are not rebound. Raw HTML, scripts, styles, comments, code examples, and
 inert template content are not reference-replacement templates; source files
 and stable authored IDs remain unchanged.
+
+Native verification retains complete source context for parser custody, but a
+split page owns only its exact source's generated-value and absence obligations.
+Selected table ordinals are projected through those same ownership boundaries
+before joining the semantic contract; context membership alone confers no native
+location or absence claim.
 
 ## 1. Citations
 

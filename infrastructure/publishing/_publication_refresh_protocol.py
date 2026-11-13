@@ -102,6 +102,7 @@ def successful_command_receipt(directory: Path, label: str, argv: list[str], sou
         and receipt["returncode"] == 0
         and receipt.get("source_commit") == source_commit
         and receipt.get("argv") == argv
+        and type(receipt.get("original_exit_code")) is int
         and receipt.get("original_exit_code") == 0
         and receipt.get("process", {}).get("accepted") is True
         and all(

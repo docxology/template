@@ -12,6 +12,7 @@ from pathlib import Path
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined, read_bytes_confined
 from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.outcomes import RunResult
 from infrastructure.core.pipeline.plan import ExecutionPlan
 from infrastructure.core.pipeline.worker_transport import WORKER_SCHEMA, config_from_payload, stage_results_to_payload
 
@@ -51,13 +52,16 @@ def main() -> int:
         verify_fresh_module_bytecode(implementation, prefix)
         resolved = config_from_payload(request["config"])
         plan = ExecutionPlan.from_dict(request["plan"], expected_digest=request["plan_digest"])
-        from infrastructure.core.pipeline.runtime_namespace import validate_shared_runtime
+        from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError, validate_shared_runtime
 
-        validate_shared_runtime(resolved, plan)
-        executor = PipelineExecutor(resolved)
-        results = executor.execute_plan(plan, deadline_monotonic=deadline)
+        try:
+            validate_shared_runtime(resolved, plan)
+            executor = PipelineExecutor(resolved)
+            results = executor.execute_plan(plan, deadline_monotonic=deadline)
+        except SharedRuntimeCustodyError as exc:
+            results = [exc.as_stage_result()]
         verify_fresh_module_bytecode(implementation, prefix)
-        run = executor.run_result(results)
+        run = RunResult.from_results(results, plan.expected_stage_keys)
         payload = {
             "schema_version": WORKER_SCHEMA,
             "nonce": request["nonce"],

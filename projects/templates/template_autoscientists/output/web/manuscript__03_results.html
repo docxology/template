@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.13" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>03_results.md.web</title>
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Ablatable Mechanisms and Measurable Noise-Robustness under a Matched Experiment Budget" />
+  <title>A Deterministic Testbed for Self-Organizing Agent-Team
+Coordination</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
     html {
       color: #1a1a1a;
-      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
-      background-color: light-dark(#fdfdfd, #1a1a1a);
-      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -39,16 +39,11 @@
     }
     @media print {
       html {
-        color-scheme: light only;
+        background-color: white;
       }
-      html, body, pre, code {
+      body {
         background-color: transparent;
-      }
-      body, a, a:visited, blockquote {
         color: black;
-      }
-      pre, code {
-        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -61,8 +56,11 @@
     p {
       margin: 1em 0;
     }
-    a, a:visited {
-      color: inherit;
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
     }
     img {
       max-width: 100%;
@@ -91,11 +89,8 @@
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid;
-      border-color: #e6e6e6;
-      border-color: light-dark(#e6e6e6, #4c4c4c);
+      border-left: 2px solid #e6e6e6;
       color: #606060;
-      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -119,7 +114,7 @@
     }
     hr {
       border: none;
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -136,11 +131,11 @@
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
     }
     th {
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -179,7 +174,91 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
@@ -188,11 +267,74 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
   })
 });
 window.normalizeTemplateMathJaxAria = function () {
@@ -219,8 +361,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -305,7 +447,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -323,8 +472,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -337,8 +484,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -566,10 +711,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -620,10 +773,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -652,33 +801,35 @@ mjx-container[display="true"] {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content" tabindex="-1">
-<h1 id="sec:results">Results</h1>
+<h1 data-number="4" id="sec:results"><span
+class="header-section-number">4</span> Results</h1>
 <p>All numbers below are produced by the analysis scripts in
 <code>scripts/</code> and written to <code>output/data/</code> as
 machine-readable JSON alongside the figures. They are deterministic:
 re-running the scripts reproduces them exactly. The budget is fixed at
 <span class="math inline">\(60\)</span> experiments for every
 configuration.</p>
-<h2 id="matched-budget-comparison">Matched-budget comparison</h2>
-<p><span class="citation"
-data-cites="fig:comparison">[@fig:comparison]</span> plots the champion
-trajectory of the coordinated three-team configuration against the
-single-thread baseline over the shared <span
+<h2 data-number="4.1" id="matched-budget-comparison"><span
+class="header-section-number">4.1</span> Matched-budget comparison</h2>
+<p>fig. <a href="#fig:comparison">1</a> plots the champion trajectory of
+the coordinated three-team configuration against the single-thread
+baseline over the shared <span
 class="math inline">\(60\)</span>-experiment budget. The two curves
 track each other and converge to the same value.</p>
 <figure id="fig:comparison">
-<a class="figure-full-size-link" href="../figures/search_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Champion metric (higher is better) versus experiment index"><img src="../figures/search_comparison.png"
+<a class="figure-full-size-link" href="../figures/search_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 1, Champion metric (higher is better) versus experiment index"><img src="../figures/search_comparison.png"
 alt="Champion-metric trajectories under a matched sequential experiment budget. The solid coordinated-teams line contains 36 points, starting at -8.6627 and ending at 0.0012; The dashed single-thread baseline line contains 60 points, starting at -8.6627 and ending at 0.0012. Values are reported noisy champion metrics; line length can reflect early stopping and does not encode wall-clock speed." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Champion metric (higher is better) versus
-experiment index for coordinated teams (solid) and the single-thread
-baseline (dashed) under a matched experiment budget. Coordinated teams
-partition the same sequential budget as the baseline rather than adding
-parallel compute, so this is a robustness/efficiency comparison, not a
-speedup. Produced by <code>run_search_comparison.py</code>.</figcaption>
+<figcaption>Figure 1: Champion metric (higher is
+better) versus experiment index for coordinated teams (solid) and the
+single-thread baseline (dashed) under a matched experiment budget.
+Coordinated teams partition the same sequential budget as the baseline
+rather than adding parallel compute, so this is a robustness/efficiency
+comparison, not a speedup. Produced by
+<code>run_search_comparison.py</code>.</figcaption>
 </figure>
 <p>The summary in <code>output/data/search_comparison.json</code>
 reports the decisive quantities:</p>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 16%" />
@@ -737,27 +888,25 @@ registry — spends the full budget and wastes <span
 class="math inline">\(36\)</span> experiments re-testing directions
 already known to fail. The coordination machinery changes <em>how</em>
 the budget is spent, not how good the final answer is.</p>
-<h2 id="per-mechanism-ablation">Per-mechanism ablation</h2>
+<h2 data-number="4.2" id="per-mechanism-ablation"><span
+class="header-section-number">4.2</span> Per-mechanism ablation</h2>
 <p>The testbed separates two distinct, independently measurable benefits
 — noise robustness and search hygiene — from the mechanisms that do not
-move the needle on this objective. <span class="citation"
-data-cites="fig:ablation">[@fig:ablation]</span> and <span
-class="citation"
-data-cites="fig:ablation_efficiency">[@fig:ablation_efficiency]</span>,
-drawn from <code>output/data/ablation.json</code>, switch off one
-mechanism at a time starting from the full coordinated
-configuration.</p>
+move the needle on this objective. fig. <a href="#fig:ablation">2</a>
+and fig. <a href="#fig:ablation_efficiency">3</a>, drawn from
+<code>output/data/ablation.json</code>, switch off one mechanism at a
+time starting from the full coordinated configuration.</p>
 <figure id="fig:ablation">
-<a class="figure-full-size-link" href="../figures/ablation.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Reported versus clean (ground-truth) champion metric"><img src="../figures/ablation.png"
+<a class="figure-full-size-link" href="../figures/ablation.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 2, Reported versus clean (ground-truth) champion metric"><img src="../figures/ablation.png"
 alt="Paired horizontal bars compare final reported and clean metrics for 5 configurations: full coordination: reported 0.0012, clean 0.0000; no confirmation: reported 0.0156, clean 0.0000; no dead-end registry: reported 0.0012, clean 0.0000; no effect-size ranking: reported 0.0012, clean 0.0000; no reorganization: reported 0.0012, clean 0.0000. The largest absolute reported-minus-clean gap is 0.0156 for no confirmation. These are outcomes on this synthetic objective, not evidence of general agent performance." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Reported versus clean (ground-truth)
-champion metric for the full configuration and each single-mechanism
-ablation. A reported-greater-than-clean gap is accepted noise. Removing
-noise-band confirmation inflates the gap roughly thirteenfold while the
-clean metric is unchanged. Produced by
+<figcaption>Figure 2: Reported versus clean
+(ground-truth) champion metric for the full configuration and each
+single-mechanism ablation. A reported-greater-than-clean gap is accepted
+noise. Removing noise-band confirmation inflates the gap roughly
+thirteenfold while the clean metric is unchanged. Produced by
 <code>run_ablation.py</code>.</figcaption>
 </figure>
-<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:99%;" data-responsive-table="true">
+<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable data table"><table style="width:100%;" data-responsive-table="true">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 16%" />
@@ -832,28 +981,26 @@ confirmation the reported metric stays close to the truth. This is
 exactly the failure mode noise-band confirmation is designed to prevent,
 and the testbed measures its size.</p>
 <p><strong>The dead-end registry is the load-bearing mechanism for
-efficiency.</strong> <span class="citation"
-data-cites="fig:ablation_efficiency">[@fig:ablation_efficiency]</span>
-shows that removing it is the only ablation that changes the experiment
-budget profile: the registry-consulting proposer otherwise never
-re-probes a retired direction (redundant re-probes <span
-class="math inline">\(= 0\)</span>) and halts at <span
-class="math inline">\(36\)</span> experiments once every direction is
-exhausted, while the no-registry configuration burns all <span
-class="math inline">\(60\)</span> experiments and wastes <span
-class="math inline">\(36\)</span> of them re-testing known dead ends.
-Crucially, this hygiene gain leaves the clean metric
-<strong>unchanged</strong> at <span
+efficiency.</strong> fig. <a href="#fig:ablation_efficiency">3</a> shows
+that removing it is the only ablation that changes the experiment budget
+profile: the registry-consulting proposer otherwise never re-probes a
+retired direction (redundant re-probes <span class="math inline">\(=
+0\)</span>) and halts at <span class="math inline">\(36\)</span>
+experiments once every direction is exhausted, while the no-registry
+configuration burns all <span class="math inline">\(60\)</span>
+experiments and wastes <span class="math inline">\(36\)</span> of them
+re-testing known dead ends. Crucially, this hygiene gain leaves the
+clean metric <strong>unchanged</strong> at <span
 class="math inline">\(0.0000\)</span> — the registry buys a leaner
 search, not a better answer.</p>
 <figure id="fig:ablation_efficiency">
-<a class="figure-full-size-link" href="../figures/ablation_efficiency.png" target="_blank" rel="noopener" aria-label="Open full-size figure, Experiments used and redundant re-probes of retired directions per configuration."><img src="../figures/ablation_efficiency.png"
+<a class="figure-full-size-link" href="../figures/ablation_efficiency.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 3, Experiments used and redundant re-probes of retired directions per configuration."><img src="../figures/ablation_efficiency.png"
 alt="Paired horizontal bars compare sequential experiment use and redundant re-probes for 5 configurations: full coordination: 36 used, 0 redundant; no confirmation: 36 used, 0 redundant; no dead-end registry: 60 used, 36 redundant; no effect-size ranking: 36 used, 0 redundant; no reorganization: 36 used, 0 redundant. The largest redundant count is 36 for no dead-end registry. Counts do not encode parallel throughput or wall-clock timing." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Experiments used and redundant re-probes
-of retired directions per configuration. Only the dead-end-registry
-ablation changes the profile: without the registry the search wastes
-<span class="math inline">\(36\)</span> experiments re-exploring
-known-dead directions and never halts early. Produced by
+<figcaption>Figure 3: Experiments used and redundant
+re-probes of retired directions per configuration. Only the
+dead-end-registry ablation changes the profile: without the registry the
+search wastes <span class="math inline">\(36\)</span> experiments
+re-exploring known-dead directions and never halts early. Produced by
 <code>run_ablation.py</code>.</figcaption>
 </figure>
 <p><strong>Effect-size ranking and reorganization do not move any metric
@@ -866,7 +1013,8 @@ budget. We report this plainly rather than dressing it up: both are
 correctly implemented and independently tested, but their benefit is
 about exploration bookkeeping on harder or more deceptive landscapes,
 not about measurable gains on this testbed.</p>
-<h2 id="what-the-numbers-say">What the numbers say</h2>
+<h2 data-number="4.3" id="what-the-numbers-say"><span
+class="header-section-number">4.3</span> What the numbers say</h2>
 <p>Four honest conclusions follow directly from the data:</p>
 <ol type="1">
 <li>Under a matched budget, coordinated teams neither beat nor lose to

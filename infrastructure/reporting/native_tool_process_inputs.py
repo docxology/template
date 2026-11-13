@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 MAX_STREAM_BYTES = 8 * 1024 * 1024
+STREAM_OBSERVATION_SCHEMA = "template-native-tool-stream-observation-v1"
 
 
 def _physical_identity(path: Path) -> dict[str, int]:
@@ -63,6 +64,7 @@ def _remaining(deadline: float) -> float:
 
 
 def _stream(path: Path) -> tuple[dict[str, Any], str]:
+    """Retain an original absolute label, not a public artifact nomination."""
     digest = hashlib.sha256()
     size, chunks = 0, []
     with path.open("rb") as stream:
@@ -73,7 +75,12 @@ def _stream(path: Path) -> tuple[dict[str, Any], str]:
                 raise ValueError("native tool stream exceeds its finite retained byte ceiling")
             chunks.append(chunk)
     raw = b"".join(chunks)
-    return {"path": str(path), "sha256": digest.hexdigest(), "bytes": size}, raw.decode("utf-8", errors="replace")
+    return {
+        "schema_version": STREAM_OBSERVATION_SCHEMA,
+        "path": str(path),
+        "sha256": digest.hexdigest(),
+        "bytes": size,
+    }, raw.decode("utf-8", errors="replace")
 
 
 def _stdin_observation(stream: Any, path: Path, deadline: float) -> dict[str, Any]:

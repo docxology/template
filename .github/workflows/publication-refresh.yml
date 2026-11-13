@@ -12,7 +12,7 @@ on:
         type: string
         required: true
       mode:
-        description: Refresh publication copies and dependent Pitch analysis, or revalidate unchanged outputs
+        description: Regenerate all canonical publications and dependent Pitch analysis, or revalidate unchanged outputs
         type: choice
         options: ["refresh", "rebind-only"]
         default: "refresh"

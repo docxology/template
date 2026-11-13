@@ -11,9 +11,12 @@ gate; the public import path is unchanged.
 ## Contracts
 
 - Public snapshot models and builders are exposed from the package root.
-- Scan and record implementation helpers live in `_scan` and `_records`;
-  focused controls import these helpers directly.
+- Scan, record and generated-input admission helpers live in `_scan`, `_records`
+  and `_inputs`; focused controls import these helpers directly.
 - Scan cache policy is declared once as `CACHE_PARTS` in `_scan.py`.
+- Generated input admission requires the explicit standalone ordering marker
+  described in [`../README.md`](../README.md#rendered-input-commitments).
+  Consumed-byte commitments do not establish authored source or compiler freshness.
 
 ## Verification
 

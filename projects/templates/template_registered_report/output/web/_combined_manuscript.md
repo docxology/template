@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 This document is a **template**, not an empirical study. It demonstrates the
@@ -21,11 +25,19 @@ reported alongside the confirmatory result. The purpose is to
 give forks a working, auditable skeleton in which planned analyses, frozen
 hypotheses, deviations, and post-run claims are separable and machine-checkable.
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -64,11 +76,19 @@ executed analysis ([Section @sec:results]), records deviations
 ([Section @sec:deviations]), and discusses scope and boundaries
 ([Section @sec:discussion]).
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-2-start-->
+```
 
 # Preregistered hypotheses {#sec:hypotheses}
 
@@ -105,11 +125,19 @@ No secondary outcome is preregistered. Any additional endpoint introduced during
 analysis is therefore exploratory and must be recorded in the deviation ledger
 ([Section @sec:deviations]) rather than presented as a confirmatory finding.
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-3-start-->
+```
 
 # Methods and analysis plan {#sec:methods}
 
@@ -164,11 +192,19 @@ Forks replace this generator with genuine data collection while keeping the same
 `run_registered_analysis` contract, so the confirmatory analysis remains bound to
 the frozen plan rather than to post-hoc choices.
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-4-start-->
+```
 
 # Results {#sec:results}
 
@@ -232,11 +268,19 @@ findings list. The same row is carried verbatim into the review packet
 the sensitivity check is visible in source, tests, review packets, and this
 manuscript — never invented after results are known.
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-5-start-->
+```
 
 # Deviation register {#sec:deviations}
 
@@ -280,11 +324,19 @@ the exploratory `secondary_score` endpoint is visible, labelled, and excluded
 from confirmatory interpretation. Forks should extend this ledger — never edit
 the frozen registration — whenever the executed analysis must diverge from plan.
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-6-start-->
+```
 
 # Discussion {#sec:discussion}
 
@@ -332,11 +384,19 @@ generation. Keep confirmatory claims tied to registered outcomes, record every
 departure in the deviation ledger, and never let post-run result prose rewrite
 the preregistered intent.
 
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-7-start-->
+```
 
 # References {#sec:references}
 
@@ -351,4 +411,8 @@ fields per entry type, run from the repository root:
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_registered_report/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-7246ce6c2a2216ecf133e366359dc6aa3eb39d395dc674517ba84a89fed16685-7-end-->
 ```

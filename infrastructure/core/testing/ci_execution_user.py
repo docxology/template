@@ -144,6 +144,13 @@ def _load(path: Path) -> dict:
     return data
 
 
+def _source_identity(root: Path, deadline: float, expected: str) -> dict[str, str]:
+    """Bind the actual clean checkout to the exact GitHub trigger commit."""
+    identity = _git(root, deadline)
+    _require(identity["head"] == expected, "checkout differs from GitHub Source identity")
+    return identity
+
+
 def _prepare(path: Path, docker: bool) -> None:
     _files._phase("request")
     _hosted(dict(os.environ))
@@ -160,17 +167,7 @@ def _prepare(path: Path, docker: bool) -> None:
     _require(not path.parent.exists(), "execution profile is one-shot")
     deadline = time.monotonic() + 240
     _require(shutil.disk_usage(temporary).free >= _files.RESERVE, "execution profile disk reserve refused")
-    identity = _git(root, deadline)
-    # On PRs, actions/checkout checks out the merge commit of the PR head into
-    # the base branch. GITHUB_SHA is the PR head, not the merge commit.
-    expected = os.environ["GITHUB_SHA"]
-    actual = identity["head"]
-    if actual != expected:
-        # A merge commit must have GITHUB_SHA as one of its parents.
-        parents = subprocess.check_output(
-            ["git", "rev-list", "--parents", "-n", "1", "HEAD"], cwd=root, text=True
-        ).split()
-        _require(expected in parents, "checkout differs from GitHub Source identity")
+    identity = _source_identity(root, deadline, os.environ["GITHUB_SHA"])
     caller = pwd.getpwuid(os.getuid())
     request = {
         "schema": 1,
@@ -363,7 +360,9 @@ def _root_prepare(path: Path) -> None:
         json.dump(data, output, sort_keys=True)
     os.chmod(path, 0o644)
     _require(shutil.disk_usage(temporary).free >= _files.RESERVE, "execution profile disk reserve refused")
-    print(json.dumps({"execution_uid": account.pw_uid, "execution_gid": account.pw_gid, "prepared": True}))
+    sys.stdout.write(
+        json.dumps({"execution_uid": account.pw_uid, "execution_gid": account.pw_gid, "prepared": True}) + "\n"
+    )
 
 
 def _identity(data: dict) -> None:
@@ -445,20 +444,28 @@ def main(argv: list[str] | None = None) -> int:
             readiness = root / "output/readiness"
             _require(not readiness.is_symlink(), "symlinked readiness transport root refused")
             excluded: list[str] = []
-            total = (
-                _export(readiness, args.state.parent / "artifacts", time.monotonic() + 120, exclusions=excluded)
-                if readiness.exists()
-                else 0
+            deadline, artifacts = time.monotonic() + 120, args.state.parent / "artifacts"
+            total = _export(readiness, artifacts, deadline, exclusions=excluded) if readiness.exists() else 0
+            case_bytes = _files._export_pytest_case_diagnostics(
+                Path(data["home"]) / "tmp" / f"pytest-of-{ACCOUNT}",
+                artifacts / "pytest-case-diagnostics",
+                deadline,
+                uid=os.getuid(),
+                byte_budget=_files.MAX_BYTES - total,
+                entry_budget=_files.MAX_FILES - len(_entries(artifacts, deadline)),
             )
-            print(
+            total += case_bytes
+            sys.stdout.write(
                 json.dumps(
                     {
                         "transport_bytes": total,
+                        "pytest_case_diagnostic_bytes": case_bytes,
                         "excluded_pytest_scratch": len(excluded),
                         "exclusions_sha256": hashlib.sha256(json.dumps(excluded).encode()).hexdigest(),
                         "runtime_acceptance": False,
                     }
                 )
+                + "\n"
             )
         else:
             _files._phase("run-preflight")

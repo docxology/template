@@ -17,6 +17,8 @@ from infrastructure.core.execution_boundary import build_bounded_env
 from infrastructure.core.pipeline.multi_project_parallel import run_projects_in_parallel
 from infrastructure.core.pipeline.multi_project_runtime import (
     WORKER_SCHEMA,
+    _finish,
+    _launch,
     _worker_bootstrap,
     execute_frozen_specs,
     freeze_project_plans,
@@ -25,6 +27,7 @@ from infrastructure.core.pipeline.multi_project_runtime import (
 from infrastructure.core.pipeline.multi_project_support import run_shared_infrastructure
 from infrastructure.core.pipeline.outcomes import StageStatus
 from infrastructure.core.pipeline.types import PipelineConfig
+from infrastructure.core.pipeline.worker_transport import results_from_payload
 from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
 
@@ -197,3 +200,56 @@ def test_actual_worker_refuses_storage_role_before_any_executor_or_child(tmp_pat
     assert not (tmp_path / "result.json").exists()
     assert not (tmp_path / "output").exists()
     assert not any((tmp_path / "projects" / name / "output/logs").exists() for name in names)
+
+
+@pytest.mark.timeout(90)
+def test_actual_worker_custody_receipt_retains_original_observation_through_cleanup(tmp_path: Path) -> None:
+    names = _fixture(tmp_path)
+    specs = freeze_project_plans(names[:1], tmp_path, mode="core", resume=False, timeout=60)
+    spec = freeze_shared_plan(specs)
+    source = spec.config.project_dir / "src" / "__init__.py"
+    source.write_text("CHANGED_BEFORE_WORKER = True\n")
+    deadline = time.monotonic() + 60
+    running = _launch(spec, tmp_path / "actual-worker", deadline)
+    try:
+        running.process.wait(timeout=45)
+        assert running.process.returncode == 75
+        payload = json.loads(running.receipt.read_bytes())
+        assert payload["project"] == spec.plan.project
+        assert payload["plan_digest"] == spec.plan.digest
+        assert payload["shared_infrastructure"] is True
+        assert payload["expected_stage_keys"] == list(spec.plan.expected_stage_keys)
+        assert payload["exit_code"] == 75
+        captured = results_from_payload(payload["stage_results"])
+        assert len(captured) == 1
+        refusal = captured[0]
+        assert refusal.outcome is not None
+        assert refusal.outcome.status is StageStatus.BLOCKED
+        assert refusal.outcome.child_exit_code is None and refusal.outcome.attempt_exit_codes == ()
+        diagnostic = refusal.outcome.diagnostic
+        observation = json.loads(diagnostic.split("fingerprint_diagnostics=", 1)[1])
+        assert observation["expected_total"] == spec.plan.source_identity
+        assert observation["observed_total"] != observation["expected_total"]
+        assert set(observation["components"]) == {"source", "python", "tools"}
+        source.write_text("CHANGED_AFTER_WORKER_REFUSAL = True\n")
+        rows, run = _finish(running, deadline)
+        assert run.exit_code == 75 and not run.complete, [outcome.diagnostic for outcome in run.outcomes]
+        assert run.expected_stage_keys == spec.plan.expected_stage_keys == ("infra_tests",)
+        assert rows[: len(captured)] == captured
+        assert rows[0].error_message == diagnostic
+        assert rows[-1].outcome is not None and rows[-1].outcome.status is StageStatus.BLOCKED
+        closing = json.loads(rows[-1].outcome.diagnostic.split("fingerprint_diagnostics=", 1)[1])
+        assert closing["expected_total"] == spec.plan.source_identity
+        assert closing["observed_total"] != observation["observed_total"]
+        assert running.cleanup_done and not running.output.thread.is_alive()
+        if running.guardian is not None:
+            assert running.guardian.process.poll() is not None and running.guardian.cache is None
+        assert not (tmp_path / "process_order.log").exists()
+        assert not (spec.config.runtime_output_dir / ".pipeline/execution.json").exists()
+        assert not (spec.config.runtime_output_dir / "reports/pipeline_report.json").exists()
+        assert not any((tmp_path / "projects" / name / "output/logs").exists() for name in names)
+    finally:
+        try:
+            running.close(terminate=True)
+        finally:
+            running.output.close()
