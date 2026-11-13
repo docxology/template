@@ -1,4 +1,4 @@
-name: Actual unchanged-clock native case diagnostics
+name: Actual unchanged-clock census exit and strict boundary diagnostics
 on:
   push:
     branches: [codex/sdk-original8-native-diagnostics-20261112-9a20c57e]
@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   native-originals:
-    name: "Original failed cases (${{ matrix.os }}, Python ${{ matrix.python-version }})"
+    name: "Census regression (${{ matrix.os }}, Python ${{ matrix.python-version }}, ${{ matrix.scope }})"
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
     permissions:
@@ -28,24 +28,43 @@ jobs:
         include:
           - os: ubuntu-24.04
             python-version: "3.14"
-            shard: original-linux314
+            scope: publisher
+            shard: census-publisher-linux314
             original-nodes: >-
               tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
-              tests/infra_tests/publishing/test_publication_refresh.py::test_actual_per_project_sequence_preserves_order_and_stops_after_first_refusal[0]
-              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics[project]
+          - os: ubuntu-24.04
+            python-version: "3.14"
+            scope: boundary
+            shard: census-boundary-linux314
+            original-nodes: >-
+              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_process_age_preserves_guardian_lifetime_boundary
+              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope
           - os: ubuntu-24.04
             python-version: "3.15"
-            shard: original-linux315
+            scope: publisher
+            shard: census-publisher-linux315
             original-nodes: >-
-              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics[project]
+              tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
+          - os: ubuntu-24.04
+            python-version: "3.15"
+            scope: boundary
+            shard: census-boundary-linux315
+            original-nodes: >-
+              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_process_age_preserves_guardian_lifetime_boundary
+              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope
           - os: macos-latest
             python-version: "3.15"
-            shard: original-darwin315
+            scope: publisher
+            shard: census-publisher-darwin315
             original-nodes: >-
-              tests/infra_tests/orchestration/test_pipeline_runner.py::test_cli_all_project_resume_preserves_checkpoint_refusal
-              tests/infra_tests/reporting/test_pdf_raw_natbib_source.py::test_source_citation_looking_fragment_in_residual_raw_markup_stays_blocked
-              tests/infra_tests/publishing/test_composed_acceptance.py::test_a_composed_receipt_refuses_when_a_hosted_origin_cannot_be_resolved
-              tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py::test_genuine_pdfium_runtime_guard[loaded-positive]
+              tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
+          - os: macos-latest
+            python-version: "3.15"
+            scope: boundary
+            shard: census-boundary-darwin315
+            original-nodes: >-
+              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_process_age_preserves_guardian_lifetime_boundary
+              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_strict_census_observes_token_holders_without_killing_them
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
