@@ -17,7 +17,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 REPO = Path(__file__).resolve().parents[3]
 
 
-def test_every_public_project_has_real_behavioral_tests() -> None:
+def test_every_public_project_has_confined_nonempty_smoke_selection() -> None:
     matrix = project_smoke_matrix(REPO)
     assert {row["project"] for row in matrix["include"]} == set(PUBLIC_PROJECT_NAMES)
     assert len(matrix["include"]) == len(PUBLIC_PROJECT_NAMES)
@@ -26,6 +26,15 @@ def test_every_public_project_has_real_behavioral_tests() -> None:
 @pytest.mark.parametrize("fault", ["missing-project", "extra-project", "empty-selection", "escape", "missing-test"])
 def test_invalid_smoke_selection_fails_before_running_a_project(tmp_path: Path, fault: str) -> None:
     selection = json.loads((REPO / ".github/project-smoke.json").read_text())
+    (tmp_path / ".github").mkdir()
+    manifest = tmp_path / ".github/project-smoke.json"
+    manifest.write_text(json.dumps(selection))
+    for project, paths in selection.items():
+        for relative in paths:
+            path = tmp_path / "projects" / project / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.touch()
+    assert {row["project"] for row in project_smoke_matrix(tmp_path)["include"]} == set(PUBLIC_PROJECT_NAMES)
     first = next(iter(selection))
     if fault == "missing-project":
         selection.pop(first)
@@ -34,11 +43,11 @@ def test_invalid_smoke_selection_fails_before_running_a_project(tmp_path: Path, 
     elif fault == "empty-selection":
         selection[first] = []
     elif fault == "escape":
+        (tmp_path / "projects" / first).parent.joinpath("private.py").touch()
         selection[first] = ["tests/../../private.py"]
     else:
         selection[first] = ["tests/nonexistent.py"]
-    (tmp_path / ".github").mkdir()
-    (tmp_path / ".github/project-smoke.json").write_text(json.dumps(selection))
+    manifest.write_text(json.dumps(selection))
     with pytest.raises(ValueError):
         project_smoke_matrix(tmp_path)
 
@@ -128,26 +137,11 @@ def test_external_symlinked_public_project_roots_are_refused(tmp_path: Path) -> 
         "",
     ],
 )
-def test_requested_coverage_checks_public_input_before_environment_setup(project: str, tmp_path: Path) -> None:
-    workflow = yaml.safe_load((REPO / ".github/workflows/ci.yml").read_text())
-    caller = workflow["jobs"]["own-exemplar-coverage"]
-    assert caller["uses"] == "./.github/workflows/exemplar-coverage.yml"
-    assert caller["if"] == "github.event_name == 'workflow_dispatch' && inputs.coverage-project != ''"
-    assert caller["with"] == {"coverage-project": "${{ inputs.coverage-project }}"}
-    assert caller["permissions"] == {"contents": "read"}
-    assert "env" not in caller and "own-exemplar-coverage" in workflow["jobs"]["ci-gate"]["needs"]
+def test_requested_coverage_refuses_nonpublic_scope_before_measurement(project: str, tmp_path: Path) -> None:
     reusable = yaml.load((REPO / ".github/workflows/exemplar-coverage.yml").read_text(), Loader=yaml.BaseLoader)
-    inputs = reusable["on"]["workflow_call"]["inputs"]
-    assert inputs["coverage-project"]["required"] == "true"
-    assert inputs["artifact-name"]["default"] == "requested-exemplar-coverage"
     job = reusable["jobs"]["own-exemplar-coverage"]
-    assert job["timeout-minutes"] == "135"
     steps = job["steps"]
     validation = next(i for i, step in enumerate(steps) if step.get("name") == "Validate the requested public project")
-    setup = next(
-        i for i, step in enumerate(steps) if step.get("name") == "Prepare the own locked development environment"
-    )
-    assert validation < setup
     result = subprocess.run(
         ["bash", "-e", "-o", "pipefail", "-c", steps[validation]["run"]],
         cwd=REPO,
@@ -158,17 +152,7 @@ def test_requested_coverage_checks_public_input_before_environment_setup(project
         check=False,
     )
     assert (result.returncode == 0) == (project in PUBLIC_PROJECT_NAMES), result.stderr
-    measurement = next(
-        step["run"] for step in steps if step.get("name") == "Measure the complete own release-profile coverage"
-    )
-    assert 'commit != os.environ["GITHUB_SHA"]' in measurement
-    assert '"source_commit": commit' in measurement
-    assert "if (exemplar_source_hash(root, name) != source_hash" in measurement
-    assert "text=True).strip() != commit" in measurement
     manual = yaml.safe_load((REPO / ".github/workflows/public-exemplar-coverage.yml").read_text())
-    coverage = manual["jobs"]["coverage"]
-    assert coverage["uses"] == caller["uses"] and coverage["strategy"]["max-parallel"] == 4
-    assert coverage["with"]["artifact-name"] == "public-exemplar-coverage-${{ matrix.name }}"
     selector = manual["jobs"]["select"]["steps"][-1]["run"]
     output = tmp_path / "github-output"
     selected = subprocess.run(

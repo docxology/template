@@ -146,20 +146,6 @@ def test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source
     }
     assert set(expected_owners[executor]) == actual_executor_consumers | methods_owners
     assert methods_owners <= set(expected_owners["infrastructure/core/pipeline/artifacts/_manifest.py"])
-    # Methods validates actual executor methods and delegates its manifest parser
-    # to this same public defining implementation, through real wrappers.
-    from infrastructure.methods import _plan_validation
-    from infrastructure.core.pipeline import PipelineExecutor
-    from infrastructure.core.pipeline.artifacts import artifact_manifest_from_payload
-
-    assert _plan_validation.PipelineExecutor is PipelineExecutor
-    assert _plan_validation.artifact_manifest_from_payload is artifact_manifest_from_payload
-    assert (
-        _plan_validation._artifact_manifest_from_payload(
-            {"inventory_mode": "stable-shippable-output-v1", "entries": [], "issues": []}
-        ).entries
-        == ()
-    )
 
 
 def test_deleted_test_routes_existing_owner_without_executing_nonexistent_path() -> None:

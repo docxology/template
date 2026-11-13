@@ -16,6 +16,10 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Isolate smoke-path refusals behind a valid complete fixture and distinguish
+  hostile foreign Git epochs from the nominated candidate. Retire workflow
+  structure, Source-substring and re-export assertion pins while retaining
+  actual selector and aggregate-script consumers.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.

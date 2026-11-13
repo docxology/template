@@ -16,11 +16,9 @@ from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.types import PipelineConfig
 
 
-def _candidate(root: Path) -> str:
+def _candidate(root: Path, *, date: str = "2023-11-14T22:13:20 +0000") -> str:
     root.mkdir(exist_ok=True)
-    environment = dict(
-        os.environ, GIT_AUTHOR_DATE="2023-11-14T22:13:20 +0000", GIT_COMMITTER_DATE="2023-11-14T22:13:20 +0000"
-    )
+    environment = dict(os.environ, GIT_AUTHOR_DATE=date, GIT_COMMITTER_DATE=date)
     for command in (
         ["git", "init"],
         ["git", "config", "user.email", "fixture@example.invalid"],
@@ -47,7 +45,8 @@ def test_default_execution_uses_exact_nominated_candidate_and_ignores_ambient_gi
     candidate = tmp_path / "candidate"
     revision = _candidate(candidate)
     foreign = tmp_path / "foreign"
-    _candidate(foreign)
+    foreign_revision = _candidate(foreign, date="2023-11-14T22:13:21 +0000")
+    assert foreign_revision != revision
     environment = {"PATH": os.environ["PATH"], "GIT_DIR": str(foreign / ".git"), "GIT_WORK_TREE": str(foreign)}
     policy = apply_execution_policy(environment, candidate)
     assert policy["SOURCE_DATE_EPOCH"] == "1700000000"
