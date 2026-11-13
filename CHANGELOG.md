@@ -61,6 +61,24 @@ locks.
   them in the Source-owned parent launcher. JSON transport must preserve exact
   independently reconstructed launcher bytes; changed commitments and original
   environment, owner, process, Source and deadline checks remain enforced.
+- Reject both Python 3.15 lazy-import forms explicitly in the current 3.14-floor
+  audit when a newer interpreter's best-effort parser admits them. Preserve
+  supported syntax, ordinary `lazy` identifiers and guarded API backports.
+  Keep the explicit build-epoch child regression independent of inherited
+  execution mode; production core/live precedence is unchanged.
+- Amortize complete Root Source admission across bounded 1000-case core
+  batches and reuse each batch's exact held node set for metadata checks.
+  Preserve real serial pytest, complete selection, bytecode and branch
+  coverage, external-fixture concurrency, cleanup and every original clock.
+- Check paired Crossref filter/compiler DATA within one fresh complete Source
+  opening/closing interval instead of nesting whole-Source verification for
+  each held record. Public verification stays fresh, live callbacks and actual
+  tool execution remain separate, and the 600-second ceiling is unchanged.
+- Give the deliberately timed-out macOS descendant control a shorter armed-body
+  window inside its unchanged whole deadline. Require the real guardian to
+  finish and the final process census to be empty in both producer and reader;
+  direct PID absence alone no longer establishes cleanup. Retire the private
+  refusal-message wording oracle while retaining real supervision controls.
 - Avoid rebuilding every lexical path ancestor during fresh Source inventory.
   Compare current held DATA within its fresh no-follow census and closing
   guards, preserving fresh per-file mode checks and both original/current

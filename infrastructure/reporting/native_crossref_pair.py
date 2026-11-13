@@ -280,13 +280,21 @@ class SourceCrossrefPair:
 
     def verify(self) -> None:
         remaining(self.deadline)
+        owner = self.owner
+        if owner is None:
+            raise ValueError("paired filter lost its genuine live Source owner")
+        with owner._verification_guard(self.reader, run_id=owner.run_id, deadline=self.deadline):
+            self._verify_data()
+
+    def _verify_data(self) -> None:
+        """Check both fixed filter records within one fresh Source interval."""
+        remaining(self.deadline)
         if (
             self.owner is None
             or current_native_producer_operation() is not self.owner
             or self.owner.owner_pid != os.getpid()
         ):
             raise ValueError("paired filter lost its genuine live Source owner")
-        self.owner.verify(self.reader, run_id=self.owner.run_id, deadline=self.owner.deadline)
         if any(
             item.owner is not self.owner or item.deadline != self.deadline or item.environment != self.environment
             for item in self.filters
@@ -300,12 +308,12 @@ class SourceCrossrefPair:
             or self.parent_loader.compiled.owner is not self.owner
         ):
             raise ValueError("paired filter lost its concrete Source parent loader")
-        self.parent_loader.compiled.verify(deadline=self.deadline)
+        self.parent_loader.compiled._verify_data(deadline=self.deadline)
         loader = self.reader.read(self.declaration["path"]).json_object()["parent_loader"]
         if loader != _parent_loader_selection(self.parent_loader):
             raise ValueError("paired filter changed its exact Source-selected parent audit overlay")
         for item in self.filters:
-            item.verify()
+            item._verify_data()
 
     def observe(self, slot: int, live: NativeLiveToolProcess) -> None:
         self.verify()

@@ -562,6 +562,10 @@ No guard spans execution, accepts callbacks or yields reusable verification.
 Public independent verification APIs remain fresh; clocks and original signed
 failure outcomes retain authority.
 
+Keep paired Crossref filter/compiler DATA in the enclosing fresh verification
+interval. Private DATA helpers must not become reusable admission, wrap native
+execution or bypass fresh public verification and live-callback custody.
+
 
 Native hosted transport accepts one declared matrix scope or the complete ordered
 public roster; each receipt must match that exact completed selection. Original

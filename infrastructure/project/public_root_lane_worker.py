@@ -226,18 +226,19 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         elif original != 0:
             code = 124 if observer.timed_out else 1
         else:
+            expected_nodes = set(pieces[index])
             expected_metadata = {
-                case["nodeid"]: case for case in census_receipt["cases"] if case["nodeid"] in pieces[index]
+                case["nodeid"]: case for case in census_receipt["cases"] if case["nodeid"] in expected_nodes
             }
             actual_metadata = {case["nodeid"]: case for case in observer.cases}
             if (
                 actual_metadata != expected_metadata
-                or set(observer.nodeids) != set(pieces[index])
+                or set(observer.nodeids) != expected_nodes
                 or len(observer.nodeids) != len(pieces[index])
                 or observer.collection_errors
                 or observer.collection_skips
                 or observer.deselected
-                or set(observer.reports) != set(pieces[index])
+                or set(observer.reports) != expected_nodes
                 or any(
                     observer.reports[node] != [("setup", "passed"), ("call", "passed"), ("teardown", "passed")]
                     for node in pieces[index]

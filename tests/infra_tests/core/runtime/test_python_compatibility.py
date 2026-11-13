@@ -77,6 +77,7 @@ def test_python_312_stdlib_and_syntax_are_supported(tmp_path: Path) -> None:
 
 def test_current_floor_rejects_315_only_syntax_and_apis(tmp_path: Path) -> None:
     (tmp_path / "future_syntax.py").write_text("lazy import json\n", encoding="utf-8")
+    (tmp_path / "future_from_syntax.py").write_text("lazy from collections import deque\n", encoding="utf-8")
     (tmp_path / "future_api.py").write_text(
         "from typing import TypeForm, NoExtraItems, disjoint_base\nvalue = frozendict()\n",
         encoding="utf-8",
@@ -84,12 +85,17 @@ def test_current_floor_rejects_315_only_syntax_and_apis(tmp_path: Path) -> None:
     issues = scan_python_314_compatibility([tmp_path], repo_root=tmp_path)
     assert {issue.rule for issue in issues} == {"PY314.API", "PY314.SYNTAX"}
     assert sum(issue.rule == "PY314.API" for issue in issues) == 4
+    assert {issue.path for issue in issues if issue.rule == "PY314.SYNTAX"} == {
+        "future_syntax.py",
+        "future_from_syntax.py",
+    }
 
 
 def test_current_floor_accepts_314_apis_and_guarded_315_backports(tmp_path: Path) -> None:
     source = tmp_path / "supported.py"
     source.write_text(
         "import annotationlib\nfrom typing import TypeIs, ReadOnly\n"
+        "lazy = 'ordinary identifier'\n"
         "try:\n    from typing import TypeForm\nexcept ImportError:\n    from typing_extensions import TypeForm\n",
         encoding="utf-8",
     )

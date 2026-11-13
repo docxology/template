@@ -54,11 +54,17 @@ def chunk_workers(unit: RootCaseUnit) -> int:
 
 
 def groups(unit: RootCaseUnit) -> tuple[tuple[str, ...], ...]:
+    """Bound receipts while amortizing complete Source admission across core cases."""
     nodeids = unit.nodeids
     if not nodeids or len(set(nodeids)) != len(nodeids):
         raise ValueError("Root lane execution requires a nonempty unique exact case set")
     workers = chunk_workers(unit)
-    size = 100 if workers == 1 else min(100, (len(nodeids) + 2 * workers - 1) // (2 * workers))
+    if unit.lane == "core":
+        size = 1000
+    elif workers == 1:
+        size = 100
+    else:
+        size = min(100, (len(nodeids) + 2 * workers - 1) // (2 * workers))
     return tuple(nodeids[index : index + size] for index in range(0, len(nodeids), size))
 
 

@@ -87,10 +87,15 @@ def scan_python_314_compatibility(
         except (OSError, UnicodeError) as exc:
             issues.append(PythonCompatibilityIssue(display, 0, "PY314.READ", str(exc)))
             continue
-        if not any(token in source for names in unavailable.values() for token in names):
+        if "lazy" not in source and not any(token in source for names in unavailable.values() for token in names):
             continue
         parents = _parent_map(tree)
         for node in ast.walk(tree):
+            # feature_version is best effort: 3.15 still parses lazy imports for 3.14.
+            if isinstance(node, (ast.Import, ast.ImportFrom)) and getattr(node, "is_lazy", False):
+                issues.append(
+                    PythonCompatibilityIssue(display, node.lineno, "PY314.SYNTAX", "lazy imports require Python 3.15+")
+                )
             apis: list[str] = []
             if isinstance(node, ast.ImportFrom):
                 apis = [
