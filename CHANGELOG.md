@@ -57,6 +57,10 @@ locks.
   header across direct and paired Crossref production and portable replay, so
   cold virtual environments retain their actual SDK metadata on deep or quoted
   paths without weakening executable-byte or final Source custody.
+- Avoid rebuilding every lexical path ancestor during fresh Source inventory.
+  Compare current held DATA within its fresh no-follow census and closing
+  guards, preserving fresh per-file mode checks and both original/current
+  Source, SDK and Git boundaries; no verified admission is cached.
 - Batch each completed compiler or baseline/observed DATA pair inside the
   existing fresh opening/closing Source guard, without spanning actual child
   execution or live native callbacks. Read each runtime distribution's metadata
