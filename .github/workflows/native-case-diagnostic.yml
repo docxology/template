@@ -104,6 +104,27 @@ jobs:
             --requirements "$scratch/native-runtime-requirements.txt"
           rm -rf "$scratch"
 
+      - name: Prove actual locked pip-audit startup and parser on selected Python
+        run: |
+          set -euo pipefail
+          .venv/bin/python -B -m pip_audit --version
+          .venv/bin/python -B - <<'PYTHON'
+          import importlib.metadata
+          import json
+          import tempfile
+          from pathlib import Path
+          import pip_api
+
+          assert importlib.metadata.version("pip-api") == "0.0.35"
+          with tempfile.TemporaryDirectory() as temporary:
+              path = Path(temporary) / "requirements.txt"
+              path.write_text("numpy>=1.22\nrequests==2.32.5; python_version >= '3.14'\n")
+              parsed = pip_api.parse_requirements(str(path))
+              assert str(parsed["numpy"].specifier) == ">=1.22"
+              assert str(parsed["requests"].specifier) == "==2.32.5"
+              print(json.dumps({"role": "Actual published pip-api35 required scanner startup/parser, not vulnerability-clean or wholeSDK qualification", "pip_api": importlib.metadata.version("pip-api"), "pip_audit": importlib.metadata.version("pip-audit"), "actual_specifiers": {name: str(value.specifier) for name, value in parsed.items()}}, sort_keys=True))
+          PYTHON
+
       - name: Verify selected Python minor
         run: |
           uv run python -c \
@@ -189,7 +210,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: current338-external-Python-line-and-fixture-DATA-${{ github.run_id }}
+          name: current32d-external-Python-line-and-fixture-DATA-${{ github.run_id }}
           path: ${{ runner.temp }}/sdk-currentff-external-CLI-DATA/
           # This directory contains only the explicit bounded observer allowlist.
           include-hidden-files: true

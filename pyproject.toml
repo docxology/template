@@ -229,6 +229,7 @@ default-groups = [
 # published security floor as well as the runtime dependency set.
 override-dependencies = [
     "pip>=26.2",
+    "pip-api>=0.0.35",  # Older vendored parser imports sre_constants, removed in supported Python.
     "msgpack>=1.2.1",
 ]
 
