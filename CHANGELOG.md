@@ -57,6 +57,14 @@ locks.
   header across direct and paired Crossref production and portable replay, so
   cold virtual environments retain their actual SDK metadata on deep or quoted
   paths without weakening executable-byte or final Source custody.
+- Batch each completed compiler or baseline/observed DATA pair inside the
+  existing fresh opening/closing Source guard, without spanning actual child
+  execution or live native callbacks. Read each runtime distribution's metadata
+  once per capture and reuse one digest of each already-held RECORD payload,
+  preserving physical reads, identity, byte/size, mutation and closing checks.
+  Retire the incidental inventory-helper call-count profiler oracle rather than
+  pinning implementation counts; genuine installed/Code/cache/refusal controls
+  and every original native deadline remain unchanged.
 - Close preview and direct-stage executor leases in test consumers, preserving
   live peer logging and restoration after the last owner. Remove the malformed
   metadata fixture's incidental `None` expectation, which Python 3.15 rejects

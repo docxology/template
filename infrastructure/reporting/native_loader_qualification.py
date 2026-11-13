@@ -204,8 +204,12 @@ def qualify_native_loader_tool(
     for left, right in zip(left_outputs, right_outputs, strict=True):
         if reader.read(left["artifact"]["path"]).content != reader.read(right["artifact"]["path"]).content:
             raise ValueError("auditor changed an actual Source-selected native output file")
-    for selected in (baseline_binding, observed_binding):
-        owner.validate_tool(selected, reader.read(selected["path"]).json_object(), reader, run_id=runtime.run_id)
+    # Keep both actual subprocesses and their live callbacks outside this DATA-only batch.
+    with owner._verification_guard(reader, run_id=runtime.run_id, deadline=runtime.deadline):
+        for selected in (baseline_binding, observed_binding):
+            owner._validate_tool_data(
+                selected, reader.read(selected["path"]).json_object(), reader, run_id=runtime.run_id
+            )
     if observer.binding is None or held_inputs != [_file(path, reader) for path in inputs] or not reader.unchanged():
         raise ValueError("actual loader lifecycle/unchanged selected input/output custody is absent")
     value = {

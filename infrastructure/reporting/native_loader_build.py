@@ -217,11 +217,13 @@ def compile_native_loader(runtime: CitationRuntime) -> CompiledNativeLoader:
     for row, header in zip(observed, headers, strict=True):
         if row["observation"] != file_observation(header):
             raise ValueError("fixed compiler's independently selected header changed during actual compilation")
-    for tool in (dependency, compilation):
-        tool_record = reader.read(tool["path"])
-        owner.validate_tool(tool, tool_record.json_object(), reader, run_id=runtime.run_id)
-        if tool_record.json_object()["original_exit_code"] != 0:
-            raise ValueError("fixed Source loader compiler/header-selection command did not actually succeed")
+    # Both compiler children are complete; only fixed DATA comparisons share this guard.
+    with owner._verification_guard(reader, run_id=runtime.run_id, deadline=runtime.deadline):
+        for tool in (dependency, compilation):
+            tool_record = reader.read(tool["path"]).json_object()
+            owner._validate_tool_data(tool, tool_record, reader, run_id=runtime.run_id)
+            if tool_record["original_exit_code"] != 0:
+                raise ValueError("fixed Source loader compiler/header-selection command did not actually succeed")
     with output.open("rb") as stream:
         output_bytes = stream.read(8 * 1024 * 1024 + 1)
     if not 0 < len(output_bytes) <= 8 * 1024 * 1024:
