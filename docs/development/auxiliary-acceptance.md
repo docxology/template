@@ -22,6 +22,12 @@ The macOS checks require a real Darwin host: process acceptance observes OS exit
 transport and a real timeout; rendering acceptance invokes Pandoc and checks the
 actual HTML content. Full native-format acceptance remains a separate gate.
 
+The descendant-timeout control uses a shorter armed execution window within the
+same enclosing deadline, leaving that original clock for guardian completion and
+the final process census. The timed-out child remains unaccepted. Both producer
+and independent reader require completed guardian cleanup and an empty final
+census; checking direct PID absence alone cannot establish the gate.
+
 An exemplar `:pipeline` selection executes the current complete core plan with
 cleanup and shared infrastructure explicitly omitted. It retains the actual plan,
 ordered outcomes, run ID, and plan digest; partial or cached outcomes cannot pass.
@@ -57,7 +63,7 @@ existing `--local-model` and `--docker-image-id` selection. Unimplemented or
 unavailable declared obligations remain blocked; these adapters do not establish
 complete readiness until every required source obligation passes.
 
-Process v2 evidence retains original producer-root/interpreter observations.
+Process v3 evidence retains original producer-root/interpreter observations.
 Readers reconstruct the original argv using confined relative spec/fact paths;
 they do not open historical producer paths or executable bytes. The fresh owned
 bytecode cache is removed after process-group cleanup. Its observed original path

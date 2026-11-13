@@ -116,9 +116,12 @@ class CompiledNativeLoader:
         self.identity = _physical_identity(library)
 
     def verify(self, *, deadline: float) -> None:
-        self.owner.verify(
-            SnapshotReader(self.owner.source.bindings.current_root), run_id=self.owner.run_id, deadline=deadline
-        )
+        reader = SnapshotReader(self.owner.source.bindings.current_root)
+        with self.owner._verification_guard(reader, run_id=self.owner.run_id, deadline=deadline):
+            self._verify_data(deadline=deadline)
+
+    def _verify_data(self, *, deadline: float) -> None:
+        """Check held compiler DATA inside the caller's fresh Source guard."""
         from infrastructure.reporting.native_tool_process import _physical_identity
 
         if (

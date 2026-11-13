@@ -12,6 +12,7 @@ from infrastructure.project.public_acceptance_auxiliary_supervision import (
     PROCESS_SCHEMA,
     _CENSUS_DIAGNOSTIC_ENUMS,
     _CENSUS_DIAGNOSTIC_INTS,
+    complete_auxiliary_cleanup,
     complete_auxiliary_observation,
 )
 
@@ -232,8 +233,10 @@ def validate_auxiliary_process(gate: str, fingerprint: str, details: dict[str, A
         if (
             observed.get("assertions", {}).get("descendant_cleanup") is not True
             or descendant.get("timed_out") is not True
+            or descendant.get("accepted") is not False
             or type(descendant.get("exit_code")) is not int
             or descendant["exit_code"] >= 0
+            or not complete_auxiliary_cleanup(descendant)
         ):
             raise ValueError("macOS process acceptance omitted real descendant timeout/cleanup")
     for control in details.get("negative_controls", []):

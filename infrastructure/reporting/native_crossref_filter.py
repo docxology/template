@@ -86,13 +86,21 @@ class SourceCrossrefFilter:
 
     def verify(self) -> None:
         remaining(self.deadline)
+        owner = self.owner
+        if owner is None:
+            raise ValueError("filter preparation lost its genuine enclosing Source producer")
+        with owner._verification_guard(self.reader, run_id=owner.run_id, deadline=self.deadline):
+            self._verify_data()
+
+    def _verify_data(self) -> None:
+        """Check fixed filter DATA inside the caller's fresh Source guard."""
+        remaining(self.deadline)
         if (
             self.owner is None
             or current_native_producer_operation() is not self.owner
             or self.owner.source is not self.source
         ):
             raise ValueError("filter preparation lost its genuine enclosing Source producer")
-        self.owner.verify(self.reader, run_id=self.owner.run_id, deadline=self.owner.deadline)
         for binding in (self.declaration, self.launcher):
             if self.reader.read(binding["path"]).sha256 != binding["sha256"]:
                 raise ValueError("filter actual prelaunch Source/request body changed")

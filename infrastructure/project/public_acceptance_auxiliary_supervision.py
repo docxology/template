@@ -60,16 +60,34 @@ _CENSUS_DIAGNOSTIC_ENUMS = (
 )
 
 
+def complete_auxiliary_cleanup(process: Any) -> bool:
+    """Check complete cleanup DATA, including for an intentionally timed-out child."""
+    cleanup = process.get("cleanup") if isinstance(process, dict) else None
+    return (
+        isinstance(cleanup, dict)
+        and cleanup.get("verified") is True
+        and cleanup.get("root_reaped") is True
+        and cleanup.get("guardian_armed") is True
+        and cleanup.get("guardian_finished") is True
+        and type(cleanup.get("guardian_exit_code")) is int
+        and type(cleanup.get("guardian_pid")) is int
+        and cleanup["guardian_pid"] > 0
+        and cleanup["guardian_exit_code"] == 0
+        and cleanup.get("final_token_sweep_matched_pids") == []
+        and cleanup.get("final_census_succeeded") is True
+        and cleanup.get("final_census_matched_pids") == []
+        and cleanup.get("diagnostics") == []
+        and cleanup.get("deadline_exceeded") is False
+    )
+
+
 def complete_auxiliary_observation(process: Any) -> bool:
     """Check complete process DATA; source, original launch and artifact authority remain external."""
     return (
         isinstance(process, dict)
         and process.get("schema_version") == PROCESS_SCHEMA
         and process.get("accepted") is True
-        and isinstance(process.get("cleanup"), dict)
-        and process["cleanup"].get("verified") is True
-        and process["cleanup"].get("final_census_succeeded") is True
-        and process["cleanup"].get("final_census_matched_pids") == []
+        and complete_auxiliary_cleanup(process)
         and type(process.get("pid")) is int
         and process["pid"] > 0
         and type(process.get("exit_code")) is int
@@ -341,12 +359,19 @@ def supervise(
     environment: dict[str, str] | None = None,
     bootstrap_payload: dict[str, Any] | None = None,
     print_originals: list[Any] | None = None,
+    execution_timeout_seconds: float | None = None,
     stream_diagnostics: bool = False,
     _sandbox_api: _SandboxTransferApi | None = None,
 ) -> dict[str, Any]:
     """Observe the original child and token-bound cleanup under one finite clock."""
     if type(deadline) not in (int, float) or not math.isfinite(deadline):
         raise ValueError("original auxiliary deadline must be finite")
+    if execution_timeout_seconds is not None and (
+        type(execution_timeout_seconds) not in (int, float)
+        or not math.isfinite(execution_timeout_seconds)
+        or execution_timeout_seconds <= 0
+    ):
+        raise ValueError("auxiliary armed execution timeout must be finite and positive")
     if _sandbox_api is not None and type(_sandbox_api) is not _SandboxTransferApi:
         raise ValueError("scoped transfer API requires its fixed credential nomination")
     if environment is not None:
@@ -392,6 +417,7 @@ def supervise(
     child: subprocess.Popen[bytes] | None = None
     guardian: BoundedRunGuardian | None = None
     run_token = ""
+    execution_deadline: float | None = None
     diagnostics: list[str] = []
     original_error: BaseException | None = None
     diagnostic_positions = {"stdout": 0, "stderr": 0}
@@ -444,9 +470,19 @@ def supervise(
                 start_new_session=True,
             )
             guardian.arm(root_pid=child.pid, run_token=run_token, deadline_monotonic=deadline)
+            # An intentional body timeout must leave the original whole clock
+            # available for guardian completion and the final process census.
+            execution_deadline = (
+                deadline
+                if execution_timeout_seconds is None
+                else min(deadline, time.monotonic() + execution_timeout_seconds)
+            )
             while True:
                 forward_diagnostics()
-                remaining = _remaining(deadline)
+                remaining = min(_remaining(deadline), execution_deadline - time.monotonic())
+                if remaining <= 0:
+                    timeout = True
+                    break
                 if stdout.stat().st_size > MAX_STREAM_BYTES or stderr.stat().st_size > MAX_STREAM_BYTES:
                     output_limit = True
                     break
@@ -503,6 +539,14 @@ def supervise(
         "duration_seconds": time.monotonic() - started,
         "streams": artifacts,
         **({"bootstrap_payload": bootstrap_payload} if bootstrap_payload is not None else {}),
+        **(
+            {
+                "execution_timeout_seconds": execution_timeout_seconds,
+                "execution_deadline_monotonic": execution_deadline,
+            }
+            if execution_timeout_seconds is not None
+            else {}
+        ),
         **(
             {"auxiliary_print_launch": print_held, "auxiliary_print_owner_pid": os.getpid()}
             if print_held is not None
