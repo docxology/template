@@ -83,6 +83,9 @@ def complete_reference(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
         if kind == "directory":
             (root / relative).mkdir(parents=True, exist_ok=True)
     _git(root, "init", "--quiet")
+    # Disposable DATA keeps exact object identities without compression or delta search.
+    _git(root, "config", "core.compression", "0")
+    _git(root, "config", "pack.window", "0")
     # Reproduce the tracked tree exactly: a historically tracked file can match
     # a later ignore rule (for example a committed replay cache), and a fresh
     # clone still contains and tracks it.
