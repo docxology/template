@@ -2756,7 +2756,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_bytecode_audit.py",
-      "source_sha256": "cb2070b29c23d4526de546f73a81ee230690ff93017c263a483e1739170087c6",
+      "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
       "families": [
         "tests/infra_tests/core/test_bytecode_audit.py::test_actual_main_frame_is_seeded_and_checked_before_imports_and_after_execution",
         "tests/infra_tests/core/test_bytecode_audit.py::test_actual_public_exec_is_source_checked_before_any_payload",
@@ -2771,7 +2771,7 @@
         "tests/infra_tests/core/test_bytecode_audit.py::test_startup_seed_cannot_admit_an_already_imported_sibling_module",
         "tests/infra_tests/core/test_bytecode_audit.py::test_startup_seed_rejects_cached_main_declared_only_by_module_spec"
       ],
-      "family_observations_sha256": "f5e0f84e8724851897a2c5ea3a582b49e10719e22028a5e0bb82c08ae8528016",
+      "family_observations_sha256": "14617d4a6c01c20a1eeb778d4e70d07870ff82a876a25f7cc139e73428f8718b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2780,8 +2780,188 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_bytecode_audit.py",
-          "source_sha256": "cb2070b29c23d4526de546f73a81ee230690ff93017c263a483e1739170087c6",
-          "line": 1
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 44
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 45
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 51
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 119
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 120
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 122
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 123
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 125
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 126
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 127
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 152
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 155
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 184
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 185
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 192
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 237
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 238
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 275
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 276
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 278
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 279
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 300
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 315
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 318
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 320
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 322
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 323
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 324
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 327
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 328
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 329
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 380
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 381
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 383
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 384
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 407
+        },
+        {
+          "path": "tests/infra_tests/core/test_bytecode_audit.py",
+          "source_sha256": "8bf7c1bdfe46010b026da9c2db9bec35ae7d2e9705f206e2a1cfcaa9b2a62bf2",
+          "line": 408
         }
       ]
     },
@@ -33435,7 +33615,7 @@
     },
     {
       "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
-      "source_sha256": "363ce6206ecad1ef506a742c1b926efb83eacab7976e8fd481eb8540da832937",
+      "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
       "families": [
         "tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_compare_only_missing_baseline_exits_nonzero",
         "tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_compare_only_shows_compare_section",
@@ -33444,7 +33624,7 @@
         "tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_save_baseline_only_no_progress_lines",
         "tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_validate_rejects_save_baseline_with_offline_mode"
       ],
-      "family_observations_sha256": "4d84745921268b772ba99d5e76fc0d8ce3b7787fc3143ff0254afbe9e945fe33",
+      "family_observations_sha256": "0e4b6b04a8f5607ef74398c1d6149c39e5682fa876a2ca1bd6aa71ff9846efca",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -33453,8 +33633,48 @@
       "evidence": [
         {
           "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
-          "source_sha256": "363ce6206ecad1ef506a742c1b926efb83eacab7976e8fd481eb8540da832937",
-          "line": 1
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 34
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 37
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 39
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 57
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 73
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 85
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 91
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 116
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_eval_runner_offline.py",
+          "source_sha256": "261ef271ed4630f03c8cfd4e28824a118aedf78ecb170840691f987b22e9f9db",
+          "line": 120
         }
       ]
     },
