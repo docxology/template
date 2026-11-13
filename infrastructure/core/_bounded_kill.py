@@ -130,15 +130,19 @@ def observe_bounded_run_processes(
             # Restrict this optional final census to the guardian's lifetime.
             # Unreadable processes created within it remain a strict refusal;
             # the default census still has no start-time exemption.
-            if started_monotonic is not None and _preexisting_process(pid, started_monotonic, deadline):
-                continue
+            cause: Exception = error
+            try:
+                if started_monotonic is not None and _preexisting_process(pid, started_monotonic, deadline):
+                    continue
+            except (OSError, RuntimeError, ValueError) as age_error:
+                cause = age_error
             current = _census_snapshot(deadline, pid)
             if pid not in current or current[pid].startswith("Z"):
                 continue
             raise RuntimeError(
                 f"bounded-run census cannot observe live same-owner PID {pid} "
-                f"(cause={type(error).__name__}, errno={getattr(error, 'errno', None)})"
-            ) from error
+                f"(cause={type(cause).__name__}, errno={getattr(cause, 'errno', None)})"
+            ) from cause
         except (OSError, RuntimeError, ValueError) as error:
             # A fresh successful OS observation may confirm exit or UID change.
             current = _census_snapshot(deadline, pid)

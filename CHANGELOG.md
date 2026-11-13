@@ -47,6 +47,9 @@ locks.
   Observe bounded exact SDK RECORD bytes and their component hash separately
   from Source admission so unexplained metadata changes remain diagnosable.
   Preserve the original component JSON for an unavailable analysis runtime.
+- Revalidate failed process-age observations against fresh OS process state;
+  only confirmed exit, UID change or zombie state clears the census entry.
+  Live unreadable or unknown-age processes remain strict custody refusals.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report
