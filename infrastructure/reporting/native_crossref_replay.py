@@ -397,6 +397,7 @@ class CrossrefFilterReaderOperation:
             raise ValueError("crossref exact specification/launcher belongs to a different original attempt")
         from infrastructure.reporting.native_source_provider_bootstrap import (
             format_selected_sdk_native_bootstrap,
+            format_selected_sdk_native_script,
         )
 
         original_root = Path(spec["source"]["current_mirror"]["root"])
@@ -413,7 +414,7 @@ class CrossrefFilterReaderOperation:
             spec["deadline_monotonic"],
             required_worker_module=WORKER,
         )
-        python = implementation.json_object()["runtime_environment"]["python_executable"]
+        python = implementation.json_object()["runtime_environment"]["python_launcher"]
         argv = [
             "--root",
             str(original_root),
@@ -428,10 +429,11 @@ class CrossrefFilterReaderOperation:
             "--run-id",
             self.run_id,
         ]
-        script = (
-            f"#!{python} -I\nimport sys\n"
+        script = format_selected_sdk_native_script(
+            python,
+            "import sys\n"
             f"if sys.argv[1:]!={[spec['output_format']]!r}: raise ValueError('actual Pandoc filter format differs')\n"
-            f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap
+            f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap,
         )
         original_launcher = str(original_root / launcher.relative)
         if paired:
@@ -445,7 +447,7 @@ class CrossrefFilterReaderOperation:
             )
         command = parent_tool["command"]
         if (
-            launcher.content != script.encode()
+            launcher.content != script
             or command.count(original_launcher) != 1
             or (command.index(original_launcher) < 1 or command[command.index(original_launcher) - 1] != "--filter")
         ):

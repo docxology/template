@@ -38,6 +38,7 @@ from infrastructure.reporting.native_source_external_admission import (
 )
 from infrastructure.reporting.native_source_provider_bootstrap import (
     format_selected_sdk_native_bootstrap,
+    format_selected_sdk_native_script,
 )
 from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
 from infrastructure.reporting.native_tool_producer import (
@@ -328,9 +329,7 @@ def prepare_source_crossref_filter(
     )
     implementation = reader.read(implementation_path.relative_to(root).as_posix())
     runtime = json.loads(implementation.content)["runtime_environment"]
-    python = runtime["python_executable"]
-    if not isinstance(python, str) or any(character.isspace() for character in python):
-        raise ValueError("filter requires an unambiguous admitted shebang interpreter nomination")
+    python = runtime["python_launcher"]
     closure = directory / "closure"
     create_private_native_directory(root, closure)
     identity = closure.stat()
@@ -394,13 +393,14 @@ def prepare_source_crossref_filter(
                 "--run-id",
                 owner.run_id,
             ]
-            script = (
-                f"#!{python} -I\nimport sys\n"
+            script = format_selected_sdk_native_script(
+                python,
+                "import sys\n"
                 f"if sys.argv[1:]!={[output_format]!r}: raise ValueError('actual Pandoc filter format differs')\n"
-                f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap
+                f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap,
             )
             launcher_path = directory / "source-crossref-filter"
-            atomic_write_bytes_confined(root, launcher_path, script.encode(), mode=0o700)
+            atomic_write_bytes_confined(root, launcher_path, script, mode=0o700)
             launch = reader.read(launcher_path.relative_to(root).as_posix())
             filter_owner = SourceCrossrefFilter(
                 source,

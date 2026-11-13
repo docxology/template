@@ -197,13 +197,15 @@ def source_file_bytes(path: Path) -> bytes:
 
 
 def runtime_identity() -> dict[str, Any]:
-    """Bind the actual interpreter and only its installed site-package metadata."""
-    binary = Path(sys.executable).resolve()
+    """Bind the venv-selecting launcher separately from physical executable bytes."""
+    launcher = Path(sys.executable).absolute()
+    binary = launcher.resolve()
     packages = sorted(
         [str(item.metadata.get("Name", "")), item.version]
         for item in distributions(path=sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")}))
     )
     return {
+        "python_launcher": str(launcher),
         "python_executable": str(binary),
         "python_sha256": _sha(_regular_bytes(binary)),
         "python_version": sys.version,

@@ -213,10 +213,12 @@ def test_terminal_roster_refuses_unclosed_or_aliased_images(refusal: str) -> Non
 _GENUINE_PANDOC_INSTALLED_SDK_CHILD = r"""
 from copy import deepcopy
 import json
+import hashlib
 import os
 import socket
 from pathlib import Path
 import sys
+import subprocess
 import time
 from uuid import uuid4
 
@@ -232,6 +234,12 @@ from infrastructure.reporting.native_loader_qualification import qualify_native_
 from infrastructure.reporting.native_loader_replay import validate_native_loader_data
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, NATIVE_OBSERVATION_CEILING_SECONDS
 from infrastructure.reporting.native_source_external_admission import NativeExternalSourceBindings, admit_external_native_source
+from infrastructure.reporting.native_crossref_pair import pair_launcher
+from infrastructure.reporting.native_source_provider_bootstrap import (
+    CROSSREF_FILTER_WORKER_MODULE,
+    format_selected_sdk_native_bootstrap,
+    format_selected_sdk_native_script,
+)
 from infrastructure.reporting.native_tool_producer import native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -257,6 +265,109 @@ sdk_root = Path(infrastructure.__file__).resolve(strict=True).parent
 assert sdk_root.is_relative_to(Path(sys.prefix).resolve(strict=True))
 custody = capture_implementation_custody()
 assert custody["binding_kind"] == "installed-distribution"
+runtime = custody["runtime_environment"]
+assert runtime["python_launcher"] == str(Path(sys.executable).absolute())
+assert runtime["python_executable"] == str(Path(sys.executable).resolve(strict=True))
+assert runtime["python_launcher"] != runtime["python_executable"]
+
+# These genuine installed-SDK --help executions prove launcher/import/Code
+# closure only. Their pair declarations are DATA, not native Source authority.
+# No VIRTUAL_ENV or checkout import root is supplied to either entry point.
+entry_directory = tmp_path / "cold-crossref-launcher-controls"
+entry_directory.mkdir()
+implementation_path = entry_directory / "implementation.json"
+implementation_bytes = json.dumps(custody, sort_keys=True).encode()
+implementation_path.write_bytes(implementation_bytes)
+entry_scripts = []
+entry_closures = []
+for ordinal in range(3):
+    leaf = entry_directory / ("slot-" + str(ordinal))
+    leaf.mkdir()
+    closure = leaf / "closure"
+    closure.mkdir()
+    held = closure.stat()
+    bootstrap = format_selected_sdk_native_bootstrap(
+        (sdk_root / "core/bytecode_audit.py").read_bytes(),
+        sdk_root,
+        (),
+        implementation_path,
+        hashlib.sha256(implementation_bytes).hexdigest(),
+        closure,
+        (held.st_dev, held.st_ino),
+        deadline,
+        required_worker_module=CROSSREF_FILTER_WORKER_MODULE,
+    )
+    entry = leaf / "source-crossref-filter"
+    entry.write_bytes(
+        format_selected_sdk_native_script(
+            runtime["python_launcher"],
+            "import sys\nsys.argv=['native-crossref-worker','--help']\n" + bootstrap,
+        )
+    )
+    entry.chmod(0o700)
+    entry_scripts.append(entry)
+    entry_closures.append(closure)
+
+pair_directory = entry_directory / "pair"
+pair_directory.mkdir()
+declaration = {
+    "directory": pair_directory.relative_to(tmp_path).as_posix(),
+    "deadline_monotonic": deadline,
+    "parent_loader": {"environment_injections": {}},
+    "slots": [
+        {
+            "launcher": {
+                "path": entry.relative_to(tmp_path).as_posix(),
+                "sha256": hashlib.sha256(entry.read_bytes()).hexdigest(),
+            }
+        }
+        for entry in entry_scripts[1:]
+    ],
+}
+pair_entry = pair_directory / "source-crossref-pair"
+pair_entry.write_bytes(pair_launcher(tmp_path, declaration, runtime["python_launcher"], "latex"))
+pair_entry.chmod(0o700)
+entry_environment = {
+    "PATH": os.defpath,
+    "LC_ALL": "C",
+    "HOME": str(tmp_path),
+}
+for entry in (entry_scripts[0], pair_entry, pair_entry):
+    completed = subprocess.run(
+        [str(entry), "latex"],
+        cwd=tmp_path,
+        env=entry_environment,
+        capture_output=True,
+        text=True,
+        timeout=min(NATIVE_OBSERVATION_CEILING_SECONDS, deadline - time.monotonic()),
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+for closure in entry_closures:
+    retained = json.loads((closure / "receipt.json").read_text())
+    assert retained["status"] == "pass", retained
+    assert retained["selected_sdk_package_root"] == str(sdk_root)
+    assert retained["worker_outcome"] == {
+        "kind": "raised", "class": "SystemExit", "module": "builtins", "system_exit_code": 0,
+    }
+    assert any(
+        row["source_path"] == str(sdk_root / "_version.py") and row["runs"]
+        for row in retained["executions"]
+    )
+assert [json.loads((pair_directory / ("invocation-" + str(slot) + ".json")).read_text())["slot"]
+        for slot in range(2)] == [0, 1]
+refused = subprocess.run(
+    [str(pair_entry), "latex"],
+    cwd=tmp_path,
+    env=entry_environment,
+    capture_output=True,
+    text=True,
+    timeout=min(NATIVE_OBSERVATION_CEILING_SECONDS, deadline - time.monotonic()),
+    check=False,
+)
+assert refused.returncode != 0
+assert "Source paired filter permits exactly two invocations" in refused.stderr
+
 metadata = mirror.stat()
 run_id = uuid4().hex
 source = admit_external_native_source(
@@ -457,12 +568,13 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
 """
 
 
+@pytest.mark.parametrize("runtime_layout", ["plain", "deep-spaces"])
 @pytest.mark.timeout(1800)
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="genuine glibc audit callbacks require Linux")
 def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
-    complete_reference: tuple[Path, str, str], tmp_path: Path
+    complete_reference: tuple[Path, str, str], tmp_path: Path, runtime_layout: str
 ) -> None:
-    """Exercise genuine native controls with installed-wheel SDK custody."""
+    """Exercise genuine native custody and cold direct/paired SDK entry points."""
     if shutil.which("pandoc") is None or shutil.which("cc") is None:
         pytest.skip("genuine Pandoc and the Source-selected C compiler are required")
     original, commit, fingerprint = complete_reference
@@ -499,7 +611,7 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     assert built.returncode == 0, built.stdout + built.stderr
     wheels = list(artifacts.glob("*.whl"))
     assert len(wheels) == 1
-    installed = tmp_path / "installed-sdk"
+    installed = tmp_path / "installed-sdk" if runtime_layout == "plain" else nested / "installed SDK's runtime"
     created = subprocess.run(
         [
             "uv",
@@ -519,6 +631,8 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     )
     assert created.returncode == 0, created.stdout + created.stderr
     selected_python = installed / "bin/python"
+    if runtime_layout == "deep-spaces":
+        assert len(os.fsencode(selected_python)) > 255 and " " in str(selected_python)
     exported = subprocess.run(
         [
             "uv",

@@ -15,6 +15,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import create_p
 from infrastructure.reporting.native_environment_custody import loader_environment_injections, value_commitment
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader
 from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
+from infrastructure.reporting.native_source_provider_bootstrap import format_selected_sdk_native_script
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -32,8 +33,9 @@ def pair_launcher(root: Path, declaration: dict[str, Any], python: str, output_f
     slots = [(str(root / item["launcher"]["path"]), item["launcher"]["sha256"]) for item in declaration["slots"]]
     directory = str(root / declaration["directory"])
     injections = declaration["parent_loader"]["environment_injections"]
-    return (
-        f"#!{python} -I\nimport hashlib,json,os,stat,sys,time\n"
+    return format_selected_sdk_native_script(
+        python,
+        "import hashlib,json,os,stat,sys,time\n"
         f"if sys.argv[1:]!={[output_format]!r}: raise ValueError('actual paired filter format differs')\n"
         f"deadline={declaration['deadline_monotonic']!r}\n"
         "if time.monotonic()>=deadline: raise TimeoutError('paired filter original clock exhausted')\n"
@@ -76,8 +78,8 @@ def pair_launcher(root: Path, declaration: dict[str, Any], python: str, output_f
         "hashlib.sha256(body).hexdigest()!=expected: "
         "raise ValueError('paired filter selected Source launcher changed')\n"
         "if time.monotonic()>=deadline: raise TimeoutError('paired filter admission exhausted original clock')\n"
-        "exec(compile(body,path,'exec'),{'__name__':'__main__','__file__':path})\n"
-    ).encode()
+        "exec(compile(body,path,'exec'),{'__name__':'__main__','__file__':path})\n",
+    )
 
 
 def validate_pair_leg(
@@ -174,7 +176,7 @@ def validate_pair_leg(
         ):
             raise ValueError("paired filter changed the complete two-slot Source selection")
     implementation = _file(spec["implementation"], reader).json_object()
-    python = implementation["runtime_environment"]["python_executable"]
+    python = implementation["runtime_environment"]["python_launcher"]
     original_root = Path(spec["source"]["current_mirror"]["root"])
     parent_launcher = _file(value["launcher"], reader)
     if parent_launcher.relative != (
@@ -374,7 +376,7 @@ def prepare_source_crossref_pair(
         }
         declaration = write_json(root, directory / "invocations.json", declaration_data)
         implementation = reader.read(filters[0].declaration["path"]).json_object()["implementation"]
-        python = reader.read(implementation["path"]).json_object()["runtime_environment"]["python_executable"]
+        python = reader.read(implementation["path"]).json_object()["runtime_environment"]["python_launcher"]
         launcher_path = directory / "source-crossref-pair"
         atomic_write_bytes_confined(
             root, launcher_path, pair_launcher(root, declaration_data, python, output_format), mode=0o700

@@ -97,6 +97,29 @@ uv run python scripts/maintenance/refresh_artifact_manifests.py \
   --project templates/template_code_project
 ```
 
+## Executor logging and runtime identity
+
+Construction acquires executor-owned file handlers. `execute_pipeline()` and
+`execute_plan()` release them on every exit; preview-only and direct-stage
+callers must close the executor themselves, including when an assertion or
+operation fails:
+
+```python
+from contextlib import closing
+
+with closing(PipelineExecutor(config)) as executor:
+    stage_names = executor.preview_stage_names()
+```
+
+Overlapping executors share a module-level logging lease. Closing one leaves
+the surviving owners' DEBUG logging intact; only the last owner restores the
+level observed before the first lease. Unrelated handlers are never reset.
+
+Runtime package identities freshly observe standard-library distribution
+metadata, including `METADATA` and `PKG-INFO`, without a persistent metadata
+cache. Missing required metadata headers retain the current standard-library
+semantics rather than receiving an invented package version.
+
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md)

@@ -50,6 +50,17 @@ locks.
   of truncating it at the routine smoke shard's 540-second deadline.
   Prepare hash-verified locked dependencies before the offline body and declare
   its Linux/compiler applicability without waiving either supported Python minor.
+  Document the cache action's actual preparation/consumer boundary in its
+  required README/AGENTS pair so the Root auxiliary docs gate can admit it.
+- Preserve the selected installed-SDK Python launcher separately from its
+  resolved executable image. Share a PID-preserving quoted shell/Python entry
+  header across direct and paired Crossref production and portable replay, so
+  cold virtual environments retain their actual SDK metadata on deep or quoted
+  paths without weakening executable-byte or final Source custody.
+- Close preview and direct-stage executor leases in test consumers, preserving
+  live peer logging and restoration after the last owner. Remove the malformed
+  metadata fixture's incidental `None` expectation, which Python 3.15 rejects
+  with `KeyError`, while retaining valid metadata and mutation-freshness checks.
 - Prepare Linux Pandoc and Crossref from immutable upstream source and frozen
   GHC 9.12.2/dependency inputs and project-wide object determinism, retaining
   exact Source-selected executable and provider archive correspondence instead
