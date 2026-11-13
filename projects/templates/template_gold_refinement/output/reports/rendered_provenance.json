@@ -91,7 +91,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9277275735f78440e23149515f3817b905fc326cc8ad316ed0fff407f3d5a22a",
+      "sha256": "68fe27c252a51226daf854d50d58bb953806a158848b1daa7c141c139fb14b93",
       "size_bytes": 13003
     }
   },
@@ -110,8 +110,8 @@
       "sha256": "42f7ab4eb06f36d42cfea564a815f5318b5171796aa39c589263a7dbd8943b21"
     },
     "stage": {
-      "file_count": 1769,
-      "sha256": "68c98642509667ca28ae6919adec2685a8267329490d74bd54f0256906375e92"
+      "file_count": 1770,
+      "sha256": "cc3f1a1616481a3bd11a9d76cdd898ab312db2dbf8815bcb9ab7512e274f20fb"
     }
   },
   "project": "templates/template_gold_refinement",
