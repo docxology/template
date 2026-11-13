@@ -1,0 +1,475 @@
+name: Actual unchanged-source residual provider body capture
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: residual-document-provider-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  provider:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        replica: [1, 2]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Prepare locked capture interpreter
+        uses: ./.github/actions/setup-python-env
+        with:
+          python-version: '3.15'
+      - name: Prepare reviewed signed Ubuntu acquisition and Nix only
+        shell: bash
+        env:
+          PREPARED_PYTHON: .venv/bin/python
+        run: |
+          set -euo pipefail
+          [ "$RUNNER_ARCH" = X64 ]
+          if [ "$RUNNER_OS" = Linux ]; then
+            if [ ! -f "$PREPARED_PYTHON" ] || [ ! -x "$PREPARED_PYTHON" ]; then
+              echo "Ubuntu mirror preparation requires an already locked Python executable" >&2
+              exit 1
+            fi
+            sudo -n "$PREPARED_PYTHON" -I -B - "$GITHUB_WORKSPACE/.github/actions/setup-acceptance-documents/ubuntu_apt_mirrors.py" <<'PYTHON'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import runpy
+          import stat
+          import sys
+          import tempfile
+          
+          
+          def identity(info):
+              return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid,
+                      info.st_nlink, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+          
+          
+          def owned_bytes(path, limit):
+              before = path.lstat()
+              if (not stat.S_ISREG(before.st_mode) or before.st_uid != 0
+                      or before.st_nlink != 1 or before.st_mode & 0o022):
+                  raise SystemExit(f"Expected an owned regular APT file: {path}")
+              with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as handle:
+                  data = handle.read(limit + 1)
+                  if (len(data) > limit or identity(os.fstat(handle.fileno())) != identity(before)
+                          or identity(path.lstat()) != identity(before)):
+                      raise SystemExit(f"APT file changed or exceeded its bound: {path}")
+              return before, data
+          
+          
+          mirror = Path("/etc/apt/apt-mirrors.txt")
+          source = Path("/etc/apt/sources.list.d/ubuntu.sources")
+          mirror_policy = runpy.run_path(sys.argv[1])
+          mirror_limit = mirror_policy["MAX_MIRROR_BYTES"]
+          before, current = owned_bytes(mirror, mirror_limit)
+          try:
+              preferred = mirror_policy["prefer_primary_archive"](current)
+          except ValueError as error:
+              raise SystemExit(str(error)) from None
+          source_before, source_data = owned_bytes(source, 65536)
+          active = False
+          fields = {}
+          for line in [*source_data.decode("utf-8").splitlines(), ""]:
+              if line.lstrip().startswith("#"):
+                  continue
+              if line.strip():
+                  key, separator, value = line.partition(":")
+                  key = key.lower()
+                  if line[0].isspace() or not separator or key in fields:
+                      raise SystemExit("Refusing an unknown Ubuntu source stanza")
+                  fields[key] = value.strip()
+              else:
+                  if fields.get("enabled", "yes") == "yes":
+                      if fields.get("uris") == "mirror+file:/etc/apt/apt-mirrors.txt":
+                          suites = set(fields.get("suites", "").split())
+                          if ("deb" not in fields.get("types", "").split() or not suites
+                                  or not suites <= {"noble", "noble-updates", "noble-backports", "noble-security"}
+                                  or fields.get("signed-by") != "/usr/share/keyrings/ubuntu-archive-keyring.gpg"):
+                              raise SystemExit("Refusing an unknown Ubuntu mirror-list source")
+                          active = True
+                  fields = {}
+          if not active:
+              raise SystemExit("No active signed Ubuntu source uses the expected mirror list")
+          print(json.dumps({"apt_mirrors_before": current.decode(),
+                            "sha256": hashlib.sha256(current).hexdigest(),
+                            "ubuntu_sources_sha256": hashlib.sha256(source_data).hexdigest()}), flush=True)
+          if current != preferred:
+              descriptor, temporary = tempfile.mkstemp(prefix=".template-apt-mirrors-", dir=mirror.parent)
+              try:
+                  with os.fdopen(descriptor, "wb") as handle:
+                      os.fchown(handle.fileno(), before.st_uid, before.st_gid)
+                      os.fchmod(handle.fileno(), stat.S_IMODE(before.st_mode))
+                      handle.write(preferred)
+                      handle.flush()
+                      os.fsync(handle.fileno())
+                  source_now, source_current = owned_bytes(source, 65536)
+                  if (identity(mirror.lstat()) != identity(before)
+                          or identity(source_now) != identity(source_before) or source_current != source_data):
+                      raise SystemExit("APT configuration changed before the priority update")
+                  os.replace(temporary, mirror)
+              finally:
+                  if os.path.exists(temporary):
+                      os.unlink(temporary)
+          after, actual = owned_bytes(mirror, mirror_limit)
+          if (actual != preferred or after.st_uid != before.st_uid or after.st_gid != before.st_gid
+                  or stat.S_IMODE(after.st_mode) != stat.S_IMODE(before.st_mode)):
+              raise SystemExit("Ubuntu mirror-priority readback failed")
+          print(json.dumps({"apt_mirrors_after": actual.decode(),
+                            "sha256": hashlib.sha256(actual).hexdigest(),
+                            "already_preferred": current == preferred}), flush=True)
+          PYTHON
+          fi
+          if ! command -v nix >/dev/null 2>&1; then
+            # Signed Noble packages supply the client and isolated build users;
+            # never fetch an unpinned remote installer or select a host GHC.
+            sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+            sudo -n apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends nix-bin nix-setup-systemd
+            sudo -n nix-store --init
+          fi
+          nix --version
+      - name: Capture unchanged genuine provider bodies and consumed compiler inputs
+        shell: bash
+        env:
+          REPLICA: ${{ matrix.replica }}
+        run: |
+          .venv/bin/python - <<'PYTHON'
+          import hashlib, io, json, os, shutil, struct, subprocess, tarfile, time
+          from pathlib import Path
+          root = Path('output/readiness/deterministic-document-providers').resolve()
+          root.mkdir(parents=True)
+          started = time.monotonic()
+          deadline = time.monotonic() + 9000
+          reference = 'git+https://github.com/lierdakil/pandoc-crossref?rev=e6c2ae3418dcf63f974802f8b7c105ebc299706c'
+          source_recipe = Path('infrastructure/config/native-document-build.nix').resolve()
+          recipe = root / source_recipe.name
+          recipe.write_bytes(source_recipe.read_bytes())
+          source_freeze = Path('infrastructure/config/native-document-build.freeze').resolve()
+          freeze = root / source_freeze.name
+          freeze.write_bytes(source_freeze.read_bytes())
+          source_patch = Path('infrastructure/config/native-document-ghc-pkg-cache-order.patch').resolve()
+          patch = root / source_patch.name
+          patch.write_bytes(source_patch.read_bytes())
+          source_tree = __import__('ast').parse(Path('infrastructure/reporting/native_document_preparation.py').read_text())
+          source_options = next(__import__('ast').literal_eval(node.value) for node in source_tree.body if isinstance(node, __import__('ast').Assign) and any(isinstance(target, __import__('ast').Name) and target.id == '_NIX_OPTIONS' for target in node.targets))
+          base = ['sudo', '-n', shutil.which('nix'), '--store', 'local', *source_options]
+          def write_json(name, value):
+              (root / name).write_text(json.dumps(value, indent=2) + '\n')
+          def run(label, arguments, native=False, allow_failure=False):
+              command = arguments if native else base + arguments
+              record = {'argv': command, 'started_unix': time.time(), 'returncode': None}
+              print(json.dumps({'phase': label, **record}), flush=True)
+              started = time.monotonic()
+              try:
+                  with (root / (label + '.stdout')).open('xb') as stdout, (root / (label + '.stderr')).open('xb') as stderr:
+                      process = subprocess.run(command, stdout=stdout, stderr=stderr, check=False,
+                                               timeout=max(0.001, deadline-time.monotonic()))
+                  record['returncode'] = process.returncode
+              except subprocess.TimeoutExpired:
+                  record['timed_out'] = True
+                  raise
+              finally:
+                  record['elapsed_seconds'] = time.monotonic() - started
+                  write_json(label + '.command.json', record)
+                  print(json.dumps({'phase_complete': label, **record}), flush=True)
+              if process.returncode and not allow_failure:
+                  raise SystemExit(process.returncode)
+              return (root / (label + '.stdout')).read_bytes()
+          allowed_environment = {
+              'PATH', 'LANG', 'LC_ALL', 'LC_CTYPE', 'TZ', 'HOME', 'USER', 'SHELL', 'TMPDIR',
+              'SOURCE_DATE_EPOCH', 'NIX_BUILD_CORES', 'NIX_PATH', 'ImageOS', 'ImageVersion',
+              'RUNNER_OS', 'RUNNER_ARCH', 'GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_SHA',
+          }
+          write_json('runner-environment.json', {key: value for key, value in os.environ.items() if key in allowed_environment})
+          environment = subprocess.run(['sudo', '-n', '/usr/bin/env', '-0'], check=True, capture_output=True,
+                                       timeout=max(0.001, deadline-time.monotonic())).stdout
+          write_json('nix-client-environment.json', {
+              key: value for entry in environment.decode().split('\0') if '=' in entry
+              for key, value in [entry.split('=', 1)] if key in allowed_environment
+          })
+          configuration_command = base + ['show-config', '--json']
+          configuration = subprocess.run(configuration_command, check=True, capture_output=True,
+                                         timeout=max(0.001, deadline-time.monotonic()))
+          selected_configuration = {
+              'sandbox', 'sandbox-fallback', 'sandbox-paths', 'build-users-group', 'max-jobs', 'cores',
+              'system', 'extra-platforms', 'builders', 'substitute', 'substituters', 'require-sigs',
+              'trusted-public-keys', 'extra-sandbox-paths', 'filter-syscalls', 'use-cgroups',
+          }
+          write_json('nix-build-configuration.json', {
+              'argv': configuration_command, 'returncode': configuration.returncode,
+              'selected_values': {key: value for key, value in json.loads(configuration.stdout).items()
+                                  if key in selected_configuration},
+          })
+          for label, command in [
+              ('nix-client-version', [shutil.which('nix'), '--version']),
+              ('runner-kernel', ['uname', '-a']), ('runner-cpu', ['lscpu']),
+              ('host-python-version', ['python3', '--version']), ('host-linker-version', ['ld', '--version']),
+              ('host-compiler-version', ['gcc', '--version']), ('host-tar-version', ['tar', '--version']),
+              ('host-package-versions', ['dpkg-query', '-W', 'nix-bin', 'binutils', 'gcc', 'libc6', 'xz-utils']),
+          ]:
+              run(label, command, native=True)
+          source = json.loads(run('source', ['flake', 'metadata', '--json', '--no-write-lock-file', '--no-update-lock-file', reference]))
+          assert source['locked']['rev'] == 'e6c2ae3418dcf63f974802f8b7c105ebc299706c'
+          assert source['locked']['narHash'] == 'sha256-+RpgwW3AmNjTLVfMK7SYjFPi/DlxesuXUtsWGtnm9oM='
+          upstream = Path(source['path'])
+          assert hashlib.sha256((upstream / 'flake.lock').read_bytes()).hexdigest() == 'c5bb26db82bc1b56577fc46ca3f56b061168c6cef86f5ec3b969530b62c80758'
+          assert hashlib.sha256((upstream / 'cabal.project.freeze').read_bytes()).hexdigest() == '17ca3d0c1f874137d845216bbfa0fe359a98ae63e3387677b1fb93c77b0480ed'
+          (root / 'native-document-build.nix').write_bytes(recipe.read_bytes())
+          (root / 'native-document-build.freeze').write_bytes(freeze.read_bytes())
+          (root / patch.name).write_bytes(patch.read_bytes())
+          with tarfile.open(root / 'immutable-upstream-source.tar.xz', 'w:xz') as archive:
+              archive.add(upstream, arcname=upstream.name)
+          local_arguments = ['--file', str(recipe)]
+          evaluation = '''value: {
+            derivation = value.provider.drvPath; output = value.provider.outPath;
+            compiler_derivation = value.compiler.drvPath; compiler_output = value.compiler.outPath;
+            plan_derivation = value.plan.drvPath; plan_output = value.plan.outPath;
+            pandoc_derivation = value.pandoc.drvPath; pandoc_output = value.pandoc.outPath;
+            crossref_derivation = value.crossref.drvPath; crossref_output = value.crossref.outPath;
+            resolved_freeze = toString value.resolvedFreeze;
+          }'''
+          local_arguments = ['--file', str(recipe)]
+          evaluated = json.loads(run('evaluation', ['eval', '--json', *local_arguments, '--apply', evaluation]))
+          (root / 'evaluation.json').write_text(json.dumps(evaluated, indent=2) + '\n')
+          graph = json.loads(run('recursive-derivations', ['derivation', 'show', '--recursive', evaluated['derivation'], evaluated['compiler_derivation'], evaluated['plan_derivation']]))
+          derivation_index = []
+          with tarfile.open(root / 'exact-recursive-derivations.tar.xz', 'w:xz') as archive:
+              for path in sorted(graph):
+                  body = Path(path).read_bytes()
+                  member = tarfile.TarInfo(Path(path).name)
+                  member.size, member.mode = len(body), 0o444
+                  archive.addfile(member, io.BytesIO(body))
+                  derivation_index.append({'path': path, 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest()})
+          write_json('exact-recursive-derivations-index.json', derivation_index)
+          source_manifest = json.loads(Path('infrastructure/config/native-document-providers.json').read_bytes())
+          source_build_pin = source_manifest['providers']['Linux-x86_64']['build']
+          for field in ('derivation', 'output', 'compiler_derivation', 'compiler_output', 'plan_derivation', 'plan_output'):
+              assert evaluated[field] == source_build_pin[field], (field, evaluated[field], source_build_pin[field])
+          for path, field in ((recipe, 'recipe_sha256'), (freeze, 'freeze_sha256'), (patch, 'compiler_patch_sha256')):
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == source_build_pin[field]
+          def unique_derivation_output(name, candidates=None):
+              values = [(path, row) for path, row in graph.items() if row.get('env', {}).get('name') == name and (candidates is None or path in candidates)]
+              assert len(values) == 1, (name, [path for path, _row in values])
+              path, row = values[0]
+              assert type(row.get('outputs', {}).get('out', {}).get('path')) is str
+              return path, row['outputs']['out']['path']
+          utility_drv, utility_output = unique_derivation_output('ghc-pkg-9.12.2-stable-package-cache')
+          cache_source_drv, cache_source_output = unique_derivation_output('ghc-9.12.2-stable-package-cache-source')
+          stock_drv, stock_output = unique_derivation_output('ghc-9.12.2', graph[evaluated['compiler_derivation']]['inputDrvs'])
+          prototype = {'compiler_derivation': evaluated['compiler_derivation'], 'compiler_output': evaluated['compiler_output'],
+                       'utility_derivation': utility_drv, 'utility_output': utility_output,
+                       'source_derivation': cache_source_drv, 'source_output': cache_source_output,
+                       'stock_compiler_output': stock_output}
+          write_json('prototype-evaluation.json', prototype)
+          held_patch_hash = hashlib.sha256(patch.read_bytes()).hexdigest()
+          matching_patches = [Path(path) for path in graph[cache_source_drv]['inputSrcs'] if Path(path).name.endswith(patch.name)]
+          assert len(matching_patches) == 1
+          assert hashlib.sha256(matching_patches[0].read_bytes()).hexdigest() == held_patch_hash
+          write_json('prototype-source-binding.json', {'held_patch_sha256': held_patch_hash, 'actual_patch_path': str(matching_patches[0]),
+                                                   'source_output': cache_source_output, 'utility_derivation': utility_drv,
+                                                   'role': 'actual unchanged Source build provenance only; no executable body pin admission'})
+          body_observations = {}
+          def retain_body(label, name, candidate):
+              key = label + '-' + name
+              observation = {'candidate': str(candidate), 'available': candidate.is_file()}
+              body_observations[key] = observation
+              if observation['available']:
+                  binary = candidate.resolve(strict=True)
+                  body = binary.read_bytes()
+                  observation.update({'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
+                                      'elf_prefix_hex': body[:16].hex()})
+                  with tarfile.open(root / (key + '.tar.xz'), 'w:xz', format=tarfile.USTAR_FORMAT) as archive:
+                      member = tarfile.TarInfo(name)
+                      member.size, member.mode = len(body), 0o755
+                      archive.addfile(member, io.BytesIO(body))
+              write_json('retained-complete-bodies.json', body_observations)
+          def retain_build_logs(label):
+              run(label + '-all-local-nix-buildlogs', [
+                  'sudo', '-n', 'tar', '--create', '--file', str(root / (label + '-all-local-nix-buildlogs.tar')),
+                  '--directory', '/nix/var/log/nix', 'drvs',
+              ], native=True, allow_failure=True)
+              for index, path in enumerate(sorted(graph)):
+                  name = graph[path].get('env', {}).get('name', '')
+                  if name.startswith('pandoc') or path in (
+                      evaluated['compiler_derivation'], evaluated['plan_derivation'], evaluated['derivation'],
+                  ):
+                      run(f'{label}-component-log-{index}-{name}', ['log', path], allow_failure=True)
+          try:
+              products = json.loads(run('provider-build', [
+                  'build', '--json', '--keep-failed', '--print-build-logs',
+                  '--out-link', str(root / 'provider-runtime'), *local_arguments, 'provider',
+              ]))
+          finally:
+              # Diagnostic copies precede every executable/version/closure comparison; no body is admitted here.
+              retain_body('initial', 'pandoc', Path(evaluated['pandoc_output']) / 'bin/pandoc')
+              retain_body('initial', 'pandoc-crossref', Path(evaluated['crossref_output']) / 'bin/pandoc-crossref')
+              retain_build_logs('initial')
+          assert len(products) == 1 and products[0]['drvPath'] == evaluated['derivation']
+          assert products[0]['outputs'] == {'out': evaluated['output']}
+          compiler_files = {}
+          compiler_caches = {}
+          retained_digests = set()
+          with tarfile.open(root / 'actual-compiler-elf-bodies.tar.xz', 'w:xz', dereference=True) as archive:
+              for key in ('compiler_output', 'utility_output', 'stock_compiler_output'):
+                  directory = Path(prototype[key])
+                  for candidate in sorted(directory.rglob('*')):
+                      if not candidate.is_file():
+                          continue
+                      with candidate.open('rb') as handle:
+                          prefix = handle.read(4)
+                          handle.seek(0)
+                          if prefix != b'\x7fELF' and candidate.name != 'package.cache':
+                              continue
+                          digest = hashlib.file_digest(handle, 'sha256').hexdigest()
+                      entry = {'path': str(candidate), 'resolved_path': str(candidate.resolve(strict=True)),
+                               'bytes': candidate.stat().st_size, 'sha256': digest}
+                      if candidate.name == 'package.cache':
+                          compiler_caches[str(candidate)] = entry
+                      else:
+                          compiler_files[str(candidate)] = entry
+                      if digest not in retained_digests:
+                          retained_digests.add(digest)
+                          archive.add(candidate, arcname=digest, recursive=False)
+          write_json('actual-compiler-elf-bodies-index.json', compiler_files)
+          write_json('actual-compiler-package-cache-index.json', compiler_caches)
+          with tarfile.open(root / 'actual-cache-utility-source.tar.xz', 'w:xz') as archive:
+              for name in ('Main.hs', 'ghc-pkg.cabal.in'):
+                  candidate = Path(prototype['source_output']) / 'utils/ghc-pkg' / name
+                  archive.add(candidate, arcname=name)
+              archive.add(patch, arcname=patch.name)
+          run('actual-ghc-pkg-version', [str(Path(prototype['compiler_output']) / 'bin/ghc-pkg'), '--version'], native=True)
+          run('actual-compiler-path-info', ['path-info', '--recursive', '--json', prototype['compiler_output']])
+          write_json('prototype-preparation-timing.json', {
+              'elapsed_seconds': time.monotonic()-started, 'production_outer_seconds': 4500,
+              'within_production_outer_so_far': time.monotonic()-started <= 4500,
+          })
+          output = Path(evaluated['output'])
+          existing_inputs = set()
+          static_inputs = set()
+          package_caches = set()
+          source_inputs = set()
+          for path, value in graph.items():
+              env = value.get('env', {})
+              existing_inputs.update(item for item in value.get('inputSrcs', []) if Path(item).exists())
+              existing_inputs.update(item['path'] for item in value.get('outputs', {}).values()
+                                     if item.get('path') and Path(item['path']).exists())
+              source_inputs.update(Path(item) for item in value.get('inputSrcs', []) if Path(item).is_file())
+              if env.get('name', '').startswith('pandoc') and Path(env.get('src', '/nonexistent')).exists():
+                  source_inputs.add(Path(env['src']))
+              if '-lib-' in env.get('name', '') or path == evaluated['compiler_derivation']:
+                  for item in value.get('outputs', {}).values():
+                      candidate = Path(item.get('path', '/nonexistent'))
+                      if candidate.is_dir():
+                          static_inputs.update(candidate.rglob('*.a'))
+                          static_inputs.update(candidate.rglob('*.conf'))
+                          package_caches.update(candidate.rglob('package.cache'))
+              if '-exe-' in env.get('name', ''):
+                  for item in value.get('outputs', {}).values():
+                      candidate = Path(item.get('path', '/nonexistent'))
+                      if candidate.is_dir():
+                          package_caches.update(candidate.rglob('package.cache'))
+          run('realized-build-input-path-info', ['path-info', '--json', *sorted(existing_inputs)])
+          for label, paths in [('actual-static-library-inputs', static_inputs), ('actual-source-and-builder-inputs', source_inputs),
+                               ('actual-component-package-caches', package_caches)]:
+              index = []
+              with tarfile.open(root / (label + '.tar.xz'), 'w:xz', dereference=True) as archive:
+                  for path in sorted(paths):
+                      archive.add(path, arcname=str(path).removeprefix('/'), recursive=path.is_dir())
+                      entry = {'path': str(path), 'directory': path.is_dir()}
+                      if path.is_file():
+                          with path.open('rb') as handle:
+                              entry.update({'bytes': path.stat().st_size, 'sha256': hashlib.file_digest(handle, 'sha256').hexdigest()})
+                      index.append(entry)
+              write_json(label + '-index.json', index)
+          run('compiler-info', [str(Path(evaluated['compiler_output']) / 'bin/ghc'), '--info'], native=True)
+          for index, (path, value) in enumerate(sorted(graph.items())):
+              name = value.get('env', {}).get('name', '')
+              if name.startswith(('gcc-wrapper-', 'binutils-wrapper-')):
+                  for item in value.get('outputs', {}).values():
+                      for command in ('gcc', 'ld', 'ar', 'strip'):
+                          candidate = Path(item.get('path', '/nonexistent')) / 'bin' / command
+                          if candidate.is_file():
+                              run(f'actual-build-tool-{index}-{command}', [str(candidate), '--version'], native=True)
+          run('runtime-closure', ['path-info', '--recursive', '--json', str(output)])
+          run('runtime-verification', ['store', 'verify', '--recursive', str(output)])
+          resolved_freeze = Path(evaluated['resolved_freeze']).read_bytes()
+          (root / 'resolved-cabal.project.freeze').write_bytes(resolved_freeze)
+          compiler = Path(evaluated['compiler_output'])
+          assert run('compiler-version', [str(compiler / 'bin/ghc'), '--numeric-version'], native=True).decode().strip() == '9.12.2'
+          assert '-fobject-determinism' in run('compiler-options', [str(compiler / 'bin/ghc'), '--show-options'], native=True).decode().splitlines()
+          prepared_elapsed = time.monotonic()-started
+          write_json('complete-provider-preparation-timing.json', {
+              'elapsed_seconds': prepared_elapsed, 'production_outer_seconds': 4500,
+              'within_production_outer': prepared_elapsed <= 4500,
+              'includes_diagnostic_compiler_and_input_archiving': True,
+              'excludes_earlier_APT_acquisition': True,
+          })
+          tools = {}
+          for name, version in [('pandoc', '3.11'), ('pandoc-crossref', 'v0.3.25a')]:
+              binary = (output / 'bin' / name).resolve(strict=True)
+              body = binary.read_bytes()
+              assert body[:7] == b'\x7fELF\x02\x01\x01'
+              offset = struct.unpack_from('<Q', body, 32)[0]
+              width, count = struct.unpack_from('<HH', body, 54)
+              assert width == 56 and 0 < count <= 128
+              headers = [struct.unpack_from('<II6Q', body, offset + index * width) for index in range(count)]
+              interpreters = [body[row[2]:row[2]+row[5]] for row in headers if row[0] == 3]
+              assert len(interpreters) == 1 and interpreters[0].endswith(b'/ld-linux-x86-64.so.2\0')
+              version_output = run(name + '-version', [str(binary), '--version'], native=True).decode()
+              assert version_output.startswith('pandoc 3.11\n' if name == 'pandoc' else 'pandoc-crossref v0.3.25 ')
+              if name == 'pandoc-crossref':
+                  assert 'GHC 9.12.2' in version_output
+              tools[name] = {'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
+                             'pt_interp': interpreters[0][:-1].decode(), 'rx_bytes': sum(row[5] for row in headers if row[0] == 1 and row[1]&1),
+                             'version_stdout': version_output}
+          try:
+              run('pandoc-component-reproducibility', [
+                  'build', '--rebuild', '--keep-failed', '--no-link', '--json', '--print-build-logs',
+                  *local_arguments, 'pandoc',
+              ], allow_failure=True)
+          finally:
+              # Nix 2.18 retains a differing --rebuild output at <output>.check with --keep-failed.
+              retain_body('component-rebuild-check', 'pandoc', Path(evaluated['pandoc_output'] + '.check') / 'bin/pandoc')
+              retain_build_logs('component-rebuild')
+          rebuild = json.loads((root / 'pandoc-component-reproducibility.command.json').read_bytes())
+          result = {'schema_version': 'template-deterministic-document-provider-census-v3', 'role': 'actual unchanged-source residual compiler/body split diagnostic; no pin admission',
+                    'runtime_acceptance': False, 'source_commit': os.environ['GITHUB_SHA'], 'replica': os.environ['REPLICA'],
+                    'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+                    'producer_base_commit': '60bfab1984e37a5ea4181518d3b96844f3d30219',
+                    'retained_complete_bodies': body_observations, 'pandoc_component_rebuild': rebuild,
+                    'upstream_source': source['locked'], 'compiler': 'ghc-9.12.2', 'ghc_options': ['-fobject-determinism'],
+                    'compiler_pipeline_prototype': prototype, 'cache_source_patch_sha256': held_patch_hash,
+                    'complete_preparation_seconds': prepared_elapsed, 'fits_production_outer_4500': prepared_elapsed <= 4500,
+                    'recipe_sha256': hashlib.sha256(recipe.read_bytes()).hexdigest(), 'freeze_sha256': hashlib.sha256(freeze.read_bytes()).hexdigest(),
+                    'resolved_freeze_sha256': hashlib.sha256(resolved_freeze).hexdigest(), **evaluated, 'tools': tools}
+          (root / 'census.json').write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          if rebuild['returncode']:
+              raise SystemExit(rebuild['returncode'])
+          PYTHON
+      - name: Retain all actual bodies and diagnostics without admission
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: residual-document-providers-${{ matrix.replica }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            output/readiness/deterministic-document-providers/*.json
+            output/readiness/deterministic-document-providers/*.stdout
+            output/readiness/deterministic-document-providers/*.stderr
+            output/readiness/deterministic-document-providers/*.nix
+            output/readiness/deterministic-document-providers/*.freeze
+            output/readiness/deterministic-document-providers/*.patch
+            output/readiness/deterministic-document-providers/*.tar.xz
+            output/readiness/deterministic-document-providers/*.tar
+          if-no-files-found: error
+          retention-days: 30
