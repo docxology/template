@@ -1,14 +1,33 @@
 diff --git a/utils/ghc-pkg/Main.hs b/utils/ghc-pkg/Main.hs
 --- a/utils/ghc-pkg/Main.hs
 +++ b/utils/ghc-pkg/Main.hs
-@@ -77,3 +77,3 @@
+@@ -75,7 +75,7 @@
+ import System.IO.Error
+ import GHC.IO           ( catchException )
+ import GHC.IO.Exception (IOErrorType(InappropriateType))
 -import Data.List ( group, sort, sortBy, nub, partition, find
 +import Data.List ( group, sort, sortBy, sortOn, nub, partition, find
                   , intercalate, intersperse, unfoldr
                   , isInfixOf, isSuffixOf, isPrefixOf, stripPrefix )
-@@ -1284,4 +1284,4 @@
+ import Control.Concurrent
+@@ -1281,7 +1281,7 @@
+       db_stack_below = stackUpTo (location db) db_stack
+ 
        pkgsCabalFormat :: [InstalledPackageInfo]
 -      pkgsCabalFormat = packages db
 +      pkgsCabalFormat = sortOn installedUnitId (packages db)
  
        -- | All the packages we can legally depend on in this step.
+       dependablePkgsCabalFormat :: [InstalledPackageInfo]
+diff --git a/compiler/GHC/Unit/State.hs b/compiler/GHC/Unit/State.hs
+--- a/compiler/GHC/Unit/State.hs
++++ b/compiler/GHC/Unit/State.hs
+@@ -1674,7 +1674,7 @@
+   -- NB: preload IS important even for type-checking, because we
+   -- need the correct include path to be set.
+   --
+-  let preload1 = nonDetKeysUniqMap (filterUniqMap (isJust . uv_explicit) vis_map)
++  let preload1 = sortBy stableUnitCmp $ nonDetKeysUniqMap (filterUniqMap (isJust . uv_explicit) vis_map)
+ 
+       -- add default preload units if they can be found in the db
+       basicLinkedUnits = fmap (RealUnit . Definite)
