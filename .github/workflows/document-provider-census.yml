@@ -432,21 +432,65 @@ jobs:
               tools[name] = {'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
                              'pt_interp': interpreters[0][:-1].decode(), 'rx_bytes': sum(row[5] for row in headers if row[0] == 1 and row[1]&1),
                              'version_stdout': version_output}
-          try:
-              run('pandoc-component-reproducibility', [
-                  'build', '--rebuild', '--keep-failed', '--no-link', '--json', '--print-build-logs',
-                  *local_arguments, 'pandoc',
-              ], allow_failure=True)
-          finally:
-              # Nix 2.18 retains a differing --rebuild output at <output>.check with --keep-failed.
-              retain_body('component-rebuild-check', 'pandoc', Path(evaluated['pandoc_output'] + '.check') / 'bin/pandoc')
-              retain_build_logs('component-rebuild')
-          rebuild = json.loads((root / 'pandoc-component-reproducibility.command.json').read_bytes())
+          # A finite variance experiment, not retries for acceptance. Stop at the
+          # first differing real output or command failure and preserve its bytes.
+          lua_drv, _lua_output = unique_derivation_output('pandoc-lua-engine-lib-pandoc-lua-engine-0.5.4')
+          pandoc_lib_drv, _pandoc_lib_output = unique_derivation_output('pandoc-lib-pandoc-3.11')
+          component_targets = [
+              ('pandoc-executable', evaluated['pandoc_derivation']),
+              ('pandoc-lua-engine', lua_drv),
+              ('pandoc-library', pandoc_lib_drv),
+          ]
+          variance_records = []
+          for sample, (component, derivation) in enumerate(component_targets * 2):
+              label = f'variance-{sample:02d}-{component}'
+              check_outputs = {
+                  key: Path(value['path'] + '.check')
+                  for key, value in graph[derivation]['outputs'].items()
+                  if value.get('path')
+              }
+              assert not any(path.exists() or path.is_symlink() for path in check_outputs.values())
+              try:
+                  run(label, [
+                      'build', '--rebuild', '--keep-failed', '--no-link', '--json', '--print-build-logs',
+                      derivation + '^*',
+                  ], allow_failure=True)
+              finally:
+                  actual_checks = {}
+                  for output_name, check_root in check_outputs.items():
+                      if not check_root.exists():
+                          continue
+                      assert check_root.is_dir() and not check_root.is_symlink()
+                      with tarfile.open(root / (label + '-' + output_name + '-check.tar.xz'), 'w:xz') as archive:
+                          for candidate in sorted(check_root.rglob('*')):
+                              info = candidate.lstat()
+                              if not __import__('stat').S_ISREG(info.st_mode):
+                                  continue
+                              assert info.st_size <= 512 * 1024 * 1024
+                              relative = str(candidate.relative_to(check_root))
+                              with candidate.open('rb') as handle:
+                                  digest = hashlib.file_digest(handle, 'sha256').hexdigest()
+                              actual_checks[output_name + '/' + relative] = {
+                                  'bytes': info.st_size, 'sha256': digest,
+                              }
+                              archive.add(candidate, arcname=relative, recursive=False)
+                  write_json(label + '-actual-check-output-index.json', actual_checks)
+                  command_record = json.loads((root / (label + '.command.json')).read_bytes())
+                  variance_records.append({
+                      'sample': sample, 'component': component, 'derivation': derivation,
+                      'command': command_record, 'actual_check_outputs': actual_checks,
+                  })
+                  write_json('finite-producer-variance-observations.json', variance_records)
+              if command_record['returncode'] or actual_checks:
+                  break
+          retain_build_logs('component-variance')
+          rebuild = variance_records[-1]['command']
           result = {'schema_version': 'template-deterministic-document-provider-census-v3', 'role': 'actual unchanged-source residual compiler/body split diagnostic; no pin admission',
                     'runtime_acceptance': False, 'source_commit': os.environ['GITHUB_SHA'], 'replica': os.environ['REPLICA'],
                     'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
                     'producer_base_commit': '60bfab1984e37a5ea4181518d3b96844f3d30219',
                     'retained_complete_bodies': body_observations, 'pandoc_component_rebuild': rebuild,
+                    'finite_producer_variance_observations': variance_records,
                     'upstream_source': source['locked'], 'compiler': 'ghc-9.12.2', 'ghc_options': ['-fobject-determinism'],
                     'compiler_pipeline_prototype': prototype, 'cache_source_patch_sha256': held_patch_hash,
                     'complete_preparation_seconds': prepared_elapsed, 'fits_production_outer_4500': prepared_elapsed <= 4500,
