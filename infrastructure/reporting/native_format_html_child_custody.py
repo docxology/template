@@ -27,7 +27,7 @@ from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 PLAN_PATH_ENV = "TEMPLATE_HTML_CHILD_PLAN_PATH"
 PLAN_HASH_ENV = "TEMPLATE_HTML_CHILD_PLAN_SHA256"
-HOOK_SHA256 = "aa13244989c39811cf6174e8e51a7a85f8f7432bbe038d7e1dc79ced68085e88"
+HOOK_SHA256 = "61dc8f06b37a0d098793bd799bd3ef6a40efdc7f8166e23fdde2e6e0f0b99035"
 PLAN_SCHEMA = "template-source-html-python-child-plan-v1"
 CLOSURE_SCHEMA = "template-source-html-python-child-closure-v1"
 _TOKEN = object()
