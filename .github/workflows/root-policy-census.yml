@@ -1,224 +1,143 @@
-name: Root policy census and reviewed draft
-
-on:
+name: Root original diagnostic capture
+'on':
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Exact dispatch commit; must equal this workflow revision
-        type: string
+        description: Exact diagnostic commit; equals workflow Source
         required: true
-      mode:
-        description: Collect review candidates, or additionally author a reviewed Linux 3.14 draft
+        type: string
+      unit:
+        description: Full exact Source policy unit, diagnostic only
+        required: true
         type: choice
-        options: [collect, author]
-        default: collect
-      review_template_path:
-        description: Author only; committed infrastructure/config JSON with exhaustive reviewed classifications
-        type: string
-        default: ""
-      review_template_sha256:
-        description: Author only; SHA256 of that exact committed template
-        type: string
-        default: ""
-
+        options:
+        - live-unpaid
+        - external-fixture
 permissions:
   contents: read
-
 concurrency:
-  group: root-policy-census-${{ github.run_id }}
+  group: root-original-diagnostic-${{ github.run_id }}
   cancel-in-progress: false
-
 env:
-  UV_FROZEN: "true"
-  OLLAMA_SKIP_TEST_MODEL_PULL: "1"
+  UV_FROZEN: 'true'
+  OLLAMA_SKIP_TEST_MODEL_PULL: '1'
   MPLBACKEND: Agg
-
+  PYTHONUNBUFFERED: '1'
 jobs:
-  census:
-    name: Root policy census (${{ matrix.host }}, ${{ matrix.python }})
+  original:
+    name: Original diagnostic (${{ matrix.host }}, ${{ matrix.python }}, ${{ inputs.unit }})
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
         include:
-          - {runner: ubuntu-24.04, host: linux, python: "3.14"}
-          - {runner: ubuntu-24.04, host: linux, python: "3.15"}
-          - {runner: macos-latest, host: darwin, python: "3.14"}
-          - {runner: macos-latest, host: darwin, python: "3.15"}
+        - runner: ubuntu-24.04
+          host: linux
+          python: '3.14'
+        - runner: ubuntu-24.04
+          host: linux
+          python: '3.15'
+        - runner: macos-latest
+          host: darwin
+          python: '3.14'
+        - runner: macos-latest
+          host: darwin
+          python: '3.15'
     steps:
-      - name: Admit the exact dispatch and review mode
-        shell: bash
-        env:
-          REQUESTED_SOURCE: ${{ inputs.source_sha }}
-          REQUESTED_MODE: ${{ inputs.mode }}
-          REVIEW_PATH: ${{ inputs.review_template_path }}
-          REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
-        run: |
-          set -euo pipefail
-          [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ] || exit 1
-          case "$REQUESTED_MODE" in
-            collect)
-              [ -z "$REVIEW_PATH" ] || exit 1
-              [ -z "$REVIEW_SHA256" ] || exit 1
-              ;;
-            author)
-              [[ "$REVIEW_PATH" =~ ^infrastructure/config/[A-Za-z0-9_./-]+\.json$ ]] || exit 1
-              [[ "$REVIEW_PATH" != *..* ]] || exit 1
-              [[ "$REVIEW_SHA256" =~ ^[0-9a-f]{64}$ ]] || exit 1
-              ;;
-            *) exit 1 ;;
-          esac
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ inputs.source_sha }}
-          submodules: true
-          persist-credentials: false
-      - uses: ./.github/actions/setup-python-env
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Prepare the own locked collection environment
-        run: >-
-          uv sync --locked --inexact --group dev --group installed-build
-          --group active-inference --group timeseries-bench --group rendering-pptx
-          --python '${{ matrix.python }}'
-      - name: Prepare exact Source-locked PDFium wheel fixture
-        shell: bash
-        run: |
-          set -euo pipefail
-          wheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \
-            --repo-root "$PWD" --temporary-root "$RUNNER_TEMP")
-          echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
-      - uses: ./.github/actions/setup-acceptance-fixtures
-      - uses: ./.github/actions/setup-docs-lint
-      - uses: ./.github/actions/setup-acceptance-documents
-      - name: Prepare source-locked browser math dependencies
-        run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
-      - uses: ./.github/actions/setup-acceptance-model
-      - uses: ./.github/actions/setup-ci-execution-user
-        if: runner.os == 'Linux'
-      - name: Collect the original full census and same-job review ledger
-        id: census
-        continue-on-error: true
-        shell: bash
-        env:
-          HOST: ${{ matrix.host }}
-          MINOR: ${{ matrix.python }}
-          REQUESTED_MODE: ${{ inputs.mode }}
-          REVIEW_PATH: ${{ inputs.review_template_path }}
-          REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
-        run: |
-          set -euo pipefail
-          original="$RUNNER_TEMP/root-policy-cli-$HOST-$MINOR"
-          mkdir "$original"
-          mode=collect
-          if [ "$REQUESTED_MODE" = author ]; then
-            mode=review
-            if [ "$HOST" = linux ] && [ "$MINOR" = 3.14 ]; then mode=author; fi
-          fi
-          command=(.venv/bin/python -B -m infrastructure.project.public_root_policy_census
-            --source-sha "$GITHUB_SHA" --mode "$mode" --timeout-seconds 660
-            --directory "$PWD/output/readiness/root-policy-census/$HOST-$MINOR")
-          if [ "$mode" != collect ]; then
-            command+=(--review-template-path "$REVIEW_PATH" --review-template-sha256 "$REVIEW_SHA256")
-          fi
-          original_status=0
-          if [ "$RUNNER_OS" = Linux ]; then
-            .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
-              --state "$RUNNER_TEMP/template-ci-execution/state.json" -- "${command[@]}" \
-              > "$original/stdout.raw" 2> "$original/stderr.raw" || original_status=$?
-          else
-            "${command[@]}" > "$original/stdout.raw" 2> "$original/stderr.raw" || original_status=$?
-          fi
-          printf '%s\n' "$original_status" > "$original/exit-code"
-          exit "$original_status"
-      - name: Stop only the owned model daemon and descendants
-        if: always()
-        shell: bash
-        run: |
-          python - <<'PYTHON'
-          import json, os, signal, subprocess, time
-          from pathlib import Path
-          def members(group):
-              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
-              result = {}
-              for line in rows.splitlines():
-                  fields = line.split()
-                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
-                      result[int(fields[0])] = " ".join(fields[2:7])
-              return result
-          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
-          owner = Path(directory) / "daemon-owner.json" if directory else None
-          if owner is not None and owner.is_file():
-              record = json.loads(owner.read_text())
-              group = record["pid"]
-              known = {int(pid): birth for pid, birth in record["members"].items()}
-              current = members(group)
-              if current:
-                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
-                  known.update(current)
-                  os.killpg(group, signal.SIGTERM)
-                  deadline = time.monotonic() + 5
-                  while members(group) and time.monotonic() < deadline:
-                      time.sleep(0.1)
-                  current = members(group)
-                  if current:
-                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
-                      os.killpg(group, signal.SIGKILL)
-                      deadline = time.monotonic() + 5
-                      while members(group) and time.monotonic() < deadline:
-                          time.sleep(0.1)
-                  assert not members(group), "Owned daemon descendants remain alive"
-              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
-          PYTHON
-      - name: Export original Linux census bytes
-        id: linux_export
-        if: always() && runner.os == 'Linux'
-        run: >-
-          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
-          --state "$RUNNER_TEMP/template-ci-execution/state.json"
-      - name: Export original macOS census bytes
-        id: darwin_export
-        if: always() && runner.os == 'macOS'
-        run: |
-          .venv/bin/python -B - <<'PYTHON'
-          import json, os, tempfile, time
-          from pathlib import Path
-          from infrastructure.core.testing._ci_execution_files import _export
-          destination = Path(tempfile.mkdtemp(prefix="template-root-census-artifacts-", dir=os.environ["RUNNER_TEMP"]))
-          exclusions = []
-          total = _export(Path.cwd() / "output/readiness", destination, time.monotonic() + 120, exclusions=exclusions)
-          with Path(os.environ["GITHUB_ENV"]).open("a") as environment:
-              environment.write(f"TEMPLATE_CI_ARTIFACT_DIRECTORY={destination}\n")
-          print(json.dumps({"transport_bytes": total, "excluded_pytest_scratch": exclusions, "runtime_acceptance": False}))
-          PYTHON
-      - name: Retain original census and same-job review DATA
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: root-policy-census-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/root-policy-census/${{ matrix.host }}-${{ matrix.python }}/
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 30
-      - name: Retain original CLI streams and exit
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: root-policy-census-cli-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/root-policy-cli-${{ matrix.host }}-${{ matrix.python }}/
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 30
-      - name: Require original collection and complete export
-        if: always()
-        shell: bash
-        env:
-          CENSUS_OUTCOME: ${{ steps.census.outcome }}
-          EXPORT_OUTCOME: ${{ runner.os == 'Linux' && steps.linux_export.outcome || steps.darwin_export.outcome }}
-        run: |
-          set -euo pipefail
-          [ "$CENSUS_OUTCOME" = success ] || exit 1
-          [ "$EXPORT_OUTCOME" = success ] || exit 1
-          echo 'Canonical collection/review DATA only; no cases executed, policy installed, runtime accepted, tag or release authorized.' >> "$GITHUB_STEP_SUMMARY"
+    - name: Admit exact diagnostic Source and closed unit selection
+      shell: bash
+      env:
+        REQUESTED_SOURCE: ${{ inputs.source_sha }}
+        REQUESTED_UNIT: ${{ inputs.unit }}
+      run: 'set -euo pipefail
+
+        [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
+
+        [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ] || exit 1
+
+        case "$REQUESTED_UNIT" in live-unpaid|external-fixture) ;; *) exit 1 ;; esac
+
+        '
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        ref: ${{ inputs.source_sha }}
+        submodules: 'true'
+        persist-credentials: 'false'
+    - uses: ./.github/actions/setup-python-env
+      with:
+        python-version: ${{ matrix.python }}
+    - name: Prepare the own locked collection environment
+      run: uv sync --locked --inexact --group dev --group installed-build --group active-inference --group timeseries-bench --group rendering-pptx --python '${{ matrix.python }}'
+    - name: Prepare exact Source-locked PDFium wheel fixture
+      shell: bash
+      run: "set -euo pipefail\nwheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \\\n  --repo-root \"$PWD\" --temporary-root \"$RUNNER_TEMP\")\necho \"TEMPLATE_TEST_PDFIUM_WHEEL=$wheel\" >> \"$GITHUB_ENV\"\n"
+    - uses: ./.github/actions/setup-acceptance-fixtures
+    - uses: ./.github/actions/setup-docs-lint
+    - uses: ./.github/actions/setup-acceptance-documents
+    - name: Prepare source-locked browser math dependencies
+      run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+    - uses: ./.github/actions/setup-acceptance-model
+    - uses: ./.github/actions/setup-ci-execution-user
+      if: runner.os == 'Linux'
+    - name: Execute complete Source policy unit and preserve original process evidence
+      id: diagnostic
+      continue-on-error: true
+      timeout-minutes: 35
+      shell: bash
+      env:
+        DIAGNOSTIC_UNIT: ${{ inputs.unit }}
+        DIAGNOSTIC_HOST: ${{ matrix.host }}
+        DIAGNOSTIC_MINOR: ${{ matrix.python }}
+      run: "set -euo pipefail\noriginal=\"$RUNNER_TEMP/root-original-diagnostic-$DIAGNOSTIC_HOST-$DIAGNOSTIC_MINOR\"\nmkdir \"$original\"\ncommand=(.venv/bin/python -B -u -c 'import hashlib,json,os,shutil,sys,tempfile,time\nfrom pathlib import Path\nfrom infrastructure.core.subprocess_policy import SubprocessPolicy,run_with_policy\nfrom infrastructure.project.public_root_case_admission import load_policy\nfrom infrastructure.project.public_root_case_units import declared_units\nfrom infrastructure.project.public_root_lane_contract import arguments\nfrom infrastructure.project.public_acceptance_evidence import write_json\nfrom infrastructure.reporting.release_readiness_snapshot import SnapshotReader\nroot=Path.cwd().resolve();unit_id=os.environ['\"'\"'DIAGNOSTIC_UNIT'\"'\"'];host=os.environ['\"'\"'DIAGNOSTIC_HOST'\"'\"'];minor=os.environ['\"'\"'DIAGNOSTIC_MINOR'\"'\"']\nassert unit_id in {'\"'\"'live-unpaid'\"'\"','\"'\"'external-fixture'\"'\"'} and minor==f'\"'\"'{sys.version_info.major}.{sys.version_info.minor}'\"'\"'\nreader=SnapshotReader(root);policy,_,_,prerequisites=load_policy(reader)\nunit=next(item for item in declared_units(policy,prerequisites) if item.id==unit_id)\nassert sys.platform in unit.platforms and minor in unit.runtimes and unit.nodeids\nselected=unit.nodeids\nassert len(selected)==len(set(selected))\ndirectory=root/'\"'\"'output/readiness/root-original-diagnostic'\"'\"'/f'\"'\"'{host}-{minor}'\"'\"'\ndirectory.mkdir(parents=True,exist_ok=False)\nscratch=Path(tempfile.mkdtemp(prefix='\"'\"'template-root-original-diagnostic-'\"'\"')).resolve()\nargv=[sys.executable,'\"'\"'-B'\"'\"','\"'\"'-u'\"'\"','\"'\"'-m'\"'\"','\"'\"'pytest'\"'\"',*arguments(root,directory,selected,120)]\nargv=[value for value in argv if value not in {'\"'\"'-q'\"'\"','\"'\"'--tb=short'\"'\"'}]\nargv += ['\"'\"'-vv'\"'\"','\"'\"'--tb=long'\"'\"','\"'\"'--durations=0'\"'\"','\"'\"'--junitxml='\"'\"'+str(directory/'\"'\"'pytest.xml'\"'\"'),'\"'\"'--basetemp='\"'\"'+str(scratch/'\"'\"'fixtures'\"'\"')]\nwrite_json(root,directory/'\"'\"'invocation.json'\"'\"',{'\"'\"'role'\"'\"':'\"'\"'diagnostic-only-exact-policy-unit-pytest-not-Root-native-acceptance'\"'\"','\"'\"'source_commit'\"'\"':os.environ['\"'\"'GITHUB_SHA'\"'\"'],'\"'\"'base_code_source'\"'\"':'\"'\"'daf0301c6f322ccff1857bbf431a5c15c092371c'\"'\"','\"'\"'repository'\"'\"':os.environ['\"'\"'GITHUB_REPOSITORY'\"'\"'],'\"'\"'workflow_run_id'\"'\"':os.environ['\"'\"'GITHUB_RUN_ID'\"'\"'],'\"'\"'host'\"'\"':host,'\"'\"'minor'\"'\"':minor,'\"'\"'unit'\"'\"':unit_id,'\"'\"'policy_sha256'\"'\"':policy.sha256,'\"'\"'nodeids'\"'\"':list(selected),'\"'\"'argv'\"'\"':argv,'\"'\"'scratch'\"'\"':str(scratch),'\"'\"'suite_budget_seconds'\"'\"':1800,'\"'\"'per_test_default_seconds'\"'\"':120})\nstarted=time.monotonic();captured=run_with_policy(argv,cwd=root,env=dict(os.environ,PYTHONUNBUFFERED='\"'\"'1'\"'\"'),policy=SubprocessPolicy(policy_id='\"'\"'root-original-diagnostic-pytest'\"'\"',source_path=__name__,timeout_seconds=1800,credential_free=True))\n# These are the SDK'\"'\"'s actual captured text streams, not raw-byte native custody.\n(directory/'\"'\"'pytest.stdout.txt'\"'\"').write_text(captured.stdout)\n(directory/'\"'\"'pytest.stderr.txt'\"'\"').write_text(captured.stderr)\nkept=[]\nfixtures=scratch/'\"'\"'fixtures'\"'\"'\nif fixtures.is_dir():\n for case in sorted(fixtures.iterdir()):\n  if case.is_symlink() or not case.is_dir():continue\n  for path in sorted(case.iterdir()):\n   if path.is_symlink() or not path.is_file() or path.suffix not in {'\"'\"'.stdout'\"'\"','\"'\"'.stderr'\"'\"','\"'\"'.exit'\"'\"','\"'\"'.json'\"'\"'}:continue\n   # Never descend into copied repositories, environments or source fixtures.\n   if path.stat().st_size>64*1024*1024:raise ValueError('\"'\"'original diagnostic file exceeds bounded data retention'\"'\"')\n   body=path.read_bytes();target=directory/'\"'\"'fixture-diagnostics'\"'\"'/case.name/path.name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(body)\n   kept.append({'\"'\"'path'\"'\"':str(target.relative_to(root)),'\"'\"'bytes'\"'\"':len(body),'\"'\"'sha256'\"'\"':hashlib.sha256(body).hexdigest()})\nwrite_json(root,directory/'\"'\"'outcome.json'\"'\"',{'\"'\"'role'\"'\"':'\"'\"'actual-diagnostic-process-outcome-not-native-acceptance'\"'\"','\"'\"'argv'\"'\"':argv,'\"'\"'returncode'\"'\"':captured.returncode,'\"'\"'original_returncode'\"'\"':captured.original_returncode,'\"'\"'timed_out'\"'\"':captured.timed_out,'\"'\"'custody_refused'\"'\"':captured.custody_refused,'\"'\"'command_error'\"'\"':captured.command_error,'\"'\"'duration_seconds'\"'\"':time.monotonic()-started,'\"'\"'retained_fixture_diagnostics'\"'\"':kept})\nshutil.rmtree(scratch)\nprint(json.dumps({'\"'\"'source_commit'\"'\"':os.environ['\"'\"'GITHUB_SHA'\"'\"'],'\"'\"'unit'\"'\"':unit_id,'\"'\"'selected_cases'\"'\"':len(selected),'\"'\"'actual_original_returncode'\"'\"':captured.original_returncode,'\"'\"'actual_returncode'\"'\"':captured.returncode,'\"'\"'timed_out'\"'\"':captured.timed_out,'\"'\"'runtime_acceptance_granted'\"'\"':False}))\nraise SystemExit(0 if captured.returncode==captured.original_returncode==0 and not captured.timed_out and not captured.custody_refused and not captured.command_error else 1)\n')\nstatus=0\nif [ \"$RUNNER_OS\" = Linux ]; then\n  .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \\\n    --state \"$RUNNER_TEMP/template-ci-execution/state.json\" -- \"${command[@]}\" \\\n    > \"$original/stdout.raw\" 2> \"$original/stderr.raw\" || status=$?\nelse\n  \"${command[@]}\" > \"$original/stdout.raw\" 2> \"$original/stderr.raw\" || status=$?\nfi\nprintf '%s\\n' \"$status\" > \"$original/exit-code\"\nexit \"$status\"\n"
+    - name: Stop only the owned model daemon and descendants
+      if: always()
+      shell: bash
+      run: "python - <<'PYTHON'\nimport json, os, signal, subprocess, time\nfrom pathlib import Path\ndef members(group):\n    rows = subprocess.check_output([\"ps\", \"-axo\", \"pid=,pgid=,lstart=,stat=\"], text=True)\n    result = {}\n    for line in rows.splitlines():\n        fields = line.split()\n        if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith(\"Z\"):\n            result[int(fields[0])] = \" \".join(fields[2:7])\n    return result\ndirectory = os.environ.get(\"TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY\")\nowner = Path(directory) / \"daemon-owner.json\" if directory else None\nif owner is not None and owner.is_file():\n    record = json.loads(owner.read_text())\n    group = record[\"pid\"]\n    known = {int(pid): birth for pid, birth in record[\"members\"].items()}\n    current = members(group)\n    if current:\n        assert any(current.get(pid) == birth for pid, birth in known.items()), \"Refuse an unverified or reused process group\"\n        known.update(current)\n        os.killpg(group, signal.SIGTERM)\n        deadline = time.monotonic() + 5\n        while members(group) and time.monotonic() < deadline:\n            time.sleep(0.1)\n        current = members(group)\n        if current:\n            assert any(current.get(pid) == birth for pid, birth in known.items()), \"Refuse a reused group during cleanup\"\n            os.killpg(group, signal.SIGKILL)\n            deadline = time.monotonic() + 5\n            while members(group) and time.monotonic() < deadline:\n                time.sleep(0.1)\n        assert not members(group), \"Owned daemon descendants remain alive\"\n    (Path(directory) / \"daemon-cleanup.json\").write_text(json.dumps({\"owned_group\": group, \"live_members_remaining\": members(group), \"original_exit\": 0}))\nPYTHON\n"
+    - name: Export original Linux diagnostic bytes
+      id: linux_export
+      if: always() && runner.os == 'Linux'
+      run: .venv/bin/python -m infrastructure.core.testing.ci_execution_user export --state "$RUNNER_TEMP/template-ci-execution/state.json"
+    - name: Export original macOS diagnostic bytes
+      id: darwin_export
+      if: always() && runner.os == 'macOS'
+      run: ".venv/bin/python -B - <<'PYTHON'\nimport json, os, tempfile, time\nfrom pathlib import Path\nfrom infrastructure.core.testing._ci_execution_files import _export\ndestination = Path(tempfile.mkdtemp(prefix=\"template-root-census-artifacts-\", dir=os.environ[\"RUNNER_TEMP\"]))\nexclusions = []\ntotal = _export(Path.cwd() / \"output/readiness\", destination, time.monotonic() + 120, exclusions=exclusions)\nwith Path(os.environ[\"GITHUB_ENV\"]).open(\"a\") as environment:\n    environment.write(f\"TEMPLATE_CI_ARTIFACT_DIRECTORY={destination}\\n\")\nprint(json.dumps({\"transport_bytes\": total, \"excluded_pytest_scratch\": exclusions, \"runtime_acceptance\": False}))\nPYTHON\n"
+    - name: Retain owned daemon originals and exact diagnostic output
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: root-original-diagnostic-${{ inputs.unit }}-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+        path: '${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/root-original-diagnostic/${{ matrix.host }}-${{ matrix.python }}/
+
+          ${{ runner.temp }}/root-original-diagnostic-${{ matrix.host }}-${{ matrix.python }}/
+
+          ${{ env.TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY }}/daemon.stdout
+
+          ${{ env.TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY }}/daemon.stderr
+
+          ${{ env.TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY }}/inference-preparation.json
+
+          ${{ env.TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY }}/daemon-owner.json
+
+          ${{ env.TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY }}/daemon-cleanup.json
+
+          '
+        include-hidden-files: true
+        if-no-files-found: error
+        retention-days: 30
+    - name: Require actual original consumer success and completed export
+      if: always()
+      shell: bash
+      env:
+        DIAGNOSTIC_OUTCOME: ${{ steps.diagnostic.outcome }}
+        EXPORT_OUTCOME: ${{ runner.os == 'Linux' && steps.linux_export.outcome || steps.darwin_export.outcome }}
+      run: 'set -euo pipefail
+
+        [ "$DIAGNOSTIC_OUTCOME" = success ] || exit 1
+
+        [ "$EXPORT_OUTCOME" = success ] || exit 1
+
+        echo "Diagnostic process/data only; no Root or release acceptance granted." >> "$GITHUB_STEP_SUMMARY"
+
+        '
+
