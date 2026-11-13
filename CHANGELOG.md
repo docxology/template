@@ -61,6 +61,15 @@ locks.
   them in the Source-owned parent launcher. JSON transport must preserve exact
   independently reconstructed launcher bytes; changed commitments and original
   environment, owner, process, Source and deadline checks remain enforced.
+- Reject both Python 3.15 lazy-import forms explicitly in the current 3.14-floor
+  audit when a newer interpreter's best-effort parser admits them. Preserve
+  supported syntax, ordinary `lazy` identifiers and guarded API backports.
+  Keep the explicit build-epoch child regression independent of inherited
+  execution mode; production core/live precedence is unchanged.
+- Amortize complete Root Source admission across bounded 1000-case core
+  batches and reuse each batch's exact held node set for metadata checks.
+  Preserve real serial pytest, complete selection, bytecode and branch
+  coverage, external-fixture concurrency, cleanup and every original clock.
 - Avoid rebuilding every lexical path ancestor during fresh Source inventory.
   Compare current held DATA within its fresh no-follow census and closing
   guards, preserving fresh per-file mode checks and both original/current
