@@ -66,6 +66,9 @@ locks.
   Retire obsolete UV-only health fixtures and command/wording assertion pins.
 - Preserve the Calibre missing-member refusal contract when strict held-custody
   closing checks raise before a missing-leaf filesystem error.
+- Require published pip-api0.0.35 or newer for the required pip-audit scanner
+  on supported Python; regenerate only that locked package, preserving the
+  installer security floor and all other dependency records.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report
