@@ -86,6 +86,133 @@ def test_raw_source_roles_cannot_excuse_visible_content_as_nonvisible_metadata()
     assert roles[0]["label"] == "eq:truth" and roles[0]["expression"] == r"\frac{1}{2}"
 
 
+@pytest.mark.parametrize("raw_kind", ("RawBlock", "RawInline"))
+@pytest.mark.parametrize(
+    ("raw", "role", "description"),
+    (
+        ("<!-- note -->", "nonvisible-comment", None),
+        ("<!-- note --!>", "nonvisible-comment", None),
+        ("<!-- alt: Source\n description. -->", "image-alternative", "Source description."),
+        (" \n<!-- alt: Source\n description. --!>\n ", "image-alternative", "Source description."),
+        ("<!-- note --!><p>Visible source prose</p><!-- -->", "unsupported", None),
+        ("<!-- note --><p>Visible source prose</p><!-- --!>", "unsupported", None),
+        ("<!-- alt: note --!><p>Visible source prose</p><!-- -->", "unsupported", None),
+        ("<!-- alt: note --><p>Visible source prose</p><!-- -->", "unsupported", None),
+        ("<!-- first --!><!-- second -->", "unsupported", None),
+        ("<!-- unfinished", "unsupported", None),
+        ("<p>Visible source prose</p>", "unsupported", None),
+    ),
+)
+def test_raw_html_roles_require_one_complete_comment(
+    raw_kind: str, raw: str, role: str, description: str | None
+) -> None:
+    node = {"t": raw_kind, "c": ["html", raw]}
+    blocks = [node] if raw_kind == "RawBlock" else [{"t": "Para", "c": [node]}]
+    ast = json.dumps({"pandoc-api-version": [1, 23, 1], "meta": {}, "blocks": blocks}).encode()
+    roles = office_raw_source_roles(ast)
+    assert len(roles) == 1 and roles[0]["kind"] == role
+    if description is not None:
+        assert roles[0]["text"] == description
+
+
+@pytest.mark.parametrize("kind", ("docx", "epub"))
+@pytest.mark.parametrize(
+    ("raw", "description"),
+    (
+        ("<!-- alt: Source\n description. -->", "Source description."),
+        (" \n<!-- alt: Source\n description. --!>\n ", "Source description."),
+        ("<!-- alt: note --!><p>Visible source prose</p><!-- -->", None),
+        ("<!-- alt: note --><p>Visible source prose</p><!-- --!>", None),
+        ("<!-- alt: first --><!-- alt: second -->", None),
+    ),
+)
+def test_actual_office_filter_and_independent_oracle_agree_on_comment_alternatives(
+    tmp_path: Path, kind: str, raw: str, description: str | None
+) -> None:
+    pandoc = shutil.which("pandoc")
+    if not pandoc:
+        pytest.skip("actual configured Pandoc source provider unavailable")
+    parsed = subprocess.run(
+        [pandoc, "--from=markdown", "--to=json"],
+        input=b"Before ![Visible caption](control.png) after.",
+        cwd=tmp_path,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    assert parsed.returncode == 0, parsed.stderr.decode()
+    source = json.loads(parsed.stdout)
+    source["blocks"].insert(0, {"t": "RawBlock", "c": ["html", raw]})
+    source_ast = json.dumps(source).encode()
+    filtered = subprocess.run(
+        [
+            pandoc,
+            "--from=json",
+            "--to=json",
+            f"--metadata=office-native-target:{kind}",
+            "--lua-filter",
+            str(office_semantics_filter_path()),
+            "--lua-filter",
+            str(office_semantics_filter_path()),
+        ],
+        input=source_ast,
+        cwd=tmp_path,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    assert filtered.returncode == 0, filtered.stderr.decode()
+    projected = json.loads(filtered.stdout)
+    image = next(node for node in projected["blocks"][-1]["c"] if node["t"] == "Image")
+    role = office_raw_source_roles(source_ast)[0]
+    assert projected["blocks"][0] == source["blocks"][0]
+    if description is None:
+        assert role["kind"] == "unsupported"
+        assert image["c"][0][2] == []
+        original_image = next(node for node in source["blocks"][-1]["c"] if node["t"] == "Image")
+        assert image["c"][1] == original_image["c"][1]
+    else:
+        assert role["kind"] == "image-alternative" and role["text"] == description
+        assert dict(image["c"][0][2])["alt"] == description
+        assert image["c"][1] == [{"t": "Str", "c": description}]
+
+
+@pytest.mark.parametrize("kind", ("docx", "epub"))
+@pytest.mark.parametrize(
+    "raw",
+    (
+        "<!-- note --!><p>Visible source prose</p><!-- -->",
+        "<!-- alt: note --!><p>Visible source prose</p><!-- -->",
+        "<!-- note --><p>Visible source prose</p><!-- --!>",
+    ),
+)
+def test_actual_office_package_cannot_witness_dropped_mixed_raw_html(tmp_path: Path, kind: str, raw: str) -> None:
+    pandoc = shutil.which("pandoc")
+    if not pandoc:
+        pytest.skip("actual configured Pandoc source provider unavailable")
+
+    def actual(args: list[str], data: bytes = b"") -> bytes:
+        completed = subprocess.run(
+            [pandoc, *args], input=data, cwd=tmp_path, capture_output=True, timeout=30, check=False
+        )
+        assert completed.returncode == 0, completed.stderr.decode()
+        return completed.stdout
+
+    empty_ast = actual(["--from=markdown", "--to=json"])
+    source = json.loads(empty_ast)
+    source["blocks"] = [{"t": "RawBlock", "c": ["html", raw]}]
+    candidate = tmp_path / f"lost-source.{kind}"
+    actual(["--from=json", f"--to={kind}", "--standalone", "--output", str(candidate)], empty_ast)
+    native_ast = actual([str(candidate), f"--from={kind}", "--to=json"])
+    observed = inspect_office_source_survival(
+        json.dumps(source).encode(), empty_ast, native_ast, candidate.read_bytes(), kind, (), {}
+    )
+    assert observed["status"] != "observed", observed
+    assert any("unsupported content/layout role" in blocker for blocker in observed["blockers"]), observed
+    assert observed["raw_roles"][0]["kind"] == "unsupported"
+    assert not any(row["kind"] == "RawRole" for row in observed["witnesses"]), observed
+
+
 @pytest.mark.parametrize("kind", ("docx", "epub"))
 def test_actual_source_writer_and_reader_reject_independent_scientific_mutants(tmp_path: Path, kind: str) -> None:
     from io import BytesIO

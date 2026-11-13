@@ -1,25 +1,65 @@
 # setup-acceptance-documents
 
-Prepares official document prerequisites on the isolated GitHub-hosted acceptance runner.
-Call after checkout and the caller's locked Python dependency sync. The `mode` input accepts exactly `native`
-(the default) or `converter` and is validated before cache restoration or setup.
-Both modes prepare exact pinned Pandoc and crossref. Native mode additionally
-prepares TeX, native readers and JuliaMono; full acceptance retains this default.
-Routine infrastructure smoke selects converter and prepares its declared readers
-and TeX separately. Ordinary project tests request native mode for EDA
-and converter mode for the other capability-matrix cells.
+Prepares Source-pinned document prerequisites on an isolated GitHub-hosted runner.
+Call after checkout and the caller's locked Python dependency sync. The `mode`
+input accepts exactly `native` (the default) or `converter`, validated before
+cache restoration or setup. Both modes prepare Pandoc 3.11 and crossref v0.3.25a
+with their unchanged JSON API. Native mode additionally prepares TeX, native
+readers and JuliaMono. Routine infrastructure smoke selects converter and
+prepares its declared readers and TeX separately; ordinary project tests request
+native for EDA and converter for the other capability-matrix cells.
 
-On Linux, the existing Pandoc step in both modes uses the caller's prepared
-Python, after archive verification, to validate the
-signed Ubuntu mirror source and prefer its existing official HTTPS archive.
-Only the recognized mirror-list priorities change; URLs, fallback mirrors,
-package trust, package selection and execution limits remain unchanged.
-Unexpected files or source declarations stop preparation. This changes the
-preferred transport route; its effect on transfer time requires actual execution.
+[`infrastructure/config/native-document-providers.json`](../../../infrastructure/config/native-document-providers.json)
+is the single pin source. macOS retains the exact official release archives,
+lengths, SHA-256 digests and selected executable members. Linux x86_64 builds
+the [Root-owned recipe](../../../infrastructure/config/native-document-build.nix)
+against the [immutable reviewed upstream commit](https://github.com/lierdakil/pandoc-crossref/tree/e6c2ae3418dcf63f974802f8b7c105ebc299706c).
+Its upstream haskell.nix/Hackage lock remains pinned. The adjacent complete Root
+Cabal freeze selects GHC 9.12.2's actual boot packages while preserving every
+nonboot version pin; `-fobject-determinism` applies to every compiled project
+package/component, not only executable `Main`. GHC 9.8.4's upstream declaration
+and original freeze remain separately authenticated: that compiler does not
+provide deterministic object generation and cannot supply stable whole-body pins.
+No unpinned host GHC or latest package set is admitted. Source builds use two
+concurrent jobs and two cores; a derivation/store path never replaces the complete
+executable's Source-owned hash and length.
 
-Fixed release archives are admitted by
-exact byte length and SHA-256 before extraction or execution. Preparation
-failures block the observation; they cannot certify an acceptance gate.
+The tracked [GHC package-cache source patch](../../../infrastructure/config/native-document-ghc-pkg-cache-order.patch)
+sorts installed unit IDs at the actual `ghc-pkg` serialization producer.
+Object determinism alone did not prevent different archive link orders.
+The real rebuilt utility uses the stock frozen GHC 9.12.2 boot libraries and
+the standard compiler dependency metadata/`ghc.package` binding. Both executable
+`keepConfigFiles` settings retain the actual consumed caches. No linker-flag
+sorting, binary-cache rewriting or fake command substitutes for that source fix.
+
+The strict shared parser rejects unsupported hosts and malformed fields in any
+manifest branch; there is no official-static-Linux or version fallback.
+
+Linux first uses the caller's prepared Python to validate the signed Ubuntu
+mirror source and prefer its reviewed official HTTPS archive. Only recognized
+mirror-list priorities change; URLs, fallback mirrors, package trust and bounded
+APT attempts remain unchanged. If Nix is absent, the action installs Ubuntu
+Noble's signed `nix-bin` and `nix-setup-systemd` packages, not a remote shell
+installer. Noninteractive sudo uses an initialized local store and isolated build
+users on this disposable runner; no systemd daemon/socket startup is required.
+Only the reviewed signed NixOS, IOG and crossref Cachix caches are selected;
+flake-supplied configuration and the optional undo.it cache are not accepted.
+
+The closed v3 Source preparation CLI holds and hashes the Root recipe, freeze
+and compiler patch before acquisition, then evaluates private copies of those
+exact bytes. It checks the
+actual upstream revision and complete NAR, original lock/freeze and compiler
+declaration, evaluated compiler/plan/provider derivations and outputs, recursive
+dependency derivations, resolved freeze, completed build and verified runtime
+closure. Each actual executable must match its Source-declared whole-body
+SHA-256 and length and have a real installed glibc ELF `PT_INTERP`; no binary
+instrumentation or wrapper is substituted. Canonical single-member `tar.xz`
+archives retain those unchanged binaries. Compression bytes and build JSON are
+transport/provenance, not authenticity: the pinned executable body is authoritative.
+The Nix output GC root remains in its separate private runtime directory, outside
+the public tool assets handed to the isolated CI user. The full store closure
+stays installed; the execution profile still refuses escaping asset symlinks.
+Preparation failures block observation and never certify an acceptance gate.
 
 In native mode, the action prepares pinned Pandoc and crossref before the shared system-dependency
 audit, then installs the complete Linux TeX/reader package union in one step or
@@ -31,18 +71,28 @@ selected Pandoc highlighting preamble. Both platforms resolve `soul.sty` with
 before document tests. Call it
 once per job before document tests; native mode runs the unchanged LaTeX
 package validator with `python-executable` (default `.venv/bin/python`). The
-common acceptance job selects `output/runtime-envs/3.14/bin/python`. A missing
-interpreter or validator failure stops setup. The action does not bootstrap,
-sync or reconcile Python, so each caller keeps its selected dependency groups;
- cached package files cannot replace actual
-package installation, archive verification, or executable probes.
+common acceptance job selects `output/runtime-envs/3.14/bin/python`. Every Linux
+caller and every native caller must provide this already locked executable.
+Only converter-only macOS may use its already installed stdlib `python3` when
+that executable is absent. No route bootstraps, syncs or reconciles Python.
+A missing required interpreter or validator failure stops setup.
 
-Only the official Pandoc, crossref, JuliaMono, frozen TeX installer and database archives are cached under
-`RUNNER_TEMP`, keyed by operating system, architecture, validated mode and the
-action's declared source hash. Every restored or freshly downloaded archive must pass its exact
-byte-length and SHA-256 checks before extraction or executable probes. Corruption
-blocks preparation; a cache hit never supplies an acceptance result. Extracted
-tools, TeX trees, fonts, environments and test results are not cached here.
+The archive cache contains only the official macOS document, JuliaMono and
+frozen TeX archives, plus the complete Source-built Linux document archives.
+Its key binds OS, architecture, validated mode, manifest and preparation sources.
+Every reuse checks complete bounded physical archive bytes and its selected
+member: official archives retain their exact compressed SHA-256/length; Linux
+members must equal the exact Source binary pins. Corruption blocks preparation.
+Extracted tools, runtime Nix closure, TeX trees, fonts, environments, build
+receipts and test outcomes are not cached as acceptance results.
+
+`native_document_preparation` retains command stdout/signed exits, frozen
+inputs, recursive derivations, runtime closure and actual selected/prepared
+paths in the fresh preparation directory. Its
+`document-provider-provenance.json` is explicitly preparation-only with
+`runtime_acceptance: false`; native TeX provenance includes that record.
+Neither provenance nor a cache hit replaces the genuine Original/Current
+process, archive/body, loader, map, memory, lifecycle and readback admissions.
 
 Converter preparation supports the ordinary tests that require Pandoc and
 crossref; it cannot provide evidence for native-format acceptance. No test,

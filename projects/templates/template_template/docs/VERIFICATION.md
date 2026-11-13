@@ -1,10 +1,12 @@
 # Template Meta-Project Verification
 
-Quick verification routine to run after changes.
+Verification procedure and expected oracles, not a record of an exercised run.
 
 ## 1. Run Tests
 
-Run from the template repo root:
+The qualified commands in sections 1–5 run from the **public monorepo root**.
+For the standalone own-suite command and required admitted SDK/DATA preparation,
+see [`../README.md`](../README.md#standalone-complete-source-data).
 
 ```bash
 uv run pytest projects/templates/template_template/tests/ -v --tb=short \
@@ -55,9 +57,13 @@ Run from repo root with `projects/templates/template_template/src` on `PYTHONPAT
 
 ## 5. Full Pipeline (optional)
 
+**Monorepo checkout only:** `scripts/pipeline/` belongs to the shared monorepo,
+not the standalone project mirror. Run these stages from that checkout with the
+canonical qualified project selection:
+
 ```bash
-uv run python scripts/pipeline/stage_02_analysis.py --project template_template
-uv run python scripts/pipeline/stage_03_render.py --project template_template
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_template
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_template
 ```
 
 ## Quick Checklist

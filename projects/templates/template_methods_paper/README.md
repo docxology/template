@@ -4,7 +4,7 @@ A methods-paper exemplar: the manuscript's subject is the methodology itself
 — a small, tested domain language for specifying, validating, and
 deterministically compiling controlled procedures (`src/template_methods_paper/methods_dsl/`), not
 results produced by running one. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[monorepo `projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -21,9 +21,13 @@ from wet-lab protocols to any controlled procedure — demonstrated on a
 manual wet-lab preparation (`PBSPreparation`) and an automated
 instrument-calibration sweep (`SensorCalibrationSweep`). If your project
 reports numerical results from running an algorithm, see
-[`template_code_project`](../template_code_project/) instead.
+[`template_code_project`](https://github.com/docxology/template/tree/main/projects/templates/template_code_project/) instead.
 
 ## Quick Start — run via the template monorepo
+
+All qualified commands here run from the **monorepo root**. Shared pipeline and
+drift scripts are not standalone project entry points; standalone preparation
+uses this project's own package metadata and declared SDK services.
 
 ```bash
 # Run the methods analysis pipeline (compiles, validates, exports artifacts + a figure)
@@ -189,12 +193,12 @@ for the library API.
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Project validation: `uv run pytest projects/templates/template_methods_paper/tests --cov=projects/templates/template_methods_paper/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
+- Repo drift validation (**monorepo checkout only**): `uv run python scripts/audit/check_template_drift.py --strict`.
 
 
 ## Optional hardening
 
 Default CI builds this template's wheel and runs focused behavioral tests. Further
 hardening can add independent examples, unit-system edge cases and publication-format consistency. The complete suites and native/provider acceptance remain opt-in;
-see [functional CI and hardening](../../../docs/development/ci.md) for commands
+see [monorepo functional CI and hardening](https://github.com/docxology/template/blob/main/docs/development/ci.md) for commands
 and the evidence each lane establishes.

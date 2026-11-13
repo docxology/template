@@ -214,10 +214,11 @@ def test_public_closure_preserves_source_exclusion_list_json_and_strict_absolute
     (output / "receipt.json").write_text(json.dumps([reference]))
     closure = _evidence_closure(SnapshotReader(tmp_path), "output/readiness/receipt.json")
     assert set(closure) == {"output/readiness/receipt.json"}
-    reference["path"] = str(tmp_path / "pyproject.toml")
-    (output / "receipt.json").write_text(json.dumps([reference]))
-    with pytest.raises(ValueError, match="absolute"):
-        _evidence_closure(SnapshotReader(tmp_path), "output/readiness/receipt.json")
+    for unsafe in (str(tmp_path / "pyproject.toml"), "../pyproject.toml"):
+        reference["path"] = unsafe
+        (output / "receipt.json").write_text(json.dumps([reference]))
+        with pytest.raises(ValueError, match="absolute|traverses"):
+            _evidence_closure(SnapshotReader(tmp_path), "output/readiness/receipt.json")
 
 
 def test_public_closure_refuses_missing_retained_bytes_and_expired_reader(tmp_path: Path) -> None:

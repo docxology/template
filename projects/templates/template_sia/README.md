@@ -12,11 +12,11 @@ and fail-closed loop validation. Its opt-in local Ollama lane proposes one
 numeric classifier parameter, evaluates the resulting source in Docker, and
 records sandbox selection and exact rollback. For
 agent-team coordination mechanisms see
-[`template_autoscientists`](../template_autoscientists/); for a bounded
+[`template_autoscientists`](https://github.com/docxology/template/blob/main/projects/templates/template_autoscientists); for a bounded
 AutoResearch loop see
-[`template_autoresearch_project`](../template_autoresearch_project/). Full
+[`template_autoresearch_project`](https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project). Full
 roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -140,7 +140,7 @@ separate run against the selected local model.
 
 - [`AGENTS.md`](AGENTS.md) — module map and contracts
 - [`docs/quickstart.md`](docs/quickstart.md) — fork and extend
-- [`../../../infrastructure/sia/README.md`](../../../infrastructure/sia/README.md) — Layer 1 API
+- [`../../../infrastructure/sia/README.md`](https://github.com/docxology/template/blob/main/infrastructure/sia/README.md) — Layer 1 API
 
 ## Template integrity
 

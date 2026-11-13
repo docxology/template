@@ -714,7 +714,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
-      "source_sha256": "478c6273e749c0bbcd0962267811725c43f4a8f6a68149da82a578c9b0c72bd1",
+      "source_sha256": "996fa60af8cc77f79b0b620f31ea1c898e9fbe315e89930aa26e783f1f374567",
       "families": [
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_direct_boundary_requires_the_planned_key_or_keyless_display_fallback",
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_duplicate_validation_display_name_is_rejected_before_child_execution",
@@ -725,7 +725,7 @@
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_resume_after_validation_preserves_committed_aggregate",
         "tests/infra_tests/core/pipeline/test_artifact_finalization.py::test_validation_seals_aggregate_before_core_and_full_downstream_stages"
       ],
-      "family_observations_sha256": "baf517e5bb12f7b7c3a2f887d70d81cd98bb6a0f6033c9fc120d25287770563d",
+      "family_observations_sha256": "23c1fbf2f344abd594b759f9c5b6f17384f5b4aabf930c93233674f1a2eca2e7",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -734,14 +734,14 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_artifact_finalization.py",
-          "source_sha256": "478c6273e749c0bbcd0962267811725c43f4a8f6a68149da82a578c9b0c72bd1",
+          "source_sha256": "996fa60af8cc77f79b0b620f31ea1c898e9fbe315e89930aa26e783f1f374567",
           "line": 1
         }
       ]
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_cache_identity.py",
-      "source_sha256": "4dc0ba7979f03576906fe650e371f12de25af7bf55308fcc77970fae35b67fed",
+      "source_sha256": "6690997fed821c2e3c1d4f7c18aa2d22b9a09afcfeddb149040d848e889019f1",
       "families": [
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_authored_input_named_output_does_not_inherit_control_filtering",
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_complete_resume_cannot_reuse_another_environment",
@@ -760,7 +760,7 @@
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_runtime_exclusions_follow_actual_output_locations",
         "tests/infra_tests/core/pipeline/test_cache_identity.py::test_source_nested_output_runtime_name_is_consumed"
       ],
-      "family_observations_sha256": "88cc6820b0f088e1f6a5d9add3ac85f996feadb1f1c724a43be13fd2414beaa6",
+      "family_observations_sha256": "a054802b5a234f946f0512e19b7885ac900877257ef7a2e60059fe0f15cb21a0",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -791,7 +791,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_cache_identity.py",
-          "source_sha256": "4dc0ba7979f03576906fe650e371f12de25af7bf55308fcc77970fae35b67fed",
+          "source_sha256": "6690997fed821c2e3c1d4f7c18aa2d22b9a09afcfeddb149040d848e889019f1",
           "line": 1
         }
       ]
@@ -847,11 +847,11 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_distribution_identity.py",
-      "source_sha256": "c77c95bf0b76f8dbe5fc2e09f535756bcfa30a0c20aaa86cc5aa93a1b2e9e95e",
+      "source_sha256": "d02d578f456b5b0f9fe1afa72286108056d377642adf087af0410fb74ec23cd9",
       "families": [
         "tests/infra_tests/core/pipeline/test_distribution_identity.py::test_actual_metadata_and_pkg_info_match_stdlib_without_persistent_reuse"
       ],
-      "family_observations_sha256": "bafd2a2c018c4e1ffcfc5568dd5dbc71ee29c5e8c7b39a402b70a3e833abd374",
+      "family_observations_sha256": "79bb02d53f556a60d28dbb46ffa0095197e3f3c3085ae3eadb53f802ba986688",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -860,7 +860,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_distribution_identity.py",
-          "source_sha256": "c77c95bf0b76f8dbe5fc2e09f535756bcfa30a0c20aaa86cc5aa93a1b2e9e95e",
+          "source_sha256": "d02d578f456b5b0f9fe1afa72286108056d377642adf087af0410fb74ec23cd9",
           "line": 1
         }
       ]
@@ -890,7 +890,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_execution_records.py",
-      "source_sha256": "0061607f3f74e5d413d325ab8067bdea8cec1054be84a4a84ff59a1ce16f0109",
+      "source_sha256": "3fee3c0aa0ba4f73276db790507c086426018cf5f2be5110f1eb893990e0e5c8",
       "families": [
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_cached_record_and_resume_keep_input_output_identity",
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_failed_fresh_run_cannot_rebind_checkpoint_to_changed_output",
@@ -902,7 +902,7 @@
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_resume_checks_consumed_repository_document_bytes",
         "tests/infra_tests/core/pipeline/test_execution_records.py::test_resume_rejection_preserves_unexecuted_analysis_and_checkpoint"
       ],
-      "family_observations_sha256": "8e66fb7cf1e02451b0f2dabdd6ccbefc0564644a4a7e54e30c611d8abb959185",
+      "family_observations_sha256": "aad950f25d2f89e9bbd694938e5dadedebb4ff0bc63edf377cca8e09d92cedbe",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -911,7 +911,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_execution_records.py",
-          "source_sha256": "0061607f3f74e5d413d325ab8067bdea8cec1054be84a4a84ff59a1ce16f0109",
+          "source_sha256": "3fee3c0aa0ba4f73276db790507c086426018cf5f2be5110f1eb893990e0e5c8",
           "line": 1
         }
       ]
@@ -1110,7 +1110,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_incremental_executor.py",
-      "source_sha256": "1bf50847537e6d4141334abce23412ea72d4225df7efcee72d72bf104bf3e186",
+      "source_sha256": "473ca79a5e6eed25cb160cc7b8a6504e2413f64db4efc816ea6c0d505eeeb5b7",
       "families": [
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestDefaultOff::test_every_stage_runs_on_repeat_when_disabled",
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestIncrementalSkip::test_missing_output_forces_rerun",
@@ -1118,7 +1118,7 @@
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestIncrementalSkip::test_only_downstream_reruns_when_only_its_own_input_changes",
         "tests/infra_tests/core/pipeline/test_incremental_executor.py::TestIncrementalSkip::test_repeat_run_skips_unchanged_stages"
       ],
-      "family_observations_sha256": "f4f5211d82fbe065163672dc8d05d7ac70b77481e31ab16a8ab72f5cecdb5f94",
+      "family_observations_sha256": "6fed3dea18ef95e447c8c827010da7c310a44578020a189e33c4d8a2f298c987",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1127,7 +1127,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_incremental_executor.py",
-          "source_sha256": "1bf50847537e6d4141334abce23412ea72d4225df7efcee72d72bf104bf3e186",
+          "source_sha256": "473ca79a5e6eed25cb160cc7b8a6504e2413f64db4efc816ea6c0d505eeeb5b7",
           "line": 1
         }
       ]
@@ -1200,7 +1200,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_modularity_boundaries.py",
-      "source_sha256": "39f4a1fd70c7a0a6b9c6252522a971f64e2dadc24aa8eff2c928b7ee81fdb8e6",
+      "source_sha256": "8db24ee0c96174bfc2613771d85a86fe5868b53f5f3e0b8e29e1c66a6f418649",
       "families": [
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_built_wheel_contains_canonical_pipeline_yaml",
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_canonical_entrypoints_export_their_own_implementations",
@@ -1209,7 +1209,7 @@
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_missing_repository_yaml_uses_packaged_canonical_dag",
         "tests/infra_tests/core/pipeline/test_modularity_boundaries.py::test_removed_root_entrypoints_are_absent"
       ],
-      "family_observations_sha256": "0753a960db41bb1c6a99c1af4511ed9619aedebf61c5d355fefe141201ca45b5",
+      "family_observations_sha256": "b971dc846bbafae1ddde3e8e5e4b0dfc01793b846fce2c86019bdd7aec82dad2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1218,7 +1218,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_modularity_boundaries.py",
-          "source_sha256": "39f4a1fd70c7a0a6b9c6252522a971f64e2dadc24aa8eff2c928b7ee81fdb8e6",
+          "source_sha256": "8db24ee0c96174bfc2613771d85a86fe5868b53f5f3e0b8e29e1c66a6f418649",
           "line": 1
         }
       ]
@@ -1400,7 +1400,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_opt_in_tags.py",
-      "source_sha256": "3a7711865ff0809197fe04d056852f5872b865b6b099089736f912f3a43ea865",
+      "source_sha256": "12ce8113f930e78f3e1cefb6d299675226030f2b7726ad1fb86c7ec4ab398055",
       "families": [
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_default_yaml_declares_docxplus_as_opt_in",
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_executor_total_stages_matches_preview",
@@ -1412,7 +1412,7 @@
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_synthetic_opt_in_tag_is_omitted_from_preview",
         "tests/infra_tests/core/pipeline/test_opt_in_tags.py::test_vocabulary_and_menu_counts_follow_yaml"
       ],
-      "family_observations_sha256": "51b2a8ba06460f6e62165037947cf4f8b01982b5433a858787f983078403d1ff",
+      "family_observations_sha256": "53bfa3b05f7cbda5da075025716907b2aea03edf4fe81ad6de2a48256f500042",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1421,7 +1421,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_opt_in_tags.py",
-          "source_sha256": "3a7711865ff0809197fe04d056852f5872b865b6b099089736f912f3a43ea865",
+          "source_sha256": "12ce8113f930e78f3e1cefb6d299675226030f2b7726ad1fb86c7ec4ab398055",
           "line": 1
         }
       ]
@@ -1482,7 +1482,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_plan_compilation.py",
-      "source_sha256": "7143ac34730bca8e134daf14c6d5ae1c2c329eb61d5509c67da225dbffdaa0f4",
+      "source_sha256": "b182f9c8d87f5253f8f7cd74476fbafd1c32497db9a9bd9a684e4d7f8eae744f",
       "families": [
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_actual_infrastructure_target_honors_skip_infra_with_custom_key",
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_analysis_selection_rejects_invalid_deadline_without_outputs",
@@ -1503,7 +1503,7 @@
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_retired_or_arbitrary_method_refuses_before_execution",
         "tests/infra_tests/core/pipeline/test_plan_compilation.py::test_script_target_requires_bounded_real_repository_python_file"
       ],
-      "family_observations_sha256": "1221208fee56bde6ed0e5583cacd7750e0a86e4ba4ba85e1913db1d4aee01ee3",
+      "family_observations_sha256": "a0978c346e10c68b1ebdd8551dbd8c20f6c3f6d676797b815c47bef48abe4802",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1512,7 +1512,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_plan_compilation.py",
-          "source_sha256": "7143ac34730bca8e134daf14c6d5ae1c2c329eb61d5509c67da225dbffdaa0f4",
+          "source_sha256": "b182f9c8d87f5253f8f7cd74476fbafd1c32497db9a9bd9a684e4d7f8eae744f",
           "line": 1
         }
       ]
@@ -1545,7 +1545,7 @@
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_plugins.py",
-      "source_sha256": "3aa0adf90e147bbd9cc0d4ef93ac2661cf5ac883750fdb99551f78cc2ad605b5",
+      "source_sha256": "b8c8695ed9d519bcc9174d1661e4e4cfa0f4af52c13aaa3d68efd9a29de97adb",
       "families": [
         "tests/infra_tests/core/pipeline/test_plugins.py::TestLoadPluginStagesDefaultOff::test_empty_file_returns_empty",
         "tests/infra_tests/core/pipeline/test_plugins.py::TestLoadPluginStagesDefaultOff::test_empty_plugins_block_returns_empty",
@@ -1569,7 +1569,7 @@
         "tests/infra_tests/core/pipeline/test_plugins.py::test_plugin_contract_and_hooks_survive_merge",
         "tests/infra_tests/core/pipeline/test_plugins.py::test_plugin_requires_explicit_identity_and_contract"
       ],
-      "family_observations_sha256": "ca7683b81d698db941dec4f6692485115f22505eb46e1fa93472f17398ad60b8",
+      "family_observations_sha256": "42ab23f041bfc761f304cc1d37a089024ada9f70210faf3a82a4b98e3422c903",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1578,21 +1578,21 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_plugins.py",
-          "source_sha256": "3aa0adf90e147bbd9cc0d4ef93ac2661cf5ac883750fdb99551f78cc2ad605b5",
+          "source_sha256": "b8c8695ed9d519bcc9174d1661e4e4cfa0f4af52c13aaa3d68efd9a29de97adb",
           "line": 1
         }
       ]
     },
     {
       "path": "tests/infra_tests/core/pipeline/test_plugins_executor.py",
-      "source_sha256": "bea71d19f733ff905262ef8ba2dc0dd148965c0621ade3eca6232c3c39bd6a2a",
+      "source_sha256": "f43ead6848dfe294867edcf7dc6c415d0cff50614aa21e31d2cf244f91f41c5c",
       "families": [
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorDefaultOff::test_no_plugin_file_means_unchanged_plan",
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorPluginMerge::test_invalid_plugin_missing_runner_rejected",
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorPluginMerge::test_invalid_plugin_rejected",
         "tests/infra_tests/core/pipeline/test_plugins_executor.py::TestExecutorPluginMerge::test_plugin_stage_runs_in_built_plan"
       ],
-      "family_observations_sha256": "37b842d692e13cda45876ab79d75c4a6c3085162b66a63512ff53d087b66ea6e",
+      "family_observations_sha256": "e7ae2b93480d0a6264720b018473b44be7572e07040c85d318bca08613f8ad92",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -1601,7 +1601,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/pipeline/test_plugins_executor.py",
-          "source_sha256": "bea71d19f733ff905262ef8ba2dc0dd148965c0621ade3eca6232c3c39bd6a2a",
+          "source_sha256": "f43ead6848dfe294867edcf7dc6c415d0cff50614aa21e31d2cf244f91f41c5c",
           "line": 1
         }
       ]
@@ -2624,7 +2624,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_contracts.py",
-      "source_sha256": "a3757036e1693115d3af8ab07f912778ddbcb0ccac287e7e05a9c89cc6dc6c4e",
+      "source_sha256": "76d94e9cfdcd2e903bec11c45968a53800af71ae85d2ea8657e4e325b08e614e",
       "families": [
         "tests/infra_tests/core/test_ci_contracts.py::test_acceptance_workflow_never_calls_python_before_the_readiness_action",
         "tests/infra_tests/core/test_ci_contracts.py::test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted",
@@ -2634,10 +2634,9 @@
         "tests/infra_tests/core/test_ci_contracts.py::test_native_union_gate_names_an_undeclared_cell",
         "tests/infra_tests/core/test_ci_contracts.py::test_paper_compilers_are_required_and_pure_cases_remain_in_smoke",
         "tests/infra_tests/core/test_ci_contracts.py::test_paper_source_changes_retain_both_compiler_contracts",
-        "tests/infra_tests/core/test_ci_contracts.py::test_readiness_action_creates_its_interpreter_before_deriving_cache_scopes",
-        "tests/infra_tests/core/test_ci_contracts.py::test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcome"
+        "tests/infra_tests/core/test_ci_contracts.py::test_readiness_action_creates_its_interpreter_before_deriving_cache_scopes"
       ],
-      "family_observations_sha256": "581d0642fc6cd4d4517fd979337c7d6ef85c8821a548ff3fe2adc69235e230c4",
+      "family_observations_sha256": "6dfa7a356e35347677509c4ceb3110fa68e84679a63adc58d39a2acb71282a22",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2668,8 +2667,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_contracts.py",
-          "line": 27,
-          "source_sha256": "a3757036e1693115d3af8ab07f912778ddbcb0ccac287e7e05a9c89cc6dc6c4e"
+          "source_sha256": "76d94e9cfdcd2e903bec11c45968a53800af71ae85d2ea8657e4e325b08e614e",
+          "line": 1
         }
       ]
     },
@@ -2713,7 +2712,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_infra.py",
-      "source_sha256": "49067bf6f32d8d0cfdf9c8c5b429ad233a70919b0a00f759ff18e75de19bbba9",
+      "source_sha256": "883f25b752d687a25f078b73fd0a06650cb6996c50e02b23ab0f7a9e28b01665",
       "families": [
         "tests/infra_tests/core/test_ci_infra.py::test_actual_shards_are_nonempty_disjoint_complete_and_include_changed_source_owners",
         "tests/infra_tests/core/test_ci_infra.py::test_aggregate_receipt_checks_exact_selected_file_and_member_union",
@@ -2725,7 +2724,7 @@
         "tests/infra_tests/core/test_ci_infra.py::test_shard_manifest_refuses_missing_duplicate_empty_and_extra_work",
         "tests/infra_tests/core/test_ci_infra.py::test_shard_seconds_target_refuses_invalid_values"
       ],
-      "family_observations_sha256": "c34911aba5cc849cbcf0cc4e7c490ded3dc376a6dfaf521ce46ad948f7f79c62",
+      "family_observations_sha256": "50f05799dde8cdc4728f4cf07f9253e48056cde138dfc685553cac7d3f54108b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2734,7 +2733,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_infra.py",
-          "source_sha256": "49067bf6f32d8d0cfdf9c8c5b429ad233a70919b0a00f759ff18e75de19bbba9",
+          "source_sha256": "883f25b752d687a25f078b73fd0a06650cb6996c50e02b23ab0f7a9e28b01665",
           "line": 1
         }
       ]
@@ -2885,10 +2884,9 @@
     },
     {
       "path": "tests/infra_tests/core/test_ci_smoke.py",
-      "source_sha256": "19db3af2fb67c60648fefd8c10c861e33b22a5cf46e3d78af580c208989a2d95",
+      "source_sha256": "a5c790daeaf8a0cfc28834a9069d4a54381e496aef6634c10c538bb50a062050",
       "families": [
         "tests/infra_tests/core/test_ci_smoke.py::test_actual_fast_gate_requires_success_from_every_declared_job",
-        "tests/infra_tests/core/test_ci_smoke.py::test_cache_uses_actual_resolved_python_and_root_inputs_before_locked_reconciliation",
         "tests/infra_tests/core/test_ci_smoke.py::test_every_public_project_has_real_behavioral_tests",
         "tests/infra_tests/core/test_ci_smoke.py::test_executable_smoke_subset_never_accepts_empty_duplicate_or_private_scopes",
         "tests/infra_tests/core/test_ci_smoke.py::test_external_symlinked_public_project_roots_are_refused",
@@ -2898,7 +2896,7 @@
         "tests/infra_tests/core/test_ci_smoke.py::test_requested_coverage_checks_public_input_before_environment_setup",
         "tests/infra_tests/core/test_ci_smoke.py::test_search_render_smoke_gets_converter_only_preparation_before_execution"
       ],
-      "family_observations_sha256": "410910f96a4cd0e56627fd40f2d38541d1e5712068df8d2a8d003fafa8006aab",
+      "family_observations_sha256": "adb66375c2743f019bc86cde4c009790aa9b6a9c8ffc6671201b2fa78a4ce535",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -2915,7 +2913,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ci_smoke.py",
-          "source_sha256": "19db3af2fb67c60648fefd8c10c861e33b22a5cf46e3d78af580c208989a2d95",
+          "source_sha256": "a5c790daeaf8a0cfc28834a9069d4a54381e496aef6634c10c538bb50a062050",
           "line": 1
         }
       ]
@@ -4329,7 +4327,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_implementation_custody.py",
-      "source_sha256": "cc3c31f0d7d9e9fa7856f09bbce72571fd341a71b7fcc5dbc1e974df062c4b07",
+      "source_sha256": "2198e97e43d8e12d69bc79fe69ff42d8ec40fa925d9b4809a310a8c838e73473",
       "families": [
         "tests/infra_tests/core/test_implementation_custody.py::test_actual_installed_record_or_source_violation_is_rejected",
         "tests/infra_tests/core/test_implementation_custody.py::test_actual_installed_source_record_and_fresh_bytecode_are_bound",
@@ -4337,7 +4335,6 @@
         "tests/infra_tests/core/test_implementation_custody.py::test_budgeted_manifest_still_refuses_linked_nonpython_directory",
         "tests/infra_tests/core/test_implementation_custody.py::test_checkout_uses_unique_actual_installed_metadata_despite_generated_source_egg_info",
         "tests/infra_tests/core/test_implementation_custody.py::test_declared_dependency_uses_its_own_installed_record",
-        "tests/infra_tests/core/test_implementation_custody.py::test_distribution_source_inventory_runs_only_for_its_installed_comparison",
         "tests/infra_tests/core/test_implementation_custody.py::test_fresh_prefix_without_preimport_audit_cannot_certify_execution",
         "tests/infra_tests/core/test_implementation_custody.py::test_installed_dependency_companion_requires_nomination_and_exact_record",
         "tests/infra_tests/core/test_implementation_custody.py::test_manifest_depth_refuses_actual_nested_directory_before_suffix_selection",
@@ -4354,7 +4351,7 @@
         "tests/infra_tests/core/test_implementation_custody.py::test_source_directory_links_are_rejected_before_python_suffix_selection",
         "tests/infra_tests/core/test_implementation_custody.py::test_source_only_platform_identity_is_checked_without_distribution_metadata"
       ],
-      "family_observations_sha256": "de08b7f076869c2aae8909a9469318604d996f8b3e8001a173c680863005f799",
+      "family_observations_sha256": "1d112d3d884dc4e57ebb6414726e58e01eadbb0d1c06178fa1b770af35851863",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -4363,7 +4360,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_implementation_custody.py",
-          "source_sha256": "cc3c31f0d7d9e9fa7856f09bbce72571fd341a71b7fcc5dbc1e974df062c4b07",
+          "source_sha256": "2198e97e43d8e12d69bc79fe69ff42d8ec40fa925d9b4809a310a8c838e73473",
           "line": 1
         }
       ]
@@ -6819,14 +6816,14 @@
     },
     {
       "path": "tests/infra_tests/core/test_ubuntu_apt_mirrors.py",
-      "source_sha256": "2b8afcbda054d58333e053719c77b528309b59f370e137d7bf6e994466dc18a0",
+      "source_sha256": "8527a941ef59e00c9afe8bb9d86461b51aee01b1b49123eba3ae5706fc3a0ba4",
       "families": [
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_extra_mirror_bytes_are_refused",
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_known_mirror_priorities_change_without_rewriting_urls",
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_read_bound_covers_only_the_finite_reviewed_host_policy",
         "tests/infra_tests/core/test_ubuntu_apt_mirrors.py::test_unknown_or_malformed_mirror_rows_are_refused"
       ],
-      "family_observations_sha256": "e65d0d3cecf256c513ee5f752695e3d701d2aac5f3accb25496d6e1a570ec3f1",
+      "family_observations_sha256": "7a8e6396d6d3b13cb84706704c54b58ab7afc5f9735d0e150db8eb367092b659",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -6835,7 +6832,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_ubuntu_apt_mirrors.py",
-          "source_sha256": "2b8afcbda054d58333e053719c77b528309b59f370e137d7bf6e994466dc18a0",
+          "source_sha256": "8527a941ef59e00c9afe8bb9d86461b51aee01b1b49123eba3ae5706fc3a0ba4",
           "line": 1
         }
       ]
@@ -8272,7 +8269,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_cli.py",
-      "source_sha256": "f3e130470d416ed9335c1b771e24050f08c6c5dec90dcc6a82250c82bf7d5df5",
+      "source_sha256": "495aa6d2a826abaaf076978965e39cc7b06e723fb170404b7a525e50d531faa4",
       "families": [
         "tests/infra_tests/llm/test_cli.py::TestCLIArgumentParsing::test_check_command_parsing",
         "tests/infra_tests/llm/test_cli.py::TestCLIArgumentParsing::test_main_no_args_exits",
@@ -8285,11 +8282,9 @@
         "tests/infra_tests/llm/test_cli.py::TestCLISchemaCommand::test_schema_emits_valid_json_and_exits_zero",
         "tests/infra_tests/llm/test_cli.py::TestCLITemplateCommand::test_template_list",
         "tests/infra_tests/llm/test_cli.py::TestCLITemplateCommand::test_template_no_name_no_list",
-        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_check_command_success",
-        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_models_command_success",
-        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_query_command_basic"
+        "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_check_command_success"
       ],
-      "family_observations_sha256": "fa72c1b7b254e3393e01ce2bc4caca22732058a2f88699fa169a90fe7fe4e04c",
+      "family_observations_sha256": "d5622ae920ea06f0d4309c03c4e9bc5ba096b12c679209a1e1168b147179a61b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -8301,26 +8296,12 @@
           "obligations": [
             "local-ollama"
           ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_models_command_success",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_cli.py::TestCLIWithOllama::test_query_command_basic",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_cli.py",
-          "source_sha256": "f3e130470d416ed9335c1b771e24050f08c6c5dec90dcc6a82250c82bf7d5df5",
+          "source_sha256": "495aa6d2a826abaaf076978965e39cc7b06e723fb170404b7a525e50d531faa4",
           "line": 1
         }
       ]
@@ -8541,7 +8522,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_core.py",
-      "source_sha256": "f676d8655354b76a1c1202e77ba14c3b88b72c1ef08211695f6e5b79e3a93a0d",
+      "source_sha256": "396b4fc8bd1a9e53527fbe4b013695fe15a25b3fccc76ce1a7f8f124a8c87a26",
       "families": [
         "tests/infra_tests/llm/test_core.py::TestClientHelperMethods::test_check_connection_returns_bool",
         "tests/infra_tests/llm/test_core.py::TestClientHelperMethods::test_check_connection_with_reason_returns_tuple",
@@ -8564,35 +8545,16 @@
         "tests/infra_tests/llm/test_core.py::TestLLMClientPropertiesPure::test_config_property",
         "tests/infra_tests/llm/test_core.py::TestLLMClientPropertiesPure::test_config_stored_on_client",
         "tests/infra_tests/llm/test_core.py::TestLLMClientPropertiesPure::test_context_property",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_apply_template",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_context_maintained_across_queries",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_get_available_models",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_basic",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_long",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_raw",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_short",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_structured",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_with_options",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_reset_context_clears_history",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_seed_reproducibility",
-        "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_stream_query",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_config_response_mode_limits",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_empty_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_long_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestLLMCoreEdgeCasesPure::test_multiple_resets",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_context_maintained",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_long",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_raw",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_short",
-        "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_with_options",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_num_ctx",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_override_num_ctx",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_repeat_penalty",
         "tests/infra_tests/llm/test_core.py::TestOptionsConversion::test_options_top_k",
         "tests/infra_tests/llm/test_core.py::TestResponseMode::test_response_mode_string_comparison",
         "tests/infra_tests/llm/test_core.py::TestResponseMode::test_response_mode_values",
-        "tests/infra_tests/llm/test_core.py::TestResponseModeDetails::test_response_mode_comparison",
-        "tests/infra_tests/llm/test_core.py::TestResponseModeDetails::test_response_mode_str",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptInjection::test_reset_reinjects_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptInjection::test_set_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptInjection::test_set_system_prompt_clears_context",
@@ -8602,136 +8564,16 @@
         "tests/infra_tests/llm/test_core.py::TestSystemPromptManagementPure::test_set_system_prompt",
         "tests/infra_tests/llm/test_core.py::TestSystemPromptManagementPure::test_system_prompt_preserved_on_reset"
       ],
-      "family_observations_sha256": "d840463f34247e10eba136572a70c829f59fdd02516c2f4fd5254f6fcae0691e",
+      "family_observations_sha256": "bfab9d6fdc4c7d37b597805888c6ce271d4284e4d8ebd7bab17c32dda431029a",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_apply_template",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_context_maintained_across_queries",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_get_available_models",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_basic",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_long",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_raw",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_short",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_structured",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_query_with_options",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_reset_context_clears_history",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_seed_reproducibility",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMClientWithOllama::test_stream_query",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_context_maintained",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_long",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_raw",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_short",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_core.py::TestLLMQueryModesIntegration::test_query_with_options",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_core.py",
-          "source_sha256": "f676d8655354b76a1c1202e77ba14c3b88b72c1ef08211695f6e5b79e3a93a0d",
+          "source_sha256": "396b4fc8bd1a9e53527fbe4b013695fe15a25b3fccc76ce1a7f8f124a8c87a26",
           "line": 1
         }
       ]
@@ -8849,7 +8691,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_llm_core.py",
-      "source_sha256": "4c66c17a34a8cab092cb1d2b41a119ff6588854696ee40291bb637e7d8e4045e",
+      "source_sha256": "fd264bf99f0905149c173cbe3f271401fd35a6192f2c1019b37490e682999d6d",
       "families": [
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientContextManagement::test_context_add_message",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientContextManagement::test_context_multiple_messages",
@@ -8867,9 +8709,6 @@
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientInit::test_init_default",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientInit::test_init_with_config",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientInit::test_init_with_fallback_models",
-        "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_apply_template",
-        "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_adds_to_context",
-        "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_basic",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientSystemPrompt::test_inject_system_prompt_idempotent",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientSystemPrompt::test_no_auto_inject",
         "tests/infra_tests/llm/test_llm_core.py::TestLLMClientSystemPrompt::test_system_prompt_content",
@@ -8881,38 +8720,16 @@
         "tests/infra_tests/llm/test_llm_core.py::TestResponseMode::test_response_mode_is_string_enum",
         "tests/infra_tests/llm/test_llm_core.py::TestResponseMode::test_response_modes"
       ],
-      "family_observations_sha256": "7ea692bc6ac3f8fbaaabb04680b922d160a4490788906e6c98439db5be3f6eb5",
+      "family_observations_sha256": "3e5217f9cbafc977a55f8c56f31b5a3e564595e68325c9a0a325889b5f1a3d1d",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [
-        {
-          "id": "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_apply_template",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_adds_to_context",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_llm_core.py::TestLLMClientQueryIntegration::test_query_basic",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_llm_core.py",
-          "source_sha256": "4c66c17a34a8cab092cb1d2b41a119ff6588854696ee40291bb637e7d8e4045e",
+          "source_sha256": "fd264bf99f0905149c173cbe3f271401fd35a6192f2c1019b37490e682999d6d",
           "line": 1
         }
       ]
@@ -8991,29 +8808,6 @@
         {
           "path": "tests/infra_tests/llm/test_llm_review.py",
           "source_sha256": "0b3f2eeb4d8b6825a2105f617e82d612314bdbad827b0875ab804243d992b506",
-          "line": 1
-        }
-      ]
-    },
-    {
-      "path": "tests/infra_tests/llm/test_llm_review_integration.py",
-      "source_sha256": "9fdfef1dc50fe55532ea07fc449ee27a8b2c56df7176d1bf6f9061a08e551456",
-      "families": [
-        "tests/infra_tests/llm/test_llm_review_integration.py::TestLLMReviewIntegration::test_generate_review_with_real_llm",
-        "tests/infra_tests/llm/test_llm_review_integration.py::TestLLMReviewIntegration::test_select_and_start_ollama_model"
-      ],
-      "family_observations_sha256": "faa78a52ad642f601285b7c567957ba624ea8828bc98f8c7fb7f945331ca611e",
-      "decision": {
-        "lane": "live-unpaid",
-        "obligations": [
-          "local-ollama"
-        ]
-      },
-      "exceptions": [],
-      "evidence": [
-        {
-          "path": "tests/infra_tests/llm/test_llm_review_integration.py",
-          "source_sha256": "9fdfef1dc50fe55532ea07fc449ee27a8b2c56df7176d1bf6f9061a08e551456",
           "line": 1
         }
       ]
@@ -9450,28 +9244,16 @@
     },
     {
       "path": "tests/infra_tests/llm/test_ollama_utils.py",
-      "source_sha256": "399faf9487cd225e7a9f540b5d3c1dc2e05ff352775d85330f19d9daf29768c8",
+      "source_sha256": "4ad64f9dc04cf8619eea180fa9f51fac7354e9218c831651a991856167f4ebda",
       "families": [
         "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_no_server",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_partial_match",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_returns_tuple",
         "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_timeout",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_with_server",
         "tests/infra_tests/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_are_strings",
         "tests/infra_tests/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_is_list",
         "tests/infra_tests/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_not_empty",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_no_auto_start",
         "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_returns_true",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_entries",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_name_field",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_returns_list",
         "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelInfo::test_get_model_info_nonexistent",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelInfo::test_get_model_info_returns_dict",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_has_entries",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_returns_list",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_returns_bool",
         "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_bad_url",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_default_url",
         "tests/infra_tests/llm/test_ollama_utils.py::TestOllamaUtilsWithoutServer::test_ensure_ollama_ready_no_server_no_auto_start",
         "tests/infra_tests/llm/test_ollama_utils.py::TestOllamaUtilsWithoutServer::test_get_available_models_no_server",
         "tests/infra_tests/llm/test_ollama_utils.py::TestOllamaUtilsWithoutServer::test_get_available_models_retries",
@@ -9480,79 +9262,24 @@
         "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_already_loaded",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_check_loaded_first",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_no_server",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_returns_tuple",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_with_server",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_failure_on_nonzero_exit",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_returns_false_when_ollama_missing",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_success_on_zero_exit",
         "tests/infra_tests/llm/test_ollama_utils.py::TestPullOllamaModel::test_pull_timeout",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestRealOllamaSmoke::test_real_local_ollama_smoke",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_fallback",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_partial_match",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_returns_string",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_with_preferences",
-        "tests/infra_tests/llm/test_ollama_utils.py::TestSelectSmallFastModel::test_select_small_fast_model_returns_string",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSmallFastPreferenceMatches::test_matches_gemma_prefix",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSmallFastPreferenceMatches::test_matches_smollm2",
         "tests/infra_tests/llm/test_ollama_utils.py::TestSmallFastPreferenceMatches::test_no_match_only_large"
       ],
-      "family_observations_sha256": "eeb598d195b34f45b6e76ac2e2f8ea74ac6d27b3be888071d4e0b36454a9a3aa",
+      "family_observations_sha256": "353afdce0b2b4171fc8bd6551ce12f1f56e5a0e396329c0084afabf80187268e",
       "decision": {
         "lane": "core",
         "obligations": []
       },
       "exceptions": [
         {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_partial_match",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_returns_tuple",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestCheckModelLoaded::test_check_model_loaded_with_server",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_no_auto_start",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
           "id": "tests/infra_tests/llm/test_ollama_utils.py::TestEnsureOllamaReady::test_ensure_ollama_ready_returns_true",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_entries",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_has_name_field",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetAvailableModels::test_get_available_models_returns_list",
           "lane": "live-unpaid",
           "obligations": [
             "local-ollama"
@@ -9566,42 +9293,7 @@
           ]
         },
         {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelInfo::test_get_model_info_returns_dict",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_has_entries",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestGetModelNames::test_get_model_names_returns_list",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_returns_bool",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
           "id": "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_bad_url",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_default_url",
           "lane": "live-unpaid",
           "obligations": [
             "local-ollama"
@@ -9615,42 +9307,7 @@
           ]
         },
         {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_returns_tuple",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestPreloadModel::test_preload_model_with_server",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestRealOllamaSmoke::test_real_local_ollama_smoke",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_fallback",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
           "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_partial_match",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectBestModel::test_select_best_model_returns_string",
           "lane": "live-unpaid",
           "obligations": [
             "local-ollama"
@@ -9662,19 +9319,12 @@
           "obligations": [
             "local-ollama"
           ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_ollama_utils.py::TestSelectSmallFastModel::test_select_small_fast_model_returns_string",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
         }
       ],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_ollama_utils.py",
-          "source_sha256": "399faf9487cd225e7a9f540b5d3c1dc2e05ff352775d85330f19d9daf29768c8",
+          "source_sha256": "4ad64f9dc04cf8619eea180fa9f51fac7354e9218c831651a991856167f4ebda",
           "line": 1
         }
       ]
@@ -10053,7 +9703,7 @@
     },
     {
       "path": "tests/infra_tests/llm/test_review_generators.py",
-      "source_sha256": "27509200c5d40ebc930b4a29539950bf544ff64f526485dff5a76fd16199d3b6",
+      "source_sha256": "8f9ae3209b0f8aa2f872274580bf4f114d19467088178c104dbc0d6bf833cc80",
       "families": [
         "tests/infra_tests/llm/test_review_generators.py::TestExtractManuscriptText::test_extracts_text_from_real_pdf",
         "tests/infra_tests/llm/test_review_generators.py::TestExtractManuscriptText::test_file_not_found",
@@ -10072,8 +9722,6 @@
         "tests/infra_tests/llm/test_review_generators.py::TestGenerationHelpers::test_build_off_topic_retry_prompt",
         "tests/infra_tests/llm/test_review_generators.py::TestGenerationHelpers::test_deduplicate_response_highly_repetitive",
         "tests/infra_tests/llm/test_review_generators.py::TestGenerationHelpers::test_deduplicate_response_non_repetitive",
-        "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_executive_summary_real_ollama",
-        "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_review_with_metrics_real_ollama",
         "tests/infra_tests/llm/test_review_generators.py::TestTemplateBasedGenerators::test_generate_executive_summary_calls_llm",
         "tests/infra_tests/llm/test_review_generators.py::TestTemplateBasedGenerators::test_generate_improvement_suggestions_calls_llm",
         "tests/infra_tests/llm/test_review_generators.py::TestTemplateBasedGenerators::test_generate_methodology_review_calls_llm",
@@ -10089,35 +9737,18 @@
         "tests/infra_tests/llm/test_review_generators.py::TestWarmupModelOffline::test_warmup_model_already_loaded_skips_preload",
         "tests/infra_tests/llm/test_review_generators.py::TestWarmupModelOffline::test_warmup_no_model_loaded_triggers_preload"
       ],
-      "family_observations_sha256": "c14aa6ebc4ab09723d6738d16712be909e6e3e3e04daf968ab4ad7bf15890189",
+      "family_observations_sha256": "5c990f1601a0e7ff728b4b8eec81507b9e08c62b17a2378ffd6b704db678b9f8",
       "decision": {
         "lane": "core",
         "obligations": [
           "python-format-distributions"
         ]
       },
-      "exceptions": [
-        {
-          "id": "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_executive_summary_real_ollama",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama",
-            "python-format-distributions"
-          ]
-        },
-        {
-          "id": "tests/infra_tests/llm/test_review_generators.py::TestReviewGeneratorsIntegration::test_generate_review_with_metrics_real_ollama",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama",
-            "python-format-distributions"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/infra_tests/llm/test_review_generators.py",
-          "source_sha256": "27509200c5d40ebc930b4a29539950bf544ff64f526485dff5a76fd16199d3b6",
+          "source_sha256": "8f9ae3209b0f8aa2f872274580bf4f114d19467088178c104dbc0d6bf833cc80",
           "line": 1
         }
       ]
@@ -13350,8 +12981,9 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
-      "source_sha256": "f9ae7ec3556eb3a9a21ad68e07701aa4d9add827ee4aa1f67ab93f33287d9a2a",
+      "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
       "families": [
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_actual_scoped_transfer_only_fixed_api_children_receive_nominated_token",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_concurrent_supervisors_have_distinct_tokens_without_environment_mutation",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_deadline_must_be_finite_before_evidence_or_launch",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_detached_descendants_cannot_survive_or_kill_a_foreign_sibling",
@@ -13361,19 +12993,52 @@
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_oversized_actual_stream_is_bounded_and_cannot_pass",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_real_fd_exhaustion_cannot_turn_failed_census_into_cleanup_acceptance",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_scoped_transfer_refuses_arbitrary_commands_hosts_and_endpoints",
+        "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_scoped_transfer_requires_explicit_token_without_ambient_auth_fallback",
         "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_strict_census_observes_token_holders_without_killing_them"
       ],
-      "family_observations_sha256": "0a9aef9e0c9275cb53613b2d204862680510762e6498cf71421d00d967eb5021",
+      "family_observations_sha256": "0222004b0004e81a49228b460517a5f6e73cced719fa8315d99fc8c11b9952c1",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_actual_scoped_transfer_only_fixed_api_children_receive_nominated_token",
+          "lane": "core",
+          "obligations": [
+            "gh-cli",
+            "git"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_scoped_transfer_refuses_arbitrary_commands_hosts_and_endpoints",
+          "lane": "core",
+          "obligations": [
+            "gh-cli"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
-          "source_sha256": "f9ae7ec3556eb3a9a21ad68e07701aa4d9add827ee4aa1f67ab93f33287d9a2a",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
+          "line": 93
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
+          "line": 144
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py",
+          "source_sha256": "fec98501f7939d2856f16d2b8aad068c9d3d86fa4affc62252be02a0f8b31908",
+          "line": 183
         }
       ]
     },
@@ -13797,7 +13462,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_capabilities.py",
-      "source_sha256": "d9f45460e37044203349f7f8c7a450426f9a0dc691111dd65118945970b99b59",
+      "source_sha256": "3770282ae82e7e8f459f70417042b56eb95ce0124fd508c202da0e1beaff81b8",
       "families": [
         "tests/infra_tests/project/test_public_capabilities.py::test_analysis_allowlist_fails_closed_on_escaping_entrypoint",
         "tests/infra_tests/project/test_public_capabilities.py::test_analysis_allowlist_retains_missing_producer_diagnostic",
@@ -13807,10 +13472,10 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_ci_python_floor_must_include_every_canonical_version",
         "tests/infra_tests/project/test_public_capabilities.py::test_ci_workflow_consumes_only_the_capability_matrix",
         "tests/infra_tests/project/test_public_capabilities.py::test_disabled_formats_and_no_hydrator_are_valid_without_live_tokens",
-        "tests/infra_tests/project/test_public_capabilities.py::test_document_archive_cache_refuses_corruption_before_use",
+        "tests/infra_tests/project/test_public_capabilities.py::test_document_font_archive_cache_refuses_corruption_before_use",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_publishes_only_validated_mode",
-        "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_python_prerequisite_is_native_only",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_rejects_invalid_mode_before_setup",
+        "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_requires_locked_python_for_native_or_linux",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_must_be_confined_without_symlinks",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_must_compile",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_rejects_main_call_in_dead_nested_branch",
@@ -13821,7 +13486,6 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_package_identity_is_bound_after_name_normalization",
         "tests/infra_tests/project/test_public_capabilities.py::test_package_identity_rejects_invalid_and_duplicate_normalized_names",
         "tests/infra_tests/project/test_public_capabilities.py::test_platform_binding_and_runtime_range_must_match",
-        "tests/infra_tests/project/test_public_capabilities.py::test_project_and_infra_matrices_provision_the_pinned_document_toolchain",
         "tests/infra_tests/project/test_public_capabilities.py::test_public_capability_inventory_classifies_skip_contracts",
         "tests/infra_tests/project/test_public_capabilities.py::test_public_capability_inventory_covers_all_canonical_exemplars",
         "tests/infra_tests/project/test_public_capabilities.py::test_public_capability_inventory_reports_missing_structure",
@@ -13832,7 +13496,7 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_skip_decorator_requires_a_reason",
         "tests/infra_tests/project/test_public_capabilities.py::test_skipif_condition_is_not_mistaken_for_a_reason"
       ],
-      "family_observations_sha256": "984981cd16fa5baa7fdf2d45a65790d6172f168042d0923f3cc3157cb4f09853",
+      "family_observations_sha256": "64eccb8caa169f80991b4f0fe65de39536694ea7b42844fba986a90de883341b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -13842,7 +13506,7 @@
         {
           "path": "tests/infra_tests/project/test_public_capabilities.py",
           "line": 1,
-          "source_sha256": "d9f45460e37044203349f7f8c7a450426f9a0dc691111dd65118945970b99b59"
+          "source_sha256": "3770282ae82e7e8f459f70417042b56eb95ce0124fd508c202da0e1beaff81b8"
         }
       ]
     },
@@ -14340,9 +14004,10 @@
     },
     {
       "path": "tests/infra_tests/project/test_root_case_lanes.py",
-      "source_sha256": "017036e813a2611e22e5937b6d80ec2597806b01a8640ba60c10c1d180aa17a2",
+      "source_sha256": "81ac3369d1bb1062f374fada2e1d416ca572fa7b311d5739810415ee048e2384",
       "families": [
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_case_timer_is_typed_and_early_callback_or_failure_text_is_not_timeout",
+        "tests/infra_tests/project/test_root_case_lanes.py::test_actual_independent_external_chunks_overlap_and_refuse_rehashed_excess_concurrency",
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_lane_deadline_or_interruption_cleans_launched_detached_child",
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_skip_teardown_or_concurrent_source_edit_refuses_success",
         "tests/infra_tests/project/test_root_case_lanes.py::test_actual_source_owned_core_selection_and_all_original_phases",
@@ -14354,7 +14019,7 @@
         "tests/infra_tests/project/test_root_case_lanes.py::test_real_case_physical_root_replacement_refuses_writes_with_identical_source_bytes",
         "tests/infra_tests/project/test_root_case_lanes.py::test_required_live_lane_stays_blocked_without_execution"
       ],
-      "family_observations_sha256": "f79a39a10163a2428d0efd5156ec45185d8c187746897db8cabee31001dd4106",
+      "family_observations_sha256": "015afb4359c5b3654ffe4cc0e7bb41816bef1c821c40eda498f54e70b25ee781",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -14363,7 +14028,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_root_case_lanes.py",
-          "source_sha256": "017036e813a2611e22e5937b6d80ec2597806b01a8640ba60c10c1d180aa17a2",
+          "source_sha256": "81ac3369d1bb1062f374fada2e1d416ca572fa7b311d5739810415ee048e2384",
           "line": 1
         }
       ]
@@ -16073,7 +15738,7 @@
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
-          "source_sha256": "31f4791c9e72000a454ea4fdf625372148db42e8f67160fdd065d992b7423384",
+          "source_sha256": "c4f171b41ef68bcdfa23274ebe4bae996bca65226ed2b138cf4c2b9e321d4335",
           "line": 1
         }
       ]
@@ -16752,7 +16417,7 @@
         },
         {
           "path": "infrastructure/config/root-case-prerequisites.json",
-          "source_sha256": "31f4791c9e72000a454ea4fdf625372148db42e8f67160fdd065d992b7423384",
+          "source_sha256": "c4f171b41ef68bcdfa23274ebe4bae996bca65226ed2b138cf4c2b9e321d4335",
           "line": 219
         },
         {
@@ -23385,7 +23050,7 @@
     },
     {
       "path": "tests/infra_tests/rendering/test_slides_tex_figures.py",
-      "source_sha256": "73c187331bf60e51caf0f8dde58d6ee18b7269edbeb1dbd516f567bbfb377341",
+      "source_sha256": "b7043e9bd9f85f85716c23a30102f4098b50acac6e03e6a9e421169ffbfa205d",
       "families": [
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_accessible_bare_and_linked_projection_images_preserve_aspect_ratio",
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_accessible_figure_latex_is_idempotent_and_leaves_unbounded_images_alone",
@@ -23395,9 +23060,10 @@
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_already_correct",
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_basic",
         "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_handles_pandoc_alt_text_brackets",
-        "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_multiple"
+        "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_fix_figure_paths_multiple",
+        "tests/infra_tests/rendering/test_slides_tex_figures.py::TestFigurePathFixing::test_linked_projection_requires_an_unescaped_target_closer"
       ],
-      "family_observations_sha256": "b33e70464bd6503cc60a34f9ac3a00216fdcaee8f04b5627cd4aecc63ca8c986",
+      "family_observations_sha256": "af2e922858ee770e34b72acfbb062bec0a07e8b9243c91640c5530c06c44c2f9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -23414,8 +23080,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/rendering/test_slides_tex_figures.py",
-          "source_sha256": "73c187331bf60e51caf0f8dde58d6ee18b7269edbeb1dbd516f567bbfb377341",
+          "source_sha256": "b7043e9bd9f85f85716c23a30102f4098b50acac6e03e6a9e421169ffbfa205d",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/rendering/test_slides_tex_figures.py",
+          "source_sha256": "b7043e9bd9f85f85716c23a30102f4098b50acac6e03e6a9e421169ffbfa205d",
+          "line": 185
         }
       ]
     },
@@ -24045,7 +23716,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-      "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729",
+      "source_sha256": "84ef39656ca074cb50663218549599336e5255d866ac5ade2a914708101c972f",
       "families": [
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_actual_small_device_filesystem_refuses_reserve_without_writing",
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_actual_successive_imports_advance_one_fixed_whole_transport_budget",
@@ -24066,7 +23737,7 @@
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_shared_importer_refuses_invalid_or_exhausted_whole_member_census",
         "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py::test_shared_importer_refuses_invalid_prior_decoded_census"
       ],
-      "family_observations_sha256": "5bf6c79e834ef29dbdb25abc151c76b1f8bba5ff76c66fc3c37bb2f409c4b2d1",
+      "family_observations_sha256": "11e25d23eefe9d1ba90b2dc63719e641c9344d934ff40439c64a8e3735ae82e5",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -24074,109 +23745,14 @@
       "exceptions": [],
       "evidence": [
         {
-          "line": 154,
           "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
+          "source_sha256": "84ef39656ca074cb50663218549599336e5255d866ac5ade2a914708101c972f",
+          "line": 1
         },
         {
-          "line": 253,
           "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 186,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 301,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 369,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 406,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 134,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 475,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 442,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 345,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 209,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 223,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 164,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 64,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 101,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 81,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 286,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "line": 238,
-          "path": "tests/infra_tests/reporting/test_auxiliary_streamed_transport.py",
-          "source_sha256": "ffff33d98fe42e16f901ae3cde230d558e0b18b39301a6145636a41a9f721729"
-        },
-        {
-          "path": "infrastructure/reporting/readiness_artifact_graph.py",
-          "line": 12,
-          "source_sha256": "e92b6eab793369c30f510345e8415203029fdd872823f47b90c3bbf9a411c192"
-        },
-        {
-          "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 86,
-          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
-        },
-        {
-          "path": "infrastructure/reporting/release_readiness_snapshot.py",
-          "line": 100,
-          "source_sha256": "5997d458fe7896b8460849318b642f3caeba8667e1c15b8fdec791fbf2626777"
+          "source_sha256": "84ef39656ca074cb50663218549599336e5255d866ac5ade2a914708101c972f",
+          "line": 209
         }
       ]
     },
@@ -25875,8 +25451,93 @@
       ]
     },
     {
+      "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
+      "source_sha256": "64b512e607987836f84906840d770bb73f863f67e372ea641f5318475f4cd3b6",
+      "families": [
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_decoder_cannot_replace_the_original_finite_clock",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_parser_preserves_finite_metadata_and_original_clock_bounds",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_archive_source_selection_cannot_admit_an_unsupported_host",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_changed_member_cannot_be_authorized_by_the_transport_that_contains_it",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_complete_source_transport_cannot_omit_or_append_xz_bytes",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_declared_tar_extent_cannot_weaken_the_native_executable_payload_bound",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_missing_nonexecutable_unsafe_or_duplicate_members_are_refused",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_official_provider_keeps_complete_pinned_archive_correspondence",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_physical_observations_retain_the_complete_body_and_refuse_symlinks",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_receipt_or_version_data_cannot_create_original_provider_custody",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_record_pointers_cannot_create_external_replay_or_renderer_authority",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_retained_provider_pin_cannot_replace_any_source_compiler_or_dependency_pin",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_body_pin_not_an_archive_producer_digest_is_authoritative",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_member_must_match_both_source_body_pins",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_transport_cannot_add_incidental_receipts_or_other_members",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_source_built_transport_retains_the_complete_exact_member",
+        "tests/infra_tests/reporting/test_native_crossref_archive.py::test_unapproved_provider_kinds_have_no_archive_admission"
+      ],
+      "family_observations_sha256": "b69c9264b576dd39563368667b3fcacff06267037197d6a9079969656ce1a7b9",
+      "decision": {
+        "lane": "core",
+        "obligations": []
+      },
+      "exceptions": [],
+      "evidence": [
+        {
+          "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
+          "source_sha256": "64b512e607987836f84906840d770bb73f863f67e372ea641f5318475f4cd3b6",
+          "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_crossref_archive.py",
+          "source_sha256": "64b512e607987836f84906840d770bb73f863f67e372ea641f5318475f4cd3b6",
+          "line": 229
+        }
+      ]
+    },
+    {
+      "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+      "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
+      "families": [
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_actual_nix_derivation_cannot_override_source_build_pins",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_changed_root_build_input_cannot_trigger_acquisition",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_cli_rejects_malformed_source_before_acquisition",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_duplicate_manifest_fields_are_rejected_at_every_depth",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_malformed_pin_in_any_union_branch_is_rejected",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_manifest_is_bounded_unambiguous_utf8_json",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_official_archive_keeps_complete_archive_authenticity",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_official_zip_aliases_cannot_replace_the_selected_regular_body",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_physical_glibc_check_refuses_a_wrapper",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_real_elf_interpreter_structure_preserves_both_reviewed_abis",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_source_archive_rejects_tampered_complete_transport_or_body",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_static_musl_wrappers_and_malformed_interp_are_not_dynamic_glibc",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_tampered_cache_cannot_trigger_build_or_publish_a_path",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_tool_selector_has_no_caller_selected_fallback",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_unknown_host_cannot_choose_a_provider"
+      ],
+      "family_observations_sha256": "9911cc7d1a8d15a881c2a93ef38f360fba93650cf967cb5b6afb8ca5a1a6a792",
+      "decision": {
+        "lane": "core",
+        "obligations": []
+      },
+      "exceptions": [],
+      "evidence": [
+        {
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
+          "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
+          "line": 66
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "208ca433dc1423b3d173e03aef2679764665b0c2e2f02b7f64db2f8e99bd6131",
+          "line": 208
+        }
+      ]
+    },
+    {
       "path": "tests/infra_tests/reporting/test_native_format_acceptance.py",
-      "source_sha256": "b0eb20b3c001039d3a931c080872686c9957899ba7de0aae655612160244c2d8",
+      "source_sha256": "2f5129b130831f4e20f4a83d774d73936f53882d96ed02f1d87d13f3aabd6452",
       "families": [
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_actual_child_outcome_survives_confined_persistence_refusal",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_actual_cli_oversized_timer_refuses_before_admission",
@@ -25892,10 +25553,9 @@
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_private_directory_refuses_linked_ancestor_without_external_side_effect",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_raster_tools_consume_held_pdf_bytes_after_original_output_changes",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_source_digest_excludes_outputs_but_binds_authored_directory_changes",
-        "tests/infra_tests/reporting/test_native_format_acceptance.py::test_visual_oracles_remain_required_after_native_conformance",
         "tests/infra_tests/reporting/test_native_format_acceptance.py::test_zero_page_and_empty_html_fail_actual_native_parsers"
       ],
-      "family_observations_sha256": "d917ab119dd41f2d270d427775a232fee923aa99623f60206091d0bd5913defd",
+      "family_observations_sha256": "f69347fdb74d53aadf7f303c72e2736f3c414fcc5d6b3a5e5606f7cb0454ad8f",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -25912,8 +25572,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_format_acceptance.py",
-          "source_sha256": "b0eb20b3c001039d3a931c080872686c9957899ba7de0aae655612160244c2d8",
-          "line": 81
+          "source_sha256": "2f5129b130831f4e20f4a83d774d73936f53882d96ed02f1d87d13f3aabd6452",
+          "line": 1
         }
       ]
     },
@@ -26235,10 +25895,9 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_loader_maps.py",
-      "source_sha256": "924d7ab6d946d3b1e7ff86640f63198862cda99ca482e251156bc2fb183995c7",
+      "source_sha256": "53a4cc4b54f9e3e2dc55773d5713b95de37bc32052ee0f7233b4433fa72a1ba2",
       "families": [
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_actual_map_mismatch_cannot_qualify",
-        "tests/infra_tests/reporting/test_native_loader_maps.py::test_audit_loader_declares_fail_noreturn_before_its_definition",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_auditor_complete_source_elf_ranges_match_actual_kernel_body",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_auditor_source_code_cannot_admit_wrong_or_extra_mapping",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_complete_callback_kernel_mapping_is_reconstructed",
@@ -26247,7 +25906,7 @@
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_reloaded_live_image_supersedes_closed_lifetime_without_aliasing",
         "tests/infra_tests/reporting/test_native_loader_maps.py::test_reordered_kernel_map_is_refused"
       ],
-      "family_observations_sha256": "11729c3568aa4272fa69989bddcfce4832b554350788c8845eabb161d5c9b32e",
+      "family_observations_sha256": "d3ba63dcf1a7ca1012653098890c69a2215f81cbb70d0249b4e078db6a2201d2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26256,8 +25915,8 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_loader_maps.py",
-          "source_sha256": "924d7ab6d946d3b1e7ff86640f63198862cda99ca482e251156bc2fb183995c7",
-          "line": 38
+          "source_sha256": "53a4cc4b54f9e3e2dc55773d5713b95de37bc32052ee0f7233b4433fa72a1ba2",
+          "line": 1
         }
       ]
     },
@@ -26429,16 +26088,16 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_office_epub_interfaces.py",
-      "source_sha256": "c958d6e8e780bb256925c2ac2c3d69e0ed162c0129fd33c0afc5ffa7975cc9a7",
+      "source_sha256": "c0c93cf0bdb094657b168586b63762f24f905595be5ebf01589e294b64d132e6",
       "families": [
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_failure_and_unknown_role_survive_status_adaptation",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_forged_status_and_observation_alias_are_rejected",
-        "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_status_is_adapted_without_granting_full_acceptance",
+        "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_complete_source_status_adaptation_preserves_observer_record",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_epub_missing_or_changed_spine_cannot_be_hidden_by_complete_office_layout",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_reference_source_residuals_cannot_be_cleared_by_equal_packages",
         "tests/infra_tests/reporting/test_native_office_epub_interfaces.py::test_source_reference_spine_uses_actual_ordered_epub_bytes"
       ],
-      "family_observations_sha256": "c0ba7d2819d19c581af1a443a70aff921918096c49200f1ba2c0aa9190744069",
+      "family_observations_sha256": "6af38c23baa117635e3e877977dffa1739355b1972b156eda68778716d51c0ae",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -26447,21 +26106,29 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_office_epub_interfaces.py",
-          "source_sha256": "c958d6e8e780bb256925c2ac2c3d69e0ed162c0129fd33c0afc5ffa7975cc9a7",
+          "source_sha256": "c0c93cf0bdb094657b168586b63762f24f905595be5ebf01589e294b64d132e6",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_epub_interfaces.py",
+          "source_sha256": "c0c93cf0bdb094657b168586b63762f24f905595be5ebf01589e294b64d132e6",
+          "line": 75
         }
       ]
     },
     {
       "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
-      "source_sha256": "5a230e9ab41c2fe5b556b05ff4077389f0f22b9f475bd5538c11bb92a9cb722e",
+      "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
       "families": [
+        "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_filter_and_independent_oracle_agree_on_comment_alternatives",
+        "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_package_cannot_witness_dropped_mixed_raw_html",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_source_writer_and_reader_reject_independent_scientific_mutants",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_docx_bookmark_names_match_both_pinned_pandoc_writers",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_independent_expression_tree_preserves_signs_scripts_fractions_and_array_cells",
+        "tests/infra_tests/reporting/test_native_office_full_source.py::test_raw_html_roles_require_one_complete_comment",
         "tests/infra_tests/reporting/test_native_office_full_source.py::test_raw_source_roles_cannot_excuse_visible_content_as_nonvisible_metadata"
       ],
-      "family_observations_sha256": "2ce0beb20695a4637934a1feb012ffb90d5cbb3371846b96b6438cb06ac9145d",
+      "family_observations_sha256": "45eaff3fa1698714788cb5d6b084d21ff8ad5da23d27dfe26fb051c24e0e3e08",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -26472,12 +26139,32 @@
       },
       "exceptions": [
         {
+          "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_filter_and_independent_oracle_agree_on_comment_alternatives",
+          "lane": "core",
+          "obligations": [
+            "pandoc"
+          ]
+        },
+        {
+          "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_actual_office_package_cannot_witness_dropped_mixed_raw_html",
+          "lane": "core",
+          "obligations": [
+            "pandoc",
+            "native-format-python"
+          ]
+        },
+        {
           "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_docx_bookmark_names_match_both_pinned_pandoc_writers",
           "lane": "core",
           "obligations": []
         },
         {
           "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_independent_expression_tree_preserves_signs_scripts_fractions_and_array_cells",
+          "lane": "core",
+          "obligations": []
+        },
+        {
+          "id": "tests/infra_tests/reporting/test_native_office_full_source.py::test_raw_html_roles_require_one_complete_comment",
           "lane": "core",
           "obligations": []
         },
@@ -26490,8 +26177,23 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
-          "source_sha256": "5a230e9ab41c2fe5b556b05ff4077389f0f22b9f475bd5538c11bb92a9cb722e",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
+          "line": 89
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
+          "line": 118
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_office_full_source.py",
+          "source_sha256": "f243daa2fee41f4eb60e3c98b54c446ed8cd7ba080184eb524747fe7133d0e07",
+          "line": 180
         }
       ]
     },
@@ -26734,25 +26436,43 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-      "source_sha256": "4b2c20477f0d4f777f44507b98b7051e28c86214f9963fc52a5be62de743d742",
+      "source_sha256": "d0590afbfd7a2ac505a4f244ceae323b1196a79c04c051ea0f724de089b15f2d",
       "families": [
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_cold_selected_root_runtime_overrides_missing_or_wrong_ambient_nomination",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_actual_popen_environment_matches_held_source_commitment_and_refuses_changed_digest",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_genuine_pandoc_terminal_success_and_fail_closed_controls",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_missing_root_nomination_still_blocks_actual_prepared_runtime",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_time",
         "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_keeps_existing_phase_ceiling_with_a_later_original_deadline",
-        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline"
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_stage_launch_retains_exact_nearer_or_expired_original_deadline",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_terminal_roster_refuses_unclosed_or_aliased_images"
       ],
-      "family_observations_sha256": "c59efd9e784b268c3e25070d22a2bdd2dc1c9bcee4dc131a004dfa5620d0941a",
+      "family_observations_sha256": "46e1687965fc1af14a1d13daced72b5cd96f6a6402ebc3c1f100fe86e8d09112",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [],
+      "exceptions": [
+        {
+          "id": "tests/infra_tests/reporting/test_native_original_launch_correctness.py::test_genuine_pandoc_terminal_success_and_fail_closed_controls",
+          "lane": "core",
+          "obligations": [
+            "linux-proc",
+            "native-loader-build",
+            "pandoc"
+          ]
+        }
+      ],
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
-          "source_sha256": "4b2c20477f0d4f777f44507b98b7051e28c86214f9963fc52a5be62de743d742",
+          "source_sha256": "d0590afbfd7a2ac505a4f244ceae323b1196a79c04c051ea0f724de089b15f2d",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
+          "source_sha256": "d0590afbfd7a2ac505a4f244ceae323b1196a79c04c051ea0f724de089b15f2d",
+          "line": 573
         }
       ]
     },
@@ -27348,12 +27068,12 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_portable_custody.py",
-      "source_sha256": "57928b7f07235c89b8243a958872ef9516c5b1c0c3d5514d6b9a405797f5e573",
+      "source_sha256": "258d771d18f9444b608926811655946c6b3969b3836556f734a62b89b35b906d",
       "families": [
         "tests/infra_tests/reporting/test_native_portable_custody.py::test_actual_tool_receipt_relocated_reader_and_tamper",
         "tests/infra_tests/reporting/test_native_portable_custody.py::test_original_bootstrap_reconstruction_preserves_root_and_hook"
       ],
-      "family_observations_sha256": "e4e796c65e5be236adbe30d93099bc8181a2a432c61bd0a6526cef73717a0407",
+      "family_observations_sha256": "3c341add6871d6864c3a060ea9df692768664ba34102cc70ca0b62196912ac03",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -27362,8 +27082,13 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_portable_custody.py",
-          "source_sha256": "57928b7f07235c89b8243a958872ef9516c5b1c0c3d5514d6b9a405797f5e573",
+          "source_sha256": "258d771d18f9444b608926811655946c6b3969b3836556f734a62b89b35b906d",
           "line": 1
+        },
+        {
+          "path": "tests/infra_tests/reporting/test_native_portable_custody.py",
+          "source_sha256": "258d771d18f9444b608926811655946c6b3969b3836556f734a62b89b35b906d",
+          "line": 53
         }
       ]
     },
@@ -28045,13 +27770,14 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-      "source_sha256": "d494837fe5f69c975a6ef6abae2052cabedfd0cfe2e607ba05b47166a026000a",
+      "source_sha256": "0fd22a5ae7a78f91b5ec4a4c62b256d0b6b1009d7f7405773a6657c960c1e8f0",
       "families": [
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_arbitrary_worker_module_is_refused_before_any_execution",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_data_packet_cannot_open_a_source_owner_stage_directory_or_reader",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_fixed_bootstrap_covers_all_actual_source_lanes_and_original_stage_deadline",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_late_observation_identity_change_is_refused",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_late_retained_roster_row_refuses_repeats_paths_and_status_minting",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_mermaid_cross_scope_launch_is_refused",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_native_owner_construction_still_requires_actual_admitted_source",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_observation_cannot_claim_completion_authority_or_replace_request_bytes",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_ordinary_owner_query_imports_without_optional_rendering_dependencies",
@@ -28062,9 +27788,11 @@
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_scope_data_nomination_refuses_missing_pair_unknown_scope_and_outside_lane",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_scope_nomination_is_optional_paired_data_and_preserves_physical_identity",
         "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_scope_nomination_refuses_symbolic_parent_directory",
-        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_script_conventions_are_data_with_distinct_pipeline_and_native_run_ids"
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_stage_script_conventions_are_data_with_distinct_pipeline_and_native_run_ids",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_standalone_mermaid_analysis_leaf_rejects_identity_mismatches",
+        "tests/infra_tests/reporting/test_native_stage_child_contracts.py::test_standalone_mermaid_requires_exact_analysis_leaf_not_parent_or_render"
       ],
-      "family_observations_sha256": "f63c3026f8edd9ba51a9f8dd38e29a1690c93e31d35e1611a6ed7380697e3c23",
+      "family_observations_sha256": "0af03254d5325a113ba625d8598f9a5ea074ae92fec725bf159cf38c79dbaad5",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -28073,7 +27801,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/reporting/test_native_stage_child_contracts.py",
-          "source_sha256": "d494837fe5f69c975a6ef6abae2052cabedfd0cfe2e607ba05b47166a026000a",
+          "source_sha256": "0fd22a5ae7a78f91b5ec4a4c62b256d0b6b1009d7f7405773a6657c960c1e8f0",
           "line": 1
         }
       ]
@@ -37230,36 +36958,27 @@
     },
     {
       "path": "tests/integration/test_module_interoperability.py",
-      "source_sha256": "9a104878cdaf3a03430632cc6b59fdbe333db429b38cdc4fb4cd474b56c20730",
+      "source_sha256": "366da0d4123f9b690e47ef352e4292caf8444b710e2038c169dd2722036332df",
       "families": [
         "tests/integration/test_module_interoperability.py::TestModuleInteroperability::test_configuration_independence",
         "tests/integration/test_module_interoperability.py::TestModuleInteroperability::test_shared_exception_handling",
         "tests/integration/test_module_interoperability.py::TestModuleInteroperability::test_shared_logging",
         "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_full_research_pipeline_metadata",
-        "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_health_check_to_llm_workflow",
         "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_rendering_metadata_workflow",
         "tests/integration/test_module_interoperability.py::TestWrapperScripts::test_literature_cli_exists",
         "tests/integration/test_module_interoperability.py::TestWrapperScripts::test_publishing_cli_exists",
         "tests/integration/test_module_interoperability.py::TestWrapperScripts::test_rendering_cli_exists"
       ],
-      "family_observations_sha256": "ab5ac3c8769628d25b6de4a090581255a109903bf6fc9e7d13c2710ccb198438",
+      "family_observations_sha256": "2bddc454c6cb1eaadab35488af5222e9c5533217e96d628a6efcb8e8fa3469a8",
       "decision": {
         "lane": "core",
         "obligations": []
       },
-      "exceptions": [
-        {
-          "id": "tests/integration/test_module_interoperability.py::TestResearchWorkflow::test_health_check_to_llm_workflow",
-          "lane": "live-unpaid",
-          "obligations": [
-            "local-ollama"
-          ]
-        }
-      ],
+      "exceptions": [],
       "evidence": [
         {
           "path": "tests/integration/test_module_interoperability.py",
-          "source_sha256": "9a104878cdaf3a03430632cc6b59fdbe333db429b38cdc4fb4cd474b56c20730",
+          "source_sha256": "366da0d4123f9b690e47ef352e4292caf8444b710e2038c169dd2722036332df",
           "line": 1
         }
       ]
@@ -37976,6 +37695,11 @@
       "eligibility": null,
       "id": "pdfium-wheel",
       "kind": "external-fixture"
+    },
+    {
+      "eligibility": null,
+      "id": "native-loader-build",
+      "kind": "tool"
     }
   ]
 }

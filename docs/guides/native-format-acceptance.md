@@ -72,7 +72,29 @@ receipts bind that input. The strict reader reconstructs all manuscript sections
 slide/reveal pairs and pitch-deck short/medium/long PDF/PPTX variants from source.
 Inventory-only `validated: true` records cannot pass.
 
-The v2 native execution record also compiles ordered content obligations from
+Original native stdout/stderr observations use
+`template-native-stream-observation-v1`: their absolute producer `path` is a
+historical label, never an artifact edge or a reader-side filesystem nomination.
+The ToolAPI wrapper separately binds the retained public stream bytes with exact
+repository-relative `path`/`sha256`/`bytes` objects. Portable readback checks those
+bytes against the versioned original hash, size, basename and decoded text after
+the producer is gone. Strict closure still rejects absolute/traversal artifact
+bindings and retains every wrapper, process and stream; neither transport nor
+versioned observation DATA grants original execution custody.
+
+Linux consuming-loader qualification uses an inherited read-only descriptor for
+the exact held compiler output: `LD_AUDIT=/proc/self/fd/<fd>`. This avoids
+[glibc's bounded audit-name buffer](https://github.com/bminor/glibc/blob/glibc-2.40/elf/dl-main.h),
+which silently omits names of 255 bytes or more, including real nested stage
+paths. Only the audited child inherits the descriptor; ordinary children and its
+guardian do not. The v5 native process and loader lifecycle bind the descriptor
+to the original compiler inode. Independent readback still requires complete
+callbacks, mapped helper/body equality, the terminal roster and signed OS exit;
+a short path, environment commitment or serialized descriptor alone grants no
+acceptance. The descriptor closes with owned observation cleanup, without
+changing the executable, compiler output, callbacks or existing clocks.
+
+The finite PDF-text component compiles ordered content obligations from
 the frozen, currently validated consumed manuscript bytes. Its deliberately
 limited projection supports plain paragraphs, ATX headings and plain list items.
 Unicode NFC, whitespace boundaries and named presentation ligatures are its
@@ -99,22 +121,38 @@ raster/font tools succeed and the intended semantic, geometry or localized pixel
 diagnostic appears with its original exit code. A setup exception, launch refusal,
 timeout, forged observation or missing baseline cannot substitute for that result.
 
-These observations establish narrower native conformance. The source-owned
-`unsupported_native_controls()` declaration currently reports missing full-oracle
-obligations for PDF, browser HTML, native DOCX/EPUB readers, projected slides,
-pitch parity, newspaper print geometry and storybook localized pixel controls.
-Full format acceptance remains **blocked** for those applicable declarations.
-The full validator requires the original passing execution, no remaining blockers
-and every required oracle; narrower conformance cannot satisfy that boundary.
+## Complete Source-owned oracle requirements
 
-Current release acceptance remains pending implementation and actual observation
-of those required controls, followed by independent readback with the held live
-reader operation. Receipt decoding cannot create that operation. The producer
-retains validated conformance separately from exit 75 and missing full obligations;
-actual failures and custody refusals remain failures. A nonblank raster proves
-neither correct scientific content nor readable typography. Execution provenance
-belongs to the supervised producer; independent review is required before a
-release claim. No existing receipt is rewritten or promoted by this guidance.
+The full boundary is the typed `NativeOracleSpecification` produced by
+`compile_native_oracle_obligations`, not a static list saying controls are
+unimplemented. It reconstructs the exact source/configuration, artifact roster,
+diagram occurrences, whole control suites and required witness axes from held
+Source. The strict reader requires equality with that freshly compiled graph.
+The specification deliberately has no pass, fulfilled or release-authority field.
+
+| Applicable Source artifacts | Required control families |
+| --- | --- |
+| Every selected PDF | `pdf`, including the declared complete scientific-source/control/replay obligation |
+| Browser HTML | `html` and `html_semantic` |
+| DOCX | `docx`, `docx_scientific`, and `docx_diagrams` when Source contains diagrams |
+| EPUB | `epub`, `epub_scientific`, and `epub_diagrams` when Source contains diagrams |
+| Manuscript slides and Reveal companions | `projection`, `pptx`, `manuscript_slides`, with the declared Reveal-specific obligations |
+| Pitch short/medium/long PDF and PPTX companions | `projection`, `pptx`, `configured_pitch`; all three pairs are mandatory |
+| Configured newspaper editions and storybook pages/contact sheet | `configured_print` over the complete Source-selected roster |
+
+Original analysis/domain/hydration-to-consumed-byte lineage and portable replay
+remain explicit requirements. A matching package readback, narrow text/raster
+component, observed adapter status or decoded receipt cannot discharge the full
+graph. Actual positive originals, every complete selected control suite, all
+source-survival/layout/visual witnesses and independent Current readback must
+satisfy their source-owned predicates. Unknown roles, missing axes, failed
+controls, custody refusals and unsupported projections remain failures or
+blockers; they cannot disappear through status adaptation.
+
+This guide describes the contract, not the qualification of a particular run.
+Release acceptance remains pending until the exact Source has genuine complete
+workflow evidence and independently admitted reader custody. No existing receipt
+is rewritten or promoted by this guidance.
 
 ## Next steps
 

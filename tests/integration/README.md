@@ -36,6 +36,11 @@ uv run pytest tests/integration/test_full_pipeline.py -v
 - cross-module behavior
 - end-to-end pipeline flow
 
+`test_module_interoperability.py` covers cross-module metadata and local-file
+contracts. Arbitrary health-report-to-prose presence/length checks are not a
+consumer correctness oracle. Deterministic LLM protocol/state tests and the
+separate Source-owned native local-provider obligations retain their own roles.
+
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md)

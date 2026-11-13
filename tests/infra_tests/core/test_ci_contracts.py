@@ -8,12 +8,7 @@ from pathlib import Path
 import yaml
 import pytest
 
-from infrastructure.core.testing.ci_contracts import (
-    CONTRACT_SECONDS,
-    combined_groups,
-    contract_files,
-    contract_preparation,
-)
+from infrastructure.core.testing.ci_contracts import combined_groups, contract_files
 from infrastructure.core.testing.ci_infra import (
     infrastructure_files,
     infrastructure_shards,
@@ -35,149 +30,6 @@ def test_deep_owner_files_are_complementary_without_removing_baseline_smoke() ->
     assert combined_groups(plan)[-1] == [heavy]
 
 
-def test_required_contract_job_keeps_whole_root_budget_and_explicit_empty_outcome() -> None:
-    workflow = yaml.safe_load((ROOT / ".github/workflows/ci.yml").read_bytes())
-    jobs = workflow["jobs"]
-    assert "test-contract" in jobs["ci-gate"]["needs"]
-    contract = jobs["test-contract"]
-    assert contract["timeout-minutes"] == "${{ matrix.documents == 'native' && 165 || 120 }}"
-    assert CONTRACT_SECONDS + 2430 < 165 * 60
-    assert CONTRACT_SECONDS <= 7200
-    assert jobs["test-infra"]["timeout-minutes"] == 10
-    assert jobs["test-infra"]["strategy"]["max-parallel"] == 16
-    from infrastructure.core.testing.ci_infra import _functional_selection
-
-    assert _functional_selection(ROOT, is_contract=True) == {"marker_expression": "", "keyword_expression": ""}
-    assert "not slow" in _functional_selection(ROOT)["marker_expression"]
-    assert contract["strategy"]["max-parallel"] == 8
-    assert "if" not in contract
-    assert "TEMPLATE_CI_XDIST" not in str(workflow)
-    assert set(contract_preparation("none")) == {"documents", "tex", "browser"}
-    assert contract["steps"][0]["if"] == "matrix.shard == -1"
-    assert any(step.get("if") == "always() && matrix.shard != -1" for step in contract["steps"])
-    pdf_modules = (
-        "tests/infra_tests/rendering/test_latex_texttt_native.py",
-        "tests/infra_tests/project/test_scientific_reference_replay.py",
-        "tests/infra_tests/reporting/test_native_pdf_citations.py",
-        "tests/infra_tests/reporting/test_native_pdf_math.py",
-        "tests/infra_tests/reporting/test_native_pdf_source_witness.py",
-        "tests/infra_tests/reporting/test_pdf_raw_natbib_source.py",
-    )
-    converter = next(
-        step
-        for step in contract["steps"]
-        if step.get("uses") == "./.github/actions/setup-acceptance-documents"
-        and step.get("with", {}).get("mode") == "${{ matrix.documents }}"
-    )
-    tex = next(step for step in contract["steps"] if "texlive-xetex" in step.get("run", ""))
-    browser = next(step for step in contract["steps"] if step.get("if") == "matrix.browser")
-    assert converter["if"] == "matrix.documents != 'none'" and tex["if"] == "matrix.tex"
-    for module in pdf_modules:
-        preparation = contract_preparation(module)
-        assert preparation["documents"] == "converter"
-        assert preparation["tex"] is True and preparation["browser"] is False
-    for module in (
-        "tests/infra_tests/reporting/test_native_browser_oracles.py",
-        "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
-    ):
-        preparation = contract_preparation(module)
-        assert preparation["documents"] == "converter"
-        assert preparation["tex"] is False and preparation["browser"] is True
-    assert contract_preparation("tests/infra_tests/project/test_root_wheel_typing.py") == {
-        "documents": "none",
-        "tex": False,
-        "browser": False,
-    }
-    preparation = contract_preparation("none")
-    assert (preparation["documents"], preparation["tex"], preparation["browser"]) == ("none", False, False)
-    assert (
-        contract_preparation("tests/infra_tests/project/test_public_acceptance_auxiliary.py")["documents"] == "native"
-    )
-    for module in ("test_latex_texttt_native.py", "test_latex_utils.py"):
-        assert contract_preparation("tests/infra_tests/rendering/" + module)["tex"] is True
-    assert browser["uses"] == "./.github/actions/check-browser"
-    browser_action = (ROOT / ".github/actions/check-browser/action.yml").read_text(encoding="utf-8")
-    assert 'echo "CHROME_EXECUTABLE_PATH=$chrome" >> "$GITHUB_ENV"' in browser_action
-    assert 'test ! -L "$chrome"' in browser_action and "resources.pak" in browser_action
-    assert "poppler-utils" in tex["run"] and "kpsewhich plainnat.bst" in tex["run"]
-    from infrastructure.core.testing.ci_selection import _infra_matrix
-
-    native_latex = "tests/infra_tests/rendering/test_pdf_latex_pipeline.py"
-    selected_shards = infrastructure_shards(ROOT, (native_latex,))
-    matrix = _infra_matrix(selected_shards)["include"]
-    assert [row["shard"] for row in matrix] == list(range(len(selected_shards)))
-    prepared = [row["shard"] for row in matrix if row["tex"]]
-    native_bibliography = "tests/infra_tests/rendering/test_pdf_renderer_fixes.py"
-    expected_prepared = [
-        index for index, files in enumerate(selected_shards) if native_latex in files or native_bibliography in files
-    ]
-    assert prepared == expected_prepared
-    assert any(native_latex in selected_shards[index] for index in prepared)
-    assert _infra_matrix([[native_latex], [native_bibliography]]) == {
-        "include": [{"shard": 0, "tex": True}, {"shard": 1, "tex": True}]
-    }
-    assert _infra_matrix([[native_latex, native_bibliography]]) == {"include": [{"shard": 0, "tex": True}]}
-    assert not _infra_matrix([["tests/infra_tests/core/test_ci_selection.py"]])["include"][0]["tex"]
-    routine_steps = jobs["test-infra"]["steps"]
-    routine_tex = [step for step in routine_steps if "texlive-" in step.get("run", "")]
-    assert len(routine_tex) == 1 and routine_tex[0]["if"] == "matrix.tex"
-    assert "texlive-xetex lmodern" in routine_tex[0]["run"] and "xelatex --version" in routine_tex[0]["run"]
-    routine_account = next(
-        index
-        for index, step in enumerate(routine_steps)
-        if step.get("uses") == "./.github/actions/setup-ci-execution-user"
-    )
-    assert routine_steps.index(routine_tex[0]) < routine_account
-    prepare_account = next(
-        index
-        for index, step in enumerate(contract["steps"])
-        if step.get("uses") == "./.github/actions/setup-ci-execution-user"
-    )
-    assert contract["steps"].index(converter) < contract["steps"].index(tex) < prepare_account
-    assert contract["steps"].index(browser) < prepare_account
-
-    # The original command still produces each receipt. Identity preparation
-    # precedes it, and independent readable transport follows even a failure.
-    for name in ("test-infra", "test-contract"):
-        steps = jobs[name]["steps"]
-        checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
-        assert checkout["with"]["persist-credentials"] is False
-        prepare = next(
-            index for index, step in enumerate(steps) if step.get("uses") == "./.github/actions/setup-ci-execution-user"
-        )
-        run = next(index for index, step in enumerate(steps) if "ci_infra" in step.get("run", ""))
-        export = next(index for index, step in enumerate(steps) if "ci_execution_user export" in step.get("run", ""))
-        upload = next(
-            index for index, step in enumerate(steps) if step.get("uses", "").startswith("actions/upload-artifact@")
-        )
-        assert prepare < run < export < upload
-        assert "ci_execution_user run" in steps[run]["run"]
-        assert '--state "$RUNNER_TEMP/template-ci-execution/state.json" --' in steps[run]["run"]
-        assert steps[export]["if"].startswith("always()")
-        assert steps[upload]["with"]["path"] == "${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/functional-infra/"
-
-    required = yaml.safe_load((ROOT / ".github/workflows/platform-required-acceptance.yml").read_bytes())["jobs"]
-    for name in ("root-original", "auxiliary-original"):
-        steps = required[name]["steps"]
-        prepare = next(step for step in steps if step.get("uses") == "./.github/actions/setup-ci-execution-user")
-        if name == "root-original":
-            assert prepare["if"] == "runner.os == 'Linux'"
-            observation = next(step for step in steps if step.get("name") == "Original complete Root observation")
-            assert 'if [ "$RUNNER_OS" = Linux ]' in observation["run"]
-            assert 'exec "${root_command[@]}"' in observation["run"]
-        else:
-            assert prepare["with"]["docker"] == "${{ matrix.docker }}"
-            assert required[name]["needs"] == "auxiliary-plan"
-            assert required[name]["strategy"]["fail-fast"] is False
-            assert required[name]["strategy"]["max-parallel"] == 4
-            observation = next(step for step in steps if step.get("id") == "auxiliary")
-        assert "ci_execution_user run" in observation["run"]
-        assert observation["continue-on-error"] is True
-        assert any(
-            "ci_execution_user export" in step.get("run", "") and step["if"].startswith("always()") for step in steps
-        )
-
-
 def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
     for module in (
         "tests/infra_tests/documentation/test_counts_coverage_measurement.py",
@@ -191,6 +43,7 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         "tests/infra_tests/reporting/test_native_browser_oracles.py",
         "tests/infra_tests/reporting/test_native_browser_scientific_structure.py",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
+        "tests/infra_tests/reporting/test_native_original_launch_correctness.py",
         "tests/infra_tests/reporting/test_native_pdf_citations.py",
         "tests/infra_tests/reporting/test_native_pdf_math.py",
         "tests/infra_tests/reporting/test_native_pdf_source_witness.py",

@@ -11,6 +11,12 @@ the orchestration CLI.
 - Keep worker functions module-level when tests exercise process pools.
 - Assert log and output isolation per project.
 - Avoid shared global state that can leak across multiprocessing starts.
+- Close every preview-only or direct-stage `PipelineExecutor` with
+  `contextlib.closing`; full execution closes its own handlers. Never reset the
+  global logging registry to compensate for an unclosed fixture owner.
+- Distribution fixtures must supply required `Name` and `Version` metadata
+  headers; compare actual stdlib observations and mutations, not historical
+  malformed-header behavior.
 
 ## Validation
 

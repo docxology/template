@@ -21,6 +21,7 @@ from typing import Any
 from infrastructure.core.implementation_custody import verify_implementation_custody
 from infrastructure.core.pipeline.fingerprints import canonical_digest, tree_records
 from infrastructure.core.pipeline.fingerprint_files import (
+    _relative_name,
     anchored_parent,
 )
 from infrastructure.project.public_reference import (
@@ -152,7 +153,7 @@ def _pure_source_records(root: Path, reader: SnapshotReader, deadline: float) ->
     declared_roots = frozenset(roots)
 
     def admit_path(path: Path) -> None:
-        relative = path.relative_to(root).as_posix()
+        relative = _relative_name(path, root)
         # tree_records independently holds/rechecks the no-follow physical
         # traversal. This callback only applies public lexical scope policy;
         # held bytes and reader.unchanged() retain their own physical checks.
@@ -173,7 +174,7 @@ def _pure_source_records(root: Path, reader: SnapshotReader, deadline: float) ->
         ):
             remaining(deadline)
             path = base if name == "." else base / name
-            relative = path.relative_to(root).as_posix()
+            relative = _relative_name(path, root)
             if kind not in {"file", "directory"}:
                 raise ValueError("native mirror has a missing or unsupported canonical source entry")
             records.append((relative, kind, digest))
@@ -209,7 +210,7 @@ def _verify_current_source_modes(
             executable = fixture_files[relative][2]
         else:
             raise ValueError("native current source lacks a committed blob or admitted fixture body")
-        metadata = reader.read(relative).path.lstat()
+        metadata = (root / relative).lstat()
         if not stat.S_ISREG(metadata.st_mode) or bool(metadata.st_mode & 0o111) != executable:
             raise ValueError("native current mirror source type/mode differs from its admitted source")
     fixtures.verify(deadline)
@@ -244,8 +245,10 @@ class NativeSourceContext:
             remaining(deadline)
             if kind != "file":
                 continue
-            actual = self.current_source_reader.read(relative)
-            if actual.content != self.reference.read(relative):
+            # The fresh no-follow census already admitted these held bytes;
+            # mode checks and both closing snapshot/directory guards stay fresh.
+            actual = self.current_source_reader.snapshots.get(root / relative)
+            if actual is None or actual.content != self.reference.read(relative):
                 raise ValueError("native current mirror source bytes differ from admitted original source")
         if not self.current_source_reader.unchanged() or not current_reader.unchanged():
             raise ValueError("native current source/artifact snapshots changed during correspondence")

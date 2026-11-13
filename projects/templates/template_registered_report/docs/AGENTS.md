@@ -2,9 +2,9 @@
 
 Agent-facing notes for this documentation tree. The nearest authoritative
 contract is [`../AGENTS.md`](../AGENTS.md); monorepo-wide rules live in
-[`../../../../AGENTS.md`](../../../../AGENTS.md). Decision-memory and
-verifier-hardening rules follow the monorepo
-`docs/rules/memory_and_decision_records.md`.
+[monorepo `AGENTS.md`](https://github.com/docxology/template/blob/main/AGENTS.md). Decision-memory and
+verifier-hardening rules follow the monorepo's
+[decision records guide](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md), not a file shipped at this standalone root.
 
 ## Layout
 

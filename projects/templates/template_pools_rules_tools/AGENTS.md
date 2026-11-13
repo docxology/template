@@ -1,6 +1,6 @@
 # AGENTS.md — template_pools_rules_tools
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md).
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md).
 
 Meta-project demonstrating fonds, tools, and rules integration. Public exemplar
 in `projects/templates/`. Nearest-child `AGENTS.md` files take precedence

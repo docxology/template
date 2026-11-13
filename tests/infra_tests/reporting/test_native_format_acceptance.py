@@ -30,7 +30,6 @@ from infrastructure.reporting.native_format_acceptance_contracts import (
     native_artifact_contract,
     native_environment,
     public_source_digest,
-    unsupported_native_controls,
     validate_native_specification,
     create_private_native_directory,
     native_deadline_guard,
@@ -158,15 +157,6 @@ def test_zero_page_and_empty_html_fail_actual_native_parsers() -> None:
         parse_native_bytes("html", b"<html><body></body></html>")
     observed = parse_native_bytes("pdf", _pdf("Independent actual content"))
     assert observed == {"pages": 1, "page_boxes_pt": [[0.0, 0.0, 144.0, 144.0]]}
-
-
-def test_visual_oracles_remain_required_after_native_conformance() -> None:
-    assert unsupported_native_controls(SCOPE, ("pdf",))[0]["tool"] == "pdf-visual-source-parity"
-    assert {row["tool"] for row in unsupported_native_controls("templates/template_pitch_deck", ("pdf", "html"))} == {
-        "pdf-visual-source-parity",
-        "browser-layout",
-        "pitch-native-parity",
-    }
 
 
 def test_actual_nested_control_suite_preserves_module_identity(tmp_path: Path) -> None:

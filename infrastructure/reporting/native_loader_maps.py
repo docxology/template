@@ -120,3 +120,29 @@ def executable_census(
     if not selected or not any(row["kind"] == "consumer-image" for row in selected):
         raise ValueError("kernel census lacks a complete actual consuming executable image")
     return {"schema_version": "template-loader-kernel-executable-census-v1", "page_bytes": page, "rows": selected}
+
+
+def terminal_kernel_residents(
+    opened: dict[int, dict[str, Any]], active: dict[int, Any], closed: list[int]
+) -> list[int]:
+    """Require every file-backed close; only the kernel vDSO may await OS exit.
+
+    Callers have already authenticated each open against its physical kernel
+    maps. This DATA predicate never invents a glibc close for the process-lifetime
+    vDSO or supplies the separately required original signed OS result.
+    """
+    opened_ids, active_ids, closed_ids = set(opened), set(active), set(closed)
+    if (
+        any(type(key) is not int or key <= 0 for key in opened_ids | active_ids | closed_ids)
+        or len(closed_ids) != len(closed)
+        or active_ids & closed_ids
+        or opened_ids != active_ids | closed_ids
+    ):
+        raise ValueError("loader terminal roster omits or aliases an actual opened/closed image")
+    residents = sorted(active_ids)
+    if len(residents) > 1 or any(
+        opened[key]["body"] is not None or opened[key]["path_label"] not in {"linux-vdso.so.1", "linux-vdso.so.2"}
+        for key in residents
+    ):
+        raise ValueError("loader terminal roster leaves a non-kernel image without its actual close")
+    return residents

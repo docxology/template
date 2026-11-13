@@ -182,6 +182,33 @@ class TestFigurePathFixing:
         assert second_graphics == 0
         assert second_captions == 0
 
+    @pytest.mark.parametrize(
+        ("prefix", "suffix", "direct"),
+        (
+            (r"\href{full.png}{", "}", True),
+            (r"\href{full\}.png}{", "}", True),
+            (r"\href{full\\}{", "}", True),
+            (r"\href{full\}{", "}", False),
+            (r"\href{full\} {", "}", False),
+            (r"\href{full.png}{Authored ", "}", False),
+            (r"\custom{\href{full.png}{", "}}", False),
+            ("% " + r"\href{full.png}{", "}\n", False),
+            (r"\verb|\href{full.png}{", "}|", False),
+            (r"\begin{verbatim}\href{full.png}{", r"}\end{verbatim}", False),
+        ),
+    )
+    def test_linked_projection_requires_an_unescaped_target_closer(self, prefix, suffix, direct):
+        # Authored inch bounds deliberately cannot qualify for the independent
+        # composer-owned bare-image pass: only a genuine direct float link may
+        # normalize this graphic.
+        graphic = r"\includegraphics[width=1in,height=1in]{authored.png}"
+        tex = r"\begin{figure}" + prefix + graphic + suffix + r"\end{figure}"
+        updated, graphics, captions = normalize_accessible_projection_latex(tex)
+        expected_graphic = graphic.replace("[", "[keepaspectratio,", 1) if direct else graphic
+        assert updated == tex.replace(graphic, expected_graphic)
+        assert graphics == int(direct)
+        assert captions == 0
+
     @pytest.mark.requires_latex
     def test_empty_caption_replacement_preserves_float_and_longtable_numbering(self, tmp_path):
         compiler = next((name for name in ("pdflatex", "xelatex", "lualatex") if shutil.which(name)), None)

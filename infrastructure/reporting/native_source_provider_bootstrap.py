@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shlex
 import stat
 import sys
 import types
@@ -302,6 +303,18 @@ def retain_selected_sdk_execution_closure(
         raise
 
 
+def format_selected_sdk_native_script(python: str, body: str) -> bytes:
+    """Exec the bound launcher without OS shebang path-length or splitting limits.
+
+    The shell replaces itself, preserving the actual Pandoc child PID. This
+    standard shell/Python header is also valid when the paired dispatcher
+    executes the already digest-checked Python body directly.
+    """
+    if not isinstance(python, str) or not Path(python).is_absolute() or "\0" in python:
+        raise ValueError("native script requires its absolute admitted Python launcher")
+    return ("#!/bin/sh\n'''exec' " + shlex.quote(python) + " -I \"$0\" \"$@\"\n' '''\n" + body).encode()
+
+
 def format_selected_sdk_native_bootstrap(
     hook_bytes: bytes,
     sdk_package_root: Path,
@@ -445,6 +458,7 @@ def selected_sdk_native_command(
         if (
             not interpreter.is_absolute()
             or not isinstance(runtime, dict)
+            or str(interpreter.absolute()) != runtime.get("python_launcher")
             or str(interpreter.resolve(strict=True)) != runtime.get("python_executable")
         ):
             raise ValueError("native launcher differs from the externally admitted actual SDK runtime")

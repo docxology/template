@@ -163,6 +163,23 @@ observations alone do not establish complete execution or a universal speedup.
 
 ## Release acceptance modules
 
+Linux document qualification requires real glibc-linked executables from the
+Source-pinned GHC 9.12.2 recipe and complete dependency freeze, with project-wide
+object determinism; static release binaries cannot emit `LD_AUDIT` callbacks.
+Root recipe, freeze and compiler-patch bytes, upstream provenance and resolved
+plan are independently bound. The real source-corrected `ghc-pkg` writer orders
+installed-unit cache roots canonically; no executable rewrite supplies this
+determinism. Linux audit-library nominations use held read-only descriptors
+inherited only by the audited child, preserving live/inode custody under deep
+paths. The original loader lifecycle authenticates the final consistency census
+and every file-backed close before `DONE`. The kernel vDSO remains explicitly
+resident until the same original process's signed OS exit; no glibc close is
+invented for it. EOF, live Source/peer custody, complete map/memory/body checks
+and the original finite deadline remain mandatory.
+The Linux auditor permits up to 256 MiB of actual executable bytes per image
+to cover the Source-pinned Pandoc image in full. The 512 MiB backing-file and
+1 GiB backing-cohort ceilings and original observation deadline stay finite.
+
 | Module | Role |
 | --- | --- |
 | `native_analysis_boundary_replay.py` | Reconstruct retained analysis boundaries under genuine native custody. |
@@ -189,7 +206,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_code_stability_domain.py` | Selected Code SDK objective-stability meanings under the existing join. |
 | `native_code_value_consumption.py` | Fixed Code numeric DATA reconstruction under genuine held Source custody. |
 | `native_code_value_predicate.py` | Independent scalar quadratic facts, never native or Original authority. |
-| `native_crossref_archive.py` | Actual Source-pinned official Crossref archive/executable correspondence. |
+| `native_crossref_archive.py` | Source-pinned official/source-built provider archive and actual executable correspondence. |
 | `native_crossref_closure.py` | One fixed crossref SDK role; serialized records cannot select another role. |
 | `native_crossref_exit.py` | Observe an authenticated live Darwin filter's kernel exit status before replay. |
 | `native_crossref_exit_dispatch.py` | Fixed Source-owned original-host roles for Linux and Darwin exit status. |
@@ -207,6 +224,10 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_current_reader_inputs.py` | Immutable Current execution nominations held by the actual native reader. |
 | `native_dependency_preparation.py` | Finite official npm asset preparation, bound to exact source lock integrity. |
 | `native_environment_custody.py` | Exact selected, bounded and audited Popen environment commitments. |
+| `native_document_elf.py` | Bounded physical glibc ELF eligibility, never loaded-process acceptance. |
+| `native_document_preparation.py` | Prepare immutable source-built Linux or exact official macOS providers and retain provenance. |
+| `native_document_provider_archives.py` | Bounded complete provider archive/member DATA reconstruction, granting no authority. |
+| `native_document_provider_contracts.py` | One strict Source-owned provider/source/compiler/dependency pin selection. |
 | `native_epub_observer.py` | Real EPUBCheck and native reader conversion with exact byte custody. |
 | `native_epub_preparation.py` | Prepare the pinned official EPUBCheck bundle in a fresh owned directory. |
 | `native_epub_replay.py` | Portable replay of retained EPUB validator and reader execution custody. |
@@ -494,7 +515,7 @@ observations alone do not establish complete execution or a universal speedup.
 | `native_stage_child_custody.py` | Fixed nested stage role authenticated through its genuine parent ToolAPI. |
 | `native_stage_child_scope.py` | Actual fixed child scope for Source renderer records; no directory authority. |
 | `native_stage_child_worker.py` | One fixed child that independently admits Source before an existing stage. |
-| `native_stage_crossref_archive_replay.py` | Official archive readback through the genuine renderer→Crossref role. |
+| `native_stage_crossref_archive_replay.py` | Provider archive readback through the genuine renderer→Crossref role. |
 | `native_stage_loader_replay.py` | Loader readback through the actual fixed renderer/Stage role. |
 | `native_storybook_source.py` | Source-bound raster storybook checks; producer summaries are never evidence. |
 | `native_tex_section_reference.py` | Source-only standalone TeX compilation with genuine every-page references. |
@@ -540,6 +561,10 @@ closure and final physical factory/registry checks precede child publication.
 No guard spans execution, accepts callbacks or yields reusable verification.
 Public independent verification APIs remain fresh; clocks and original signed
 failure outcomes retain authority.
+
+Keep paired Crossref filter/compiler DATA in the enclosing fresh verification
+interval. Private DATA helpers must not become reusable admission, wrap native
+execution or bypass fresh public verification and live-callback custody.
 
 
 Native hosted transport accepts one declared matrix scope or the complete ordered

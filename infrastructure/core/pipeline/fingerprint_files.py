@@ -15,6 +15,15 @@ _FILE_FLAGS = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | os.O_NONBLOCK
 _DIGESTS: dict[tuple[object, ...], str] = {}
 
 
+def _relative_name(path: Path, root: Path) -> str:
+    """Compute a lexical name without rebuilding each ancestor as a Path."""
+    parts = path.parts
+    prefix = root.parts
+    if path.anchor != root.anchor or parts[: len(prefix)] != prefix:
+        return path.relative_to(root).as_posix()
+    return "/".join(parts[len(prefix) :]) or "."
+
+
 def observation(value: os.stat_result) -> tuple[int, ...]:
     """Include identity, content-change clocks, permissions, and length."""
     return (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns, value.st_ctime_ns, value.st_mode)

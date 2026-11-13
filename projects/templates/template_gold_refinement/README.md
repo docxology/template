@@ -87,23 +87,58 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_gol
 Keep `SOURCE_DATE_EPOCH` set when refreshing tracked public outputs so dashboard
 and manuscript timestamps are reproducible instead of wall-clock dependent.
 
-Standalone repositories are publication mirrors for source, DOI metadata, and
-tracked rendered artifacts. Use the monorepo above when you need the full shared
-infrastructure, pipeline stages, or cross-template validation.
+Standalone repositories retain source, DOI metadata, and tracked rendered
+artifacts, and support the project-local analysis and SDK-backed hydration
+commands below. The shared pipeline scripts and cross-template gates above
+belong to the template monorepo, not the standalone repository.
 
 ## Quick Start
 
+### Standalone repository (project root)
+
+Use Python 3.14 or 3.15, not a historical 3.13 interpreter pin. The commands
+require reviewed standalone installation metadata/lock resolving
+`research-project-template==5.2.0` against the actual released SDK. The canonical
+editable `../../..` SDK binding is monorepo-only: a raw source export is not an
+install-ready standalone release. Missing SDK publication, the reviewed
+installation projection, or a compatible standalone interpreter pin remains an
+adoption prerequisite.
+The root-local recipe preserves the
+[standalone owner's usage contract](https://github.com/docxology/template_gold_refinement/blob/66bafceb2e8e3c1a21ea78ecfe3265e1e4fd1406/README.md#L91-L111).
+
 ```bash
+uv sync --extra dev --python 3.14
+
 # Run the refinement analysis pipeline
-uv run python projects/templates/template_gold_refinement/scripts/refinement_analysis.py
+uv run python scripts/refinement_analysis.py
 
-# Run tests
-uv run pytest projects/templates/template_gold_refinement/tests/ -v
+# Hydrate manuscript variables using the declared installed SDK
+uv run python scripts/z_generate_manuscript_variables.py
 
-# Test gate (authoritative)
-uv run pytest projects/templates/template_gold_refinement/tests/ \
-  --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90
+# Run tests and the project-local branch-coverage gate
+uv run --extra dev pytest tests/ -v
+uv run --extra dev pytest tests/ --cov=src --cov-branch --cov-fail-under=90
 ```
+
+The current scripts import the domain package `template_gold_refinement` from
+`src/`. After analysis, `scripts/z_generate_manuscript_variables.py` calls the
+installed SDK's
+`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`
+to write `output/data/manuscript_variables.json` and `output/manuscript/`.
+That hydration step needs the declared SDK, not a monorepo-only script path;
+it is not itself a full manuscript render.
+
+### Template monorepo (root)
+
+```bash
+uv run python projects/templates/template_gold_refinement/scripts/refinement_analysis.py
+uv run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py
+uv run pytest projects/templates/template_gold_refinement/tests/ \
+  --cov=projects/templates/template_gold_refinement/src --cov-branch --cov-fail-under=90
+```
+
+Use the separate monorepo pipeline commands above for the full shared
+render/validate/copy sequence.
 
 ## Generated artifact contract
 
@@ -165,11 +200,13 @@ function cross-checked by a live regression test.
 
 ## Dependencies
 
-Run `uv sync` at the **repository root** for the shared template pipeline. Stage
-02 executes this project with `uv run --directory
-projects/templates/template_gold_refinement`, so the project-local
-`pyproject.toml` also declares the runtime dependencies needed by the exemplar,
-including `networkx>=3.4.2` for deterministic graph layouts.
+For standalone use, synchronize the project-local environment as shown above;
+the reviewed installation projection must supply the declared installed SDK.
+In the **template monorepo**, run `uv sync` at its root for the shared pipeline.
+Stage 02 executes this project with `uv run --directory
+projects/templates/template_gold_refinement`. The project-local `pyproject.toml`
+declares the exemplar's runtime dependencies, including `networkx>=3.4.2` for
+deterministic graph layouts.
 
 ## Key Features
 
@@ -194,8 +231,8 @@ See [AGENTS.md](AGENTS.md) for technical documentation.
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize configuration: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
 - Standalone fork guide: [`STANDALONE.md`](STANDALONE.md).
-- Project validation: `uv run pytest projects/templates/template_gold_refinement/tests/ --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
+- Standalone project validation: `uv run --extra dev pytest tests/ --cov=src --cov-branch --cov-fail-under=90` from the prepared project root.
+- Monorepo-only drift validation: `uv run python scripts/audit/check_template_drift.py --strict` from the template monorepo root.
 
 <!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 

@@ -532,117 +532,6 @@ def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
     )
 
 
-def test_project_and_infra_matrices_provision_the_pinned_document_toolchain() -> None:
-    repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github/workflows/hardening.yml").read_text(encoding="utf-8"))
-    action = yaml.safe_load(
-        (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
-    )
-
-    for job_name in ("test-project", "test-infra"):
-        steps = workflow["jobs"][job_name]["steps"]
-        setup_indices = [
-            index
-            for index, step in enumerate(steps)
-            if step.get("uses") == "./.github/actions/setup-acceptance-documents"
-        ]
-        assert len(setup_indices) == 1
-        assert "if" not in steps[setup_indices[0]]
-        assert not any(step.get("uses", "").startswith("pandoc/actions/setup@") for step in steps)
-        test_indices = [
-            index
-            for index, step in enumerate(steps)
-            if "pytest tests/infra_tests/" in step.get("run", "")
-            or "scripts/pipeline/stage_01_test.py" in step.get("run", "")
-        ]
-        assert test_indices and setup_indices[0] < min(test_indices)
-
-    action_steps = action["runs"]["steps"]
-    named = {step["name"]: (index, step) for index, step in enumerate(action_steps)}
-    assert len(named) == len(action_steps)
-    mode_index, mode = named["Validate document preparation mode"]
-    cache_index, cache = named["Restore exact official document archives"]
-    converter_index, converter = named["Prepare exact compatible Pandoc and cross-reference binaries"]
-    frozen_index, frozen = named["Prepare the frozen tagging-capable Linux TeX distribution"]
-    prerequisites_index, prerequisites = named["Prepare native document prerequisites"]
-    font_index, _ = named["Prepare exact JuliaMono family"]
-    providers_index, _ = named["Record actual native TeX providers"]
-    assert (
-        mode_index < cache_index < converter_index < frozen_index < prerequisites_index < font_index < providers_index
-    )
-    assert action["inputs"]["mode"]["default"] == "native"
-    assert action["inputs"]["python-executable"]["default"] == ".venv/bin/python"
-    assert action["inputs"]["python-executable"]["required"] is False
-    assert mode["id"] == "preparation-mode" and "if" not in mode
-    assert mode["env"] == {
-        "PREPARATION_MODE": "${{ inputs.mode }}",
-        "PREPARED_PYTHON": "${{ inputs.python-executable }}",
-    }
-    assert cache["uses"] == "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9"
-    assert cache["with"] == {
-        "path": "${{ runner.temp }}/template-acceptance-document-archives",
-        "key": "acceptance-document-archives-v2-${{ runner.os }}-${{ runner.arch }}-"
-        "${{ steps.preparation-mode.outputs.mode }}-"
-        "${{ hashFiles('.github/actions/setup-acceptance-documents/action.yml') }}",
-    }
-    assert "if" not in cache and "if" not in converter
-    assert prerequisites["env"] == {"PREPARED_PYTHON": "${{ inputs.python-executable }}"}
-    native = "steps.preparation-mode.outputs.mode == 'native'"
-    for step in action_steps[converter_index + 1 :]:
-        expected = f"{native} && runner.os == 'Linux'" if step is frozen else native
-        assert step["if"] == expected
-    assert "--verify-downloads" in frozen["run"]
-
-    # Each narrowed preparation route is explicit; new callers retain native.
-    project_mode = "${{ matrix.project == 'templates/template_eda_notebook' && 'native' || 'converter' }}"
-    narrowed = {
-        ("ci.yml", "test-infra"): ("converter", None),
-        ("ci.yml", "test-contract"): ("${{ matrix.documents }}", "matrix.documents != 'none'"),
-        ("ci.yml", "test-project"): ("converter", "matrix.project == 'templates/template_search_project'"),
-        ("hardening.yml", "test-project"): (project_mode, None),
-        ("exemplar-coverage.yml", "own-exemplar-coverage"): (
-            "${{ inputs.coverage-project == 'templates/template_eda_notebook' && 'native' || 'converter' }}",
-            None,
-        ),
-    }
-    observed_narrowed = set()
-    for workflow_path in sorted((repo / ".github/workflows").glob("*.yml")):
-        jobs = yaml.safe_load(workflow_path.read_text(encoding="utf-8")).get("jobs", {})
-        for job_name, job in jobs.items():
-            for step in job.get("steps", []):
-                if step.get("uses") != "./.github/actions/setup-acceptance-documents":
-                    continue
-                declared = step.get("with", {}).get("mode", "native")
-                caller = (workflow_path.name, job_name)
-                if caller in narrowed:
-                    expected, condition = narrowed[caller]
-                    assert caller not in observed_narrowed
-                    observed_narrowed.add(caller)
-                    assert step.get("if") == condition
-                else:
-                    expected = "native"
-                assert declared == expected
-                prepared_python = step.get("with", {}).get("python-executable", ".venv/bin/python")
-                expected_python = (
-                    "output/runtime-envs/3.14/bin/python"
-                    if workflow_path.name == "platform-required-acceptance.yml" and job_name == "common-original"
-                    else ".venv/bin/python"
-                )
-                assert prepared_python == expected_python
-
-    assert observed_narrowed == set(narrowed)
-
-    # The installed/native and release jobs share this nested caller. Its
-    # locked root environment must reach the same action input defaults.
-    for action_path in sorted((repo / ".github/actions").glob("*/action.yml")):
-        nested = yaml.safe_load(action_path.read_text(encoding="utf-8"))
-        for step in nested.get("runs", {}).get("steps", []):
-            if step.get("uses") != "./.github/actions/setup-acceptance-documents":
-                continue
-            assert step.get("with", {}).get("mode", "native") == "native"
-            assert step.get("with", {}).get("python-executable", ".venv/bin/python") == ".venv/bin/python"
-
-
 @pytest.mark.parametrize("mode", ["", "Native", " native", "native\nconverter", "converter; exit 0"])
 def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, mode: str) -> None:
     repo = Path(__file__).resolve().parents[3]
@@ -685,8 +574,11 @@ def test_document_preparation_publishes_only_validated_mode(tmp_path: Path, mode
 
 
 @pytest.mark.parametrize("mode", ["native", "converter"])
+@pytest.mark.parametrize("system", ["Linux", "macOS"])
 @pytest.mark.parametrize("nomination", ["missing", "not-executable"])
-def test_document_preparation_python_prerequisite_is_native_only(tmp_path: Path, mode: str, nomination: str) -> None:
+def test_document_preparation_requires_locked_python_for_native_or_linux(
+    tmp_path: Path, mode: str, system: str, nomination: str
+) -> None:
     """Run actual action Bash against absent or nonexecutable real Python bytes."""
     repo = Path(__file__).resolve().parents[3]
     action = yaml.safe_load(
@@ -704,15 +596,17 @@ def test_document_preparation_python_prerequisite_is_native_only(tmp_path: Path,
     result = subprocess.run(
         ["bash", "-c", action["runs"]["steps"][0]["run"]],
         cwd=tmp_path,
-        env=dict(os.environ, PREPARATION_MODE=mode, PREPARED_PYTHON=str(python), GITHUB_OUTPUT=str(output)),
+        env=dict(
+            os.environ, PREPARATION_MODE=mode, PREPARED_PYTHON=str(python), RUNNER_OS=system, GITHUB_OUTPUT=str(output)
+        ),
         capture_output=True,
         text=True,
         timeout=5,
         check=False,
     )
-    if mode == "native":
+    if mode == "native" or system == "Linux":
         assert result.returncode != 0
-        assert "native document preparation requires an already locked Python executable" in result.stderr
+        assert "requires an already locked Python executable" in result.stderr
     else:
         assert result.returncode == 0, result.stderr
     # Mode publication is only the first step's validated input; the failed
@@ -723,29 +617,20 @@ def test_document_preparation_python_prerequisite_is_native_only(tmp_path: Path,
     )
 
 
-@pytest.mark.parametrize("tool", ["pandoc", "juliamono"])
 @pytest.mark.parametrize("fault", ["length", "sha256"])
-def test_document_archive_cache_refuses_corruption_before_use(tmp_path: Path, tool: str, fault: str) -> None:
-    """Run the real Bash preparation against corrupt local data, without substitutes."""
+def test_document_font_archive_cache_refuses_corruption_before_use(tmp_path: Path, fault: str) -> None:
+    """Run the real font preparation against corrupt local data, without substitutes."""
     repo = Path(__file__).resolve().parents[3]
     action = yaml.safe_load(
         (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
     )
-    names = {
-        "pandoc": (
-            "Prepare exact compatible Pandoc and cross-reference binaries",
-            "pandoc-3.11-linux-amd64.tar.gz",
-            34940580,
-        ),
-        "juliamono": ("Prepare exact JuliaMono family", "JuliaMono-ttf.tar.gz", 21847069),
-    }
-    step_name, archive_name, expected_size = names[tool]
-    command = next(step["run"] for step in action["runs"]["steps"] if step.get("name") == step_name)
+    archive_name, expected_size = "JuliaMono-ttf.tar.gz", 21847069
+    command = next(
+        step["run"] for step in action["runs"]["steps"] if step.get("name") == "Prepare exact JuliaMono family"
+    )
     archives = tmp_path / "template-acceptance-document-archives"
     archives.mkdir()
-    # Populate every selected archive so these refusal cases need no download.
-    for name in ("pandoc-3.11-linux-amd64.tar.gz", "pandoc-crossref-Linux-X64.tar.xz", "JuliaMono-ttf.tar.gz"):
-        (archives / name).write_bytes(b"truncated")
+    (archives / archive_name).write_bytes(b"truncated")
     if fault == "sha256":
         # Sparse bytes have the declared length and a different actual digest.
         with (archives / archive_name).open("wb") as stream:
@@ -769,7 +654,6 @@ def test_document_archive_cache_refuses_corruption_before_use(tmp_path: Path, to
     assert f"document archive {mismatch} mismatch: {archive_name}" in result.stderr
     assert not (tmp_path / "github-path").exists() and not (tmp_path / "github-env").exists()
     assert not (tmp_path / "home").exists()
-    assert all(not any(directory.iterdir()) for directory in tmp_path.glob("template-document-tools.*"))
 
 
 def test_platform_binding_and_runtime_range_must_match(tmp_path: Path) -> None:

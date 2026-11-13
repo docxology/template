@@ -243,7 +243,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.408578872680664
+      "total_size_mb": 2.4085798263549805
     },
     "figures": {
       "files": 5,
@@ -252,7 +252,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.21340370178222656
+      "size_mb": 0.21340465545654297
     },
     "stable_inventory": {
       "categories": {
@@ -270,7 +270,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 223770
+          "size_bytes": 223771
         },
         "release": {
           "files": 2,
@@ -291,7 +291,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 47,
-      "total_size_bytes": 2525578
+      "total_size_bytes": 2525579
     }
   },
   "recommendations": [],
@@ -302,11 +302,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-11T08:05:13Z",
+  "timestamp": "2026-11-13T11:04:04Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "712a60ae8d4d618a7373c3176b9565a1278088174b38f7ad3659507aebf6b34e",
+      "sha256": "04819f4753113365893c0ec09434571cf74b7f3204f49a27a6d61d09a5b61b83",
       "size_bytes": 15248
     },
     "combined_manuscript": {
@@ -364,15 +364,15 @@
       },
       "output": {
         "file_count": 47,
-        "sha256": "465359e7f12f211e75f42b6ed100dd64bc0711ad219a5b85201e5eb0725d1ef8"
+        "sha256": "a527650adb7380178add3061be31cad6f2b4394122e1d92e706cea01bd63c173"
       },
       "source": {
         "file_count": 56,
         "sha256": "4120062e7c70f56ce1ef67e3f334f8894fa0f0fb05c01baa13eb6ca370d5467e"
       },
       "stage": {
-        "file_count": 1761,
-        "sha256": "e5607bfbe32f353ce848eccd99fe543a72997dd814560776a9d9cb489c92b789"
+        "file_count": 1770,
+        "sha256": "cc3f1a1616481a3bd11a9d76cdd898ab312db2dbf8815bcb9ab7512e274f20fb"
       }
     },
     "project": "templates/template_sia",

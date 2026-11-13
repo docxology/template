@@ -4,6 +4,35 @@
 
 Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only`, then generate the canonical audit artifacts with `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and preserve template integrity.
 
+### Standalone project commands
+
+This repository's standalone root contains `scripts/` and `tests/` directly;
+the `projects/templates/...`, `scripts/pipeline/`, `scripts/audit/`, and
+`scripts/publish/` paths elsewhere on this page belong to the monorepo.
+Prepare the genuine SDK wheel matching `pyproject.toml` and the project's
+`dev` extra; the checkout-only ancestor resolver is not standalone preparation,
+and an intended candidate version is not an available PyPI release.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/01_generate_release_artifacts.py
+.venv/bin/python scripts/02_build_figures.py
+.venv/bin/python -I -m infrastructure.validation.cli prerender manuscript --repo-root .
+```
+
+Development proofs remain opt-in: from this root,
+`.venv/bin/python scripts/generate_dev_variants.py --no-steganography` selects
+plain PDFs. Omit that flag only with the real declared SDK provenance capability
+prepared; a missing capability must not silently downgrade a requested proof.
+The [authored standalone repair history](https://github.com/docxology/template_redacted_report/blob/669131e7b962a21ba5d85c2483dcd2d05566ccc0/CHANGELOG.md#L11-L24)
+records why unrelated `PROJECT_ROOT.parents[2]` bootstrap insertion was removed.
+Preserve that startup boundary in both development-proof entry points; the old
+repair record is not acceptance of this candidate. `WFZ-RR-001` remains open in
+[`TODO.md`](TODO.md#workflowz-review--2026-11-10-retained-open-request).
+
 ## When to use this template
 
 Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published.
@@ -76,13 +105,13 @@ normal Stage 02 order.
 
 `render.redaction_visual` declares the proofing surface: redaction styles `blackout`, `whiteout`, `grayout`, and `blur`; PDF backgrounds `white`, `gray`, `black`, and `blur`; and near-zero left/right PDF margins for the minimal report style. The blur background is a review mode that blurs non-redacted context while leaving redaction spans visibly treated by the selected style.
 
-Generate the full development proof matrix, including template steganography/provenance post-processing, with:
+From the **monorepo root**, generate the full development proof matrix, including template steganography/provenance post-processing, with:
 
 ```bash
 uv run python projects/templates/template_redacted_report/scripts/generate_dev_variants.py
 ```
 
-Kmyth TPM sidecar sealing is optional and disabled by default. To request `.ski` sidecars for each steganography PDF and source-safe hash manifest, pass `--with-kmyth` or `--kmyth-binary-dir infrastructure/steganography/kmyth/bin`; add `--require-kmyth` when missing tools or failed sealing should block generation. When requested, `variant_matrix.json` records tool paths, runtime status, and sidecar counts.
+Kmyth TPM sidecar sealing is optional and disabled by default. To request `.ski` sidecars for each steganography PDF and source-safe hash manifest, pass `--with-kmyth` or `--kmyth-binary-dir <absolute-reviewed-kmyth-bin>`; add `--require-kmyth` when missing tools or failed sealing should block generation. The monorepo's `infrastructure/steganography/kmyth/bin` is a source-checkout path, not a standalone default. When requested, `variant_matrix.json` records tool paths, runtime status, and sidecar counts.
 
 ## Tests
 
@@ -102,7 +131,7 @@ This exemplar is a release-safety and disclosure-control template. It must not b
 
 ## Fork guidance
 
-Use `scripts/audit/copy_exemplar.py` for clean forks. Keep high-side source files outside the public repository, commit only sanitized fixtures, configure your lawful marking taxonomy explicitly, require source-safe ledgers and review records, and require an explicit release authority field before publication.
+The clean-fork helper `scripts/audit/copy_exemplar.py` belongs to a [docxology/template](https://github.com/docxology/template) checkout, not this standalone root. Alternatively copy the project source while preserving its declared dependencies. Keep high-side source files outside the public repository, commit only sanitized fixtures, configure your lawful marking taxonomy explicitly, require source-safe ledgers and review records, and require an explicit release authority field before publication.
 
 
 ## Optional hardening

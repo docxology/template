@@ -1,14 +1,14 @@
 {
   "exemplar_coverage": [
     [
+      "template_newspaper",
+      156,
+      99.25
+    ],
+    [
       "template_madlib",
       198,
       99.11
-    ],
-    [
-      "template_newspaper",
-      156,
-      99.08
     ],
     [
       "template_methods_paper",
@@ -22,7 +22,7 @@
     ],
     [
       "template_autoresearch_project",
-      398,
+      393,
       96.49
     ],
     [
@@ -37,23 +37,23 @@
     ],
     [
       "template_textbook",
-      299,
-      96.06
-    ],
-    [
-      "template_storybook",
-      45,
-      95.57
+      303,
+      96.07
     ],
     [
       "template_template",
-      161,
+      158,
       95.55
     ],
     [
       "template_literature_meta_analysis",
-      1261,
+      1264,
       95.48
+    ],
+    [
+      "template_storybook",
+      45,
+      95.38
     ],
     [
       "template_registered_report",
@@ -62,22 +62,22 @@
     ],
     [
       "template_pools_rules_tools",
-      307,
+      308,
       94.68
-    ],
-    [
-      "template_advanced_literature_review",
-      163,
-      94.04
     ],
     [
       "template_code_project",
       296,
-      94.04
+      94.13
+    ],
+    [
+      "template_advanced_literature_review",
+      170,
+      94.12
     ],
     [
       "template_autoscientists",
-      191,
+      194,
       93.39
     ],
     [
@@ -93,7 +93,7 @@
     [
       "template_search_project",
       458,
-      92.0
+      91.89
     ],
     [
       "template_experiment_tree",
@@ -113,7 +113,7 @@
     [
       "template_active_inference",
       992,
-      91.16
+      91.15
     ],
     [
       "template_eda_notebook",
@@ -129,7 +129,7 @@
   "infrastructure_python": [
     [
       "reporting",
-      419
+      423
     ],
     [
       "core",

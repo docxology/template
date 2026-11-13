@@ -132,7 +132,10 @@ def run_source_native_mermaid(
         from infrastructure.project.public_acceptance_evidence import write_json
         from infrastructure.project.public_reference_git import remaining
         from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-        from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+        from infrastructure.reporting.native_pdf_citation_runtime import (
+            CitationRuntime,
+            NATIVE_OBSERVATION_CEILING_SECONDS,
+        )
         from infrastructure.reporting.native_stage_child import (
             current_native_stage_directory,
             retain_native_stage_artifact,
@@ -141,9 +144,6 @@ def run_source_native_mermaid(
 
         if role not in CALLERS or type(timeout) is not int or timeout <= 0 or not isinstance(raw_source, str):
             raise ValueError("Mermaid production role/timeout/caller source is absent")
-        stage_directory = current_native_stage_directory(require_render=True)
-        if stage_directory is None:
-            raise ValueError("native Mermaid production requires its actual fixed Source-admitted stage child")
         root = owner.source.bindings.current_root
         reader = SnapshotReader(root, native_producer_operation=owner)
         owner.verify(reader, run_id=owner.run_id, deadline=owner.deadline)
@@ -163,7 +163,20 @@ def run_source_native_mermaid(
         ):
             raise ValueError("Mermaid production inputs/output/CWD differ from a real selected Source project role")
         scope = matches[0]
-        phase_deadline = min(owner.deadline, time.monotonic() + min(timeout, 120))
+        stage_directory = current_native_stage_directory(
+            require_render=role == "inline",
+            require_analysis=role == "standalone",
+            expected_scope=scope,
+        )
+        if stage_directory is None:
+            raise ValueError("native Mermaid production requires its actual fixed Source-admitted stage child")
+        # The caller's smaller timeout governs only its uninstrumented fallback.
+        # Native observation also includes Source custody, callbacks, cleanup and
+        # retention, so it always receives the shared finite observation ceiling.
+        phase_deadline = min(
+            owner.deadline,
+            time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS,
+        )
         remaining(phase_deadline)
         paths = tuple(dict.fromkeys((source_path, *(path.absolute() for path in input_paths))))
         for path in paths:
@@ -286,7 +299,6 @@ def run_source_native_mermaid(
             retain_native_stage_artifact(reader.read(selected["path"]), tool_artifacts=runtime.tools)
             runtime.unchanged()
             owner.verify(reader, run_id=owner.run_id, deadline=owner.deadline)
-            remaining(phase_deadline)
         except BaseException as error:
             attempt = {
                 "artifact": selected,

@@ -46,6 +46,14 @@ authenticates source bytes; it does not authenticate mutable derived cached whee
 bytes. This cache ownership boundary is an explicit prerequisite, and a successful
 dependency preparation alone establishes no full installed or native acceptance.
 
+The separate
+[`setup-native-loader-fixture`](../../.github/actions/setup-native-loader-fixture/action.yml)
+preparation follows the same build ordering: its fresh temporary venv receives
+the hash-locked `installed-build` group before any non-isolated runtime sdist
+build. Installing that group into Root's `.venv` does not provision the separate
+builder. This matters on Python 3.15, where the pinned PyYAML release uses its
+locked source archive rather than a CPython 3.14 wheel.
+
 The installed native original and current reader export the Root lock's default
 execution dependencies plus PPTX rendering. These supply the actual test stack,
 type checker and scientific providers required by full-suite replay. The export

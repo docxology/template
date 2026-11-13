@@ -159,7 +159,7 @@ the truth of the substituted content itself.
 
 ## Variants
 
-[`template_gold_refinement`](../template_gold_refinement/README.md) is a worked
+[`template_gold_refinement`](https://github.com/docxology/template_gold_refinement) is a worked
 **domain-specialization** of this exemplar. It reuses the same deterministic
 token-injection composition core (`src/composition.py`, `src/config.py`,
 `src/manuscript_variables.py`, and a near-identical `manuscript/config.yaml`
@@ -198,6 +198,31 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [Tests](tests/README.md)
 
 <!-- foam-orphan-nav:end -->
+
+## Standalone project commands
+
+From an independent project root, prepare Python 3.14/3.15 with the genuine SDK
+wheel matching `pyproject.toml` and this project's `dev` extra. The local
+`tool.uv.sources` ancestor is for monorepo development, not standalone SDK
+selection; an intended version is not a PyPI publication receipt.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/01_generate_madlib_artifacts.py
+.venv/bin/python scripts/02_validate_outputs.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
+```
+
+`projects/templates/...`, `scripts/pipeline/`, and `scripts/audit/` commands
+elsewhere in these docs run from a [docxology/template](https://github.com/docxology/template)
+monorepo checkout. They do not exist at a standalone project root. The shared
+[publishing guides](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md)
+and [decision-memory rules](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md)
+are monorepo documentation, not a second local implementation.
+
 
 
 ## Optional hardening

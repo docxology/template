@@ -84,18 +84,47 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_sto
 
 ## Quick start
 
-From the repository root:
+### Standalone repository (project root)
+
+Use Python 3.14 or 3.15 and reviewed standalone installation metadata/lock that
+resolve `research-project-template==5.2.0` against the actual released SDK.
+The canonical editable `../../..` SDK binding is monorepo-only: a raw source
+export is not an install-ready standalone release. Missing SDK publication or
+the reviewed installation projection remains a prerequisite.
+The project-relative commands preserve the
+[standalone owner's usage contract](https://github.com/docxology/template_storybook/blob/aae579f0c3db2b53664b5d637e525698eb60f6b6/README.md#L81-L102):
+
+```bash
+uv sync --extra dev --python 3.14
+uv run python scripts/90_build_storybook_pdf.py
+# On macOS; elsewhere open the same PDF with your normal viewer
+open output/pdf/the-shape-between.pdf
+```
+
+The existing PDF builder renders every configured page itself, then writes the
+PDF, manifest, summary, and contact sheet. Separate page scripts remain available
+for targeted work, for example `uv run python scripts/20_render_page_01.py`.
+The scripts accept `--project-root` to select another prepared project tree.
+Normal configured outputs and manifest paths are project-relative; the
+unresolved containment-hardening request is retained in
+[`TODO.md`](TODO.md#workflowz-review--2026-11-10), not claimed as fixed.
+
+### Template monorepo (root)
 
 ```bash
 uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook
 open projects/templates/template_storybook/output/pdf/the-shape-between.pdf
 ```
 
-Render through the manuscript pipeline as well:
+Stage 02 runs the project's configured page-script list. Stage 03 separately
+renders the descriptive manuscript PDF, not the primary illustrated storybook:
 
 ```bash
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_storybook
 ```
+
+These `scripts/pipeline/` paths belong to the template monorepo and are not
+standalone entrypoints.
 
 ## How it works
 
@@ -126,9 +155,17 @@ pipeline metadata, render formats, and the Stage-02 script list.
 
 ## Tests
 
+From the prepared standalone project root:
+
+```bash
+uv run --extra dev pytest tests/ --cov=src --cov-branch --cov-fail-under=90
+```
+
+From the template monorepo root instead:
+
 ```bash
 uv run pytest projects/templates/template_storybook/tests/ \
-  --cov=projects/templates/template_storybook/src --cov-fail-under=90
+  --cov=projects/templates/template_storybook/src --cov-branch --cov-fail-under=90
 ```
 
 The suite uses the real YAML content and renders real PNG/PDF artifacts.

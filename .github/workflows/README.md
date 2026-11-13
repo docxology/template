@@ -7,6 +7,12 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
+Document-consuming functional jobs (every infrastructure shard and Search) use a
+75-minute hosted envelope for cold Source-pinned compiler/tool preparation.
+Each actual smoke-execution step remains capped at 10 minutes; other project
+jobs retain their 10-minute outer limit. Native observation, regression, pytest
+and operation clocks are unchanged.
+
 Manual CI dispatch accepts an optional exact public `coverage-project` and calls
 `exemplar-coverage.yml` for its own locked release-profile measurement. The
 **Public exemplar coverage** workflow calls the same job across the complete
@@ -88,8 +94,8 @@ flowchart TB
 `test-infra` retains its 90-minute hosted budget and unchanged per-case
 timeouts. Its Linux/macOS cells invoke the shared
 [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml)
-once before the tests; pinned archive verification, native package preparation,
-and actual executable probes remain required.
+once before the tests; Source-pinned Linux builds or exact macOS archives,
+native package preparation and actual executable probes remain required.
 
 ### Quality Gates
 

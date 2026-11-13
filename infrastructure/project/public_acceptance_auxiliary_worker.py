@@ -105,6 +105,7 @@ def execute(
             if directory is not None:
                 import psutil
                 from infrastructure.project.public_acceptance_auxiliary import supervise
+                from infrastructure.project.public_acceptance_auxiliary_supervision import complete_auxiliary_cleanup
 
                 command = [
                     sys.executable,
@@ -118,7 +119,16 @@ def execute(
                 # This intentional timeout must first admit Source and ARM the
                 # independent guardian. It remains inside the enclosing gate's
                 # original clock; a startup refusal proves no descendant cleanup.
-                process = supervise(command, root, directory / "descendant", time.monotonic() + min(10, budget))
+                descendant_deadline = time.monotonic() + min(10, budget)
+                if operation_deadline is not None:
+                    descendant_deadline = min(descendant_deadline, operation_deadline)
+                process = supervise(
+                    command,
+                    root,
+                    directory / "descendant",
+                    descendant_deadline,
+                    execution_timeout_seconds=1.0,
+                )
                 if type(process.get("pid")) is not int or type(process.get("exit_code")) is not int:
                     raise ValueError("macOS descendant control did not launch and observe an actual child")
                 pid = int((root / process["streams"]["stdout"]["path"]).read_text().strip())
@@ -127,8 +137,8 @@ def execute(
                     alive = descendant.is_running() and descendant.status() != psutil.STATUS_ZOMBIE
                 except psutil.NoSuchProcess:
                     alive = False
-                if not process["timed_out"] or alive:
-                    raise ValueError("actual timed-out process group left a running descendant")
+                if not process["timed_out"] or alive or not complete_auxiliary_cleanup(process):
+                    raise ValueError("actual descendant timeout/cleanup did not complete verified observation")
                 result["assertions"]["descendant_cleanup"] = True
                 result["descendant_process"] = process
             return result

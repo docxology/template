@@ -4,6 +4,29 @@
 
 Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_registered_report --project-only`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and keep template integrity checks green.
 
+### Standalone project commands
+
+From this repository's standalone root, prepare Python 3.14/3.15, the genuine
+SDK wheel matching `pyproject.toml`, and this project's `dev` extra. The
+checkout-only `tool.uv.sources` path is not an installed provider; do not assume
+an intended candidate version is published on PyPI.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+MPLBACKEND=Agg .venv/bin/python scripts/generate_figures.py
+.venv/bin/python scripts/generate_review_artifacts.py
+```
+
+The documented four-figure/data/registry outcome still requires the explicit
+standalone receipt in [`RR-STANDALONE-FIGURES-1`](TODO.md#workflowz-review--2026-11-10-retained-acceptance-obligation);
+these commands are not a claim that it was exercised. Paths beginning
+`projects/templates/`, `scripts/pipeline/`, or `scripts/audit/` below are
+monorepo-root commands, not standalone files. Keep the frozen registration
+schema/hash and confirmatory/exploratory boundaries unchanged.
+
 ## When to use this template
 
 Use this template when the core method is a **registered report or preregistered replication**: hypotheses, outcomes, exclusion rules, analysis plan, power or sensitivity rationale, deviation ledger, and confirmatory-versus-exploratory claim boundaries must be locked before results are interpreted.
@@ -61,7 +84,7 @@ empirical study. Every number in the prose is produced by the tested code in
 also renders four committed figures into
 [`manuscript/figures/`](manuscript/figures/README.md): the hypothesis-to-outcome
 mapping, the analysis-plan workflow DAG, the deviation-ledger timeline, and the
-seeded permutation-test result. Regenerate with:
+seeded permutation-test result. Regenerate from the **monorepo root** with:
 
 ```bash
 MPLBACKEND=Agg uv run python projects/templates/template_registered_report/scripts/generate_figures.py
@@ -89,7 +112,7 @@ Confirmatory claims must map to registered hypotheses and outcomes. Exploratory 
 
 ## Fork guidance
 
-Use `scripts/audit/copy_exemplar.py` for clean forks. Replace the registration fixture, update the analysis plan, record ethics/stage metadata, and rerun tests before rendering.
+Use the template monorepo's `scripts/audit/copy_exemplar.py` ([docxology/template](https://github.com/docxology/template)) for clean forks; this standalone checkout ships no copier. Replace the registration fixture, update the analysis plan, record ethics/stage metadata, and rerun tests before rendering.
 
 
 ## Optional hardening

@@ -20,6 +20,7 @@ from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_crossref_protocol import peer_pid, process_birth
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader
+from infrastructure.reporting.native_loader_maps import terminal_kernel_residents
 from infrastructure.reporting.native_loader_protocol import (
     CHUNK,
     MAX_EVENTS,
@@ -39,7 +40,7 @@ from infrastructure.reporting.native_loader_protocol import (
 if TYPE_CHECKING:
     from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
 
-SCHEMA = "template-consuming-native-loader-lifecycle-v3"
+SCHEMA = "template-consuming-native-loader-lifecycle-v5"
 ENV_KEYS = {
     "LD_AUDIT",
     "LD_PRELOAD",
@@ -63,6 +64,7 @@ class NativeLoaderObservation:
     socket_directory: tempfile.TemporaryDirectory[str]
     address: str
     server: socket.socket
+    _library_fd: int | None
     prepared: bool
     eof: bool
     total_body: int
@@ -111,6 +113,28 @@ class NativeLoaderObservation:
         self.environment_injections: dict[str, str] | None = None
         self.resident_terminal: dict[str, Any] | None = None
         self.connection: socket.socket | None = None
+        self._library_fd = None
+        # glibc silently ignores LD_AUDIT names >= NAME_MAX. Hold a short
+        # descriptor nomination before paired children commit their environments.
+        try:
+            self._library_fd = os.open(self.compiled.library, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+            self.inherited_library_descriptor()
+        except BaseException:
+            self.abort()
+            raise
+
+    def inherited_library_descriptor(self) -> int:
+        """Nominate only the held compiler inode to this one actual child."""
+        remaining(self.deadline)
+        descriptor = self._library_fd
+        if (
+            self.owner_pid != os.getpid()
+            or descriptor is None
+            or descriptor < 3
+            or identity(descriptor) != self.compiled.identity
+        ):
+            raise ValueError("loader inherited library lost its actual held compiler descriptor")
+        return descriptor
 
     def prepare_env(self, env: dict[str, str], *, deadline: float, purpose: str) -> dict[str, str]:
         """Called inside the actual supervisor after sanitation, before Popen."""
@@ -314,8 +338,15 @@ class NativeLoaderObservation:
                 while True:
                     value, descriptor = frame(connection, self.deadline)
                     if value is None:
+                        if not self.done or not self.preinit:
+                            raise ValueError(
+                                "loader channel premature EOF preceded its validated terminal callback/closed roster"
+                            )
+                        terminal_kernel_residents(self.seen, self.active, self.closed)
                         self.eof = True
                         break
+                    if self.done:
+                        raise ValueError("loader frame followed its validated terminal callback")
                     try:
                         self._verify_peer(live, connection)
                         peer = self.peer
@@ -356,8 +387,15 @@ class NativeLoaderObservation:
                                 rows = self._map_event(live, value["sequence"])
                                 value["complete_executable_map_census"] = self._census(rows, live)
                             elif value["kind"] == "done":
-                                if self.done or self.active or not self.preinit or set(self.closed) != set(self.seen):
-                                    raise ValueError("loader terminal callback omits an actual opened/closed image")
+                                if (
+                                    self.done
+                                    or not self.preinit
+                                    or len(self.events) < 2
+                                    or self.events[-2]["kind"] != "activity"
+                                    or self.events[-2]["base"] != 0
+                                ):
+                                    raise ValueError("loader terminal callback lacks its final consistency boundary")
+                                terminal_kernel_residents(self.seen, self.active, self.closed)
                                 self.done = True
                             elif value["kind"] == "hello" and len(self.events) != 1:
                                 raise ValueError("loader repeated its Source launch initialization")
@@ -367,7 +405,11 @@ class NativeLoaderObservation:
                                 if self.preinit and value["base"] == 0:
                                     rows = self._map_event(live, value["sequence"])
                                     value["complete_executable_map_census"] = self._census(rows, live)
-                        self._verify_peer(live, connection)
+                        if not self.done:
+                            self._verify_peer(live, connection)
+                        # DONE was authenticated while the child blocked for this
+                        # acknowledgement. It may now exit before EOF; reaping below
+                        # checks argv/owner/guardian custody without requiring a live poll.
                         connection.settimeout(remaining(self.deadline))
                         connection.sendall(b"\xa5")
                     finally:
@@ -380,7 +422,7 @@ class NativeLoaderObservation:
                     raise ValueError(
                         "loader channel closure lacks actual signed normal consuming-process OS termination"
                     )
-                residents = list(self.active)
+                residents = terminal_kernel_residents(self.seen, self.active, self.closed)
                 for object_id, descriptor in self.descriptors.items():
                     _unchanged_body(self.seen[object_id]["body"], descriptor, self.deadline)
                 self.resident_terminal = {
@@ -389,7 +431,6 @@ class NativeLoaderObservation:
                     "resident_object_ids": residents,
                     "observed_monotonic": time.monotonic(),
                 }
-                self.done = True
         finally:
             self.server.close()
             for descriptor in self.descriptors.values():
@@ -400,21 +441,32 @@ class NativeLoaderObservation:
             self.socket_directory.cleanup()
 
     def abort(self) -> None:
-        """Close owned IPC only; ordinary ToolAPI/guardian owns process cleanup."""
-        if self.connection is not None:
+        """Close owned IPC/descriptors; ordinary ToolAPI owns process cleanup."""
+        try:
+            if self.connection is not None:
+                try:
+                    self.connection.shutdown(socket.SHUT_RDWR)
+                except OSError:
+                    pass
             try:
-                self.connection.shutdown(socket.SHUT_RDWR)
+                self.server.shutdown(socket.SHUT_RDWR)
             except OSError:
                 pass
-        try:
-            self.server.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
-        self.server.close()
+            self.server.close()
+            Path(self.address).unlink(missing_ok=True)
+            self.socket_directory.cleanup()
+        finally:
+            descriptor, self._library_fd = self._library_fd, None
+            if descriptor is not None:
+                os.close(descriptor)
 
     def finish(self, result: dict[str, Any]) -> dict[str, str]:
         """Called after actual OS reaping; enclosing ToolAPI must still close guardian."""
         self.compiled.verify(deadline=self.deadline)
+        library_descriptor = {
+            "descriptor": self.inherited_library_descriptor(),
+            "identity": dict(self.compiled.identity),
+        }
         if (
             not self.eof
             or not self.done
@@ -423,6 +475,7 @@ class NativeLoaderObservation:
             or tuple(result["command"]) != self.command
             or result["pid"] != self.peer["pid"]
             or result["owner_pid"] != self.owner_pid
+            or result.get("library_descriptor") != library_descriptor
             or result["original_exit_code"] != 0
         ):
             raise ValueError("loader callbacks lack the same actual consuming tool's signed normal OS exit")
@@ -436,6 +489,7 @@ class NativeLoaderObservation:
             "compiler": self.compiled.binding,
             "purpose": self.purpose,
             "owner_pid": self.owner_pid,
+            "library_descriptor": library_descriptor,
             "consuming_process": self.peer,
             "command": list(self.command),
             "original_deadline_monotonic": self.deadline,

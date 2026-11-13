@@ -4,7 +4,7 @@ A computational-notebook exemplar: an interactive walkthrough notebook
 ([`notebooks/eda_walkthrough.ipynb`](notebooks/eda_walkthrough.ipynb)) that
 imports a small, fully-tested EDA library instead of carrying logic in its
 cells. Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -16,9 +16,9 @@ workflow: explore fast in a notebook cell, then move any computation that
 matters into `src/template_eda_notebook/eda/` behind a failing test (thin-orchestrator pattern;
 `src/` implements, scripts and cells coordinate, tests enforce ≥90% coverage
 with no mocks). If your project is primarily prose, layout, or numerical
-optimization, see [`template_prose_project`](../template_prose_project/),
-[`template_newspaper`](../template_newspaper/), or
-[`template_code_project`](../template_code_project/) instead.
+optimization, see [`template_prose_project`](https://github.com/docxology/template/tree/main/projects/templates/template_prose_project),
+[`template_newspaper`](https://github.com/docxology/template/tree/main/projects/templates/template_newspaper), or
+[`template_code_project`](https://github.com/docxology/template/tree/main/projects/templates/template_code_project) instead.
 
 ## Publication and rendering
 
@@ -85,6 +85,28 @@ uv sync
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_eda_notebook
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_eda_notebook
 ```
+
+### Standalone project commands
+
+Paths beginning `projects/templates/`, `scripts/pipeline/`, or `scripts/audit/`
+below are **monorepo-root** paths, not files shipped at a standalone root.
+The EDA library remains infrastructure-free; analysis and notebook execution use
+the declared SDK. Prepare Python 3.14 or 3.15 with an explicitly supplied
+matching SDK wheel; do not let the checkout-only `tool.uv.sources` resolver
+select an unrelated ancestor or assume this candidate is published on PyPI.
+From the standalone project root:
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine SDK wheel matching pyproject.toml}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/eda_analysis.py
+.venv/bin/python scripts/execute_notebook.py --startup-timeout 30 --cell-timeout 60 --run-timeout 180
+```
+
+Keep the fresh-kernel receipt, numerical oracle, and source-custody requirements
+below; an installed import or saved notebook output does not replace them.
 
 ## Quick Start — run via the template monorepo
 

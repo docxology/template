@@ -90,7 +90,7 @@ def _ensure_dir(path: pathlib.Path) -> None:
 
 
 def _default_output_dir() -> pathlib.Path:
-    here = pathlib.Path(__file__).resolve().parents[2]
+    here = pathlib.Path(__file__).resolve().parents[3]
     return here / "manuscript" / "figures"
 
 

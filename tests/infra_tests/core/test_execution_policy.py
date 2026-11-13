@@ -179,7 +179,7 @@ def test_actual_child_sees_explicit_export_epoch(tmp_path: Path) -> None:
             sys.executable,
             "-I",
             "-c",
-            "import os;print(os.environ['SOURCE_DATE_EPOCH'] + ':' + os.environ['TEMPLATE_EXECUTION_MODE'])",
+            "import os;print(os.environ['SOURCE_DATE_EPOCH'])",
         ],
         cwd=tmp_path,
         env=environment,
@@ -187,4 +187,4 @@ def test_actual_child_sees_explicit_export_epoch(tmp_path: Path) -> None:
         text=True,
         timeout=10,
     )
-    assert result.returncode == 0 and result.stdout.strip() == "1700000000:core"
+    assert result.returncode == 0 and result.stdout.strip() == "1700000000"

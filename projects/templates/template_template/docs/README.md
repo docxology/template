@@ -15,6 +15,10 @@ Technical documentation for the `template` meta-project — the self-referential
 
 ## Getting Started
 
+These qualified commands run from the **public monorepo root**, not the standalone
+project root. For standalone SDK/DATA preparation and the own-suite command, see
+[`../README.md`](../README.md#standalone-complete-source-data).
+
 ```bash
 # Run tests
 PYTHONPATH=. uv run pytest projects/templates/template_template/tests/ -v
@@ -24,12 +28,12 @@ PYTHONPATH=. uv run python projects/templates/template_template/scripts/generate
 PYTHONPATH=. uv run python projects/templates/template_template/scripts/generate_manuscript_metrics.py
 
 # Full pipeline
-./run.sh  # Select template_template, then Core pipeline
+./run.sh --project templates/template_template --pipeline --mode core
 ```
 
 ## Key Concepts
 
 - **Self-referential**: This project's manuscript describes the infrastructure it runs on
 - **Variable injection**: `${variable}` tokens in manuscript are replaced with live metrics at build time
-- **Zero-mock**: Every test runs against the real filesystem and real infrastructure; the collected total is in [`COUNTS.md`](../../../../docs/_generated/COUNTS.md)
+- **Zero-mock**: Every test runs against the real filesystem and real infrastructure; the collected total is in [monorepo `COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)
 - **Four figures**: Architecture overview, pipeline stages, module inventory, comparative matrix — all auto-generated from live data

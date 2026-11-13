@@ -3,7 +3,7 @@
 A configurable, reproducible **prose-review** pipeline built on
 `infrastructure/prose/` (readability + structure + quality) and
 `infrastructure/reference/` (BibTeX validation). Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -11,10 +11,10 @@ Use this template for **manuscript-focused editorial pipelines**: readability
 gates (Flesch-Kincaid bands), structural checking, citation/BibTeX
 validation, and prose-quality review workflows where the document itself is
 the artifact under test. If you are implementing algorithms with numerical
-experiments, start from [`template_code_project`](../template_code_project/)
+experiments, start from [`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project)
 instead; for book-length structure see
-[`template_textbook`](../template_textbook/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_textbook`](https://github.com/docxology/template/blob/main/projects/templates/template_textbook). Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -276,10 +276,10 @@ of the orchestrator scripts.
 
 * [`AGENTS.md`](AGENTS.md) — agent-oriented walkthrough.
 * [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation / cross-reference conventions for this project.
-* [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
+* [`../../docs/guides/manuscript-semantics.md`](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
 * [`docs/architecture.md`](docs/architecture.md) — architectural diagram.
 * [`docs/quickstart.md`](docs/quickstart.md) — getting started guide.
-* [`infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) —
+* [`infrastructure/prose/SKILL.md`](https://github.com/docxology/template/blob/main/infrastructure/prose/SKILL.md) —
   underlying prose-analysis API.
 
 ## Template integrity

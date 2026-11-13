@@ -81,9 +81,10 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_autoscientists
 ```
 
-Standalone repositories are publication mirrors for source, DOI metadata, and
-tracked rendered artifacts. Use the monorepo above when you need the full shared
-infrastructure, pipeline stages, or cross-template validation.
+Standalone repositories retain source, DOI metadata, and tracked rendered
+artifacts, and support the project-local research commands below with the
+declared installed SDK. The shared pipeline scripts and cross-template gates
+above belong to the template monorepo, not the standalone repository.
 
 ## What it honestly shows
 
@@ -106,32 +107,59 @@ constant.
 
 ## Quick Start
 
+### Standalone repository (project root)
+
+Use Python 3.14 or 3.15 and reviewed standalone installation metadata/lock that
+resolve `research-project-template==5.2.0` against the actual released SDK.
+The canonical editable `../../..` SDK binding is monorepo-only: a raw source
+export is not an install-ready standalone release. Missing SDK publication or
+the reviewed installation projection remains a prerequisite.
+These root-local entrypoints preserve the
+[standalone owner's usage contract](https://github.com/docxology/template_autoscientists/blob/7a2c780fbd1e8a09233f0291ce4df6484b7a45fb/README.md#L111-L145).
+
 ```bash
+uv sync --extra dev --python 3.14
+
 # Coordinated vs single-thread baseline (matched budget) + summary JSON/figure
-uv run python projects/templates/template_autoscientists/scripts/run_search_comparison.py
+uv run python scripts/run_search_comparison.py --mode core
 
 # Per-mechanism ablation (metric figure + efficiency/hygiene figure)
-uv run python projects/templates/template_autoscientists/scripts/run_ablation.py
+uv run python scripts/run_ablation.py
 
-# Core and local transport contract suite; actual installed-model acceptance is opt-in
-uv run pytest projects/templates/template_autoscientists/tests -m "not requires_ollama"
+# Core and local transport contract suite; installed-model acceptance is opt-in
+uv run --extra dev pytest tests/ -m "not requires_ollama"
+```
+
+The comparison controller requires the declared platform SDK even in core mode;
+it does not load a project-local SDK substitute. The scripts import the current
+`template_autoscientists` package under `src/` and write this project's `output/`.
+
+### Template monorepo (root)
+
+```bash
+uv run python projects/templates/template_autoscientists/scripts/run_search_comparison.py --mode core
+uv run python projects/templates/template_autoscientists/scripts/run_ablation.py
+uv run pytest projects/templates/template_autoscientists/tests/ \
+  -m "not requires_ollama" \
+  --cov=projects/templates/template_autoscientists/src --cov-branch --cov-fail-under=90
 ```
 
 ## Prerequisites & verification
 
-**Test/coverage gate (authoritative per-project command).** Exit code 0 alone is
-not proof — confirm tests collected > 0 and coverage clears the 90% `src/` gate
-(read the `TOTAL` line of the report for the live figure):
+**Standalone test/coverage gate.** From the prepared standalone project root,
+exit code 0 alone is not proof — confirm tests collected > 0 and coverage clears
+the 90% `src/` branch gate (read the live report's `TOTAL` line). The separate
+monorepo-root form appears above.
 
 ```bash
-uv run pytest projects/templates/template_autoscientists/tests \
+uv run --extra dev pytest tests/ \
   -m "not requires_ollama" \
-  --cov=projects/templates/template_autoscientists/src --cov-fail-under=90
+  --cov=src --cov-branch --cov-fail-under=90
 ```
 
-**Full pipeline render (qualified name required).** This exemplar lives under
-`projects/templates/`, so the pipeline must be invoked with the *qualified*
-project name — a bare name fails environment setup:
+**Full pipeline render (template monorepo only).** `scripts/runner/` and
+`scripts/pipeline/` are monorepo-root paths; they are not standalone entrypoints.
+From the template monorepo root, use the qualified project name:
 
 ```bash
 uv run python scripts/runner/execute_pipeline.py --project templates/template_autoscientists --mode core
@@ -170,8 +198,8 @@ manuscript under [`manuscript/`](manuscript/) for the full write-up.
 
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
-- Project validation: `uv run pytest projects/templates/template_autoscientists/tests/ --cov=projects/templates/template_autoscientists/src --cov-fail-under=90`.
-- Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
+- Standalone project validation: `uv run --extra dev pytest tests/ -m "not requires_ollama" --cov=src --cov-branch --cov-fail-under=90` from the prepared project root.
+- Monorepo-only drift validation: `uv run python scripts/audit/check_template_drift.py --strict` from the template monorepo root.
 
 The local coordination lane binds actual platform custody in both checkout and
 installed-wheel environments. Installed evidence includes the selected

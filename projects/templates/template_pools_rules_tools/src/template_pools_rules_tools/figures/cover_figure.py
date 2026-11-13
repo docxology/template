@@ -25,7 +25,7 @@ NEUTRAL_LIGHT = "#94a3b8"
 
 
 def _default_output_dir() -> pathlib.Path:
-    return pathlib.Path(__file__).resolve().parents[2] / "manuscript" / "figures"
+    return pathlib.Path(__file__).resolve().parents[3] / "manuscript" / "figures"
 
 
 def generate_cover_art(

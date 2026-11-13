@@ -6,6 +6,16 @@ PDF and PPTX.
 
 **Location:** git-tracked public exemplar at `projects/templates/template_pitch_deck/` in the public template checkout.
 
+The standalone repository root corresponds to that project directory.
+`projects/templates/...`, `scripts/pipeline/`, `scripts/audit/`, and sibling
+project paths below are **monorepo-root** references, not local standalone files.
+Standalone execution uses the genuine installed SDK plus admitted complete-source
+DATA and real renderers described in
+[`AGENTS.md`](AGENTS.md#standalone-complete-source-data); installing a wheel alone
+does not supply Root tests, manuscripts, native Git facts, or the pinned Kmyth
+checkout. From a fully prepared standalone root, `python -I -m pytest tests/
+--cov=src --cov-fail-under=90` is the complete own-suite command.
+
 ## When to use this template
 
 Use this template when you need a pitch, grant report, or recurring
@@ -13,13 +23,13 @@ stakeholder update treated as a build artifact — bound to live repository
 facts, validated for unresolved tokens and pitch-deck cliché, and
 regenerable byte-for-byte from source rather than hand-maintained in a
 proprietary slide tool. The flagship shipped content pitches
-[`template_template`](../template_template/) — this monorepo's own
+[`template_template`](https://github.com/docxology/template/tree/main/projects/templates/template_template/) — this monorepo's own
 autopoietic meta-project — to a meta-science / science-integrity audience.
 
 If your research subject renders as a manuscript instead, start from
-[`template_code_project`](../template_code_project/) or
-[`template_template`](../template_template/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_code_project`](https://github.com/docxology/template/tree/main/projects/templates/template_code_project/) or
+[`template_template`](https://github.com/docxology/template/tree/main/projects/templates/template_template/). Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 

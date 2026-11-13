@@ -190,3 +190,10 @@ def test_macos_control_observes_real_descendant_after_guardian_startup(tmp_path:
     assert process["timed_out"] is True
     # This is a deliberately timed-out control, never a passing child receipt.
     assert process["accepted"] is False
+    cleanup = process["cleanup"]
+    assert cleanup["verified"] is True
+    assert cleanup["guardian_armed"] is True and cleanup["guardian_finished"] is True
+    assert cleanup["guardian_exit_code"] == 0 and cleanup["root_reaped"] is True
+    assert cleanup["final_census_succeeded"] is True
+    assert cleanup["final_census_matched_pids"] == cleanup["final_token_sweep_matched_pids"] == []
+    assert cleanup["deadline_exceeded"] is False and cleanup["diagnostics"] == []

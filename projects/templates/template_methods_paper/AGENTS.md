@@ -1,15 +1,15 @@
 # A Domain Language for Specifying Controlled Methods — agent guide
 
-**This is an active project** in the `projects/` directory, discovered and
-executed by infrastructure discovery functions. Public exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+**This is a public canonical exemplar** under `projects/templates/` in the monorepo,
+also byte-copied to a standalone repository. Public exemplar roster:
+[monorepo `projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 Publication DOI layout:
-[`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md).
+[Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md).
 Manuscript semantics:
-[`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
+[shared guide](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md).
 
 Decision memory and verifier hardening follow
-[`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md):
+[monorepo `docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md):
 use nearby `WHY:` comments only for surprising local choices, keep volatile
 counts generated, and add negative controls for verifier-like gates.
 
@@ -28,7 +28,7 @@ procedure.
 | --- | --- |
 | `src/template_methods_paper/methods_dsl/` (domain) | Pure dataclasses and functions — **no** plotting, no file I/O, **no** `infrastructure` imports except the one sanctioned exception (`_logging.py`) |
 | `scripts/` | Thin orchestrators; call domain APIs and the declared platform SDK for figure provenance, API documentation, and manuscript injection; the only place matplotlib + file writes live |
-| Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
+| Live counts | Link [monorepo generated counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via
 `scripts/audit/check_template_drift.py --strict` and
@@ -82,7 +82,7 @@ uv run pytest projects/templates/template_methods_paper/tests \
 ```
 
 Live test count and achieved coverage:
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) — do not
+[monorepo generated counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md) — do not
 copy the numbers here.
 
 ## Advisory research overlays (validation inputs, not autonomous agents)
@@ -114,8 +114,8 @@ quick reference commands, and pitfalls.
 
 ## See Also
 
-- [Root projects AGENTS.md](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster.
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md).
+- [Monorepo projects AGENTS.md](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars) — public exemplar roster.
+- [Monorepo publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md).
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
 - [`src/AGENTS.md`](src/template_methods_paper/AGENTS.md) / [`src/methods_dsl/AGENTS.md`](src/template_methods_paper/methods_dsl/AGENTS.md) — DSL library API reference.
 - [`TODO.md`](TODO.md) — template-status gaps and improvement ladder.

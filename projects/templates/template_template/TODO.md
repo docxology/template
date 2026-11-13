@@ -1,7 +1,7 @@
 # template_template TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo `docs/maintenance/exemplar-backlog-history.md`](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -59,9 +59,9 @@ keeps a capability blocked rather than silently promoting it.
 
 The rows below describe remaining acceptance and repairs, not a claim that
 existing implementations are missing. Inspect current source and the dated
-[program record](../../../docs/maintenance/platform-4-upgrade.md) first.
+[monorepo program record](https://github.com/docxology/template/blob/main/docs/maintenance/platform-4-upgrade.md) first.
 Set `P4_PROJECT_ROOT` to this project's absolute canonical checkout and prepare
-its locked environment using the [runtime matrix guide](../../../docs/development/public-runtime-matrix.md).
+its locked environment using the [monorepo runtime matrix guide](https://github.com/docxology/template/blob/main/docs/development/public-runtime-matrix.md).
 Run one project per pytest process under the producer's declared finite outer
 deadline and source-owned per-case limits. The whole-selection domain command
 is an explicit acceptance opt-in: prepare its declared unpaid tool/model
@@ -88,6 +88,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `WZ-20261110-01` | open | Medium | Exact Python 3.15.2; locked dev dependencies; admitted SDK/DATA preparation | Retain the exact 3.15.2 development request and prove the complete locked own suite before treating that patch interpreter as tested; see the unchecked request below. | interpreter identity and complete own-suite receipt bound to the same source/lock | exact-interpreter assertion and full pytest command below | selected Python 3.14 must fail the 3.15.2 assertion; missing dependencies/interpreter are not success |
 | `P4-TEMPLATE-DOMAIN-1` | partial | Medium | All other exemplar and source/documentation integration; P4-PUBLIC-REFERENCE-1 | Regenerate this exemplar last and independently recount final public source, architecture, DAG and manuscript metrics using the admitted Root source rather than ambient Git/PATH or stale snapshots. | independent final metrics, source/DAG and confidentiality receipts | `OLLAMA_SKIP_TEST_MODEL_PULL=1 uv run --locked --no-sync --offline --project "$P4_PROJECT_ROOT" --directory "$P4_PROJECT_ROOT" python -m pytest tests/ --cov=src --cov-branch --cov-fail-under=90 --timeout=120 -m ""`; execute each declared opt-in capability producer under the root acceptance profile | private same-leaf aliases, forged PATH counts, stale source identities or copied literal metrics must fail |
 | `P4-TEMPLATE-MANUSCRIPT-1` | open | Medium | P4-TEMPLATE-DOMAIN-1; reviewed per-project render/native producer contracts and prepared tools | Regenerate final architecture diagrams, manuscript tables, source metrics and figures after all other changes; bind every claim to generator-owned current evidence. Audit configurable inputs, thin orchestration, injected variables and accessibility; repair only verified gaps. | current analysis/hydration/source bindings, all declared format outputs and visual/content negative controls | `uv run --no-sync --offline python scripts/pipeline/stage_02_analysis.py --project templates/template_template`; then canonical `stage_03_render.py` and `stage_04_validate.py` with the same selection and the required native producer | stale variables, unresolved content, missing formats, incorrect figures/citations or wrong-source visual evidence must fail |
 | `P4-TEMPLATE-PORTABILITY-1` | open | Medium | P4-TEMPLATE-DOMAIN-1; P4-TEMPLATE-MANUSCRIPT-1; built genuine SDK/provider; reviewed packaging projection | Execute all supported runtime and installed-wheel cells and fresh disposable standalone setup/full own-suite/format replay before publication. Verify independent intended version, source/export digest, public resource completeness and reviewed packaging projection; remote promotion is a separate row. | complete runtime/installed and pre-push isolated export/reinstallation receipts | `uv run --no-sync --offline python scripts/gates/installed_public.py --project templates/template_template --python "3.14=$P4_PYTHON314" --python "3.15=$P4_PYTHON315"`; then complete isolated exported suite and declared formats | parent-relative imports, editable provider substitution, absent cells, incomplete exports, invented publication metadata or remote content mismatch must fail |
@@ -104,3 +105,26 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Retained Workflowz requests — 2026-11-10
+
+Provenance: [authored standalone TODO at `0d1cd52d61034b3d38d2cc164bc3afadac41a9e8`, lines 108–146](https://github.com/docxology/template_template/blob/0d1cd52d61034b3d38d2cc164bc3afadac41a9e8/TODO.md#L108-L146),
+recovered body SHA-256 `b42869376a7eac9e0710d5116290536454a3d7c67f0e2623c60b270bd6a2e962`.
+The exact Python request remains unchecked, not accepted merely because a
+3.15 lane exists. Vendor requests `WZ-20261110-02` and `WZ-20261110-03` were
+resolved against the reviewed pinned source and software controls recorded in
+[the dated monorepo history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#reviewed-kmyth-software-corrections--2026-11-12).
+Historical line references below identify the original packet, not the current layout.
+
+- [ ] **WZ-20261110-01 — P2: Pin and actually validate the Python 3.15 development lane.**
+  - **Reported basis:** the packet's `.python-version:1` requested only `3.15`, while `pyproject.toml:57` listed tested versions only through 3.14. This was a validation/reproducibility concern, not evidence of outdated dependencies.
+  - **Requested outcome:** retain the exact development request `3.15.2`; require the complete locked own suite on that exact interpreter before recording it as tested. Reconcile the original request to add `3.15` to `tested_python_versions` with current metadata using real receipts: a current 3.15 lane declaration alone does not close this request. Do not change `requires-python`, relax locks or silently upgrade dependencies to make it pass. A concrete dependency/SDK constraint remains blocked.
+  - **Preparation:** from this project's prepared root (`P4_PROJECT_ROOT`), use the locked dev dependencies and declared `research-project-template` SDK plus admitted complete-source DATA; preserve the finite outer deadline and source-owned per-case limits in the current acceptance contract.
+  - **Acceptance commands (from that prepared own-project root):**
+    ```bash
+    uv run --locked --no-sync --python 3.15.2 python -c 'import sys; assert sys.version_info[:3] == (3, 15, 2), sys.version'
+    OLLAMA_SKIP_TEST_MODEL_PULL=1 uv run --locked --no-sync --python 3.15.2 python -m pytest tests/ --cov=src --cov-branch --cov-fail-under=90 --timeout=120 -m ""
+    ```
+    Require nonempty complete collection and a successful complete own-suite receipt; focused results do not qualify.
+  - **Negative control:** `uv run --locked --no-sync --python 3.14 python -c 'import sys; assert sys.version_info[:3] == (3, 15, 2), sys.version'` must fail the version assertion when that interpreter is available. Missing interpreters or dependencies are blockers, never a passing 3.15.2 cell.
+

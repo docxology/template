@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import hashlib
 import re
-from pathlib import Path
 from typing import Any, TYPE_CHECKING
 
 from infrastructure.core._bounded_kill import _RUN_IDS_ENV
@@ -47,7 +46,7 @@ def _commitments(env: dict[str, str]) -> dict[str, str]:
 def loader_environment_injections(loader: NativeLoaderObservation) -> dict[str, str]:
     """The exact overlay selected by the concrete Source consuming observer."""
     return {
-        "LD_AUDIT": str(loader.compiled.library),
+        "LD_AUDIT": f"/proc/self/fd/{loader.inherited_library_descriptor()}",
         "TEMPLATE_LOADER_TOKEN": loader.token.decode("ascii"),
         "TEMPLATE_LOADER_SOCKET": loader.address,
         "TEMPLATE_LOADER_DEADLINE_NS": str(int(loader.deadline * 1_000_000_000)),
@@ -165,8 +164,17 @@ def validate_native_environment(native: dict[str, Any], tool: dict[str, Any], re
     else:
         lifecycle = _file(native["loader_lifecycle"], reader).json_object()
         compilation = _file(lifecycle["compiler"], reader).json_object()
-        compiler = _file(compilation["compiler"], reader).json_object()
-        library = str(Path(compiler["cwd"]) / Path(compilation["library"]["path"]).name)
+        descriptor = lifecycle.get("library_descriptor")
+        if (
+            not isinstance(descriptor, dict)
+            or set(descriptor) != {"descriptor", "identity"}
+            or type(descriptor["descriptor"]) is not int
+            or not 3 <= descriptor["descriptor"] < 2**31
+            or descriptor != native.get("library_descriptor")
+            or descriptor["identity"] != compilation.get("library_identity")
+        ):
+            raise ValueError("actual audit descriptor differs from its original held compiler inode")
+        library = f"/proc/self/fd/{descriptor['descriptor']}"
         if (
             not isinstance(injections, dict)
             or set(injections) != _LOADER_KEYS

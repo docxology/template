@@ -197,13 +197,16 @@ def source_file_bytes(path: Path) -> bytes:
 
 
 def runtime_identity() -> dict[str, Any]:
-    """Bind the actual interpreter and only its installed site-package metadata."""
-    binary = Path(sys.executable).resolve()
-    packages = sorted(
-        [str(item.metadata.get("Name", "")), item.version]
-        for item in distributions(path=sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")}))
-    )
+    """Bind the venv-selecting launcher separately from physical executable bytes."""
+    launcher = Path(sys.executable).absolute()
+    binary = launcher.resolve()
+    packages = []
+    for item in distributions(path=sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")})):
+        metadata = item.metadata
+        packages.append([str(metadata.get("Name", "")), metadata["Version"]])
+    packages.sort()
     return {
+        "python_launcher": str(launcher),
         "python_executable": str(binary),
         "python_sha256": _sha(_regular_bytes(binary)),
         "python_version": sys.version,
@@ -354,7 +357,8 @@ def _distribution_custody(
         if "__pycache__" in relative.parts and location.suffix == ".pyc":
             continue
         raw = _regular_bytes(location)
-        actual_files[name] = _sha(raw)
+        digest = hashlib.sha256(raw).digest()
+        actual_files[name] = digest.hex()
         if name != record_name and (not declared_hash or not declared_size):
             raise ValueError("selected distribution file lacks exact RECORD hash/size custody")
         if declared_size and (not declared_size.isdecimal() or int(declared_size) != len(raw)):
@@ -363,15 +367,15 @@ def _distribution_custody(
             algorithm, separator, expected = declared_hash.partition("=")
             if algorithm != "sha256" or not separator:
                 raise ValueError("selected platform RECORD requires SHA-256 file hashes")
-            actual = base64.urlsafe_b64encode(hashlib.sha256(raw).digest()).decode().rstrip("=")
+            actual = base64.urlsafe_b64encode(digest).decode().rstrip("=")
             if actual != expected:
                 raise ValueError("installed platform file differs from its declared RECORD hash")
         if in_package and location.suffix == ".py":
             if not declared_hash or not declared_size:
                 raise ValueError("installed public Python source lacks exact RECORD custody")
-            source_files[location.relative_to(package_root).as_posix()] = _sha(raw)
+            source_files[location.relative_to(package_root).as_posix()] = actual_files[name]
         if public_module:
-            companion_files[location.name] = _sha(raw)
+            companion_files[location.name] = actual_files[name]
     if set(entries) != {str(path) for path in files}:
         raise ValueError("selected distribution file set differs from its RECORD")
     if installed:

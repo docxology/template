@@ -29,6 +29,140 @@ locks.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
+- Give the heavyweight Formal colony experiment modules explicit 600-second
+  per-test ceilings applied at module scope while preserving their real on-disk
+  trials, seeds and scientific assertions.
+- Provision the pinned SIA sandbox image in its native acceptance cell and audit
+  the Autoscientists comparison against the actual Source repository scripts
+  root when the SDK is installed separately.
+- Authenticate native loader terminal callbacks before reaping a completed
+  process, and use one finite 600-second native observation ceiling for custody,
+  callbacks, cleanup and retention without relaxing fail-closed acceptance.
+  Admit standalone Mermaid production only in the actual analysis stage; inline
+  manuscript fences remain render-stage only.
+- Preserve the reviewed Ubuntu APT mirror allowlist while appending lower-priority
+  EC2 regional fallbacks so hosted document setup can continue through primary
+  archive DNS failures. Run converter preparation before CI's raster and TeX APT
+  installs so those steps use the same policy, and bound each connection attempt
+  so a stalled mirror falls through to the next reviewed row.
+- Run the installed-SDK native-loader regression in its prepared full-module
+  contract lane, preserving its complete selection and original clocks instead
+  of truncating it at the routine smoke shard's 540-second deadline.
+  Prepare hash-verified locked dependencies before the offline body and declare
+  its Linux/compiler applicability without waiving either supported Python minor.
+  Document the cache action's actual preparation/consumer boundary in its
+  required README/AGENTS pair so the Root auxiliary docs gate can admit it.
+- Preserve the selected installed-SDK Python launcher separately from its
+  resolved executable image. Share a PID-preserving quoted shell/Python entry
+  header across direct and paired Crossref production and portable replay, so
+  cold virtual environments retain their actual SDK metadata on deep or quoted
+  paths without weakening executable-byte or final Source custody.
+- Canonicalize paired Crossref loader injection commitments before embedding
+  them in the Source-owned parent launcher. JSON transport must preserve exact
+  independently reconstructed launcher bytes; changed commitments and original
+  environment, owner, process, Source and deadline checks remain enforced.
+- Reject both Python 3.15 lazy-import forms explicitly in the current 3.14-floor
+  audit when a newer interpreter's best-effort parser admits them. Preserve
+  supported syntax, ordinary `lazy` identifiers and guarded API backports.
+  Keep the explicit build-epoch child regression independent of inherited
+  execution mode; production core/live precedence is unchanged.
+- Amortize complete Root Source admission across bounded 1000-case core
+  batches and reuse each batch's exact held node set for metadata checks.
+  Preserve real serial pytest, complete selection, bytecode and branch
+  coverage, external-fixture concurrency, cleanup and every original clock.
+- Check paired Crossref filter/compiler DATA within one fresh complete Source
+  opening/closing interval instead of nesting whole-Source verification for
+  each held record. Public verification stays fresh, live callbacks and actual
+  tool execution remain separate, and the 600-second ceiling is unchanged.
+- Give the deliberately timed-out macOS descendant control a shorter armed-body
+  window inside its unchanged whole deadline. Require the real guardian to
+  finish and the final process census to be empty in both producer and reader;
+  direct PID absence alone no longer establishes cleanup. Retire the private
+  refusal-message wording oracle while retaining real supervision controls.
+- Avoid rebuilding every lexical path ancestor during fresh Source inventory.
+  Compare current held DATA within its fresh no-follow census and closing
+  guards, preserving fresh per-file mode checks and both original/current
+  Source, SDK and Git boundaries; no verified admission is cached.
+- Batch each completed compiler or baseline/observed DATA pair inside the
+  existing fresh opening/closing Source guard, without spanning actual child
+  execution or live native callbacks. Read each runtime distribution's metadata
+  once per capture and reuse one digest of each already-held RECORD payload,
+  preserving physical reads, identity, byte/size, mutation and closing checks.
+  Retire the incidental inventory-helper call-count profiler oracle rather than
+  pinning implementation counts; genuine installed/Code/cache/refusal controls
+  and every original native deadline remain unchanged.
+- Close preview and direct-stage executor leases in test consumers, preserving
+  live peer logging and restoration after the last owner. Remove the malformed
+  metadata fixture's incidental `None` expectation, which Python 3.15 rejects
+  with `KeyError`, while retaining valid metadata and mutation-freshness checks.
+- Overlap only independently owned external-fixture Root chunks, with at most two
+  original guarded processes, serial per-child pytest and unchanged case/cohort
+  clocks. Bind actual launch/finish offsets and remaining budgets in schema-3
+  lane/process evidence; independently refuse excess concurrency, invalid launch
+  order, incomplete phases and reset deadlines rather than trusting green jobs.
+- Retire prose-presence, wording, length, history-count-growth and redundant
+  metric/default smoke oracles, plus their unused test helpers. Preserve concrete
+  daemon and deterministic protocol/state contracts and the four Source-owned
+  native local-review/translation obligations without changing model, prompt,
+  token limits, retries, lifecycle or request budgets.
+- Prepare Linux Pandoc and Crossref from immutable upstream source and frozen
+  GHC 9.12.2/dependency inputs and project-wide object determinism, retaining
+  exact Source-selected executable and provider archive correspondence instead
+  of asking static binaries for glibc callbacks.
+  Keep its GC root outside the public execution asset tree without weakening
+  the isolated CI user's escaping-link refusal.
+  Keep official macOS archives pinned. Authenticate the final loader-consistency
+  boundary and all file-backed closes; retain the kernel vDSO until the actual
+  original OS exit rather than fabricating a close callback.
+  Observe the complete Source-pinned Pandoc executable image under a finite
+  256 MiB code-image ceiling; retain the 512 MiB backing-file and 1 GiB cohort
+  ceilings and existing observation clocks without truncating evidence.
+  Match the pin producer's bounded two-job/two-core source-build execution and
+  construct nonempty platform arguments under macOS system Bash 3.
+- Accept the real stdlib Linux `MsgFlag` for `MSG_CMSG_CLOEXEC`, preserving
+  close-on-exec descriptor transport instead of rejecting its integer enum.
+- Keep native Office raw comments within the first actual `-->` or `--!>`
+  terminator. Mixed visible HTML cannot become nonvisible metadata or an image
+  alternative; the independent source oracle and actual Lua producer retain
+  the same finite boundary. Preserve escaped braces in linked slide-image
+  targets instead of treating an escaped closer as a direct image wrapper.
+- Reconcile authored standalone navigation, execution-context warnings, dated
+  review records and unchecked Workflowz requests into canonical exemplar
+  sources before exact export. Remove unexercised passing-test counts and
+  retain immutable review provenance rather than silently replacing it.
+- Advance the pinned Kmyth fork through its reviewed main correction, preserving
+  the existing macOS baseline while removing a missing logging format argument,
+  restoring the intended SGX release C flags and selecting network-test headers
+  from their own directory. Retire only the software-verified vendor requests;
+  no TPM or SGX hardware acceptance is inferred.
+- Canonicalize package-cache serialization in the actual GHC 9.12.2 `ghc-pkg`
+  source, preserving frozen library versions and object determinism while
+  removing independently observed executable linker-order drift. Authenticate
+  the tracked compiler patch alongside recipe and freeze in the closed v3
+  provider manifest; retain exact complete executable pins and unchanged clocks.
+- Remove the superseded unconditional missing-oracle checklist and its
+  self-pinning test. Document the actual Source-compiled complete oracle graph,
+  keeping component status adaptation separate from full acceptance authority.
+- Resolve Redacted's standalone utilities through their prepared SDK instead of
+  injecting a monorepo ancestor into Python's import path.
+- Keep all Pools public figure defaults inside their actual project and bind
+  figure provenance to the real producer namespace.
+- Read Textbook figure alternatives from authored chapter metadata, preserving
+  the explicit legacy mapping while refusing missing or blank alternatives.
+- Preserve undefined citation-network metrics as `N/A` through strict JSON and
+  manuscript hydration instead of treating unavailable values as finite numbers.
+- Bind Advanced Literature Review's polite contact identity to admitted
+  configuration bytes, preserve actual citation-count eligibility and remove its
+  false MIT classifier without changing the project's CC-BY license.
+- Restore Registered Report's four actual generated figure declarations without
+  changing frozen study permissions or implying deposition authority.
+- Retire source-text, forwarding, log-wording, minimum-count and tautological
+  test pins; retain the real hydration, enumeration and standalone-source
+  consumer regressions.
+- Re-author the complete Root case policy from four fresh same-job originals
+  and explicit module decisions. Preserve independent original census bindings;
+  policy serialization and collection do not grant runtime acceptance.
+
 ### Fixes carried forward from main
 
 - Apply generated project-test exclusions to the native pytest session's actual

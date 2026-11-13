@@ -38,6 +38,7 @@ from infrastructure.reporting.native_source_external_admission import (
 )
 from infrastructure.reporting.native_source_provider_bootstrap import (
     format_selected_sdk_native_bootstrap,
+    format_selected_sdk_native_script,
 )
 from infrastructure.reporting.native_tool_process import NativeLiveToolProcess
 from infrastructure.reporting.native_tool_producer import (
@@ -45,12 +46,12 @@ from infrastructure.reporting.native_tool_producer import (
 )
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
-SCHEMA = "template-source-owned-crossref-filter-v3"
+SCHEMA = "template-source-owned-crossref-filter-v4"
 WORKER = "infrastructure.reporting.native_crossref_worker"
 _KEY = object()
 BLOCKERS = (
     "crossref actual loaded native-library closure requires independent admission",
-    "crossref official Source-pinned archive to extracted executable body requires independent admission",
+    "crossref Source-pinned provider archive to extracted executable body requires independent admission",
 )
 
 
@@ -85,13 +86,21 @@ class SourceCrossrefFilter:
 
     def verify(self) -> None:
         remaining(self.deadline)
+        owner = self.owner
+        if owner is None:
+            raise ValueError("filter preparation lost its genuine enclosing Source producer")
+        with owner._verification_guard(self.reader, run_id=owner.run_id, deadline=self.deadline):
+            self._verify_data()
+
+    def _verify_data(self) -> None:
+        """Check fixed filter DATA inside the caller's fresh Source guard."""
+        remaining(self.deadline)
         if (
             self.owner is None
             or current_native_producer_operation() is not self.owner
             or self.owner.source is not self.source
         ):
             raise ValueError("filter preparation lost its genuine enclosing Source producer")
-        self.owner.verify(self.reader, run_id=self.owner.run_id, deadline=self.owner.deadline)
         for binding in (self.declaration, self.launcher):
             if self.reader.read(binding["path"]).sha256 != binding["sha256"]:
                 raise ValueError("filter actual prelaunch Source/request body changed")
@@ -298,19 +307,22 @@ def prepare_source_crossref_filter(
     if selected is None:
         raise ValueError("filter lacks its independently nominated current crossref executable")
     crossref = file_observation(Path(selected).resolve(strict=True))
-    official_archive = None
+    provider_archive = None
     if platform.system() == "Linux":
-        from infrastructure.reporting.native_crossref_archive import _pin, PIN_SOURCE, observe_crossref_official_archive
+        from infrastructure.reporting.native_crossref_archive import observe_crossref_provider_archive
+        from infrastructure.reporting.native_document_provider_contracts import PIN_SOURCE, select_document_tool
 
-        action = source.current_source_reader.read(PIN_SOURCE)
+        pin_source = source.current_source_reader.read(PIN_SOURCE)
         host = {"system": platform.system(), "machine": platform.machine()}
-        pin = _pin(action.content, host)
+        pin = select_document_tool(pin_source.content, host, "crossref")
         archive_root = env.get("RUNNER_TEMP")
         if not archive_root or not Path(archive_root).is_absolute():
-            raise ValueError("Source native Linux filter lacks the actual setup-action archive directory nomination")
-        official_archive = observe_crossref_official_archive(
+            raise ValueError(
+                "Source native Linux filter lacks the actual prepared provider archive directory nomination"
+            )
+        provider_archive = observe_crossref_provider_archive(
             source,
-            directory / "official-archive",
+            directory / "provider-archive",
             Path(archive_root) / "template-acceptance-document-archives" / pin["asset"],
             Path(crossref["path"]),
             reader,
@@ -325,9 +337,7 @@ def prepare_source_crossref_filter(
     )
     implementation = reader.read(implementation_path.relative_to(root).as_posix())
     runtime = json.loads(implementation.content)["runtime_environment"]
-    python = runtime["python_executable"]
-    if not isinstance(python, str) or any(character.isspace() for character in python):
-        raise ValueError("filter requires an unambiguous admitted shebang interpreter nomination")
+    python = runtime["python_launcher"]
     closure = directory / "closure"
     create_private_native_directory(root, closure)
     identity = closure.stat()
@@ -359,7 +369,7 @@ def prepare_source_crossref_filter(
                 "deadline_monotonic": deadline,
                 "caller_deadline_monotonic": owner.deadline,
                 "crossref": crossref,
-                "official_archive": official_archive,
+                "provider_archive": provider_archive,
                 "socket_address": endpoint,
                 "closure_identity": [identity.st_dev, identity.st_ino],
                 "expected_exit": 0,
@@ -391,13 +401,14 @@ def prepare_source_crossref_filter(
                 "--run-id",
                 owner.run_id,
             ]
-            script = (
-                f"#!{python} -I\nimport sys\n"
+            script = format_selected_sdk_native_script(
+                python,
+                "import sys\n"
                 f"if sys.argv[1:]!={[output_format]!r}: raise ValueError('actual Pandoc filter format differs')\n"
-                f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap
+                f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap,
             )
             launcher_path = directory / "source-crossref-filter"
-            atomic_write_bytes_confined(root, launcher_path, script.encode(), mode=0o700)
+            atomic_write_bytes_confined(root, launcher_path, script, mode=0o700)
             launch = reader.read(launcher_path.relative_to(root).as_posix())
             filter_owner = SourceCrossrefFilter(
                 source,

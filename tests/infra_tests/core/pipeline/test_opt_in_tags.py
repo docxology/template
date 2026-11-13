@@ -6,6 +6,7 @@ No mocks: real pipeline.yaml plus synthetic project-local YAML trees.
 from __future__ import annotations
 
 import shutil
+from contextlib import closing
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import PipelineDAG, opt_in_tags_from_mapping
@@ -56,19 +57,18 @@ def test_default_yaml_declares_docxplus_as_opt_in() -> None:
 
 def test_preview_excludes_docxplus_from_default_full_and_core_only(tmp_path: Path) -> None:
     repo_root = _project_repo(tmp_path)
-    full = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="live"))
-    core = PipelineExecutor(
-        PipelineConfig(project_name="p", repo_root=repo_root, mode="core"),
-    )
+    with (
+        closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="live"))) as full,
+        closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="core"))) as core,
+    ):
+        full_names = full.preview_stage_names()
+        core_names = core.preview_stage_names()
 
-    full_names = full.preview_stage_names()
-    core_names = core.preview_stage_names()
-
-    assert "docxplus Export" not in full_names
-    assert "docxplus Export" not in core_names
-    assert "docxplus Export" in all_stage_names()
-    assert "LLM Manuscript Review" in full_names
-    assert "LLM Manuscript Review" not in core_names
+        assert "docxplus Export" not in full_names
+        assert "docxplus Export" not in core_names
+        assert "docxplus Export" in all_stage_names()
+        assert "LLM Manuscript Review" in full_names
+        assert "LLM Manuscript Review" not in core_names
 
 
 def test_synthetic_opt_in_tag_is_omitted_from_preview(tmp_path: Path) -> None:
@@ -95,24 +95,24 @@ stages:
 """,
         encoding="utf-8",
     )
-    executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="live"))
-    names = executor.preview_stage_names()
-    assert "Environment Setup" in names
-    assert "Experimental Export" not in names
+    with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="live"))) as executor:
+        names = executor.preview_stage_names()
+        assert "Environment Setup" in names
+        assert "Experimental Export" not in names
 
 
 def test_executor_total_stages_matches_preview(tmp_path: Path) -> None:
     repo_root = _project_repo(tmp_path)
-    full = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="live"))
-    core = PipelineExecutor(
-        PipelineConfig(project_name="p", repo_root=repo_root, mode="core"),
-    )
-    full_names = full.preview_stage_names()
-    core_names = core.preview_stage_names()
-    assert full.config.total_stages == len(full_names)
-    assert core.config.total_stages == len(core_names)
-    assert full.config.total_stages == default_run_stage_count(mode="live")
-    assert core.config.total_stages == default_run_stage_count(mode="core")
+    with (
+        closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="live"))) as full,
+        closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root, mode="core"))) as core,
+    ):
+        full_names = full.preview_stage_names()
+        core_names = core.preview_stage_names()
+        assert full.config.total_stages == len(full_names)
+        assert core.config.total_stages == len(core_names)
+        assert full.config.total_stages == default_run_stage_count(mode="live")
+        assert core.config.total_stages == default_run_stage_count(mode="core")
 
 
 def test_plain_live_tag_vocabulary_matches_compiled_selection(tmp_path: Path) -> None:
@@ -126,10 +126,20 @@ def test_plain_live_tag_vocabulary_matches_compiled_selection(tmp_path: Path) ->
         "  - {name: Paid, key: paid, method: run_project_tests, tags: [paid]}\n"
         "  - {name: Publish, key: publish, method: run_project_tests, tags: [publication]}\n"
     )
-    core = PipelineExecutor(PipelineConfig("p", repo_root, mode="core"))
-    live = PipelineExecutor(PipelineConfig("p", repo_root, mode="live"))
-    assert core.preview_stage_names() == core_stage_names(yaml_path=declaration) == ("Core",)
-    assert live.preview_stage_names() == live_stage_names(yaml_path=declaration) == ("Core", "Local Live", "Model")
+    with (
+        closing(PipelineExecutor(PipelineConfig("p", repo_root, mode="core"))) as core,
+        closing(PipelineExecutor(PipelineConfig("p", repo_root, mode="live"))) as live,
+    ):
+        assert core.preview_stage_names() == core_stage_names(yaml_path=declaration) == ("Core",)
+        assert (
+            live.preview_stage_names()
+            == live_stage_names(yaml_path=declaration)
+            == (
+                "Core",
+                "Local Live",
+                "Model",
+            )
+        )
 
 
 def test_paid_plugin_remains_opt_in_when_custom_dag_omits_paid_tag(tmp_path: Path) -> None:

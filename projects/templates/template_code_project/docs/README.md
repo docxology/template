@@ -14,7 +14,7 @@ The `docs/` directory contains the behavioral and architectural rules that gover
 |---|---|---|
 | [`agent_instructions.md`](agent_instructions.md) | 7 hard rules for AI agents; verification checklist | AI agents, all developers |
 | [`architecture.md`](architecture.md) | Layer table, dependency direction, forbidden patterns, how-to-add-algorithm | Developers |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, coverage mechanics, the gate-vs-exit-code rule (live counts → [`COUNTS.md`](../../../../docs/_generated/COUNTS.md)) | Developers, testers |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, coverage mechanics, the gate-vs-exit-code rule (live counts → [monorepo `COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)) | Developers, testers |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Mermaid/chrome prerequisite; 4-phase manuscript→PDF pipeline; config.yaml controls | Content authors, developers |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | Developers |
 | [`syntax_guide.md`](syntax_guide.md) | Markdown links, LaTeX refs, all `{{VARIABLE}}` tokens, figure label registry | Content authors |
@@ -62,6 +62,9 @@ project, mirror these invariants — they are what the repo's gates enforce:
 
 **2. As a fork seed for a new project.** Minimum viable steps:
 
+Run this procedure from the **monorepo root**; the shared copy/pipeline commands
+are not shipped as standalone project entry points.
+
 ```bash
 NEW=my_project
 uv run python scripts/audit/copy_exemplar.py \
@@ -81,7 +84,7 @@ uv run python scripts/runner/execute_pipeline.py --project "working/$NEW" --mode
 ```
 
 The copied project remains in the local-only `working/` tree and is selected
-explicitly by `--project "working/$NEW"`; the repo-level guide [`docs/guides/new-project-setup.md`](../../../../docs/guides/new-project-setup.md)
+explicitly by `--project "working/$NEW"`; the [monorepo new-project setup guide](https://github.com/docxology/template/blob/main/docs/guides/new-project-setup.md)
 covers the full workflow.
 
 **Prerequisites to know before referencing the render path:** combined-PDF
@@ -93,12 +96,14 @@ test gate is the **direct** command below (a green `scripts/pipeline/stage_01_te
 
 **Code vs. prose — pick the right reference.** Use **`template_code_project`**
 when the deliverable is computed (algorithms, figures from data, numerical
-results). Use the sibling **[`template_prose_project`](../../template_prose_project/)**
+results). Use **[`template_prose_project`](https://github.com/docxology/template/tree/main/projects/templates/template_prose_project/)**
 when the deliverable is editorial (readability/structure/citation review of
 written prose). Both share the identical structural contract above; they
 differ only in what `src/` computes and what the pipeline checks.
 
 ## Verification Commands
+
+These qualified commands run from the **monorepo root**.
 
 ```bash
 # Tests pass + coverage ≥90%
@@ -118,4 +123,4 @@ grep -r "from infrastructure\|import infrastructure" projects/templates/template
 - [../README.md](../README.md) — Project quick start
 - [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
 - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
-- [../../../docs/](../../../../docs/) — Repository-level documentation hub (measured file/subdirectory counts live in `docs/_generated/COUNTS.md`)
+- [Monorepo docs/](https://github.com/docxology/template/tree/main/docs/) — Repository-level documentation hub (measured file/subdirectory counts live in its generated `COUNTS.md`)

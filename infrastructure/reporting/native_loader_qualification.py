@@ -7,23 +7,30 @@ scientific acceptance; retained DATA never creates either live capability.
 
 from __future__ import annotations
 
+import platform
+import shutil
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
+from infrastructure.reporting.native_document_elf import require_glibc_executable
 from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
+from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader, compile_native_loader
 from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
-from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
+from infrastructure.reporting.native_pdf_citation_runtime import (
+    CitationRuntime,
+    NATIVE_OBSERVATION_CEILING_SECONDS,
+)
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 if TYPE_CHECKING:
     from infrastructure.reporting.native_crossref_pair import SourceCrossrefPair
 
-SCHEMA = "template-native-tool-loader-qualification-v3"
+SCHEMA = "template-native-tool-loader-qualification-v4"
 _FIELDS = frozenset(
     {
         "schema_version",
@@ -129,6 +136,13 @@ def qualify_native_loader_tool(
             or arguments.count(str(runtime.root / crossref_pair.launcher["path"])) != 1
         ):
             raise ValueError("filtered parent pair changed its identical selected environment/launcher argv")
+    selected_executable = shutil.which(name, path=runtime.env.get("PATH"))
+    if selected_executable is None:
+        raise NativeToolUnavailable(f"{name} is not installed in the selected qualification environment")
+    try:
+        require_glibc_executable(Path(selected_executable).resolve(strict=True), machine=platform.machine())
+    except ValueError as error:
+        raise NativeToolUnavailable(f"{name} is not a supported consuming glibc executable: {error}") from error
     inputs = tuple(dict.fromkeys((*input_paths, *((stdin_path,) if stdin_path is not None else ()))))
     held_inputs = [_file(path, reader) for path in inputs]
     if len(set(path.absolute() for path in output_paths)) != len(output_paths):
@@ -164,7 +178,7 @@ def qualify_native_loader_tool(
     if crossref_pair is None:
         leaf = compiled.directory / ("callbacks-" + purpose)
         create_private_native_directory(runtime.root, leaf)
-        deadline = min(runtime.deadline, time.monotonic() + 120.0)
+        deadline = min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
         observer = NativeLoaderObservation(compiled, leaf, purpose=purpose, deadline=deadline)
     else:
         observer = crossref_pair.parent_loader
@@ -190,8 +204,12 @@ def qualify_native_loader_tool(
     for left, right in zip(left_outputs, right_outputs, strict=True):
         if reader.read(left["artifact"]["path"]).content != reader.read(right["artifact"]["path"]).content:
             raise ValueError("auditor changed an actual Source-selected native output file")
-    for selected in (baseline_binding, observed_binding):
-        owner.validate_tool(selected, reader.read(selected["path"]).json_object(), reader, run_id=runtime.run_id)
+    # Keep both actual subprocesses and their live callbacks outside this DATA-only batch.
+    with owner._verification_guard(reader, run_id=runtime.run_id, deadline=runtime.deadline):
+        for selected in (baseline_binding, observed_binding):
+            owner._validate_tool_data(
+                selected, reader.read(selected["path"]).json_object(), reader, run_id=runtime.run_id
+            )
     if observer.binding is None or held_inputs != [_file(path, reader) for path in inputs] or not reader.unchanged():
         raise ValueError("actual loader lifecycle/unchanged selected input/output custody is absent")
     value = {

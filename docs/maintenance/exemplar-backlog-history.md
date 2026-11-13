@@ -1,11 +1,77 @@
 # Exemplar backlog history
 
-This review record preserves completed-work evidence that was removed from the
-future-only `projects/templates/*/TODO.md` files. The TODO files are planning
+This review record preserves completed-work evidence and bounded dated reviews from
+the future-only `projects/templates/*/TODO.md` files. The TODO files are planning
 inputs, not release notebooks; current measured status belongs in
 `docs/_generated/COUNTS.md`, project output receipts, and the generated
 publication records. This record intentionally names the source surface and
 the evidence class without turning completed work back into an active task.
+
+## Reviewed Kmyth software corrections — 2026-11-12
+
+The reported Meta vendor requests were confirmed against the selected
+`cb23c6d94423cbe4f5ef0caf23594d1095ddde79` baseline and discharged through
+[Kmyth PR #1](https://github.com/docxology/kmyth/pull/1), normally squash-merged as
+[`8dfaf3f6e18c0c3c97a09524041ad32babf19afa`](https://github.com/docxology/kmyth/commit/8dfaf3f6e18c0c3c97a09524041ad32babf19afa).
+Its tree `bf571c67d09976fe19ec7a8bb560898533496983` is exactly the software-tested
+candidate tree; the Root gitlink selects that reviewed source. No unrelated
+vendor upgrade was introduced relative to the previously selected baseline.
+
+Original requests: [authored Meta TODO at `0d1cd52d61034b3d38d2cc164bc3afadac41a9e8`, lines 122–146](https://github.com/docxology/template_template/blob/0d1cd52d61034b3d38d2cc164bc3afadac41a9e8/TODO.md#L122-L146).
+Its preserved body SHA-256 is
+`b42869376a7eac9e0710d5116290536454a3d7c67f0e2623c60b270bd6a2e962`.
+
+| Former request | Implemented boundary | Actual software proof and negative control |
+| --- | --- | --- |
+| `WZ-20261110-02` | The release branch updates `SGX_COMMON_CFLAGS`, not unused `GX_COMMON_CFLAGS`. | GNU Make 4.4.1 emitted release `-DNDEBUG -UEDEBUG -UDEBUG`, debug `-DDEBUG -UNDEBUG -UEDEBUG`, and prerelease `-DNDEBUG -DEDEBUG -UDEBUG`; the opposite mode's definitions were absent. |
+| `WZ-20261110-03` | `TEST_NETWORK_HEADERS` uses `TEST_NETWORK_INC_DIR`. | With the utility directory deliberately invalid, the equality probe selected actual `test/include/network/tls_util_test.h` and exited 0. Restoring the old utility-wildcard expression through a make override made the same probe exit 2; the genuine network-header set was nonempty. |
+
+The same reviewed source removes the stray `%s` without an argument from the
+missing-SRK/no-capacity log, preserving the correction already present in the
+public SDK mirrors. GCC 14.2.0 compiled the actual corrected TPM source with
+real TPM2-TSS 4.1.3, OpenSSL 3.5.7 and Valgrind headers and a temporary
+`printf`-format annotation on the unchanged real `log_event` declaration.
+`-fsyntax-only -Wformat=2 -Werror=format` exited 0; the actual original pinned
+source under the same compiler/header contract exited 1 with the missing
+`char *` format-argument error at line 226. No function or hardware interaction
+was substituted.
+
+These were Linux/aarch64 software-contract checks, not TPM SRK error-path
+execution, key-operation, SGX SDK/enclave or hardware acceptance. They do not
+grant Root release acceptance. The exact Python 3.15.2 request
+`WZ-20261110-01` remains active in the future-only Meta TODO.
+
+## Bounded Workflowz reviews — 2026-11-10
+
+These are retained author-written **no-action review records**, not successful
+runtime checks, proof of defect absence, completed improvement tasks, or current
+release acceptance. Their limited packet scope and re-review triggers remain
+part of the record.
+
+### `template_code_project`
+
+Source: [standalone TODO at `2af12b358bbdc300051c13d1879466087416772c`, lines 85–87](https://github.com/docxology/template_code_project/blob/2af12b358bbdc300051c13d1879466087416772c/TODO.md#L85-L87).
+Recovered authored body SHA-256:
+`238d817adec983267ff66e83530acc9c78027fcbd68370bff3fadaf3df529589`.
+
+> Coverage note: reviewed the supplied project guidance, README, existing TODO, package/runtime metadata, logging implementation, and visible vendored Kmyth build excerpts. No concrete improvement survived the packet’s evidence threshold: no project source excerpts were supplied, and the visible build excerpts lacked enough context to verify suspected defects. Re-review on a concrete failure or when relevant source/build changes or fuller excerpts are available.
+
+### `template_methods_paper`
+
+Source: [standalone TODO at `9344b8fe21823da2481d361be0f723d858bc5b6d`, lines 92–94](https://github.com/docxology/template_methods_paper/blob/9344b8fe21823da2481d361be0f723d858bc5b6d/TODO.md#L92-L94).
+Recovered authored body SHA-256:
+`63f3a737a9e3e419fb982b56acad647728fc5ea246bb3743085ddb3cf432a9cf`.
+
+> Coverage note: This bounded packet exposed project guidance, README, the existing future-only backlog, package metadata, and selected infrastructure excerpts, but no project DSL source or test excerpts (0 source files with excerpts). The visible `pass` in `_template_resources/infrastructure/core/logging/setup.py:34` is only a `finally` clause after handler closure, not a production fallback; the SGX `SIM` default at `_template_resources/infrastructure/steganography/kmyth/sgx/Makefile:35` is an explicit build-mode setting, not evidence of a silent substitute. No concrete, independently actionable improvement with exact source evidence and a behavioral acceptance probe survived. Re-review on a concrete failure or when relevant project source, tests, CI, or runtime configuration changes.
+
+The `_template_resources/...` references above identify the reviewed packet,
+not the present executable SDK layout. Neither review independently establishes
+vendored build correctness. The exact Python request remains in
+[the future-only Meta TODO](../../projects/templates/template_template/TODO.md#retained-workflowz-requests--2026-11-10).
+The two vendor requests were later resolved only by the separate 2026-11-12
+source-bound software evidence above; those later results do not expand the
+scope or confidence of these original bounded reviews.
+
 
 ## Archived 2026-08-02 publication and accuracy passes
 

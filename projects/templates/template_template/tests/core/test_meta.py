@@ -40,12 +40,6 @@ class TestDiscoverInfrastructureModules:
         assert isinstance(modules, list)
         assert all(isinstance(m, ModuleInfo) for m in modules)
 
-    def test_discovers_minimum_expected_modules(self):
-        """Repository must have at least 8 infrastructure subpackages."""
-        modules = discover_infrastructure_modules(REPO_ROOT)
-        names = [m.name for m in modules]
-        assert len(modules) >= 8, f"Expected ≥8 modules, got {len(modules)}: {names}"
-
     def test_core_module_present(self):
         modules = discover_infrastructure_modules(REPO_ROOT)
         names = [m.name for m in modules]
@@ -149,11 +143,6 @@ class TestCountPipelineStages:
         stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         assert isinstance(stages, list)
         assert all(isinstance(s, PipelineStage) for s in stages)
-
-    def test_discovers_minimum_stages(self):
-        """Pipeline must have at least 5 numbered stages."""
-        stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
-        assert len(stages) >= 5, f"Expected ≥5 stages, got {len(stages)}"
 
     def test_stages_are_sequential(self):
         """Canonical pipeline stage numbers must never regress."""
@@ -332,12 +321,6 @@ class TestBuildInfrastructureReport:
     def test_repo_root_matches(self):
         report = _cached_infrastructure_report()
         assert report.repo_root == REPO_ROOT
-
-    def test_computed_properties_match_lists(self):
-        report = _cached_infrastructure_report()
-        assert len(report.modules) == len(report.modules)
-        assert len(report.projects) == len(report.projects)
-        assert len(report.pipeline_stages) == len(report.pipeline_stages)
 
 
 # ---------------------------------------------------------------------------

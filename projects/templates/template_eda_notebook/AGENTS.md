@@ -2,14 +2,14 @@
 
 **This is an active project** in the `projects/` directory, discovered and
 executed by infrastructure discovery functions. Public exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 Publication DOI layout:
-[`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md).
+[`docs/guides/zenodo-doi-strategy.md`](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md).
 Manuscript semantics:
-[`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
+[`docs/guides/manuscript-semantics.md`](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md).
 
 Decision memory and verifier hardening follow
-[`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md):
+[`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md):
 use nearby `WHY:` comments only for surprising local choices, keep volatile
 counts generated, and add negative controls for verifier-like gates.
 
@@ -28,7 +28,7 @@ what keeps that exploration reproducible, covered, and reusable.
 | `src/template_eda_notebook/notebook_execution.py` (runtime) | NBClient execution with frozen admitted inputs, private selected-interpreter cache and pre-import executed-code audit; finite deadlines; the exact declared Layer1 runtime adapter exception |
 | `notebooks/` | Thin walkthrough; cells only call `src` functions (no `def`/`class` in cells) |
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and the unique source package; the notebook guardian and package worker live in `notebook_execution.py` |
-| Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
+| Live counts | Link [`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md); **do not** hardcode measured test totals or coverage % |
 
 The boundary is enforced by `check_project_src_infrastructure_boundary` via
 `scripts/audit/check_template_drift.py --strict` and
@@ -86,7 +86,7 @@ uv run pytest projects/templates/template_eda_notebook/tests -k "TestCorrelation
 ```
 
 Live test count and achieved coverage:
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) — do not copy
+[`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md) — do not copy
 the numbers here.
 
 ## Advisory research overlays (validation inputs, not autonomous agents)
@@ -119,8 +119,8 @@ quick reference commands, and pitfalls.
 
 ## See Also
 
-- [Root projects AGENTS.md](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster.
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md).
+- [Root projects AGENTS.md](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars) — public exemplar roster.
+- [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Publishing module reference](https://github.com/docxology/template/blob/main/infrastructure/publishing/README.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md) · [Archival targets](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md).
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax.
 - [`src/AGENTS.md`](src/template_eda_notebook/AGENTS.md) — EDA library API reference.
 - [`TODO.md`](TODO.md) — template-status gaps and improvement ladder.

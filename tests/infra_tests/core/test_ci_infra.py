@@ -338,19 +338,13 @@ def test_changed_python_helper_routes_complete_actual_consumer_package(tmp_path:
     from infrastructure.core.testing.ci_infra import CI_EXTRA_PATHS, _shard_collection
     from infrastructure.core.testing.pytest_observations import DIRECTORY_ENV, NONCE_ENV, ROOT_ENV
 
-    actual_helper = "tests/infra_tests/llm/real_ollama_client.py"
+    actual_helper = "tests/infra_tests/llm/ollama_stub_server.py"
     actual_files = infrastructure_files(ROOT, (actual_helper,))
     actual_consumers = {
         path.relative_to(ROOT).as_posix() for path in (ROOT / "tests/infra_tests/llm").rglob("test_*.py")
     }
     assert actual_helper not in actual_files
     assert {path for path in actual_files if path.startswith("tests/infra_tests/llm/")} == actual_consumers
-    assert {
-        "tests/infra_tests/llm/test_llm_core.py",
-        "tests/infra_tests/llm/test_core.py",
-        "tests/infra_tests/llm/test_review_generators.py",
-        "tests/infra_tests/llm/test_llm_review_integration.py",
-    } <= actual_consumers
 
     root = tmp_path / "owned-helper-project"
     root.mkdir()

@@ -121,11 +121,11 @@ jobs:
     name: "Infrastructure Smoke (${{ matrix.shard }})"
     needs: detect-projects
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       # Independent hosted shards can fill available runner slots without
-      # changing their selections, per-job budgets, or artifact contracts.
+      # changing their selections, smoke-execution budgets, or artifact contracts.
       max-parallel: 16
       matrix: ${{ fromJSON(needs.detect-projects.outputs.infra) }}
     steps:
@@ -143,22 +143,22 @@ jobs:
           dependency-group: installed-build
       - run: uv sync --locked --group installed-build
       - uses: ./.github/actions/setup-meta-provider
-      - name: Prepare genuine PDF raster tools for behavioral controls
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends poppler-utils
-          pdftoppm -v
-          pdffonts -v
       - uses: ./.github/actions/setup-acceptance-documents
         with:
           mode: converter
+      - name: Prepare genuine PDF raster tools for behavioral controls
+        run: |
+          set -euo pipefail
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends poppler-utils
+          pdftoppm -v
+          pdffonts -v
       - name: Prepare actual TeX for the selected routine compiler controls
         if: matrix.tex
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex lmodern texlive-fonts-recommended
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends texlive-xetex lmodern texlive-fonts-recommended
           xelatex --version
           kpsewhich article.cls
           kpsewhich pzdr.tfm
@@ -169,6 +169,7 @@ jobs:
           name: functional-selection
       - uses: ./.github/actions/setup-ci-execution-user
       - name: Run exact functional shard with original pytest observations
+        timeout-minutes: 10
         env:
           SHARD: ${{ matrix.shard }}
         run: |
@@ -230,8 +231,8 @@ jobs:
         if: matrix.tex
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends texlive-xetex texlive-latex-extra texlive-fonts-recommended lmodern poppler-utils
           xelatex --version
           bibtex --version
           kpsewhich plainnat.bst
@@ -241,6 +242,10 @@ jobs:
       - name: Select the installed browser for the selected native consumer
         if: matrix.browser
         uses: ./.github/actions/check-browser
+      - name: Prepare locked dependencies for the offline installed loader fixture
+        if: matrix.module == 'tests/infra_tests/reporting/test_native_original_launch_correctness.py'
+        timeout-minutes: 10
+        uses: ./.github/actions/setup-native-loader-fixture
       - name: Prepare hash-required offline cache for the installed credential contract
         if: matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
         timeout-minutes: 10
@@ -320,7 +325,7 @@ jobs:
     # contracts already run in the infra and contract jobs.
     if: needs.detect-projects.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: ${{ matrix.project == 'templates/template_search_project' && 75 || 10 }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.detect-projects.outputs.matrix) }}
@@ -343,6 +348,7 @@ jobs:
         with:
           mode: converter
       - name: Run focused behavioral tests
+        timeout-minutes: 10
         env:
           TEMPLATE_CI_JUNIT_DIRECTORY: ${{ runner.temp }}/functional-project
           PROJECT: ${{ matrix.project }}

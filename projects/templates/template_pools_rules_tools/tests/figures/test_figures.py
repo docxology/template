@@ -7,7 +7,10 @@ PNG files land in an isolated temp directory and never pollute source tree.
 from __future__ import annotations
 
 import pathlib
+import shutil
+import subprocess
 import sys
+import textwrap
 
 import pytest
 
@@ -352,3 +355,49 @@ class TestDefaultOutputDirectory:
         )
         _assert_png(result)
         assert result.parent == tmp_path / "default"
+
+    def test_public_producers_use_project_manuscript_by_default(self, tmp_path: pathlib.Path):
+        project = tmp_path / "project"
+        shutil.copytree(
+            pathlib.Path(__file__).resolve().parents[2] / "src",
+            project / "src",
+            ignore=shutil.ignore_patterns("__pycache__"),
+        )
+        code = textwrap.dedent(
+            r"""
+            import importlib
+            import pathlib
+            import sys
+
+            project = pathlib.Path(sys.argv[1]).resolve()
+            sys.path.insert(0, str(project / "src"))
+            from template_pools_rules_tools.figures.figures import (
+                COVER_FIGURE_FILENAMES,
+                INTEGRATION_FIGURE_SPECS,
+                generate_cover_art,
+            )
+
+            def assert_generated(path, filename):
+                assert path == project / "manuscript" / "figures" / filename, path
+                with path.open("rb") as image:
+                    assert image.read(8) == b"\x89PNG\r\n\x1a\n", path
+
+            for spec in INTEGRATION_FIGURE_SPECS:
+                module_name, function_name = spec.generated_by.rsplit(".", 1)
+                producer = getattr(importlib.import_module(module_name), function_name)
+                assert_generated(producer(), spec.filename)
+            for filename in COVER_FIGURE_FILENAMES:
+                assert_generated(generate_cover_art(filename=filename), filename)
+            """
+        )
+        result = subprocess.run(
+            [sys.executable, "-I", "-c", code, str(project)],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert not (project / "src" / "manuscript").exists()
+        assert not (tmp_path / "manuscript").exists()

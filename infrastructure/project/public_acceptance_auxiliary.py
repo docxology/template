@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 import time
 import uuid
@@ -35,6 +36,7 @@ from infrastructure.project.public_acceptance_auxiliary_supervision import (
     PROCESS_SCHEMA as PROCESS_SCHEMA,
     complete_auxiliary_observation,
     supervise as supervise,
+    supervise_sandbox_transfer_api,
 )
 
 ROOT_GATES = (
@@ -485,6 +487,10 @@ def run_sandbox_transfer(
         or re.fullmatch(r"[0-9a-f]{40}", source_commit) is None
     ):
         raise ValueError("sandbox transfer requires an exact repository, run ID and source commit")
+    # Keep the nominated token out of ambient environments, including cleanup helpers.
+    gh_token = os.environ.pop("GH_TOKEN", None)
+    if not gh_token:
+        raise ValueError("sandbox transfer requires explicit existing GH_TOKEN nomination")
     root = root.resolve(strict=True)
     reader = SnapshotReader(root)
     export = admitted_root_export(root, export_receipt.absolute(), reader)
@@ -528,7 +534,15 @@ def run_sandbox_transfer(
         ("artifact", f"repos/{repository}/actions/artifacts/{artifact_id}"),
         ("repository", f"repos/{repository}"),
     ):
-        process = supervise([gh, "api", "--hostname", "github.com", endpoint], root, directory / label, deadline)
+        process = supervise_sandbox_transfer_api(
+            [gh, "api", "--hostname", "github.com", endpoint],
+            root,
+            directory / label,
+            deadline,
+            repository=repository,
+            artifact_id=artifact_id,
+            gh_token=gh_token,
+        )
         process_artifact = write_json(root, directory / f"{label}-process.json", process)
         if not complete_auxiliary_observation(process):
             raise ValueError(

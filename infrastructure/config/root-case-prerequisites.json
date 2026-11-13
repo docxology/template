@@ -373,6 +373,22 @@
       ]
     },
     {
+      "id": "native-loader-build",
+      "kind": "tool",
+      "environment_keys": [],
+      "executables": [
+        "cc",
+        "uv",
+        "git",
+        "python"
+      ],
+      "platforms": [],
+      "paths": [],
+      "packages": [
+        "hatchling"
+      ]
+    },
+    {
       "id": "pdfium-wheel",
       "kind": "external-fixture",
       "environment_keys": [

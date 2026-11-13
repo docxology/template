@@ -32,7 +32,7 @@ The suite spans `test_dataset.py`, `test_cleaning.py`, `test_statistics.py`,
 `test_correlation.py`, `test_figures.py`, `test_project_paths.py`,
 `test_eda_analysis_script.py`, and `test_notebook.py`. Both the project
 `pyproject.toml` and the root pipeline gate coverage at **90%**. Live test count
-and coverage live in [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) —
+and coverage live in [`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md) —
 do not hardcode either number in prose.
 
 After modifying any `src/template_eda_notebook/eda/` module, run:

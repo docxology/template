@@ -32,7 +32,7 @@ GRID = "#e2e8f0"
 
 
 def _default_output_dir() -> pathlib.Path:
-    return pathlib.Path(__file__).resolve().parents[2] / "manuscript" / "figures"
+    return pathlib.Path(__file__).resolve().parents[3] / "manuscript" / "figures"
 
 
 def _resolve_output(output_dir: str | pathlib.Path | None, filename: str) -> pathlib.Path:
