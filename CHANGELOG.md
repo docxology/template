@@ -61,6 +61,16 @@ locks.
   live peer logging and restoration after the last owner. Remove the malformed
   metadata fixture's incidental `None` expectation, which Python 3.15 rejects
   with `KeyError`, while retaining valid metadata and mutation-freshness checks.
+- Overlap only independently owned external-fixture Root chunks, with at most two
+  original guarded processes, serial per-child pytest and unchanged case/cohort
+  clocks. Bind actual launch/finish offsets and remaining budgets in schema-3
+  lane/process evidence; independently refuse excess concurrency, invalid launch
+  order, incomplete phases and reset deadlines rather than trusting green jobs.
+- Retire prose-presence, wording, length, history-count-growth and redundant
+  metric/default smoke oracles, plus their unused test helpers. Preserve concrete
+  daemon and deterministic protocol/state contracts and the four Source-owned
+  native local-review/translation obligations without changing model, prompt,
+  token limits, retries, lifecycle or request budgets.
 - Prepare Linux Pandoc and Crossref from immutable upstream source and frozen
   GHC 9.12.2/dependency inputs and project-wide object determinism, retaining
   exact Source-selected executable and provider archive correspondence instead

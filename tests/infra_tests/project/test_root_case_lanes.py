@@ -49,7 +49,8 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     (root / "infrastructure/config").mkdir(parents=True)
     (root / "pyproject.toml").write_text(
         '[project]\nname="owned-root-lane-control"\nversion="0.1.0"\nrequires-python=">=3.12"\n'
-        '[tool.pytest.ini_options]\naddopts=[]\nmarkers=["requires_ollama: explicit local-model obligation"]\n'
+        '[tool.pytest.ini_options]\naddopts=[]\nmarkers=["requires_ollama: explicit local-model obligation",'
+        '"external_fixture: independent owned external DATA"]\n'
         '[tool.coverage.run]\nbranch=true\nsource=["infrastructure"]\n',
         encoding="utf-8",
     )
@@ -109,6 +110,28 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
         "    if value=='source-edit':\n"
         "        source=Path(__file__); source.write_bytes(source.read_bytes()+b'\\n# owned source edit\\n')\n"
         "    assert number>0\n"
+        "@pytest.mark.external_fixture\n@pytest.mark.parametrize('number',[1,2,3,4])\n"
+        "def test_external(number,request):\n"
+        "    root=Path(__file__).parents[1]\n"
+        "    configuration=Path(os.environ['TEMPLATE_OWNED_EXTERNAL_CONFIGURATION'])\n"
+        "    assert json.loads(configuration.read_text())=={'root':str(root)}\n"
+        "    directory=root/'output/readiness/external-overlap'\n"
+        "    directory.mkdir(exist_ok=True)\n"
+        "    pending=directory/(str(number)+'.pending')\n"
+        "    with pending.open('x') as stream: json.dump({'pid':os.getpid()},stream)\n"
+        "    assert not (directory/str(number)).exists()\n"
+        "    pending.rename(directory/str(number))\n"
+        "    if number in (1,2):\n"
+        "        peer=directory/str(3-number); limit=time.monotonic()+45\n"
+        "        while not peer.exists() and time.monotonic()<limit: time.sleep(.01)\n"
+        "        assert peer.exists(),'independent owned chunk never reached its actual case'\n"
+        "        actual=json.loads(peer.read_text())['pid']; assert actual!=os.getpid()\n"
+        "        os.kill(actual,0)\n"
+        "        (directory/('observed-'+str(number))).write_text(str(actual))\n"
+        "        peer_observed=directory/('observed-'+str(3-number))\n"
+        "        while not peer_observed.exists() and time.monotonic()<limit: time.sleep(.01)\n"
+        "        assert peer_observed.exists(),'peer did not observe both live original processes'\n"
+        "    test_core(number,request)\n"
         "@pytest.mark.requires_ollama\nclass TestLive:\n"
         "    def test_model(self):\n"
         "        (Path(__file__).parents[1]/'output/readiness/live-body').write_text('actual live body invoked')\n"
@@ -120,18 +143,29 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     from infrastructure.project.public_root_case_contract import _json
 
     rows = _json(SnapshotReader(root).read(first["receipt_artifact"]["path"]))["census"]["families"]
-    assignments = {"tests/test_owned.py::test_core": "core", "tests/test_owned.py::TestLive::test_model": "live-unpaid"}
+    assignments = {
+        "tests/test_owned.py::test_core": "core",
+        "tests/test_owned.py::test_external": "external-fixture",
+        "tests/test_owned.py::TestLive::test_model": "live-unpaid",
+    }
     assert {row["id"] for row in rows} == set(assignments)
     policy = {
         "schema_version": POLICY_SCHEMA,
         "runtimes": ["3.14", "3.15"],
         "platforms": ["darwin", "linux"],
-        "obligations": [{"id": "owned-local-model", "kind": "local-model", "eligibility": None}],
+        "obligations": [
+            {"id": "owned-local-model", "kind": "local-model", "eligibility": None},
+            {"id": "owned-external", "kind": "external-fixture", "eligibility": None},
+        ],
         "families": [
             {key: row[key] for key in ("id", "members", "source_sha256", "metadata_sha256")}
             | {
                 "lane": assignments[row["id"]],
-                "obligations": ["owned-local-model"] if assignments[row["id"]] == "live-unpaid" else [],
+                "obligations": ["owned-local-model"]
+                if assignments[row["id"]] == "live-unpaid"
+                else ["owned-external"]
+                if assignments[row["id"]] == "external-fixture"
+                else [],
             }
             for row in rows
         ],
@@ -148,7 +182,14 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
                         "environment_keys": ["TEMPLATE_OWNED_UNAVAILABLE_MODEL_CONFIGURATION"],
                         "executables": ["python"],
                         "platforms": [],
-                    }
+                    },
+                    {
+                        "id": "owned-external",
+                        "kind": "external-fixture",
+                        "environment_keys": ["TEMPLATE_OWNED_EXTERNAL_CONFIGURATION"],
+                        "executables": ["python"],
+                        "platforms": [],
+                    },
                 ],
             }
         ),
@@ -168,6 +209,7 @@ def _genuine_lane_root(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, 
     assert set(admission.plan.nodeids) == {
         "tests/test_owned.py::test_core[one]",
         "tests/test_owned.py::test_core[two]",
+        *(f"tests/test_owned.py::test_external[{number}]" for number in (1, 2, 3, 4)),
         "tests/test_owned.py::TestLive::test_model",
     }
     assert not (root / "output/readiness/events.txt").exists()
@@ -272,6 +314,102 @@ def test_actual_thread_deadline_composes_with_native_guard_and_refuses_expiry_or
         assert actual["duration_seconds"] < 30
         with pytest.raises(ValueError):
             read_lane(SnapshotReader(root), bundle)
+
+
+def test_actual_independent_external_chunks_overlap_and_refuse_rehashed_excess_concurrency(
+    genuine_lane: tuple[Path, dict[str, Any], dict[str, Any]], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, census, _ = genuine_lane
+    configuration = root / "output/readiness/owned-external-configuration.json"
+    configuration.write_text(json.dumps({"root": str(root)}))
+    monkeypatch.setenv("TEMPLATE_OWNED_EXTERNAL_CONFIGURATION", str(configuration))
+    bundle = _epoch_call(
+        produce_root_lane,
+        root,
+        root / "output/readiness/external-parallel",
+        census_bundle=census,
+        lane="external-fixture",
+        mode="live",
+        timeout_seconds=240,
+        test_timeout_seconds=60,
+    )
+    assert bundle["exit_code"] == 0, bundle
+    result = read_lane(SnapshotReader(root), bundle)
+    assert result["selected_nodes"] == [f"tests/test_owned.py::test_external[{number}]" for number in (1, 2, 3, 4)]
+    overlap = root / "output/readiness/external-overlap"
+    first, second = (json.loads((overlap / str(number)).read_text())["pid"] for number in (1, 2))
+    assert first != second
+    assert int((overlap / "observed-1").read_text()) == second
+    assert int((overlap / "observed-2").read_text()) == first
+
+    # Rehash the entire original DATA chain. Successful phases/custody cannot
+    # authorize more simultaneous children than the Source-owned scheduler.
+    import math
+
+    original_bundle = copy.deepcopy(bundle)
+    paths = {key: root / bundle[key + "_artifact"]["path"] for key in ("result", "process", "coordinator")}
+    original = {path: path.read_bytes() for path in paths.values()}
+    process, outer = (json.loads(paths[key].read_bytes()) for key in ("process", "coordinator"))
+    outer_bundle_path = root / outer["bundle_artifact"]["path"]
+    original[outer_bundle_path] = outer_bundle_path.read_bytes()
+    natives = []
+    for record in result["records"]:
+        path = root / record["process_artifact"]["path"]
+        original[path] = path.read_bytes()
+        natives.append((record, path, json.loads(original[path])))
+    launch = min(native["launch_offset_seconds"] for _, _, native in natives)
+    duration = min(native["duration_seconds"] for _, _, native in natives)
+    spec = json.loads((root / bundle["spec_artifact"]["path"]).read_bytes())
+    try:
+        for record, path, native in natives:
+            native.update(
+                launch_offset_seconds=launch,
+                finish_offset_seconds=launch + duration,
+                remaining_budget_seconds=math.floor(spec["timeout_seconds"] - launch),
+            )
+            native["duration_seconds"] = native["finish_offset_seconds"] - launch
+            record["process_artifact"] = write_json(root, path, native)
+        bundle["result_artifact"] = write_json(root, paths["result"], result)
+        process["result_artifact"] = bundle["result_artifact"]
+        bundle["process_artifact"] = write_json(root, paths["process"], process)
+        outer["bundle_artifact"] = write_json(
+            root, outer_bundle_path, {key: value for key, value in bundle.items() if key != "coordinator_artifact"}
+        )
+        bundle["coordinator_artifact"] = write_json(root, paths["coordinator"], outer)
+        with pytest.raises(ValueError, match="source-owned concurrency"):
+            read_lane(SnapshotReader(root), bundle)
+    finally:
+        for path, body in original.items():
+            path.write_bytes(body)
+    assert read_lane(SnapshotReader(root), original_bundle)["exit_code"] == 0
+
+    action = root / "output/readiness/action.json"
+    try:
+        shutil.rmtree(overlap)
+        action.write_text(json.dumps(7))
+        failed = _epoch_call(
+            produce_root_lane,
+            root,
+            root / "output/readiness/external-parallel-hard-exit",
+            census_bundle=census,
+            lane="external-fixture",
+            mode="live",
+            timeout_seconds=240,
+            test_timeout_seconds=60,
+        )
+        assert failed["exit_code"] == 1, failed
+        incomplete = json.loads((root / failed["result_artifact"]["path"]).read_bytes())
+        assert [record["index"] for record in incomplete["records"]] == [0, 1]
+        for record in incomplete["records"]:
+            native = json.loads((root / record["process_artifact"]["path"]).read_bytes())
+            assert native["original_returncode"] == native["returncode"] == 7
+            assert native["timed_out"] is native["custody_refused"] is False
+            assert native["command_error"] == ""
+            assert record["receipt_artifact"] is None
+        with pytest.raises(ValueError):
+            read_lane(SnapshotReader(root), failed)
+    finally:
+        action.unlink(missing_ok=True)
 
 
 def test_actual_source_owned_core_selection_and_all_original_phases(
@@ -639,6 +777,8 @@ def test_real_case_physical_root_replacement_refuses_writes_with_identical_sourc
         "impossible-outer-timeline",
         "impossible-worker-timeline",
         "impossible-chunk-timeline",
+        "reset-chunk-budget",
+        "reversed-chunk-interval",
         "missing-output-binding",
         "wrong-output-binding",
         "missing-diagnostics-binding",
@@ -719,6 +859,13 @@ def test_consistently_rehashed_original_lane_evidence_cannot_waive_contract(
         outer["duration_seconds"] = outer["admission_duration_seconds"] / 2
     elif fault == "impossible-worker-timeline":
         result["duration_seconds"] = process["duration_seconds"]
+    elif fault == "reset-chunk-budget":
+        native["remaining_budget_seconds"] = json.loads(spec_snapshot.path.read_bytes())["timeout_seconds"]
+    elif fault == "reversed-chunk-interval":
+        native["launch_offset_seconds"], native["finish_offset_seconds"] = (
+            native["finish_offset_seconds"],
+            native["launch_offset_seconds"],
+        )
     else:
         native["duration_seconds"] = result["duration_seconds"] + 1
     try:

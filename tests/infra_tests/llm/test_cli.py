@@ -282,36 +282,3 @@ class TestCLIWithOllama:
 
         captured = capsys.readouterr()
         assert "running" in captured.out.lower()
-
-    def test_models_command_success(self, capsys):
-        """Test models command with Ollama running."""
-        args = argparse.Namespace()
-
-        models_command(args)
-
-        captured = capsys.readouterr()
-        # Should show available models or "No models found"
-        assert "models" in captured.out.lower() or "model" in captured.out.lower()
-
-    def test_query_command_basic(self, capsys):
-        """Test basic query command."""
-        from infrastructure.llm.core.config import OllamaClientConfig
-        from infrastructure.llm.utils.models import select_small_fast_model
-
-        model = select_small_fast_model(OllamaClientConfig.from_env().base_url)
-        assert model, "A prepared small Ollama model is required"
-        args = argparse.Namespace(
-            prompt="Say 'test' and nothing else",
-            short=True,
-            long=False,
-            stream=False,
-            model=model,
-            temperature=0.0,
-            max_tokens=50,
-            seed=42,
-        )
-
-        query_command(args)
-
-        captured = capsys.readouterr()
-        assert len(captured.out) > 0
