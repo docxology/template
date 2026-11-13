@@ -1,4 +1,4 @@
-name: Actual remaining native Source and prepared-runtime diagnostics
+name: Actual current CLI external stack and fixture DATA
 on:
   push:
     branches: [codex/sdk-original8-native-diagnostics-20261112-9a20c57e]
@@ -26,36 +26,12 @@ jobs:
       # module completely. Independent runner cells bound shared CPU pressure.
       matrix:
         include:
-          - os: ubuntu-24.04
-            python-version: "3.14"
-            scope: runtime-source
-            shard: remaining-runtime-linux314
-            original-nodes: >-
-              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics
-              tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_save_baseline_only_integration
-              tests/infra_tests/core/test_bytecode_audit.py
-              tests/infra_tests/reporting/test_native_project_provider_batch.py::test_native_directory_identity_keeps_confined_search_only_witnesses
-          - os: ubuntu-24.04
-            python-version: "3.15"
-            scope: runtime-source
-            shard: remaining-runtime-linux315
-            original-nodes: >-
-              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics
-              tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_save_baseline_only_integration
-              tests/infra_tests/core/test_bytecode_audit.py
-              tests/infra_tests/reporting/test_native_project_provider_batch.py::test_native_directory_identity_keeps_confined_search_only_witnesses
           - os: macos-latest
             python-version: "3.15"
-            scope: browser-scientific
-            shard: remaining-browser-darwin315
+            scope: cli-external-stack-DATA
+            shard: currentff-fresh-cli-darwin315
             original-nodes: >-
-              tests/infra_tests/reporting/test_native_browser_scientific_structure.py::test_actual_structure_and_alpha_browser_controls
-          - os: macos-latest
-            python-version: "3.15"
-            scope: pdfium-positive
-            shard: remaining-pdfium-darwin315
-            original-nodes: >-
-              tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py::test_genuine_pdfium_runtime_guard[loaded-positive]
+              tests/infra_tests/orchestration/test_pipeline_runner.py::test_cli_all_project_resume_preserves_checkpoint_refusal
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -154,6 +130,16 @@ jobs:
       - name: Assert immutable selected product Source
         run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
 
+      - name: Prepare external own process sampler outside product Source
+        shell: bash
+        run: |
+          .venv/bin/python -B - <<'PYTHON'
+          import base64,os
+          from pathlib import Path
+          path=Path(os.environ["RUNNER_TEMP"])/"sdk-currentff-external-CLI-observer.py"
+          path.write_bytes(base64.b64decode("aW1wb3J0IGhhc2hsaWIsanNvbixvcyxzaGxleCxzdGF0LHN1YnByb2Nlc3Msc3lzLHRpbWUKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnBpZD1pbnQoc3lzLmFyZ3ZbMV0pO2Jhc2U9UGF0aChzeXMuYXJndlsyXSk7b3V0PVBhdGgoc3lzLmFyZ3ZbM10pO291dC5ta2Rpcihtb2RlPTBvNzAwKTtzdGFydD10aW1lLm1vbm90b25pYygpO3VpZD1vcy5nZXR1aWQoKQpyZWNvcmQ9eydyb2xlJzonRXh0ZXJuYWwgb3duIG9yaWdpbmFsIHB5dGVzdCBkZXNjZW5kYW50IHN0YWNrL2ZpeHR1cmUgREFUQSBvbmx5OyBubyBpbmplY3RlZCBjaGlsZCBvYnNlcnZlci9wcm9maWxlciwgY29tbWFuZC9kZWFkbGluZS93b3JrZXIgY2hhbmdlLCBTb3VyY2UgZWRpdCBvciBydW50aW1lL3JlbGVhc2UgZ3JhbnQnLCdweXRlc3RfcGlkJzpwaWQsJ3VpZCc6dWlkLCdzbmFwc2hvdHMnOltdLCdzYW1wbGVzJzpbXSwnY29waWVkX2ZpeHR1cmVfREFUQSc6W10sJ2Vycm9ycyc6W10sJ29yaWdpbmFsX2NoaWxkX3N0b3BwZWRfYnlfb2JzZXJ2ZXInOkZhbHNlfTtiaXJ0aD1Ob25lO3NlZW49e307c2FtcGxlZD17fTtzYW1wbGVfY291bnQ9MAoKZGVmIHNhdmUoKToKICAgIChvdXQvJ2FjdHVhbC1leHRlcm5hbC1vd25lZC1DTEktREFUQS5qc29uJykud3JpdGVfdGV4dChqc29uLmR1bXBzKHJlY29yZCxpbmRlbnQ9Mixzb3J0X2tleXM9VHJ1ZSkrJ1xuJykKCmRlZiBzbmFwc2hvdCgpOgogICAgcmVzdWx0PXN1YnByb2Nlc3MucnVuKFsnL2Jpbi9wcycsJy1heG8nLCdwaWQ9LHBwaWQ9LHVpZD0sbHN0YXJ0PSxjb21tYW5kPSddLHN0ZGluPXN1YnByb2Nlc3MuREVWTlVMTCxjYXB0dXJlX291dHB1dD1UcnVlLGNoZWNrPUZhbHNlKQogICAgaWYgcmVzdWx0LnJldHVybmNvZGU6CiAgICAgICAgcmVjb3JkWydlcnJvcnMnXS5hcHBlbmQoeydwc19leGl0JzpyZXN1bHQucmV0dXJuY29kZSwnc3RkZXJyJzpyZXN1bHQuc3RkZXJyLmRlY29kZShlcnJvcnM9J3JlcGxhY2UnKX0pO3JldHVybiB7fQogICAgcm93cz17fQogICAgZm9yIGxpbmUgaW4gcmVzdWx0LnN0ZG91dC5kZWNvZGUoZXJyb3JzPSdyZXBsYWNlJykuc3BsaXRsaW5lcygpOgogICAgICAgIGZpZWxkcz1saW5lLnNwbGl0KE5vbmUsOCkKICAgICAgICBpZiBsZW4oZmllbGRzKSE9OTpjb250aW51ZQogICAgICAgIGNoaWxkLHBhcmVudCxvd25lcj1tYXAoaW50LGZpZWxkc1s6M10pCiAgICAgICAgaWYgb3duZXI9PXVpZDpyb3dzW2NoaWxkXT17J3BpZCc6Y2hpbGQsJ3BwaWQnOnBhcmVudCwndWlkJzpvd25lciwnYmlydGgnOicgJy5qb2luKGZpZWxkc1szOjhdKSwnYXJndic6ZmllbGRzWzhdfQogICAgcmV0dXJuIHJvd3MKCnNhdmUoKQp0cnk6CiAgICB3aGlsZSB0aW1lLm1vbm90b25pYygpLXN0YXJ0PDE4MDoKICAgICAgICByb3dzPXNuYXBzaG90KCk7cm9vdD1yb3dzLmdldChwaWQpCiAgICAgICAgaWYgcm9vdCBpcyBOb25lOnJlY29yZFsncm9vdF9kaXNhcHBlYXJlZCddPVRydWU7YnJlYWsKICAgICAgICBpZiBiaXJ0aCBpcyBOb25lOgogICAgICAgICAgICBhc3NlcnQgJ3B5dGVzdCcgaW4gc2hsZXguc3BsaXQocm9vdFsnYXJndiddKSBhbmQgcm9vdFsndWlkJ109PXVpZAogICAgICAgICAgICBiaXJ0aD1yb290WydiaXJ0aCddO3JlY29yZFsnYWN0dWFsX29yaWdpbmFsX3B5dGVzdF9iaXJ0aCddPWJpcnRoCiAgICAgICAgaWYgcm9vdFsnYmlydGgnXSE9YmlydGg6cmVjb3JkWydlcnJvcnMnXS5hcHBlbmQoeydyb290X2JpcnRoX2NoYW5nZWQnOlRydWV9KTticmVhawogICAgICAgIGRlc2NlbmRhbnRzPXtwaWR9CiAgICAgICAgZm9yIF8gaW4gcmFuZ2UoNTEyKToKICAgICAgICAgICAgYWRkZWQ9e2tleSBmb3Iga2V5LHJvdyBpbiByb3dzLml0ZW1zKCkgaWYgcm93WydwcGlkJ10gaW4gZGVzY2VuZGFudHN9LWRlc2NlbmRhbnRzCiAgICAgICAgICAgIGlmIG5vdCBhZGRlZDpicmVhawogICAgICAgICAgICBkZXNjZW5kYW50cy51cGRhdGUoYWRkZWQpCiAgICAgICAgZWxzZTpyYWlzZSBWYWx1ZUVycm9yKCdPd24gcHJvY2Vzcy10cmVlIG9ic2VydmF0aW9uIGV4Y2VlZHMgYm91bmQnKQogICAgICAgIG5vdz10aW1lLm1vbm90b25pYygpO3JlY29yZFsnc25hcHNob3RzJ10uYXBwZW5kKHsnZWxhcHNlZCc6bm93LXN0YXJ0LCdyb3dzJzpbcm93c1trZXldIGZvciBrZXkgaW4gc29ydGVkKGRlc2NlbmRhbnRzKSBpZiBrZXkgaW4gcm93c119KTtzYXZlKCkKICAgICAgICBmb3IgY2hpbGQgaW4gc29ydGVkKGRlc2NlbmRhbnRzKToKICAgICAgICAgICAgaWYgY2hpbGQgbm90IGluIHJvd3Mgb3IgY2hpbGQ9PXBpZCBvciBzYW1wbGVfY291bnQ+PTE2OmNvbnRpbnVlCiAgICAgICAgICAgIHJvdz1yb3dzW2NoaWxkXTthcmd2PXNobGV4LnNwbGl0KHJvd1snYXJndiddKTtrZXk9KGNoaWxkLHJvd1snYmlydGgnXSk7c2Vlbi5zZXRkZWZhdWx0KGtleSxub3cpO2FnZT1ub3ctc2VlbltrZXldO2NvdW50PXNhbXBsZWQuZ2V0KGtleSwwKQogICAgICAgICAgICBtb2R1bGU9YXJndlthcmd2LmluZGV4KCctbScpKzFdIGlmICctbScgaW4gYXJndiBhbmQgYXJndi5pbmRleCgnLW0nKSsxPGxlbihhcmd2KSBlbHNlICcnCiAgICAgICAgICAgIGNsaT1tb2R1bGU9PSdpbmZyYXN0cnVjdHVyZS5vcmNoZXN0cmF0aW9uJyBhbmQgJy0tcmVzdW1lJyBub3QgaW4gYXJndiBhbmQgJy0tYWxsLXByb2plY3RzJyBpbiBhcmd2CiAgICAgICAgICAgIHdvcmtlcj1tb2R1bGUgaW4gKCdpbmZyYXN0cnVjdHVyZS5jb3JlLnBpcGVsaW5lLm11bHRpX3Byb2plY3Rfd29ya2VyJywnaW5mcmFzdHJ1Y3R1cmUuY29yZS5waXBlbGluZS5zdGFnZV93b3JrZXInLCdpbmZyYXN0cnVjdHVyZS5jb3JlLnBpcGVsaW5lLnJlcG9ydF93b3JrZXInKQogICAgICAgICAgICB0aHJlc2hvbGQ9KDQsMTQsMjQpW2NvdW50XSBpZiBjbGkgYW5kIGNvdW50PDMgZWxzZSAoMiwxMClbY291bnRdIGlmIHdvcmtlciBhbmQgY291bnQ8MiBlbHNlIE5vbmUKICAgICAgICAgICAgaWYgdGhyZXNob2xkIGlzIE5vbmUgb3IgYWdlPHRocmVzaG9sZDpjb250aW51ZQogICAgICAgICAgICBmcmVzaD1zbmFwc2hvdCgpLmdldChjaGlsZCkKICAgICAgICAgICAgaWYgZnJlc2ggaXMgTm9uZSBvciBmcmVzaFsnYmlydGgnXSE9cm93WydiaXJ0aCddIG9yIGZyZXNoWyd1aWQnXSE9dWlkOmNvbnRpbnVlCiAgICAgICAgICAgIGRlc3RpbmF0aW9uPW91dC8oJ3NhbXBsZS0nK3N0cihjaGlsZCkrJy0nK3N0cihjb3VudCkrJy50eHQnKTtjb21tYW5kPVsnL3Vzci9iaW4vc2FtcGxlJyxzdHIoY2hpbGQpLCcxJywnMScsJy1maWxlJyxzdHIoZGVzdGluYXRpb24pXTtyZXN1bHQ9c3VicHJvY2Vzcy5ydW4oY29tbWFuZCxzdGRpbj1zdWJwcm9jZXNzLkRFVk5VTEwsY2FwdHVyZV9vdXRwdXQ9VHJ1ZSxjaGVjaz1GYWxzZSk7c2FtcGxlZFtrZXldPWNvdW50KzE7c2FtcGxlX2NvdW50Kz0xCiAgICAgICAgICAgIG9ic2VydmF0aW9uPXsncGlkJzpjaGlsZCwnYmlydGgnOnJvd1snYmlydGgnXSwnYXJndic6YXJndiwnZWxhcHNlZCc6dGltZS5tb25vdG9uaWMoKS1zdGFydCwncmV0dXJuY29kZSc6cmVzdWx0LnJldHVybmNvZGUsJ3N0ZG91dCc6cmVzdWx0LnN0ZG91dC5kZWNvZGUoZXJyb3JzPSdyZXBsYWNlJyksJ3N0ZGVycic6cmVzdWx0LnN0ZGVyci5kZWNvZGUoZXJyb3JzPSdyZXBsYWNlJyksJ2ZpbGUnOmRlc3RpbmF0aW9uLm5hbWV9CiAgICAgICAgICAgIGlmIGRlc3RpbmF0aW9uLmlzX2ZpbGUoKToKICAgICAgICAgICAgICAgIGluZm89ZGVzdGluYXRpb24ubHN0YXQoKTthc3NlcnQgc3RhdC5TX0lTUkVHKGluZm8uc3RfbW9kZSkgYW5kIGluZm8uc3Rfbmxpbms9PTEgYW5kIGluZm8uc3Rfc2l6ZTw9MioxMDI0KjEwMjQ7cmF3PWRlc3RpbmF0aW9uLnJlYWRfYnl0ZXMoKTtvYnNlcnZhdGlvbi51cGRhdGUoYnl0ZXM9bGVuKHJhdyksU0hBMjU2PWhhc2hsaWIuc2hhMjU2KHJhdykuaGV4ZGlnZXN0KCkpCiAgICAgICAgICAgIHJlY29yZFsnc2FtcGxlcyddLmFwcGVuZChvYnNlcnZhdGlvbik7c2F2ZSgpCiAgICAgICAgdGltZS5zbGVlcCgwLjUpCiAgICByZWNvcmRbJ29ic2VydmF0aW9uX2xpZmV0aW1lX3NlY29uZHMnXT10aW1lLm1vbm90b25pYygpLXN0YXJ0CiAgICBpZiB0aW1lLm1vbm90b25pYygpLXN0YXJ0Pj0xODA6cmVjb3JkWydlcnJvcnMnXS5hcHBlbmQoeydleHRlcm5hbF9vYnNlcnZlcl9idWRnZXRfZWxhcHNlZCc6VHJ1ZX0pCmZpbmFsbHk6CiAgICBhbGxvd2VkPVsncHJvY2Vzc19vcmRlci5sb2cnXQogICAgZm9yIGxhYmVsIGluICgncmVzdW1lJywnZnJlc2gnKToKICAgICAgICBhbGxvd2VkICs9IFsnY2xpLW9ic2VydmF0aW9ucy8nK2xhYmVsKycvJytuYW1lIGZvciBuYW1lIGluICgnc3Rkb3V0Jywnc3RkZXJyJywnZXhpdC5qc29uJywndGltZW91dC5qc29uJyldCiAgICBmb3IgcHJvamVjdCBpbiAoJ2FscGhhJywnYmV0YScpOgogICAgICAgIGFsbG93ZWQgKz0gWydwcm9qZWN0cy8nK3Byb2plY3QrJy9vdXRwdXQvLnBpcGVsaW5lL2V4ZWN1dGlvbi5qc29uJywncHJvamVjdHMvJytwcm9qZWN0Kycvb3V0cHV0L2xvZ3MvcGlwZWxpbmUubG9nJ10KICAgIHRvdGFsPTAKICAgIGZvciBmaXh0dXJlIGluIHNvcnRlZChiYXNlLmdsb2IoJ3BvcGVuLWd3WzAtOV0qL3Rlc3RfY2xpX2FsbF9wcm9qZWN0X3Jlc3VtZV9wclswLTldKicpKToKICAgICAgICBpZiBmaXh0dXJlLmlzX3N5bWxpbmsoKSBvciBub3QgZml4dHVyZS5pc19kaXIoKTpjb250aW51ZQogICAgICAgIGZvciByZWxhdGl2ZSBpbiBhbGxvd2VkOgogICAgICAgICAgICB0YXJnZXQ9Zml4dHVyZS9yZWxhdGl2ZQogICAgICAgICAgICB0cnk6YmVmb3JlPXRhcmdldC5sc3RhdCgpCiAgICAgICAgICAgIGV4Y2VwdCBGaWxlTm90Rm91bmRFcnJvcjpjb250aW51ZQogICAgICAgICAgICBpZiBub3Qgc3RhdC5TX0lTUkVHKGJlZm9yZS5zdF9tb2RlKSBvciBiZWZvcmUuc3RfbmxpbmshPTEgb3IgYmVmb3JlLnN0X3NpemU+MTAyNCoxMDI0OnJlY29yZFsnZXJyb3JzJ10uYXBwZW5kKHsndW5yZXRhaW5lZF9maXh0dXJlX21lbWJlcic6cmVsYXRpdmV9KTtjb250aW51ZQogICAgICAgICAgICByYXc9dGFyZ2V0LnJlYWRfYnl0ZXMoKTthZnRlcj10YXJnZXQubHN0YXQoKTtpZGVudGl0eT1sYW1iZGEgdmFsdWU6dHVwbGUoZ2V0YXR0cih2YWx1ZSxrKSBmb3IgayBpbiAoJ3N0X2RldicsJ3N0X2lubycsJ3N0X21vZGUnLCdzdF9ubGluaycsJ3N0X3NpemUnLCdzdF9tdGltZV9ucycsJ3N0X2N0aW1lX25zJykpCiAgICAgICAgICAgIGlmIGlkZW50aXR5KGJlZm9yZSkhPWlkZW50aXR5KGFmdGVyKTpyZWNvcmRbJ2Vycm9ycyddLmFwcGVuZCh7J3Vuc3RhYmxlX2ZpeHR1cmVfbWVtYmVyJzpyZWxhdGl2ZX0pO2NvbnRpbnVlCiAgICAgICAgICAgIHRvdGFsKz1sZW4ocmF3KQogICAgICAgICAgICBpZiB0b3RhbD4xNioxMDI0KjEwMjQ6cmFpc2UgVmFsdWVFcnJvcignT3duIGZpeHR1cmUgZGlhZ25vc3RpYyBEQVRBIGJvdW5kIGV4Y2VlZGVkJykKICAgICAgICAgICAgbG9jYWw9UGF0aCgnZml4dHVyZS1EQVRBJykvZml4dHVyZS5wYXJlbnQubmFtZS9maXh0dXJlLm5hbWUvcmVsYXRpdmU7ZGVzdGluYXRpb249b3V0L2xvY2FsO2Rlc3RpbmF0aW9uLnBhcmVudC5ta2RpcihwYXJlbnRzPVRydWUsZXhpc3Rfb2s9VHJ1ZSk7ZGVzdGluYXRpb24ud3JpdGVfYnl0ZXMocmF3KTtyZWNvcmRbJ2NvcGllZF9maXh0dXJlX0RBVEEnXS5hcHBlbmQoeydvcmlnaW5hbF9maXh0dXJlX21lbWJlcic6c3RyKHRhcmdldCksJ2xvY2FsJzpzdHIobG9jYWwpLCdieXRlcyc6bGVuKHJhdyksJ1NIQTI1Nic6aGFzaGxpYi5zaGEyNTYocmF3KS5oZXhkaWdlc3QoKX0pCiAgICBzYXZlKCkK"))
+          PYTHON
+
       - name: Run infrastructure tests
         env:
           # Coverage instrumentation is memory-intensive on macOS; keep that
@@ -188,7 +174,25 @@ jobs:
             --junitxml="output/readiness/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml" \
             --durations=10 \
             -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
-            --timeout=120
+            --timeout=120 &
+          original_pytest=$!
+          .venv/bin/python -B "$RUNNER_TEMP/sdk-currentff-external-CLI-observer.py" \
+            "$original_pytest" "$RUNNER_TEMP/template-infra-case-workspaces" \
+            "$RUNNER_TEMP/sdk-currentff-external-CLI-DATA" &
+          external_observer=$!
+          if wait "$original_pytest"; then original_status=0; else original_status=$?; fi
+          if wait "$external_observer"; then observer_status=0; else observer_status=$?; fi
+          printf 'Original pytest exit: %s; external DATA observer exit: %s\n' "$original_status" "$observer_status"
+          exit "$original_status"
+
+      - name: Retain bounded original CLI external stack and fixture DATA
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: currentff-external-CLI-stack-and-fixture-DATA-${{ github.run_id }}
+          path: ${{ runner.temp }}/sdk-currentff-external-CLI-DATA/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Export original Linux infrastructure readiness bytes
         if: ${{ always() && runner.os == 'Linux' }}
