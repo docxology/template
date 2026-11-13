@@ -15392,7 +15392,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_reference.py",
-      "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
+      "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
       "families": [
         "tests/infra_tests/project/test_public_reference.py::test_actual_committed_submodule_declaration_is_not_ambient_routing_authority",
         "tests/infra_tests/project/test_public_reference.py::test_actual_git_control_metadata_is_separate_from_public_source_data",
@@ -15411,7 +15411,7 @@
         "tests/infra_tests/project/test_public_reference.py::test_plain_archive_and_partial_explicit_bindings_cannot_invent_git_custody",
         "tests/infra_tests/project/test_public_reference.py::test_real_private_filename_open_control_is_live_before_guarded_admission"
       ],
-      "family_observations_sha256": "ef81e4fd2607ed61a05c4f79fbae2fccd3f6d1ef3918107b803125f96ae3580b",
+      "family_observations_sha256": "e1051839d3110d6ed694fd536e125963eec3f134e41222931f888e2762649d87",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -15433,23 +15433,33 @@
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_public_reference.py",
-          "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
           "line": 26
         },
         {
           "path": "tests/infra_tests/project/test_public_reference.py",
-          "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
           "line": 53
         },
         {
           "path": "tests/infra_tests/project/test_public_reference.py",
-          "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
-          "line": 337
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
         },
         {
           "path": "tests/infra_tests/project/test_public_reference.py",
-          "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
-          "line": 591
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 340
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 594
         }
       ]
     },
@@ -15465,7 +15475,7 @@
         "tests/infra_tests/project/test_public_reference_session.py::test_real_path_git_forgery_executes_but_bound_pitch_uses_original_admitted_counts",
         "tests/infra_tests/project/test_public_reference_session.py::test_unbound_development_and_partial_configuration_are_distinct"
       ],
-      "family_observations_sha256": "b8b1988ae7a3bb8ad0157227411759d596a7a2be8f5a3a5f93d44d9c9ac1027c",
+      "family_observations_sha256": "2487cfb0bb01dfd670037e4109478a0b28d76afd5c236db2ce2b3f0805044fbe",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -15485,6 +15495,16 @@
         }
       ],
       "evidence": [
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
+        },
         {
           "path": "tests/infra_tests/project/test_public_reference_session.py",
           "source_sha256": "631c07bc968ff573199c3ffec0010ae7d800259416f502a45cea55ca97d35265",
@@ -17502,7 +17522,7 @@
         "tests/infra_tests/publishing/test_composed_acceptance.py::test_origin_verdict_treats_an_unobservable_origin_as_declared",
         "tests/infra_tests/publishing/test_composed_acceptance.py::test_partial_hosted_handoff_is_refused"
       ],
-      "family_observations_sha256": "997a83c2a447c0b9ef2eac526f2cad6075b78233ca86a00960dcee6eba3bdfec",
+      "family_observations_sha256": "c23955b43544e6e35660b4b2767e033d6999cd2b32c89f9ca4de76fcccac6e6b",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -17576,6 +17596,16 @@
           "path": "infrastructure/publishing/composed_receipt.py",
           "source_sha256": "b74c46f503628e7535fef21c8c0baae13d24c7f39d9fe8be6f1a75a69d85d663",
           "line": 112
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
         },
         {
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
@@ -26615,7 +26645,7 @@
         "tests/infra_tests/reporting/test_evidence_class_composition.py::test_unavailable_stage_closure_refuses_instead_of_widening",
         "tests/infra_tests/reporting/test_evidence_class_composition.py::test_unknown_kind_is_not_silently_narrowed"
       ],
-      "family_observations_sha256": "09488f8be3ce8d4c9e7fc16dd1b5ac84291c07f9986c3c6e214861b8752855ab",
+      "family_observations_sha256": "7d13550be9f7a8ffb9362791b5d0045734afa2812abc4f496871cf302a473642",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -26631,8 +26661,18 @@
         },
         {
           "path": "tests/infra_tests/project/test_public_reference.py",
-          "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
           "line": 53
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
         },
         {
           "path": "tests/infra_tests/reporting/test_evidence_class_composition.py",
@@ -26693,7 +26733,7 @@
         "tests/infra_tests/reporting/test_evidence_class_composition_gate.py::test_tampered_class_binding_is_refused",
         "tests/infra_tests/reporting/test_evidence_class_composition_gate.py::test_unrelated_scope_change_keeps_evidence_current"
       ],
-      "family_observations_sha256": "e71ee0ea423236ea60ecd87fa16a5e4e9f66b30000980c007d3a6305117d65db",
+      "family_observations_sha256": "2a1677f35540328bc46dacc74fc5743fb92f31c56751b7c0554bf7f0d083a603",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -26709,8 +26749,18 @@
         },
         {
           "path": "tests/infra_tests/project/test_public_reference.py",
-          "source_sha256": "893280fb133a45aa74f0f70cc354a28d94b158b1d3546e666cf88b79545f5e37",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
           "line": 53
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
         },
         {
           "path": "tests/infra_tests/reporting/test_evidence_class_composition_gate.py",
@@ -28153,7 +28203,7 @@
         "tests/infra_tests/reporting/test_native_hosted_credentials.py::test_hosted_environment_commits_exact_job_input_and_rejects_rewritten_data",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py::test_hosted_launch_refuses_arbitrary_preparation_without_a_real_factory"
       ],
-      "family_observations_sha256": "e74c13881ae05cf91edd44100f3b4d210c23199d193228c2dc48bf2f318e5f0c",
+      "family_observations_sha256": "a7e10080b5ca12f54cb7226c62efbd10e158c2b0305ed374dc4624fc753e0959",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -28169,6 +28219,16 @@
         }
       ],
       "evidence": [
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
+        },
         {
           "path": "tests/infra_tests/reporting/test_native_hosted_credentials.py",
           "source_sha256": "375a38aa17b452d6449293bc514b106055ce4a1b76d712167d00c5db5d154edb",
@@ -29479,7 +29539,7 @@
       "families": [
         "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py::test_genuine_pdfium_runtime_guard"
       ],
-      "family_observations_sha256": "bc65927ac1b0ce20687afbe42342eca008f4556971d6cb597ddc0494f88e487d",
+      "family_observations_sha256": "e39618d2b8df6c1f4e2e94e31dc691bec845f479ff8895094b23255c110789ab",
       "decision": {
         "lane": "external-fixture",
         "obligations": [
@@ -29492,6 +29552,16 @@
           "path": "infrastructure/config/root-case-prerequisites.json",
           "source_sha256": "31f4791c9e72000a454ea4fdf625372148db42e8f67160fdd065d992b7423384",
           "line": 376
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
         },
         {
           "path": "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
@@ -29531,7 +29601,7 @@
       "families": [
         "tests/infra_tests/reporting/test_native_pdfium_verify_current.py::test_genuine_pdfium_use_time_guard"
       ],
-      "family_observations_sha256": "9e3ad66159e402907917efbcd4bd4021fb3d510543a1ac84f2fb3985a943418b",
+      "family_observations_sha256": "0c2e5c866797c481dda2af860e0e7410d7184a7d5c0cffd382013be0bec5424d",
       "decision": {
         "lane": "external-fixture",
         "obligations": [
@@ -29540,6 +29610,16 @@
       },
       "exceptions": [],
       "evidence": [
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
+        },
         {
           "path": "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
           "source_sha256": "3bf6b91c55b0ff4ab605aea0a62fae6c9deed71fd8164991e35734cc8ee32209",
@@ -29822,7 +29902,7 @@
         "tests/infra_tests/reporting/test_native_project_provider_batch.py::test_native_directory_identity_keeps_confined_search_only_witnesses",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py::test_provider_batch_refuses_context_free_inputs_without_source_authority"
       ],
-      "family_observations_sha256": "ad498d73b07960fd9420e9814d5c5bfd96323e404d41b6779359d2a0a00b790d",
+      "family_observations_sha256": "65c0dff841307c5c60a8151855551aaed36513bda7987467b9176d6cd07880e9",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -29844,6 +29924,16 @@
         }
       ],
       "evidence": [
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
+        },
         {
           "path": "tests/infra_tests/reporting/test_native_project_provider_batch.py",
           "source_sha256": "164e3a2c8de136a62bb3861b80f1eb520e1ed85027458c95728d30cbe85d010b",
@@ -30350,7 +30440,7 @@
       "families": [
         "tests/infra_tests/reporting/test_native_source_wheel_guard.py::test_genuine_source_wheel_single_guard"
       ],
-      "family_observations_sha256": "5a566bc2fb53ca7b16194e0d46ead9df03495819d4bf0682c0687cbb513c717b",
+      "family_observations_sha256": "26121553fef76426264c09bba5d62d03a95bc245292a2c8eab47187d42bcf643",
       "decision": {
         "lane": "external-fixture",
         "obligations": [
@@ -30359,6 +30449,16 @@
       },
       "exceptions": [],
       "evidence": [
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/project/test_public_reference.py",
+          "source_sha256": "1dd7322c447f6a5c22c1ea1c4cf646f8e50bf51352bc7e51d82b55eb3bb774ae",
+          "line": 88
+        },
         {
           "path": "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
           "source_sha256": "d80064e638cd1991eb2b2ac34754f609da1e343763f37338673ff45eec54c599",
