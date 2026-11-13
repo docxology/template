@@ -127,7 +127,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "8ff597c49af06c2ccc5d9a226fb162482148f8b1ff13ce087a64c5c267705ff7",
+      "sha256": "35d1666cd4f66d801a54e49825cf3941b3089e9bcad3d374b0320032cb630e9d",
       "size_bytes": 14527
     }
   },
@@ -135,7 +135,7 @@
   "fingerprints": {
     "config": {
       "file_count": 27,
-      "sha256": "d4282a8d018ae72a6e0cac814e763d165c0550ffd46694ec38939401f0a15d7b"
+      "sha256": "f8e67a2bb816961633da78ea0617ced42c27ee1b43f6e6c4959bd199dab2df5a"
     },
     "output": {
       "file_count": 178,
@@ -147,7 +147,7 @@
     },
     "stage": {
       "file_count": 1764,
-      "sha256": "a6c05d952a5870ffeddd2d05f35d83915cf6933af484fad059711cc454a263af"
+      "sha256": "9a1bff109f5031a908a1a20d36c36a6bc58b2b3461482303c742e9aeba209116"
     }
   },
   "project": "templates/template_active_inference",

@@ -55,7 +55,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "184cb2e2e0010fc508552daabf909376da4d373285fb2d090d6125147883dd95",
+      "sha256": "02115f46d7c378262eb6465081186aa03dce414a574312373bab81c72ed8b426",
       "size_bytes": 10317
     }
   },
@@ -63,7 +63,7 @@
   "fingerprints": {
     "config": {
       "file_count": 28,
-      "sha256": "8012ceee6c9c90486254ef1b7357aae2bed060cd09cb39d26f9ac22bc2393818"
+      "sha256": "f5a0b822112122cd827d2b21612dc77ee3d2b60e6ec7673ebd713caf44794f3f"
     },
     "output": {
       "file_count": 38,
@@ -75,7 +75,7 @@
     },
     "stage": {
       "file_count": 1764,
-      "sha256": "a6c05d952a5870ffeddd2d05f35d83915cf6933af484fad059711cc454a263af"
+      "sha256": "9a1bff109f5031a908a1a20d36c36a6bc58b2b3461482303c742e9aeba209116"
     }
   },
   "project": "templates/template_newspaper",
