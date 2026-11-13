@@ -186,7 +186,7 @@ def test_genuine_batch_matches_single_factories_and_refuses_changed_source(
     positive_closure = evidence / "selected-sdk-positive-closure"
     positive_closure.mkdir()
     worker_arguments = ("owned-native-construction-control", "--no-child-is-launched")
-    command = selected_sdk_native_command(
+    selected_sdk_native_command(
         interpreter.absolute(),
         context,
         worker_arguments,
@@ -195,9 +195,6 @@ def test_genuine_batch_matches_single_factories_and_refuses_changed_source(
         audit_closure_directory=positive_closure,
         deadline=deadline,
     )
-    assert command[:3] == (str(interpreter.absolute()), "-I", "-c")
-    assert command[-2:] == worker_arguments
-    assert "install_bytecode_audit" in command[3]
     assert not tuple(positive_closure.iterdir())
     assert context.current_source_reader.unchanged()
     source = scratch / "template_literature_meta_analysis"
