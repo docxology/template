@@ -221,6 +221,29 @@ import sys
 import subprocess
 import time
 from uuid import uuid4
+import faulthandler
+import signal
+
+_diagnostic_scope = Path(sys.argv[5])
+_diagnostic_origin = time.monotonic()
+_diagnostic_birth = int(Path("/proc/self/stat").read_text().rsplit(") ", 1)[1].split()[19])
+faulthandler.register(signal.SIGUSR2, all_threads=True)
+
+
+def _diagnostic_checkpoint(phase):
+    event = {
+        "pid": os.getpid(),
+        "pid_start_ticks": _diagnostic_birth,
+        "phase": phase,
+        "elapsed_seconds": time.monotonic() - _diagnostic_origin,
+    }
+    payload = json.dumps(event, sort_keys=True)
+    with (_diagnostic_scope / "genuine-debug-phases.jsonl").open("a", encoding="utf-8") as stream:
+        stream.write(payload + "\n")
+    print("GENUINE_SDK_PHASE " + payload, file=sys.stderr, flush=True)
+
+
+_diagnostic_checkpoint("before-installed-SDK-imports")
 
 from contextlib import contextmanager
 
@@ -263,12 +286,14 @@ deadline = float(sys.argv[6])
 assert infrastructure.__file__ is not None
 sdk_root = Path(infrastructure.__file__).resolve(strict=True).parent
 assert sdk_root.is_relative_to(Path(sys.prefix).resolve(strict=True))
+_diagnostic_checkpoint("before-implementation-custody")
 custody = capture_implementation_custody()
 assert custody["binding_kind"] == "installed-distribution"
 runtime = custody["runtime_environment"]
 assert runtime["python_launcher"] == str(Path(sys.executable).absolute())
 assert runtime["python_executable"] == str(Path(sys.executable).resolve(strict=True))
 assert runtime["python_launcher"] != runtime["python_executable"]
+_diagnostic_checkpoint("after-implementation-custody")
 
 # These genuine installed-SDK --help executions prove launcher/import/Code
 # closure only. Their pair declarations are DATA, not native Source authority.
@@ -281,6 +306,7 @@ implementation_path.write_bytes(implementation_bytes)
 entry_scripts = []
 entry_closures = []
 for ordinal in range(3):
+    _diagnostic_checkpoint("before-bootstrap-slot-" + str(ordinal))
     leaf = entry_directory / ("slot-" + str(ordinal))
     leaf.mkdir()
     closure = leaf / "closure"
@@ -307,6 +333,7 @@ for ordinal in range(3):
     entry.chmod(0o700)
     entry_scripts.append(entry)
     entry_closures.append(closure)
+    _diagnostic_checkpoint("after-bootstrap-slot-" + str(ordinal))
 
 pair_directory = entry_directory / "pair"
 pair_directory.mkdir()
@@ -333,6 +360,7 @@ entry_environment = {
     "HOME": str(tmp_path),
 }
 for entry in (entry_scripts[0], pair_entry, pair_entry):
+    _diagnostic_checkpoint("before-cold-help-" + str(entry))
     completed = subprocess.run(
         [str(entry), "latex"],
         cwd=tmp_path,
@@ -343,6 +371,7 @@ for entry in (entry_scripts[0], pair_entry, pair_entry):
         check=False,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
+    _diagnostic_checkpoint("after-cold-help-" + str(entry))
 for closure in entry_closures:
     retained = json.loads((closure / "receipt.json").read_text())
     assert retained["status"] == "pass", retained
@@ -367,9 +396,11 @@ refused = subprocess.run(
 )
 assert refused.returncode != 0
 assert "Source paired filter permits exactly two invocations" in refused.stderr
+_diagnostic_checkpoint("all-cold-entries-and-exhausted-pair-control-complete")
 
 metadata = mirror.stat()
 run_id = uuid4().hex
+_diagnostic_checkpoint("before-external-Source-admission")
 source = admit_external_native_source(
     NativeExternalSourceBindings(
         original,
@@ -383,12 +414,15 @@ source = admit_external_native_source(
     ),
     deadline=deadline,
 )
+_diagnostic_checkpoint("after-external-Source-admission")
 environment = {
     "PATH": os.environ.get("PATH", os.defpath),
     "LC_ALL": "C",
     "HOME": str(tmp_path),
 }
+_diagnostic_checkpoint("before-native-operation-entry")
 with native_producer_operation(source, run_id=run_id, deadline=deadline):
+    _diagnostic_checkpoint("after-native-operation-entry")
     runtime = CitationRuntime(
         mirror,
         mirror / "output/readiness/native-loader-terminal-control",
@@ -397,6 +431,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         run_id=run_id,
     )
     reader = SnapshotReader(mirror)
+    _diagnostic_checkpoint("before-paired-native-qualification")
     try:
         observed, qualification_binding, compiled = qualify_native_loader_tool(
             runtime,
@@ -431,6 +466,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
                 flush=True,
             )
         raise
+    _diagnostic_checkpoint("after-paired-native-qualification")
     qualification = reader.read(qualification_binding["path"]).json_object()
     baseline = reader.read(qualification["baseline_tool"]["path"]).json_object()
     observed = reader.read(qualification["observed_tool"]["path"]).json_object()
@@ -466,6 +502,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         )
         == lifecycle
     )
+    _diagnostic_checkpoint("after-positive-independent-replay")
     for mutation in ("missing-done", "post-done-frame", "library-descriptor", "library-inode"):
         changed = deepcopy(lifecycle)
         if mutation == "missing-done":
@@ -486,6 +523,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
                 original_deadline=deadline,
                 original_completion=native["operation_end"]["monotonic"],
             )
+        _diagnostic_checkpoint("after-negative-replay-" + mutation)
 
     purpose = "pandoc-terminal-nonzero"
     leaf = compiled.directory / ("callbacks-" + purpose)
@@ -508,6 +546,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert failed["original_exit_code"] != 0
     assert observer.done is True and observer.eof is True
     assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
+    _diagnostic_checkpoint("after-genuine-nonzero-control")
 
     purpose = "pandoc-terminal-wrong-peer"
     leaf = compiled.directory / ("callbacks-" + purpose)
@@ -532,6 +571,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert native["cleanup"]["root_reaped"] is True
     assert native["cleanup"]["final_token_sweep_matched_pids"] == []
     assert observer.peer is None and observer.events == []
+    _diagnostic_checkpoint("after-wrong-peer-control")
 
     purpose = "python-terminal-premature-eof"
     leaf = compiled.directory / ("callbacks-" + purpose)
@@ -554,6 +594,7 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
     assert failed["original_exit_code"] == 0
     assert observer.done is False
     assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
+    _diagnostic_checkpoint("after-premature-EOF-control")
 
     retained = len(runtime.tools)
     with raises(TimeoutError):
@@ -565,6 +606,8 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
         )
     assert len(runtime.tools) == retained
     assert not (runtime.directory / "pandoc-terminal-expired.native-process.json").exists()
+    _diagnostic_checkpoint("after-original-expired-deadline-control")
+_diagnostic_checkpoint("all-original-controls-and-native-operation-exit-complete")
 """
 
 
@@ -709,23 +752,30 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
         "LC_ALL": "C",
         "HOME": str(tmp_path),
     }
-    result = subprocess.run(
-        [
-            str(selected_python),
-            "-I",
-            str(child),
-            str(original),
-            commit,
-            fingerprint,
-            str(mirror),
-            str(tmp_path),
-            str(deadline),
-        ],
-        cwd=tmp_path,
-        env=child_environment,
-        text=True,
-        capture_output=True,
-        timeout=max(1.0, deadline - time.monotonic()),
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            [
+                str(selected_python),
+                "-I",
+                str(child),
+                str(original),
+                commit,
+                fingerprint,
+                str(mirror),
+                str(tmp_path),
+                str(deadline),
+            ],
+            cwd=tmp_path,
+            env=child_environment,
+            text=True,
+            capture_output=True,
+            timeout=max(1.0, deadline - time.monotonic()),
+            check=False,
+        )
+    except subprocess.TimeoutExpired as error:
+        for name, payload in (("genuine-child.stdout", error.output), ("genuine-child.stderr", error.stderr)):
+            (tmp_path / name).write_bytes(payload.encode() if isinstance(payload, str) else payload or b"")
+        raise
+    (tmp_path / "genuine-child.stdout").write_text(result.stdout)
+    (tmp_path / "genuine-child.stderr").write_text(result.stderr)
     assert result.returncode == 0, result.stdout + result.stderr
