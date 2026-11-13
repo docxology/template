@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -39,14 +40,16 @@ def _run_security_command(
 
 
 def _run_bandit(repo_root: Path) -> dict[str, Any]:
-    probe = _run_security_command(repo_root, ["uv", "run", "bandit", "--version"], tool="bandit-probe", timeout=30)
+    probe = _run_security_command(
+        repo_root, [sys.executable, "-m", "bandit", "--version"], tool="bandit-probe", timeout=30
+    )
     if probe.returncode != 0 or probe.timed_out:
         print("WARNING: bandit not installed, skipping")
         return {"status": "skipped", "reason": "bandit not installed", "tool": "bandit"}
 
     cmd = [
-        "uv",
-        "run",
+        sys.executable,
+        "-m",
         "bandit",
         "-c",
         str(repo_root / "bandit.yaml"),
@@ -120,7 +123,7 @@ def parse_pip_audit_output(*, stdout: str, stderr: str) -> dict[str, Any]:
 def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
     probe = _run_security_command(
         repo_root,
-        ["uv", "run", "pip-audit", "--version"],
+        [sys.executable, "-m", "pip_audit", "--version"],
         tool="pip-audit-probe",
         timeout=30,
     )
@@ -129,9 +132,9 @@ def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
         return {"status": "skipped", "reason": "pip-audit not installed", "tool": "pip_audit"}
 
     cmd = [
-        "uv",
-        "run",
-        "pip-audit",
+        sys.executable,
+        "-m",
+        "pip_audit",
         "--format",
         "json",
         "--progress-spinner",

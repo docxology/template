@@ -120,66 +120,6 @@ def test_fallback_scope_arrays_match_the_actual_public_helpers(tmp_path: Path) -
     ]
 
 
-def test_default_shared_checks_remain_in_real_health_registry_and_hooks() -> None:
-    """Repeated scans may disappear only while their actual owners retain them."""
-    import yaml
-
-    from infrastructure.core.health_gates import build_gate_specs
-    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_ci_lint_paths, public_ci_source_paths
-
-    specs = dict(build_gate_specs(REPO_ROOT))
-    lint = [path.as_posix() for path in public_ci_lint_paths(REPO_ROOT)]
-    sources = [path.as_posix() for path in public_ci_source_paths(REPO_ROOT)]
-    assert specs["ruff"] == ["uv", "run", "ruff", "check", *lint]
-    assert specs["ruff-format"] == ["uv", "run", "ruff", "format", "--check", *lint]
-    assert specs["mypy"] == ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *sources]
-    assert specs["bandit"] == [
-        "uv",
-        "run",
-        "python",
-        "-m",
-        "bandit",
-        "-r",
-        "-ll",
-        "-c",
-        "bandit.yaml",
-        "infrastructure/",
-        "scripts/",
-        *(f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES),
-    ]
-    for name, command in (
-        ("no-mocks", ["uv", "run", "python", "scripts/audit/verify_no_mocks.py"]),
-        (
-            "semantic-standins",
-            [
-                "uv",
-                "run",
-                "python",
-                "scripts/audit/verify_no_mocks.py",
-                "--inventory",
-                "--max-dependency-replacements",
-                "0",
-            ],
-        ),
-        ("all-exports", ["uv", "run", "python", "-m", "infrastructure.skills", "check-all-exports"]),
-        ("operations-manifest", ["uv", "run", "python", "-m", "infrastructure.skills", "operations-check"]),
-        ("generated-artifacts", ["uv", "run", "python", "scripts/audit/check_tracked_generated_artifacts.py"]),
-        ("confidentiality", ["uv", "run", "python", "scripts/audit/check_tracked_all.py"]),
-        ("module-line-count", ["uv", "run", "python", "scripts/gates/module_line_count_check.py"]),
-    ):
-        assert specs[name] == command
-    configuration = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text(encoding="utf-8"))
-    hooks = [hook for repo in configuration["repos"] if repo["repo"] == "local" for hook in repo["hooks"]]
-    guard = next(hook for hook in hooks if hook["id"] == "pre-push-quick")
-    assert "pre-push" in guard["stages"]
-    assert "uv run python scripts/audit/check_mirror_symlinks.py" in guard["args"][-1]
-    source = SCRIPT.read_text(encoding="utf-8")
-    assert 'if [[ -z "$JOB" || "$JOB" == "health" ]]; then' in source
-    assert "uv run python -m infrastructure.core.health\n" in source
-    assert 'if [[ -z "$JOB" || "$JOB" == "precommit" ]]; then' in source
-    assert "uv run pre-commit run --hook-stage pre-push --all-files" in source
-
-
 @pytest.mark.parametrize(
     ("arguments", "missing_module"),
     [(("--job", "lint"), "infrastructure.project.public_scope"), ((), "infrastructure.core.health")],

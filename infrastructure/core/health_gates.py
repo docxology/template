@@ -43,15 +43,13 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     public_project_targets = [f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES]
 
     return [
-        ("mypy", ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *public_targets]),
-        ("ruff", ["uv", "run", "ruff", "check", *lint_targets]),
-        ("ruff-format", ["uv", "run", "ruff", "format", "--check", *lint_targets]),
+        ("mypy", [sys.executable, "scripts/gates/mypy_ratchet.py", *public_targets]),
+        ("ruff", [sys.executable, "-m", "ruff", "check", *lint_targets]),
+        ("ruff-format", [sys.executable, "-m", "ruff", "format", "--check", *lint_targets]),
         (
             "bandit",
             [
-                "uv",
-                "run",
-                "python",
+                sys.executable,
                 "-m",
                 "bandit",
                 "-r",
@@ -63,27 +61,25 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 *public_project_targets,
             ],
         ),
-        ("no-mocks", ["uv", "run", "python", "scripts/audit/verify_no_mocks.py"]),
+        ("no-mocks", [sys.executable, "scripts/audit/verify_no_mocks.py"]),
         (
             "semantic-standins",
             [
-                "uv",
-                "run",
-                "python",
+                sys.executable,
                 "scripts/audit/verify_no_mocks.py",
                 "--inventory",
                 "--max-dependency-replacements",
                 "0",
             ],
         ),
-        ("all-exports", ["uv", "run", "python", "-m", "infrastructure.skills", "check-all-exports"]),
-        ("skills-manifest", ["uv", "run", "python", "-m", "infrastructure.skills", "check"]),
+        ("all-exports", [sys.executable, "-m", "infrastructure.skills", "check-all-exports"]),
+        ("skills-manifest", [sys.executable, "-m", "infrastructure.skills", "check"]),
         (
             "operations-manifest",
-            ["uv", "run", "python", "-m", "infrastructure.skills", "operations-check"],
+            [sys.executable, "-m", "infrastructure.skills", "operations-check"],
         ),
-        ("skill-reachability", ["uv", "run", "python", "scripts/gates/skill_reachability_check.py"]),
-        ("confidentiality", ["uv", "run", "python", "scripts/audit/check_tracked_all.py"]),
+        ("skill-reachability", [sys.executable, "scripts/gates/skill_reachability_check.py"]),
+        ("confidentiality", [sys.executable, "scripts/audit/check_tracked_all.py"]),
         (
             "codeowners",
             [
@@ -98,7 +94,7 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ),
         (
             "generated-artifacts",
-            ["uv", "run", "python", "scripts/audit/check_tracked_generated_artifacts.py"],
+            [sys.executable, "scripts/audit/check_tracked_generated_artifacts.py"],
         ),
         (
             "xml-parser-policy",
@@ -115,32 +111,30 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 ),
             ],
         ),
-        ("template-drift", ["uv", "run", "python", "scripts/audit/check_template_drift.py", "--strict"]),
-        ("docs-lint", ["uv", "run", "python", "scripts/audit/lint_docs.py", "--quiet"]),
-        ("stage-table", ["uv", "run", "python", "scripts/docgen/stage_table.py"]),
-        ("api-reference", ["uv", "run", "python", "scripts/docgen/api_reference.py", "--check"]),
-        ("counts", ["uv", "run", "python", "scripts/docgen/counts.py", "--check"]),
-        ("exemplar-roster", ["uv", "run", "python", "scripts/docgen/exemplar_roster.py", "--check"]),
-        ("publication-records", ["uv", "run", "python", "scripts/docgen/publication_records.py", "--check"]),
-        ("status-freshness", ["uv", "run", "python", "scripts/gates/status_freshness.py"]),
+        ("template-drift", [sys.executable, "scripts/audit/check_template_drift.py", "--strict"]),
+        ("docs-lint", [sys.executable, "scripts/audit/lint_docs.py", "--quiet"]),
+        ("stage-table", [sys.executable, "scripts/docgen/stage_table.py"]),
+        ("api-reference", [sys.executable, "scripts/docgen/api_reference.py", "--check"]),
+        ("counts", [sys.executable, "scripts/docgen/counts.py", "--check"]),
+        ("exemplar-roster", [sys.executable, "scripts/docgen/exemplar_roster.py", "--check"]),
+        ("publication-records", [sys.executable, "scripts/docgen/publication_records.py", "--check"]),
+        ("status-freshness", [sys.executable, "scripts/gates/status_freshness.py"]),
         (
             "methods-plan",
             [
-                "uv",
-                "run",
-                "python",
+                sys.executable,
                 "scripts/gates/methods_plan_check.py",
                 "--all-public",
                 "--artifact-mode",
                 "source",
             ],
         ),
-        ("public-capabilities", ["uv", "run", "python", "scripts/gates/public_capabilities.py"]),
+        ("public-capabilities", [sys.executable, "scripts/gates/public_capabilities.py"]),
         ("architecture-overview", arch_overview_argv),
-        ("module-line-count", ["uv", "run", "python", "scripts/gates/module_line_count_check.py"]),
+        ("module-line-count", [sys.executable, "scripts/gates/module_line_count_check.py"]),
         (
             "ci-module-durations",
-            ["uv", "run", "python", "scripts/gates/ci_module_durations_check.py"],
+            [sys.executable, "scripts/gates/ci_module_durations_check.py"],
         ),
     ]
 

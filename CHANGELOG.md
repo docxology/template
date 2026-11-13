@@ -61,6 +61,11 @@ locks.
 - Run offline skill-evaluation CLI controls with the selected prepared Python and
   an owned copy of the actual harness. Do not reconcile the shared SDK runtime or
   overwrite its public baseline while parallel frozen-Source consumers run.
+- Run health gates and required security scanners with the selected prepared
+  Python, without implicit dependency reconciliation during parallel execution.
+  Retire obsolete UV-only health fixtures and command/wording assertion pins.
+- Preserve the Calibre missing-member refusal contract when strict held-custody
+  closing checks raise before a missing-leaf filesystem error.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report

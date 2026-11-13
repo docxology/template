@@ -8,7 +8,6 @@ real repo root, and assertions against actual gate outputs. No mocks.
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -78,11 +77,6 @@ class TestSyntheticGate:
         repo = tmp_path / "stub-repo"
         (repo / "scripts" / "audit").mkdir(parents=True)
         (repo / "scripts" / "audit" / "verify_no_mocks.py").write_text(script_body, encoding="utf-8")
-        (repo / "pyproject.toml").write_text(
-            '[project]\nname = "health-gate-fixture"\nversion = "0.0.0"\n'
-            "[tool.uv]\npackage = false\n[tool.uv.workspace]\nmembers = []\n",
-            encoding="utf-8",
-        )
         return repo
 
     def test_stub_gate_timeout_fails_closed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -169,9 +163,6 @@ class TestSubsetSelection:
         repo = tmp_path / "stage-table-repo"
         (repo / "scripts" / "docgen").mkdir(parents=True)
         (repo / "scripts" / "docgen" / "stage_table.py").write_text(script_body, encoding="utf-8")
-        fixture = REPO_ROOT / "tests/fixtures/health_gate"
-        for name in ("pyproject.toml", "uv.lock"):
-            shutil.copyfile(fixture / name, repo / name)
 
         report = run_health_checks(repo, gates=["stage-table"])
 
