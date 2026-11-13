@@ -6,6 +6,7 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -15,22 +16,10 @@ import pytest
 _REPO = Path(__file__).resolve().parents[3]
 _SKILLS_TESTS = Path(__file__).resolve().parent
 _SCRIPTS = _REPO / "docs/prompts/_skill-eval/scripts"
-HARNESS = _SCRIPTS / "run_eval_harness.py"
 sys.path.insert(0, str(_SCRIPTS))
 sys.path.insert(0, str(_SKILLS_TESTS))
 
 from skill_eval_fixtures import write_minimal_workspace
-
-
-def _run_harness(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
-    cmd = ["uv", "run", "python", str(HARNESS), *args]
-    return subprocess.run(
-        cmd,
-        cwd=cwd or _REPO,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
 
 
 def test_save_baseline_only_no_progress_lines(
@@ -108,5 +97,24 @@ def test_save_baseline_only_integration(tmp_path: Path) -> None:
     workspace = tmp_path / "latest"
     write_minimal_workspace(workspace)
 
-    result = _run_harness("--save-baseline-only", "--output-dir", str(workspace))
+    owned_root = tmp_path / "owned-harness"
+    owned_scripts = owned_root / "docs/prompts/_skill-eval/scripts"
+    shutil.copytree(_SCRIPTS, owned_scripts, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(owned_scripts / "run_eval_harness.py"),
+            "--save-baseline-only",
+            "--output-dir",
+            str(workspace),
+        ],
+        cwd=owned_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     assert result.returncode == 0, result.stderr
+    expected = json.loads((workspace / "benchmark.json").read_text(encoding="utf-8"))
+    expected["run_dir"] = "baseline"
+    baseline = owned_root / "docs/prompts/_skill-eval/baseline/benchmark.json"
+    assert json.loads(baseline.read_text(encoding="utf-8")) == expected

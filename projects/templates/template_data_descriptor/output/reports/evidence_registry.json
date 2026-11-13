@@ -2377,27 +2377,15 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-07T02:14:29Z",
+      "checked_at": "2026-11-13T01:34:26Z",
       "kind": "figure",
-      "source": "manuscript/04_provenance.md",
+      "source": "manuscript/AGENTS.md",
       "source_field": "",
-      "source_path": "manuscript/04_provenance.md",
+      "source_path": "manuscript/AGENTS.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:provenance_flow"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-07T02:14:29Z",
-      "kind": "figure",
-      "source": "output/figures/provenance_flow.png",
-      "source_field": "",
-      "source_path": "output/figures/provenance_flow.png",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "fig:provenance_flow"
+      "value": "fig:schema_overview"
     },
     {
       "active": true,
@@ -2406,6 +2394,18 @@
       "source": "manuscript/README.md",
       "source_field": "",
       "source_path": "manuscript/README.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:schema_overview"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-13T01:34:26Z",
+      "kind": "figure",
+      "source": "manuscript/03_schema.md",
+      "source_field": "",
+      "source_path": "manuscript/03_schema.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,

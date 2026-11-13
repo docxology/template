@@ -1,4 +1,4 @@
-name: Actual unchanged-clock census exit and strict boundary diagnostics
+name: Actual remaining native Source and prepared-runtime diagnostics
 on:
   push:
     branches: [codex/sdk-original8-native-diagnostics-20261112-9a20c57e]
@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   native-originals:
-    name: "Census regression (${{ matrix.os }}, Python ${{ matrix.python-version }}, ${{ matrix.scope }})"
+    name: "Original remaining consumers (${{ matrix.os }}, Python ${{ matrix.python-version }}, ${{ matrix.scope }})"
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
     permissions:
@@ -28,43 +28,34 @@ jobs:
         include:
           - os: ubuntu-24.04
             python-version: "3.14"
-            scope: publisher
-            shard: census-publisher-linux314
+            scope: runtime-source
+            shard: remaining-runtime-linux314
             original-nodes: >-
-              tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
-          - os: ubuntu-24.04
-            python-version: "3.14"
-            scope: boundary
-            shard: census-boundary-linux314
-            original-nodes: >-
-              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_process_age_preserves_guardian_lifetime_boundary
-              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope
+              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics
+              tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_save_baseline_only_integration
+              tests/infra_tests/core/test_bytecode_audit.py
+              tests/infra_tests/reporting/test_native_project_provider_batch.py::test_native_directory_identity_keeps_confined_search_only_witnesses
           - os: ubuntu-24.04
             python-version: "3.15"
-            scope: publisher
-            shard: census-publisher-linux315
+            scope: runtime-source
+            shard: remaining-runtime-linux315
             original-nodes: >-
-              tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
-          - os: ubuntu-24.04
-            python-version: "3.15"
-            scope: boundary
-            shard: census-boundary-linux315
-            original-nodes: >-
-              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_process_age_preserves_guardian_lifetime_boundary
-              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_preexisting_non_dumpable_process_is_outside_guardian_start_scope
+              tests/infra_tests/core/test_cli.py::TestCLISubprocess::test_cli_frozen_source_refusal_retains_complete_diagnostics
+              tests/infra_tests/skills/test_skill_eval_runner_offline.py::test_save_baseline_only_integration
+              tests/infra_tests/core/test_bytecode_audit.py
+              tests/infra_tests/reporting/test_native_project_provider_batch.py::test_native_directory_identity_keeps_confined_search_only_witnesses
           - os: macos-latest
             python-version: "3.15"
-            scope: publisher
-            shard: census-publisher-darwin315
+            scope: browser-scientific
+            shard: remaining-browser-darwin315
             original-nodes: >-
-              tests/infra_tests/publishing/test_publication_refresh.py::test_arbitrary_real_zero_exits_cannot_replace_the_two_publication_gates
+              tests/infra_tests/reporting/test_native_browser_scientific_structure.py::test_actual_structure_and_alpha_browser_controls
           - os: macos-latest
             python-version: "3.15"
-            scope: boundary
-            shard: census-boundary-darwin315
+            scope: pdfium-positive
+            shard: remaining-pdfium-darwin315
             original-nodes: >-
-              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_process_age_preserves_guardian_lifetime_boundary
-              tests/infra_tests/project/test_public_acceptance_auxiliary_supervision.py::test_strict_census_observes_token_holders_without_killing_them
+              tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py::test_genuine_pdfium_runtime_guard[loaded-positive]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -50,6 +50,17 @@ locks.
 - Revalidate failed process-age observations against fresh OS process state;
   only confirmed exit, UID change or zombie state clears the census entry.
   Live unreadable or unknown-age processes remain strict custody refusals.
+- Retire provider command-structure and embedded-source assertion pins; keep
+  actual provider, Source, wheel and argument-mutation consumer coverage.
+- Reuse only bounded immutable compilation and canonical-Code derivations during
+  executed-bytecode checks; freshly consume every Source, hook and cache at every
+  admission/completion boundary, preserving all original declarations and guards.
+- Observe nominated native Source directories through one fresh held no-follow
+  ancestor traversal per observation. Preserve every identity, search-only policy,
+  opening/closing check and caller deadline without cross-guard observations.
+- Run offline skill-evaluation CLI controls with the selected prepared Python and
+  an owned copy of the actual harness. Do not reconcile the shared SDK runtime or
+  overwrite its public baseline while parallel frozen-Source consumers run.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report

@@ -21,7 +21,9 @@ from typing import Any
 from infrastructure.core.implementation_custody import verify_implementation_custody
 from infrastructure.core.pipeline.fingerprints import canonical_digest, tree_records
 from infrastructure.core.pipeline.fingerprint_files import (
+    _ANCESTOR_FLAGS,
     anchored_parent,
+    verify_directory,
 )
 from infrastructure.project.public_reference import (
     MAX_REFERENCE_BYTES,
@@ -118,6 +120,60 @@ def _anchored_directory_identity(path: Path, deadline: float) -> tuple[int, int]
     return result
 
 
+def _directory_identity_batch(paths: tuple[Path, ...], deadline: float) -> DirectoryIdentities:
+    """Share held ancestors within one fresh traversal, never across guards."""
+    remaining(deadline)
+    if not paths:
+        return ()
+    anchor = Path(paths[0].anchor)
+    directories = set(paths)
+    for path in paths:
+        remaining(deadline)
+        if not path.is_absolute() or ".." in path.parts or path.anchor != anchor.anchor:
+            raise ValueError("current source directory witness refuses an aliased locator")
+        directories.update(path.parents)
+    _physical_directory(anchor)
+    children: dict[Path, list[Path]] = {path: [] for path in directories}
+    for path in sorted(directories):
+        remaining(deadline)
+        if path != anchor:
+            children[path.parent].append(path)
+    observed: dict[Path, tuple[int, int]] = {}
+    with anchored_parent(anchor / ".native-directory-identity") as descriptor:
+        if descriptor is None:
+            raise ValueError("current source directory witness has a missing ancestor")
+        metadata = os.fstat(descriptor)
+        observed[anchor] = metadata.st_dev, metadata.st_ino
+        opened = [(anchor, descriptor, iter(children[anchor]))]
+        try:
+            while opened:
+                remaining(deadline)
+                path, parent, pending = opened[-1]
+                try:
+                    child = next(pending)
+                except StopIteration:
+                    if len(opened) == 1:
+                        break
+                    opened.pop()
+                    try:
+                        verify_directory(opened[-1][1], path.name, parent)
+                    finally:
+                        os.close(parent)
+                    continue
+                try:
+                    held = os.open(child.name, _ANCESTOR_FLAGS, dir_fd=parent)
+                except OSError as exc:
+                    raise ValueError("current source directory witness refuses an aliased ancestor") from exc
+                opened.append((child, held, iter(children[child])))
+                metadata = os.fstat(held)
+                observed[child] = metadata.st_dev, metadata.st_ino
+        finally:
+            for _, held, _ in reversed(opened[1:]):
+                os.close(held)
+    remaining(deadline)
+    return tuple((path, observed[path]) for path in paths)
+
+
 def _observe_source_directory_identities(root: Path, records: SourceRecords, deadline: float) -> DirectoryIdentities:
     """Hold actual source/ancestor identities once, before current file snapshots.
 
@@ -134,16 +190,15 @@ def _observe_source_directory_identities(root: Path, records: SourceRecords, dea
             paths.add(path)
     if len(paths) > MAX_FILES:
         raise ValueError("current source directory witnesses exceed the existing entry bound")
-    observed = tuple((path, _anchored_directory_identity(path, deadline)) for path in sorted(paths))
+    observed = _directory_identity_batch(tuple(sorted(paths)), deadline)
     _verify_source_directory_identities(observed, deadline)
     return observed
 
 
 def _verify_source_directory_identities(identities: DirectoryIdentities, deadline: float) -> None:
     """Require the same actual directories; never replace expected identities."""
-    for path, expected in identities:
-        if _anchored_directory_identity(path, deadline) != expected:
-            raise ValueError("current source/ancestor directory was physically replaced")
+    if _directory_identity_batch(tuple(path for path, _ in identities), deadline) != identities:
+        raise ValueError("current source/ancestor directory was physically replaced")
     remaining(deadline)
 
 

@@ -26,6 +26,50 @@ MAX_EXECUTIONS = 10000
 _ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | os.O_DIRECTORY | os.O_NOFOLLOW
 
 
+_DERIVATIONS: types.MappingProxyType[tuple[object, ...], tuple[types.CodeType | None, bytes, int]] = (
+    types.MappingProxyType({})
+)
+
+
+def _remember_derivation(
+    key: tuple[object, ...], code: types.CodeType | None, payload: bytes, source_size: int = 0
+) -> None:
+    """Retain only bounded immutable derivations, never a verification result."""
+    global _DERIVATIONS
+    size = len(payload) + source_size
+    if size > MAX_CACHE_BYTES:
+        return
+    # Publish immutable snapshots: concurrent misses may lose reuse, not checks.
+    current = dict(_DERIVATIONS)
+    retained = sum(item[2] for item in current.values())
+    while current and (retained + size > MAX_CACHE_BYTES or len(current) >= 2 * MAX_EXECUTIONS):
+        retained -= current.pop(next(iter(current)))[2]
+    current[key] = (code, payload, size)
+    _DERIVATIONS = types.MappingProxyType(current)
+
+
+def _executed_canonical(code: types.CodeType) -> bytes:
+    # Code equality is not identity and can ignore fields such as co_filename.
+    key = ("executed", id(code))
+    cached = _DERIVATIONS.get(key)
+    if cached is not None and cached[0] is code:
+        return cached[1]
+    payload = canonical_code(code)
+    _remember_derivation(key, code, payload)
+    return payload
+
+
+def _source_canonical(raw: bytes, filename: str, optimize: int) -> bytes:
+    # The caller freshly consumes guarded Source bytes even on every cache hit.
+    key = ("source", raw, filename, optimize)
+    cached = _DERIVATIONS.get(key)
+    if cached is not None:
+        return cached[1]
+    payload = canonical_code(compile(raw, filename, "exec", dont_inherit=True, optimize=optimize))
+    _remember_derivation(key, None, payload, len(raw))
+    return payload
+
+
 def _read_cache(path: Path) -> bytes:
     """Read bounded regular bytes through held, no-follow ancestor descriptors."""
     path = path.absolute()
@@ -119,10 +163,8 @@ def install_bytecode_audit(
         startup_path = Path(startup_code.co_filename).absolute()
         if startup_path != Path(filename).absolute() or not any(startup_path.is_relative_to(root) for root in roots):
             raise ValueError("audit startup seed must match the admitted main source path")
-        expected = compile(
-            _read_cache(startup_path), startup_code.co_filename, "exec", dont_inherit=True, optimize=sys.flags.optimize
-        )
-        if canonical_code(startup_code) != canonical_code(expected):
+        expected = _source_canonical(_read_cache(startup_path), startup_code.co_filename, sys.flags.optimize)
+        if _executed_canonical(startup_code) != expected:
             raise ValueError("executed main startup code differs from current source bytes")
         if isinstance(getattr(main_module, "__cached__", None), str) or isinstance(
             getattr(getattr(main_module, "__spec__", None), "cached", None), str
@@ -162,8 +204,8 @@ def install_bytecode_audit(
         execution_count += 1
         if execution_count > MAX_EXECUTIONS:
             raise ValueError("public module executions exceed the audit ceiling")
-        expected = compile(_read_cache(path), code.co_filename, "exec", dont_inherit=True, optimize=sys.flags.optimize)
-        if canonical_code(code) != canonical_code(expected):
+        expected = _source_canonical(_read_cache(path), code.co_filename, sys.flags.optimize)
+        if _executed_canonical(code) != expected:
             relative = next(path.relative_to(root).as_posix() for root in roots if path.is_relative_to(root))
             raise ValueError(f"executed public module differs from current source bytes: {relative}")
         cached = Path(importlib.util.cache_from_source(str(path))).absolute()
@@ -224,10 +266,8 @@ def verify_executed_source_code(source_root: Path, prefix: Path) -> None:
         relative = path.relative_to(source_root.absolute()).as_posix()
         raw_source = _read_cache(path)
         for actual_code, cache_path, cache_sha256 in actual_executions:
-            expected = compile(
-                raw_source, actual_code.co_filename, "exec", dont_inherit=True, optimize=sys.flags.optimize
-            )
-            if canonical_code(actual_code) != canonical_code(expected):
+            expected = _source_canonical(raw_source, actual_code.co_filename, sys.flags.optimize)
+            if _executed_canonical(actual_code) != expected:
                 raise ValueError(f"executed public module differs from current source bytes: {relative}")
             if cache_path is not None:
                 raw = _read_cache(Path(cache_path))
