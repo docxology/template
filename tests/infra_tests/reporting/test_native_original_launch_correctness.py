@@ -17,11 +17,18 @@ import pytest
 from infrastructure.core._bounded_kill import _RUN_IDS_ENV
 from infrastructure.core.pipeline.stages import PIPELINE_STAGE_TIMEOUT_SECONDS, _stage_launch_deadline
 from infrastructure.core.secrets import strip_secret_env
-from infrastructure.project.public_acceptance_evidence import bootstrap_command
+from infrastructure.project.public_acceptance_evidence import bootstrap_command, write_json
 from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
+from infrastructure.reporting.native_crossref_filter import SCHEMA as CROSSREF_FILTER_SCHEMA
+from infrastructure.reporting.native_crossref_pair import (
+    SCHEMA as CROSSREF_PAIR_SCHEMA,
+    pair_launcher,
+    validate_pair_leg,
+)
 from infrastructure.reporting.native_environment_custody import capture_native_environment, validate_native_environment
 from infrastructure.reporting.native_format_acceptance_contracts import native_environment
 from infrastructure.reporting.native_loader_maps import terminal_kernel_residents
+from infrastructure.reporting.native_loader_observation import ENV_KEYS
 from infrastructure.reporting.native_original_supervisor import _worker_environment
 from infrastructure.reporting.native_pdf_citation_runtime import NATIVE_OBSERVATION_CEILING_SECONDS, budget
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -208,6 +215,93 @@ def test_terminal_roster_refuses_unclosed_or_aliased_images(refusal: str) -> Non
         active[3] = opened[3]
     with pytest.raises(ValueError):
         terminal_kernel_residents(opened, active, closed)
+
+
+def test_paired_filter_leg_accepts_transport_order_but_refuses_changed_commitment(tmp_path: Path) -> None:
+    """Preserve transported DATA selection; this predicate grants no native authority."""
+    directory = tmp_path / "output/readiness/pair"
+    directory.mkdir(parents=True)
+    python = str(Path(sys.executable).absolute())
+    implementation = write_json(
+        tmp_path, directory / "implementation.json", {"runtime_environment": {"python_launcher": python}}
+    )
+    owner = os.getpid()
+    deadline = time.monotonic() + 30
+    scope = "templates/template_data_descriptor"
+    source = {
+        "original_source": {"commit": "a" * 40, "source_identity": "b" * 64},
+        "current_mirror": {"root": str(tmp_path)},
+    }
+    base_spec = {
+        "schema_version": CROSSREF_FILTER_SCHEMA,
+        "scope": scope,
+        "run_id": "c" * 32,
+        "source": source,
+        "parent_owner_pid": owner,
+        "deadline_monotonic": deadline,
+        "caller_deadline_monotonic": deadline,
+        "crossref": {"archive_sha256": "d" * 64},
+        "expected_exit": 0,
+        "output_format": "latex",
+        "implementation": implementation,
+    }
+    specifications = []
+    slots = []
+    for ordinal in range(2):
+        leaf = directory / ("slot-" + str(ordinal))
+        leaf.mkdir()
+        spec = {**base_spec, "directory": leaf.relative_to(tmp_path).as_posix()}
+        specifications.append(spec)
+        slots.append(
+            {
+                "specification": write_json(tmp_path, leaf / "specification.json", spec),
+                "launcher": write_json(tmp_path, leaf / "source-crossref-filter", {"fixture_slot": ordinal}),
+            }
+        )
+    injections = {key: "e" * 64 for key in sorted(ENV_KEYS - {"LD_PRELOAD"}, reverse=True)}
+    declaration = {
+        "schema_version": CROSSREF_PAIR_SCHEMA,
+        "scope": scope,
+        "run_id": base_spec["run_id"],
+        "directory": directory.relative_to(tmp_path).as_posix(),
+        "source_binding": ["a" * 40, "b" * 64],
+        "owner_pid": owner,
+        "deadline_monotonic": deadline,
+        "slots": slots,
+        "parent_loader": {
+            "compiler": {},
+            "purpose": "source-renderer",
+            "owner_pid": owner,
+            "deadline_monotonic": deadline,
+            "environment_injections": injections,
+        },
+    }
+    declaration_binding = write_json(tmp_path, directory / "invocations.json", declaration)
+    parent_path = directory / "source-crossref-pair"
+    parent_path.write_bytes(pair_launcher(tmp_path, declaration, python, "latex"))
+    parent = SnapshotReader(tmp_path).read(parent_path.relative_to(tmp_path).as_posix())
+    child = {"pid": owner, "ppid": os.getppid(), "uid": os.getuid()}
+    claim = write_json(tmp_path, directory / "invocation-0.json", {"slot": 0, **child})
+    invocation = {
+        "declaration": declaration_binding,
+        "launcher": {"path": parent.relative, "sha256": parent.sha256},
+        "slot": 0,
+        "claim": claim,
+    }
+    assert validate_pair_leg(
+        invocation, slots[0]["specification"], slots[0]["launcher"], specifications[0], child, SnapshotReader(tmp_path)
+    ) == str(parent_path)
+    injections["TEMPLATE_LOADER_TOKEN"] = "f" * 64
+    invocation["declaration"] = write_json(tmp_path, directory / "invocations.json", declaration)
+    with pytest.raises(ValueError):
+        validate_pair_leg(
+            invocation,
+            slots[0]["specification"],
+            slots[0]["launcher"],
+            specifications[0],
+            child,
+            SnapshotReader(tmp_path),
+        )
 
 
 _GENUINE_PANDOC_INSTALLED_SDK_CHILD = r"""

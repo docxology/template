@@ -56,7 +56,7 @@ def pair_launcher(root: Path, declaration: dict[str, Any], python: str, output_f
         "stream.write(claim);stream.flush();os.fsync(stream.fileno())\n"
         " except BaseException: raise\n"
         "finally: os.close(directory_fd)\n"
-        f"injections={injections!r}\n"
+        f"injections={dict(sorted(injections.items()))!r}\n"
         "selected=injections if slot==1 else {}\n"
         "present={key for key in os.environ if key in injections or key=='LD_PRELOAD' "
         "or key.startswith('DYLD_') or key.startswith('TEMPLATE_LOADER_')}\n"

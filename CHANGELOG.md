@@ -57,6 +57,10 @@ locks.
   header across direct and paired Crossref production and portable replay, so
   cold virtual environments retain their actual SDK metadata on deep or quoted
   paths without weakening executable-byte or final Source custody.
+- Canonicalize paired Crossref loader injection commitments before embedding
+  them in the Source-owned parent launcher. JSON transport must preserve exact
+  independently reconstructed launcher bytes; changed commitments and original
+  environment, owner, process, Source and deadline checks remain enforced.
 - Avoid rebuilding every lexical path ancestor during fresh Source inventory.
   Compare current held DATA within its fresh no-follow census and closing
   guards, preserving fresh per-file mode checks and both original/current
