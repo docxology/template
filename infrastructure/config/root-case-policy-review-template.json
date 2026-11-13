@@ -4965,7 +4965,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_health.py",
-      "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
+      "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
       "families": [
         "tests/infra_tests/core/test_health.py::TestCLI::test_empty_gate_expression_exits_non_zero",
         "tests/infra_tests/core/test_health.py::TestCLI::test_json_output_is_parseable",
@@ -4987,7 +4987,7 @@
         "tests/infra_tests/core/test_health.py::TestSubsetSelection::test_workers_must_be_positive",
         "tests/infra_tests/core/test_health.py::TestSyntheticGate::test_stub_gate_timeout_fails_closed"
       ],
-      "family_observations_sha256": "dd0cfad076abbfdfdc1236a0d0238a0b1c388a52a5441b7fa96042c964946f1a",
+      "family_observations_sha256": "f3f9fb9e7bfad9c5d77dd22da0276bb5debc178e70f613a468746ab8d25d3620",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -5064,94 +5064,194 @@
           "line": 249
         },
         {
-          "path": "infrastructure/core/health_gates.py",
-          "source_sha256": "bb9fd28c164cf6505111c15936366820f920a92710ef8db3091c692a03777f6c",
-          "line": 66
-        },
-        {
-          "path": "infrastructure/core/health_gates.py",
-          "source_sha256": "bb9fd28c164cf6505111c15936366820f920a92710ef8db3091c692a03777f6c",
-          "line": 118
-        },
-        {
-          "path": "infrastructure/core/health_gates.py",
-          "source_sha256": "bb9fd28c164cf6505111c15936366820f920a92710ef8db3091c692a03777f6c",
-          "line": 120
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 53
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 64
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
           "line": 65
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 92
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 67
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 68
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 69
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 88
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 102
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
           "line": 106
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 113
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 111
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 126
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 121
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 122
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 131
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
           "line": 132
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 143
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 133
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 174
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 136
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 176
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 140
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 186
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 144
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 197
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 169
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 178
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 179
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 180
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 190
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 199
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 201
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 202
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 203
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 204
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 205
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 206
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
           "line": 207
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 224
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 208
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 236
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 212
         },
         {
           "path": "tests/infra_tests/core/test_health.py",
-          "source_sha256": "1868427db9f43e511383c7acaa815ad0158da9105a22daa1dfa66f6c6c52a343",
-          "line": 250
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 216
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 231
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 232
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 243
+        },
+        {
+          "path": "tests/infra_tests/core/test_health.py",
+          "source_sha256": "be9927924f49b583d1bfbc46ceb957a6653a73d5fd1c23291c0ace63f2026dcc",
+          "line": 245
         }
       ]
     },
@@ -13964,7 +14064,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
-      "source_sha256": "69b5fe1490bfad726cf2e4f543bb3783a635793e35e95c20ea0dca9e6b51b990",
+      "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
       "families": [
         "tests/infra_tests/project/test_native_linux_calibre_custody.py::test_actual_loaded_plugin_line_required_even_with_complete_custody",
         "tests/infra_tests/project/test_native_linux_calibre_custody.py::test_actual_package_mutation_and_missing_member_refuse",
@@ -13975,7 +14075,7 @@
         "tests/infra_tests/project/test_native_linux_calibre_custody.py::test_sparse_directory_and_declared_role_do_not_grant_membership",
         "tests/infra_tests/project/test_native_linux_calibre_custody.py::test_sparse_package_bytes_require_search_but_no_ancestor_listing"
       ],
-      "family_observations_sha256": "735f5af3ffcfbce8677673ddfd0f4b2bfa882b2959089c8bda6ac0818b5a12f8",
+      "family_observations_sha256": "fa99957bc78ce4f7f173c756b65d9adf1a1a56ce16abd4ae0ffe8dd1ef3568f2",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -13984,8 +14084,158 @@
       "evidence": [
         {
           "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
-          "source_sha256": "69b5fe1490bfad726cf2e4f543bb3783a635793e35e95c20ea0dca9e6b51b990",
-          "line": 1
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 68
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 78
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 82
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 93
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 100
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 108
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 111
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 113
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 125
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 126
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 129
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 135
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 138
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 144
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 145
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 148
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 149
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 152
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 153
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 155
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 157
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 161
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 162
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 177
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 180
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 190
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 191
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 199
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 207
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 213
+        },
+        {
+          "path": "tests/infra_tests/project/test_native_linux_calibre_custody.py",
+          "source_sha256": "5a161d54a326ee41646ae7611de0ea666baec62d4777fafd42fcf2e35f613fe8",
+          "line": 217
         }
       ]
     },
@@ -33463,15 +33713,14 @@
     },
     {
       "path": "tests/infra_tests/skills/test_skill_contracts.py",
-      "source_sha256": "f2b97997334ab28eba0c6f0f6ce6b88e59f66f4b3d0e2b9920b02bf151f0ccd0",
+      "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
       "families": [
-        "tests/infra_tests/skills/test_skill_contracts.py::test_check_contracts_cli",
         "tests/infra_tests/skills/test_skill_contracts.py::test_check_skill_contracts_scans_docs_prompts",
         "tests/infra_tests/skills/test_skill_contracts.py::test_template_prompt_contracts_are_valid",
         "tests/infra_tests/skills/test_skill_contracts.py::test_validate_skill_contract_file_accepts_complete_metadata",
         "tests/infra_tests/skills/test_skill_contracts.py::test_validate_skill_contract_file_rejects_missing_metadata"
       ],
-      "family_observations_sha256": "9d8d9e4fae1a8ed3d022930a6bb9b1c89b49af24e6936a569467abea68cd8b18",
+      "family_observations_sha256": "a5bf72e975d0c5fcde2dbf428ac80239ff15e93461d59d0535a1dec11c9f5149",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -33480,14 +33729,44 @@
       "evidence": [
         {
           "path": "tests/infra_tests/skills/test_skill_contracts.py",
-          "source_sha256": "f2b97997334ab28eba0c6f0f6ce6b88e59f66f4b3d0e2b9920b02bf151f0ccd0",
-          "line": 1
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 42
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_contracts.py",
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 55
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_contracts.py",
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 56
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_contracts.py",
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 57
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_contracts.py",
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 70
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_contracts.py",
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 71
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_contracts.py",
+          "source_sha256": "3453e0a4e9bdf8dd0bc07565e98d07669f531621b85bbdcf68059a9f693866c6",
+          "line": 75
         }
       ]
     },
     {
       "path": "tests/infra_tests/skills/test_skill_discovery.py",
-      "source_sha256": "48f6cf6787e41e1de1d46e5aa4119b23fe9daa7b4e0930f3f9161dafc863b600",
+      "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
       "families": [
         "tests/infra_tests/skills/test_skill_discovery.py::TestBuildManifestPayload::test_basic_payload_from_fixture",
         "tests/infra_tests/skills/test_skill_discovery.py::TestBuildManifestPayload::test_payload_keys",
@@ -33495,7 +33774,6 @@
         "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_check_exit_zero",
         "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_check_fails_when_manifest_stale",
         "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_list_json_stdout",
-        "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_subprocess_module_invocation",
         "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_write_index_subcommand",
         "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_write_subcommand",
         "tests/infra_tests/skills/test_skill_discovery.py::TestCliModule::test_write_with_roots_after_subcommand",
@@ -33530,7 +33808,7 @@
         "tests/infra_tests/skills/test_skill_discovery.py::TestTemplateRepository::test_top_level_infrastructure_packages_have_skill_descriptors",
         "tests/infra_tests/skills/test_skill_discovery.py::test_shared_workflows_are_public_and_editor_state_is_excluded"
       ],
-      "family_observations_sha256": "bba6ccd25dcc6566fef383f35de9fd2e16af18d83fb82b6c5b139fa00f4ee511",
+      "family_observations_sha256": "416e4ce86fe7151d1fe03e3b86aed4b0fbabf800f25c511c3c62627e2adca1e9",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -33539,8 +33817,453 @@
       "evidence": [
         {
           "path": "tests/infra_tests/skills/test_skill_discovery.py",
-          "source_sha256": "48f6cf6787e41e1de1d46e5aa4119b23fe9daa7b4e0930f3f9161dafc863b600",
-          "line": 1
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 38
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 39
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 44
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 45
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 50
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 55
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 71
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 75
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 76
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 84
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 94
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 95
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 108
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 123
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 125
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 126
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 127
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 138
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 139
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 140
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 142
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 150
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 161
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 162
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 163
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 164
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 170
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 171
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 172
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 173
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 174
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 175
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 176
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 178
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 179
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 185
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 186
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 200
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 206
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 207
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 213
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 214
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 224
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 229
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 231
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 232
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 233
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 239
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 240
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 245
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 247
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 248
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 249
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 250
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 259
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 265
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 271
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 272
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 278
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 284
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 286
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 287
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 302
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 319
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 320
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 329
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 330
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 332
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 342
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 345
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 367
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 381
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 382
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 384
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 397
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 405
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 406
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 414
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 416
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 417
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 434
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 435
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 447
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 455
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 463
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 464
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 479
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 488
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 489
+        },
+        {
+          "path": "tests/infra_tests/skills/test_skill_discovery.py",
+          "source_sha256": "e1ffeb2481b038d141021629148dc156c02bc46f13928d3d68abfa17281b4346",
+          "line": 491
         }
       ]
     },
@@ -35186,31 +35909,19 @@
     },
     {
       "path": "tests/infra_tests/test_ci_local_contract.py",
-      "source_sha256": "2b4df33993647b670641c4cb96a9744a5c1f778cb4808d97654b167a9164e507",
+      "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
       "families": [
-        "tests/infra_tests/test_ci_local_contract.py::test_ci_local_shell_syntax_is_valid",
-        "tests/infra_tests/test_ci_local_contract.py::test_default_shared_checks_remain_in_real_health_registry_and_hooks",
-        "tests/infra_tests/test_ci_local_contract.py::test_fallback_invokes_uv_precommit_and_full_confidentiality_guard",
-        "tests/infra_tests/test_ci_local_contract.py::test_fallback_scope_arrays_match_the_actual_public_helpers",
         "tests/infra_tests/test_ci_local_contract.py::test_fallback_scope_producer_failure_stops_before_lint",
         "tests/infra_tests/test_ci_local_contract.py::test_no_act_dry_run_resolves_repository_root_from_any_cwd",
         "tests/infra_tests/test_ci_local_contract.py::test_no_act_lists_fail_closed_policy_lanes",
-        "tests/infra_tests/test_ci_local_contract.py::test_no_act_named_dry_run_preserves_each_existing_lane",
         "tests/infra_tests/test_ci_local_contract.py::test_no_act_rejects_unknown_lane_instead_of_vacuous_success"
       ],
-      "family_observations_sha256": "8eb9ff42240e7c61a6f97e5c0c7121895559dd4d3a41f5b801cf9375f4848058",
+      "family_observations_sha256": "0efc969c266db672b1b7c98b043f6d64ba708bd187515354dad35f8420cef22d",
       "decision": {
         "lane": "core",
         "obligations": []
       },
       "exceptions": [
-        {
-          "id": "tests/infra_tests/test_ci_local_contract.py::test_fallback_scope_arrays_match_the_actual_public_helpers",
-          "lane": "core",
-          "obligations": [
-            "uv-cli"
-          ]
-        },
         {
           "id": "tests/infra_tests/test_ci_local_contract.py::test_fallback_scope_producer_failure_stops_before_lint",
           "lane": "core",
@@ -35222,8 +35933,68 @@
       "evidence": [
         {
           "path": "tests/infra_tests/test_ci_local_contract.py",
-          "source_sha256": "2b4df33993647b670641c4cb96a9744a5c1f778cb4808d97654b167a9164e507",
-          "line": 1
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 28
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 29
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 30
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 36
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 37
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 43
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 45
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 73
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 88
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 89
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 90
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 91
+        },
+        {
+          "path": "tests/infra_tests/test_ci_local_contract.py",
+          "source_sha256": "15aa6c3f0c1aa82ad64b0080546420987cb5d1f4c4b884df8f189e38032c654d",
+          "line": 92
         }
       ]
     },
@@ -38858,7 +39629,7 @@
     },
     {
       "path": "tests/infra_tests/validation/test_security_gate.py",
-      "source_sha256": "f550af96905e97016b85e67fb4abfb9e0753af6dc27a29c22624c3a29a1b5da2",
+      "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
       "families": [
         "tests/infra_tests/validation/test_security_gate.py::TestAggregateSecurityFindings::test_all_skipped_records_required_tool_failures",
         "tests/infra_tests/validation/test_security_gate.py::TestAggregateSecurityFindings::test_high_severity_sets_fail_flag",
@@ -38867,11 +39638,10 @@
         "tests/infra_tests/validation/test_security_gate.py::TestAggregateSecurityFindings::test_pip_audit_vulnerabilities_supports_dependency_json_shape",
         "tests/infra_tests/validation/test_security_gate.py::TestAggregateSecurityFindings::test_skipped_tools_are_reported_separately",
         "tests/infra_tests/validation/test_security_gate.py::test_empty_pip_audit_output_is_a_skip_not_zero_findings",
-        "tests/infra_tests/validation/test_security_gate.py::test_run_security_scan_skips_missing_tools_with_empty_path",
         "tests/infra_tests/validation/test_security_gate.py::test_valid_pip_audit_json_is_not_skipped",
         "tests/infra_tests/validation/test_security_gate.py::test_write_security_report_persists_json"
       ],
-      "family_observations_sha256": "67e2998459cd0f5badf0ecce980f8efe04dc49283ba734db0e292428dc28d17c",
+      "family_observations_sha256": "91b8ac366cea66fc34f47a43204cc54a2648e59140cac24a5291a36e36890e2b",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -38880,8 +39650,158 @@
       "evidence": [
         {
           "path": "tests/infra_tests/validation/test_security_gate.py",
-          "source_sha256": "f550af96905e97016b85e67fb4abfb9e0753af6dc27a29c22624c3a29a1b5da2",
-          "line": 1
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 28
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 29
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 30
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 31
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 32
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 33
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 52
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 53
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 54
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 55
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 56
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 66
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 67
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 68
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 69
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 70
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 71
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 84
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 85
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 86
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 87
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 100
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 101
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 102
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 107
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 115
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 120
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 121
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 122
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 127
+        },
+        {
+          "path": "tests/infra_tests/validation/test_security_gate.py",
+          "source_sha256": "ca666963462230bbdcb823c60b50700d90ba7dcbff8bb4915a583b20eea20677",
+          "line": 128
         }
       ]
     },
