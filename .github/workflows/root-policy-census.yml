@@ -1,224 +1,124 @@
-name: Root policy census and reviewed draft
-
-on:
-  workflow_dispatch:
-    inputs:
-      source_sha:
-        description: Exact dispatch commit; must equal this workflow revision
-        type: string
-        required: true
-      mode:
-        description: Collect review candidates, or additionally author a reviewed Linux 3.14 draft
-        type: choice
-        options: [collect, author]
-        default: collect
-      review_template_path:
-        description: Author only; committed infrastructure/config JSON with exhaustive reviewed classifications
-        type: string
-        default: ""
-      review_template_sha256:
-        description: Author only; SHA256 of that exact committed template
-        type: string
-        default: ""
-
-permissions:
-  contents: read
-
-concurrency:
-  group: root-policy-census-${{ github.run_id }}
-  cancel-in-progress: false
-
-env:
-  UV_FROZEN: "true"
-  OLLAMA_SKIP_TEST_MODEL_PULL: "1"
-  MPLBACKEND: Agg
-
-jobs:
-  census:
-    name: Root policy census (${{ matrix.host }}, ${{ matrix.python }})
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 75
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {runner: ubuntu-24.04, host: linux, python: "3.14"}
-          - {runner: ubuntu-24.04, host: linux, python: "3.15"}
-          - {runner: macos-latest, host: darwin, python: "3.14"}
-          - {runner: macos-latest, host: darwin, python: "3.15"}
-    steps:
-      - name: Admit the exact dispatch and review mode
-        shell: bash
-        env:
-          REQUESTED_SOURCE: ${{ inputs.source_sha }}
-          REQUESTED_MODE: ${{ inputs.mode }}
-          REVIEW_PATH: ${{ inputs.review_template_path }}
-          REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
-        run: |
-          set -euo pipefail
-          [[ "$REQUESTED_SOURCE" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          [ "$REQUESTED_SOURCE" = "$GITHUB_SHA" ] || exit 1
-          case "$REQUESTED_MODE" in
-            collect)
-              [ -z "$REVIEW_PATH" ] || exit 1
-              [ -z "$REVIEW_SHA256" ] || exit 1
-              ;;
-            author)
-              [[ "$REVIEW_PATH" =~ ^infrastructure/config/[A-Za-z0-9_./-]+\.json$ ]] || exit 1
-              [[ "$REVIEW_PATH" != *..* ]] || exit 1
-              [[ "$REVIEW_SHA256" =~ ^[0-9a-f]{64}$ ]] || exit 1
-              ;;
-            *) exit 1 ;;
-          esac
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ inputs.source_sha }}
-          submodules: true
-          persist-credentials: false
-      - uses: ./.github/actions/setup-python-env
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Prepare the own locked collection environment
-        run: >-
-          uv sync --locked --inexact --group dev --group installed-build
-          --group active-inference --group timeseries-bench --group rendering-pptx
-          --python '${{ matrix.python }}'
-      - name: Prepare exact Source-locked PDFium wheel fixture
-        shell: bash
-        run: |
-          set -euo pipefail
-          wheel=$(.venv/bin/python -B -m infrastructure.project.pdfium_fixture_preparation \
-            --repo-root "$PWD" --temporary-root "$RUNNER_TEMP")
-          echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
-      - uses: ./.github/actions/setup-acceptance-fixtures
-      - uses: ./.github/actions/setup-docs-lint
-      - uses: ./.github/actions/setup-acceptance-documents
-      - name: Prepare source-locked browser math dependencies
-        run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
-      - uses: ./.github/actions/setup-acceptance-model
-      - uses: ./.github/actions/setup-ci-execution-user
-        if: runner.os == 'Linux'
-      - name: Collect the original full census and same-job review ledger
-        id: census
-        continue-on-error: true
-        shell: bash
-        env:
-          HOST: ${{ matrix.host }}
-          MINOR: ${{ matrix.python }}
-          REQUESTED_MODE: ${{ inputs.mode }}
-          REVIEW_PATH: ${{ inputs.review_template_path }}
-          REVIEW_SHA256: ${{ inputs.review_template_sha256 }}
-        run: |
-          set -euo pipefail
-          original="$RUNNER_TEMP/root-policy-cli-$HOST-$MINOR"
-          mkdir "$original"
-          mode=collect
-          if [ "$REQUESTED_MODE" = author ]; then
-            mode=review
-            if [ "$HOST" = linux ] && [ "$MINOR" = 3.14 ]; then mode=author; fi
-          fi
-          command=(.venv/bin/python -B -m infrastructure.project.public_root_policy_census
-            --source-sha "$GITHUB_SHA" --mode "$mode" --timeout-seconds 660
-            --directory "$PWD/output/readiness/root-policy-census/$HOST-$MINOR")
-          if [ "$mode" != collect ]; then
-            command+=(--review-template-path "$REVIEW_PATH" --review-template-sha256 "$REVIEW_SHA256")
-          fi
-          original_status=0
-          if [ "$RUNNER_OS" = Linux ]; then
-            .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
-              --state "$RUNNER_TEMP/template-ci-execution/state.json" -- "${command[@]}" \
-              > "$original/stdout.raw" 2> "$original/stderr.raw" || original_status=$?
-          else
-            "${command[@]}" > "$original/stdout.raw" 2> "$original/stderr.raw" || original_status=$?
-          fi
-          printf '%s\n' "$original_status" > "$original/exit-code"
-          exit "$original_status"
-      - name: Stop only the owned model daemon and descendants
-        if: always()
-        shell: bash
-        run: |
-          python - <<'PYTHON'
-          import json, os, signal, subprocess, time
-          from pathlib import Path
-          def members(group):
-              rows = subprocess.check_output(["ps", "-axo", "pid=,pgid=,lstart=,stat="], text=True)
-              result = {}
-              for line in rows.splitlines():
-                  fields = line.split()
-                  if len(fields) >= 8 and int(fields[1]) == group and not fields[7].startswith("Z"):
-                      result[int(fields[0])] = " ".join(fields[2:7])
-              return result
-          directory = os.environ.get("TEMPLATE_ACCEPTANCE_MODEL_DIRECTORY")
-          owner = Path(directory) / "daemon-owner.json" if directory else None
-          if owner is not None and owner.is_file():
-              record = json.loads(owner.read_text())
-              group = record["pid"]
-              known = {int(pid): birth for pid, birth in record["members"].items()}
-              current = members(group)
-              if current:
-                  assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse an unverified or reused process group"
-                  known.update(current)
-                  os.killpg(group, signal.SIGTERM)
-                  deadline = time.monotonic() + 5
-                  while members(group) and time.monotonic() < deadline:
-                      time.sleep(0.1)
-                  current = members(group)
-                  if current:
-                      assert any(current.get(pid) == birth for pid, birth in known.items()), "Refuse a reused group during cleanup"
-                      os.killpg(group, signal.SIGKILL)
-                      deadline = time.monotonic() + 5
-                      while members(group) and time.monotonic() < deadline:
-                          time.sleep(0.1)
-                  assert not members(group), "Owned daemon descendants remain alive"
-              (Path(directory) / "daemon-cleanup.json").write_text(json.dumps({"owned_group": group, "live_members_remaining": members(group), "original_exit": 0}))
-          PYTHON
-      - name: Export original Linux census bytes
-        id: linux_export
-        if: always() && runner.os == 'Linux'
-        run: >-
-          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
-          --state "$RUNNER_TEMP/template-ci-execution/state.json"
-      - name: Export original macOS census bytes
-        id: darwin_export
-        if: always() && runner.os == 'macOS'
-        run: |
-          .venv/bin/python -B - <<'PYTHON'
-          import json, os, tempfile, time
-          from pathlib import Path
-          from infrastructure.core.testing._ci_execution_files import _export
-          destination = Path(tempfile.mkdtemp(prefix="template-root-census-artifacts-", dir=os.environ["RUNNER_TEMP"]))
-          exclusions = []
-          total = _export(Path.cwd() / "output/readiness", destination, time.monotonic() + 120, exclusions=exclusions)
-          with Path(os.environ["GITHUB_ENV"]).open("a") as environment:
-              environment.write(f"TEMPLATE_CI_ARTIFACT_DIRECTORY={destination}\n")
-          print(json.dumps({"transport_bytes": total, "excluded_pytest_scratch": exclusions, "runtime_acceptance": False}))
-          PYTHON
-      - name: Retain original census and same-job review DATA
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: root-policy-census-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/root-policy-census/${{ matrix.host }}-${{ matrix.python }}/
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 30
-      - name: Retain original CLI streams and exit
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: root-policy-census-cli-${{ matrix.host }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/root-policy-cli-${{ matrix.host }}-${{ matrix.python }}/
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 30
-      - name: Require original collection and complete export
-        if: always()
-        shell: bash
-        env:
-          CENSUS_OUTCOME: ${{ steps.census.outcome }}
-          EXPORT_OUTCOME: ${{ runner.os == 'Linux' && steps.linux_export.outcome || steps.darwin_export.outcome }}
-        run: |
-          set -euo pipefail
-          [ "$CENSUS_OUTCOME" = success ] || exit 1
-          [ "$EXPORT_OUTCOME" = success ] || exit 1
-          echo 'Canonical collection/review DATA only; no cases executed, policy installed, runtime accepted, tag or release authorized.' >> "$GITHUB_STEP_SUMMARY"
+{
+  "name": "Owned complete Source-fastpath SDK proof",
+  "on": {
+    "workflow_dispatch": {
+      "inputs": {
+        "source_sha": {
+          "description": "Exact owned diagnostic revision; must equal dispatch Source",
+          "required": true,
+          "type": "string"
+        }
+      }
+    }
+  },
+  "permissions": {
+    "contents": "read",
+    "actions": "read"
+  },
+  "concurrency": {
+    "group": "owned-cold-sdk-${{ github.run_id }}",
+    "cancel-in-progress": false
+  },
+  "env": {
+    "UV_FROZEN": "true",
+    "PYTHONUNBUFFERED": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "jobs": {
+    "original": {
+      "name": "Complete genuine SDK (Linux, ${{ matrix.python }})",
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 75,
+      "strategy": {
+        "fail-fast": false,
+        "matrix": {
+          "python": [
+            "3.14",
+            "3.15"
+          ]
+        }
+      },
+      "steps": [
+        {
+          "name": "Admit exact owned Source",
+          "shell": "bash",
+          "env": {
+            "REQUESTED_SOURCE": "${{ inputs.source_sha }}"
+          },
+          "run": "set -euo pipefail\n[[ \"$REQUESTED_SOURCE\" =~ ^[0-9a-f]{40}$ ]]\n[ \"$REQUESTED_SOURCE\" = \"$GITHUB_SHA\" ]\n"
+        },
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "ref": "${{ inputs.source_sha }}",
+            "submodules": true,
+            "persist-credentials": false
+          }
+        },
+        {
+          "uses": "./.github/actions/setup-python-env",
+          "with": {
+            "python-version": "${{ matrix.python }}",
+            "dependency-group": "installed-build"
+          }
+        },
+        {
+          "name": "Prepare the actual locked complete contract environment",
+          "run": "uv sync --locked --group installed-build --python '${{ matrix.python }}'"
+        },
+        {
+          "uses": "./.github/actions/setup-meta-provider"
+        },
+        {
+          "uses": "./.github/actions/setup-acceptance-documents",
+          "with": {
+            "mode": "converter"
+          }
+        },
+        {
+          "uses": "./.github/actions/setup-native-loader-fixture",
+          "timeout-minutes": 10
+        },
+        {
+          "uses": "./.github/actions/setup-ci-execution-user"
+        },
+        {
+          "name": "Execute the entire original SDK module and retain real consumer output",
+          "id": "genuine",
+          "continue-on-error": true,
+          "timeout-minutes": 35,
+          "shell": "bash",
+          "run": "set -euo pipefail\noriginal=\"$RUNNER_TEMP/owned-genuine-sdk-cli\"\nmkdir \"$original\"\nstatus=0\n.venv/bin/python -m infrastructure.core.testing.ci_execution_user run \\\n --state \"$RUNNER_TEMP/template-ci-execution/state.json\" -- \\\n .venv/bin/python -B -u -c 'import hashlib,json,os,shutil,sys,tempfile,time,xml.etree.ElementTree as ET\nfrom pathlib import Path\nfrom infrastructure.core.subprocess_policy import SubprocessPolicy,run_with_policy\nroot=Path.cwd().resolve();directory=root/'\"'\"'output/readiness/owned-genuine-sdk'\"'\"';directory.mkdir(parents=True,exist_ok=False)\nscratch=Path(tempfile.mkdtemp(prefix='\"'\"'owned-genuine-sdk-originals-'\"'\"')).resolve()\nmodule='\"'\"'tests/infra_tests/reporting/test_native_original_launch_correctness.py'\"'\"'\nargv=[sys.executable,'\"'\"'-B'\"'\"','\"'\"'-u'\"'\"','\"'\"'-m'\"'\"','\"'\"'pytest'\"'\"','\"'\"'-c'\"'\"',str(root/'\"'\"'pyproject.toml'\"'\"'),'\"'\"'--rootdir'\"'\"',str(root),'\"'\"'--confcutdir'\"'\"',str(root),'\"'\"'-o'\"'\"','\"'\"'addopts='\"'\"','\"'\"'--import-mode=importlib'\"'\"','\"'\"'--assert=plain'\"'\"','\"'\"'--strict-markers'\"'\"','\"'\"'-p'\"'\"','\"'\"'no:cacheprovider'\"'\"','\"'\"'-vv'\"'\"','\"'\"'--tb=long'\"'\"','\"'\"'--durations=0'\"'\"','\"'\"'--junitxml='\"'\"'+str(directory/'\"'\"'pytest.xml'\"'\"'),'\"'\"'--basetemp='\"'\"'+str(scratch/'\"'\"'fixtures'\"'\"'),module]\ninvocation={'\"'\"'role'\"'\"':'\"'\"'actual-complete-genuine-SDK-module-diagnostic-not-Root-release-acceptance'\"'\"','\"'\"'source_commit'\"'\"':os.environ['\"'\"'GITHUB_SHA'\"'\"'],'\"'\"'repository'\"'\"':os.environ['\"'\"'GITHUB_REPOSITORY'\"'\"'],'\"'\"'workflow_run_id'\"'\"':os.environ['\"'\"'GITHUB_RUN_ID'\"'\"'],'\"'\"'actual_minor'\"'\"':f'\"'\"'{sys.version_info.major}.{sys.version_info.minor}'\"'\"','\"'\"'production_code_source'\"'\"':'\"'\"'9d1c1fedd09daa164dac118b10111a7e5b493384'\"'\"','\"'\"'module_source_sha256'\"'\"':hashlib.sha256((root/module).read_bytes()).hexdigest(),'\"'\"'argv'\"'\"':argv,'\"'\"'whole_suite_original_budget_seconds'\"'\"':1800,'\"'\"'original_genuine_case_operation_seconds'\"'\"':1200,'\"'\"'original_genuine_case_pytest_seconds'\"'\"':1800,'\"'\"'native_observation_ceiling_unchanged'\"'\"':600}\n(directory/'\"'\"'invocation.json'\"'\"').write_text(json.dumps(invocation,indent=2)+'\"'\"'\\n'\"'\"')\nstarted=time.monotonic();actual=run_with_policy(argv,cwd=root,env=dict(os.environ,PYTHONUNBUFFERED='\"'\"'1'\"'\"'),policy=SubprocessPolicy(policy_id='\"'\"'owned-complete-genuine-SDK-originals'\"'\"',source_path=__name__,timeout_seconds=1800,credential_free=True))\n(directory/'\"'\"'pytest.stdout.txt'\"'\"').write_text(actual.stdout);(directory/'\"'\"'pytest.stderr.txt'\"'\"').write_text(actual.stderr)\nkept=[];kept_bytes=0;native_retention=[]\nif (scratch/'\"'\"'fixtures'\"'\"').is_dir():\n for case in sorted((scratch/'\"'\"'fixtures'\"'\"').iterdir()):\n  if case.is_symlink() or not case.is_dir():continue\n  candidates=[path for path in case.iterdir() if not path.is_symlink() and path.is_file() and path.suffix in {'\"'\"'.stdout'\"'\"','\"'\"'.stderr'\"'\"','\"'\"'.exit'\"'\"','\"'\"'.json'\"'\"','\"'\"'.jsonl'\"'\"'}]\n  child=case/'\"'\"'genuine-pandoc-installed-sdk.py'\"'\"';native_roots=[];non_regular=[]\n  if child.is_file() and not child.is_symlink():\n   candidates.append(child)\n   for parent,dirs,files in os.walk(case,followlinks=False):\n    dirs[:]=[name for name in dirs if name not in {'\"'\"'.git'\"'\"','\"'\"'cold-crossref-launcher-controls'\"'\"'} and not (Path(parent)/name).is_symlink()]\n    current=Path(parent)\n    if current.name=='\"'\"'native-loader-terminal-control'\"'\"' and current.parent.name=='\"'\"'readiness'\"'\"' and current.parent.parent.name=='\"'\"'output'\"'\"' and current.parent.parent.parent.name=='\"'\"'mirror'\"'\"':\n     native_roots.append(current);dirs[:]=[]\n  for source in (case/'\"'\"'cold-crossref-launcher-controls'\"'\"',*native_roots):\n   if not source.is_dir() or source.is_symlink():continue\n   for parent,dirs,files in os.walk(source,followlinks=False):\n    dirs[:]=[name for name in dirs if name!='\"'\"'.git'\"'\"' and not (Path(parent)/name).is_symlink()]\n    for name in files:\n     path=Path(parent)/name\n     if path.is_symlink() or not path.is_file():\n      non_regular.append({'\"'\"'path'\"'\"':path.relative_to(case).as_posix(),'\"'\"'mode'\"'\"':path.lstat().st_mode});continue\n     candidates.append(path)\n  case_kept=[]\n  for path in sorted(set(candidates)):\n   size=path.stat().st_size\n   if size>64*1024*1024 or kept_bytes+size>4*1024*1024*1024:raise ValueError('\"'\"'bounded original SDK diagnostic retention exceeded (64MiB file, 4GiB complete process-body cohort)'\"'\"')\n   body=path.read_bytes();kept_bytes+=len(body);target=directory/'\"'\"'fixture-originals'\"'\"'/case.name/path.relative_to(case);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(body)\n   observed={'\"'\"'path'\"'\"':str(target.relative_to(root)),'\"'\"'bytes'\"'\"':len(body),'\"'\"'sha256'\"'\"':hashlib.sha256(body).hexdigest()};kept.append(observed);case_kept.append(observed)\n  if child.is_file() and not child.is_symlink():\n   native_retention.append({'\"'\"'actual_case'\"'\"':case.name,'\"'\"'actual_discovered_native_roots'\"'\"':[path.relative_to(case).as_posix() for path in native_roots],'\"'\"'all_regular_native_original_files_in_discovered_roots_retained'\"'\"':True,'\"'\"'non_regular_files_observed_not_read'\"'\"':non_regular,'\"'\"'actual_native_process_records'\"'\"':[row for row in case_kept if row['\"'\"'path'\"'\"'].endswith('\"'\"'.native-process.json'\"'\"')],'\"'\"'actual_native_root_byte_chunks'\"'\"':[row for row in case_kept if '\"'\"'-body-'\"'\"' in row['\"'\"'path'\"'\"'] and row['\"'\"'path'\"'\"'].endswith('\"'\"'.bin'\"'\"')]})\nsuites=[]\nif (directory/'\"'\"'pytest.xml'\"'\"').is_file():suites=[element.attrib for element in ET.parse(directory/'\"'\"'pytest.xml'\"'\"').getroot().iter('\"'\"'testsuite'\"'\"')]\npassed=actual.returncode==actual.original_returncode==0 and not actual.timed_out and not actual.custody_refused and not actual.command_error and bool(suites) and all(int(suite['\"'\"'tests'\"'\"'])>0 and all(int(suite[key])==0 for key in ('\"'\"'errors'\"'\"','\"'\"'failures'\"'\"','\"'\"'skipped'\"'\"')) for suite in suites)\nresult={'\"'\"'role'\"'\"':'\"'\"'actual-complete-genuine-SDK-module-process-not-public-native-acceptance'\"'\"','\"'\"'returncode'\"'\"':actual.returncode,'\"'\"'original_returncode'\"'\"':actual.original_returncode,'\"'\"'timed_out'\"'\"':actual.timed_out,'\"'\"'custody_refused'\"'\"':actual.custody_refused,'\"'\"'command_error'\"'\"':actual.command_error,'\"'\"'duration_seconds'\"'\"':time.monotonic()-started,'\"'\"'actual_suites'\"'\"':suites,'\"'\"'all_actual_selected_cases_passed_without_skip'\"'\"':passed,'\"'\"'retained_originals'\"'\"':kept,'\"'\"'actual_nested_native_retention'\"'\"':native_retention,'\"'\"'diagnostic_retention_byte_bound'\"'\"':4*1024*1024*1024,'\"'\"'release_acceptance_granted'\"'\"':False}\n(directory/'\"'\"'outcome.json'\"'\"').write_text(json.dumps(result,indent=2)+'\"'\"'\\n'\"'\"');shutil.rmtree(scratch)\nprint(json.dumps(result));raise SystemExit(0 if passed else 1)\n' \\\n > \"$original/stdout.raw\" 2> \"$original/stderr.raw\" || status=$?\nprintf '%s\\n' \"$status\" > \"$original/exit-code\"\nexit \"$status\"\n"
+        },
+        {
+          "name": "Export original owned readiness",
+          "id": "export",
+          "if": "always()",
+          "run": ".venv/bin/python -m infrastructure.core.testing.ci_execution_user export --state \"$RUNNER_TEMP/template-ci-execution/state.json\""
+        },
+        {
+          "name": "Retain actual SDK original streams and results",
+          "if": "always()",
+          "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+          "with": {
+            "name": "repaired-complete-sdk-linux-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/owned-genuine-sdk/\n${{ runner.temp }}/owned-genuine-sdk-cli/\n",
+            "include-hidden-files": true,
+            "if-no-files-found": "error",
+            "retention-days": 30
+          }
+        },
+        {
+          "name": "Require actual whole-module consumer success and completed export",
+          "if": "always()",
+          "shell": "bash",
+          "env": {
+            "ORIGINAL_OUTCOME": "${{ steps.genuine.outcome }}",
+            "EXPORT_OUTCOME": "${{ steps.export.outcome }}"
+          },
+          "run": "set -euo pipefail\n[ \"$ORIGINAL_OUTCOME\" = success ]\n[ \"$EXPORT_OUTCOME\" = success ]\necho \"Complete component proof only; no Root or public release acceptance granted.\" >> \"$GITHUB_STEP_SUMMARY\"\n"
+        }
+      ]
+    }
+  }
+}
