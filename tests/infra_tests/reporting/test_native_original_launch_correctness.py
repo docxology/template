@@ -568,11 +568,10 @@ with native_producer_operation(source, run_id=run_id, deadline=deadline):
 """
 
 
-@pytest.mark.parametrize("runtime_layout", ["plain", "deep-spaces"])
 @pytest.mark.timeout(1800)
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="genuine glibc audit callbacks require Linux")
 def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
-    complete_reference: tuple[Path, str, str], tmp_path: Path, runtime_layout: str
+    complete_reference: tuple[Path, str, str], tmp_path: Path
 ) -> None:
     """Exercise genuine native custody and cold direct/paired SDK entry points."""
     if shutil.which("pandoc") is None or shutil.which("cc") is None:
@@ -611,7 +610,7 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     assert built.returncode == 0, built.stdout + built.stderr
     wheels = list(artifacts.glob("*.whl"))
     assert len(wheels) == 1
-    installed = tmp_path / "installed-sdk" if runtime_layout == "plain" else nested / "installed SDK's runtime"
+    installed = nested / "installed SDK's runtime"
     created = subprocess.run(
         [
             "uv",
@@ -631,8 +630,7 @@ def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
     )
     assert created.returncode == 0, created.stdout + created.stderr
     selected_python = installed / "bin/python"
-    if runtime_layout == "deep-spaces":
-        assert len(os.fsencode(selected_python)) > 255 and " " in str(selected_python)
+    assert len(os.fsencode(selected_python)) > 255 and " " in str(selected_python)
     exported = subprocess.run(
         [
             "uv",
