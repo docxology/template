@@ -51,13 +51,17 @@ _LOCATION_PROBE = (
 )
 
 
-def native_runtime_export_command(uv: Path, metadata_root: Path, requirements: Path) -> tuple[str, ...]:
-    """Export native execution defaults and explicit Active ML feature dependencies."""
+def native_runtime_export_command(
+    uv: Path, metadata_root: Path, requirements: Path, *, python: Path
+) -> tuple[str, ...]:
+    """Export locked native execution requirements for the nominated interpreter."""
     return (
         str(uv),
         "export",
         "--directory",
         str(metadata_root),
+        "--python",
+        str(python),
         "--locked",
         "--offline",
         "--group",
@@ -373,9 +377,29 @@ def prepare_native_installed_runtime(
             actual[0].name,
             reader=reader,
         )
+    runtime = scratch / "native-environment"
+    run(
+        (str(uv), "venv", "--no-project", "--no-python-downloads", "--python", str(python), str(runtime)),
+        "runtime-venv",
+    )
+    installed_python = runtime / "bin/python"
     runtime_requirements = scratch / "runtime-requirements.txt"
-    run(native_runtime_export_command(uv, metadata.root, runtime_requirements), "runtime-lock")
-    normalize_locked_dependency_export(metadata.root, runtime_requirements)
+    run(
+        native_runtime_export_command(uv, metadata.root, runtime_requirements, python=installed_python),
+        "runtime-lock",
+    )
+    # The nominated consumer can differ from the interpreter running this owner.
+    interpreter = run(
+        (
+            str(installed_python),
+            "-I",
+            "-c",
+            "import json,sys;print(json.dumps({'minor':f'{sys.version_info.major}.{sys.version_info.minor}'}))",
+        ),
+        "runtime-interpreter",
+    )
+    minor = json_object_from_bytes(interpreter["stdout"].encode())["minor"]
+    normalize_locked_dependency_export(metadata.root, runtime_requirements, minor=minor)
     if not metadata.unchanged():
         raise ValueError("native preparation locked Source changed during dependency export normalization")
     # Current native replay executes full suites using its Root-locked execution profile.
@@ -391,12 +415,6 @@ def prepare_native_installed_runtime(
             if provider != "root"
         )
     )
-    runtime = scratch / "native-environment"
-    run(
-        (str(uv), "venv", "--no-project", "--no-python-downloads", "--python", str(python), str(runtime)),
-        "runtime-venv",
-    )
-    installed_python = runtime / "bin/python"
     run(
         (
             str(uv),

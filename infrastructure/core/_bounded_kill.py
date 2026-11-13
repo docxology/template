@@ -67,7 +67,7 @@ def _census_snapshot(deadline: float, pid: int | None = None) -> dict[int, str]:
 def _preexisting_process(pid: int, started_monotonic: float, deadline: float) -> bool:
     """Return whether *pid* predates this guardian's token-bearing lifetime."""
     observed = subprocess.run(  # nosec B603 - fixed process start-age query
-        ["/bin/ps", "-p", str(pid), "-o", "etimes="],
+        ["/bin/ps", "-p", str(pid), "-o", "etime="],
         capture_output=True,
         text=True,
         check=False,
@@ -76,7 +76,19 @@ def _preexisting_process(pid: int, started_monotonic: float, deadline: float) ->
     if observed.returncode != 0:
         raise RuntimeError(f"bounded-run census could not determine process start age for PID {pid}")
     try:
-        elapsed = int(observed.stdout.strip())
+        days, separator, clock = observed.stdout.strip().rpartition("-")
+        fields = [int(component) for component in clock.split(":")]
+        if len(fields) not in {2, 3} or (separator and len(fields) != 3):
+            raise ValueError("invalid elapsed-time clock fields")
+        if any(value < 0 for value in fields) or any(value >= 60 for value in fields[-2:]):
+            raise ValueError("invalid elapsed-time clock range")
+        day_count = int(days) if separator else 0
+        if day_count < 0 or (separator and fields[0] >= 24):
+            raise ValueError("invalid elapsed-time day range")
+        elapsed = 0
+        for field in fields:
+            elapsed = elapsed * 60 + field
+        elapsed += day_count * 86400
     except ValueError as error:
         raise ValueError(f"bounded-run census received invalid process elapsed time for PID {pid}") from error
     return elapsed > time.monotonic() - started_monotonic + 0.5
@@ -115,18 +127,22 @@ def observe_bounded_run_processes(
                 )
             _census_remaining(deadline)
         except PermissionError as error:
-            # Only processes started after this guardian's run token exists can
-            # hold it. Older runner daemons cannot be token holders and must not
-            # turn an unrelated process-environ restriction into a false census.
-            if started_monotonic is not None and _preexisting_process(pid, started_monotonic, deadline):
-                continue
+            # Restrict this optional final census to the guardian's lifetime.
+            # Unreadable processes created within it remain a strict refusal;
+            # the default census still has no start-time exemption.
+            cause: Exception = error
+            try:
+                if started_monotonic is not None and _preexisting_process(pid, started_monotonic, deadline):
+                    continue
+            except (OSError, RuntimeError, ValueError) as age_error:
+                cause = age_error
             current = _census_snapshot(deadline, pid)
             if pid not in current or current[pid].startswith("Z"):
                 continue
             raise RuntimeError(
                 f"bounded-run census cannot observe live same-owner PID {pid} "
-                f"(cause={type(error).__name__}, errno={getattr(error, 'errno', None)})"
-            ) from error
+                f"(cause={type(cause).__name__}, errno={getattr(cause, 'errno', None)})"
+            ) from cause
         except (OSError, RuntimeError, ValueError) as error:
             # A fresh successful OS observation may confirm exit or UID change.
             current = _census_snapshot(deadline, pid)

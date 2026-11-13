@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-source-context-v2",
-  "binding_sha256": "d8ef87b03bfe6884c9c72b4c559137161c27f979bcbdee4796b309241f8ac1df",
+  "binding_sha256": "fb0c26efb0a3ea4213f03686c971c7af841d7833cda12b7329f30448ba2a7831",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "96ad130998efe1ae7834aa9c4f26a620e92cce23927bd8f4460959c4689fbca8",
-  "combined_size_bytes": 142303,
+  "combined_sha256": "6bb122efcde563b9fdf21c3f937b94fd336dfd4180b26b5845645312a42205d8",
+  "combined_size_bytes": 142311,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -45,7 +45,7 @@
     {
       "ordinal": 7,
       "path": "output/manuscript/06_methods_pymdp.md",
-      "sha256": "a2f95f3e110062cf266fe971a257cc992cc90adc399f192ec49cb3c0d30b96bf",
+      "sha256": "974ada13b56e71ba27e31921430b27abd042429436e32554fcb54307a71b66fd",
       "size_bytes": 4176
     },
     {
@@ -93,7 +93,7 @@
     {
       "ordinal": 15,
       "path": "output/manuscript/16_appendix_full_sheaf.md",
-      "sha256": "82d5fc41224692f8d463c3162cfaa5f75afe735e54136972d8bb0d704e454de8",
+      "sha256": "65fe30432744dc32281c08ffc390285db8eeb83e5cccec4eae5edf0d3161d3d1",
       "size_bytes": 20268
     },
     {
@@ -115,7 +115,7 @@
       "size_bytes": 537
     }
   ],
-  "ordered_inputs_sha256": "30b4549fec91ebedc8449cc8a81886bc72dec5b1c0e68d14016c80acd7108b0e",
+  "ordered_inputs_sha256": "1f343a65e85b0bff2efadfb4e6cd4f22bd327c05d503ca6e8dc6ae29b59189ae",
   "project": "templates/template_active_inference",
   "schema_version": "template-manuscript-composition-v1"
 }

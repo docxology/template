@@ -15,10 +15,10 @@ from infrastructure.core.exceptions import TemplateError, ValidationError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.validation.content.manuscript_config import is_project_resolved, unresolved_config_tokens
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering import RenderManager
-from infrastructure.rendering.config import _unresolved_config_tokens
 from infrastructure.rendering.latex_validation import ValidationReport, validate_preamble_packages
 from infrastructure.transmission.transmission_bookends import is_transmission_bookend
 
@@ -59,63 +59,6 @@ def _is_provisional_pre_aux_slide_overflow(manager: RenderManager, error: Templa
         and failure.get("format") == "accessible slide pair"
         and failure.get("diagnostic_code") == _ACCESSIBLE_BEAMER_OVERFLOW_CODE
     )
-
-
-GENERATED_ORDERING_MARKER = "# Generated manuscript ordering"
-"""Marker a generator writes when it owns the injected manuscript ordering."""
-
-PROJECT_RESOLVED_MARKER = "# Project-resolved config"
-"""Explicit opt-in marker: this injected config is the project's own artifact."""
-
-
-def has_generated_manuscript_ordering(config_path: Path) -> bool:
-    """Return True when an injected config owns generated manuscript ordering."""
-    if not config_path.is_file():
-        return False
-    return GENERATED_ORDERING_MARKER in config_path.read_text(encoding="utf-8")
-
-
-def unresolved_config_tokens(config_path: Path) -> list[str]:
-    """Return the sorted unique ``{{UPPER_SNAKE}}`` tokens still present in *config_path*.
-
-    Backtick code spans are stripped first (see :func:`_unresolved_config_tokens`), so a
-    config that *documents* the token syntax reports no unresolved tokens.
-    """
-    if not config_path.is_file():
-        return []
-    return _unresolved_config_tokens(config_path.read_text(encoding="utf-8"))
-
-
-def is_project_resolved(config_path: Path, source_config_path: Path | None = None) -> bool:
-    """Return whether the injected ``config.yaml`` is a project-owned artifact.
-
-    A project generator may substitute ``{{TOKEN}}`` values into
-    ``output/manuscript/config.yaml``; that resolved file is authoritative and
-    must not be clobbered by the tracked source template. Three branches claim
-    ownership:
-
-    1. :data:`GENERATED_ORDERING_MARKER` — the original marker behaviour,
-       unchanged;
-    2. :data:`PROJECT_RESOLVED_MARKER` — an explicit opt-in for generators that
-       do not reorder the manuscript;
-    3. inference — the tracked source still carries hydration tokens that the
-       injected copy has resolved.
-
-    Branch 3 is deliberately narrow: it fires only when the source itself is a
-    token template, so a project that merely hand-edits its injected config
-    still receives the source refresh it has always received.
-    """
-    if not config_path.is_file():
-        return False
-    text = config_path.read_text(encoding="utf-8")
-    if GENERATED_ORDERING_MARKER in text or PROJECT_RESOLVED_MARKER in text:
-        return True
-    if source_config_path is None:
-        return False
-    source_tokens = set(unresolved_config_tokens(source_config_path))
-    if not source_tokens:
-        return False
-    return bool(source_tokens - set(unresolved_config_tokens(config_path)))
 
 
 def verify_config_tokens_resolved(config_path: Path) -> None:
@@ -348,8 +291,8 @@ def _clean_stale_web_artifacts(manager: RenderManager) -> None:
     """Remove generated web artifacts before deciding whether HTML will render.
 
     Only removes files this renderer itself produces (the combined
-    ``index.html`` and per-section ``{parent}__{stem}.html`` pages, per
-    ``WebRenderer._output_file_for_source``) plus renderer-owned publish
+    ``index.html`` and parent-prefixed section pages with optional Source digests,
+    per ``WebRenderer._output_file_for_source``) plus renderer-owned publish
     targets (``.<stem>.<hex>.html.tmp``), the shared combined markdown, and
     the favicon — a blanket ``*.html`` glob would also delete unrelated
     hand-authored web artifacts (e.g. a project's own ``dashboard.html``)

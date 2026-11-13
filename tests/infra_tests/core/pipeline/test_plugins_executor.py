@@ -60,9 +60,6 @@ plugins:
             assert "Fixture Plugin Stage" in names
             # Plugin runs after its declared dependency.
             assert names.index("Copy Outputs") < names.index("Fixture Plugin Stage")
-            # The merged plugin resolves to a runnable callable.
-            spec = next(s for s in specs if s.name == "Fixture Plugin Stage")
-            assert callable(spec.func)
 
     def test_invalid_plugin_rejected(self, tmp_path: Path) -> None:
         repo_root = _make_project_repo(tmp_path)
@@ -77,9 +74,11 @@ plugins:
             encoding="utf-8",
         )
 
-        with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor:
-            with pytest.raises(PluginStageError):
-                executor._build_stage_list(skip_clean=False)
+        with (
+            closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor,
+            pytest.raises(PluginStageError),
+        ):
+            executor._build_stage_list(skip_clean=False)
 
     def test_invalid_plugin_missing_runner_rejected(self, tmp_path: Path) -> None:
         repo_root = _make_project_repo(tmp_path)
@@ -91,9 +90,11 @@ plugins:
 """,
             encoding="utf-8",
         )
-        with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor:
-            with pytest.raises(PluginStageError):
-                executor._build_stage_list(skip_clean=False)
+        with (
+            closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor,
+            pytest.raises(PluginStageError),
+        ):
+            executor._build_stage_list(skip_clean=False)
 
 
 class TestExecutorDefaultOff:

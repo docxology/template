@@ -20,9 +20,9 @@ from infrastructure.core.pipeline.outcomes import RunResult
 from infrastructure.core.pipeline.post_run_reporting import write_pipeline_post_run_reports
 from infrastructure.core.pipeline.report_finalization import REPORT_FILES, REPORT_RECEIPT_SCHEMA
 from infrastructure.core.pipeline.types import PipelineConfig, PipelineStageResult
-from infrastructure.core.pipeline.worker_transport import stage_result_from_payload
+from infrastructure.core.pipeline.worker_transport import stage_result_from_payload, stage_results_to_payload
 from infrastructure.core.pipeline.plan import ExecutionPlan
-from infrastructure.core.pipeline.runtime_namespace import validate_shared_runtime
+from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError, validate_shared_runtime
 from infrastructure.core.implementation_custody import verify_fresh_module_bytecode
 
 
@@ -114,7 +114,7 @@ def main() -> int:
             or canonical_digest(record["plan"]) != args.plan_digest
         ):
             raise ValueError("Reporting record identity differs from the controller")
-        validate_shared_runtime(config, ExecutionPlan.from_dict(record["plan"], expected_digest=args.plan_digest))
+        resolved_plan = ExecutionPlan.from_dict(record["plan"], expected_digest=args.plan_digest)
         plan = record["plan"]
         if plan["project"] != args.project:
             raise ValueError("Reporting project differs from the resolved plan")
@@ -122,6 +122,31 @@ def main() -> int:
         run = RunResult.from_results(results, tuple(record["expected_stage_keys"]))
         if run.complete != record["complete"] or run.exit_code != record["exit_code"]:
             raise ValueError("Reporting outcome differs from the recorded execution")
+        try:
+            validate_shared_runtime(config, resolved_plan)
+        except SharedRuntimeCustodyError as exc:
+            refusal = exc.as_stage_result()
+            if read_bytes_confined(output, record_path) != record_bytes:
+                raise ValueError("Execution record changed during report execution") from exc
+            verify_fresh_module_bytecode(implementation, args.pycache_prefix)
+            receipt = output / ".pipeline" / "report_finalization.json"
+            _archive_previous(output, receipt)
+            payload = {
+                "schema_version": REPORT_RECEIPT_SCHEMA,
+                "status": "blocked",
+                "run_id": args.run_id,
+                "project": resolved_plan.project,
+                "shared_infrastructure": args.shared_infrastructure,
+                "plan_digest": args.plan_digest,
+                "execution_record_digest": args.record_digest,
+                "source_identity": resolved_plan.source_identity,
+                "expected_stage_keys": list(resolved_plan.expected_stage_keys),
+                "stage_results": stage_results_to_payload([refusal]),
+                "exit_code": refusal.exit_code,
+                "files": {},
+            }
+            atomic_write_text_confined(output, receipt, json.dumps(payload, sort_keys=True) + "\n", mode=0o600)
+            return refusal.exit_code
         definition = args.repo_root / plan["provenance"]
         before_identity = source_fingerprint_components(args.repo_root, project, definition_path=definition)
         _write_identity_diagnostic(output, args.run_id, args.plan_digest, before_identity)

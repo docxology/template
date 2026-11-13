@@ -140,6 +140,9 @@ tracked public output fixtures are retained as bound inputs when authored tests
 require them; every stage must still freshly succeed. The benchmark plugin's
 storage moves into the owned output control directory through its supported
 option. Every fresh output byte and the original execution record are retained.
+The disposable source copy writes independent file bytes and preserves ordinary
+mode/timestamps without propagating privileged BSD file flags. It never
+hardlinks candidate Source or copies a prepared executable environment.
 
 Admission reads the original process/spec/streams and complete before/after
 source records, Python/distribution/tool components, aggregate environment
@@ -153,6 +156,13 @@ aggregate environment hash: integrity checks retain both original hashes and
 all component comparisons, while authenticated same-repository exact-SHA hosted
 handoff establishes origin. An unsigned local bundle alone cannot establish that
 origin if all retained bytes and hashes are rewritten consistently.
+
+Native process stdout/stderr metadata carries the explicit
+`template-native-tool-stream-observation-v1` schema at the fixed replay boundary.
+Producer labels may be absolute observations; replay retains their exact
+metadata without reopening them or admitting them as wrapper inputs. Canonical
+wrapper input bindings remain relative, confined and complete. Typed stream
+observations do not widen artifact closure or permit untagged legacy records.
 
 The QR runtime v2 retains original linked libzbar path, SHA256, byte count and
 regular-file metadata before and after actual decoding. It preserves genuine

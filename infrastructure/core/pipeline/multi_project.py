@@ -30,7 +30,6 @@ if TYPE_CHECKING:
     from infrastructure.core.pipeline.multi_project_runtime import ProjectExecutionSpec
 
 logger = get_logger(__name__)
-_OUTCOME_HINT_LIMIT = 160
 
 
 @dataclass
@@ -78,13 +77,20 @@ def validated_project_run(result: MultiProjectResult, name: str) -> RunResult | 
     return validated_run_for_rows(result.project_results.get(name), result.run_results.get(name))
 
 
+def _format_failed_stage(stage: PipelineStageResult, hint_max_chars: int | None) -> str:
+    message = (stage.error_message or "").strip()
+    if hint_max_chars is not None and len(message) > hint_max_chars:
+        message = message[: hint_max_chars - 1] + "…"
+    return f"{stage.stage_name} — {message}" if message else stage.stage_name
+
+
 def format_multi_project_outcome_lines(
     ordered_projects: Sequence[ProjectInfo],
     result: MultiProjectResult,
     *,
-    hint_max_chars: int = _OUTCOME_HINT_LIMIT,
+    hint_max_chars: int | None = None,
 ) -> list[str]:
-    """Human-readable lines naming succeeded vs failed projects (serial multi-project UX).
+    """Human-readable typed outcomes with complete failure diagnostics by default.
 
     ``ordered_projects`` must match discovery order and use ``qualified_name`` keys
     consistent with :class:`MultiProjectOrchestrator`.
@@ -92,7 +98,7 @@ def format_multi_project_outcome_lines(
     Args:
         ordered_projects: Projects in run order (same list passed to orchestrator config).
         result: Aggregate result from ``execute_all_projects``.
-        hint_max_chars: Truncate first failing stage ``error_message`` to this length.
+        hint_max_chars: Optional caller-requested cap; None retains the full diagnostic.
     """
     return [text for _, text in _multi_project_outcome_lines(ordered_projects, result, hint_max_chars=hint_max_chars)]
 
@@ -101,7 +107,7 @@ def _multi_project_outcome_lines(
     ordered_projects: Sequence[ProjectInfo],
     result: MultiProjectResult,
     *,
-    hint_max_chars: int = _OUTCOME_HINT_LIMIT,
+    hint_max_chars: int | None = None,
 ) -> list[tuple[Literal["info", "error"], str]]:
     """Project ordered outcome messages with their logging severity."""
     lines: list[tuple[Literal["info", "error"], str]] = []
@@ -113,6 +119,13 @@ def _multi_project_outcome_lines(
     infra_aborted = len(pr) == 0 and result.successful_projects == 0 and result.failed_projects == n
     if infra_aborted:
         lines.append(("error", "Infrastructure tests failed — no project pipelines were run."))
+        shared = result.shared_infrastructure_result
+        if shared is not None:
+            lines.extend(
+                ("error", f"  - {_format_failed_stage(stage, hint_max_chars)}")
+                for stage in shared.stage_results
+                if not stage.success
+            )
         return lines
 
     succeeded: list[str] = []
@@ -135,13 +148,7 @@ def _multi_project_outcome_lines(
             if first_bad is None:
                 failed.append(f"{qn}: unknown stage failure")
                 continue
-            msg = (first_bad.error_message or "").strip()
-            if len(msg) > hint_max_chars:
-                msg = msg[: hint_max_chars - 1] + "…"
-            if msg:
-                failed.append(f"{qn}: {first_bad.stage_name} — {msg}")
-            else:
-                failed.append(f"{qn}: {first_bad.stage_name}")
+            failed.append(f"{qn}: {_format_failed_stage(first_bad, hint_max_chars)}")
 
     if succeeded:
         lines.append(("info", "Succeeded:"))

@@ -14,9 +14,10 @@ from template_formal.types.result import Err, Ok
 _PREFERENCE = BeliefState(mean=0.0, variance=1.0)
 
 
-def test_record_observation_persists_a_real_row_via_select(tmp_path) -> None:  # type: ignore[no-untyped-def]
+@pytest.mark.parametrize("write_ahead_logging", (False, True))
+def test_record_observation_persists_a_real_row_via_select(tmp_path, write_ahead_logging: bool) -> None:  # type: ignore[no-untyped-def]
     db_path = tmp_path / "agent.sqlite3"
-    agent: Agent[BeliefState] = Agent(new_agent_id(), db_path, _PREFERENCE)
+    agent: Agent[BeliefState] = Agent(new_agent_id(), db_path, _PREFERENCE, write_ahead_logging=write_ahead_logging)
     candidate = CandidateAction(name="forage_north", predicted_state=BeliefState(mean=0.0, variance=1.0))
 
     assert agent.observation_count() == 0

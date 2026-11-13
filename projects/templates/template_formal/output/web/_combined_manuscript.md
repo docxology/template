@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-0-start-->
+```
+
 # Abstract {#sec:abstract}
 
 This paper presents a strongly-typed, decentralized multiagent simulation —
@@ -62,11 +66,19 @@ rather than one-off scripts.
 types, category theory, Active Inference, multiagent systems, affine types,
 illegal state unrepresentable.
 
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -157,11 +169,19 @@ documentary stand-in for the kind of shared-coordination-state problem Raft
 solves in full; the comparison is drawn explicitly, not left implicit, in
 @sec:results-discussion.
 
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-2-start-->
+```
 
 # Type Architecture {#sec:type-architecture}
 
@@ -403,11 +423,19 @@ matches (ISC-44) — there is no limitations subsection that needs the
 exemption, because the template makes neither claim anywhere to
 begin with.
 
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-3-start-->
+```
 
 # Storage as a Functor {#sec:storage-functor}
 
@@ -480,11 +508,19 @@ confirms this structurally (ISC-30): a second agent's storage file path is
 unreachable through the first agent's public API, not merely unreached in
 the tests that happen to exist.
 
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-4-start-->
+```
 
 # The Active Inference Framing of the Decision Loop {#sec:active-inference}
 
@@ -585,11 +621,19 @@ keeps the "many local free-energy minimizers coordinating through a shared
 environment, with no shared internal state" framing honest at the code
 level, not just at the level of the manuscript's prose.
 
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-5-start-->
+```
 
 # Results and Discussion {#sec:results-discussion}
 
@@ -695,7 +739,7 @@ fact item 4 above states in prose. Bottom: `north`'s share of total
 concentration, constant at $1.0$ from tick 0 because *every* agent resolves
 the identical free-energy tie to `north` on the very first tick (item 1
 above) — this is the mechanism-demonstration run, presented honestly as
-"guaranteed by construction," not as emergence.](../figures/colony_demo_convergence.png){#fig:demo-convergence}
+"guaranteed by construction," not as emergence.](../output/figures/colony_demo_convergence.png){#fig:demo-convergence}
 
 What this test demonstrates is a genuine, correctly-wired positive-feedback
 mechanism operating on real per-agent state — the scaffolding a claim about
@@ -832,7 +876,7 @@ mean. Right: the same distribution as an empirical CDF. This demo figure
 is illustrative of the *shape* of the real distribution at a smaller,
 faster $N$ — the $N=150$ Wilson-interval numbers quoted above, not this
 $N=40$ run, are what the paper's statistical claim is
-bound to.](../figures/colony_convergence_tick_distribution.png){#fig:convergence-tick-distribution}
+bound to.](../output/figures/colony_convergence_tick_distribution.png){#fig:convergence-tick-distribution}
 
 A companion test
 (`test_colony_coordinator_never_touches_an_agents_internal_storage_or_protocol_handle`)
@@ -1621,11 +1665,19 @@ other seed bases; the real-vs-null gap and the zero-deposit ablation do
 not, and neither is gated by a cross-seed-base regression test the way the
 heterogeneity ordering is).
 
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-6-start-->
+```
 
 # References {#sec:references}
 
@@ -1636,4 +1688,8 @@ To validate that `references.bib` is syntactically clean and contains the requir
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_formal/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-90271e6837b8756b0727a60b8455c38d8bc51d1c340062f53214a8b2d1aff888-6-end-->
 ```

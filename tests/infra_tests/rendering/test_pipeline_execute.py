@@ -11,8 +11,8 @@ import json
 import shutil
 import subprocess
 import sys
-import zipfile
 import venv
+import zipfile
 from dataclasses import replace
 from pathlib import Path
 
@@ -20,12 +20,14 @@ import pytest
 
 from infrastructure.rendering._combined_exports import render_combined_outputs
 from infrastructure.rendering._manuscript_source import render_individual_files
+from infrastructure.rendering._web_assets import MATHJAX_URL
 from infrastructure.rendering.manuscript_composition import COMPOSITION_RELATIVE_PATH, read_manuscript_composition
 from infrastructure.rendering.pipeline import (
     RenderPipelineDependencies,
     execute_render_pipeline,
     verify_render_outputs,
 )
+
 from ._pipeline_helpers import (
     _dependencies_for,
     _make_project_with_manuscript,
@@ -207,6 +209,43 @@ def test_execute_render_pipeline_combined_packages_do_not_require_pdf(
     assert [row.path for row in composition.ordered_inputs] == ["manuscript/01_section.md"]
     for row in composition.ordered_inputs:
         assert row.sha256 == hashlib.sha256((project / row.path).read_bytes()).hexdigest()
+
+
+@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc is required for real HTML rendering")
+def test_execute_render_pipeline_never_substitutes_cdn_for_local_assets(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An explicit offline request must publish local assets or refuse, never CDN."""
+    for name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(name, raising=False)
+    project = tmp_path / "projects/templates/offline_html"
+    _make_project_with_manuscript(project, n_md=1)
+    (project / "manuscript/01_section.md").write_text("# Offline example\n\nThe expression $x^2 + 1$ is symbolic.\n")
+    config = project / "manuscript/config.yaml"
+    configuration = (
+        "render:\n  formats:\n    pdf: false\n    html: true\n    slides: false\n    docx: false\n    epub: false\n"
+        "  html:\n    asset_mode: MODE\n"
+    )
+    dependencies = _dependencies_for(
+        project,
+        render_individual=render_individual_files,
+        render_combined=render_combined_outputs,
+        verify_outputs=verify_render_outputs,
+    )
+    config.write_text(configuration.replace("MODE", "cdn"), encoding="utf-8")
+    assert execute_render_pipeline("offline_html", repo_root=tmp_path, dependencies=dependencies) == 0
+    index = project / "output/web/index.html"
+    assert MATHJAX_URL in index.read_text(encoding="utf-8")
+
+    config.write_text(configuration.replace("MODE", "local"), encoding="utf-8")
+    result = execute_render_pipeline("offline_html", repo_root=tmp_path, dependencies=dependencies)
+    if result == 0:
+        assert MATHJAX_URL not in index.read_text(encoding="utf-8")
+        manifest = json.loads((project / "output/web/assets/mathjax-4.0.0/asset-manifest.json").read_text())
+        assert manifest["packages"] == {"mathjax": "4.0.0", "@mathjax/mathjax-newcm-font": "4.0.0"}
+    else:
+        assert result == 1
 
 
 def test_execute_render_pipeline_outer_exception_returns_one(

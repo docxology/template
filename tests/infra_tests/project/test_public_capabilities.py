@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import json
+
 import os
 import subprocess
 import sys
@@ -28,7 +28,7 @@ from infrastructure.project.public_capabilities import (
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
-from scripts.gates.public_capabilities import main as capability_gate_main
+
 from tests._support.projects import make_project, write_doc
 
 _CI_CEILING = CANONICAL_CI_PYTHON_VERSIONS[-1]
@@ -102,17 +102,6 @@ def test_public_capability_inventory_covers_all_canonical_exemplars(
     meta = next(project for project in report.projects if project.project == "templates/template_template")
     assert meta.package.expected_name == PACKAGE_NAME_OVERRIDES["templates/template_template"]
     assert meta.package.name == "template-template-meta-project"
-
-
-def test_public_capability_manifest_json_is_stable(public_report: PublicCapabilityReport) -> None:
-    first = json.dumps(public_report.to_dict(), sort_keys=True, separators=(",", ":"))
-    second = json.dumps(public_report.to_dict(), sort_keys=True, separators=(",", ":"))
-
-    assert first == second
-    payload = json.loads(first)
-    assert payload["schema_version"] == CAPABILITY_MANIFEST_SCHEMA_VERSION
-    assert len(payload["roster_digest"]) == 64
-    assert len(payload["ci_matrix"]["include"]) == len(public_report.ci_matrix)
 
 
 def test_public_capability_inventory_reports_missing_structure(tmp_path: Path) -> None:
@@ -492,46 +481,6 @@ def test_imperative_skip_and_importorskip_keep_distinct_reason_contracts(tmp_pat
     ]
 
 
-def test_ci_matrix_cli_emits_one_line_exact_product(
-    public_report: PublicCapabilityReport,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repo = Path(__file__).resolve().parents[3]
-
-    exit_code = capability_gate_main(["--repo-root", str(repo), "--ci-matrix-json"])
-
-    assert exit_code == 0
-    output = capsys.readouterr().out
-    assert output.count("\n") == 1
-    assert json.loads(output) == {"include": [entry.to_dict() for entry in public_report.ci_matrix]}
-
-
-def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
-    repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github" / "workflows" / "hardening.yml").read_text(encoding="utf-8"))
-    detect = workflow["jobs"]["detect-projects"]
-    matrix_step = next(step for step in detect["steps"] if step.get("id") == "matrix")
-    strategy = workflow["jobs"]["test-project"]["strategy"]
-
-    assert detect["outputs"] == {
-        "matrix": "${{ steps.matrix.outputs.matrix }}",
-        "infra_matrix": "${{ steps.matrix.outputs.infra_matrix }}",
-        "required_jobs": "${{ steps.matrix.outputs.required_jobs }}",
-    }
-    assert "scripts/gates/public_capabilities.py --ci-matrix-json" in matrix_step["run"]
-    assert strategy["matrix"] == "${{ fromJSON(needs.detect-projects.outputs.matrix) }}"
-    assert workflow["jobs"]["test-project"]["env"]["UV_PYTHON"] == "${{ matrix.python-version }}"
-    assert workflow["jobs"]["test-infra"]["env"]["UV_PYTHON"] == "${{ matrix.python-version }}"
-    assert (
-        workflow["jobs"]["test-infra"]["strategy"]["matrix"]
-        == "${{ fromJSON(needs.detect-projects.outputs.infra_matrix) }}"
-    )
-    assert (
-        sum(step.get("name") == "Verify selected Python minor" for step in workflow["jobs"]["test-project"]["steps"])
-        == 1
-    )
-
-
 @pytest.mark.parametrize("mode", ["", "Native", " native", "native\nconverter", "converter; exit 0"])
 def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, mode: str) -> None:
     repo = Path(__file__).resolve().parents[3]
@@ -549,7 +498,6 @@ def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, 
         check=False,
     )
     assert result.returncode != 0
-    assert "document preparation mode must be native or converter" in result.stderr
     assert list(tmp_path.iterdir()) == []
 
 

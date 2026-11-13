@@ -119,7 +119,6 @@ def test_executor_logging_preserves_ordinary_python_progress(tmp_path: Path) -> 
     provider = Path(infrastructure.__file__).resolve().parent.parent
     # Reuse the same actual test-harness function without importing this pytest module.
     control = textwrap.dedent(inspect.getsource(_exercise_logging))
-    assert "pytest" not in control
     code = (
         "import os, sys\nfrom pathlib import Path\n"
         "os.environ.pop('PYTEST_CURRENT_TEST', None)\n"
@@ -194,22 +193,21 @@ def test_actual_closed_banner_stream_releases_constructed_executor(tmp_path: Pat
     assert observability.logger.level == module_level
 
 
-def test_oldest_executor_closes_without_resetting_live_peer_logging(tmp_path: Path) -> None:
+def _exercise_live_peer_logging(root: Path) -> None:
     import logging
 
     from infrastructure.core.pipeline import observability
     from infrastructure.core.pipeline.executor import PipelineExecutor
     from infrastructure.core.pipeline.types import PipelineConfig
 
-    scaffold_pipeline(tmp_path, ("first", "second"))
     logger = observability.logger
     original_level = logger.level
     executors = []
     logger.setLevel(logging.WARNING)
     try:
-        first = PipelineExecutor(PipelineConfig("first", tmp_path, clean=False, skip_infra=True))
+        first = PipelineExecutor(PipelineConfig("first", root, clean=False, skip_infra=True))
         executors.append(first)
-        second = PipelineExecutor(PipelineConfig("second", tmp_path, clean=False, skip_infra=True))
+        second = PipelineExecutor(PipelineConfig("second", root, clean=False, skip_infra=True))
         executors.append(second)
         assert first.preview_stage_names() == second.preview_stage_names() == ("Project Analysis",)
 
@@ -224,3 +222,36 @@ def test_oldest_executor_closes_without_resetting_live_peer_logging(tmp_path: Pa
         for executor in reversed(executors):
             executor.close()
         logger.setLevel(original_level)
+
+
+def test_oldest_executor_closes_without_resetting_live_peer_logging(tmp_path: Path) -> None:
+    import infrastructure
+
+    scaffold_pipeline(tmp_path, ("first", "second"))
+    assert infrastructure.__file__ is not None
+    provider = Path(infrastructure.__file__).resolve().parent.parent
+    # This last-owner control requires an isolated registry, not other tests' owners.
+    control = textwrap.dedent(inspect.getsource(_exercise_live_peer_logging))
+    code = (
+        "import os, sys\nfrom pathlib import Path\n"
+        "os.environ.pop('PYTEST_CURRENT_TEST', None)\n"
+        "sys.dont_write_bytecode = True\n"
+        "sys.pycache_prefix = str(Path(sys.argv[2]) / 'owned-bytecode')\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "import infrastructure\n"
+        "assert Path(infrastructure.__file__).resolve() == Path(sys.argv[1]) / 'infrastructure/__init__.py'\n"
+        + control
+        + "\n_exercise_live_peer_logging(Path(sys.argv[2]))\n"
+        "assert 'pytest' not in sys.modules\n"
+    )
+    environment = dict(os.environ)
+    environment.pop("PYTEST_CURRENT_TEST", None)
+    child = subprocess.run(
+        [sys.executable, "-I", "-c", code, str(provider), str(tmp_path)],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=100,
+    )
+    assert child.returncode == 0, child.stdout + child.stderr

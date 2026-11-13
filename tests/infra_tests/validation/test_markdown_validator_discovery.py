@@ -7,6 +7,7 @@ from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.markdown_validator import (
     collect_symbols,
     find_manuscript_directory,
+    validate_markdown,
 )
 from infrastructure.core.exceptions import NotADirectoryError
 
@@ -80,6 +81,28 @@ class TestCollectSymbols:
         # rendered doc: ``# Section`` / ``## Subsection`` also contribute
         # ``section`` / ``subsection``.
         assert {"section", "subsection"} <= anchors
+
+    @pytest.mark.parametrize(
+        "attributes",
+        [
+            '{.unnumbered title="quoted #sec:ghost" #sec:references}',
+            '{#sec:references title="quoted #sec:ghost" .unnumbered}',
+        ],
+    )
+    def test_cross_file_links_resolve_ids_but_not_quoted_attribute_values(self, tmp_path, attributes):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        navigation = manuscript / "navigation.md"
+        navigation.write_text("# Navigation\n\n[References](#sec:references)\n", encoding="utf-8")
+        (manuscript / "references.md").write_text(f"# References {attributes}\n", encoding="utf-8")
+
+        _, exit_code = validate_markdown(manuscript, tmp_path, strict=True)
+        assert exit_code == 0
+
+        navigation.write_text(navigation.read_text(encoding="utf-8") + "\n[Undefined](#sec:ghost)\n", encoding="utf-8")
+        problems, exit_code = validate_markdown(manuscript, tmp_path, strict=True)
+        assert exit_code == 1
+        assert [problem.code for problem in problems] == ["MARKDOWN.LINK_ANCHOR_MISSING"]
 
     def test_empty_file_list(self):
         """Test collect_symbols with empty file list."""

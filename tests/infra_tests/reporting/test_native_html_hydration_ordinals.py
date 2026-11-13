@@ -24,7 +24,11 @@ from infrastructure.reporting.native_format_semantic_source import (
     semantic_parser_options,
 )
 from infrastructure.reporting.native_format_html_glyph_contours import compile_source_character_runs
-from infrastructure.reporting.native_html_hydration_ordinals import compose_html_ordinal_input, _table_native_projection
+from infrastructure.reporting.native_html_hydration_ordinals import (
+    compose_html_ordinal_input,
+    _contract_ordinal_positions,
+    _table_native_projection,
+)
 from infrastructure.reporting.native_format_semantic_ast import compile_semantic_ast
 from infrastructure.reporting.native_format_html_image_alt import (
     compile_original_image_alt,
@@ -229,6 +233,78 @@ def test_real_source_projection_retains_owned_definitions_and_global_reference_v
     del damaged["blocks"][first_boundary]
     with pytest.raises(RenderingError):
         semantic_contract_ast(tmp_path, scope, artifact, tuple(sources), json.dumps(damaged).encode())
+
+
+@pytest.mark.parametrize("owned_index", [0, 1])
+def test_real_table_ordinals_follow_owned_projection_not_repeated_values(tmp_path: Path, owned_index: int) -> None:
+    """The same genuine full pair supplies full custody and owned Table identity."""
+    pandoc = shutil.which("pandoc")
+    if pandoc is None:
+        pytest.skip("pandoc not available on PATH")
+    scope = "working/table-proof"
+    manuscript = tmp_path / "projects" / scope / "manuscript"
+    manuscript.mkdir(parents=True)
+    body = b"# Results\n\n| Key | Value |\n| --- | --- |\n| a | 7 |\n"
+    bodies = (body, body)
+    sources = []
+    for name in ("03_results.md", "05_experimental_setup.md"):
+        path = manuscript / name
+        path.write_bytes(body)
+        sources.append((path.relative_to(tmp_path).as_posix(), body))
+    first = body.index(b"a | 7")
+    marked, anchors = annotate_manuscript_ordinals(
+        bodies, ((owned_index, 1, "TABLE", first, first + len(b"a | 7"), hashlib.sha256(b"a | 7").hexdigest()),)
+    )
+    arguments = [pandoc, *semantic_parser_options(tmp_path, scope)]
+    for lua_filter in semantic_lua_filters():
+        arguments.extend(["--lua-filter", str(lua_filter)])
+    actual = subprocess.run(arguments, input=compose_html_ordinal_input(bodies), capture_output=True, check=True).stdout
+    annotated = subprocess.run(
+        arguments, input=compose_html_ordinal_input(marked, boundary_bodies=bodies), capture_output=True, check=True
+    ).stdout
+    artifact = NativeArtifact(
+        id=f"section:{Path(sources[owned_index][0]).name}:html",
+        format="html",
+        path=f"projects/{scope}/output/web/owned.html",
+    )
+    full, owned = _contract_ordinal_positions(tmp_path, scope, artifact, tuple(sources), annotated, actual, anchors)
+    assert full[0]["input_index"] == owned[0]["input_index"] == owned_index
+    assert full[0]["container_ast_path"] != owned[0]["container_ast_path"]
+    contract = compile_semantic_ast(
+        (sources[owned_index],), semantic_contract_ast(tmp_path, scope, artifact, tuple(sources), actual)
+    )
+    projected_table_ids = [row["source_id"] for row in contract["tables"]]
+    assert projected_table_ids == ["ast:" + "/".join(map(str, owned[0]["container_ast_path"]))]
+
+    # Identical values in another source cannot stand in for the owned carrier.
+    other = NativeArtifact(
+        id=f"section:{Path(sources[1 - owned_index][0]).name}:html",
+        format="html",
+        path=f"projects/{scope}/output/web/other.html",
+    )
+    with pytest.raises(ValueError):
+        _contract_ordinal_positions(tmp_path, scope, other, tuple(sources), annotated, actual, anchors)
+
+    for defect in ("missing", "changed", "reordered"):
+        damaged_pair = []
+        for original_ast in (annotated, actual):
+            damaged = json.loads(original_ast)
+            boundaries = [
+                index
+                for index, block in enumerate(damaged["blocks"])
+                if block["t"] == "RawBlock" and "template-web-source-" in str(block["c"])
+            ]
+            assert len(boundaries) == 4
+            if defect == "missing":
+                del damaged["blocks"][boundaries[0]]
+            elif defect == "changed":
+                damaged["blocks"][boundaries[0]]["c"][1] += "changed"
+            else:
+                left, right = boundaries[:2]
+                damaged["blocks"][left], damaged["blocks"][right] = damaged["blocks"][right], damaged["blocks"][left]
+            damaged_pair.append(json.dumps(damaged).encode())
+        with pytest.raises((ValueError, RenderingError)):
+            _contract_ordinal_positions(tmp_path, scope, artifact, tuple(sources), *damaged_pair, anchors)
 
 
 def test_modern_figure_caption_has_own_visible_source_run_and_no_alt_relabel() -> None:

@@ -5,6 +5,11 @@ Do not call it on a shared workstation. It uses fresh `RUNNER_TEMP` storage
 and the disposable hosted runner's user font/tool directories. Third-party
 archives and model blobs must retain their exact source-pinned hashes and lengths.
 
+Runtime archive acquisition uses official immutable asset API identities.
+Keep the provided GitHub token scoped to that preparation step, never in
+`GITHUB_ENV`, model daemons or case workers. Preserve curl's normal cross-origin
+authorization stripping; do not use `--location-trusted`.
+
 The cache contains only the fixed manifest and model blobs. Cache hits never
 bypass byte-length, SHA-256 or regular-file checks; corrupt or symlinked entries
 fail before daemon startup rather than being replaced. Runtime/daemon custody

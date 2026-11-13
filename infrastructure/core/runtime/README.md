@@ -13,6 +13,11 @@ profiles without the process-memory access required by `profiling.sampling`.
 These diagnostic profiles do not replace the supported Python 3.14/3.15 release
 gates or authorize cache reuse, changed timeouts, or coverage exceptions.
 
+`get_subprocess_env` probes `uv --version` only when a `VIRTUAL_ENV` entry is
+present and could be removed. Environments without that entry are preserved
+without launching optional UV; when present, the existing availability-based
+removal behavior is unchanged. This check does not resolve or acquire packages.
+
 ## Files
 
 - `_python_env.py` — Python environment helpers; Stage-02 scripts must resolve
@@ -39,6 +44,19 @@ sync or acquisition. The worker observes its actual interpreter/version/site
 roots before domain execution and checks them afterward, separately from the
 controller's source/runtime fingerprint. Fresh private caches and a pre-import
 CodeType audit bind public platform/project code and the held script bytes.
+
+A frozen-plan Source mismatch still blocks with 75. Its bounded diagnostic
+retains expected/observed aggregate SHA-256 identities and observed
+source/Python/tool component digests, never paths or runtime values. A prior
+controller observation identifies changed components only when its aggregate
+exactly matches the frozen expected identity; otherwise expected components
+remain unknown. The diagnostic does not authorize replay or Source relabeling.
+
+Bounded POSIX guardians derive their package digest from the same invocation's
+fresh, complete loaded-infrastructure/scripts census instead of immediately
+walking that package again. Parent startup, child READY and child DONE still
+take independent fresh observations; source membership, bytecode, nonce,
+protocol, cleanup and original deadline checks are unchanged.
 
 The selected installed dependency plane binds METADATA/RECORD declarations.
 It does not prove all dependency member bytes. Consequently canonical analysis

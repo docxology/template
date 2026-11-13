@@ -186,9 +186,13 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_f
 #     refuses newer JVMs; Java 17 is what this project documents and what CI
 #     provisions. The jar is never tracked: fetch it into
 #     formal/tla/tla2tools.jar and verify the pin first:
-#       curl -fsSL -o formal/tla/tla2tools.jar \
-#         https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar
-#       shasum -a 256 formal/tla/tla2tools.jar   # must equal TLC_SHA256 in src/
+#       curl --fail --location --header 'Accept: application/octet-stream' \
+#         --proto '=https' --proto-redir '=https' --retry 2 --max-time 120 \
+#         --output projects/templates/template_formal/formal/tla/tla2tools.jar \
+#         https://api.github.com/repos/tlaplus/tlaplus/releases/assets/184694200
+#       shasum -a 256 projects/templates/template_formal/formal/tla/tla2tools.jar
+#     From the repository root, verify the full TLC_BYTES and TLC_SHA256 tuple
+#     in projects/templates/template_formal/src/template_formal/tool_acceptance.py.
 #     Alternatively point TEMPLATE_FORMAL_TLC_JAR at that verified file.
 projects/templates/template_formal/scripts/check_formal_specs.sh
 ```

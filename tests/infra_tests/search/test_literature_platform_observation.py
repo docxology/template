@@ -145,7 +145,7 @@ elif fault == 'metadata':
     assert 'name = "research-project-template"' in raw
     target.write_text(raw.replace('name = "research-project-template"', 'name = "owned-invalid-provider"'))
 else:
-    target = Path(live_contract.__cached__)
+    target = Path(live_contract.__spec__.cached)
     assert target.is_relative_to(Path(sys.pycache_prefix))
     target.write_bytes(target.read_bytes() + b'owned bytecode mutation')
 try:

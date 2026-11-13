@@ -81,6 +81,15 @@ SEQUENCE = [
 ]
 
 
+def _control_progress(phase: str) -> None:
+    """Best-effort fixed caller-thread observation; never grant admission."""
+    try:
+        os.write(2, f"pdfium-runtime-control {phase} {time.monotonic():.9f}\n".encode("ascii"))
+    except OSError:
+        # Diagnostic loss must not replace the actual verification outcome.
+        pass
+
+
 class _RuntimeObservation:
     """Observe actual frames and mutate only explicitly selected disposable DATA."""
 
@@ -102,9 +111,23 @@ class _RuntimeObservation:
             source_module.inventory.__code__: "git",
             source_module.NativeSourceContext._verify_current_source.__code__: "current",
         }
+        self.observed_code_ids = {id(code) for code in self.direct_codes}
+        self.observed_code_ids.update(
+            (
+                id(self.guard_code),
+                id(self.data_code),
+                id(data_module.validate_runtime_owner.__code__),
+                id(installed_module._installed.__code__),
+            )
+        )
 
     def __call__(self, frame: FrameType, event: str, argument: Any) -> None:
+        # Complete Source traversal emits many irrelevant profiler events.
+        if event != "call" and (event != "return" or argument is None):
+            return
         code = frame.f_code
+        if id(code) not in self.observed_code_ids:
+            return
         parent = frame.f_back
         parent_code = None if parent is None else parent.f_code
         label = None
@@ -123,6 +146,7 @@ class _RuntimeObservation:
                     label = "data"
             if label is not None:
                 self.events.append(label)
+                _control_progress(f"{label}:call")
                 if "deadline" in frame.f_locals:
                     self.deadlines.append(frame.f_locals["deadline"])
                 if "runtime" in frame.f_locals:
@@ -135,9 +159,13 @@ class _RuntimeObservation:
             assert argument == self.runtime.before
             self.data_returned = True
             self.events.append("data-return")
+            _control_progress("data:return")
+        if code is installed_module._installed.__code__ and parent_code is self.data_code:
+            _control_progress("installed:return")
         final_git_return = False
         if code is source_module.inventory.__code__ and parent_code is self.guard_code:
             self.git_returns[id(parent)] += 1
+            _control_progress(f"git:return:{self.git_returns[id(parent)]}")
             final_git_return = self.data_returned and self.git_returns[id(parent)] == 3
         if self.mutation is not None:
             return
@@ -156,6 +184,7 @@ class _RuntimeObservation:
             and parent_code is self.data_code
             and self.control in {"loaded-body", "loaded-code"}
         ):
+            _control_progress("installed-return:mutation-begin")
             assert argument == self.runtime.before
             assert parent is not None
             target = (
@@ -174,15 +203,18 @@ class _RuntimeObservation:
             assert before != after and before[1]["inode"] != after[1]["inode"]
             self.mutation = {"target": str(target), "before": before[1], "after": after[1]}
             self.events.append("installed-return-mutation")
+            _control_progress("installed-return:mutation-complete")
 
     def verify(self, *, loaded: Path | None = None) -> dict[str, Any]:
         previous = sys.getprofile()
         assert previous is None, "Do not replace another profiler in the genuine child"
+        _control_progress("verify:begin")
         try:
             sys.setprofile(self)
             return self.runtime.verify(loaded=loaded)
         finally:
             sys.setprofile(previous)
+            _control_progress("verify:unwound")
 
     def assert_single_guard(self) -> None:
         assert len(self.guard_frames) == 1, self.events
@@ -239,10 +271,12 @@ def _loaded_control(runtime: runtime_module.PDFiumRuntimeAdmission, control: str
     }
     directory = runtime.source.bindings.current_root / "output/readiness/owned-runtime-control"
     expectation = nullcontext() if control == "loaded-positive" else pytest.raises(ValueError, match=expected[control])
+    _control_progress("execution:enter-begin")
     with expectation as failure:
         with full_worker_pdfium_execution(
             provider, directory=directory, deadline=runtime.deadline, runtime_admission=runtime
         ) as execution:
+            _control_progress("execution:body-entered")
             raw = sys.modules["pypdfium2_raw.bindings"]
             loaded = Path(raw._libs["pdfium"]._name).resolve(strict=True)
             assert loaded.is_relative_to(runtime.site)
@@ -258,8 +292,10 @@ def _loaded_control(runtime: runtime_module.PDFiumRuntimeAdmission, control: str
                     cache = Path(raw.__spec__.cached)
                     assert cache.is_relative_to(runtime.prefix) and cache.is_file()
                     cache.write_bytes(cache.read_bytes() + b"Owned changed audited cache\n")
+                    _control_progress("cache:mutation-complete")
                 observation.verify(loaded=loaded)
                 raise AssertionError("The nominated runtime verification must itself refuse")
+    _control_progress("expectation:completed")
     if control == "loaded-positive":
         assert execution.completed_binding is not None
         return {"events": observation.events, "completed_binding": execution.completed_binding}
@@ -374,6 +410,7 @@ def _clone_with_deadline(fixture: tuple[Path, str, str], destination: Path, *, d
             ["clone", "--quiet", "--no-local", "--no-hardlinks", "--no-checkout", str(original / link.path), link.path],
         ),
         (destination / link.path, ["checkout", "--quiet", "--detach", link.oid]),
+        (destination, ["submodule", "init", "--", link.path]),
     )
     environment = {"PATH": os.defpath, "LC_ALL": "C", "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
     for position, (cwd, arguments) in enumerate(commands):
@@ -493,12 +530,21 @@ def test_genuine_pdfium_runtime_guard(complete_reference: tuple[Path, str, str],
     }
     payload_path = workspace / "runtime-input.json"
     payload_path.write_text(json.dumps(payload, sort_keys=True))
+    # Optional markers must not change the child outcome when storage fails.
     bootstrap = bytecode_audit_bootstrap(roots, prefix) + (
-        "import json, pathlib, runpy, sys\n"
+        "import json, os, pathlib, runpy, sys\n"
         "payload = json.loads(pathlib.Path(sys.argv[1]).read_text())\n"
         "sys.path.insert(0, payload['sdk_parent'])\n"
         "sys.path.extend(path for path in payload['dependency_paths'] if path not in sys.path)\n"
+        "try:\n"
+        "    os.write(2, b'pdfium-child-body-begin\\n')\n"
+        "except OSError:\n"
+        "    pass\n"
         "runpy.run_path(payload['test_file'])['_child_control'](payload)\n"
+        "try:\n"
+        "    os.write(2, b'pdfium-child-body-returned\\n')\n"
+        "except OSError:\n"
+        "    pass\n"
     )
     _run_owned(
         [str(interpreter), "-I", "-B", "-X", f"pycache_prefix={prefix}", "-c", bootstrap, str(payload_path)],

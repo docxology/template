@@ -753,3 +753,32 @@ Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-bac
   parent traversal and non-directory parents must refuse while preserving
   unrelated evidence. The Linux nonroot search-only-ancestor proof remains a
   separate control. Expiry or cleanup must never authorize a native tool result.
+
+
+## Durable local trial journaling criterion
+
+- [x] **ISC-129**: Owned local trial agents may explicitly select SQLite WAL
+  with FULL synchronous durability and one committed transaction per observation.
+  SQLite must actually select WAL or refuse; there is no in-memory, NORMAL-sync
+  or per-batch-commit fallback. Ordinary database/agent callers keep their existing
+  journaling behavior. Independent real connections must observe committed rows
+  before the writer closes, and rollback must preserve earlier committed state.
+  All original seeded inventories, agent/tick counts, numerical assertions and
+  case deadlines remain intact; local timings do not establish hosted acceptance.
+  Evidence: the unchanged real SQLite independent-reader/rollback consumers and
+  the complete [Linux release-profile producer](https://github.com/docxology/template/actions/runs/43171241151)
+  establish these declared software controls; no physical power-loss claim follows.
+
+
+## Independent portable process observation criterion
+
+- [x] **ISC-130**: The timeout consumer's independent liveness oracle must
+  distinguish a genuinely live process from a terminated, unreaped child on
+  both supported POSIX platforms. Absence of Linux `/proc` must not turn a
+  confirmed Darwin zombie into a surviving descendant. Unknown observations
+  remain conservative; the actual detached-child timeout control and its
+  original deadline remain mandatory.
+  Evidence: both original consumers passed on Darwin3.14/3.15 in the
+  [exact-source process probe](https://github.com/docxology/template/actions/runs/43183310236);
+  the complete Linux release profile above covers the same unchanged consumers.
+  This narrow criterion does not establish full SDK or release acceptance.

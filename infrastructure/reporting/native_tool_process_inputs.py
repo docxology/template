@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 MAX_STREAM_BYTES = 8 * 1024 * 1024
-STREAM_SCHEMA = "template-native-stream-observation-v1"
+STREAM_OBSERVATION_SCHEMA = "template-native-tool-stream-observation-v1"
 
 
 def _physical_identity(path: Path) -> dict[str, int]:
@@ -64,7 +64,7 @@ def _remaining(deadline: float) -> float:
 
 
 def _stream(path: Path) -> tuple[dict[str, Any], str]:
-    """Retain original stream DATA, not a public repository artifact binding."""
+    """Retain an original absolute label, not a public artifact nomination."""
     digest = hashlib.sha256()
     size, chunks = 0, []
     with path.open("rb") as stream:
@@ -76,7 +76,7 @@ def _stream(path: Path) -> tuple[dict[str, Any], str]:
             chunks.append(chunk)
     raw = b"".join(chunks)
     return {
-        "schema_version": STREAM_SCHEMA,
+        "schema_version": STREAM_OBSERVATION_SCHEMA,
         "path": str(path),
         "sha256": digest.hexdigest(),
         "bytes": size,

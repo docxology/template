@@ -44,11 +44,11 @@ def test_untrusted_stage_three_renders_regular_prepared_sources(
 ) -> None:
     root, project = _project(tmp_path, monkeypatch)
     manuscript = project / "manuscript"
-    (manuscript / "01_opening.md").write_text(
+    (manuscript / "01 Result.md").write_text(
         "# Opening\n\nPrepared **Markdown** with [a link](https://example.org/) and $x^2$.\n\nSee [@local].\n",
         encoding="utf-8",
     )
-    (manuscript / "02_close.md").write_text("# Closing\n\nA second section.\n", encoding="utf-8")
+    (manuscript / "01-result.md").write_text("# Closing\n\nA second section.\n", encoding="utf-8")
     (manuscript / "local.bib").write_text(
         "@book{local, title={Local Bibliography Fixture}, author={Example, Alex}, year={2026}}\n",
         encoding="utf-8",
@@ -61,7 +61,13 @@ def test_untrusted_stage_three_renders_regular_prepared_sources(
     assert "<strong>Markdown</strong>" in combined
     assert 'href="https://example.org/"' in combined
     assert "Local Bibliography Fixture" in combined
-    assert "A second section." in (web / "manuscript__02_close.html").read_text(encoding="utf-8")
+    assert "A second section." in combined
+    pages = {page: page.read_text(encoding="utf-8") for page in web.glob("*.html") if page.name != "index.html"}
+    opening = [page for page, body in pages.items() if "<strong>Markdown</strong>" in body]
+    closing = [page for page, body in pages.items() if "A second section." in body]
+    assert len(opening) == len(closing) == 1
+    assert opening[0].name.casefold() != closing[0].name.casefold()
+    assert all("<script" not in body for body in pages.values())
     assert "<math " in combined
     assert "<script" not in combined
 
@@ -205,17 +211,6 @@ def test_untrusted_html_refuses_temporary_root_with_linked_ancestor(tmp_path: Pa
     with pytest.raises(ValueError, match="symlink component"):
         renderer.render(source)
     assert list((real / "scratch").iterdir()) == []
-
-
-def test_untrusted_stage_three_refuses_casefolded_output_collision(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    root, project = _project(tmp_path, monkeypatch)
-    for filename in ("01 Result.md", "01-result.md"):
-        (project / "manuscript" / filename).write_text("# Prepared text\n", encoding="utf-8")
-
-    assert execute_render_pipeline("template_test", repo_root=root, skip_manuscript_hydration=True) == 1
-    assert not (project / "output" / "web").exists()
 
 
 @pytest.mark.skipif(shutil.which("pandoc") is None, reason="real Pandoc is required")

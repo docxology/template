@@ -53,13 +53,19 @@ def process_bibliography(tex_file: Path, output_dir: Path, bib_files: Sequence[P
             timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
         )
 
-        if result.returncode != 0 and result.stderr.strip():
-            logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
+        if result.returncode != 0:
+            diagnostic = result.stderr.strip() or result.stdout.strip()
+            logger.warning(
+                "Bibliography processing failed (exit %s): %s",
+                result.returncode,
+                diagnostic[:2000],
+            )
+            return False
 
         logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
         return True
 
-    except Exception as e:  # noqa: BLE001
+    except (OSError, subprocess.SubprocessError) as e:
         logger.warning(f"Bibliography processing failed: {e}", exc_info=True)
         return False
 

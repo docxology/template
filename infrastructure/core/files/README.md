@@ -2,6 +2,11 @@
 
 File cleanup, inventory, and output-copying helpers for `infrastructure.core`.
 
+Package exports retain their existing providers and resolve on first use through
+the established SDK lazy-export pattern. Importing a leaf such as `secure_write`
+does not initialize cleanup, inventory or copying; requested public providers
+are cached for subsequent access.
+
 ## Files
 
 - `operations.py` — symlink-confined recursive local-mirror copying with PDF,

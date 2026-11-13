@@ -83,7 +83,7 @@
           "file_count": 10,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "1.98"
+          "size_mb": "2.02"
         }
       },
       "file_counts": {
@@ -191,7 +191,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 1.98
+            "size_mb": 2.02
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -203,7 +203,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.85809326171875
+      "total_size_mb": 5.897022247314453
     },
     "figures": {
       "files": 15,
@@ -212,7 +212,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 1.4802303314208984
+      "size_mb": 1.4801568984985352
     },
     "stable_inventory": {
       "categories": {
@@ -226,11 +226,11 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 1552134
+          "size_bytes": 1552057
         },
         "reports": {
           "files": 4,
-          "size_bytes": 4369
+          "size_bytes": 4376
         },
         "slides": {
           "files": 6,
@@ -238,12 +238,12 @@
         },
         "web": {
           "files": 10,
-          "size_bytes": 2078367
+          "size_bytes": 2119257
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 38,
-      "total_size_bytes": 6142656
+      "total_size_bytes": 6183476
     }
   },
   "recommendations": [],
@@ -254,57 +254,57 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-13T11:04:04Z",
+  "timestamp": "2026-11-13T15:23:36Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4eba79d7d5edb4f37eca3b13f411d7dfeb7966d99f2933c21817a39bdc77dad7",
+      "sha256": "7210617a8390fcd024b76dc1171f0d3b7a34e53c35878f8f481819b3c88b7184",
       "size_bytes": 12668
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
-      "size_bytes": 4633
+      "sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
+      "size_bytes": 6013
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "05018d90b902106a1109809faba4f80eec6032be03f899a1a6e53860e8a89c32",
-      "size_bytes": 1697
+      "sha256": "a650891bedb0103173b95bc5958ffa176ef71cea9f6e83b33809bc244923ab90",
+      "size_bytes": 1704
     },
     "consumed_manuscript": [
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+        "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
         "source_path": "manuscript/00_abstract.md",
         "source_sha256": "6dac67c69bb6b7552420ad3c9da7ace1e361c3ccb0e32d8c4bf478fb488a8c64"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+        "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
         "source_path": "manuscript/01_introduction.md",
         "source_sha256": "15bfeaa33bafe7ff66490be186341c2e8b6b2fe93cacb0fcfa81eed3148bb092"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+        "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
         "source_path": "manuscript/02_architecture.md",
         "source_sha256": "b5d67db2dc82868a1be89d6d1deef3d825837dccdbca013f408309b757a888f6"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+        "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
         "source_path": "manuscript/03_story_and_graphics.md",
         "source_sha256": "6cc28869475ee90b89e3f2dd3463ca645ec9a24a44364a1aa9a53c49263eaf02"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+        "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
         "source_path": "manuscript/04_reproducibility.md",
         "source_sha256": "13750ef7f2e3fb48e23659f56ee9bcf21ba98ecdfe8d2669083c26feecc1a9c0"
       },
       {
         "rendered_path": "output/web/_combined_manuscript.md",
-        "rendered_sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
+        "rendered_sha256": "9b1e3fe9a6597233b3258ce6a617c1abb921ab29c877aee1373bc6fc9888ae5e",
         "source_path": "manuscript/99_references.md",
         "source_sha256": "e47938c4007f3e479c55570940821395c2c2cf228beffbd18bb505c9748c1a6c"
       }
@@ -312,19 +312,19 @@
     "fingerprints": {
       "config": {
         "file_count": 15,
-        "sha256": "b11b84e6079117b7751c7b0fee29e9f8e0b95579f8b4fd808d9ac4b348356b6f"
+        "sha256": "38e6f3ea8126fe81aaf9976f202d3a424656b5c1a6c2361d80a2b2cfe871e31c"
       },
       "output": {
         "file_count": 38,
-        "sha256": "00a343242631d37f22ac4d455e503e73f45c011339f633d9e7455dce6d4d6b9a"
+        "sha256": "ee09516814f610c7672d15ce46e080967ce7d13dd32e46737a98a019a5db83c1"
       },
       "source": {
         "file_count": 35,
         "sha256": "5e2252c9831dbe5a4f6f5778c880f1e01a33e7670938ec454e0a45aa2fe72fc0"
       },
       "stage": {
-        "file_count": 1770,
-        "sha256": "cc3f1a1616481a3bd11a9d76cdd898ab312db2dbf8815bcb9ab7512e274f20fb"
+        "file_count": 1764,
+        "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
       }
     },
     "project": "templates/template_storybook",

@@ -700,6 +700,26 @@ def test_interrupted_supervisor_still_cleans_detached_owned_children(tmp_path: P
             _remove_owned_control(pid, code)
 
 
+@pytest.mark.skipif(sys.platform not in {"darwin", "linux"}, reason="process-age census requires Darwin or Linux")
+def test_process_age_preserves_guardian_lifetime_boundary() -> None:
+    from infrastructure.core._bounded_kill import _preexisting_process
+
+    before = time.monotonic() - 2
+    child = subprocess.Popen(
+        [sys.executable, "-I", "-c", "import sys; sys.stdin.buffer.read(1)"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    try:
+        deadline = time.monotonic() + 10
+        assert not _preexisting_process(child.pid, before, deadline)
+        assert _preexisting_process(child.pid, time.monotonic() + 2, deadline)
+    finally:
+        child.communicate(input=b"\n", timeout=10)
+    assert child.returncode == 0
+
+
 @pytest.mark.skipif(sys.platform != "linux", reason="procfs is required for the non-dumpable control")
 def test_preexisting_non_dumpable_process_is_outside_guardian_start_scope() -> None:
     import select
@@ -738,8 +758,8 @@ time.sleep(30)
         assert ready == f"{restricted.pid}\n".encode()
         assert restricted.poll() is None
         birth = time.monotonic()
-        # A pre-existing non-dumpable daemon cannot hold this run's token and is
-        # outside the guardian start scope, so it cannot fail final census.
+        # The explicitly later guardian boundary excludes this older process,
+        # even though its unreadable environment contains the supplied token.
         assert (
             observe_bounded_run_processes(
                 token,

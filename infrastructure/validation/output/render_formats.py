@@ -20,19 +20,10 @@ from infrastructure.core.pipeline.artifacts import (
     StableOutputInventory,
     collect_stable_output_inventory,
 )
-from infrastructure.rendering._slides_participation import is_beamer_manuscript_section, skips_beamer
-from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.config import (
     RenderingConfig,
     load_render_config_for_verification,
     render_config_manuscript_dir as render_config_manuscript_dir,
-)
-from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
-from infrastructure.rendering.output_validation import (
-    validate_combined_html,
-    validate_docx_output,
-    validate_epub_output,
-    validate_slide_artifacts,
 )
 
 logger = get_logger(__name__)
@@ -173,6 +164,7 @@ def remove_disabled_render_outputs(
 
 def _validate_combined_pdf(output_dir: Path, project_basename: str) -> bool:
     """Validate the copied combined PDF without consulting a source fallback."""
+    from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 
     candidates = (
         output_dir / f"{project_basename}_combined.pdf",
@@ -197,6 +189,8 @@ def _validate_combined_pdf(output_dir: Path, project_basename: str) -> bool:
 
 def _expected_slide_outputs(output_dir: Path, manuscript_dir: Path) -> list[Path] | None:
     """Return exact Beamer deliverables expected from current manuscript inputs."""
+    from infrastructure.rendering._slides_participation import is_beamer_manuscript_section, skips_beamer
+    from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 
     source_files = discover_manuscript_files(manuscript_dir)
     if not source_files:
@@ -225,6 +219,7 @@ def _validate_slide_outputs(
     slides_profile: str = "archive",
 ) -> bool:
     """Validate slide identities under the selected profile contract."""
+    from infrastructure.rendering.output_validation import validate_slide_artifacts
 
     if manuscript_dir is None:
         expected = sorted((output_dir / "slides").glob("*_slides.pdf"))
@@ -249,6 +244,8 @@ def _validate_slide_outputs(
 
 
 def _validate_epub_output(output_dir: Path, project_basename: str) -> bool:
+    from infrastructure.rendering.output_validation import validate_epub_output
+
     return validate_epub_output(output_dir, project_basename, logger=logger)
 
 
@@ -298,10 +295,14 @@ def validate_enabled_render_outputs(
         )
         checks.append(("PDF", pdf_valid))
     if "html" in enabled:
+        from infrastructure.rendering.output_validation import validate_combined_html
+
         checks.append(("HTML", validate_combined_html(output_dir, logger=logger)))
     if "slides" in enabled:
         checks.append(("slides", _validate_slide_outputs(output_dir, manuscript_dir, slides_profile=slides_profile)))
     if "docx" in enabled:
+        from infrastructure.rendering.output_validation import validate_docx_output
+
         checks.append(("DOCX", validate_docx_output(output_dir, project_basename, logger=logger)))
     if "epub" in enabled:
         checks.append(("EPUB", _validate_epub_output(output_dir, project_basename)))

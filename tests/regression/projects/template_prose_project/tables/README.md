@@ -1,6 +1,5 @@
-# `template_prose_project` — table regression tests
+# `template_prose_project` — bibliography source integrity
 
-> One file per manuscript table. Re-derives each cell value via
-> the project's deterministic pipeline and compares to the pinned
-> ground truth in
-> [`../../../pinned_values/template_prose_project.json`](../../../pinned_values/template_prose_project.json).
+`test_editorial_report_claims.py` derives the current manuscript's citation keys
+and requires that its current bibliography resolves them. It does not freeze
+editorial metrics or claim to validate external references' truth.

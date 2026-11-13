@@ -39,7 +39,7 @@ do not assume they are available from a package index. Run from the standalone
 checkout's root:
 
 ```bash
-python -I -m pytest tests/ --cov=src --cov-fail-under=90
+python -IB -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 The standalone command uses its own `pyproject.toml`; it requires no Root-stage

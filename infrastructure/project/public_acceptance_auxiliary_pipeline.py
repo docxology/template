@@ -194,7 +194,7 @@ def run_pipeline(
     with tempfile.TemporaryDirectory(prefix="pipeline-source-") as temporary:
         copied = Path(temporary).resolve() / "source"
         copied.mkdir()
-        print(
+        sys.stdout.write(
             json.dumps(
                 {
                     "role": "diagnostic-only-pipeline-progress",
@@ -202,11 +202,12 @@ def run_pipeline(
                     "phase": "copy-public-source",
                     "original_deadline_monotonic": deadline,
                 }
-            ),
-            flush=True,
+            )
+            + "\n"
         )
+        sys.stdout.flush()
         files = copy_public_pipeline_source(root, copied, reader)
-        print(
+        sys.stdout.write(
             json.dumps(
                 {
                     "role": "diagnostic-only-pipeline-progress",
@@ -214,9 +215,10 @@ def run_pipeline(
                     "phase": "prepare-original-child",
                     "public_source_files": len(files),
                 }
-            ),
-            flush=True,
+            )
+            + "\n"
         )
+        sys.stdout.flush()
         # File-only exports omit authored empty directories that enter the unchanged compiler's identity.
         for source_root, rows in _source_records(root, scope):
             for relative, kind, _ in rows:
@@ -305,7 +307,7 @@ def run_pipeline(
         command, payload = prepare_audited_auxiliary_command(
             Path(sys.executable), copied, PIPELINE, ("--child-spec", str(spec_path)), inner / "execution"
         )
-        print(
+        sys.stdout.write(
             json.dumps(
                 {
                     "role": "diagnostic-only-pipeline-progress",
@@ -313,9 +315,10 @@ def run_pipeline(
                     "phase": "launch-original-child",
                     "original_deadline_monotonic": deadline,
                 }
-            ),
-            flush=True,
+            )
+            + "\n"
         )
+        sys.stdout.flush()
         process = supervise(
             command,
             copied,

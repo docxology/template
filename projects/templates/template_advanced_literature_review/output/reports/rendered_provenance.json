@@ -142,22 +142,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "7aa6605796a74fc775541d790df2ba428967116d43f5eeaf297c0d34628a134a",
+      "sha256": "08fc94dd81a0a3de5960962d0780c9c3f74add39730d95b6105ac92b161f6cda",
       "size_bytes": 34071
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "63635e3c74f7b50377ea9142b089a49897bfd9bc3d1ac600a7946b33ff1aefc0",
-      "size_bytes": 76542
+      "sha256": "8d7a224dfbd8b463e8204cfc8fa8905251837a32c509393533557948d629dc10",
+      "size_bytes": 76661
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "34ecfa206da6a02a094f21ef7132ab29c86fd75f051da78f2e35e8b26a4e1d0e",
+      "sha256": "3b3c427c9a4ca866efa7249a6954cf2b0dc253c6918fd913f29264cbf66113df",
       "size_bytes": 5251
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9aa7f80fcbc83e5f76018abbef5ee7e78f8deb00660178fa9a8e15b48c89d142",
+      "sha256": "d1aa0f18f7312f3634dda84b370d92d0d31520022f5b8f35b4cbdd7231620d0f",
       "size_bytes": 16095
     }
   },
@@ -165,19 +165,19 @@
   "fingerprints": {
     "config": {
       "file_count": 21,
-      "sha256": "b77408a4c27e74b6b3bd0330b243de922022b3a04d02d67d0dade11bebc3b01c"
+      "sha256": "f3b4e69a7d0a49bf45de4f776c6f45a84b50deea9a85d843dea58cc2f41f5e12"
     },
     "output": {
       "file_count": 103,
-      "sha256": "3821521d2b7128a593a28a3c150d2e4e7c02e2e6e304c423e53c91400a34306d"
+      "sha256": "1d0608ad8b0d086563458bfbd09973447b393a51993c3ff6789dc58ad3e50647"
     },
     "source": {
       "file_count": 101,
-      "sha256": "ebcc23444726d54ca9665d9fd07fff7ffbf0c22c0df0769123fb0b5b079f6dd5"
+      "sha256": "053599c9deb2dcd9d5053402eb95c92fc50109ae7b56fd0cba1491b9edc1dfab"
     },
     "stage": {
-      "file_count": 1770,
-      "sha256": "cc3f1a1616481a3bd11a9d76cdd898ab312db2dbf8815bcb9ab7512e274f20fb"
+      "file_count": 1764,
+      "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
     }
   },
   "project": "templates/template_advanced_literature_review",

@@ -6,6 +6,9 @@ The `infrastructure/core/files/` package contains file cleanup, inventory, and o
 
 ## Files
 
+- `__init__.py` - existing public exports resolve lazily with explicit typing
+  imports and cached provider identities; leaf readers must not initialize
+  unrelated cleanup, inventory or copy modules
 - `operations.py` - symlink-confined recursive local-mirror copying and per-format counts, including DOCX and EPUB; Stage 5 separately validates and reports the stable/shippable publication subset
 - `serialization.py` - shared JSON/YAML read + relative-path helpers (`read_json_object`, `load_yaml_mapping`, `relative_or_self`) reused across infrastructure
 - `portability.py` - sanitizes machine-local home prefixes from text publication artifacts before hashing/copying

@@ -61,6 +61,12 @@ the public tool assets handed to the isolated CI user. The full store closure
 stays installed; the execution profile still refuses escaping asset symlinks.
 Preparation failures block observation and never certify an acceptance gate.
 
+APT update and install commands use 20-second HTTP/HTTPS connection and
+data-idle bounds with one additional acquisition attempt. A stalled mirror
+returns control to APT without changing the reviewed fallback URLs, signature
+checks, package selections or overall job budgets. This is not a total
+installation deadline or an acceptance result.
+
 In native mode, the action prepares pinned Pandoc and crossref before the shared system-dependency
 audit, then installs the complete Linux TeX/reader package union in one step or
 prepares BasicTeX and native readers on macOS. Both platforms probe the selected

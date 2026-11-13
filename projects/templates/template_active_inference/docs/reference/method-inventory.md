@@ -1289,11 +1289,11 @@ Total documented definitions: 896
 | 209 | `function` | `_copy_replay_inputs` | inventory fallback | Inventory fallback for function `_copy_replay_inputs` defined at `src/validation_spine/artifacts.py:209`. |
 | 218 | `function` | `build_reproducibility_replay` | docstring | Replay deterministic toy producers in a temporary tree and compare outputs. |
 | 295 | `function` | `build_counterexample_matrix` | docstring | Document expected-failure fixtures that keep the gates falsifiable. |
-| 399 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
-| 426 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
-| 482 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
-| 534 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
-| 563 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
+| 396 | `function` | `write_validation_spine_artifacts` | docstring | Write provenance, replay, and counterexample artifacts. |
+| 423 | `function` | `validate_artifact_provenance` | docstring | Validate artifact provenance. |
+| 479 | `function` | `validate_reproducibility_replay` | docstring | Validate reproducibility replay. |
+| 531 | `function` | `validate_counterexample_matrix` | docstring | Validate counterexample matrix. |
+| 560 | `function` | `validate_validation_spine` | docstring | Return all validation-spine artifact issues. |
 
 ## `src/visualizations/animation.py`
 

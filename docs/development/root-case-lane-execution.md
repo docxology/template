@@ -4,6 +4,15 @@ The Root v2 census, explicit case policy, and lane execution are distinct record
 
 The source-owned Root declaration is an exact `[tool.template.root_acceptance]` table with integer `schema_version = 3`, `policy`, and `prerequisites`. Both paths stay in `infrastructure/config/` and name public JSON files. The policy uses `template-root-case-policy-v3`; prerequisites use `template-root-case-prerequisites-v2` with an exact row for every declared obligation. Every row binds `id`, `kind`, `environment_keys`, `executables`, and `platforms`. Missing declarations or required capabilities block execution. Extra declarations, unknown obligation IDs, and source changes refuse admission.
 
+Review the whole fixture path, not only the case body. A negative control that
+requests `complete_reference` still needs native Git for its genuine clone,
+checkout and fixture commit. Keep a prerequisite-free exception only when the
+actual source refuses before that fixture or external operation. Canonical
+observations bind each fixture's complete source-file digest; changing a helper
+there requires fresh consumer metadata even when the consuming module is
+unchanged. Retired incidental families and their obsolete exceptions leave the
+literal policy together; they are not waived execution evidence.
+
 Network obligations additionally bind an actual reviewed public JSON record with schema `template-unpaid-operation-eligibility-v1`, provider, operation, `billing: unpaid`, verified and expiration UTC timestamps, public primary HTTPS sources, and the exact credential key names. The record must remain source-current and within at most 30 days of verification. Loading it verifies the reviewed record's identity and freshness; it does not perform fresh internet verification or authorize billing. A network marker cannot authorize a paid operation. Paid provider execution remains outside this program.
 
 `produce_root_lane(root, fresh_directory, census_bundle=original_bundle, lane=exact_lane, mode='core')` runs only the actual selected interpreter and actual SDK. `core` is the default. Live lanes require explicit `mode='live'` and source-owned prerequisites. Core subprocesses are credential-free. Missing tools or configuration yield blocked `75`; missing required lanes remain required and cannot be converted to skips.

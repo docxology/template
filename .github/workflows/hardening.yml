@@ -381,6 +381,37 @@ jobs:
           scratch=$(mktemp -d "$RUNNER_TEMP/uv-offline-warm.XXXXXX")
           UV_PROJECT_ENVIRONMENT="$scratch/venv" uv sync --frozen --no-python-downloads \
             --python .venv/bin/python
+          uv export --locked --only-group installed-build --no-emit-project \
+            --no-header --no-annotate --output-file "$scratch/native-build-requirements.txt"
+          .venv/bin/python -B - "$scratch/native-runtime-requirements.txt" <<'PYTHON'
+          import shutil
+          import subprocess
+          import sys
+          from pathlib import Path
+          from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
+          from infrastructure.reporting.native_installed_preparation import native_runtime_export_command
+
+          root = Path.cwd()
+          requirements = Path(sys.argv[1])
+          uv = shutil.which("uv")
+          assert uv is not None, "native runtime preparation requires uv"
+          command = native_runtime_export_command(Path(uv), root, requirements, python=Path(sys.executable))
+          subprocess.run(command, check=True)
+          normalize_locked_dependency_export(
+              root, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
+          )
+          PYTHON
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$scratch/native-build-environment"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$scratch/native-build-environment/bin/python" \
+            "$scratch/native-build-requirements.txt"
+          # Match native cache preparation: only Source-locked build tools are
+          # importable by sdist backends; runtime packages go to a separate target.
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$scratch/native-build-environment/bin/python" \
+            --target "$scratch/prepared-dependencies" \
+            --requirements "$scratch/native-runtime-requirements.txt"
           rm -rf "$scratch"
 
       - name: Verify selected Python minor
@@ -394,30 +425,77 @@ jobs:
 
       - uses: ./.github/actions/setup-acceptance-documents
 
+      - name: Prepare actual MathJax viewport browser tools
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+          export PLAYWRIGHT_BROWSERS_PATH="$PWD/.tmp/playwright-browsers"
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
+          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
+
+      - uses: ./.github/actions/setup-ci-execution-user
+        if: runner.os == 'Linux'
+
       - name: Run infrastructure tests
         env:
-          COVERAGE_FILE: .coverage.infra
           # Coverage instrumentation is memory-intensive on macOS; keep that
           # runner deterministic while retaining wider auto-parallelism on Linux.
           TEMPLATE_CI_XDIST_WORKERS: ${{ matrix.os == 'macos-latest' && '2' || 'auto' }}
           # All four py3.14/Linux shards instrument real execution. The required
           # coverage-infra job merges their complete union and enforces 60%.
           INFRA_COV_FLAGS: ${{ (matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04') && '--cov=infrastructure --cov-report= --cov-fail-under=0' || '' }}
-        # -n auto parallelizes across runner cores (pytest-xdist). Scope-based
-        # distribution keeps subprocess-heavy test modules together, avoiding
-        # intermittent worker replacement under work-stealing contention.
+        # Keep every selected case, but do not serialize long native controls on
+        # one worker or requeue completed scopes after a crash. The Linux payload
+        # uses a fresh UID and explicit runtime DATA, not the runner's environment.
         run: |
+          executor=()
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            executor=(.venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+              --state "$RUNNER_TEMP/template-ci-execution/state.json" --)
+          fi
+          diagnostics=()
+          if [[ "$RUNNER_OS" == macOS ]]; then
+            diagnostics=(--basetemp "$RUNNER_TEMP/template-infra-case-workspaces"
+              -o faulthandler_timeout=90 -o faulthandler_exit_on_timeout=false)
+          fi
           # shellcheck disable=SC2086  # INFRA_COV_FLAGS is intentionally word-split
-          uv run pytest tests/infra_tests/ \
+          "${executor[@]}" /usr/bin/env COVERAGE_FILE=.coverage.infra UV_PYTHON="$PWD/.venv/bin/python" .venv/bin/python -m pytest tests/infra_tests/ \
             -p infrastructure.core.testing.ci_infra_shard_plugin \
             --infra-ci-shard "${{ matrix.shard }}" \
             -n "$TEMPLATE_CI_XDIST_WORKERS" \
-            --dist loadscope \
+            --dist load --maxschedchunk=1 \
             --benchmark-disable \
             $INFRA_COV_FLAGS \
+            "${diagnostics[@]}" \
+            --junitxml="output/readiness/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml" \
             --durations=10 \
             -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
             --timeout=120
+
+      - name: Verify completed MathJax equations across live viewport changes
+        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run \
+            --state "$RUNNER_TEMP/template-ci-execution/state.json" -- \
+            /usr/bin/env NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
+            PLAYWRIGHT_BROWSERS_PATH="$PWD/.tmp/playwright-browsers" \
+            .tmp/playwright-node/node_modules/.bin/playwright test \
+            tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
+            --workers=1 --output=.tmp/mathjax-browser
+
+      - name: Export actual infrastructure coverage shard
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
+          .venv/bin/python scripts/gates/infra_ci_partition.py --export-shard "${{ matrix.shard }}"
+
+      - name: Export original Linux infrastructure readiness bytes
+        if: ${{ always() && runner.os == 'Linux' }}
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
 
       - name: Preserve partial infrastructure controller diagnostics
         if: ${{ always() }}
@@ -425,32 +503,50 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: output/readiness/ordinary-infra-ci/diagnostics/shard-${{ matrix.shard }}.json
+          path: ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/diagnostics/shard-${{ matrix.shard }}.json
           if-no-files-found: warn
 
-      # CI-PLAYWRIGHT-SCHEDULE-1: browser provisioning costs several minutes,
-      # so PR and push runs skip it; the MathJax live-viewport spec still runs
-      # on the weekly scheduled (and manually dispatched) lanes.
-      - name: Verify completed MathJax equations across live viewport changes
-        if: matrix.shard == 0 && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
-        run: |
-          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-          npm install --prefix .tmp/playwright-node --no-package-lock --no-save @playwright/test@1.62.1
-          .tmp/playwright-node/node_modules/.bin/playwright install --with-deps chromium
-          NODE_PATH="$PWD/.tmp/playwright-node/node_modules" \
-            .tmp/playwright-node/node_modules/.bin/playwright test \
-            tests/infra_tests/rendering/mathjax_reflow.spec.cjs \
-            --workers=1 --output=.tmp/mathjax-browser
-
-      - name: Export actual infrastructure coverage shard
-        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'
-        run: uv run python scripts/gates/infra_ci_partition.py --export-shard "${{ matrix.shard }}"
+      - name: Preserve original infrastructure case outcomes and native diagnostics
+        if: ${{ always() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: infra-case-diagnostics-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
+          path: |
+            ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/junit/shard-${{ matrix.shard }}.xml
+            ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/pytest-case-diagnostics/
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/*.exit
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/actual-runtime.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/runtime-input.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/runtime-observation.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/complete-public-source-data[0-9]*.git-stage.trace2.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/cli-observations/*/timeout.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/operator/diagnostics/*.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/sequence/diagnostics/*.exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/audited-child/original-wrapper-exit.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.stdout
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/*.stderr
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/html-python-source-*/plan.json
+            ${{ runner.temp }}/template-infra-case-workspaces/popen-gw[0-9]*/test_*[0-9]/output/readiness/evidence/html-python-source-*/closure.json
+          if-no-files-found: warn
 
       - name: Upload complete selection record
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-selection-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.shard }}
-          path: output/readiness/ordinary-infra-ci/shard-${{ matrix.shard }}.json
+          path: ${{ runner.os == 'Linux' && env.TEMPLATE_CI_ARTIFACT_DIRECTORY || 'output/readiness' }}/ordinary-infra-ci/shard-${{ matrix.shard }}.json
           if-no-files-found: error
 
       - name: Upload actual infrastructure coverage shard
@@ -458,7 +554,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-coverage-shard-${{ matrix.shard }}
-          path: output/readiness/ordinary-infra-ci/coverage-data/infra-coverage-shard-${{ matrix.shard }}/
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/ordinary-infra-ci/coverage-data/infra-coverage-shard-${{ matrix.shard }}/
           if-no-files-found: error
 
   coverage-infra:
@@ -534,19 +630,32 @@ jobs:
 
       - name: Prepare the genuine locked Active coverage environment
         timeout-minutes: 10
-        run: uv sync --project projects/templates/template_active_inference --locked --extra dev --python .venv/bin/python
+        run: |
+          .venv/bin/python -m venv --copies --without-pip projects/templates/template_active_inference/.venv
+          uv sync --project projects/templates/template_active_inference --locked --extra dev --python .venv/bin/python
+
+      - uses: ./.github/actions/setup-ci-execution-user
 
       - name: Run slow-marked infrastructure tests
         run: >-
-          uv run pytest tests/infra_tests/
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user run
+          --state "$RUNNER_TEMP/template-ci-execution/state.json" --
+          /usr/bin/env UV_PYTHON="$PWD/.venv/bin/python"
+          .venv/bin/python -m pytest tests/infra_tests/
           -m slow
           -p infrastructure.core.testing.ci_infra_shard_plugin
           --infra-ci-observer-only slow
           -n auto
-          --dist loadscope
+          --dist load --maxschedchunk=1
           --benchmark-disable
           --durations=10
           --timeout=1200
+
+      - name: Export original slow-lane readiness bytes
+        if: always()
+        run: >-
+          .venv/bin/python -m infrastructure.core.testing.ci_execution_user export
+          --state "$RUNNER_TEMP/template-ci-execution/state.json"
 
       - name: Preserve partial slow-lane controller diagnostics
         if: ${{ always() }}
@@ -554,7 +663,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: infra-diagnostics-slow
-          path: output/readiness/ordinary-infra-ci/diagnostics/shard-slow.json
+          path: ${{ env.TEMPLATE_CI_ARTIFACT_DIRECTORY }}/ordinary-infra-ci/diagnostics/shard-slow.json
           if-no-files-found: warn
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -706,19 +815,22 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        # `public-exemplars` is the single deterministic dependency contract
-        # for every canonical public project, including scientific, literature,
-        # PPTX, and monitoring dependencies. Prepare the locked backend before
-        # genuine standalone-wheel controls run with networking disabled.
-        run: uv sync --locked --group public-exemplars --group installed-build
+        # The Active replay also needs its existing opt-in runtime group in
+        # this selected interpreter. Other project cells keep the base groups.
+        shell: bash
+        run: |
+          set -euo pipefail
+          groups=(--group public-exemplars --group installed-build)
+          if [ "${{ matrix.project }}" = templates/template_active_inference ]; then
+            groups+=(--group active-inference)
+          fi
+          uv sync --locked "${groups[@]}"
 
       - name: Prepare exact standalone runtime dependencies
-        # The genuine standalone-wheel control installs the root build backend
-        # and the standalone runtime with `uv pip sync --offline --no-config
-        # --no-build --require-hashes`. A lockfile `uv sync` fetches wheels by
-        # their locked URLs and never records the registry entries that an
-        # offline `uv pip sync` resolves from, so warm both exact hash-pinned
-        # sets through the same installer here, while the network is allowed.
+        # Keep the native cache preparation model: hash-locked installed-build
+        # tools alone serve source backends, and runtime dependencies install to
+        # a separate target without build isolation or dependency resolution.
+        # The fresh offline standalone consumer retains --no-build.
         if: matrix.project == 'templates/template_autoresearch_project'
         timeout-minutes: 5
         run: |
@@ -730,13 +842,19 @@ jobs:
             --locked --no-default-groups --no-emit-project --no-emit-local \
             --no-header --no-annotate \
             --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
-          for kind in build runtime; do
-            uv venv --no-project --no-python-downloads --python .venv/bin/python \
-              "$RUNNER_TEMP/autoresearch-$kind-preparation"
-            uv pip sync --no-config --no-build --require-hashes \
-              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
-              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
-          done
+          .venv/bin/python -B -m infrastructure.project.locked_dependency_export \
+            --metadata-root projects/templates/template_autoresearch_project \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
+            --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$RUNNER_TEMP/autoresearch-build-preparation"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            "$RUNNER_TEMP/autoresearch-build-requirements.txt"
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            --target "$RUNNER_TEMP/autoresearch-build-preparation/prepared-dependencies" \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
 
       # Active Inference and Formal execute their declared Lean proofs in
       # ordinary Stage 01 (Formal also runs TLC with the runner's Java and its
@@ -762,21 +880,21 @@ jobs:
       - name: Install elan and the pinned Lean toolchain
         if: steps.lean-pin.outputs.file != ''
         timeout-minutes: 15
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPLATE_ELAN_DOWNLOAD_RETRIES: "0"
+          TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS: "0"
         run: |
           set -euxo pipefail
-          curl -sSf \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" \
-            | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          source scripts/shell/prepare_pinned_elan.sh
           "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "${{ steps.lean-pin.outputs.file }}")"
           java -version
 
       - name: Prepare the exact external TLC provider for Formal
         if: matrix.project == 'templates/template_formal'
         timeout-minutes: 5
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           pins=$(python3 -S - <<'PY'
@@ -802,8 +920,8 @@ jobs:
           if set(values) != fields:
               raise SystemExit("TLC source pin tuple is incomplete")
           url, digest, size = values["TLC_URL"], values["TLC_SHA256"], values["TLC_BYTES"]
-          if type(url) is not str or re.fullmatch(r"https://github\.com/tlaplus/tlaplus/releases/download/[A-Za-z0-9._-]+/tla2tools\.jar", url) is None:
-              raise SystemExit("TLC URL must be an exact HTTPS official release locator")
+          if type(url) is not str or re.fullmatch(r"https://api\.github\.com/repos/tlaplus/tlaplus/releases/assets/[1-9][0-9]*", url) is None:
+              raise SystemExit("TLC URL must be an exact HTTPS official immutable asset locator")
           if type(digest) is not str or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
               raise SystemExit("TLC SHA256 must be 64 lowercase hexadecimal characters")
           if type(size) is not int or not 0 < size <= 64 * 1024 * 1024:
@@ -814,7 +932,9 @@ jobs:
           read -r url expected_sha expected_bytes <<< "$pins"
           tool=$(mktemp -d "$RUNNER_TEMP/template-formal-tlc.XXXXXX")
           jar="$tool/tla2tools.jar"
-          curl --fail --location --proto '=https' --proto-redir '=https' --retry 2 --max-time 120 --output "$jar" "$url"
+          curl --fail --location --header 'Accept: application/octet-stream' \
+            --header "Authorization: Bearer $GH_TOKEN" --proto '=https' --proto-redir '=https' \
+            --retry 2 --max-time 120 --output "$jar" "$url"
           actual_bytes=$(wc -c < "$jar" | tr -d '[:space:]')
           if [ "$actual_bytes" != "$expected_bytes" ]; then
             printf 'TLC byte length mismatch: expected %s, got %s\n' "$expected_bytes" "$actual_bytes" >&2
@@ -963,15 +1083,13 @@ jobs:
             lake-build-${{ runner.os }}-
 
       - name: Install elan (lean + lake)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPLATE_ELAN_DOWNLOAD_RETRIES: "0"
+          TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS: "0"
         run: |
           set -euxo pipefail
-          curl -sSf \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" \
-            | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          source scripts/shell/prepare_pinned_elan.sh
 
       - name: Pin Lean toolchain and warm Lake build
         working-directory: projects/fep_lean/lean
@@ -1439,12 +1557,11 @@ jobs:
           python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --locked --group public-exemplars --group installed-build
+        run: uv sync --locked --group public-exemplars --group installed-build --group active-inference
 
       - name: Prepare exact standalone runtime dependencies
-        # Same preparation as the test-project Autoresearch cell: warm the
-        # root installed-build backend and the standalone runtime through the
-        # offline fixture's exact installer while the network is allowed.
+        # Same Source-locked backend and separate runtime target preparation as
+        # the test-project Autoresearch cell; the offline consumer stays no-build.
         timeout-minutes: 5
         run: |
           set -euo pipefail
@@ -1455,13 +1572,19 @@ jobs:
             --locked --no-default-groups --no-emit-project --no-emit-local \
             --no-header --no-annotate \
             --output-file "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
-          for kind in build runtime; do
-            uv venv --no-project --no-python-downloads --python .venv/bin/python \
-              "$RUNNER_TEMP/autoresearch-$kind-preparation"
-            uv pip sync --no-config --no-build --require-hashes \
-              --python "$RUNNER_TEMP/autoresearch-$kind-preparation/bin/python" \
-              "$RUNNER_TEMP/autoresearch-$kind-requirements.txt"
-          done
+          .venv/bin/python -B -m infrastructure.project.locked_dependency_export \
+            --metadata-root projects/templates/template_autoresearch_project \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt" \
+            --minor "$(.venv/bin/python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+          uv venv --no-project --no-python-downloads --python .venv/bin/python \
+            "$RUNNER_TEMP/autoresearch-build-preparation"
+          uv pip sync --no-config --no-build --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            "$RUNNER_TEMP/autoresearch-build-requirements.txt"
+          uv pip install --no-config --no-build-isolation --no-deps --require-hashes \
+            --python "$RUNNER_TEMP/autoresearch-build-preparation/bin/python" \
+            --target "$RUNNER_TEMP/autoresearch-build-preparation/prepared-dependencies" \
+            --requirements "$RUNNER_TEMP/autoresearch-runtime-requirements.txt"
 
       - uses: ./.github/actions/setup-acceptance-fixtures
 
@@ -1469,14 +1592,13 @@ jobs:
 
       - name: Prepare the exact harmonized Lean toolchain
         timeout-minutes: 20
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEMPLATE_ELAN_DOWNLOAD_RETRIES: "0"
+          TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS: "120"
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --location --max-time 120 \
-            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
-            -o "$RUNNER_TEMP/elan-init.sh"
-          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" | sha256sum --check --status
-          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          source scripts/shell/prepare_pinned_elan.sh
           active_pin=$(cat projects/templates/template_active_inference/lean/lean-toolchain)
           formal_pin=$(cat projects/templates/template_formal/formal/lean/lean-toolchain)
           test -n "$active_pin" && test "$active_pin" = "$formal_pin"
@@ -1501,10 +1623,12 @@ jobs:
           echo "TEMPLATE_SIA_TEST_IMAGE=$SIA_SANDBOX_IMAGE" >> "$GITHUB_ENV"
 
       - name: Run receipt-bearing public matrix
+        # Do not contend real database experiment fixtures across outer projects.
+        # Preserve every scope, test clock, marker expression and coverage floor.
         run: >-
           uv run python scripts/pipeline/stage_01_test.py
           --project-only --all-projects --public-projects
-          --project-workers auto
+          --project-workers 1
           --receipt public_matrix_receipt.json
 
       - name: Upload public-matrix receipt

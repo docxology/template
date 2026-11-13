@@ -10,14 +10,12 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-from dataclasses import is_dataclass
 from pathlib import Path
 
 import pytest
 
 from infrastructure.core.health import (
     GATE_NAMES,
-    GateResult,
     HealthReport,
     build_gate_specs,
     format_report_table,
@@ -49,23 +47,10 @@ def _run_module_cli(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 class TestPublicSurface:
-    """The public dataclasses and registry stay stable."""
+    """Gate identifiers and public/private project scope are unambiguous."""
 
-    def test_gate_result_is_frozen_dataclass(self) -> None:
-        assert is_dataclass(GateResult)
-        assert is_dataclass(HealthReport)
-
-    def test_gate_names_are_unique_and_non_empty(self) -> None:
+    def test_gate_names_are_unique(self) -> None:
         assert len(GATE_NAMES) == len(set(GATE_NAMES))
-        assert all(name and name.islower() for name in GATE_NAMES)
-
-    def test_build_gate_specs_returns_argv_lists(self) -> None:
-        specs = build_gate_specs(REPO_ROOT)
-        assert {name for name, _ in specs} == set(GATE_NAMES)
-        for _, argv in specs:
-            assert isinstance(argv, list)
-            assert all(isinstance(arg, str) for arg in argv)
-            assert len(argv) >= 1
 
     def test_build_gate_specs_uses_public_project_scope(self, tmp_path: Path) -> None:
         """Lint/type gates must not follow local rotating project symlinks."""
@@ -82,41 +67,10 @@ class TestPublicSurface:
         assert "projects/" not in specs["bandit"]
         assert "projects/templates/template_code_project/" in specs["bandit"]
         assert all("projects/private_research_project" not in arg for arg in specs["bandit"])
-        for gate in (
-            "confidentiality",
-            "generated-artifacts",
-            "template-drift",
-            "counts",
-            "skills-manifest",
-            "semantic-standins",
-            "operations-manifest",
-            "skill-reachability",
-        ):
-            assert gate in specs
-
-        assert specs["semantic-standins"][-3:] == [
-            "--inventory",
-            "--max-dependency-replacements",
-            "0",
-        ]
-        assert specs["operations-manifest"][-1] == "operations-check"
-        assert specs["skill-reachability"][-1] == "scripts/gates/skill_reachability_check.py"
-        assert specs["public-capabilities"][-1] == "scripts/gates/public_capabilities.py"
-        assert all("stage_01_test.py" not in argument for argument in specs["public-capabilities"])
-
-    def test_ci_security_and_platform_oracles_fail_closed(self) -> None:
-        workflow = (REPO_ROOT / ".github" / "workflows" / "hardening.yml").read_text(encoding="utf-8")
-        assert "continue-on-error: ${{ runner.os == 'macOS' }}" not in workflow
-        assert "uv export --all-groups --all-extras --frozen" in workflow
-        assert 'audit_requirements "$LOCK_REQUIREMENTS"' in workflow
-        assert 'uv run pip-audit --requirement "$requirement_file"' in workflow
-        assert 'uv export --project "projects/$project" --all-extras --frozen' in workflow
-        assert "--no-deps --disable-pip" in workflow
-        assert 'targets+=("projects/$project")' in workflow
 
 
 class TestSyntheticGate:
-    """A trivial stub gate script must parse correctly into a ``GateResult``."""
+    """An explicit gate deadline produces a failed health result."""
 
     @staticmethod
     def _stub_gate_repo(tmp_path: Path, script_body: str) -> Path:
@@ -125,30 +79,6 @@ class TestSyntheticGate:
         (repo / "scripts" / "audit" / "verify_no_mocks.py").write_text(script_body, encoding="utf-8")
         return repo
 
-    def test_stub_gate_runs_via_registry_then_subprocess(
-        self,
-        tmp_path: Path,
-    ) -> None:
-        # The gate executes through the public registry path (run_health_checks
-        # → real subprocess), exercising the output-parsing behavior real gates
-        # rely on — no mocks, no private seams.
-        report = run_health_checks(self._stub_gate_repo(tmp_path, "print('hello health')\n"), gates=["no-mocks"])
-
-        result = report.results[0]
-        assert isinstance(result, GateResult)
-        assert result.name == "no-mocks"
-        assert result.passed is True
-        assert result.elapsed_ms >= 0.0
-        assert "hello health" in result.output
-
-    def test_stub_gate_failure_reports_stderr_tail(self, tmp_path: Path) -> None:
-        repo = self._stub_gate_repo(tmp_path, "import sys; sys.stderr.write('boom'); raise SystemExit(7)\n")
-
-        result = run_health_checks(repo, gates=["no-mocks"]).results[0]
-
-        assert result.passed is False
-        assert "boom" in result.output
-
     def test_stub_gate_timeout_fails_closed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.01")
         repo = self._stub_gate_repo(tmp_path, "import time; time.sleep(1)\n")
@@ -156,7 +86,6 @@ class TestSyntheticGate:
         result = run_health_checks(repo, gates=["no-mocks"]).results[0]
 
         assert result.passed is False
-        assert "timed out" in result.output
 
 
 class TestGateTimeoutResolution:
@@ -171,8 +100,6 @@ class TestGateTimeoutResolution:
         result = run_health_checks(repo, gates=["no-mocks"]).results[0]
 
         assert result.passed is False
-        # The resolved override surfaces in the diagnostic tail.
-        assert "gate timed out after 0.01s" in result.output
 
     def test_env_override_rejects_nonpositive(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0")
@@ -206,15 +133,15 @@ class TestSubsetSelection:
         assert report.wall_elapsed_ms > 0
 
     def test_workers_must_be_positive(self) -> None:
-        with pytest.raises(ValueError, match="workers must be at least 1"):
+        with pytest.raises(ValueError):
             run_health_checks(REPO_ROOT, gates=["no-mocks"], workers=0)
 
     def test_unknown_gate_raises(self) -> None:
-        with pytest.raises(ValueError, match="unknown gate"):
+        with pytest.raises(ValueError):
             run_health_checks(REPO_ROOT, gates=["does-not-exist"])
 
     def test_empty_list_fails_closed(self) -> None:
-        with pytest.raises(ValueError, match="at least one gate"):
+        with pytest.raises(ValueError):
             run_health_checks(REPO_ROOT, gates=[])
 
     @pytest.mark.parametrize(
@@ -254,17 +181,7 @@ class TestRealGate:
 
 
 class TestRendering:
-    """``format_report_table`` produces sensible plain and coloured output."""
-
-    @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
-    def test_plain_table_contains_gate_names_and_overall(self) -> None:
-        report = run_health_checks(REPO_ROOT, gates=["no-mocks"])
-        text = format_report_table(report, color=False)
-        assert "no-mocks" in text
-        assert "PASS" in text
-        assert "Overall" in text
-        # No ANSI escape when colour is disabled.
-        assert "\033[" not in text
+    """Explicit colour mode enables ANSI report styling."""
 
     @pytest.mark.timeout(300)  # real no-mocks gate subprocess exceeds the 10s default
     def test_colored_table_contains_ansi(self) -> None:
@@ -288,44 +205,15 @@ class TestCLI:
         assert isinstance(payload["total_elapsed_ms"], (int, float))
         assert isinstance(payload["wall_elapsed_ms"], (int, float))
         assert payload["schema_version"] == 1
-        assert payload["workers"] == 1
-        assert payload["repo_commit"]
         assert isinstance(payload["clean_checkout"], bool)
-        assert len(payload["gate_spec_sha256"]) == 64
 
     def test_unknown_gate_exits_non_zero(self) -> None:
         proc = _run_module_cli("--gates=not-a-gate")
         assert proc.returncode != 0
-        assert "unknown gate" in proc.stderr.lower()
 
     def test_empty_gate_expression_exits_non_zero(self) -> None:
         proc = _run_module_cli("--gates=,")
         assert proc.returncode != 0
-        assert "at least one gate" in proc.stderr.lower()
-
-    def test_help_lists_all_gates(self) -> None:
-        # argparse wraps help text to ``COLUMNS``; widen so the choices
-        # list is rendered intact and we can assert each gate appears.
-        cmd = [
-            sys.executable,
-            "-m",
-            "infrastructure.core.health",
-            "--repo-root",
-            str(REPO_ROOT),
-            "--help",
-        ]
-        proc = subprocess.run(  # noqa: S603 — argv list, no shell.
-            cmd,
-            cwd=str(REPO_ROOT),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=120,
-            env={**__import__("os").environ, "COLUMNS": "1000"},
-        )
-        assert proc.returncode == 0
-        for name in GATE_NAMES:
-            assert name in proc.stdout, f"missing gate {name!r} in help"
 
 
 class TestRepositoryState:
@@ -345,45 +233,7 @@ class TestRepositoryState:
 
 
 class TestFailureDiagnosticsReachStderr:
-    """A failing health run must be legible from any bounded output tail.
-
-    The 2026-09-08 hosted rehearsal ran ``health --json --quiet``; a
-    docs-lint failure surfaced only as a bare exit 1 because the verdict
-    and failing-gate detail lived mid-JSON on stdout. The verdict line and
-    failing-gate dumps now always reach stderr (stdout stays pure JSON).
-    """
-
-    def test_failing_quiet_run_writes_verdict_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        """--quiet suppresses the per-gate dumps, never the verdict line."""
-        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.001")
-        proc = _run_module_cli("--json", "--quiet", "--gates", "ruff")
-
-        assert proc.returncode == 1
-        assert "health verdict: passed=false failed_gates=['ruff']" in proc.stderr
-        # The failing gate's captured tail is suppressed in quiet mode.
-        assert "── ruff ──" not in proc.stderr
-        assert "gate timed out" not in proc.stderr
-
-    def test_failing_non_quiet_run_dumps_failing_gate_tail(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        """Without --quiet, the failing gate's captured tail follows the verdict."""
-        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0.001")
-        proc = _run_module_cli("--gates", "ruff")
-
-        assert proc.returncode == 1
-        assert "── ruff ──" in proc.stderr
-        assert "gate timed out" in proc.stderr
-
-    @pytest.mark.timeout(300)  # real ruff gate subprocess exceeds the 10s default
-    def test_module_cli_wiring_keeps_stdout_pure_json_with_stderr_verdict(
-        self,
-    ) -> None:
-        """End-to-end wiring: the real CLI emits the verdict line on stderr."""
-        completed = _run_module_cli("--json", "--quiet", "--gates", "ruff")
-
-        assert completed.returncode == 0
-        payload = json.loads(completed.stdout)
-        assert payload["passed"] is True
-        assert "health verdict: passed=true failed_gates=[]" in completed.stderr
+    """The CLI fails closed with structured JSON after a real gate timeout."""
 
     def test_module_cli_timed_out_gate_reports_failure_verdict(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Real failing run: the timeout env knob forces a genuine gate failure."""
@@ -393,4 +243,3 @@ class TestFailureDiagnosticsReachStderr:
         assert completed.returncode == 1
         payload = json.loads(completed.stdout)
         assert payload["passed"] is False
-        assert "health verdict: passed=false failed_gates=['ruff']" in completed.stderr

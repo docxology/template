@@ -279,12 +279,12 @@ else
         if ! may_elevate; then
             fail "apt installs need elevation, but stdin is not interactive."
             echo "   Run from a terminal:" >&2
-            echo "     sudo apt-get update" >&2
-            echo "     sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra texlive-bibtex-extra texlive-fonts-recommended texlive-latex-recommended lmodern fonts-dejavu" >&2
+            echo "     sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 update" >&2
+            echo "     sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y pandoc texlive-xetex texlive-latex-extra texlive-bibtex-extra texlive-fonts-recommended texlive-latex-recommended lmodern fonts-dejavu" >&2
             exit 1
         fi
-        sudo apt-get update
-        sudo apt-get install -y ${apt_install_pandoc:+pandoc} \
+        sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 update
+        sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y ${apt_install_pandoc:+pandoc} \
             ${apt_install_tex:+texlive-xetex texlive-latex-extra texlive-bibtex-extra texlive-fonts-recommended texlive-latex-recommended lmodern fonts-dejavu}
     fi
 fi

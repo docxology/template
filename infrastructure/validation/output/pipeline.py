@@ -62,6 +62,7 @@ from infrastructure.validation.output.claim_verification import (
 )
 from infrastructure.validation.output.validator import ValidationResultDict, collect_detailed_validation_results
 from infrastructure.validation.output.report import generate_validation_report
+from infrastructure.validation.rendered_snapshot import declared_generated_manuscript_inputs
 
 logger = get_logger(__name__)
 
@@ -239,11 +240,16 @@ def validate_evidence_registry(
     """Validate manuscript evidence tokens against project artifact provenance."""
     log_substep("Validating evidence registry...", logger)
 
-    if not manuscript_dir.exists():
+    generated_inputs = declared_generated_manuscript_inputs(project_root)
+    if generated_inputs is None and not manuscript_dir.exists():
         logger.warning(f"Manuscript directory not found at expected location: {manuscript_dir}")
         return True, []
 
-    markdown_files = sorted(path for path in manuscript_dir.rglob("*.md") if path.is_file())
+    markdown_files = (
+        generated_inputs
+        if generated_inputs is not None
+        else sorted(path for path in manuscript_dir.rglob("*.md") if path.is_file())
+    )
     if not markdown_files:
         logger.warning("No manuscript markdown files found for evidence registry validation")
         return True, []
@@ -391,7 +397,15 @@ def execute_validation_pipeline(
 
     try:
         registry_path = project_root / "output" / "figures" / "figure_registry.json"
-        fig_result, figure_issues = validate_figure_registry(registry_path, manuscript_dir)
+        generated_inputs = declared_generated_manuscript_inputs(project_root)
+        if generated_inputs is None:
+            fig_result, figure_issues = validate_figure_registry(registry_path, manuscript_dir)
+        else:
+            fig_result, figure_issues = validate_figure_registry(
+                registry_path,
+                project_root / "output" / "manuscript",
+                manuscript_files=generated_inputs,
+            )
         results.append(("Figure registry", fig_result))
     except Exception as e:
         logger.error(f"Error during figure registry validation: {e}", exc_info=True)

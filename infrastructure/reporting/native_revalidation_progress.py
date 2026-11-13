@@ -52,7 +52,7 @@ class RevalidationProgress:
             or (scope is not None and scope not in self.scopes)
         ):
             raise ValueError("native revalidation diagnostic lost its fixed process/window")
-        print(
+        sys.stderr.write(
             json.dumps(
                 {
                     "schema_version": "template-native-revalidation-progress-v1",
@@ -70,10 +70,10 @@ class RevalidationProgress:
                 },
                 sort_keys=True,
                 allow_nan=False,
-            ),
-            file=sys.stderr,
-            flush=True,
+            )
+            + "\n"
         )
+        sys.stderr.flush()
 
     def source_check(self, phase: str) -> None:
         remaining(self.deadline)

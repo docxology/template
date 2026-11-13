@@ -219,7 +219,7 @@ def main(argv: list[str] | None = None) -> int:
         path = record_validator_issues(args.project_root, args.directory, args.phase)
     else:
         path = record_snapshot(args.project_root, args.directory, args.phase, retain=args.mode == "raw")
-    print(json.dumps({"diagnostic_only": True, "record": str(path)}))
+    sys.stdout.write(json.dumps({"diagnostic_only": True, "record": str(path)}) + "\n")
     return 0
 
 

@@ -10,6 +10,11 @@ serial/parallel benchmark evidence is validated by
 `infrastructure.core.ci_policy` derives the required CI jobs from the workflow.
 The final Gate requires that complete set and validates each conditional skip.
 
+`infrastructure.core._optional_deps` owns optional-provider imports. Logging and
+resource monitoring request only `psutil`; NumPy resolves and caches its actual
+module (or the existing `ImportError` absence result) only when a scientific
+consumer requests `np`.
+
 ## Quick Start
 
 ```python

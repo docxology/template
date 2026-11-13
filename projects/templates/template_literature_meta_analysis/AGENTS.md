@@ -83,7 +83,7 @@ with the actual platform wheel matching `pyproject.toml` and this project's `dev
 [`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
 
 ```bash
-python -I -m pytest tests/ --cov=src --cov-fail-under=90
+python -IB -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 This command uses the project's `pyproject.toml` and tests; it does not require

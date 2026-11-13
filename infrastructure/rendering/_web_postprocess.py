@@ -188,12 +188,19 @@ def resolve_split_page_fragments(combined_file: Path, section_files: tuple[Path,
 
 
 def normalize_figure_paths(content: str) -> str:
-    """Rewrite manuscript figure paths for files emitted under ``output/web``."""
-    return (
-        content.replace("../../output/figures/", "../figures/")
-        .replace("../output/figures/", "../figures/")
-        .replace("output/figures/", "../figures/")
-    )
+    """Rebase emitted HTML image sources, never literal paths in code or prose."""
+
+    def rebase_image(match: re.Match[str]) -> str:
+        source = _html_attribute(match.group("attrs"), "src")
+        if source is None:
+            return match.group(0)
+        deployed = re.sub(r"^(?:\.\./)*output/figures/", "../figures/", source)
+        deployed = re.sub(r"^(?:\.\./){2,}figures/", "../figures/", deployed)
+        if deployed == source:
+            return match.group(0)
+        return _set_image_source(match.group(0), deployed)
+
+    return _IMAGE_RE.sub(rebase_image, content)
 
 
 def normalize_figure_paths_in_file(html_file: Path) -> None:

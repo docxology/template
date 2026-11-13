@@ -1,5 +1,5 @@
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-0-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-0-start-->
 ```
 
 ```{=latex}
@@ -59,7 +59,7 @@ Structured manifest: `../data/transmission_manifest.json`
 <!-- BEGINNING OF TRANSMISSION -->
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-0-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-0-end-->
 ```
 
 
@@ -69,7 +69,7 @@ Structured manifest: `../data/transmission_manifest.json`
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-1-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-1-start-->
 ```
 
 # Sheaf Track Coverage {#sec:sheaf_coverage}
@@ -121,7 +121,7 @@ This page summarizes which **sheaf fragment tracks** are bound for each IMRAD ro
 Appendix row `16_appendix_full_sheaf.md` binds 33 fragment track types as a composability proof (registry defines 34 types; optional `layers` is methods-only).
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-1-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-1-end-->
 ```
 
 
@@ -131,7 +131,7 @@ Appendix row `16_appendix_full_sheaf.md` binds 33 fragment track types as a comp
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-2-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-2-start-->
 ```
 
 # Abstract {#sec:abstract}
@@ -143,7 +143,7 @@ We study a minimal Active Inference stack on toy models: a Bernoulli–Ising ana
 [@sec:results_invariants] records 12 / 12 invariant checks passed. SI planning horizon: 2 steps. Sweep RMSE 0 nats bounds analytical–empirical agreement on the coupling grid.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-2-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-2-end-->
 ```
 
 
@@ -153,7 +153,7 @@ We study a minimal Active Inference stack on toy models: a Bernoulli–Ising ana
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-3-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-3-start-->
 ```
 
 ```{=latex}
@@ -177,7 +177,7 @@ Three **scientific tracks** (analytical, pymdp, sheaf composition) map onto 34 *
 The pymdp track follows the [pymdp sophisticated_inference examples](https://github.com/infer-actively/pymdp/tree/main/examples/experimental/sophisticated_inference) [@pymdp2024] with a minimal T-maze and planning horizon `policy_len = 2`. Other sections cite [@sec:methods_pymdp] instead of repeating that reference.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-3-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-3-end-->
 ```
 
 
@@ -187,7 +187,7 @@ The pymdp track follows the [pymdp sophisticated_inference examples](https://git
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-4-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-4-start-->
 ```
 
 # Contributions {#sec:intro_contributions}
@@ -226,7 +226,7 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 ```
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-4-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-4-end-->
 ```
 
 
@@ -236,7 +236,7 @@ Ontology-facing symbols are checked per model: the Bernoulli toy binds `pi1`, `p
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-5-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-5-start-->
 ```
 
 ```{=latex}
@@ -313,7 +313,7 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 ```
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-5-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-5-end-->
 ```
 
 
@@ -323,7 +323,7 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-6-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-6-start-->
 ```
 
 # pymdp simulation harness {#sec:methods_pymdp}
@@ -332,7 +332,7 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 
 **Sophisticated inference (planning horizon).** The pymdp method is a deterministic state-inference harness on a minimal T-maze ([@fig:tmaze_schematic]) with planning horizon `policy_len = 2`. The discrete-state framing follows finite POMDP active-inference treatments and sophisticated-inference analyses [@dacosta2020discrete; @smith2022tutorial; @friston2021sophisticated; @dacosta2023reward], and the implementation anchor is the pymdp software paper [@pymdp2024]. The default `state_inference` rollout writes the summary/trace artifacts used in [@sec:results_si_tmaze]; mean belief entropy is 0.0000.
 
-The method keeps runtime, posterior, and extension evidence separate. `output/data/si_policy_comparison.json` compares `state_inference` and `policy_inference` over declared toy horizons and seeds without replacing the default rollout (4 rows; complete-grid flag 1). Agent construction and backend warnings live in `output/reports/pymdp_runtime_diagnostics.json` (4 constructions, 4 known third-party warnings, 0 unexpected warnings). Posterior rows live in `output/data/pymdp_policy_posterior_grid.json` and must remain normalized (`1`).
+The method keeps runtime, posterior, and extension evidence separate. `output/data/si_policy_comparison.json` compares `state_inference` and `policy_inference` over declared toy horizons and seeds without replacing the default rollout (4 rows; complete-grid flag 1). Agent construction and backend warnings live in `output/reports/pymdp_runtime_diagnostics.json` (4 constructions, 0 known third-party warnings, 0 unexpected warnings). Posterior rows live in `output/data/pymdp_policy_posterior_grid.json` and must remain normalized (`1`).
 
 Graph-world artifacts are deterministic extension outputs declared in `tracks.yaml` rather than new empirical claims. `simulate_si_graph_world.py` writes summary and trace artifacts for the finite graph path; the regenerated summary reports 4 nodes, 4 steps, and goal-reached flag 1. The topology-trace extension records 4 toy topology traces with agreement flag 1.
 
@@ -385,7 +385,7 @@ See `gnn/si_tmaze.gnn.md` for a GNN view of the T-maze hidden state, observation
 ```
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-6-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-6-end-->
 ```
 
 
@@ -395,7 +395,7 @@ See `gnn/si_tmaze.gnn.md` for a GNN view of the T-maze hidden state, observation
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-7-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-7-start-->
 ```
 
 # Lean formalization boundary {#sec:methods_lean}
@@ -436,7 +436,7 @@ contains 12 extracted theorem rows, with
 constructive-token status `true`.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-7-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-7-end-->
 ```
 
 
@@ -446,7 +446,7 @@ constructive-token status `true`.
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-8-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-8-start-->
 ```
 
 # Sheaf composition {#sec:methods_sheaf}
@@ -833,7 +833,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `sheaf_gluing_certificate` | `output/data/sheaf_gluing_certificate.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 | `sheaf_evidence_crosswalk` | `output/data/sheaf_evidence_crosswalk.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
 | `validation_dependency_graph` | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | validate_manuscript, validate_outputs |
-| `semantic_gluing_graph_figure` | `../figures/semantic_gluing_graph.png` | `generate_figures.py` | validate_outputs, figure_registry |
+| `semantic_gluing_graph_figure` | `output/figures/semantic_gluing_graph.png` | `generate_figures.py` | validate_outputs, figure_registry |
 
 **Claim rows:** 97 typed evidence claims.
 
@@ -888,7 +888,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | `output/data/uncertainty_summary.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/data/validation_dependency_graph.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf |
 | `output/data/validation_gate_index.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
-| `../figures/si_belief_trajectory.gif` | `render_animation.py` | Yes | appendix_full_sheaf |
+| `output/figures/si_belief_trajectory.gif` | `render_animation.py` | Yes | appendix_full_sheaf |
 | `output/reports/ablation_sensitivity_report.json` | `generate_sheaf_tracks.py` | Yes | results_invariants, appendix_full_sheaf |
 | `output/reports/adversarial_audit.json` | `generate_sheaf_tracks.py` | Yes | methods_sheaf, appendix_full_sheaf |
 | `output/reports/artifact_diffoscope.json` | `generate_integration_audit.py` | Yes | methods_sheaf, appendix_full_sheaf |
@@ -1044,7 +1044,7 @@ Every roadmap row is shown below in canonical order. The source-owned full matri
 **Improvement rows:** 39 total; 32 live / 2 optional / 5 blocked; every row shown.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-8-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-8-end-->
 ```
 
 
@@ -1054,7 +1054,7 @@ Every roadmap row is shown below in canonical order. The source-owned full matri
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-9-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-9-start-->
 ```
 
 ```{=latex}
@@ -1086,7 +1086,7 @@ Both estimators are deterministic (no sampling, no RNG) and are evaluated on the
 *Reproduced from [@fig:ising_mi_curve]. Closed-form $I(\lambda)$ and an independent exact recomputation via total correlation for the symmetric Bernoulli-Ising toy across 21 grid points up to $\lambda_{\max}$ = 4; grid maximum 0.6031 nats. Both estimators are deterministic (no sampling), so the right panel is a cross-implementation agreement check (max residual 0 nats), not a sampling residual.*
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-9-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-9-end-->
 ```
 
 
@@ -1096,7 +1096,7 @@ Both estimators are deterministic (no sampling, no RNG) and are evaluated on the
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-10-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-10-start-->
 ```
 
 # Free-energy decomposition {#sec:results_free_energy}
@@ -1112,7 +1112,7 @@ Saturation MI (grid maximum on the measured $\lambda$ sweep): 0.6031 nats.
 ![Free energy of the entangled posterior relative to the mean-field prior across the hyperparameter sweep (grid points 21); relative to the entangled prior, the same posterior has identically zero free energy.](../figures/free_energy_curve.png){#fig:free_energy_curve width=90% fig-alt="Line plot of free energy in nats versus coupling strength lambda for the entangled posterior relative to a mean-field prior. The entangled-prior free energy is identically zero, so this plotted comparison isolates mean-field prior mismatch. A single dark curve traces free energy across the sweep; the minimum is marked with a teal scatter point and labeled with the argmin lambda value."}
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-10-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-10-end-->
 ```
 
 
@@ -1122,7 +1122,7 @@ Saturation MI (grid maximum on the measured $\lambda$ sweep): 0.6031 nats.
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-11-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-11-start-->
 ```
 
 # T-maze active-inference rollout {#sec:results_si_tmaze}
@@ -1164,7 +1164,7 @@ Rollout trace: `output/data/si_tmaze_trace.json`. JSONL run log: `output/logs/py
 ![Discrete action index over time for the pymdp T-maze rollout (policy length 2).](../figures/si_tmaze_actions.png){#fig:si_tmaze_actions width=90% fig-alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps."}
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-11-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-11-end-->
 ```
 
 
@@ -1174,7 +1174,7 @@ Rollout trace: `output/data/si_tmaze_trace.json`. JSONL run log: `output/logs/py
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-12-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-12-start-->
 ```
 
 # Validation invariants {#sec:results_invariants}
@@ -1236,7 +1236,7 @@ records 36 cells, with complete-grid status
 `true`.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-12-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-12-end-->
 ```
 
 
@@ -1246,7 +1246,7 @@ records 36 cells, with complete-grid status
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-13-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-13-start-->
 ```
 
 ```{=latex}
@@ -1322,7 +1322,7 @@ validation, semantic, and bundle artifacts. Its evidence artifact is
 `true`.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-13-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-13-end-->
 ```
 
 
@@ -1332,7 +1332,7 @@ validation, semantic, and bundle artifacts. Its evidence artifact is
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-14-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-14-start-->
 ```
 
 ```{=latex}
@@ -1380,7 +1380,7 @@ validated finite toy proof surface.
 
 <!-- sheaf-track:pymdp -->
 
-pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy, action trace). Runtime diagnostics: `output/reports/pymdp_runtime_diagnostics.json` (known warnings 4, unexpected warnings 0). Policy posterior grid: `output/data/pymdp_policy_posterior_grid.json` (10 rows). Full log: `output/logs/pymdp_runs.jsonl`.
+pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy, action trace). Runtime diagnostics: `output/reports/pymdp_runtime_diagnostics.json` (known warnings 0, unexpected warnings 0). Policy posterior grid: `output/data/pymdp_policy_posterior_grid.json` (10 rows). Full log: `output/logs/pymdp_runs.jsonl`.
 
 <!-- sheaf-track:interop -->
 
@@ -1700,7 +1700,7 @@ validation, release bundle hash, license audit, semantic certificate, and
 blocked-scope status, with all-attested flag `true`.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-14-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-14-end-->
 ```
 
 
@@ -1710,7 +1710,7 @@ blocked-scope status, with all-attested flag `true`.
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-15-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-15-start-->
 ```
 
 # Conclusion {#sec:conclusion}
@@ -1722,7 +1722,7 @@ The T-maze harness runs in `state_inference` mode with config hash `133a13df72cf
 The exemplar therefore sits at a narrow intersection: finite discrete active inference on POMDP-like toy models [@dacosta2020discrete; @friston2021sophisticated; @dacosta2023reward], sheaf-style local-to-global checks for publication artifacts [@curry2014sheaves; @robinson2014topological], and GNN notation as an interop layer [@gnn2023].
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-15-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-15-end-->
 ```
 
 
@@ -1732,7 +1732,7 @@ The exemplar therefore sits at a narrow intersection: finite discrete active inf
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-16-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-16-start-->
 ```
 
 # References
@@ -1740,7 +1740,7 @@ The exemplar therefore sits at a narrow intersection: finite discrete active inf
 See `manuscript/references.bib` for bibliography entries cited in the composed sections.
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-16-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-16-end-->
 ```
 
 
@@ -1750,7 +1750,7 @@ See `manuscript/references.bib` for bibliography entries cited in the composed s
 
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-17-start-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-17-start-->
 ```
 
 ```{=latex}
@@ -1781,5 +1781,5 @@ See `manuscript/references.bib` for bibliography entries cited in the composed s
 <!-- END OF TRANSMISSION -->
 
 ```{=html}
-<!--template-web-source-267f99dbca8e02d47a016eee0444ba81473d1ab8db3219d9fd178beafa26dd0f-17-end-->
+<!--template-web-source-17ff332dc814cbe3a23706cdac16acd2319da00d60d5cbd3495505a32c62088d-17-end-->
 ```

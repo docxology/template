@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-0-start-->
+```
+
 # Abstract
 
 This exemplar demonstrates a **data descriptor** workflow in which the schema,
@@ -17,11 +21,19 @@ than transcribing values that would drift. This is a template with a
 demonstration dataset: it makes no scientific claim about the data, only about
 how to describe and release a dataset responsibly.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-1-start-->
+```
 
 # Introduction {#sec:introduction}
 
@@ -63,11 +75,19 @@ follow describe the demonstration dataset ([@sec:data]), its schema
 binds the descriptor to the bytes it names ([@sec:quality]), and close with
 usage and forking notes ([@sec:usage]).
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-2-start-->
+```
 
 # Data description {#sec:data}
 
@@ -89,9 +109,9 @@ descriptor by `file_inventory_rows()` in `src/data_descriptor/figures.py` and
 plotted by the thin analysis script
 [`scripts/generate_figures.py`](../scripts/generate_figures.py).
 
-![File inventory: declared row counts per file, from `file_inventory_rows()`. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as `text/csv`. The bar values are the row counts recorded in the descriptor, not re-derived here — the quality gate ([@sec:quality]) is where declared and actual counts are reconciled.](../figures/file_inventory.png){#fig:file_inventory}
+![File inventory: declared row counts per file, from `file_inventory_rows()`. The measurement table is the larger of the two files; the subject table is its dimension companion. Both are declared as `text/csv`. The bar values are the row counts recorded in the descriptor, not re-derived here — the quality gate ([@sec:quality]) is where declared and actual counts are reconciled.](../output/figures/file_inventory.png){#fig:file_inventory}
 
-Running the script regenerates the figures under `../figures/`; the prose
+Running the script regenerates the figures under `output/figures/`; the prose
 below and in later sections describes what those artifacts show. Because the
 figures are produced from the descriptor and the fixture bytes, they cannot drift
 from the data without the tests and the quality gate noticing.
@@ -105,11 +125,19 @@ obtain the files through the appropriate channel. In this template the fixture
 bytes are public and small, so they are shipped alongside the descriptor and used
 to demonstrate end-to-end verification.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-3-start-->
+```
 
 # Schema and data dictionary {#sec:schema}
 
@@ -119,7 +147,7 @@ optional unit, and value constraints. [@fig:schema_overview] renders this
 dictionary directly from the descriptor via `schema_table_rows()` in
 `src/data_descriptor/figures.py`.
 
-![Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from `schema_table_rows()`. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from `data/example_descriptor.json` and cannot silently disagree with it.](../figures/schema_overview.png){#fig:schema_overview}
+![Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from `schema_table_rows()`. Identifier fields carry regular-expression patterns; the categorical fields carry closed enumerations; the quantitative field carries a unit and numeric bounds. The table is generated from `data/example_descriptor.json` and cannot silently disagree with it.](../output/figures/schema_overview.png){#fig:schema_overview}
 
 ## Field contract
 
@@ -155,11 +183,19 @@ the minimum exceeds the maximum, and patterns declared on non-text fields. On th
 shipped descriptor none of these fire — the data dictionary above is complete, so
 the readiness score is unpenalised (see [@sec:quality]).
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-4-start-->
+```
 
 # Provenance {#sec:provenance}
 
@@ -168,7 +204,7 @@ list is an ordered chain of steps, each naming the agent responsible.
 [@fig:provenance_flow] renders that chain via `provenance_steps()` in
 `src/data_descriptor/figures.py`.
 
-![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](../figures/provenance_flow.png){#fig:provenance_flow}
+![Provenance chain: the ordered steps that produced the release, from `provenance_steps()`. Each box is a declared step; the label beneath is the responsible agent. The chain runs left to right from raw collection to the packaged, metadata-only release manifest.](../output/figures/provenance_flow.png){#fig:provenance_flow}
 
 ## Methods: the provenance chain
 
@@ -198,11 +234,19 @@ minimum a downstream reuser needs to judge whether the dataset was produced the
 way they require. For a real dataset, these steps would cite concrete tools,
 versions, and operators rather than the template's synthetic agents.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-5-start-->
+```
 
 # Quality validation {#sec:quality}
 
@@ -225,7 +269,7 @@ against a deliberately-perturbed copy produced by `demo_broken_descriptor()`
 unit). The clean fixture produces zero findings; the perturbed demo produces
 several errors and warnings.
 
-![Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data — it exists only to prove the gate reacts. Counts come from `severity_counts()`.](../figures/quality_gate.png){#fig:quality_gate}
+![Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right). The demonstration perturbation is clearly named in code and never treated as real data — it exists only to prove the gate reacts. Counts come from `severity_counts()`.](../output/figures/quality_gate.png){#fig:quality_gate}
 
 ## Descriptor↔file verification
 
@@ -241,7 +285,7 @@ is what makes the metadata-only release boundary honest.
 both files verify, declared and actual row counts agree, and each recomputed
 checksum matches its declaration, so the readiness score is unpenalised.
 
-![Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from `verify_descriptor_files()`. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.](../figures/checksum_verification.png){#fig:checksum_verification}
+![Descriptor↔file verification: declared versus recomputed row counts and checksum agreement per file, from `verify_descriptor_files()`. Both shipped fixture files verify against their bytes on disk; the title reports the descriptor's readiness score. If a fixture file were edited without updating the descriptor, the corresponding row would flip to a mismatch status and the test suite would fail.](../output/figures/checksum_verification.png){#fig:checksum_verification}
 
 ## Machine-readable release manifest
 
@@ -262,11 +306,19 @@ byte-level verification against real temporary files, figure-data preparation, a
 an integration test that runs the figure script end to end and asserts real PNGs
 are written. Coverage exceeds the 90% project gate with no mocks.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-5-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-6-start-->
+```
 
 # Usage notes {#sec:usage}
 
@@ -279,7 +331,7 @@ uv run python projects/templates/template_data_descriptor/scripts/generate_figur
 uv run python projects/templates/template_data_descriptor/scripts/generate_release_artifacts.py
 ```
 
-The first writes the five figures under `../figures/`; the second writes
+The first writes the five figures under `output/figures/`; the second writes
 the descriptor readiness report, field-constraint summary, and metadata-only
 release manifest under `output/reports/`. Both are thin orchestrators: all
 computation lives in the tested `src/data_descriptor/` package.
@@ -313,11 +365,19 @@ data. When you fork it, keep that discipline: a data descriptor earns trust by
 describing a dataset precisely and verifiably, not by over-claiming what the
 dataset shows.
 
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-6-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-7-start-->
+```
 
 # References {#sec:references}
 
@@ -335,4 +395,8 @@ clean and complete:
 ```bash
 uv run python -m infrastructure.reference.citation.cli validate \
     projects/templates/template_data_descriptor/manuscript/references.bib --strict
+```
+
+```{=html}
+<!--template-web-source-10f38c7565b7e45f35b5d18d8cb3ebf1aa4c32effb071ae6e09fbe81d27591e4-7-end-->
 ```

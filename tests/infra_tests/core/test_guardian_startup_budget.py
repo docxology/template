@@ -281,7 +281,6 @@ def test_actual_unarmed_guardian_cleanup_sweeps_reparented_token_holders(tmp_pat
 
     This is an ARM helper control, not a forced full-stream scheduling race.
     """
-    import contextlib
     import signal
     from infrastructure.core.execution_boundary import build_bounded_run_env, terminate_bounded_run_processes
 
@@ -395,12 +394,9 @@ def test_actual_unarmed_guardian_cleanup_sweeps_reparented_token_holders(tmp_pat
                 terminate_bounded_run_processes(token)
             finally:
                 if process is not None:
-                    with contextlib.suppress(ProcessLookupError):
-                        os.kill(process.pid, signal.SIGKILL)
+                    if process.poll() is None:
+                        process.kill()
                     process.wait(timeout=5)
-                if detached_pid is not None:
-                    with contextlib.suppress(ProcessLookupError):
-                        os.kill(detached_pid, signal.SIGKILL)
 
 
 def test_builder_empty_inventory_is_blocked_not_pass() -> None:

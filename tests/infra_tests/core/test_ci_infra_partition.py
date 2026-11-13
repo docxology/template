@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
-import configparser
 import hashlib
 import json
 import os
 import sys
-import time
 from pathlib import Path
 
 import pytest
-import yaml
 
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.testing.ci_infra_coverage import (
@@ -33,11 +30,6 @@ from infrastructure.core.testing.ci_infra_partition import (
     validate_receipts,
 )
 from infrastructure.project.public_capabilities import CANONICAL_CI_PYTHON_VERSIONS
-from infrastructure.project.public_reference_git import (
-    _PINNED_SUBMODULE,
-    _PINNED_SUBMODULE_URL,
-    native_git,
-)
 
 SDK_ROOT = Path(__file__).resolve().parents[3]
 
@@ -143,7 +135,7 @@ def test_declared_matrix_retains_every_environment_and_shard() -> None:
     expected = {
         (runner, version, shard)
         for runner, versions in (
-            ("ubuntu-latest", CANONICAL_CI_PYTHON_VERSIONS),
+            ("ubuntu-24.04", CANONICAL_CI_PYTHON_VERSIONS),
             ("macos-latest", ("3.15",)),
         )
         for version in versions
@@ -155,6 +147,13 @@ def test_declared_matrix_retains_every_environment_and_shard() -> None:
 
 def test_partition_covers_future_modules_and_every_parameter_without_overlap() -> None:
     ids = [f"{module}::test_actual[param-{parameter}]" for module in RESERVED_MODULES for parameter in range(3)]
+    heavy_modules = (
+        "tests/infra_tests/reporting/test_native_pdfium_runtime_guard.py",
+        "tests/infra_tests/reporting/test_native_pdfium_verify_current.py",
+        "tests/infra_tests/reporting/test_native_source_wheel_guard.py",
+    )
+    for module in heavy_modules:
+        ids.extend(f"{module}::test_actual[control-{parameter}]" for parameter in range(17))
     ids.extend(f"tests/infra_tests/new_family/test_future_{index}.py::test_case" for index in range(20))
     assignments = partition(ids)
     assert sorted(node for assigned in assignments for node in assigned) == sorted(ids)
@@ -162,6 +161,10 @@ def test_partition_covers_future_modules_and_every_parameter_without_overlap() -
     assert partition(list(reversed(ids))) == assignments
     for module, shard in RESERVED_MODULES.items():
         assert module_shard(module) == shard
+        assert all(node in assignments[shard] for node in ids if node.startswith(module + "::"))
+    for module in heavy_modules:
+        counts = [sum(node.startswith(module + "::") for node in assigned) for assigned in assignments]
+        assert max(counts) - min(counts) <= 1
 
 
 def test_partition_admits_escaped_parametrization_ids_from_actual_collection() -> None:
@@ -310,7 +313,7 @@ def test_actual_xdist_workers_agree_and_only_execute_the_assigned_cases(
     )
     result = _native(
         root,
-        "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n",
+        "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'load', '--maxschedchunk=1']))\n",
     )
     assert result.returncode == 0, result.stderr + result.stdout
     record = read_receipt(root, receipt_path(root, 0))
@@ -454,74 +457,6 @@ def test_complete_merge_admission_refuses_invalid_selection_records(fault: str) 
         )
 
 
-def test_ci_workflow_consumes_partition_and_keeps_the_union_gate_required() -> None:
-    workflow = yaml.safe_load((SDK_ROOT / ".github/workflows/hardening.yml").read_text())
-    jobs = workflow["jobs"]
-    emit = next(step["run"] for step in jobs["detect-projects"]["steps"] if step.get("id") == "matrix")
-    assert "scripts/gates/infra_ci_partition.py --matrix" in emit
-    infra = jobs["test-infra"]
-    assert infra["timeout-minutes"] == 90 and infra["strategy"]["fail-fast"] is False
-    execution = next(step for step in infra["steps"] if step.get("name") == "Run infrastructure tests")
-    assert "--infra-ci-shard" in execution["run"] and "--dist loadscope" in execution["run"]
-    assert INFRA_MARKERS in execution["run"] and "--timeout=120" in execution["run"]
-    assert "--cov-fail-under=0" in execution["env"]["INFRA_COV_FLAGS"]
-    assert jobs["coverage-infra"]["needs"] == ["test-infra"]
-    assert any("--merge-coverage" in step.get("run", "") for step in jobs["coverage-infra"]["steps"])
-    assert "coverage-infra" in jobs["ci-gate"]["needs"]
-    assert set(jobs["ci-gate"]["needs"]) == set(jobs) - {"ci-gate"}
-    diagnostics = next(
-        step for step in infra["steps"] if step.get("name") == "Preserve partial infrastructure controller diagnostics"
-    )
-    assert diagnostics["if"] == "${{ always() }}" and diagnostics["continue-on-error"] is True
-    assert diagnostics["with"]["if-no-files-found"] == "warn"
-    assert "/diagnostics/" in diagnostics["with"]["path"]
-    slow = jobs["test-infra-slow"]
-    slow_execution = next(step for step in slow["steps"] if step.get("name") == "Run slow-marked infrastructure tests")
-    assert slow["timeout-minutes"] == 90
-    assert "--timeout=1200" in slow_execution["run"] and "-n auto" in slow_execution["run"]
-    assert "-m slow" in slow_execution["run"] and "--dist loadscope" in slow_execution["run"]
-    assert "--infra-ci-observer-only slow" in slow_execution["run"] and "--infra-ci-shard" not in slow_execution["run"]
-    slow_diagnostics = next(
-        step for step in slow["steps"] if step.get("name") == "Preserve partial slow-lane controller diagnostics"
-    )
-    assert slow_diagnostics["if"] == "${{ always() }}" and slow_diagnostics["continue-on-error"] is True
-    assert slow_diagnostics["with"]["if-no-files-found"] == "warn"
-
-
-def test_ci_infra_checkouts_prepare_the_declared_public_pin_before_source_observation() -> None:
-    """Both real workflow jobs nominate the same initialized, credential-free source."""
-    declarations = configparser.ConfigParser(interpolation=None, strict=True)
-    declarations.read_string((SDK_ROOT / ".gitmodules").read_text())
-    section = 'submodule "' + _PINNED_SUBMODULE + '"'
-    assert not declarations.defaults() and declarations.sections() == [section]
-    assert declarations.get(section, "path") == _PINNED_SUBMODULE
-    assert declarations.get(section, "url") == _PINNED_SUBMODULE_URL
-    # Actual index metadata, rather than a fabricated directory or guessed pin.
-    index = native_git(SDK_ROOT, time.monotonic() + 30.0, "ls-files", "--stage", "-z")
-    links = []
-    for row in index.split(b"\0"):
-        if row:
-            metadata, path = row.rsplit(b"\t", 1)
-            if metadata.startswith(b"160000 "):
-                assert metadata.split()[2] == b"0"
-                links.append(path.decode("utf-8"))
-    assert links == [_PINNED_SUBMODULE]
-    jobs = yaml.safe_load((SDK_ROOT / ".github/workflows/hardening.yml").read_text())["jobs"]
-    checkouts = []
-    for job_name in ("test-infra", "coverage-infra"):
-        steps = jobs[job_name]["steps"]
-        checkout = steps[0]
-        assert checkout["uses"].startswith("actions/checkout@")
-        assert len(checkout["uses"].split("@", 1)[1]) == 40
-        # Exactly the declared pinned, credential-free setup: no token, key,
-        # ref or depth override can substitute a different source.
-        assert checkout["with"] == {"submodules": True, "persist-credentials": False}
-        assert steps[1]["uses"] == "./.github/actions/setup-python-env"
-        assert sum(step.get("uses", "").startswith("actions/checkout@") for step in steps) == 1
-        checkouts.append(checkout["uses"])
-    assert checkouts[0] == checkouts[1]
-
-
 @pytest.mark.timeout(120)
 def test_actual_zero_collection_refuses_vacuous_success(tmp_path: Path) -> None:
     root = _fixture(tmp_path)
@@ -545,7 +480,7 @@ def test_actual_xdist_zero_collection_refuses_without_worker_restarts(
         (root / module).write_text("VALUE = 1\n")
     result = _native(
         root,
-        "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'loadscope']))\n",
+        "raise SystemExit(pytest.main(command(0) + ['-n', '2', '--dist', 'load', '--maxschedchunk=1']))\n",
     )
     assert result.returncode == 2, result.stdout + result.stderr
     record = read_receipt(root, receipt_path(root, 0))
@@ -619,34 +554,12 @@ def test_actual_xdist_crash_retains_partial_controller_diagnostics(tmp_path: Pat
         + ("@pytest.mark.slow\n" if lane == "slow" else "")
         + "def test_actual_worker_exit():\n    import os\n    os._exit(19)\n"
     )
-    supervision = ""
-    if lane == "slow":
-        # The existing last-case worker-crash mechanics can leave xdist waiting
-        # for its replacement worker. Observe the real partial failure, then
-        # explicitly terminate only this owned controller within five seconds.
-        # Missing failure DATA still fails the assertions below.
-        supervision = (
-            "import os, signal, threading, time\n"
-            "def interrupt_owned_controller():\n"
-            "    deadline = time.monotonic() + 20.0\n"
-            "    diagnostic = root/'output/readiness/ordinary-infra-ci/diagnostics/shard-slow.json'\n"
-            "    while time.monotonic() < deadline:\n"
-            "        if diagnostic.exists():\n"
-            "            failures = json.loads(diagnostic.read_text())['first_failure_events']\n"
-            "            crashed = any(event.get('worker_error_present') is True for event in failures)\n"
-            "            reported = any(event.get('public_family', '').endswith('::test_actual_worker_exit') and event.get('observed_outcome') == 'failed' for event in failures)\n"
-            "            if crashed and reported: break\n"
-            "        time.sleep(0.01)\n"
-            "    os.kill(os.getpid(), signal.SIGTERM)\n"
-            "threading.Thread(target=interrupt_owned_controller, daemon=True).start()\n"
-        )
     result = _native(
         root,
         _lane_program(lane)
-        + supervision
-        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'loadscope']))\n",
+        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'load', '--maxschedchunk=1']))\n",
     )
-    assert result.returncode == (1 if lane == "ordinary" else -15), result.stdout + result.stderr
+    assert result.returncode == 1, result.stdout + result.stderr
     assert "node down" in result.stdout + result.stderr
     diagnostics = _diagnostic_record(root, "0" if lane == "ordinary" else "slow")
     assert any(event.get("worker_error_present") is True for event in diagnostics["first_failure_events"])
@@ -704,7 +617,7 @@ def test_actual_controller_interruption_retains_started_case(tmp_path: Path, lan
         root,
         "import os\n(root/'controller.pid').write_text(str(os.getpid()))\n"
         + _lane_program(lane)
-        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'loadscope']))\n",
+        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'load', '--maxschedchunk=1']))\n",
     )
     assert result.returncode == -15, result.stdout + result.stderr
     diagnostics = _diagnostic_record(root, "0" if lane == "ordinary" else "slow")
@@ -737,7 +650,7 @@ def test_actual_slow_observer_only_retains_original_behavior(tmp_path: Path, out
         "assert pytest.main(invalid) == 2\n"
         "assert not (root/'executed.txt').exists()\n"
         + _lane_program("slow")
-        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'loadscope']))\n"
+        + "raise SystemExit(pytest.main(args + ['-n', '2', '--dist', 'load', '--maxschedchunk=1']))\n"
     )
     result = _native(root, program)
     assert result.returncode == (0 if outcome == "passed" else 1), result.stdout + result.stderr

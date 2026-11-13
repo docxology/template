@@ -96,6 +96,16 @@ DEFERRED/IMMEDIATE/EXCLUSIVE` is the sole source of transaction
 boundaries — sqlite3's own implicit-transaction heuristics are deliberately
 disabled.
 
+**Explicit durable WAL (ISC-129).** `open_database(..., write_ahead_logging=True)`
+requires SQLite to select WAL and retains `synchronous=FULL`; unavailable WAL
+refuses without a weaker fallback. Each observation still commits independently.
+The default does not reset the provider's existing journaling mode. WAL is
+persistent per database and uses companion `-wal`/`-shm` files while active:
+use an owned local filesystem, not a network share, and do not copy a live main
+file alone. See SQLite's [WAL durability and deployment contract](https://www.sqlite.org/wal.html).
+Real controls verify FULL sync, independent-reader visibility before writer
+closure, rollback and reopened committed state; they do not simulate power loss.
+
 ## Tests
 
 | Test file | Covers |

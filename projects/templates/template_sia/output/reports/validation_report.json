@@ -102,7 +102,7 @@
           "file_count": 10,
           "largest_file": "source-web-fonts.js",
           "largest_file_path": "web/assets/source-web-fonts.js",
-          "size_mb": "2.01"
+          "size_mb": "2.03"
         }
       },
       "file_counts": {
@@ -233,7 +233,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 2.01
+            "size_mb": 2.03
           }
         },
         "inventory_mode": "stable-shippable-output-v1",
@@ -243,7 +243,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.4085798263549805
+      "total_size_mb": 2.4266357421875
     },
     "figures": {
       "files": 5,
@@ -286,12 +286,12 @@
         },
         "web": {
           "files": 10,
-          "size_bytes": 2111030
+          "size_bytes": 2129963
         }
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 47,
-      "total_size_bytes": 2525579
+      "total_size_bytes": 2544512
     }
   },
   "recommendations": [],
@@ -302,11 +302,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-13T11:04:04Z",
+  "timestamp": "2026-11-13T15:23:36Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "04819f4753113365893c0ec09434571cf74b7f3204f49a27a6d61d09a5b61b83",
+      "sha256": "645384f67c50018d8c358e1dcf852c5d2b2536b5f28d79a8c7f40a5ff2506319",
       "size_bytes": 15248
     },
     "combined_manuscript": {
@@ -360,19 +360,19 @@
     "fingerprints": {
       "config": {
         "file_count": 17,
-        "sha256": "81b8e2094b512d3ecb8b6a2ce9ded32ba53af5a5c85452f36ec7fffbeb00c86e"
+        "sha256": "b235a9c1261bab6ce81675c6f1a138d6a78e1e990c1a2715479902402eb3e425"
       },
       "output": {
         "file_count": 47,
-        "sha256": "a527650adb7380178add3061be31cad6f2b4394122e1d92e706cea01bd63c173"
+        "sha256": "69d397448da82520e332c924c8c6d4e094a17edcb1c47d48d3f7611bfc49ef74"
       },
       "source": {
         "file_count": 56,
         "sha256": "4120062e7c70f56ce1ef67e3f334f8894fa0f0fb05c01baa13eb6ca370d5467e"
       },
       "stage": {
-        "file_count": 1770,
-        "sha256": "cc3f1a1616481a3bd11a9d76cdd898ab312db2dbf8815bcb9ab7512e274f20fb"
+        "file_count": 1764,
+        "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
       }
     },
     "project": "templates/template_sia",

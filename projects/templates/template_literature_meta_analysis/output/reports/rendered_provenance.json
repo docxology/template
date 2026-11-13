@@ -130,42 +130,42 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "53eb74ada57cac60e6e88d86415e49778a90388491ff8e3078221e0d9591277a",
+      "sha256": "e1b0b11fd7431b411f1b6186ece96ec9f43081c0d9069bf48dba757c35d049be",
       "size_bytes": 41689
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "53ab4749d54ddabeb637b4b2965227d369525732c9968640dd5aa4307bb7c424",
-      "size_bytes": 76689
+      "sha256": "0686ac9141719456f462dec634421aeb26c3703de5fc76ecd6f079def146b95c",
+      "size_bytes": 76819
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "8f96883928ce65f20a4d34ef9eee7b1b79398dab035771b653b47ccb65605e22",
+      "sha256": "9c5b39f6268ee8cab5beb53573f83f05a34cfd678d508360760c785bc4f242cd",
       "size_bytes": 4839
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "7853c38a165fcbe8cd4e2a365f58de3e1ec424a9a177aff9a79738e08a0feaa4",
-      "size_bytes": 16488
+      "sha256": "eaa363f26910d94e032e221866f0ad536ae8f3a0d7d1581936eafdaa81adc3a1",
+      "size_bytes": 16487
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 22,
-      "sha256": "7c9a1f0d12c8a28c5d768e12ffbe31998299ba3fd11658dd0262360d089b9334"
+      "sha256": "8eb1eaec7acaba0b1bdffffac2738d0bb254eb17215efd38f327c00829d6e3a2"
     },
     "output": {
       "file_count": 127,
-      "sha256": "1e24d27b583031e07b2f0dbd14fe0e423718fd5a66e2159730d161ee57bb23f0"
+      "sha256": "47f8506db05c81f7073e24a436ac8210c48a058fbeda63efe82a3d5a7b635e20"
     },
     "source": {
       "file_count": 142,
-      "sha256": "60fbed605c0368f6115775ffb4b5c0998391ad75ec0d70c4e954f1376d3b0200"
+      "sha256": "f4b72ef6e33d486ebd0c150da0c75edddf15a27a1592bc100b702622c74d1424"
     },
     "stage": {
-      "file_count": 1770,
-      "sha256": "cc3f1a1616481a3bd11a9d76cdd898ab312db2dbf8815bcb9ab7512e274f20fb"
+      "file_count": 1764,
+      "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
     }
   },
   "project": "templates/template_literature_meta_analysis",

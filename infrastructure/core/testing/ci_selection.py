@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import shutil
+import sys
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -194,10 +195,10 @@ def main() -> int:
     infrastructure_selection(root, plan)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(plan, sort_keys=True, indent=2) + "\n")
-    print("docs_only=" + ("true" if plan.get("documentation_only") else "false"))
-    print("matrix=" + json.dumps(project_smoke_selection_matrix(root, tuple(plan["projects"]))))
-    print("infra=" + json.dumps(_infra_matrix(plan["infra_shards"])))
-    print("contracts=" + json.dumps(_contract_matrix(plan["infra_shards"], plan["contract_modules"])))
+    sys.stdout.write("docs_only=" + ("true" if plan.get("documentation_only") else "false") + "\n")
+    sys.stdout.write("matrix=" + json.dumps(project_smoke_selection_matrix(root, tuple(plan["projects"]))) + "\n")
+    sys.stdout.write("infra=" + json.dumps(_infra_matrix(plan["infra_shards"])) + "\n")
+    sys.stdout.write("contracts=" + json.dumps(_contract_matrix(plan["infra_shards"], plan["contract_modules"])) + "\n")
     return 0
 
 

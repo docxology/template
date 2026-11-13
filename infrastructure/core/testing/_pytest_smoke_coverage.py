@@ -1,5 +1,6 @@
 """Keep smoke and metadata pytest processes free of coverage."""
 
+import sys
 from collections.abc import Iterator
 from typing import Any
 
@@ -31,7 +32,8 @@ def pytest_load_initial_conftests(early_config: pytest.Config, args: list[str]) 
     if _metadata_mode(early_config, options) == "capability":
         absent = object()
         supported = early_config.getoption("--cov-datafile", absent) is not absent
-        print(f"\n{_METADATA_RESULT}capability:{'yes' if supported else 'no'}", flush=True)
+        sys.stdout.write(f"\n{_METADATA_RESULT}capability:{'yes' if supported else 'no'}\n")
+        sys.stdout.flush()
         raise SystemExit(0)
     if hasattr(options, "no_cov") and not options.no_cov:
         # pytest-cov reads the early namespace, then pytest reparses argv.
@@ -66,4 +68,5 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
         and count > 0
         and count == len(session.items)
     ):
-        print(f"\n{_METADATA_RESULT}discovery:{count}", flush=True)
+        sys.stdout.write(f"\n{_METADATA_RESULT}discovery:{count}\n")
+        sys.stdout.flush()

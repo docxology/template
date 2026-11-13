@@ -1,8 +1,9 @@
 # Functional CI and optional hardening
 
 The public template should be easy to install and use. Default CI checks that
-contract on Linux/Python 3.14, without starting Docker, Lean, a browser, or a
-native document acceptance matrix.
+contract on Linux/Python 3.14, without starting Docker, Lean, or the complete
+native document acceptance matrix. Selected behavioral controls prepare and use
+their actual browser and document tools.
 
 On main and manual runs, every public template builds a wheel and runs the real behavioral tests listed
 in `.github/project-smoke.json`, in a separate pytest process. Most tests use a disposable project copy; tests
@@ -24,8 +25,9 @@ planning preference. Broad rosters expand beyond that preference when needed
 to retain the twelve-module cap; hosted concurrency remains sixteen jobs. Without any applicable measurement, file capacity determines job count
 and byte sizes only balance placement. Neither estimate proves a cell will fit its deadline. Explicit one-to-eight shard
 requests retain their existing manual packing behavior.
-Smoke keeps its 540-second child budget and ten-minute job limit;
-contract jobs use the existing full-infrastructure 120-second per-test default,
+Smoke keeps its 540-second child budget and ten-minute execution-step limit;
+the surrounding infrastructure job allows 75 minutes including preparation.
+Contract jobs use the existing full-infrastructure 120-second per-test default,
 retain explicit test-owned timeout markers, and have a separate 6600-second
 whole-module ceiling below the existing Root acceptance budget. The explicit
 pytest option applies to this test process; nested producer environments retain
@@ -57,19 +59,109 @@ dependency group and root lock/package/Python-selector inputs. Every caller
 still runs its declared locked reconciliation. Reused downloads or environments
 are preparation inputs, never accepted runtime results.
 
-Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
-selected compiler controls also install the recommended TeX fonts and verify
-`pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract
-additionally prepares the declared Pandoc/XeTeX document producers and readers. The native portability contract warms the exact Root
-lockfile's default and dev groups in a fresh job-owned environment before its
-unchanged offline fixture runs; a restored environment alone does not establish
-that the required wheel archives remain cached.
+Hardening retains four infrastructure shards for Linux on both supported Python
+minors and macOS on Python 3.15. Linux uses `ubuntu-24.04`, matching the pinned
+Noble APT admission rather than admitting a new runner distribution implicitly.
+Original pytest worker identity comes from actual `Config.workerinput`; an
+inherited `PYTEST_XDIST_WORKER` does not turn a fresh serial controller into a
+worker. The Active project cells and public-matrix interpreter include the
+existing `active-inference` group; default SDK installation is unchanged.
+
+Linux hardening infrastructure and its separate slow lane run under the existing
+[fresh execution-account profile](../../.github/actions/setup-ci-execution-user/README.md).
+Prepare tools, browser binaries and the copied Active environment before
+handoff. Invoke the selected `.venv/bin/python` directly and explicitly nominate
+it for nested `uv` consumers; the account's credential-filter allowlist is not
+expanded. Locked native exports likewise select their actual installed
+interpreter rather than inheriting `.python-version`.
+
+Infrastructure scheduling uses `load --maxschedchunk=1`. Ordinary modules retain
+their stable file assignment. The complete parameter inventories in
+`test_native_pdfium_runtime_guard.py`, `test_native_pdfium_verify_current.py` and
+`test_native_source_wheel_guard.py` are distributed round-robin over the same four
+shards, in canonical collected order. Every control retains its independent
+Source, wheel, installation and fresh audit; no mutable authority or result is
+shared to save time. Extra worker-local fixture setup trades bounded duplication
+for balanced execution. Worker crashes must return their genuine failed exit
+without artificial controller interruption. Worker counts, marker selections,
+job and per-test clocks, explicit test-owned timeout markers and the 60% complete
+coverage union remain unchanged.
+
+Export Linux coverage under the same execution account, then always transport
+the original readiness bytes before artifact upload. The runner uploads from
+`TEMPLATE_CI_ARTIFACT_DIRECTORY`; macOS retains its original `output/readiness`
+paths. Partial diagnostics never establish complete selection or coverage.
+Keep evidence-class mutation fixtures separate from the loaded SDK and require
+their initialized pinned Source closure instead of accepting skipped controls.
+
+Hardening retains each infrastructure shard's original JUnit report in
+`infra-case-diagnostics-<os>-<python>-<shard>`. JUnit distinguishes case failures,
+setup errors and skips; a completed-node selection receipt alone is not proof
+that a case passed. Linux transports JUnit through the existing fresh-account
+readiness exporter rather than expanding its environment allowlist.
+
+Linux also exports the fresh account's retained numbered `pytest-N` case trees
+into `pytest-case-diagnostics/`. The selected original diagnostic leaves match
+the macOS artifact scope, including captured copied-package subprocess streams.
+No-follow directory descriptors, execution-UID checks and single-link regular
+files exclude aliases, substituted files, fixture checkouts and browser caches.
+Readiness and case transport share the original 120-second deadline, 16 GiB byte
+ceiling and 300,000-entry ceiling; neither export grants runtime acceptance.
+Portable filesystem controls do not establish the hosted account transition.
+Selected leaf descriptors bind to their original census metadata. Copies remain
+private until the final roster/byte checks pass; failed staging stays below the
+execution account's private temporary root, outside the uploaded artifact path.
+Traversal-only fixture aliases are pruned, never followed. Native Git Trace2
+files are selected beside their numbered factory fixture, not inside its Source.
+
+On macOS, owned case workspaces live beneath the runner's temporary directory.
+Pytest's parent/worker fault handler emits a nonterminating stack observation
+after 90 seconds. Genuine PDFium children use only synchronous, fixed
+caller-thread progress records: no child watchdog or additional profiler is
+installed. Optional FD2 write failures do not replace the original verification
+or mutation outcome. `verify:unwound` means the observed verifier exited and its
+previous profiler was restored, not that verification succeeded or the entire
+execution context closed. A missing optional record does not prove its boundary
+was never reached.
+
+The complete public-reference fixture also retains the real native Git staging
+Trace2 events. Its explicit subprocess environment nominates a sibling trace
+file outside copied/staged Source; neither inherited variables nor `git -c`
+enable Trace2 through this sanitized environment. All public bytes, every
+canonical project's stable outputs, empty directories, pinned submodule and the
+existing staging timeout remain intact. See the
+[Git Trace2 contract](https://git-scm.com/docs/api-trace2) for event semantics;
+the last emitted event is not an exact blocked instruction.
+
+The diagnostic artifacts select those fixture traces and genuine PDFium
+stdout, stderr, exit, runtime-input and observation files, excluding pytest's
+`current` workspace aliases. They do not upload whole fixture clones, virtual
+environments or wheel payloads. Logs can contain run-local paths; review them
+before redistribution. Missing exits, partial records and failed runs remain
+missing or failed: these diagnostics do not grant Source admission, waive any
+provider or deadline check, or establish complete hardening, main or release
+acceptance.
+
+Infrastructure smoke prepares the converter first, admitting reviewed signed
+Ubuntu mirrors before its single Poppler and selected TeX install. Linux builds
+the Source-pinned dynamic converters; macOS uses exact official archives.
+Selected compiler controls verify the recommended fonts and `pzdr.tfm`, which
+XeTeX hyperlink support requires. The auxiliary contract additionally prepares
+its declared Pandoc/XeTeX producers and readers.
+Native portability and Auto prepare fresh caches with Source-locked build tools
+in a backend-only environment. Online runtime preparation uses those tools
+without build isolation or dependency resolution and installs into a separate
+target, allowing exact locked sdists to build without polluting the backend.
+Both preparation and native consumption nominate archives for the actual
+selected interpreter's minor. Fresh consumers still require offline,
+no-build and exact-hash installation; neither `uv sync` state nor a restored
+environment proves those archives remain available to that consumer.
 
 Run a project's same selection locally after locked root setup:
 
 ```bash
 uv sync --locked --group installed-build
-uv run python scripts/gates/ci_smoke.py --project templates/template_code_project
+.venv/bin/python scripts/gates/ci_smoke.py --project templates/template_code_project
 ```
 
 Advanced Literature Review also needs its declared Meta provider installed;

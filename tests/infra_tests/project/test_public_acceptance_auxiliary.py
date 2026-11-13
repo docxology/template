@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import errno
 import os
 import shutil
 import stat
@@ -30,14 +29,14 @@ PRINT_WITNESS_FAULTS = {
 
 
 def _copy_prepared_runtime_file(original: str, copied: str) -> str:
-    """Retain independent prepared bytes without changing the source inode."""
-    try:
-        os.lstat(copied)
-    except FileNotFoundError:
-        pass
-    else:
-        raise FileExistsError(errno.EEXIST, os.strerror(errno.EEXIST), copied)
-    return shutil.copy2(original, copied)
+    """Copy bytes, mode and timestamps, never foreign BSD flags or source links."""
+    with open(original, "rb") as source:
+        metadata = os.fstat(source.fileno())
+        with open(copied, "xb") as destination:
+            shutil.copyfileobj(source, destination)
+            os.fchmod(destination.fileno(), stat.S_IMODE(metadata.st_mode))
+    os.utime(copied, ns=(metadata.st_atime_ns, metadata.st_mtime_ns))
+    return copied
 
 
 @pytest.mark.skipif(os.name != "posix" or os.geteuid() == 0, reason="requires actual nonroot POSIX file ownership")
@@ -53,6 +52,7 @@ def test_prepared_runtime_copy_preserves_owned_and_foreign_file_boundaries(tmp_p
     assert owned.stat().st_nlink == owned_copy.stat().st_nlink == 1
     assert owned_copy.read_bytes() == owned.read_bytes()
     assert stat.S_IMODE(owned_copy.stat().st_mode) == 0o640
+    assert owned_copy.stat().st_mtime_ns == owned.stat().st_mtime_ns
     assert tuple(getattr(owned.stat(), field) for field in fields) == owned_before
     owned_copy.write_bytes(b"independent disposable runtime changes")
     assert owned.read_bytes() == b"actual owned prepared runtime"
@@ -73,6 +73,8 @@ def test_prepared_runtime_copy_preserves_owned_and_foreign_file_boundaries(tmp_p
     assert stat.S_IMODE(copied.st_mode) == stat.S_IMODE(metadata.st_mode)
     assert (copied.st_dev, copied.st_ino) != (metadata.st_dev, metadata.st_ino)
     assert copied.st_uid == os.geteuid() and copied.st_nlink == 1
+    assert copied.st_mtime_ns == metadata.st_mtime_ns
+    assert getattr(copied, "st_flags", 0) == 0
 
     sentinel = tmp_path / "existing-destination"
     sentinel.write_bytes(b"must not overwrite")
@@ -80,11 +82,18 @@ def test_prepared_runtime_copy_preserves_owned_and_foreign_file_boundaries(tmp_p
         with pytest.raises(FileExistsError):
             _copy_prepared_runtime_file(str(original), str(sentinel))
         assert sentinel.read_bytes() == b"must not overwrite"
+    for index, original in enumerate((owned, foreign)):
+        linked_destination = tmp_path / f"linked-destination-{index}"
+        linked_destination.symlink_to(original)
+        with pytest.raises(FileExistsError):
+            _copy_prepared_runtime_file(str(original), str(linked_destination))
+        assert linked_destination.is_symlink() and linked_destination.resolve() == original
     absent_copy = tmp_path / "absent-copy"
     with pytest.raises(FileNotFoundError):
         _copy_prepared_runtime_file(str(tmp_path / "missing-source"), str(absent_copy))
     assert not absent_copy.exists()
     assert tuple(getattr(foreign.stat(), field) for field in fields) == before
+    assert tuple(getattr(owned.stat(), field) for field in fields) == owned_before
 
 
 def test_supervision_preserves_original_failure_and_bound_streams(tmp_path: Path) -> None:
@@ -118,6 +127,96 @@ def test_supervision_kills_actual_timeout(tmp_path: Path) -> None:
 def test_supervision_refuses_evidence_escape(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="canonical path"):
         supervise([sys.executable, "-c", "pass"], tmp_path, tmp_path / "outside", time.monotonic() + 5)
+
+
+@pytest.mark.timeout(45)
+def test_native_stream_artifact_closure_survives_producer_and_wrapper_removal(tmp_path: Path) -> None:
+    import json
+
+    from infrastructure.project.public_acceptance_evidence import write_json
+    from infrastructure.reporting.native_format_acceptance_checks import native_tool_record
+    from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
+    from infrastructure.reporting.native_format_acceptance_evidence import _tool
+    from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
+    from infrastructure.reporting.native_tool_replay import validate_native_tool_data
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+    from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
+
+    producer = tmp_path / "producer"
+    producer.mkdir()
+    wrapper = producer / "producer-python"
+    wrapper.write_text(f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
+    wrapper.chmod(0o700)
+    directory = producer / "output/readiness/native-streams"
+    create_private_native_directory(producer, directory)
+    arguments = [
+        "-I",
+        "-c",
+        "import sys;print('actual original stdout');print('actual original stderr',file=sys.stderr)",
+    ]
+    deadline = time.monotonic() + 30
+    result = native_tool_record(
+        producer,
+        directory,
+        str(wrapper),
+        arguments,
+        env={"PATH": str(Path(sys.executable).parent)},
+        deadline=deadline,
+        run_id="a" * 32,
+        purpose="portable-streams",
+    )
+    completed = time.monotonic()
+    assert result["exit_code"] == result["original_exit_code"] == 0
+    reader_root = tmp_path / "reader"
+    shutil.copytree(producer, reader_root)
+    shutil.rmtree(producer)
+    assert not producer.exists() and not wrapper.exists()
+    reader = SnapshotReader(reader_root)
+    closure = _evidence_closure(reader, result["artifact"]["path"])
+    raw = json.loads(closure[result["artifact"]["path"]])
+    native = json.loads(closure[raw["native_process_artifact"]["path"]])
+    assert set(closure) == {
+        result["artifact"]["path"],
+        raw["native_process_artifact"]["path"],
+        raw["raw_stdout"]["path"],
+        raw["raw_stderr"]["path"],
+    }
+    assert set(reader.snapshots) == {reader_root / relative for relative in closure}
+    for channel in ("stdout", "stderr"):
+        original = native[f"raw_{channel}"]
+        retained = raw[f"raw_{channel}"]
+        assert Path(original["path"]).is_absolute() and not Path(original["path"]).exists()
+        assert original["sha256"] == retained["sha256"] and original["bytes"] == retained["bytes"]
+        assert closure[retained["path"]] == f"actual original {channel}\n".encode()
+    validate_native_tool_data(
+        raw, SnapshotReader(reader_root), original_deadline=deadline, original_completion=completed
+    )
+    with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
+        _tool(result["artifact"], SnapshotReader(reader_root), "a" * 32, str(wrapper), "portable-streams", arguments)
+    native_path = reader_root / raw["native_process_artifact"]["path"]
+    original_native = native_path.read_bytes()
+    try:
+        for channel in ("stdout", "stderr"):
+            for schema in (None, "unrecognized-stream-observation"):
+                changed = json.loads(original_native)
+                if schema is None:
+                    changed[f"raw_{channel}"].pop("schema_version")
+                else:
+                    changed[f"raw_{channel}"]["schema_version"] = schema
+                changed_binding = write_json(reader_root, native_path, changed)
+                with pytest.raises(ValueError, match="raw bytes/text"):
+                    validate_native_tool_data(
+                        {**raw, "native_process_artifact": changed_binding},
+                        SnapshotReader(reader_root),
+                        original_deadline=deadline,
+                        original_completion=completed,
+                    )
+    finally:
+        native_path.write_bytes(original_native)
+    stream = reader_root / raw["raw_stdout"]["path"]
+    stream.write_bytes(b"changed retained native stdout")
+    with pytest.raises(ValueError, match="original reference"):
+        _evidence_closure(SnapshotReader(reader_root), result["artifact"]["path"])
 
 
 @pytest.mark.parametrize("gate", ["root:docs_lint", "root:methods", "root:macos:process"])
@@ -368,7 +467,7 @@ def test_real_process_readback_after_producer_root_and_wrapper_deleted(tmp_path:
         for item in members
         if item.is_file() and not item.is_symlink()
     }
-    shutil.copytree(prefix, reader_runtime, copy_function=shutil.copy2, symlinks=True)
+    shutil.copytree(prefix, reader_runtime, copy_function=_copy_prepared_runtime_file, symlinks=True)
     for relative, expected in originals.items():
         original = prefix / relative
         copied = reader_runtime / relative

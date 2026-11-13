@@ -195,6 +195,8 @@ jobs:
       - name: Prepare pinned Lean and TLC before formal observations
         timeout-minutes: 20
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           bash scripts/shell/prepare_ci_lean.sh
@@ -202,7 +204,7 @@ jobs:
           for pin in projects/templates/template_active_inference/lean/lean-toolchain projects/templates/template_formal/formal/lean/lean-toolchain; do
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
           done
-          sudo apt-get install -y --no-install-recommends default-jre-headless
+          sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends default-jre-headless
           java -version
       - name: Warm exact locked offline wheel dependencies for every scope and minor
         timeout-minutes: 30
@@ -453,6 +455,8 @@ jobs:
         if: matrix.formal
         timeout-minutes: 20
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           bash scripts/shell/prepare_ci_lean.sh
@@ -461,7 +465,7 @@ jobs:
             "$HOME/.elan/bin/elan" toolchain install "$(tr -d '[:space:]' < "$pin")"
           done
       - name: Prepare the declared Java launcher
-        run: sudo apt-get install -y --no-install-recommends default-jre-headless
+        run: sudo apt-get -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 install -y --no-install-recommends default-jre-headless
       - name: Prepare the exact immutable SIA sandbox image
         if: matrix.docker
         timeout-minutes: 10
@@ -572,18 +576,10 @@ jobs:
       # the readiness action derives the full roster after its own `uv sync`, which
       # is the only point where an interpreter exists.
       - uses: ./.github/actions/setup-native-installed-readiness
-      - name: Strict rendered publication evidence gate
-        # The native worker refuses on this same strict rendered predicate before
-        # any stage executes, so run it first: a stale receipt fails in seconds
-        # instead of after the bounded native lifecycle. It skips and weakens
-        # nothing; the lane still owns every native check.
-        #
-        # --rendered is deliberately NOT asserted here, for the same reason as in
-        # platform-native-preflight.yml: rendered receipts are rebound only by
-        # rebind.yml, which is dispatch-only and acts on the tip of origin/main.
-        # Asserting a current rendered receipt inside a dispatch-only acceptance
-        # run demands a rebind this run cannot perform. Every source, methods,
-        # evidence, figure, artifact and placeholder check below still blocks.
+      - name: Strict source publication precheck
+        # Refuse invalid source, methods, evidence, figures and artifacts first.
+        # This is not the rendered-provenance gate: the native worker admits
+        # current rendered evidence before stages and audits it again afterward.
         run: >-
           .venv/bin/python -m infrastructure.validation.cli publication-audit --all-public
           --strict --require-figure-accessibility --format markdown
@@ -615,8 +611,8 @@ jobs:
           # of this workflow's 31 failures retained its transport correctly and
           # then expired after one day before anyone read it. The refusal that
           # blocks every release has therefore never been diagnosed. Thirty days
-          # covers a release cycle. The per-cell indexes below keep one day:
-          # they are bulk, and they are not the diagnostic.
+          # covers a release cycle; per-cell primary indexes and shards also
+          # explicitly request thirty days. Retrieval still checks actual expiry.
           retention-days: 30
       - name: Preserve failed original raw and Code evidence
         if: always() && steps.native.outcome == 'failure'
@@ -756,7 +752,7 @@ jobs:
           # workflow's 31 failures retained its transport and then expired after
           # one day before anyone read it, so the refusal that blocks every
           # release has never been diagnosed. Thirty days covers a release cycle;
-          # primary per-cell indexes keep their one-day default.
+          # primary per-cell indexes and shards also explicitly request thirty days.
           retention-days: 30
 
   complete:

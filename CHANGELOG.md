@@ -16,16 +16,86 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Resolve optional NumPy only for scientific consumers, keeping psutil-only
+  logging and resource-monitor imports independent of numerical providers.
+  Preserve actual provider identity and existing optional-import semantics.
+- Retain original before/after fingerprint-program streams for frozen-Source
+  CLI controls through the existing bounded diagnostic artifact allowlist.
+  Exact total matches identify corresponding components without substituting
+  adjacent-process observations for admission or release evidence.
+- Retire parser-internal/default/wording smoke tests instead of repinning their
+  incidental assertions. Keep real CLI mutation/error/discovery consumers, and
+  isolate the missing-repository boundary in its own disposable fixture.
+- Supervise fingerprint-observer descendants through the existing bounded
+  executor before continuing, preserving the two-second observation and
+  110-second CLI deadlines, original/effective exits and explicit UTF-8 capture.
+  Retire remaining prose-only discovery and success-only JSON inventory smoke
+  cases; retain data-bearing discovery/inventory and real error boundaries.
+- Skip optional UV version probes when no `VIRTUAL_ENV` entry can be removed;
+  preserve the resulting environment and every existing present-entry behavior
+  without caching source observations or changing execution deadlines.
+- Avoid resolving native Source-directory ancestry twice before the existing
+  held no-follow witness. Keep physical identities, search-only access,
+  substitution refusals and every original closing Source/deadline check.
+- Retain bounded publication-supervision refusal facts in real consumer
+  diagnostics without accepting rejected children or changing original exits.
+- Count citation-reference glyphs through the same PDF parser layout objects
+  without allocating unused per-character geometry dictionaries; retain all
+  page/glyph limits, source checks and the original finite deadline.
+- Export only explicit publication-supervision diagnostic streams/exit JSON
+  on both hosted platforms; retain UID/no-follow/link/privacy/byte boundaries.
+  Observe bounded exact SDK RECORD bytes and their component hash separately
+  from Source admission so unexplained metadata changes remain diagnosable.
+  Preserve the original component JSON for an unavailable analysis runtime.
+- Revalidate failed process-age observations against fresh OS process state;
+  only confirmed exit, UID change or zombie state clears the census entry.
+  Live unreadable or unknown-age processes remain strict custody refusals.
+- Retire provider command-structure and embedded-source assertion pins; keep
+  actual provider, Source, wheel and argument-mutation consumer coverage.
+- Reuse only bounded immutable compilation and canonical-Code derivations during
+  executed-bytecode checks; freshly consume every Source, hook and cache at every
+  admission/completion boundary, preserving all original declarations and guards.
+- Observe nominated native Source directories through one fresh held no-follow
+  ancestor traversal per observation. Preserve every identity, search-only policy,
+  opening/closing check and caller deadline without cross-guard observations.
+- Run offline skill-evaluation CLI controls with the selected prepared Python and
+  an owned copy of the actual harness. Do not reconcile the shared SDK runtime or
+  overwrite its public baseline while parallel frozen-Source consumers run.
+- Run health gates and required security scanners with the selected prepared
+  Python, without implicit dependency reconciliation during parallel execution.
+  Retire obsolete UV-only health fixtures and command/wording assertion pins.
+- Preserve the Calibre missing-member refusal contract when strict held-custody
+  closing checks raise before a missing-leaf filesystem error.
+- Require published pip-api0.0.35 or newer for the required pip-audit scanner
+  on supported Python; regenerate only that locked package, preserving the
+  installer security floor and all other dependency records.
+- Retire shell syntax, Source-text, forwarding and exact dry-run wording pins;
+  keep actual CLI root-resolution, listing and fail-closed execution consumers.
+- Avoid compression and pack delta-search in disposable complete-source DATA
+  fixtures; retain native clone transport, independent Source inventories,
+  negative consumers, original setup clocks and worker selection.
 - Share lifecycle traversal and direct public selection, keeping private
   workspaces outside the public roster.
 - Consolidate stage vocabulary and target admission, worker transport, report
   validation and archive readback under their owning contracts.
 - Render confined prepared Markdown as scriptless HTML for untrusted inputs.
   Bind live review configuration and generated filenames to the selected project.
+- Retain distinct prepared untrusted manuscript pages when legacy slugs collide.
+  Their contents remain separate and scriptless under actual disambiguated
+  destinations; safe names need not inherit an obsolete collision refusal.
 - Preserve secure-PDF provenance across repeated runs using publisher-owned
   custom-suffix receipts.
 - Build Active Inference certificate and crosswalk output from a single ledger
   projection and regenerate its method inventory.
+- Preserve exact integer-zero original exits in retained publication receipts;
+  JSON booleans and floating-point zero cannot certify a successful producer.
+  Source, command and original stream-byte bindings remain enforced.
+- Review complete Root families against original four-target member and fixture
+  ledgers and substantive public Source evidence, preserving jq, uv and Pandoc
+  prerequisites. AI metadata grants neither human signoff nor runtime acceptance.
+- Refresh the literal Root case policy from all four supported targets and
+  record the baseline date after genuine release-profile measurements for
+  every public exemplar; retain the complete original producer evidence.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
@@ -95,6 +165,11 @@ locks.
   live peer logging and restoration after the last owner. Remove the malformed
   metadata fixture's incidental `None` expectation, which Python 3.15 rejects
   with `KeyError`, while retaining valid metadata and mutation-freshness checks.
+- Keep isolated Meta SDK-origin and canonical-startup readers bytecode-readonly
+  from interpreter startup, including when isolated mode ignores Python
+  environment settings. Preserve genuine standalone corpus, provider-shadow,
+  invalid-domain and empty-selection consumers; retire documentation-command,
+  tuple-copy and exception-wording pins instead of repinning them.
 - Overlap only independently owned external-fixture Root chunks, with at most two
   original guarded processes, serial per-child pytest and unchanged case/cohort
   clocks. Bind actual launch/finish offsets and remaining budgets in schema-3
@@ -162,9 +237,380 @@ locks.
 - Re-author the complete Root case policy from four fresh same-job originals
   and explicit module decisions. Preserve independent original census bindings;
   policy serialization and collection do not grant runtime acceptance.
+- Observe optional guardian-lifetime process ages with portable POSIX `ps etime`
+  on Darwin and Linux. Preserve the strict default census, unreadable newer-holder
+  refusal, original shared deadline and age margin; exercise real process-age
+  boundaries and Linux non-dumpable controls before and after the repair.
+- Emit pytest capability/discovery metadata through flushed protocol stdout,
+  preserving exact records without library `print` calls or logging substitution.
+- Regenerate the API reference from the current public `__all__` declarations;
+  preserve prose outside its canonical generated markers.
+- Close preview and direct plugin-plan executors deterministically. Exercise
+  last-owner restoration in an isolated real Python process, without resetting
+  another live owner's logging or repinning its expected level.
+- Supply health-gate controls with genuinely generated standalone metadata and
+  its matching lock. Frozen consumers retain `UV_FROZEN`, the real `uv run`
+  command and every complete zero-drift/exit/failure boundary.
+- Complete the health-gate fixture's permanent README/agent guide pair without
+  changing its standalone lock, parser inputs or strict health decisions.
+- Filter genuine PDFium profiling to the observed code identities before
+  inspecting parent frames. Preserve all original mutation controls, complete
+  Source custody, real providers, two workers and the 900-second case deadline.
+- Distinguish post-admission shared Source/environment custody loss from invalid
+  invocation through `SharedRuntimeCustodyError`. Retain one original component
+  observation, blocked exit 75 and typed worker/report completion, including
+  refusal before an executor initializes its output root. Hold the physical
+  output directory while appending worker logs; retain mandatory closing Source
+  and bytecode checks. Malformed storage, target and policy declarations remain
+  invalid.
+- Transport retained Linux pytest case diagnostics from the genuine execution
+  account without relocating workspaces or expanding its credential allowlist.
+  Exclude aliases, Source/caches and substituted physical entries; share the
+  existing readiness transport deadline, byte and entry ceilings. Diagnostic
+  custody does not grant hosted runtime, hardening or release acceptance.
+- Bind case copies to their original census metadata and keep staging private
+  until final validation. Prune traversal-only fixture aliases without following
+  them; retain genuine factory-level Git Trace2 without copying its Source tree.
+- Inherit diagnostic publication read/search permissions from the artifact parent,
+  retaining private staging and the original cross-account upload boundary.
+- Keep shared-runtime Source digests and canonical-stage declarations in distinct
+  typed locals without changing custody, storage, target or policy validation.
+- Reuse guarded exact-file-version digests for citation dependencies and native
+  executables instead of repeatedly materializing their bytes. Retain fresh
+  no-follow observations, all process/custody checks and original finite clocks.
+- Keep effective render-format loading independent of manuscript and artifact
+  validator imports during pipeline reporting. Load the same validators only
+  when their actual formats are checked; preserve every output and custody gate.
+- Resolve the existing core file-helper exports on demand through the SDK's
+  established lazy-provider pattern, retaining public names and concrete helper
+  identities without importing cleanup and inventory for confined leaf reads.
+- Keep invalid final-report receipts failed when guardian cleanup also refuses
+  custody. Preserve the actual child exit and append cleanup evidence without
+  demoting a selection forgery to pending work.
+- Explicitly opt Formal's owned local trial databases into SQLite WAL with FULL
+  synchronous durability. Preserve per-observation commits, ordinary caller
+  defaults, complete seeded workloads and original case clocks.
+- Add an exact-source macOS process probe for Formal's existing live/unreaped
+  and detached-descendant consumers on both supported Python minors. Retain
+  original streams, exit and exact unskipped JUnit; full coverage remains separate.
+- Retain complete expected/observed and Source/Python/tool component digests when
+  frozen execution identity refuses before launch or completion. Reuse one fresh
+  observation and the existing worker diagnostic schema; do not expose environment
+  values, rebaseline the plan or change original refusal/deadline precedence.
+- Require execution-account preparation to use the exact GitHub trigger commit,
+  including the normal pull-request merge checkout. A real-Git regression
+  rejects an ordinary child checkout whose parent matches the trigger SHA;
+  ancestry alone cannot authorize a different Source or bypass the shared clock.
+- Preserve the preceding main-lane policy review's genuine complete Linux/macOS
+  collection on Python 3.14 and 3.15: 994 modules, 13,023 families and 17,224
+  members. That review kept the exact-checkout family in Core with its Git
+  prerequisite and all 31 then-declared obligations. Final merged-Source policy
+  requires fresh four-target authorship; metadata is not runtime acceptance
+  or human approval.
+- Export hosted native diagnostics only from numbered xdist case directories
+  and explicit original diagnostic leaves. Avoid fixture symlink loops,
+  `current` aliases, copied Source/environments and browser profiles.
+- Retain full browser-wrapper stdout/stderr, command and original outcome before
+  raising its actual child refusal; diagnostic loss cannot replace that refusal.
 
 ### Fixes carried forward from main
 
+- Make SDK GitHub publication create-only: refuse existing releases, including
+  drafts, and require the verified existing tag without release upserts or
+  asset replacement. Preserve original acceptance, exact admitted assets and
+  retrieved-byte verification.
+- Require the complete original hosted acceptance triple in GitHub publication;
+  remove the unsupported composed-only workflow input while retaining
+  standalone composed-evidence validation.
+- Wait for the selected original native acceptance producer before final
+  collection, preserving both lanes, the complete-roster guards and clocks.
+- Retain original infrastructure JUnit outcomes and selected macOS native case
+  files, nonterminating parent/worker stacks, synchronous PDFium progress and
+  genuine fixture Git staging traces without uploading whole disposable Source
+  trees or environments. Optional diagnostic writes preserve original failures;
+  all controls, Source custody, shard coverage and production clocks remain.
+- Retire workflow-shape, copied-output, report-wording and serialization-tautology
+  test pins without replacing them. Preserve real aggregate shell execution,
+  malformed-input, no-side-effect, case-conservation and genuine wheel controls;
+  refresh their canonical metadata before policy qualification.
+- Give temporary health-gate parser workspaces their own non-packaged uv project
+  and workspace boundary instead of resolving unrelated ancestor packages.
+  Preserve complete zero-drift summary decisions and unchanged production gate
+  commands and timeouts.
+
+- Match hardcoded test totals as integer tokens, not components of dotted
+  versions or decimals. Keep real totals blocking strict documentation drift
+  validation even beside valid runtime-version prose.
+
+- Retire release-workflow source-shape and wording pins without repinning
+  publisher wiring. Preserve real handoff, archive, version and shell-routing
+  consumers, including blank and partial 5.x handoff refusals.
+- Preserve original multi-project CLI timeout streams and command/deadline
+  observations before re-raising the original exception, without inventing an exit.
+  Keep existing deadlines and fail-closed resume; document bound checkpoint
+  eligibility, retained progress and deliberate separate fresh execution.
+
+- Requalify complete Root case-policy review inputs against every supported
+  native target before policy authorship. Preserve declared obligations and
+  explicitly bind real Git-dependent tracked/untracked documentation checks.
+  Refresh complete family/member/fixture bindings for the three real
+  crash-recovery cleanup callers after fresh Linux/macOS census collection.
+  Install the lossless authored literal policy after all four complete original
+  plans and the canonical encoding roundtrip agree; runtime acceptance remains
+  separate.
+
+- Replace retained numeric-PID fallback cleanup in crash-recovery tests with
+  inherited fixture-owned run identities and live owned Popen cleanup. Keep
+  actual detached-descendant, interruption, provenance and arming assertions.
+
+- Derive each guardian package identity from its same fresh verified Source
+  census, removing an immediate duplicate tree walk while preserving separate
+  parent-startup/child-READY/child-DONE observations and all custody checks.
+- Retain bounded expected/observed Source identities and source/Python/tool
+  component digests when a stage refuses a frozen-plan mismatch. Preserve the
+  original refusal, leaf exit and aggregation semantics without exposing paths.
+  Preserve complete child streams on unexpected shared-CLI test exits so
+  genuine mismatch diagnostics survive assertion-representation clipping.
+- Preserve full typed failure diagnostics in compact multi-project status,
+  including shared-infrastructure aborts; use the same formatter in core,
+  standalone serial and parallel CLI consumers. Make complete diagnostics the
+  default while retaining explicit formatter caps for caller-requested summaries.
+  Remove duplicate ad hoc status helpers, not custody guards.
+- Cover genuine shared/project Source changes through the actual CLI: retain
+  refusal 75, complete expected/observed/component identities, once-only shared
+  execution and selected-project boundaries. Retire obsolete formatter echoes
+  and not-throw reporting checks instead of pinning replacement wording.
+- Retain the original early Source-wheel refusal as the direct cause when a
+  genuine mutation control cannot reach its nominated boundary, with actual
+  guard events, Git-return count and remaining-clock context. Preserve the
+  positive pass, real mutation checks and every original custody boundary.
+- Read each citation frozen input once for its fresh checked post-tool record;
+  retain all pre-tool, final-use, executable, process, producer and callback
+  checks and original clocks. This removes duplicate I/O, not a deadline gate.
+- Install the source-suite Meta provider into both declared Python 3.14/3.15
+  environments; remove stale 3.12/3.13 documentation variables and loop.
+- Repair Active Inference's Python 3.15 lock with upstream PyMDP 1.0.5 and
+  JAX/JAXlib 0.11.1, retaining the `jaxlib>=0.11.1` wheel-compatibility floor,
+  unrelated locked package versions and Main's coverage 7.17.2. Exercise real
+  Bayes/posterior/finite-EFE contracts and the simulation CLI on both tested
+  minors; remove the obsolete exact-version assertion instead of repinning it.
+- Remove Active Inference's incidental requirement that upstream emit a known
+  JAX warning. Retain the real unexpected-warning rejection control on both
+  tested minors and migrate its validation-spine binding; warning policy is
+  unchanged.
+- Refresh the authored Active Inference method reference through its canonical
+  producer. Retain real source/script coverage, read-only current/stale CLI
+  checks, no-mutation and writer-idempotence controls on both tested minors;
+  retire incidental format, count-floor and documentation-wording assertions.
+  Document regeneration before Source freeze and the existing future-only
+  eight-column backlog contract without introducing a second task format.
+- Refresh canonical public coverage literals from the complete original
+  release-profile cohort and retain its actual completion date, source-input
+  hashes, measurement support, individual job logs and primary archives before
+  generating current provenance and count documentation. Never relabel a failed
+  attempt or reuse its measurements as a fresh cohort.
+- Align infrastructure workflow guidance with its actual single-case load
+  scheduler; retain worker counts, selection, deadlines and coverage gates.
+- Bound release-path APT HTTP(S) connections and idle transfers to the existing
+  native 60-second acquisition convention. Preserve approved mirror priorities,
+  signed repositories, package selections, retry settings and total job budgets.
+- Correct native readiness cache-scope guidance: Root is always warmed; explicit
+  project scopes override selection, otherwise a selected cell includes its
+  local providers and no selected cell derives the complete public roster.
+- Retire obsolete workflow-source and rendered filename/log-copy assertions
+  rather than pinning their replacements; preserve archive-policy boundaries
+  and substantive rendering/error consumers.
+
+- Bind each ARL capability projection to one invocation's original audited
+  producer, retaining the first verdict even on failure. Separately authenticate
+  and read a downloaded same-Source carrier with the full original reader.
+- Stream downloaded auxiliary evidence under the existing native aggregate
+  budget while preserving per-file bounds and the complete required closure.
+- Collect and review Root family policy through actual same-checkout census
+  originals on both supported Python minors and host families. Keep policy
+  authoring separate from runtime and release acceptance.
+- Refresh exhaustive family classifications from all four original native
+  collectors after removing incidental assertions; verify complete current
+  Source inputs, exact encoding and every full plan before literal installation.
+  Keep native metadata/readback separate from executed runtime evidence.
+- Refresh explicit review inputs for integrated global HTML and source-owned
+  parser consumers, preserving every unrelated lane and prerequisite definition.
+  Requalify the numeric coverage baseline against current inputs and external
+  support: remeasure changed inputs, preserve other original producers/dates,
+  and rewrite COUNTS only when its actual live-fact rendering changes.
+- Include genuine fixture setup in Root prerequisite review: complete-source
+  clones require Git even when the eventual case body tests a refusal. Preserve
+  genuinely pre-I/O refusal exceptions instead of widening their requirements.
+- Acquire pinned TLC and both Ollama runtimes through official immutable asset
+  API locators with explicit content negotiation and existing GitHub tokens
+  scoped only to hosted acquisition. Preserve every artifact version, length,
+  SHA-256, retry limit and deadline; keep qualified offline runners offline.
+- Pin the actual Elan 4.2.4 installer bytes through official immutable asset
+  APIs rather than a bootstrap script's mutable secondary `latest` download.
+  Share its preparation inside all existing caller clocks, preserve their Lean
+  declarations and curl limits, and clear acquisition tokens before execution.
+- Remove remaining incidental CSS-token assertions while retaining actual
+  renderer-owned full-resolution figure links and their destinations.
+- Keep registered-report bibliography comments free of BibTeX entry sentinels;
+  preserve every reference entry and compile the complete manuscript through
+  the unchanged PDF and publication gates.
+- Capture genuine canonical artifact additions and retirements against frozen
+  base manifests and freshly validated public output inventories. Preserve
+  exact A/M/D bytes and native candidate trees, require every original
+  generation and all three strict gates, and keep unchanged-output rebinds
+  restricted to existing report updates.
+- Describe the existing publication DOI as an immutable version identifier,
+  preserving its preferred article citation without inventing a software-release
+  DOI or changing any archival record.
+- Resolve output-validation exports lazily so cold evidence-registry and
+  rendered-snapshot consumers do not enter an import cycle through leaf
+  artifact readers; preserve all existing public provider identities.
+- Preserve the selected HTML asset mode through Stage 03 configuration.
+  Explicit offline requests publish the pinned local MathJax closure or refuse;
+  they never silently substitute CDN assets.
+- Discover browser mathematics with bounded scanner-entry appends rather than
+  whole-document argument spreads. Preserve raw and Pandoc equations, selected
+  roots, ignore/process boundaries and live viewport reflow in large books.
+- Keep document roots unclipped so deep mobile anchors remain painted in long
+  books; retain responsive wrapping and table-local scrolling without masking
+  horizontal overflow at the page boundary.
+- Document the existing lazy Core facade exports without importing heavy
+  providers during cold API discovery.
+- Keep Linux hardening on its reviewed Noble distribution and provision Active's
+  existing dependency group in the interpreter that actually runs its tests.
+  Build exact runtime sdists online with Source-locked backend tools and
+  actual selected-minor nomination; retain fresh offline, no-build/hash consumers.
+- Run Linux infrastructure shards and the slow lane under the existing fresh
+  unprivileged execution account. Preserve selected-minor nomination for nested
+  `uv` consumers and locked exports, prepare admissible copied Active runtimes,
+  and transport original readiness and coverage bytes after same-UID export.
+- Balance infrastructure cases with `load --maxschedchunk=1` without changing
+  shard count, workers, clocks, exclusions or coverage floors. Require natural
+  failed completion after a worker crash instead of interrupting its controller.
+- Exercise evidence-class mutations on authentic owned Source copies with
+  initialized pinned submodules, never on the loaded SDK. Missing positive
+  fixture closure fails instead of silently skipping its controls; deliberate
+  unavailable-source refusals remain covered.
+- Keep those positive fixture assertions in canonical Ruff syntax without
+  changing their semantics or turning missing closure into a skip.
+- Correct workflow guidance to describe manual-only authenticated publication
+  from an accepted tag, the retired pre-4 path and actual native retention.
+  Tag creation is not publication, and input admission is not runtime acceptance.
+- Isolate composed-receipt controls on genuine per-test Source and artifact
+  trees; never delete or restore another worker's shared receipt.
+- Run the complete public-matrix receipt with one outer project worker while
+  preserving test clocks, coverage floors and every scientific input/assertion.
+  Keep database durability and seeded model algorithms unchanged.
+- Make genuine parallel-worker deadline and interruption controls wait for atomic
+  stage readiness within one shared 30-second fixture deadline, rather than
+  assuming native startup fits 12 seconds. Keep the separate four-second
+  exhaustion control, required cleanup assertions and production clocks; make
+  both fixture processes outlive that deadline and nominate the actual SDK root.
+- Spread every parameter in the three expensive native guard matrices over the
+  existing infrastructure shards. Preserve canonical full-case union, stable
+  ordinary-module assignment, independent mutable fixtures and every guard;
+  never reuse custody authority or raise deadlines to fit the work.
+- Stop measured frontmatter overflow on its first LaTeX pass, preserving actual
+  compiler/stdout diagnostics and refusing a published PDF. Keep all authored
+  negative-control content with deterministic hard breaks, not text reduction.
+- Give disposable non-Git CLI fixtures an explicit deterministic epoch instead
+  of depending on ambient workflow metadata. Retain both consumer output streams
+  on failure without changing production epoch admission or exit semantics.
+- Derive original pytest worker identity from actual pytest configuration;
+  inherited worker environment does not relabel a new serial controller.
+- Keep native process stream observations explicitly typed and distinct from
+  confined artifact input bindings. Copy disposable source bytes without
+  propagating privileged BSD flags or hardlinking candidate Source.
+- Reject lazy-import syntax above the declared Python floor and tolerate absent
+  optional distribution Version metadata without introducing persistent identity
+  reuse. Read bytecode locations through current module specifications.
+- Preserve portable native unknown-size LZMA streams. Bound the locally adapted
+  synchronous decoder by exact finite output, input and dictionary budgets,
+  complete stream consumption and unsigned final range state; retain every
+  original font body, hash and license.
+- Retire incidental prose/readability, CSS token and workflow/HTML wiring
+  assertions rather than repinning them. Retain bibliography resolution,
+  actual capability refusals and native consumer integrity controls.
+- Require selected cases from every declared regression file, not an incidental
+  suite-size floor; remove non-collected scaffolds and empty fixture packages.
+- Preserve native machine stdout/stderr protocols, explicit flushes and original
+  exits without library `print` calls.
+- Resolve Pandoc IDs before or after class/key-value attributes without treating
+  quoted hash text as a label or waiving genuinely missing targets.
+- Probe the existing real tagged-PDF test independently on all four targets;
+  require one passing case with no skip before drawing a capability conclusion.
+- Retain bounded, allowlisted HTTP error-header observations while preserving
+  existing retry behavior and keeping quota interpretation separate.
+- Retain structured rendered-validation drift observations and original worker
+  results, plus bounded Active producer phase diagnostics.
+- Prepare native transmission images before Active hydration audits; regenerate
+  its tracked publication evidence through the actual producers.
+- Preserve Newspaper image resource refusals and exercise valid, corrupt and
+  resource-limited images in the persistent project smoke roster.
+- Update development and scientific dependencies within their declared Root and
+  project lock scopes; qualify the actual consumers with the locked toolchain.
+- Retain artifact-only publication refresh and unchanged-output rebind review
+  patches with finite generated ownership, original exits and committed-tree
+  gates. Direct push remains inactive pending its separate owner decision.
+- Freeze final metadata and Source before publication regeneration and coverage.
+  Import genuine coverage literals from measured Source, regenerate publication
+  outputs that consume those values, compare measured source/support hashes and
+  remeasure affected source changes before all-project unchanged-output rebind
+  and exact-main acceptance.
+- Reconcile the canonical release boundary with the genuine dependent Pitch
+  analysis/refresh and nine-project rebind complement. Require explicit consent
+  for automatic GitHub-release/Zenodo archival without changing hooks or other
+  operators' approvals.
+
+- Run coordinated publication preparation under the existing fresh execution
+  account with exactly one generation worker, preserving strict original-process
+  observation and terminal phase failures through the disposable candidate and
+  review capture. Refuse concurrent shared-account workers before any phase.
+- Prepare Linux document tools from one frozen official TeX Live 2025 final
+  repository, with pinned installer and database bytes and coherent engine and
+  package selection.
+- Pack each native matrix cell with its exact selected original and collect the
+  complete ordered 25-cell union through the real artifact custodians. Assign
+  distinct receipt and transport paths at original creation, and preserve every
+  original receipt rather than synthesizing an aggregate pass.
+
+- Honor multi-project resume through the existing checkpoint policy and refuse
+  unsupported all-project incremental requests before execution.
+- Isolate optional PDF processing state per invocation, validate opt-in types,
+  stage PDF and sidecar publication, preserve prior destination modes and recover
+  ordinary publication errors without overwriting foreign edits.
+- Preserve existing PDF catalog objects through overlays, metadata injection and
+  password encryption except for explicitly replaced metadata; retain fresh
+  encryption randomness and the legacy source-name hash manifest convention.
+- Preserve Kmyth inputs and existing sidecars on provider failure, reject source
+  aliases, and remove inherited credential names and agent sockets from its
+  child environment while retaining declared TPM and library nominees.
+- Omit the CORS allow-origin header for the declared deny-default case, correct
+  the shared pipeline API examples and retain successful native-cell artifacts
+  for 30 days.
+
+- Add an exact Mermaid CLI 12.2 native profile using the patched Mermaid 12.3
+  browser distribution. Preserve the curated SDK font and rectangular viewport
+  APIs, actual caller custody and every native proof gate; retain historical
+  profiles separately.
+- Update the locked Node tooling to patched KaTeX and Zod dependency versions,
+  retain the scoped dependency audit, and run a persistent inherited-trust
+  regression. Resolve the Source-locked Puppeteer browser deterministically.
+- Bind ordinary Mermaid caches to renderer, font and toolchain inputs; native
+  custody requires each actual producer call even when prior image bytes exist.
+- Rebase emitted HTML image sources before exact web figure-registry matching,
+  preserving bare paths and literal image tags in inline/fenced Markdown code.
+- Require native BibTeX success for actual citation requests, including included
+  auxiliary files; unused bibliography files do not force processing.
+- Preserve prior published PDFs on rejected revisions and refuse stale final or
+  staging PDFs when the current compiler produces no output.
+- Admit explicit compiler-owned manuscript rosters without inventing authored
+  source mappings. Bind their consumed configuration and ordered bytes, and use
+  the same confined inputs for Stage 04 content, evidence and transmission
+  checks; unconsumed residue cannot supply manuscript evidence.
+- Resolve rendering-package exports lazily so shared discovery and bibliography
+  readers remain usable from validation without initializing format providers
+  or introducing import cycles.
 - Apply generated project-test exclusions to the native pytest session's actual
   marker vocabulary. Strict native projects no longer reject unused engine
   marker names; declared and undeclared opt-in cases remain excluded as requested.
@@ -175,6 +621,10 @@ locks.
   section roster and combined index. Keep valid local links local; retain unknown
   and ambiguous targets as visible defects. Preserve fragment encoding, external
   and asset links, authored content, and source IDs.
+- Ignore inert HTML template descendants when locating ordered paper frontmatter.
+  Preserve complete authored template bytes and the live outer template element,
+  including HTML's ignored self-closing flag. Duplicate live IDs, unclosed
+  templates and missing or reordered structural containers still refuse.
 - Finalize split HTML references in the combined manuscript's global context.
   The earlier fragment-routing correction could route existing anchors but
   isolated section rendering still restarted formalism counters and left
@@ -269,6 +719,26 @@ matching tag identity and authenticated publication.
   regression. Resolve the Source-locked Puppeteer browser deterministically.
 - Bind ordinary Mermaid caches to renderer, font and toolchain inputs; native
   custody requires each actual producer call even when prior image bytes exist.
+These independent main corrections are included in this candidate. Their original
+integration did not publish a new SDK release or approve the minor-release
+preparation; the exact-source release gates above remain required.
+
+Additional integration corrections:
+
+- Keep distinct nested or sanitized manuscript sources in separate HTML pages.
+  Disambiguation binds the complete Source path; ordinary flat safe names remain
+  stable. Actual isolated previews and globally finalized split links preserve
+  each source's content instead of silently overwriting a sibling page.
+- Separate split-HTML Code ownership from complete parser context throughout
+  capture, portable replay and absence closure. Derive selected Table contract
+  identities from the same genuine projected AST pair while retaining full and
+  original parser identities, complete-cell checks and native residuals.
+- Regenerate every canonical public project in the default publication refresh.
+  A tracked materialized config no longer excludes rendered products from
+  genuine generation. Explicit unchanged-output rebinding retains its strict
+  report-only ownership and unchanged-byte refusal boundary.
+- Retire obsolete helper, argv, wording and incidental-default pins; retain real
+  invalid-input, source-ownership, repeated-value and rendered-page regressions.
 
 ## [5.0.2] - 2026-11-04
 

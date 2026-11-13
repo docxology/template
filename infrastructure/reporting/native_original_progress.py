@@ -391,7 +391,8 @@ def original_cell_progress(phase: str, scope: str, deadline: float) -> None:
         "remaining_seconds": deadline - observed,
     }
     try:
-        print(json.dumps(value, sort_keys=True, allow_nan=False), file=sys.stderr, flush=True)
+        sys.stderr.write(json.dumps(value, sort_keys=True, allow_nan=False) + "\n")
+        sys.stderr.flush()
     except (OSError, ValueError):
         # Diagnostics grant no authority and must not launder the primary exit.
         pass

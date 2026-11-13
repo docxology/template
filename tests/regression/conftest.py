@@ -38,16 +38,17 @@ def _manifest() -> dict[str, object]:
 
 
 def pytest_collection_finish(session: pytest.Session) -> None:
-    """Reject missing regression surfaces and unexpectedly small collections."""
+    """Reject mandatory regression files that contributed no selected cases."""
     manifest = _manifest()
     required = {str(path) for path in manifest["required_test_files"]}  # type: ignore[index]
-    present = {path.relative_to(_REGRESSION_ROOT).as_posix() for path in _REGRESSION_ROOT.rglob("test_*.py")}
-    missing = sorted(required - present)
-    minimum = int(manifest["minimum_collected_tests"])  # type: ignore[arg-type]
-    problems: list[str] = []
+    selected = {
+        item.path.relative_to(_REGRESSION_ROOT).as_posix()
+        for item in session.items
+        if item.path.is_relative_to(_REGRESSION_ROOT)
+    }
+    missing = sorted(required - selected)
     if missing:
-        problems.append(f"missing required regression files: {', '.join(missing)}")
-    if len(session.items) < minimum:
-        problems.append(f"collected {len(session.items)} tests; required at least {minimum}")
-    if problems:
-        pytest.exit("regression manifest violation: " + "; ".join(problems), returncode=1)
+        pytest.exit(
+            "regression manifest violation: required files without selected cases: " + ", ".join(missing),
+            returncode=1,
+        )

@@ -13,6 +13,7 @@ used by the repository's root wrappers and maintenance workflows.
 | `shell_bootstrap.sh` | Finite nonce-bound prepared CPython/venv admission and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
 | `setup-system-deps.sh` | One-shot installer for the external toolchain: pandoc, XeLaTeX + missing LaTeX packages, uv (macOS/Debian; idempotent, `--check` verifies without installing) |
 | `prepare_native_epubcheck.py` | Finite exact-size/hash official EPUBCheck 5.4.0 download and bounded confined ZIP extraction into a fresh owned directory; no model or credential setup |
+| `prepare_pinned_elan.sh` | Sourced hosted Elan 4.2.4 preparation with immutable official archive pins; keeps original caller clocks and compiler commands |
 | `ci_local.sh` | Local CI reproduction (`act` when available, else a documented fail-closed direct-command subset) |
 | `health-check.sh` | Pre-flight system health check (Python, uv, pandoc, xelatex, disk, Docker, repo) |
 | `backup-daily.sh` | Daily rsync backup tier |
@@ -82,3 +83,21 @@ it requires an executable CPython >=3.14 and uses that interpreter for the actua
 LaTeX package validator. The caller owns dependency preparation. `--check` can
 be combined with this selection and retains its no-install behavior. Ordinary
 standalone invocation keeps its existing uv setup, sync and validation.
+
+## Hosted pinned Elan
+
+Source `prepare_pinned_elan.sh` only inside the existing disposable hosted Bash
+preparation step; do not run the installer on a shared workstation. The helper
+verifies the official Linux/macOS architecture-specific asset length and SHA-256
+before executing Elan 4.2.4. It never acquires a moving default Lean toolchain.
+
+Callers provide `GH_TOKEN` only to that preparation step. The helper disables
+secret-bearing shell tracing during acquisition, unsets `GH_TOKEN` and
+`GITHUB_TOKEN` before the upstream installer, and restores the caller's tracing.
+Existing Lean declarations, equality checks and compiler/model commands remain
+with the caller inside its original step/job clock. The optional
+`TEMPLATE_ELAN_DOWNLOAD_RETRIES` and
+`TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS` preserve existing curl limits; defaults
+are 2 and 60, with explicit zero retaining an existing unbounded transfer.
+Do not add retries, fallbacks, new default toolchains or authority claims.
+

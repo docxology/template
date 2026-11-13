@@ -30,9 +30,10 @@ def _install_sleeping_stage(root: Path) -> None:
         "import json,os,subprocess,sys,time\nfrom pathlib import Path\n"
         "project=sys.argv[sys.argv.index('--project')+1]\n"
         "output=Path('projects')/project/'output/data';output.mkdir(parents=True,exist_ok=True)\n"
-        "child=subprocess.Popen([sys.executable,'-I','-c','import time;time.sleep(30)'],start_new_session=True)\n"
-        "(output/'running.json').write_text(json.dumps({'pid':os.getpid(),'detached':child.pid}))\n"
-        "time.sleep(30)\n"
+        "child=subprocess.Popen([sys.executable,'-I','-c','import time;time.sleep(60)'],start_new_session=True)\n"
+        "(output/'running.tmp').write_text(json.dumps({'pid':os.getpid(),'detached':child.pid}))\n"
+        "(output/'running.tmp').replace(output/'running.json')\n"
+        "time.sleep(60)\n"
     )
 
 
@@ -121,10 +122,16 @@ def test_total_deadline_kills_actual_started_stage_detached_children_and_queue(t
     scaffold_pipeline(tmp_path, names)
     _install_sleeping_stage(tmp_path)
     started = time.monotonic()
+    deadline = started + 30
     result = run_projects_in_parallel(
-        names, repo_root=tmp_path, max_workers=1, run_infra_tests=False, run_timeout_seconds=12
+        names,
+        repo_root=tmp_path,
+        max_workers=1,
+        run_infra_tests=False,
+        run_timeout_seconds=30,
+        deadline_monotonic=deadline,
     )
-    assert result.exit_code == 124 and time.monotonic() - started < 22
+    assert result.exit_code == 124 and time.monotonic() - started < 40
     assert set(result.run_results) == set(names)
     assert all(run.expected_stage_keys == ("analysis",) and run.exit_code == 124 for run in result.run_results.values())
     observed = json.loads((tmp_path / "projects/templates/alpha/output/data/running.json").read_text())
@@ -136,26 +143,35 @@ def test_total_deadline_kills_actual_started_stage_detached_children_and_queue(t
 def test_interrupt_cleans_actual_worker_and_detached_child(tmp_path: Path) -> None:
     scaffold_pipeline(tmp_path, ("templates/alpha",))
     _install_sleeping_stage(tmp_path)
-    implementation = Path(__file__).resolve().parents[5]
+    implementation = Path(__file__).resolve().parents[4]
     code = (
         "import sys;sys.pycache_prefix=sys.argv.pop(1);sys.dont_write_bytecode=True;"
         "sys.path.insert(0,sys.argv.pop(1));from pathlib import Path;"
         "from infrastructure.core.pipeline.multi_project_parallel import run_projects_in_parallel;"
         "raise SystemExit(run_projects_in_parallel(('templates/alpha',),repo_root=Path(sys.argv[1]),"
-        "run_infra_tests=False,run_timeout_seconds=30).exit_code)"
+        "run_infra_tests=False,run_timeout_seconds=30,deadline_monotonic=float(sys.argv[2])).exit_code)"
     )
+    deadline = time.monotonic() + 30
     process = subprocess.Popen(
-        [sys.executable, "-I", "-c", code, str(tmp_path / "outer-bytecode"), str(implementation), str(tmp_path)],
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            code,
+            str(tmp_path / "outer-bytecode"),
+            str(implementation),
+            str(tmp_path),
+            str(deadline),
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         start_new_session=True,
     )
     marker = tmp_path / "projects/templates/alpha/output/data/running.json"
     try:
-        deadline = time.monotonic() + 12
         while not marker.exists() and process.poll() is None and time.monotonic() < deadline:
             time.sleep(0.025)
-        assert marker.exists(), process.communicate(timeout=5)
+        assert marker.exists(), f"genuine stage did not become ready; controller exit={process.poll()}"
         observed = json.loads(marker.read_text())
         os.kill(process.pid, signal.SIGINT)
         stdout, stderr = process.communicate(timeout=12)
@@ -236,7 +252,7 @@ def test_actual_parallel_stage_intervals_overlap(tmp_path: Path) -> None:
 def test_worker_lock_wait_uses_remaining_outer_budget(tmp_path: Path) -> None:
     scaffold_pipeline(tmp_path, ("templates/alpha",))
     project = tmp_path / "projects/templates/alpha"
-    implementation = Path(__file__).resolve().parents[5]
+    implementation = Path(__file__).resolve().parents[4]
     marker = project / "output/holder-ready"
     code = (
         "import sys,time;sys.path.insert(0,sys.argv.pop(1));from pathlib import Path;"

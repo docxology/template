@@ -237,7 +237,7 @@ class CheckpointManager:
                 f"Loaded checkpoint: stage {checkpoint.last_stage_completed}/{checkpoint.total_stages}"  # noqa: E501
             )
             return checkpoint
-        except Exception as e:  # noqa: BLE001 — intentional: corrupt/invalid checkpoint must degrade gracefully to fresh run
+        except Exception as e:  # noqa: BLE001 — preserve invalid checkpoints and let resume refuse
             logger.warning(f"Failed to load checkpoint: {e}", exc_info=True)
             logger.info("Invalid checkpoint preserved; resume is refused")
             return None

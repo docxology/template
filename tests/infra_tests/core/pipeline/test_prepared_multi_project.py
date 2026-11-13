@@ -18,6 +18,7 @@ from infrastructure.core.pipeline.multi_project_runtime import (
     selected_project_config,
 )
 from infrastructure.core.pipeline.outcomes import StageStatus
+from infrastructure.core.pipeline.runtime_namespace import SharedRuntimeCustodyError
 from infrastructure.project.discovery import discover_projects
 from tests.infra_tests.orchestration._pipeline_fixture import scaffold_pipeline
 
@@ -183,8 +184,16 @@ def test_actual_prepared_workers_refuse_changed_definition_without_recompiling(
     if with_shared:
         # The parent re-admits the shared plan against held declarations before
         # its once-only gate starts, so drift refuses before any worker exists.
-        with pytest.raises(ValueError, match="differs from its admitted declaration"):
+        assert shared is not None
+        with pytest.raises(SharedRuntimeCustodyError) as refused:
             orchestrator.execute_prepared_projects(specs, shared)
+        encoded = str(refused.value).split("fingerprint_diagnostics=", 1)[1]
+        diagnostic, _ = json.JSONDecoder().raw_decode(encoded)
+        assert diagnostic["expected_total"] == shared.plan.source_identity
+        assert diagnostic["observed_total"] != diagnostic["expected_total"]
+        assert set(diagnostic["components"]) == {"source", "python", "tools"}
+        digests = [diagnostic["observed_total"], *diagnostic["components"].values()]
+        assert all(len(digest) == 64 and set(digest) <= set("0123456789abcdef") for digest in digests)
         assert tuple(spec.plan.digest for spec in specs) == frozen_digests
         assert not (tmp_path / "process_order.log").exists()
         return
@@ -197,10 +206,19 @@ def test_actual_prepared_workers_refuse_changed_definition_without_recompiling(
         if result.shared_infrastructure_result is not None
         else tuple(result.run_results.values())
     )
-    assert runs and all(not run.complete for run in runs)
+    assert len(runs) == len(specs)
+    assert all(not run.complete for run in runs)
     assert all(run.outcomes[0].status is StageStatus.BLOCKED for run in runs)
     assert all(run.outcomes[0].child_exit_code is None for run in runs)
-    assert all("source changed" in run.outcomes[0].diagnostic.lower() for run in runs)
+    expected_totals = {spec.plan.source_identity for spec in specs}
+    for run in runs:
+        encoded = run.outcomes[0].diagnostic.split("fingerprint_diagnostics=", 1)[1]
+        diagnostic, _ = json.JSONDecoder().raw_decode(encoded)
+        assert diagnostic["expected_total"] in expected_totals
+        assert diagnostic["observed_total"] != diagnostic["expected_total"]
+        assert set(diagnostic["components"]) == {"source", "python", "tools"}
+        digests = [diagnostic["observed_total"], *diagnostic["components"].values()]
+        assert all(len(digest) == 64 and set(digest) <= set("0123456789abcdef") for digest in digests)
 
 
 @pytest.mark.timeout(240)

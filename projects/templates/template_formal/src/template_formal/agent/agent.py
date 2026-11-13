@@ -232,11 +232,12 @@ class Agent(Generic[StateT]):
         preference: StateT,
         *,
         isolation_level: IsolationLevel = "deferred",
+        write_ahead_logging: bool = False,
     ) -> None:
         if not isinstance(agent_id, UUID):
             raise TypeError(f"Agent requires an AgentId (a NewType-wrapped UUID), got {type(agent_id).__name__}")
         self._agent_id: AgentId = agent_id
-        database = open_database(db_path, isolation_level=isolation_level)
+        database = open_database(db_path, isolation_level=isolation_level, write_ahead_logging=write_ahead_logging)
         create_schema(database, OBSERVATIONS_TABLE)
         self._database: Database = database
         self._preference: StateT = preference

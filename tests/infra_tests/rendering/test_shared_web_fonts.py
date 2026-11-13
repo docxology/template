@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 import lzma
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -39,7 +40,7 @@ def test_shared_asset_retains_all_exact_font_bodies_and_full_license(tmp_path: P
     assert 0 < expected == stream["bytes"] <= 6 * 1024 * 1024
     assert 13 <= len(packed) <= 4 * 1024 * 1024
     assert packed[:5] == b"\x5d\x00\x00\x80\x00"  # Fixed properties and 8-MiB dictionary.
-    assert int.from_bytes(packed[5:13], "little") == expected  # No unknown/unbounded output header.
+    assert packed[5:13] == b"\xff" * 8  # Preserve the encoder's EOS-terminated stream.
     decoded = lzma.decompress(packed, format=lzma.FORMAT_ALONE)
     assert len(decoded) == expected
     offset = 0
@@ -111,6 +112,73 @@ def test_shared_transport_is_deterministic_and_preserves_raw_bundle_api() -> Non
             base64.b64decode(face["data"], validate=True)
             == (source_web_font_directory() / FONT_BODIES[face["postscript_name"]]["filename"]).read_bytes()
         )
+
+
+def test_local_decoder_requires_and_enforces_exact_finite_output_budget() -> None:
+    """Consume genuine native streams in the shipped JS decoder, including hostile boundaries."""
+    script = source_web_font_javascript()
+    payload, _ = json.JSONDecoder().raw_decode(script.split("node.textContent=JSON.stringify(", 1)[1])
+    binary = bytes(range(256)) * 32
+    packet = {
+        "fonts": payload,
+        "binary": base64.b64encode(binary).decode("ascii"),
+        "packed_binary": base64.b64encode(lzma.compress(binary, format=lzma.FORMAT_ALONE, preset=6)).decode("ascii"),
+    }
+    result = subprocess.run(
+        [
+            "node",
+            "-e",
+            r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const crypto = require("node:crypto");
+const context = {};
+vm.runInNewContext(fs.readFileSync(process.argv[1], "utf8"), context);
+const decoder = context.LZMA;
+const packet = JSON.parse(fs.readFileSync(0, "utf8"));
+const native = Buffer.from(packet.packed_binary, "base64");
+const original = Buffer.from(packet.binary, "base64");
+assert.deepEqual(Buffer.from(decoder.decompress(native, original.length)), original);
+for (const bound of [undefined, null, NaN, Infinity, -Infinity, 0, -1, 1.5, "8192", 6 * 1024 * 1024 + 1]) {
+    assert.throws(() => decoder.decompress(native, bound));
+}
+assert.throws(() => decoder.decompress(native, 1));
+assert.throws(() => decoder.decompress(native, original.length - 1));
+assert.throws(() => decoder.decompress(native, original.length + 1));
+for (const length of [0, 12, 13, 17, Math.floor(native.length / 2), native.length - 1]) {
+    assert.throws(() => decoder.decompress(native.subarray(0, length), original.length));
+}
+assert.throws(() => decoder.decompress(Buffer.concat([native, Buffer.from([0])]), original.length));
+assert.throws(() => decoder.decompress(Buffer.alloc(4 * 1024 * 1024 + 1), original.length));
+const knownSize = Buffer.from(native);
+knownSize.writeBigUInt64LE(BigInt(original.length), 5);
+assert.throws(() => decoder.decompress(knownSize, original.length));
+const wrongDictionary = Buffer.from(native);
+wrongDictionary[1] = 1;
+assert.throws(() => decoder.decompress(wrongDictionary, original.length));
+const fonts = packet.fonts;
+const decoded = Buffer.from(decoder.decompress(Buffer.from(fonts.stream.data, "base64"), fonts.stream.bytes));
+let offset = 0;
+const observations = fonts.faces.map(face => {
+    const body = decoded.subarray(offset, offset + face.bytes);
+    offset += face.bytes;
+    return {bytes: body.length, sha256: crypto.createHash("sha256").update(body).digest("hex")};
+});
+assert.equal(offset, decoded.length);
+process.stdout.write(JSON.stringify(observations));
+""",
+            str(source_web_font_directory().parent / "lzma-d-min.js"),
+        ],
+        input=json.dumps(packet),
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert json.loads(result.stdout) == [
+        {"bytes": face["bytes"], "sha256": face["sha256"]} for face in FONT_BODIES.values()
+    ]
 
 
 def test_multiple_real_html_pages_share_one_idempotent_bounded_asset(tmp_path: Path) -> None:

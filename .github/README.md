@@ -1092,7 +1092,7 @@ required — it is disabled on this repository, which is why the workflow perfor
 the merge itself.
 
 Each JavaScript action declares its runtime in the pinned `action.yml`; consult that revision's documentation for self-hosted runner requirements.
-The pinned [checkout](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and [release](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) actions declare `runs.using: node24`.
+The pinned [checkout](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) action declares `runs.using: node24`. Release publication uses the create-only GitHub CLI command, not a JavaScript release action.
 Separately, [`setup-docs-lint`](actions/setup-docs-lint/action.yml) selects Node `24.22.0` for documentation tools and the native Mermaid 11 profile; this toolchain selection is independent of the JavaScript action runtime.
 
 ---

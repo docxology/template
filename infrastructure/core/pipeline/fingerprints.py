@@ -225,7 +225,7 @@ def _distribution_identity(paths: list[str]) -> list[tuple[str, str | None]]:
     packages = []
     for distribution in distributions(path=paths):
         metadata = distribution.metadata
-        packages.append((str(metadata.get("Name", "")), metadata["Version"]))
+        packages.append((str(metadata.get("Name", "")), metadata.get("Version")))
     return sorted(packages)
 
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.13" />
+  <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Designed multi-column page layout as a reproducible-research exemplar" />
@@ -14,10 +14,7 @@ Engine</title>
     */
     html {
       color: #1a1a1a;
-      color: light-dark(#1a1a1a, #fdfdfd);
       background-color: #fdfdfd;
-      background-color: light-dark(#fdfdfd, #1a1a1a);
-      color-scheme: light dark;
     }
     body {
       margin: 0 auto;
@@ -42,16 +39,11 @@ Engine</title>
     }
     @media print {
       html {
-        color-scheme: light only;
+        background-color: white;
       }
-      html, body, pre, code {
+      body {
         background-color: transparent;
-      }
-      body, a, a:visited, blockquote {
         color: black;
-      }
-      pre, code {
-        padding: 0;
       }
       p, h2, h3 {
         orphans: 3;
@@ -64,8 +56,11 @@ Engine</title>
     p {
       margin: 1em 0;
     }
-    a, a:visited {
-      color: inherit;
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
     }
     img {
       max-width: 100%;
@@ -94,11 +89,8 @@ Engine</title>
     blockquote {
       margin: 1em 0 1em 1.7em;
       padding-left: 1em;
-      border-left: 2px solid;
-      border-color: #e6e6e6;
-      border-color: light-dark(#e6e6e6, #4c4c4c);
+      border-left: 2px solid #e6e6e6;
       color: #606060;
-      color: light-dark(#606060, #b6b6b6);
     }
     code {
       white-space: pre-wrap;
@@ -122,7 +114,7 @@ Engine</title>
     }
     hr {
       border: none;
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -139,11 +131,11 @@ Engine</title>
     }
     tbody {
       margin-top: 0.5em;
-      border-top: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
     }
     th {
-      border-top: 1px solid currentColor;
+      border-top: 1px solid #1a1a1a;
       padding: 0.25em 0.5em 0.25em 0.5em;
     }
     td {
@@ -210,11 +202,74 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 });
 var templateMathOutput = window.MathJax.output || {};
 window.MathJax.output = Object.assign({}, templateMathOutput, {
-  displayOverflow: "linebreak",
+  displayOverflow: "scroll",
   linebreaks: Object.assign({}, templateMathOutput.linebreaks, {
-    inline: true,
+    inline: false,
     width: "100%",
     lineleading: 0.5
+  })
+});
+var templateMathOptions = window.MathJax.options || {};
+window.MathJax.options = Object.assign({}, templateMathOptions, {
+  renderActions: Object.assign({}, templateMathOptions.renderActions, {
+    // Use the documented find action/MathItem extension point. MathJax 4.0.0's
+    // default finder spreads every DOM text run into push() arguments, exceeding
+    // the browser argument stack on large books even with very little math.
+    find: [10, function (doc) {
+      if (doc.processed.isSet("findMath")) return;
+      var adaptor = doc.adaptor;
+      adaptor.document = doc.document;
+      var containers = adaptor.getElements(
+        doc.options.elements || [adaptor.body(doc.document)], doc.document
+      );
+      // Retain the pinned HTMLDocument.findPosition source offsets/order
+      // (MathJax-src 4.0.0, ts/handlers/html/HTMLDocument.ts, Apache-2.0).
+      function position(nodes, item, location, delim) {
+        var parts = nodes[item.n];
+        var index = location.n;
+        var order = item.n;
+        var increment = 1 / (parts.length || 1);
+        for (var part of parts) {
+          if (index <= part[1] && adaptor.kind(part[0]) === "#text") {
+            return {i: order, node: part[0], n: Math.max(index, 0), delim: delim};
+          }
+          index -= part[1];
+          order += increment;
+        }
+        return {node: null, n: 0, delim: delim};
+      }
+      for (var jax of doc.inputJax) {
+        var list = new doc.options.MathList();
+        if (jax.processStrings) {
+          var strings = [];
+          var nodes = [];
+          for (var container of containers) {
+            var found = doc.domStrings.find(container);
+            // Append individually: neither DOM size nor expression count becomes
+            // a function argument count. Keep the scanner's complete run mapping.
+            for (var string of found[0]) strings.push(string);
+            for (var nodeList of found[1]) nodes.push(nodeList);
+          }
+          for (var item of jax.findMath(strings)) {
+            list.push(new doc.options.MathItem(
+              item.math, jax, item.display,
+              position(nodes, item, item.start, item.open),
+              position(nodes, item, item.end, item.close)
+            ));
+          }
+        } else {
+          for (var container of containers) {
+            for (var item of jax.findMath(container)) {
+              list.push(new doc.options.MathItem(
+                item.math, jax, item.display, item.start, item.end
+              ));
+            }
+          }
+        }
+        doc.math.merge(list);
+      }
+      doc.processed.set("findMath");
+    }, "", false]
   })
 });
 window.normalizeTemplateMathJaxAria = function () {
@@ -241,8 +296,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
         .then(async function () {
           var width = document.documentElement.clientWidth;
           try {
-            // MathJax 4 MathItem.STATE.METRICS = 110. The default RERENDER
-            // state retains old container metrics and cannot reflow on zoom.
+            // MathJax 4 MathItem.STATE.METRICS = 110. Restart from metrics
+            // after a viewport change rather than retaining old container widths.
             await window.MathJax.startup.document.rerenderPromise(110);
             window.normalizeTemplateMathJaxAria();
             window.templateMathJaxReflowError = null;
@@ -327,7 +382,14 @@ pre > code.sourceCode > span {
   white-space: pre-wrap;
   word-break: break-word;
 }
-mjx-container[display="true"] { max-width: 100%; overflow: visible; }
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { max-width: 100%; overflow-x: auto; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -345,8 +407,6 @@ mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 
 html {
   max-width: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -359,8 +419,6 @@ body {
   background-color: #f8f8f8;
   color: #1a1a1a;
   overflow-wrap: break-word;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 main,
@@ -588,10 +646,18 @@ a:focus-visible {
   font-size: 1.1em;
 }
 
+.math.inline {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
 mjx-container[display="true"] {
   display: block;
   max-width: 100%;
-  overflow: visible;
+  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
@@ -642,10 +708,6 @@ mjx-container[display="true"] {
 @media (min-width: 1000px) {
   /* Wide figure links stay within the viewport but extend beyond the prose
      column. Do not clip their labels at the narrower body boundary. */
-  body {
-    overflow-x: visible;
-  }
-
   .figure-full-size-link {
     left: 50%;
     max-width: none;
@@ -702,6 +764,7 @@ class="toc-section-number">6</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
+
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>We present <code>template_newspaper</code>, a pure-Python engine that
@@ -721,7 +784,9 @@ frames, with headings kept beside their opening content. The project
 obeys the research-template monorepo contract and is discovered and
 executed by the same orchestration pipeline as its code- and
 prose-focused siblings.</p>
+
 <hr />
+
 <h1 data-number="2" id="introduction"><span
 class="header-section-number">2</span> Introduction</h1>
 <p>Most reproducible-research tooling treats a document as a linear
@@ -749,7 +814,9 @@ neighborhood broadsheet — is an edit to the data, not the code.</p>
 <p>The remainder of this manuscript describes the engine’s architecture
 (Section 2), its typography and figure generation (Section 3), and how
 the artifact is produced and verified reproducibly (Section 4).</p>
+
 <hr />
+
 <h1 data-number="3" id="engine-architecture"><span
 class="header-section-number">3</span> Engine Architecture</h1>
 <p>The engine is nine small modules, each with one responsibility.</p>
@@ -828,7 +895,9 @@ deterministically, so the same edition manifest always yields a
 byte-identical paper — the reproducibility contract verified in
 <code>tests/</code> and described in
 <code>04_reproducibility.md</code>.</p>
+
 <hr />
+
 <h1 data-number="4" id="typography-and-figures"><span
 class="header-section-number">4</span> Typography and Figures</h1>
 <p>A newspaper’s voice is its type. The engine registers, when present,
@@ -857,7 +926,9 @@ forecast, a tide curve, a Dungeness-crab landings bar chart — are
 rendered with Matplotlib in black and gray with serif labels, so they
 sit naturally beside the type rather than fighting it. A missing image
 file degrades to a clearly labelled placeholder, never a crash.</p>
+
 <hr />
+
 <h1 data-number="5" id="reproducibility"><span
 class="header-section-number">5</span> Reproducibility</h1>
 <p>The artifact is produced by a deterministic, three-step chain that
@@ -865,7 +936,7 @@ the repository pipeline runs as Stage-02 analysis scripts, in
 lexicographic order: <code>00_preflight.py</code> confirms the
 dependencies import and the edition loads and validates;
 <code>10_generate_figures.py</code> writes the halftone scenes and
-charts to <code>../figures/</code>; and
+charts to <code>output/figures/</code>; and
 <code>20_render_newspaper.py</code> renders the twelve pages to
 <code>output/pdf/the-triplicate.pdf</code> and emits a machine-readable
 render report (<code>output/data/render_report.json</code>) plus a human
@@ -887,7 +958,9 @@ percent line coverage.</p>
 dimensions, the figure count — is recorded in
 <code>data/claim_ledger.yaml</code> against the artifact that
 substantiates it, so a reviewer can trace each number to its source.</p>
+
 <hr />
+
 <h1 data-number="6" id="references"><span
 class="header-section-number">6</span> References</h1>
 <p>The bibliography is maintained in <code>references.bib</code>. Key
@@ -910,6 +983,7 @@ layout and the rail/well distinction <span class="citation"
 data-cites="garcia">(<a href="#ref-garcia" role="doc-biblioref">García
 1987</a>)</span>.</li>
 </ul>
+
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-bringhurst" class="csl-entry" role="listitem">

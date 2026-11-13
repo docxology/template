@@ -630,7 +630,7 @@ The six hypotheses frame the evidence landscape for Modafinil:
   acceptability relative to alternative wakefulness agents.
 
 <!-- FIGURE: hypothesis_dashboard.png -->
-![Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](../figures/hypothesis_dashboard.png "Hypothesis Dashboard"){#fig:hypothesis_dashboard}
+![Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence.](../output/figures/hypothesis_dashboard.png "Hypothesis Dashboard"){#fig:hypothesis_dashboard}
 
 ```{=html}
 <!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-8-end-->
@@ -660,7 +660,7 @@ descriptive summary of this retained analyzed subset. A field-wide estimate of
 research activity would require a separate live coverage audit.
 
 <!-- FIGURE: growth_curve.png -->
-![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) summarize the retained dated subset from 2000 through 2026, with its largest annual count in 2025.](../figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
+![Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) summarize the retained dated subset from 2000 through 2026, with its largest annual count in 2025.](../output/figures/growth_curve.png "Publication Growth Curve"){#fig:growth_curve}
 
 ## RQ1: Field Size and Growth
 
@@ -706,13 +706,13 @@ its use in narcolepsy, shift-work disorder, and obstructive sleep apnea.
 | Neuroscience | 49 | 2.2% |
 
 <!-- FIGURE: field_summary.png -->
-![Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../figures/field_summary.png "Field Summary"){#fig:field_summary}
+![Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel.](../output/figures/field_summary.png "Field Summary"){#fig:field_summary}
 
 <!-- FIGURE: subfield_distribution.png -->
-![Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 63.0\%.](../figures/subfield_distribution.png "Subfield Distribution"){#fig:subfield_distribution}
+![Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 63.0\%.](../output/figures/subfield_distribution.png "Subfield Distribution"){#fig:subfield_distribution}
 
 <!-- FIGURE: subfield_timeline.png -->
-![Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../figures/subfield_timeline.png "Subfield Timeline"){#fig:subfield_timeline}
+![Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads.](../output/figures/subfield_timeline.png "Subfield Timeline"){#fig:subfield_timeline}
 
 ## Identifier and Full-Text Coverage
 
@@ -747,7 +747,7 @@ characteristic of scientific literature.
 | 500+ | 11 |
 
 <!-- FIGURE: citation_distribution.png -->
-![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
+![Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks.](../output/figures/citation_distribution.png "Citation Distribution"){#fig:citation_distribution}
 
 \clearpage
 
@@ -767,7 +767,7 @@ characteristic of scientific literature.
 | American Journal of Psychiatry | 23 |
 
 <!-- FIGURE: top_venues.png -->
-![Top publication venues for Modafinil. The horizontal bar chart shows the leading venues by paper count in the analyzed subset, revealing where the modafinil literature is published.](../figures/top_venues.png "Top Venues"){#fig:top_venues}
+![Top publication venues for Modafinil. The horizontal bar chart shows the leading venues by paper count in the analyzed subset, revealing where the modafinil literature is published.](../output/figures/top_venues.png "Top Venues"){#fig:top_venues}
 
 \clearpage
 
@@ -787,7 +787,7 @@ characteristic of scientific literature.
 | 10 | Jed Black | 14 |
 
 <!-- FIGURE: author_productivity.png -->
-![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](../figures/author_productivity.png "Author Productivity"){#fig:author_productivity}
+![Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature.](../output/figures/author_productivity.png "Author Productivity"){#fig:author_productivity}
 
 ```{=html}
 <!--template-web-source-2d86007151a31a289a327e6706783ed6b9c260298ba4c37ecf5b59e6b98a6229-9-end-->
@@ -889,7 +889,7 @@ hypersomnia). These topics cross-cut the keyword-based subfield taxonomy,
 revealing connections that the explicit classification does not capture.
 
 <!-- FIGURE: topic_term_bars.png -->
-![Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../figures/topic_term_bars.png "Topic-Term Weights"){#fig:topic_term_bars}
+![Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../output/figures/topic_term_bars.png "Topic-Term Weights"){#fig:topic_term_bars}
 
 ## Document Embeddings
 
@@ -899,10 +899,10 @@ vectors, so the derived similarity matrix, nearest-neighbour lists, clusters, an
 two-dimensional projection are all reproducible.
 
 <!-- FIGURE: pca_embeddings.png -->
-![PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../figures/pca_embeddings.png "PCA Embeddings"){#fig:pca_embeddings}
+![PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../output/figures/pca_embeddings.png "PCA Embeddings"){#fig:pca_embeddings}
 
 <!-- FIGURE: dendrogram.png -->
-![Hierarchical clustering dendrogram of subfield TF-IDF centroids. Leaves are the configured subfields; the tree shows the similarity structure between subfield centroid vectors.](../figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
+![Hierarchical clustering dendrogram of subfield TF-IDF centroids. Leaves are the configured subfields; the tree shows the similarity structure between subfield centroid vectors.](../output/figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
 
 ## Term Analysis
 
@@ -910,7 +910,7 @@ The TF-IDF term heatmap reveals which terms discriminate between subfields: term
 high between-subfield variance (rather than high global mean) are selected for display.
 
 <!-- FIGURE: term_heatmap.png -->
-![Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms.](../figures/term_heatmap.png "Term Heatmap"){#fig:term_heatmap}
+![Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms.](../output/figures/term_heatmap.png "Term Heatmap"){#fig:term_heatmap}
 
 ## Named Entity Analysis
 
@@ -939,7 +939,7 @@ vocabulary of the modafinil literature.
 | IH | 101 |
 
 <!-- FIGURE: entity_bar_chart.png -->
-![Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature.](../figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
+![Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature.](../output/figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}
 
 **Table 5. Top keyphrases by TF-IDF score.**
 
@@ -984,13 +984,13 @@ reveal the most closely related works in the corpus.
 | `doi:10.1002/cncr.25083` | `doi:10.1200/jco.2005.23.16_suppl.8012` | 0.9507 |
 
 <!-- FIGURE: similarity_heatmap.png -->
-![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
+![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../output/figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
 
 <!-- FIGURE: word_cloud.png -->
-![Term cloud for Modafinil. Term sizes are proportional to their topic-term weights from the discovered topics, providing a visual summary of the dominant vocabulary.](../figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
+![Term cloud for Modafinil. Term sizes are proportional to their topic-term weights from the discovered topics, providing a visual summary of the dominant vocabulary.](../output/figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
 
 <!-- FIGURE: cooccurrence_matrix.png -->
-![Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../figures/cooccurrence_matrix.png "Term Co-occurrence"){#fig:cooccurrence_matrix}
+![Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../output/figures/cooccurrence_matrix.png "Term Co-occurrence"){#fig:cooccurrence_matrix}
 
 These embeddings support semantic retrieval over the corpus and the visual map of the
 literature's topical geography.
@@ -1070,10 +1070,10 @@ cited by other corpus members. Hub papers, which cite many other corpus members,
 integrative reviews or meta-analyses that connect disparate threads of the literature.
 
 <!-- FIGURE: citation_network.png -->
-![Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1416 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../figures/citation_network.png "Citation Network"){#fig:citation_network}
+![Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1416 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../output/figures/citation_network.png "Citation Network"){#fig:citation_network}
 
 <!-- FIGURE: degree_distribution.png -->
-![Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
+![Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../output/figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
 
 The heavy-tailed degree distribution is characteristic of citation networks: a small
 number of highly-cited papers anchor the structure, while the long tail of low-degree
@@ -1315,7 +1315,7 @@ traceable to a regenerable artifact.
 
 This manuscript was generated from a live retrieval run using 10 engines.
 Every number, table, and figure in this document is injected from a committed artifact
-(`output/data/*.json`, `../figures/*.png`). Re-running the pipeline with the same
+(`output/data/*.json`, `output/figures/*.png`). Re-running the pipeline with the same
 configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated from the same
 template. No number in this document was typed by hand.

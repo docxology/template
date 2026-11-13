@@ -98,6 +98,14 @@ observation and install its exact wheel into each dedicated source-test
 environment as shown in the runtime guide. The provider-only run records
 `matrix_complete: false`; it never closes the complete installed-matrix lane.
 
+The same genuine provider is required when a fresh Root interpreter collects
+Advanced's tests, including canonical `COUNTS.md` generation. Locked Root
+dependency groups alone do not install it; the existing
+[`setup-meta-provider` action](../../.github/actions/setup-meta-provider/action.yml)
+exports, builds and installs the noneditable wheel. Prepare each selected
+project venv's declared test dependencies too: an existing incomplete venv
+blocks collection rather than silently falling back to Root.
+
 The actual probe runs isolated Python outside source directories, with
 `PYTHONPATH` and credential-shaped environment variables removed. The launcher
 creates an empty private bytecode prefix before imports. Imported modules must

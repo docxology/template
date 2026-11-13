@@ -82,10 +82,8 @@
     },
     {
       "project": "templates/template_prose_project",
-      "state": "bound",
-      "pin_file": "tests/regression/pinned_values/template_prose_project.json",
-      "claim_count": 6,
-      "rationale": "Offline editorial metrics are bound to real markdown and bibliography fixtures."
+      "state": "not_applicable",
+      "rationale": "Editorial snapshot metrics derive from current manuscript wording rather than frozen baselines. Source regressions directly verify bibliography resolution; no quantitative pin authority is claimed."
     },
     {
       "project": "templates/template_autoscientists",

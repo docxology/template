@@ -73,7 +73,7 @@ slide/reveal pairs and pitch-deck short/medium/long PDF/PPTX variants from sourc
 Inventory-only `validated: true` records cannot pass.
 
 Original native stdout/stderr observations use
-`template-native-stream-observation-v1`: their absolute producer `path` is a
+`template-native-tool-stream-observation-v1`: their absolute producer `path` is a
 historical label, never an artifact edge or a reader-side filesystem nomination.
 The ToolAPI wrapper separately binds the retained public stream bytes with exact
 repository-relative `path`/`sha256`/`bytes` objects. Portable readback checks those

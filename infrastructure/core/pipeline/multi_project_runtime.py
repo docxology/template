@@ -27,7 +27,7 @@ from infrastructure.core.execution_boundary import (
     _complete_bounded_run_cleanup,
     terminate_process_tree,
 )
-from infrastructure.core.files.secure_write import append_text_confined, read_bytes_confined
+from infrastructure.core.files.secure_write import append_text_confined, hold_confined_directory, read_bytes_confined
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap
 from infrastructure.core.pipeline.plan import ExecutionPlan, compile_execution_plan
 from infrastructure.core.pipeline.outcomes import RunResult, StageOutcome, StageStatus
@@ -311,11 +311,27 @@ def _finish(
         if child_code == 124:
             return runtime_failure(running.spec, StageStatus.TIMED_OUT, "Actual project worker timed out", child_code)
         content = running.output.read()
-        append_text_confined(
-            running.spec.config.runtime_output_dir,
-            running.spec.config.runtime_output_dir / "logs/multi_project_worker.log",
-            content.decode(errors="replace"),
+        # A pre-execution refusal has no executor-created output root.
+        output_root = running.spec.config.runtime_output_dir
+        base = (
+            running.spec.config.repo_root
+            if running.spec.config.shared_infrastructure
+            else running.spec.config.project_dir
         )
+        base_identity = base.stat()
+        with hold_confined_directory(
+            base,
+            output_root.relative_to(base),
+            expected_root_identity=(base_identity.st_dev, base_identity.st_ino),
+            create=True,
+        ) as held_output:
+            output_identity = os.fstat(held_output.descriptor)
+            append_text_confined(
+                output_root,
+                output_root / "logs/multi_project_worker.log",
+                content.decode(errors="replace"),
+                expected_root_identity=(output_identity.st_dev, output_identity.st_ino),
+            )
         if running.output.overflow.is_set():
             raise ValueError("Worker output exceeded its 8 MiB bound")
         if state is not None:

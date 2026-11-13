@@ -8,6 +8,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import shutil
 import sys
 import time
@@ -172,6 +173,12 @@ def portable(tmp_path: Path):
     result = subprocess.run(
         [sys.executable, "-I", "-B", "-c", body, str(producer), str(reader_root), str(state)],
         stdin=subprocess.DEVNULL,
+        env={
+            **os.environ,
+            "PYTEST_XDIST_WORKER": "gw-parent",
+            "PYTEST_XDIST_WORKER_COUNT": "8",
+            "PYTEST_XDIST_TESTRUNUID": "parent-session",
+        },
         capture_output=True,
         timeout=60,
     )

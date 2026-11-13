@@ -235,16 +235,17 @@ def _run(stage: str, changed: tuple[str, ...] | None) -> int:
 
 def _execute(stage: str, commands: list[list[str]]) -> int:
     if not commands:
-        print(f"[local-gate] {stage}: no affected files; nothing to run")
+        sys.stdout.write(f"[local-gate] {stage}: no affected files; nothing to run\n")
         return 0
     environment = {key: value for key, value in os.environ.items() if key != "PYTEST_ADDOPTS"}
     for command in commands:
-        print(f"[local-gate] {stage}: {' '.join(command)}", flush=True)
+        sys.stdout.write(f"[local-gate] {stage}: {' '.join(command)}\n")
+        sys.stdout.flush()
         result = subprocess.run(command, cwd=REPO_ROOT, check=False, env=environment)
         if result.returncode:
-            print(f"[local-gate] {stage}: failed with exit {result.returncode}", file=sys.stderr)
+            sys.stderr.write(f"[local-gate] {stage}: failed with exit {result.returncode}\n")
             return result.returncode
-    print(f"[local-gate] {stage}: passed")
+    sys.stdout.write(f"[local-gate] {stage}: passed\n")
     return 0
 
 
@@ -270,21 +271,21 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(str(error))
     if args.list:
         for stage in stages:
-            print(f"# {stage}")
+            sys.stdout.write(f"# {stage}\n")
             if stage == "infra":
                 plan = _infra_plan(changed)
-                print(f"# selected files: {sum(len(shard) for shard in plan['infra_shards'])}")
+                sys.stdout.write(f"# selected files: {sum(len(shard) for shard in plan['infra_shards'])}\n")
                 commands = _infra_commands(plan, Path("<tmp>"))
             else:
                 commands = stage_commands(stage, changed)
             for command in commands or [["<nothing to run>"]]:
-                print("  " + " ".join(command))
+                sys.stdout.write("  " + " ".join(command) + "\n")
         return 0
     for stage in stages:
         code = _run(stage, changed)
         if code:
             return code
-    print("[local-gate] all requested stages passed")
+    sys.stdout.write("[local-gate] all requested stages passed\n")
     return 0
 
 

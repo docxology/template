@@ -95,7 +95,7 @@ def test_current_floor_accepts_314_apis_and_guarded_315_backports(tmp_path: Path
     source = tmp_path / "supported.py"
     source.write_text(
         "import annotationlib\nfrom typing import TypeIs, ReadOnly\n"
-        "lazy = 'ordinary identifier'\n"
+        "lazy = 'lazy import json'\n# lazy from pathlib import Path\n"
         "try:\n    from typing import TypeForm\nexcept ImportError:\n    from typing_extensions import TypeForm\n",
         encoding="utf-8",
     )

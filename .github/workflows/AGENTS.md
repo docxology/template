@@ -56,9 +56,9 @@ flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
     W --> FAST[ci.yml<br/>Linux/Python 3.14 functional checks · CI Gate]
-    W --> CI[hardening.yml<br/>20 jobs · 2 conditional via detect outputs<br/>manual-only lanes: test-infra-slow, public-matrix-receipt]
+    W --> CI[hardening.yml<br/>Manual complete Source-derived matrices<br/>Slow lane · Hardening Gate]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
-    W --> REL[release.yml<br/>Create GitHub Releases on version tags]
+    W --> REL[release.yml<br/>Manual publication from an accepted version tag]
     W --> REQUIRED[platform-required-acceptance.yml<br/>Original observations + strict candidate collector]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
     W --> RB[rebind.yml<br/>Post-merge receipt rebind on main]
@@ -170,7 +170,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 - **Runner:** `ubuntu-latest` / Python 3.14
 - **Shared gates:** [`run-public-lint`](../actions/run-public-lint/README.md) with `type-check: ratchet` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`, concurrently with separate logs) and [`run-tracked-guards`](../actions/run-tracked-guards/README.md) (confidentiality, secrets, generated artifacts — sequential).
-- **Tools:** `./.github/actions/run-public-lint` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`), `./.github/actions/run-tracked-guards` (confidentiality, secrets and generated artifacts), `scripts/audit/check_exemplar_configs.py`, and `scripts/audit/check_release_versions.py` (with `--tag "$RELEASE_TAG"` on tag pushes). The publication audit is **not** part of this job: `hardening.yml` runs the source-only `publication-audit --all-public --strict --format json`, and `release.yml` runs the modular `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` over rendered exemplars and uploads one receipt per project.
+- **Tools:** `./.github/actions/run-public-lint` (Ruff check, Ruff format check, `scripts/gates/mypy_ratchet.py`), `./.github/actions/run-tracked-guards` (confidentiality, secrets and generated artifacts), `scripts/audit/check_exemplar_configs.py`, and `scripts/audit/check_release_versions.py` (with `--tag "$RELEASE_TAG"` when manually dispatched at a tag ref). The publication audit is **not** part of this job: `hardening.yml` runs the source-only `publication-audit --all-public --strict --format json`, and `release.yml` runs the modular `scripts/audit/check_publication_outputs.py --all-public --strict --jobs 4` over rendered exemplars and uploads one receipt per project.
 - **Scope:** Ruff and mypy use the public scopes from `infrastructure.project.public_scope ci-paths` (resolved once inside the shared action); Bandit lives in the `security` job.
 
 #### 2. Static Health Report (`health`)
@@ -202,14 +202,14 @@ A negative control backs this contract: deliberately breaking any represented st
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. The canonical workflow guard in `tests/infra_tests/core/test_ci_infra_partition.py` checks both setup declarations against the actual native Git index and public submodule declaration. `test-project`, `test-infra-slow`, and `public-matrix-receipt` use the same pinned, credential-free checkout contract before their genuine standalone export controls.
+- **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. Genuine clone/reference and submodule-tamper controls in `tests/infra_tests/project/test_public_reference.py` verify the native Git inventory and pinned object bytes without workflow Source-text guards. `test-project`, `test-infra-slow`, and `public-matrix-receipt` use the same pinned, credential-free checkout contract before their genuine standalone export controls.
 - **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
 - **Offline warm:** a scratch `uv sync --frozen` against the selected interpreter re-populates the uv cache with every locked default-group wheel (setup-uv prunes registry wheels from the saved cache), so infra tests that build fresh environments with `uv sync --locked --offline` do not depend on a cold or pruned cache. The scratch environment is deleted.
 - **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. Linux verifies immutable source/compiler/dependency inputs and exact glibc-linked Pandoc/crossref bodies; macOS verifies exact official archives. Font archives, complete TeX/native-reader preparation and actual executable probes remain required. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
 - **Matrix:** Supported environments are: Linux Python 3.14/3.15 and macOS Python 3.15. The source-declared `ci_infra_partition.py` emits four complete module shards per environment (source-derived cell count). The four measured C4 families are assigned distinct shards; every other current or future collected module receives a stable SHA-256 assignment. No test is marked slow or removed by partitioning.
 - **Selection:** `ci_infra_shard_plugin` partitions actual pytest collection after the unchanged ordinary marker expression. Each selected case belongs to exactly one shard; empty/duplicate/noncanonical inventory, worker disagreement and incomplete actual completion fail. The plugin is explicitly loaded for this invocation, so nested pytest jobs retain their own selection.
 - **Diagnostics:** On the xdist controller the plugin also keeps a bounded, diagnostics-only record (`output/readiness/ordinary-infra-ci/diagnostics/shard-N.json`) of active cases, recent events, first failures and worker loss, labeled by declared public test family and member hash only. Every shard uploads it with `if: always()` as `infra-diagnostics-<os>-<python>-<shard>`; the manual `test-infra-slow` job loads the plugin with `--infra-ci-observer-only slow` to retain `shard-slow.json` as `infra-diagnostics-slow` without partition or selection admission. These records identify where a crashed or cancelled job was, and cannot replace a selection receipt or authorize coverage.
-- **Budgets:** The job is 90 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist loadscope`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
+- **Budgets:** The job is 90 minutes, pytest remains `--timeout=120`, and every existing per-case timeout override remains effective. Linux retains `-n auto`, macOS retains `-n 2`, and both use `--dist load --maxschedchunk=1`. Faster completion is a hypothesis until fresh hosted timings establish it; additional jobs repeat preparation and may increase total runner minutes.
 - **Coverage:** Only the four Python 3.14/Linux shards instrument execution. Per-shard thresholds are replaced by the required `coverage-infra` complete-union gate at the same ≥60% floor. The gate refuses missing/extra/duplicate/stale/failed selection records, incomplete case unions and changed coverage bytes, then merges genuine branch measurements in memory and writes confined JSON/XML. Codecov upload remains nonblocking after this required local threshold passes.
 - **Receipt scope:** Ordinary selection records bind infrastructure/scripts/infra tests/CI configuration source bytes. They do not replace full public source custody, installed-wheel, live, platform or release acceptance; missing Root release policy remains blocked.
 - **MathJax live viewport:** The manual hardening browser spec runs once on shard 0 of Python 3.14/Linux. Its existing tool provisioning, completed-typesetting checks and failure policy remain unchanged.
@@ -327,16 +327,16 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 
 ## Release Workflow (`release.yml`)
 
-Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input). Both triggers serialize by the selected tag and preserve in-flight publication; a manual dispatch from a different branch cannot race the same tag push.
+Triggers only on `workflow_dispatch` with an explicit existing tag. Dispatches serialize by that selected tag and preserve in-flight publication; another branch cannot race publication of the same tag. Creating or pushing a tag starts neither this workflow nor its acceptance checks.
 
 1. Resolves the requested tag before checkout, initializes its pinned submodules, and proves `HEAD` equals the dereferenced tag commit
 2. Prepares supported interpreters, the locked release environment and identical acceptance fixture inputs; audits pristine published exemplars before the installed handoff
-3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. Tag pushes without that explicit handoff stop
+3. For root 4+, requires the exact successful hosted run ID, `platform-required-acceptance` artifact ID and aggregate receipt SHA256; authenticates the same-repository exact-revision run and bounded artifact, then uses an independently installed current reader to authenticate every candidate requirement, the complete retained installed matrix and its exact admitted wheel/receipt. A tag alone cannot supply that handoff
 4. Runs the tagged-SHA no-mocks and bounded pipeline-smoke gates, root release contract and fail-closed public capability manifest
 5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
 7. Selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings
-8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.3` with **`generate_release_notes: false`** and attaches the admitted distributions, tag-selected overview PNG and byte manifest
+8. Refuses existing releases, including drafts, then uses `gh release create --verify-tag` with authored notes and the admitted distributions, tag-selected overview PNG and byte manifest; no release upsert, asset replacement or implicit tag creation
 9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
 
 The candidate [`platform-required-acceptance.yml`](platform-required-acceptance.yml)
@@ -346,8 +346,8 @@ exact-source bundle can supply the root 4+ handoff. Implementation presence or
 a dated version heading is not proof of successful acceptance, integration into
 `main`, or publication. Ordinary CI and partial/static results cannot replace it.
 
-The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) and
-[release action](https://raw.githubusercontent.com/softprops/action-gh-release/efb35369e0ad2afab669f228072c1b0d510eae64/action.yml) use the Node 24 JavaScript action runtime.
+The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) uses the Node 24 JavaScript action runtime.
+Release publication uses the GitHub CLI rather than a JavaScript release action.
 The JavaScript action runtime is independent of the Node 24 document toolchain selected by
 [`setup-docs-lint`](../actions/setup-docs-lint/action.yml).
 GitHub-hosted runners satisfy the documented runtime requirement; self-hosted
@@ -518,6 +518,20 @@ print(s.getvalue())
 
 The infrastructure partition changes execution placement only. The required `coverage-infra` job consumes every 3.14/Linux shard, validates their complete disjoint case union and source/data identities, and enforces the unchanged 60% floor. The existing `ci-gate` complete-job policy includes this job; an unsuccessful or skipped merge prevents optional exhaustive hardening acceptance. Root 4 release evidence remains separately required.
 
+The complete collected parameters in the three PDFium runtime, PDFium use-time
+and Source-wheel guard modules are balanced over those same four shards.
+Ordinary modules keep their stable file assignment. Every original control and
+per-case audit remains required; independent mutable Source/installations and
+the existing clocks are not replaced by shared results or larger deadlines.
+See the [execution details](../../docs/development/ci.md).
+
+The manual `public-matrix-receipt` job uses one outer project worker. This
+preserves its complete 25-project roster, current marker selection, serial inner
+execution, per-test clocks and coverage floors while avoiding contention between
+scientific experiment fixtures that commit real SQLite observations. The
+120-minute job budget is unchanged; no seed, trial, sample or scientific result
+is substituted to fit it.
+
 Required auxiliary execution uses a Source-derived complete project matrix and
 one separate Root checks cell. Each serial cell retains its 1,800-second
 operation deadline; four hosted cells may run concurrently. This changes
@@ -598,3 +612,20 @@ The complete job requires successful matrix production before setup.
 A cell or transport DATA alone cannot establish whole-roster or release
 acceptance. Successful native-cell artifacts request 30 days of retention.
 Retainers check each actual expiry at retrieval time.
+
+## Formal process-consumer qualification
+
+`formal-process-probe.yml` admits exact-source scoped branch pushes or explicit
+manual dispatch, on Darwin3.14/3.15. Prepare the own locked `dev` and
+`formal-tools` extras, not a nonexistent `dev` dependency group or an unqualified
+SDK fallback. Execute only the two declared existing process consumers with the
+original one-second operation and120-second pytest case clocks. Require the
+original exit0, exactly two JUnit cases with zero failures/errors/skips, actual
+source/interpreter/package origin and retained original streams/probe record.
+
+Independent run-ID concurrency never cancels another run; tag pushes do not
+trigger this diagnostic. Original records may establish Formal ISC130 only with
+genuine corresponding Linux evidence and unchanged consumer Source. They do not
+establish complete project coverage, the90% release-profile floor, Root/native
+or release acceptance. Preserve local execution-policy refusals; use the genuine
+hosted platform rather than an alternate process-query API to bypass them.

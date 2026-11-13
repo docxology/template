@@ -450,7 +450,7 @@ def main() -> int:
     plan = json.loads(args.plan.read_bytes())
     validate_plan(Path.cwd(), plan)
     if args.shard is None:
-        print(json.dumps(verify_shard_receipts(plan, args.directory), sort_keys=True))
+        sys.stdout.write(json.dumps(verify_shard_receipts(plan, args.directory), sort_keys=True) + "\n")
         return 0
     return run_shard(Path.cwd(), plan, args.shard, args.directory)
 

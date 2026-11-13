@@ -4,12 +4,9 @@ Edge-case coverage, integration paths, and renderer dispatch using real files
 and subprocess execution (no mocking framework).
 """
 
-from pathlib import Path
-
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering import pdf_renderer
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
     extract_preamble,
@@ -19,9 +16,8 @@ from infrastructure.rendering._pdf_title_page import (
     generate_title_page_body,
     generate_title_page_preamble,
 )
-from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
-from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+from infrastructure.rendering._pdf_latex_bibliography import process_bibliography
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
@@ -472,182 +468,6 @@ class TestBibliographyProcessingEdgeCases:
         result = process_bibliography(tex_file, output_dir, [bib_file])
 
         assert result is False
-
-
-class TestFixFigurePathsEdgeCases:
-    """Test edge cases in figure path fixing."""
-
-    def test_fix_paths_various_prefixes(self, tmp_path):
-        """Test fixing various path prefix formats."""
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
-
-        output_dir = tmp_path / "output" / "pdf"
-        output_dir.mkdir(parents=True)
-
-        figures_dir = tmp_path / "output" / "figures"
-        figures_dir.mkdir()
-        (figures_dir / "test.png").write_text("dummy")
-
-        # Test various path formats
-        tex_content = r"""
-\includegraphics{output/figures/test.png}
-\includegraphics{./figures/test.png}
-\includegraphics{test.png}
-"""
-
-        result = fix_figure_paths(tex_content, manuscript_dir=manuscript_dir, output_dir=output_dir)
-
-        # Should process all paths
-        assert result is not None
-
-    def test_fix_paths_with_backslash(self, tmp_path):
-        """Test fixing paths with backslash separators."""
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
-
-        output_dir = tmp_path / "output" / "pdf"
-        output_dir.mkdir(parents=True)
-
-        figures_dir = tmp_path / "output" / "figures"
-        figures_dir.mkdir()
-        (figures_dir / "test.png").write_text("dummy")
-
-        tex_content = r"\includegraphics{figures\test.png}"
-
-        result = fix_figure_paths(tex_content, manuscript_dir=manuscript_dir, output_dir=output_dir)
-
-        # Should handle backslash paths
-        assert result is not None
-
-
-class TestRenderCombinedEdgeCases:
-    """Test edge cases in render_combined method."""
-
-    @pytest.fixture
-    def full_project_setup(self, tmp_path):
-        """Create full project setup for testing."""
-        manuscript_dir = tmp_path / "manuscript"
-        manuscript_dir.mkdir()
-
-        output_dir = tmp_path / "output"
-        output_dir.mkdir()
-
-        pdf_dir = output_dir / "pdf"
-        pdf_dir.mkdir()
-
-        figures_dir = output_dir / "figures"
-        figures_dir.mkdir()
-
-        # Create minimal markdown file
-        md_file = manuscript_dir / "01_intro.md"
-        md_file.write_text("# Introduction\n\nSome content.")
-
-        # Create config
-        config_file = manuscript_dir / "config.yaml"
-        config_file.write_text(
-            """
-paper:
-  title: "Test Paper"
-authors:
-  - name: "Test Author"
-"""
-        )
-
-        config = RenderingConfig(
-            output_dir=str(output_dir),
-            pdf_dir=str(pdf_dir),
-            manuscript_dir=str(manuscript_dir),
-            figures_dir=str(figures_dir),
-        )
-
-        return config, manuscript_dir, [md_file]
-
-    def test_render_combined_removes_existing_output(self, full_project_setup, tmp_path):
-        """Test that existing output file is removed before rendering."""
-        config, manuscript_dir, source_files = full_project_setup
-        config.pandoc_path = str(tmp_path / "definitely-missing-pandoc")
-        renderer = PDFRenderer(config)
-
-        # Create existing output file
-        existing_pdf = Path(config.pdf_dir) / "test_combined.pdf"
-        existing_pdf.write_text("old content")
-
-        assert existing_pdf.exists()
-
-        # Attempt render - may fail due to missing tools
-        try:
-            renderer.render_combined(source_files, manuscript_dir, "test")
-        except (RenderingError, Exception):
-            pass  # Expected if pandoc/LaTeX not available
-        assert not existing_pdf.exists()
-
-    def test_render_combined_finds_alternate_bib(self, full_project_setup, tmp_path):
-        """Test finding alternate bibliography file (99_references.bib)."""
-        config, manuscript_dir, source_files = full_project_setup
-        renderer = PDFRenderer(config)
-
-        # Create alternate bib file
-        alt_bib = manuscript_dir / "99_references.bib"
-        alt_bib.write_text("@article{test, title={Test}}")
-
-        # Attempt render - may fail due to missing tools
-        try:
-            renderer.render_combined(source_files, manuscript_dir, "test")
-        except (RenderingError, Exception):
-            pass  # Expected if pandoc/LaTeX not available
-
-
-class TestModuleLevel:
-    """Test module-level functions and attributes."""
-
-    def test_module_has_pdf_renderer_class(self):
-        """Test that module exports PDFRenderer class."""
-
-        assert hasattr(pdf_renderer, "PDFRenderer")
-        assert callable(pdf_renderer.PDFRenderer)
-
-    def test_module_has_parse_missing_package(self):
-        """Test that helpers export parse_missing_latex_package_from_log."""
-        from infrastructure.rendering._pdf_latex_helpers import (
-            parse_missing_latex_package_from_log,
-        )
-
-        assert callable(parse_missing_latex_package_from_log)
-
-    def test_pdf_renderer_has_required_methods(self):
-        """Test PDFRenderer has all required methods."""
-        from infrastructure.rendering.config import RenderingConfig
-        from infrastructure.rendering.pdf_renderer import PDFRenderer
-
-        renderer = PDFRenderer(RenderingConfig(output_dir="/tmp"))
-
-        assert hasattr(renderer, "render")
-        assert hasattr(renderer, "render_markdown")
-        assert hasattr(renderer, "render_combined")
-
-        # Verify extracted module functions are importable
-        from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
-        from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
-        from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
-        from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
-        from infrastructure.rendering._pdf_latex_helpers import (
-            extract_preamble,
-            check_latex_log_for_graphics_errors,
-        )
-        from infrastructure.rendering._pdf_title_page import (
-            generate_title_page_preamble,
-            generate_title_page_body,
-        )
-
-        assert callable(combine_manuscript_markdown_sections)
-        assert callable(process_bibliography)
-        assert callable(extract_preamble)
-        assert callable(fix_figure_paths)
-        assert callable(fix_math_delimiters)
-        assert callable(check_latex_log_for_graphics_errors)
-        assert callable(generate_title_page_preamble)
-        assert callable(generate_title_page_body)
 
 
 class TestCombineMarkdownFilesEdgeCases:

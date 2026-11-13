@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import sys
 import time
 import tomllib
 from typing import Any
@@ -80,7 +81,8 @@ def run_logged(
     receipt = command_receipt(argv, process, git(root, "rev-parse", "HEAD").decode().strip())
     write_json(diagnostics / f"{label}.exit.json", receipt)
     code = receipt["returncode"]
-    print(f"{label}: original exit {receipt['original_exit_code']}; supervised result {code}", flush=True)
+    sys.stdout.write(f"{label}: original exit {receipt['original_exit_code']}; supervised result {code}\n")
+    sys.stdout.flush()
     return code
 
 
@@ -172,7 +174,7 @@ def _require_single_worker(jobs: int) -> None:
 
 
 def generate(root: Path, directory: Path, jobs: int) -> int:
-    """Refresh tracked publication copies; revalidate the unchanged complement."""
+    """Run each frozen project's actual refresh or explicit rebind command chain."""
     code, _ = _generate(root, directory, jobs)
     return code
 

@@ -961,10 +961,82 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-09T14:02:38Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][1]",
       "source_field": "$.exemplar_coverage[0][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "198"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-09T14:02:38Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][1] (numeric variant)",
+      "source_field": "$.exemplar_coverage[0][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1.98"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-09T14:02:38Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][2]",
+      "source_field": "$.exemplar_coverage[0][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "99.11"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-09T14:02:38Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[0][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.9911"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[0][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "99.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-09T14:02:38Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[1][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "99.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-09T14:02:38Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][1]",
+      "source_field": "$.exemplar_coverage[1][1]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -985,10 +1057,10 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-09T14:02:38Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[0][1]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][1] (numeric variant)",
+      "source_field": "$.exemplar_coverage[1][1]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -1009,67 +1081,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][2]",
-      "source_field": "$.exemplar_coverage[0][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "99.25"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[0][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.9925"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[0][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[0][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "99.2"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][1]",
-      "source_field": "$.exemplar_coverage[1][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "198"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[1][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1.98"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-09T14:02:38Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][2]",
       "source_field": "$.exemplar_coverage[1][2]",
@@ -1077,19 +1089,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.11"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[1][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[1][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.9911"
+      "value": "99.08"
     },
     {
       "active": true,
@@ -1101,7 +1101,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "99.1"
+      "value": "0.9908"
     },
     {
       "active": true,
@@ -1109,6 +1109,30 @@
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[2][1]",
       "source_field": "$.exemplar_coverage[2][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "94"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-08T02:56:22Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[13][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "94"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[14][2]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -1201,7 +1225,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-10-30T19:22:57Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[4][1]",
       "source_field": "$.exemplar_coverage[4][1]",
@@ -1209,11 +1233,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "393"
+      "value": "398"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-10-30T19:22:57Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[4][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[4][1]",
@@ -1221,7 +1245,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.93"
+      "value": "3.98"
     },
     {
       "active": true,
@@ -1381,7 +1405,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-10-30T19:22:57Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[7][1]",
       "source_field": "$.exemplar_coverage[7][1]",
@@ -1389,11 +1413,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "303"
+      "value": "299"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-10-30T19:22:57Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[7][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[7][1]",
@@ -1401,11 +1425,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.03"
+      "value": "2.99"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[7][2]",
       "source_field": "$.exemplar_coverage[7][2]",
@@ -1413,11 +1437,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "96.07"
+      "value": "96.06"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[7][2] (numeric variant)",
       "source_field": "$.exemplar_coverage[7][2]",
@@ -1425,7 +1449,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.9607"
+      "value": "0.9606"
     },
     {
       "active": true,
@@ -1441,7 +1465,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][1]",
       "source_field": "$.exemplar_coverage[8][1]",
@@ -1449,11 +1473,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "158"
+      "value": "45"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[8][1]",
@@ -1461,14 +1485,74 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1.58"
+      "value": "0.45"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][2]",
       "source_field": "$.exemplar_coverage[8][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "95.57"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[8][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.9557"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[8][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "95.6"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][1]",
+      "source_field": "$.exemplar_coverage[9][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "161"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][1] (numeric variant)",
+      "source_field": "$.exemplar_coverage[9][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1.61"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][2]",
+      "source_field": "$.exemplar_coverage[9][2]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -1477,27 +1561,15 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[8][2]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[9][2]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.9555"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[8][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[8][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "95.5"
     },
     {
       "active": true,
@@ -1513,34 +1585,46 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][1]",
-      "source_field": "$.exemplar_coverage[9][1]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[10][2]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1264"
+      "value": "95.5"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[9][1]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][1]",
+      "source_field": "$.exemplar_coverage[10][1]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "12.64"
+      "value": "1261"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][2]",
-      "source_field": "$.exemplar_coverage[9][2]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][1] (numeric variant)",
+      "source_field": "$.exemplar_coverage[10][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "12.61"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][2]",
+      "source_field": "$.exemplar_coverage[10][2]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -1549,75 +1633,15 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-07T07:01:20Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[9][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[9][2]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[10][2]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.9548"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][1]",
-      "source_field": "$.exemplar_coverage[10][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "45"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[10][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.45"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][2]",
-      "source_field": "$.exemplar_coverage[10][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "95.38"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[10][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.9538"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[10][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[10][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "95.4"
     },
     {
       "active": true,
@@ -1681,7 +1705,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-10-30T19:22:57Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[12][1]",
       "source_field": "$.exemplar_coverage[12][1]",
@@ -1689,11 +1713,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "308"
+      "value": "307"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
+      "checked_at": "2026-10-30T19:22:57Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[12][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[12][1]",
@@ -1701,7 +1725,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.08"
+      "value": "3.07"
     },
     {
       "active": true,
@@ -1741,10 +1765,82 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-08T02:56:22Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][1]",
       "source_field": "$.exemplar_coverage[13][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "163"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-08T02:56:22Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][1] (numeric variant)",
+      "source_field": "$.exemplar_coverage[13][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1.63"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-08T02:56:22Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][2]",
+      "source_field": "$.exemplar_coverage[13][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "94.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][2]",
+      "source_field": "$.exemplar_coverage[14][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "94.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-08T02:56:22Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[13][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.9404"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][2] (numeric variant)",
+      "source_field": "$.exemplar_coverage[14][2]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.9404"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-08T02:56:22Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][1]",
+      "source_field": "$.exemplar_coverage[14][1]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -1753,10 +1849,10 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-08T02:56:22Z",
       "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[13][1]",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][1] (numeric variant)",
+      "source_field": "$.exemplar_coverage[14][1]",
       "source_path": "output/data/chart_inputs.json",
       "source_tier": "generated_metric",
       "stale": false,
@@ -1765,103 +1861,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][2]",
-      "source_field": "$.exemplar_coverage[13][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "94.13"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[13][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.9413"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[13][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[13][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "94.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[14][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "94.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][1]",
-      "source_field": "$.exemplar_coverage[14][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "170"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][1] (numeric variant)",
-      "source_field": "$.exemplar_coverage[14][1]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1.7"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][2]",
-      "source_field": "$.exemplar_coverage[14][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "94.12"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T19:27:50Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[14][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[14][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.9412"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[15][1]",
       "source_field": "$.exemplar_coverage[15][1]",
@@ -1869,11 +1869,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "194"
+      "value": "191"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[15][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[15][1]",
@@ -1881,7 +1881,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "1.94"
+      "value": "1.91"
     },
     {
       "active": true,
@@ -1993,7 +1993,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-11T05:33:17Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.infrastructure_python[2][1]",
       "source_field": "$.infrastructure_python[2][1]",
@@ -2017,7 +2017,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-11T05:33:17Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.infrastructure_python[2][1] (numeric variant)",
       "source_field": "$.infrastructure_python[2][1]",
@@ -2089,7 +2089,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-10-31T02:22:03Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[18][2]",
       "source_field": "$.exemplar_coverage[18][2]",
@@ -2097,11 +2097,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.89"
+      "value": "92"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-10-31T02:22:03Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[18][2] (numeric variant)",
       "source_field": "$.exemplar_coverage[18][2]",
@@ -2109,19 +2109,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.9189"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
-      "kind": "number",
-      "source": "output/data/chart_inputs.json:$.exemplar_coverage[18][2] (numeric variant)",
-      "source_field": "$.exemplar_coverage[18][2]",
-      "source_path": "output/data/chart_inputs.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "91.9"
+      "value": "0.92"
     },
     {
       "active": true,
@@ -2353,7 +2341,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-07T07:01:20Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[22][1]",
       "source_field": "$.exemplar_coverage[22][1]",
@@ -2361,11 +2349,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "992"
+      "value": "990"
     },
     {
       "active": true,
-      "checked_at": "2026-11-07T07:01:20Z",
+      "checked_at": "2026-11-11T08:19:55Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[22][1] (numeric variant)",
       "source_field": "$.exemplar_coverage[22][1]",
@@ -2373,11 +2361,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "9.92"
+      "value": "9.9"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[22][2]",
       "source_field": "$.exemplar_coverage[22][2]",
@@ -2385,11 +2373,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "91.15"
+      "value": "91.16"
     },
     {
       "active": true,
-      "checked_at": "2026-11-12T06:53:59Z",
+      "checked_at": "2026-11-08T11:03:37Z",
       "kind": "number",
       "source": "output/data/chart_inputs.json:$.exemplar_coverage[22][2] (numeric variant)",
       "source_field": "$.exemplar_coverage[22][2]",
@@ -2397,7 +2385,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.9115"
+      "value": "0.9116"
     },
     {
       "active": true,
@@ -2410,6 +2398,18 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "91.2"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-07T07:01:20Z",
+      "kind": "number",
+      "source": "output/data/chart_inputs.json:$.exemplar_coverage[23][1]",
+      "source_field": "$.exemplar_coverage[23][1]",
+      "source_path": "output/data/chart_inputs.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "132"
     }
   ],
   "schema": "template-evidence-registry-report-v1",

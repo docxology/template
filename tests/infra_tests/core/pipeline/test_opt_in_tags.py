@@ -131,15 +131,7 @@ def test_plain_live_tag_vocabulary_matches_compiled_selection(tmp_path: Path) ->
         closing(PipelineExecutor(PipelineConfig("p", repo_root, mode="live"))) as live,
     ):
         assert core.preview_stage_names() == core_stage_names(yaml_path=declaration) == ("Core",)
-        assert (
-            live.preview_stage_names()
-            == live_stage_names(yaml_path=declaration)
-            == (
-                "Core",
-                "Local Live",
-                "Model",
-            )
-        )
+        assert live.preview_stage_names() == live_stage_names(yaml_path=declaration) == ("Core", "Local Live", "Model")
 
 
 def test_paid_plugin_remains_opt_in_when_custom_dag_omits_paid_tag(tmp_path: Path) -> None:

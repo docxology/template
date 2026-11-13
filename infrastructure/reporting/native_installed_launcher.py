@@ -145,7 +145,7 @@ def _print_preparation_scopes(argv: list[str]) -> int:
     args, _unknown = parser.parse_known_args(argv)
     _selected_cell_scope(parser, args)
     for scope in native_preparation_scopes(args.mode, args.source_root.resolve(strict=True), cell=args.matrix_cell):
-        print(scope)
+        sys.stdout.write(scope + "\n")
     return 0
 
 

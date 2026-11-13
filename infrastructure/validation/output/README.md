@@ -22,6 +22,11 @@ YAML-plus-environment format toggles, validating each enabled canonical
 deliverable, rejecting disabled-format leftovers, and filtering only
 renderer-owned artifacts from the freshly copied publication tree.
 
+Configuration-only callers do not load manuscript discovery or artifact
+validators. Each validation path imports its existing renderer checks only when
+that format is actually inspected; reports retain the same effective toggles,
+canonical output rules and fail-closed validation results.
+
 Stage 4 structure and size statistics use the artifact layer's canonical stable
 inventory. Public exemplars use `stable-shippable-output-v1`; an explicitly
 resolved non-template lifecycle project may use `stable-local-output-v1`.

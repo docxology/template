@@ -72,7 +72,14 @@ def test_real_pdf_and_html_keep_three_complete_pages_before_contents(tmp_path: P
 @pytest.mark.timeout(120)
 def test_real_tex_overflow_is_a_failed_render(tmp_path: Path) -> None:
     manuscript, manager = _native_project(tmp_path, overflow=True)
-    with pytest.raises(RenderingError):
+    with pytest.raises(RenderingError) as error:
         manager.render_combined_pdf(discover_manuscript_files(manuscript), manuscript, "overflow_fixture")
     log = tmp_path / "output/pdf/_combined_manuscript.log"
     assert "paper.frontmatter page overflow" in log.read_text(encoding="utf-8")
+    assert error.value.context["log_file"] == str(log)
+    assert error.value.context["returncode"] != 0
+    assert "paper.frontmatter page overflow" in error.value.context["first_error"]
+    stdout_log = tmp_path / "output/pdf/_latex_stdout.log"
+    assert error.value.context["stdout_log_file"] == str(stdout_log)
+    assert "paper.frontmatter page overflow" in stdout_log.read_text(encoding="utf-8")
+    assert not (tmp_path / "output/pdf/overflow_fixture_combined.pdf").exists()

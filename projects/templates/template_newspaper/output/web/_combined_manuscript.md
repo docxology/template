@@ -1,3 +1,7 @@
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-0-start-->
+```
+
 # Abstract
 
 We present `template_newspaper`, a pure-Python engine that renders a complete
@@ -15,11 +19,19 @@ ReportLab column frames, with headings kept beside their opening content. The pr
 research-template monorepo contract and is discovered and executed by the same
 orchestration pipeline as its code- and prose-focused siblings.
 
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-0-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-1-start-->
+```
 
 # Introduction
 
@@ -49,11 +61,19 @@ The remainder of this manuscript describes the engine's architecture
 (Section 2), its typography and figure generation (Section 3), and how the
 artifact is produced and verified reproducibly (Section 4).
 
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-1-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-2-start-->
+```
 
 # Engine Architecture
 
@@ -127,11 +147,19 @@ Every step is pure-data-in, artifact-out and seeded deterministically, so the
 same edition manifest always yields a byte-identical paper — the reproducibility
 contract verified in `tests/` and described in `04_reproducibility.md`.
 
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-2-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-3-start-->
+```
 
 # Typography and Figures
 
@@ -160,11 +188,19 @@ bar chart — are rendered with Matplotlib in black and gray with serif labels, 
 they sit naturally beside the type rather than fighting it. A missing image file
 degrades to a clearly labelled placeholder, never a crash.
 
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-3-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-4-start-->
+```
 
 # Reproducibility
 
@@ -172,7 +208,7 @@ The artifact is produced by a deterministic, three-step chain that the
 repository pipeline runs as Stage-02 analysis scripts, in lexicographic order:
 `00_preflight.py` confirms the dependencies import and the edition loads and
 validates; `10_generate_figures.py` writes the halftone scenes and charts to
-`../figures/`; and `20_render_newspaper.py` renders the twelve pages to
+`output/figures/`; and `20_render_newspaper.py` renders the twelve pages to
 `output/pdf/the-triplicate.pdf` and emits a machine-readable render report
 (`output/data/render_report.json`) plus a human summary. The render is
 deterministic — the canvas is opened in ReportLab's `invariant` mode and the
@@ -193,11 +229,19 @@ Every quantitative claim in this project — the page count, the trim dimensions
 the figure count — is recorded in `data/claim_ledger.yaml` against the artifact
 that substantiates it, so a reviewer can trace each number to its source.
 
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-4-end-->
+```
+
 
 
 ---
 
 
+
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-5-start-->
+```
 
 # References
 
@@ -211,3 +255,7 @@ The bibliography is maintained in `references.bib`. Key sources:
   for accessible, here monochrome, figure palettes [@wong2011].
 - García, M. *Contemporary Newspaper Design.* Grid, modular layout and the
   rail/well distinction [@garcia].
+
+```{=html}
+<!--template-web-source-0301c3071c24249bb0a0a3429d1dd4148b270a5af66fdb4415d76ea0509810c0-5-end-->
+```

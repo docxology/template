@@ -11,7 +11,10 @@ from infrastructure.validation.content.markdown_strip import strip_fences
 logger = get_logger(__name__)
 
 EQ_LABEL_PATTERN = re.compile(r"\\label\{([^}]+)\}")
-ANCHOR_PATTERN = re.compile(r"\{#([^}]+)\}")
+_PANDOC_ATTRIBUTE_VALUE = r"""(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s{}"']+)"""
+_PANDOC_ATTRIBUTE = rf"""(?:\.[^\s{{}}"'#]+|-|[A-Za-z_][\w:.-]*(?:={_PANDOC_ATTRIBUTE_VALUE})?)"""
+# IDs are separate tokens, not hash-prefixed text inside a quoted value.
+ANCHOR_PATTERN = re.compile(rf"""\{{\s*(?:{_PANDOC_ATTRIBUTE}\s+)*#([^\s{{}}"'#]+)(?:\s+{_PANDOC_ATTRIBUTE})*\s*\}}""")
 REF_PATTERN = re.compile(r"\\ref\{([^}]+)\}")
 EQREF_PATTERN = re.compile(r"\\eqref\{([^}]+)\}")
 
@@ -36,7 +39,7 @@ def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
         anchors.update(ANCHOR_PATTERN.findall(text))
         body = strip_fences(text)
         for raw_heading in re.findall(r"(?m)^#{1,6}[ \t]+(.+?)[ \t]*$", body):
-            heading = re.sub(r"\s*\{#[^}]+\}\s*$", "", raw_heading).strip()
+            heading = ANCHOR_PATTERN.sub("", raw_heading).strip()
             slug = re.sub(r"[^\w\s-]", "", heading.lower())
             slug = re.sub(r"\s+", "-", slug).strip("-")
             if slug:

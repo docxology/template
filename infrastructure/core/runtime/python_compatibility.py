@@ -43,7 +43,7 @@ def scan_python_312_compatibility(
     for source_path, display in _python_files_and_displays(paths, resolved_root):
         try:
             source = source_path.read_text(encoding="utf-8")
-            tree = ast.parse(source, filename=str(source_path), feature_version=(3, 12))
+            tree = _parse_floor_syntax(source, source_path, minor=12)
         except SyntaxError as exc:
             issues.append(
                 PythonCompatibilityIssue(
@@ -80,22 +80,17 @@ def scan_python_314_compatibility(
     for source_path, display in _python_files_and_displays(paths, repo_root.resolve()):
         try:
             source = source_path.read_text(encoding="utf-8")
-            tree = ast.parse(source, filename=str(source_path), feature_version=(3, 14))
+            tree = _parse_floor_syntax(source, source_path, minor=14)
         except SyntaxError as exc:
             issues.append(PythonCompatibilityIssue(display, exc.lineno or 0, "PY314.SYNTAX", exc.msg))
             continue
         except (OSError, UnicodeError) as exc:
             issues.append(PythonCompatibilityIssue(display, 0, "PY314.READ", str(exc)))
             continue
-        if "lazy" not in source and not any(token in source for names in unavailable.values() for token in names):
+        if not any(token in source for names in unavailable.values() for token in names):
             continue
         parents = _parent_map(tree)
         for node in ast.walk(tree):
-            # feature_version is best effort: 3.15 still parses lazy imports for 3.14.
-            if isinstance(node, (ast.Import, ast.ImportFrom)) and getattr(node, "is_lazy", False):
-                issues.append(
-                    PythonCompatibilityIssue(display, node.lineno, "PY314.SYNTAX", "lazy imports require Python 3.15+")
-                )
             apis: list[str] = []
             if isinstance(node, ast.ImportFrom):
                 apis = [
@@ -119,6 +114,21 @@ def scan_python_314_compatibility(
                     for api in apis
                 )
     return tuple(sorted(issues, key=lambda issue: (issue.path, issue.line, issue.rule)))
+
+
+def _parse_floor_syntax(source: str, source_path: Path, *, minor: int) -> ast.Module:
+    tree = ast.parse(source, filename=str(source_path), feature_version=(3, minor))
+    # feature_version is best-effort: some 3.15 parsers accept explicit lazy
+    # imports even for an older grammar. Inspect the actual import node, not
+    # source text, so comments, strings and the soft keyword remain valid.
+    if "lazy" in source:
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Import, ast.ImportFrom)) and getattr(node, "is_lazy", False):
+                raise SyntaxError(
+                    "Lazy imports require Python 3.15+",
+                    (str(source_path), node.lineno, node.col_offset + 1, None),
+                )
+    return tree
 
 
 def _python_files_and_displays(paths: Iterable[Path], resolved_root: Path) -> tuple[tuple[Path, str], ...]:

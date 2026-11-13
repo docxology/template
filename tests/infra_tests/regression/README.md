@@ -1,5 +1,5 @@
 # Regression-oracle tests
 
-Tests for the checked-in regression manifest, minimum collection floor, and
-required-file fail-closed behavior. The claim-binding cases themselves live in
+Real isolated controls for Literature's canonical regression source imports and
+sibling-shadow refusals. Quantitative claim-binding cases live in
 `tests/regression/`.
