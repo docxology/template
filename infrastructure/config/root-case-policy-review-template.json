@@ -4327,7 +4327,7 @@
     },
     {
       "path": "tests/infra_tests/core/test_implementation_custody.py",
-      "source_sha256": "cc3c31f0d7d9e9fa7856f09bbce72571fd341a71b7fcc5dbc1e974df062c4b07",
+      "source_sha256": "2198e97e43d8e12d69bc79fe69ff42d8ec40fa925d9b4809a310a8c838e73473",
       "families": [
         "tests/infra_tests/core/test_implementation_custody.py::test_actual_installed_record_or_source_violation_is_rejected",
         "tests/infra_tests/core/test_implementation_custody.py::test_actual_installed_source_record_and_fresh_bytecode_are_bound",
@@ -4335,7 +4335,6 @@
         "tests/infra_tests/core/test_implementation_custody.py::test_budgeted_manifest_still_refuses_linked_nonpython_directory",
         "tests/infra_tests/core/test_implementation_custody.py::test_checkout_uses_unique_actual_installed_metadata_despite_generated_source_egg_info",
         "tests/infra_tests/core/test_implementation_custody.py::test_declared_dependency_uses_its_own_installed_record",
-        "tests/infra_tests/core/test_implementation_custody.py::test_distribution_source_inventory_runs_only_for_its_installed_comparison",
         "tests/infra_tests/core/test_implementation_custody.py::test_fresh_prefix_without_preimport_audit_cannot_certify_execution",
         "tests/infra_tests/core/test_implementation_custody.py::test_installed_dependency_companion_requires_nomination_and_exact_record",
         "tests/infra_tests/core/test_implementation_custody.py::test_manifest_depth_refuses_actual_nested_directory_before_suffix_selection",
@@ -4352,7 +4351,7 @@
         "tests/infra_tests/core/test_implementation_custody.py::test_source_directory_links_are_rejected_before_python_suffix_selection",
         "tests/infra_tests/core/test_implementation_custody.py::test_source_only_platform_identity_is_checked_without_distribution_metadata"
       ],
-      "family_observations_sha256": "de08b7f076869c2aae8909a9469318604d996f8b3e8001a173c680863005f799",
+      "family_observations_sha256": "1d112d3d884dc4e57ebb6414726e58e01eadbb0d1c06178fa1b770af35851863",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -4361,7 +4360,7 @@
       "evidence": [
         {
           "path": "tests/infra_tests/core/test_implementation_custody.py",
-          "source_sha256": "cc3c31f0d7d9e9fa7856f09bbce72571fd341a71b7fcc5dbc1e974df062c4b07",
+          "source_sha256": "2198e97e43d8e12d69bc79fe69ff42d8ec40fa925d9b4809a310a8c838e73473",
           "line": 1
         }
       ]
