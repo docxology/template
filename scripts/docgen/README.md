@@ -27,6 +27,23 @@ uv run python scripts/docgen/exemplar_roster.py
 uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
+`counts.py --write` and `--check` collect test metadata; they do not rerun
+coverage or execute the suites. Collection uses an existing project `.venv`,
+otherwise the invoking runtime; a broken nominated environment is an error.
+Prepare any missing declared dependency closure rather than adding import-path
+shortcuts or omitting the exemplar. For Advanced's canonical local Meta provider:
+
+```bash
+uv sync --locked --project projects/templates/template_advanced_literature_review \
+  --extra dev --python "$PWD/.venv/bin/python"
+```
+
+That checkout resolver uses the declared local Meta/SDK sources, not an
+unpublished package-index release. Standalone adoption still needs its genuinely
+published provider pins. Coverage is separate: the
+[requested-project workflow](../../.github/workflows/public-exemplar-coverage.yml)
+can measure changed inputs without repeating unchanged original measurements.
+
 Prepare the nominated DATA file by independently copying the selected SDK's
 `counts_coverage.py` byte-for-byte outside both the repository and SDK. Retain
 its original bytes before measurement. `--verify-coverage --write` refuses

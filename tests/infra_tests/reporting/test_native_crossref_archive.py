@@ -239,8 +239,7 @@ def _source_record():
         "recipe_sha256",
         "freeze_path",
         "freeze_sha256",
-        "compiler_patch_path",
-        "compiler_patch_sha256",
+        "compiler_patches",
         "resolved_freeze_sha256",
         "compiler",
         "ghc_options",
@@ -263,6 +262,22 @@ def test_retained_provider_pin_cannot_replace_any_source_compiler_or_dependency_
     _validate_record(record, **expected)
     value = record["pin"]["build"][field]
     record["pin"]["build"][field] = value + ["-tampered"] if type(value) is list else value + "-tampered"
+    with pytest.raises(ValueError, match="Source/platform/pin"):
+        _validate_record(record, **expected)
+
+
+@pytest.mark.parametrize("patch_index", [0, 1])
+@pytest.mark.parametrize("field", ["path", "sha256"])
+def test_retained_compiler_patch_row_cannot_replace_the_selected_source(patch_index: int, field: str) -> None:
+    _, pin, record = _source_record()
+    expected = {
+        "run_id": record["run_id"],
+        "host": record["host"],
+        "pin": pin,
+        "source_binding": record["source_binding"],
+    }
+    row = record["pin"]["build"]["compiler_patches"][patch_index]
+    row[field] += "-tampered"
     with pytest.raises(ValueError, match="Source/platform/pin"):
         _validate_record(record, **expected)
 

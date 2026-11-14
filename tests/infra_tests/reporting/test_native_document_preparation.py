@@ -68,6 +68,7 @@ def test_unknown_host_cannot_choose_a_provider(host: dict) -> None:
     [
         (("extra",), True),
         (("schema_version",), "unknown"),
+        (("schema_version",), "template-native-document-providers-v3"),
         (("providers", "FreeBSD-x86_64"), {}),
         (("providers", "Linux-x86_64", "kind"), "official-archives"),
         (("providers", "Linux-x86_64", "build", "compiler"), "ghc-latest"),
@@ -76,8 +77,6 @@ def test_unknown_host_cannot_choose_a_provider(host: dict) -> None:
         (("providers", "Linux-x86_64", "build", "ghc_options"), []),
         (("providers", "Linux-x86_64", "build", "recipe_path"), "../unreviewed.nix"),
         (("providers", "Linux-x86_64", "build", "freeze_path"), "/tmp/unreviewed.freeze"),
-        (("providers", "Linux-x86_64", "build", "compiler_patch_path"), "/tmp/unreviewed.patch"),
-        (("providers", "Linux-x86_64", "build", "compiler_patch_sha256"), "A" * 64),
         (("providers", "Linux-x86_64", "build", "resolved_freeze_sha256"), "A" * 64),
         (("providers", "Linux-x86_64", "build", "compiler_output"), "/nix/store/../ghc-9.12.2"),
         (("providers", "Linux-x86_64", "build", "plan_derivation"), "/tmp/unreviewed.drv"),
@@ -105,6 +104,47 @@ def test_malformed_pin_in_any_union_branch_is_rejected(path: tuple[str, ...], va
     row[path[-1]] = value
     with pytest.raises(ValueError):
         select_document_provider(_content(document), _LINUX)
+
+
+@pytest.mark.parametrize("host", [_LINUX, {"system": "Darwin", "machine": "arm64"}])
+@pytest.mark.parametrize(
+    "change",
+    [
+        "not-a-list",
+        "one-missing",
+        "extra",
+        "reversed",
+        "duplicate-path",
+        "foreign-path",
+        "missing-digest",
+        "extra-row-field",
+        "malformed-digest",
+    ],
+)
+def test_compiler_patch_pair_is_closed_and_ordered_in_every_host_branch(host: dict, change: str) -> None:
+    document = _manifest()
+    build = document["providers"]["Linux-x86_64"]["build"]
+    patches = build["compiler_patches"]
+    if change == "not-a-list":
+        build["compiler_patches"] = {str(index): patch for index, patch in enumerate(patches)}
+    elif change == "one-missing":
+        patches.pop()
+    elif change == "extra":
+        patches.append(dict(patches[0]))
+    elif change == "reversed":
+        patches.reverse()
+    elif change == "duplicate-path":
+        patches[1]["path"] = patches[0]["path"]
+    elif change == "foreign-path":
+        patches[1]["path"] = "/tmp/unreviewed.patch"
+    elif change == "missing-digest":
+        del patches[1]["sha256"]
+    elif change == "extra-row-field":
+        patches[1]["extra"] = True
+    else:
+        patches[1]["sha256"] = "A" * 64
+    with pytest.raises(ValueError):
+        select_document_provider(_content(document), host)
 
 
 @pytest.mark.parametrize("content", [b"", b"[]", b"null", b"{", b"\xff", b'{"n":NaN}', b" " * 131073])
@@ -205,19 +245,21 @@ def test_tampered_cache_cannot_trigger_build_or_publish_a_path(tmp_path: Path) -
     assert {path.name for path in tmp_path.iterdir()} == {"archives"}
 
 
-@pytest.mark.parametrize("changed", ["recipe", "freeze", "compiler_patch", "missing_compiler_patch"])
-def test_changed_root_build_input_cannot_trigger_acquisition(tmp_path: Path, changed: str) -> None:
+@pytest.mark.parametrize("input_index", range(4))
+@pytest.mark.parametrize("missing", [False, True])
+def test_changed_root_build_input_cannot_trigger_acquisition(tmp_path: Path, input_index: int, missing: bool) -> None:
     source = tmp_path / "source"
     manifest = source / PIN_SOURCE
     manifest.parent.mkdir(parents=True)
     document = _manifest()
     manifest.write_bytes(_content(document))
-    for name in ("recipe", "freeze", "compiler_patch"):
-        if name == "compiler_patch" and changed == "missing_compiler_patch":
+    build = document["providers"]["Linux-x86_64"]["build"]
+    inputs = [build["recipe_path"], build["freeze_path"], *(patch["path"] for patch in build["compiler_patches"])]
+    for index, relative in enumerate(inputs):
+        if index == input_index and missing:
             continue
-        relative = document["providers"]["Linux-x86_64"]["build"][name + "_path"]
         body = (_REPO / relative).read_bytes()
-        (source / relative).write_bytes(body + b"\n# changed after pinning\n" if name == changed else body)
+        (source / relative).write_bytes(body + b"\n# changed after pinning\n" if index == input_index else body)
     archives, destination = tmp_path / "archives", tmp_path / "destination"
     with pytest.raises((ValueError, FileNotFoundError)):
         prepare_document_providers(

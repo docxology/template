@@ -166,10 +166,13 @@ observations alone do not establish complete execution or a universal speedup.
 Linux document qualification requires real glibc-linked executables from the
 Source-pinned GHC 9.12.2 recipe and complete dependency freeze, with project-wide
 object determinism; static release binaries cannot emit `LD_AUDIT` callbacks.
-Root recipe, freeze and compiler-patch bytes, upstream provenance and resolved
-plan are independently bound. The real source-corrected `ghc-pkg` writer orders
-installed-unit cache roots canonically; no executable rewrite supplies this
-determinism. Linux audit-library nominations use held read-only descriptors
+Root recipe, freeze and both ordered compiler-patch inputs, upstream provenance
+and resolved plan are independently bound. The standard Source-built compiler
+orders both installed-unit cache roots and compiler preload units canonically.
+Its provider-way patch omits only unused profiling/compiler-documentation work,
+not normal/shared libraries, debug RTS, optimization or standard build phases.
+No executable rewrite supplies determinism. Linux audit-library nominations use
+held read-only descriptors
 inherited only by the audited child, preserving live/inode custody under deep
 paths. The original loader lifecycle authenticates the final consistency census
 and every file-backed close before `DONE`. The kernel vDSO remains explicitly

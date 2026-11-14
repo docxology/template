@@ -33,15 +33,16 @@ See [README.md](README.md) for usage.
 The single pin source is `infrastructure/config/native-document-providers.json`,
 interpreted by the pure closed-union `native_document_provider_contracts` API.
 Do not duplicate platform archive pins in shell. Linux x86_64 uses the held,
-hash-pinned Root recipe, complete freeze and tracked compiler patch against the
-immutable upstream commit and haskell.nix/Hackage lock. The v3 closed manifest
-authenticates all three held inputs before acquisition or build. Root retains
-GHC 9.12.2 and project-wide `-fobject-determinism`; its real rebuilt `ghc-pkg`
-canonicalizes package-cache serialization by installed unit ID. Keep the
-standard compiler dependency metadata, `ghc.package` binding and both executable
-`keepConfigFiles` settings from the qualified recipe. Do not sort linker flags,
-rewrite cache bytes or substitute a fake command. Upstream's GHC 9.8.4 declaration
-and original freeze remain separately authenticated, not rewritten.
+hash-pinned Root recipe, complete freeze and ordered pair of tracked compiler
+patches against the immutable upstream commit and haskell.nix/Hackage lock.
+The v4 closed manifest authenticates all four held inputs before acquisition.
+The standard GHC 9.12.2 constructor compiles package-cache installed-unit sorting
+and compiler preload-unit sorting; retain project-wide `-fobject-determinism`.
+Omit only the qualified unused profiling ways and compiler documentation;
+preserve normal/shared libraries, debug RTS, optimization, standard build phases,
+compiler dependency metadata and both executable `keepConfigFiles` settings.
+Do not sort linker flags, rewrite cache bytes or substitute a fake command.
+Upstream's GHC 9.8.4 declaration and original freeze remain separately authenticated.
 `native_document_preparation` evaluates private copies of the held inputs and
 checks actual source NAR, compiler/plan/provider paths, recursive derivations,
 resolved freeze, completed build and verified runtime closure.

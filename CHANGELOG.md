@@ -43,6 +43,11 @@ locks.
   refusal, exact tag identity, no-clobber uploads and independent public readback.
 - Import four authenticated changed-input coverage originals while preserving
   the 21 input-identical original measurements and their dated baseline.
+- Build Linux document providers with the qualified standard Source-patched GHC:
+  canonical package-cache/preload ordering, with only unused profiling and
+  compiler-documentation ways omitted. Closed v4 pins authenticate both ordered
+  patches before acquisition; complete executable bodies, signed closure,
+  preparation clocks and every native admission remain mandatory.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.

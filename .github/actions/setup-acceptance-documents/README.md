@@ -24,13 +24,16 @@ No unpinned host GHC or latest package set is admitted. Source builds use two
 concurrent jobs and two cores; a derivation/store path never replaces the complete
 executable's Source-owned hash and length.
 
-The tracked [GHC package-cache source patch](../../../infrastructure/config/native-document-ghc-pkg-cache-order.patch)
-sorts installed unit IDs at the actual `ghc-pkg` serialization producer.
-Object determinism alone did not prevent different archive link orders.
-The real rebuilt utility uses the stock frozen GHC 9.12.2 boot libraries and
-the standard compiler dependency metadata/`ghc.package` binding. Both executable
-`keepConfigFiles` settings retain the actual consumed caches. No linker-flag
-sorting, binary-cache rewriting or fake command substitutes for that source fix.
+The tracked [ordering source patch](../../../infrastructure/config/native-document-ghc-pkg-cache-order.patch)
+sorts installed unit IDs at the actual `ghc-pkg` serialization producer and
+preload units inside the compiler. Object determinism alone did not prevent
+different archive link orders. The standard GHC 9.12.2 constructor compiles both
+corrections while retaining its dependency metadata and `ghc.package` binding.
+The second [provider-way patch](../../../infrastructure/config/native-document-ghc-provider-ways.patch)
+omits only unused profiling library/RTS ways and generated compiler documentation;
+normal/shared libraries, debug RTS, optimization and standard build phases stay.
+Both executable `keepConfigFiles` settings retain the actual consumed caches.
+No linker-flag sorting, binary-cache rewriting or fake command supplies determinism.
 
 The strict shared parser rejects unsupported hosts and malformed fields in any
 manifest branch; there is no official-static-Linux or version fallback.
@@ -45,9 +48,9 @@ users on this disposable runner; no systemd daemon/socket startup is required.
 Only the reviewed signed NixOS, IOG and crossref Cachix caches are selected;
 flake-supplied configuration and the optional undo.it cache are not accepted.
 
-The closed v3 Source preparation CLI holds and hashes the Root recipe, freeze
-and compiler patch before acquisition, then evaluates private copies of those
-exact bytes. It checks the
+The closed v4 Source preparation CLI holds and hashes the Root recipe, freeze
+and exact ordered pair of compiler patches before acquisition, then evaluates
+private copies of all four inputs. It checks the
 actual upstream revision and complete NAR, original lock/freeze and compiler
 declaration, evaluated compiler/plan/provider derivations and outputs, recursive
 dependency derivations, resolved freeze, completed build and verified runtime
