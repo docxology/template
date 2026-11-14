@@ -20,6 +20,16 @@ locks.
   hostile foreign Git epochs from the nominated candidate. Retire workflow
   structure, Source-substring and re-export assertion pins while retaining
   actual selector and aggregate-script consumers.
+- Fetch the same size/SHA-pinned stable TLC body through its official anonymous
+  release-download URL in Formal and hosted preparation, retaining atomic
+  admission, tool proofs and every existing deadline.
+- Retire composed-receipt mutations masked by mandatory hosted authentication
+  and declaration-only union assertions. Retain real unauthenticated CLI,
+  revision/schema refusals and pure origin verdicts; illustrative DATA never
+  becomes hosted release evidence.
+- Classify native Office HTML comments by their first literal closing token,
+  not a full-comment filtering regexp. Preserve multiline alternatives and
+  reject empty-abrupt openings, mixed visible content and trailing comments.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.
