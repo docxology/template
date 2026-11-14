@@ -159,7 +159,7 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "91.15 %"),
+    ExemplarSnapshot("template_active_inference", "91.16 %"),
     ExemplarSnapshot("template_advanced_literature_review", "94.12 %"),
     ExemplarSnapshot("template_autopoiesis", "91.43 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.49 %"),

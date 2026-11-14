@@ -41,6 +41,8 @@ locks.
 - Stage each new Root release as an owned draft and verify all four downloaded
   assets before public publication can trigger archival. Preserve existing-release
   refusal, exact tag identity, no-clobber uploads and independent public readback.
+- Import four authenticated changed-input coverage originals while preserving
+  the 21 input-identical original measurements and their dated baseline.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.
