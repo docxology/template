@@ -9,6 +9,14 @@ inputs:
     description: Already locked Python for Source provider preparation, the Linux mirror guard and native LaTeX validator; does not sync or acquire Python.
     required: false
     default: .venv/bin/python
+  nix-store-snapshot:
+    description: Optional flat preparation DATA from this exact workflow run; never a substitute for normal provider verification.
+    required: false
+    default: ""
+  nix-store-manifest-sha256:
+    description: Exact manifest SHA256 returned by the same-run root-owned preparation producer.
+    required: false
+    default: ""
 runs:
   using: composite
   steps:
@@ -18,6 +26,8 @@ runs:
       env:
         PREPARATION_MODE: ${{ inputs.mode }}
         PREPARED_PYTHON: ${{ inputs.python-executable }}
+        NIX_STORE_SNAPSHOT: ${{ inputs.nix-store-snapshot }}
+        NIX_STORE_MANIFEST_SHA256: ${{ inputs.nix-store-manifest-sha256 }}
       run: |
         set -euo pipefail
         case "$PREPARATION_MODE" in
@@ -29,6 +39,11 @@ runs:
             echo "native/Linux document preparation requires an already locked Python executable" >&2
             exit 1
           fi
+        fi
+        if [ -n "$NIX_STORE_SNAPSHOT" ] || [ -n "$NIX_STORE_MANIFEST_SHA256" ]; then
+          [ "${RUNNER_OS:-}" = Linux ]
+          [ -d "$NIX_STORE_SNAPSHOT" ] && [ ! -L "$NIX_STORE_SNAPSHOT" ]
+          [[ "$NIX_STORE_MANIFEST_SHA256" =~ ^[0-9a-f]{64}$ ]]
         fi
     - name: Restore exact document provider archives
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -147,6 +162,22 @@ runs:
           sudo -n nix-store --init
         fi
         nix --version
+    - name: Restore only genuine same-run Linux store preparation DATA
+      if: runner.os == 'Linux' && inputs.nix-store-snapshot != ''
+      shell: bash
+      env:
+        PREPARED_PYTHON: ${{ inputs.python-executable }}
+        NIX_STORE_SNAPSHOT: ${{ inputs.nix-store-snapshot }}
+        NIX_STORE_MANIFEST_SHA256: ${{ inputs.nix-store-manifest-sha256 }}
+      run: |
+        set -euo pipefail
+        preparation_python=$("$PREPARED_PYTHON" -I -c 'import sys; print(sys.executable)')
+        sudo -n --preserve-env=GITHUB_ACTIONS,GITHUB_REPOSITORY,GITHUB_SHA,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT \
+          timeout --signal=TERM --kill-after=5s 900s \
+          "$preparation_python" -I -B \
+          "$GITHUB_WORKSPACE/.github/actions/setup-acceptance-documents/nix_store_snapshot.py" \
+          restore "$NIX_STORE_SNAPSHOT" --nix-binary "$(command -v nix)" \
+          --manifest-sha256 "$NIX_STORE_MANIFEST_SHA256"
     - name: Prepare exact compatible Pandoc and cross-reference binaries
       shell: bash
       env:

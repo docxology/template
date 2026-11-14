@@ -567,6 +567,12 @@ hidden files for thirty days. Optional author mode creates only a canonical
 Linux 3.14 draft from an exhaustive reviewed committed template; the other three
 targets collect again and refuse any template/member/fixture drift. It cannot
 install policy, push, tag, publish or satisfy required runtime acceptance.
+One shared 135-minute Ubuntu preparation job transports the genuine complete
+Nix store only within the same Source/run/attempt/client. Linux consumers keep
+root ownership, original trust metadata and unconditional source/body/signature
+verification. Each of the four policy jobs still has its original 75-minute
+outer and 660-second collection clock. A snapshot is preparation DATA, not
+classified runtime acceptance or permission to replay an immutable original.
 
 
 ## Manual tagged PDF tool probe

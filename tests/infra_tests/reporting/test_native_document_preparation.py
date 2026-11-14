@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
+import runpy
+import sqlite3
 import stat
 import struct
 import subprocess
@@ -378,3 +381,155 @@ def test_actual_nix_derivation_cannot_override_source_build_pins(fault: str) -> 
         graph = {Path(path).name: row}
     with pytest.raises(ValueError):
         _require_derivation_graph(graph, build)
+
+
+@pytest.fixture(scope="module")
+def store_snapshot():
+    before = sys.path[:]
+    try:
+        return runpy.run_path(str(_REPO / ".github/actions/setup-acceptance-documents/nix_store_snapshot.py"))
+    finally:
+        sys.path[:] = before
+
+
+def _snapshot_transport_fixture(tmp_path: Path, store_snapshot):
+    # Parser DATA only: never a real database, NAR, client or native admission.
+    directory = tmp_path / "transport"
+    directory.mkdir()
+    body = b"parser-only NAR transport fixture"
+    contents = {"database.sqlite": b"parser-only database fixture", "schema": b"10\n",
+                "path-00000.nar.gz": gzip.compress(body, mtime=0)}
+    for name, content in contents.items():
+        (directory / name).write_bytes(content)
+    def entry(name):
+        return {"file": name, "size": len(contents[name]), "sha256": hashlib.sha256(contents[name]).hexdigest()}
+    binding = {"GITHUB_SHA": "a" * 40, "fixture_only": True}
+    manifest = {
+        "schema": store_snapshot["SCHEMA"], "binding": binding,
+        "database": entry("database.sqlite"), "schema_file": entry("schema"),
+        "database_logical_sha256": "b" * 64,
+        "paths": [{**entry("path-00000.nar.gz"), "path": "/nix/store/" + "0" * 32 + "-fixture",
+                   "nar_sha256": hashlib.sha256(body).hexdigest(), "nar_size": len(body)}],
+    }
+    content = json.dumps(manifest).encode()
+    (directory / "manifest.json").write_bytes(content)
+    return directory, content, hashlib.sha256(content).hexdigest(), binding
+
+
+def test_store_snapshot_refuses_foreign_source(store_snapshot, tmp_path):
+    _directory, content, digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    with pytest.raises(ValueError):
+        store_snapshot["validate_manifest"](content, digest, {**binding, "GITHUB_SHA": "c" * 40})
+
+
+def test_store_snapshot_refuses_manifest_not_bound_by_producer(store_snapshot, tmp_path):
+    directory, content, digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    altered = content.replace(b'"fixture_only": true', b'"fixture_only": false')
+    (directory / "manifest.json").write_bytes(altered)
+    sealed = tmp_path / "sealed"
+    with pytest.raises(ValueError):
+        store_snapshot["seal_snapshot"](directory, sealed, digest, binding)
+    assert not sealed.exists()
+
+
+def test_store_snapshot_refuses_ambiguous_manifest(store_snapshot, tmp_path):
+    _directory, content, _digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    altered = content.replace(b'"fixture_only": true', b'"fixture_only": true, "fixture_only": true')
+    with pytest.raises(ValueError):
+        store_snapshot["validate_manifest"](altered, hashlib.sha256(altered).hexdigest(), binding)
+
+
+def test_store_snapshot_refuses_escaping_registered_path(store_snapshot, tmp_path):
+    _directory, content, _digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    manifest = json.loads(content)
+    manifest["paths"][0]["path"] = "/nix/store/../../outside"
+    altered = json.dumps(manifest).encode()
+    with pytest.raises(ValueError):
+        store_snapshot["validate_manifest"](altered, hashlib.sha256(altered).hexdigest(), binding)
+
+
+def test_store_snapshot_refuses_corrupt_payload_before_store_write(store_snapshot, tmp_path):
+    directory, _content, digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    payload = directory / "path-00000.nar.gz"
+    original = payload.read_bytes()
+    payload.write_bytes(original[:-1] + bytes([original[-1] ^ 1]))
+    sealed = tmp_path / "sealed"
+    with pytest.raises(ValueError):
+        store_snapshot["seal_snapshot"](directory, sealed, digest, binding)
+    assert not sealed.exists()
+
+
+def test_store_snapshot_refuses_linked_payload(store_snapshot, tmp_path):
+    directory, _content, digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    payload = directory / "path-00000.nar.gz"
+    outside = tmp_path / "outside"
+    payload.rename(outside)
+    payload.symlink_to(outside)
+    sealed = tmp_path / "sealed"
+    with pytest.raises(OSError):
+        store_snapshot["seal_snapshot"](directory, sealed, digest, binding)
+    assert not sealed.exists()
+
+
+def test_store_snapshot_refuses_unlisted_payload(store_snapshot, tmp_path):
+    directory, _content, digest, binding = _snapshot_transport_fixture(tmp_path, store_snapshot)
+    (directory / "unlisted").write_bytes(b"not in the producer roster")
+    sealed = tmp_path / "sealed"
+    with pytest.raises(ValueError):
+        store_snapshot["seal_snapshot"](directory, sealed, digest, binding)
+    assert not sealed.exists()
+
+
+def test_store_metadata_is_immutable_without_following_external_link(store_snapshot, tmp_path):
+    tree = tmp_path / "restored"
+    tree.mkdir()
+    regular, executable = tree / "regular", tree / "executable"
+    regular.write_bytes(b"ordinary")
+    executable.write_bytes(b"executable")
+    executable.chmod(0o755)
+    outside = tmp_path / "outside"
+    outside.write_bytes(b"must remain untouched")
+    outside_before = outside.stat()
+    link = tree / "link"
+    link.symlink_to(outside)
+    try:
+        store_snapshot["_canonical_metadata"](tree)
+        assert stat.S_IMODE(regular.stat().st_mode) == 0o444
+        assert stat.S_IMODE(executable.stat().st_mode) == 0o555
+        assert stat.S_IMODE(tree.stat().st_mode) == 0o555
+        assert all(path.lstat().st_mtime_ns == 1_000_000_000 for path in (tree, regular, executable, link))
+        assert (outside.stat().st_mode, outside.stat().st_mtime_ns) == (outside_before.st_mode, outside_before.st_mtime_ns)
+        assert regular.read_bytes() == b"ordinary" and executable.read_bytes() == b"executable"
+        assert outside.read_bytes() == b"must remain untouched"
+    finally:
+        tree.chmod(0o700)
+        for path in (regular, executable):
+            path.chmod(0o600)
+
+
+def test_store_registration_digest_is_order_independent_and_binds_trust(store_snapshot, tmp_path):
+    # Real SQLite boundary DATA, not native Nix registrations or science proof.
+    schema = """
+        CREATE TABLE ValidPaths (
+            id INTEGER PRIMARY KEY, path TEXT, hash TEXT, narSize INTEGER,
+            ultimate INTEGER, sigs TEXT, ca TEXT);
+        CREATE TABLE DerivationOutputs (
+            drv INTEGER, id TEXT, path TEXT, PRIMARY KEY(drv,id),
+            FOREIGN KEY(drv) REFERENCES ValidPaths(id));
+    """
+    summaries = []
+    for number, order in enumerate(((1, 2), (2, 1))):
+        database = tmp_path / f"database-{number}.sqlite"
+        with sqlite3.connect(database) as connection:
+            connection.executescript(schema)
+            for index in order:
+                path = "/nix/store/" + str(index) * 32 + "-fixture"
+                connection.execute("INSERT INTO ValidPaths VALUES (?,?,?,?,?,?,?)",
+                                   (index, path, "sha256:" + "0" * 64, 42, 1, "fixture-signature", None))
+                connection.execute("INSERT INTO DerivationOutputs VALUES (?,?,?)", (index, "out", path))
+        summaries.append(store_snapshot["_db_info"](database))
+    assert summaries[0]["logical_sha256"] == summaries[1]["logical_sha256"]
+    with sqlite3.connect(tmp_path / "database-1.sqlite") as connection:
+        connection.execute("UPDATE ValidPaths SET sigs=? WHERE id=1", ("different-fixture-signature",))
+    changed = store_snapshot["_db_info"](tmp_path / "database-1.sqlite")
+    assert changed["logical_sha256"] != summaries[1]["logical_sha256"]

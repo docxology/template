@@ -35,6 +35,11 @@ locks.
   Strengthen the existing real preamble parser control to preserve both LaTeX
   fences while excluding prose and other languages; actual native rendering
   remains mandatory rather than being replaced by an import-shape assertion.
+- Share genuine Linux converter preparation within one exact Root-policy run.
+  Transport complete original Nix registrations and content-bound NARs through
+  root-private custody and unprivileged handoff; refuse foreign, linked,
+  corrupt, busy or nonempty input. Keep signed clients, trust metadata,
+  source/derivation/body verification and all original census clocks.
 - Isolate smoke-path refusals behind a valid complete fixture and distinguish
   hostile foreign Git epochs from the nominated candidate. Retire workflow
   structure, Source-substring and re-export assertion pins while retaining

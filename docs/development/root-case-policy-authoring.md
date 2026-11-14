@@ -63,6 +63,19 @@ the existing pinned model readiness preparation. Preparation does not execute
 Root test bodies or a project's live acceptance producer. Original daemon
 cleanup and unprivileged Linux/actual macOS guards remain in use.
 
+One shared Ubuntu 3.14 preparation job builds the genuine Linux converters
+before the four collection jobs. Its 135-minute envelope includes the unchanged
+7,200-second provider allowance and bounded 900-second store transport. Each
+policy census job retains its 75-minute outer and 660-second collection clocks.
+The flat snapshot belongs only to that exact Source/run/attempt/client and holds
+complete original SQLite registrations and NAR bodies, not invented trust flags
+or a cross-run cache. Consumers refuse a busy, nonempty or incompatible store,
+restore only into the fresh root-owned store, then still execute normal Source
+evaluation/build, closure/signature verification and exact component-body checks.
+No local privileged setup or extra test run is required to review this DATA.
+Preparation, a retrieved snapshot or a green job wrapper is not policy/runtime
+acceptance; actual complete original ledgers and required readers remain decisive.
+
 `collect` mode invokes the original census and immediately calls `family_ledger`
 in that same physical job and runtime. It retains `original-bundle.json`,
 `family-ledger.json`, the collector's complete bound evidence and `report.json`,
