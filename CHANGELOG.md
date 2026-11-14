@@ -30,6 +30,13 @@ locks.
 - Classify native Office HTML comments by their first literal closing token,
   not a full-comment filtering regexp. Preserve multiline alternatives and
   reject empty-abrupt openings, mixed visible content and trailing comments.
+- Keep pre-profile handoff schema/revision refusals on small real Git metadata
+  fixtures, not repeated complete-publication copies. Full-profile CLI admission
+  remains a separate genuine release proof.
+- Preserve native Mermaid's original caller deadline and 120-second cap across
+  Source custody, observation and cleanup; a shared ceiling cannot extend it.
+- Remove literal coverage-schema/inventory-version assertion pins while retaining
+  actual legacy-schema and stale-inventory refusals.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.

@@ -94,6 +94,12 @@ a short path, environment commitment or serialized descriptor alone grants no
 acceptance. The descriptor closes with owned observation cleanup, without
 changing the executable, compiler output, callbacks or existing clocks.
 
+Native Mermaid keeps the caller's original timeout, capped at 120 seconds and
+the real Source owner's remaining deadline. Custody, live observation, callbacks,
+retention and cleanup consume that same clock; the shared observation ceiling
+does not create a longer tool budget. Inline rendering requires the actual render
+stage, while standalone diagram production requires its exact analysis leaf.
+
 The finite PDF-text component compiles ordered content obligations from
 the frozen, currently validated consumed manuscript bytes. Its deliberately
 limited projection supports plain paragraphs, ATX headings and plain list items.

@@ -132,10 +132,7 @@ def run_source_native_mermaid(
         from infrastructure.project.public_acceptance_evidence import write_json
         from infrastructure.project.public_reference_git import remaining
         from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-        from infrastructure.reporting.native_pdf_citation_runtime import (
-            CitationRuntime,
-            NATIVE_OBSERVATION_CEILING_SECONDS,
-        )
+        from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
         from infrastructure.reporting.native_stage_child import (
             current_native_stage_directory,
             retain_native_stage_artifact,
@@ -170,13 +167,9 @@ def run_source_native_mermaid(
         )
         if stage_directory is None:
             raise ValueError("native Mermaid production requires its actual fixed Source-admitted stage child")
-        # The caller's smaller timeout governs only its uninstrumented fallback.
-        # Native observation also includes Source custody, callbacks, cleanup and
-        # retention, so it always receives the shared finite observation ceiling.
-        phase_deadline = min(
-            owner.deadline,
-            time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS,
-        )
+        # Preserve the caller's original clock for custody, observation and cleanup;
+        # the shared observation ceiling cannot lengthen this tool invocation.
+        phase_deadline = min(owner.deadline, time.monotonic() + min(timeout, 120))
         remaining(phase_deadline)
         paths = tuple(dict.fromkeys((source_path, *(path.absolute() for path in input_paths))))
         for path in paths:

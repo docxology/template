@@ -22,7 +22,6 @@ from infrastructure.documentation.counts_doc import (
 )
 from infrastructure.documentation.counts_coverage import (
     COVERAGE_SOURCE_INVENTORY_MODE,
-    COVERAGE_SUPPORT_IDENTITY_MODE,
     _coverage_total_from_report,
     _nul_delimited_git_paths,
     _validated_coverage_report,
@@ -543,8 +542,6 @@ def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
     with pytest.raises(RuntimeError, match="schema mismatch"):
         validate_coverage_provenance(tmp_path)
 
-    assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 5
-
 
 def test_coverage_provenance_rejects_legacy_source_inventory_mode(tmp_path: Path) -> None:
     path = tmp_path / COVERAGE_PROVENANCE_RELATIVE_PATH
@@ -561,9 +558,6 @@ def test_coverage_provenance_rejects_legacy_source_inventory_mode(tmp_path: Path
 
     with pytest.raises(RuntimeError, match="source inventory mode"):
         validate_coverage_provenance(tmp_path)
-
-    assert COVERAGE_SOURCE_INVENTORY_MODE == "tracked-and-nonignored-coverage-inputs-v3"
-    assert COVERAGE_SUPPORT_IDENTITY_MODE == "explicit-public-documentation-support-v2"
 
 
 def test_coverage_provenance_requires_source_tree_identity(tmp_path: Path) -> None:

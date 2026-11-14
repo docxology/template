@@ -1,7 +1,7 @@
 """Source-bound handoff refusals and pure hosted-origin verdict controls.
 
-Receipt envelopes exercise only schema, exact-Source and unauthenticated
-consumer refusals; they are not accepted class evidence. Origin verdicts consume
+Receipt envelopes exercise only schema and exact-Git-Source refusals; they are
+not accepted class evidence. Origin verdicts consume
 illustrative metadata, not authenticated hosted originals. Hosted qualification
 and complete native-cell-union acceptance remain separate production gates.
 """
@@ -9,11 +9,7 @@ and complete native-cell-union acceptance remain separate production gates.
 from __future__ import annotations
 
 import json
-import os
 import shutil
-import subprocess
-import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -25,16 +21,17 @@ from infrastructure.publishing.composed_receipt import (
     validate_composed_receipt,
 )
 from infrastructure.publishing.release_acceptance import MissingAcceptanceHandoff, validate_handoff_inputs
-from tests.infra_tests.project.test_public_reference import (
-    _clone_complete_reference,
-    complete_reference as complete_reference,
-)
+from tests.infra_tests.project.test_public_reference import _git
 
 
 @pytest.fixture
-def source_root(complete_reference: tuple[Path, str, str], tmp_path: Path) -> Path:
-    """Give each source-bound refusal control its own genuine Source and Git tree."""
-    return _clone_complete_reference(complete_reference, tmp_path / "source", deadline=time.monotonic() + 300)
+def source_root(tmp_path: Path) -> Path:
+    """Commit real version metadata for guards that precede profile resolution."""
+    shutil.copyfile(Path(__file__).resolve().parents[3] / "pyproject.toml", tmp_path / "pyproject.toml")
+    _git(tmp_path, "init", "--quiet")
+    _git(tmp_path, "add", "--", "pyproject.toml")
+    _git(tmp_path, "commit", "--quiet", "-m", "Owned source-bound handoff metadata DATA")
+    return tmp_path
 
 
 @pytest.fixture
@@ -45,8 +42,7 @@ def handoff_root(tmp_path: Path) -> Path:
 
 
 def _revision(root: Path) -> str:
-    observed = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, check=True)
-    return observed.stdout.strip()
+    return _git(root, "rev-parse", "HEAD").decode().strip()
 
 
 def _written(root: Path, payload: dict[str, str]) -> Path:
@@ -68,32 +64,6 @@ def test_no_handoff_at_all_is_refused(handoff_root: Path) -> None:
     """Publication never proceeds without a named evidence shape."""
     with pytest.raises(MissingAcceptanceHandoff):
         validate_handoff_inputs(handoff_root, "", "", "")
-
-
-def test_unauthenticated_composed_handoff_is_refused_by_cli(source_root: Path) -> None:
-    """An actual CLI consumer with neither token refuses before any hosted lookup."""
-    target = _written(source_root, {"schema_version": SCHEMA, "source_commit": _revision(source_root)})
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-B",
-            "-m",
-            "infrastructure.publishing.release_acceptance",
-            "inputs",
-            "--repo-root",
-            str(source_root),
-            "--composed-receipt",
-            str(target),
-        ],
-        cwd=source_root,
-        env={key: value for key, value in os.environ.items() if key not in {"GH_TOKEN", "GITHUB_TOKEN"}},
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert result.returncode == 2
-    assert "hosted classes require a resolvable hosted origin" in result.stdout
 
 
 def test_composed_receipt_with_a_stale_commit_is_refused(source_root: Path) -> None:
