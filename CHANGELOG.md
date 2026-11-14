@@ -31,6 +31,10 @@ locks.
   real XeLaTeX/font consumer. Preserve the complete release-profile suites,
   locked readers, pinned Lean/TLC and Docker preparation, floors and deadlines;
   complete native/publication acceptance retains its independent prerequisites.
+- Retire Active's renderer Source-substring checks and duplicate-default pins.
+  Strengthen the existing real preamble parser control to preserve both LaTeX
+  fences while excluding prose and other languages; actual native rendering
+  remains mandatory rather than being replaced by an import-shape assertion.
 - Isolate smoke-path refusals behind a valid complete fixture and distinguish
   hostile foreign Git epochs from the nominated candidate. Retire workflow
   structure, Source-substring and re-export assertion pins while retaining
