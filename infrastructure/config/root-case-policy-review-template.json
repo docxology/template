@@ -27258,7 +27258,7 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
-      "source_sha256": "f0333c6a1fada2747d1683d987f561a981b7b4e678e575373421959686f38a27",
+      "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12",
       "families": [
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_actual_nix_derivation_cannot_override_source_build_pins",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_changed_root_build_input_cannot_trigger_acquisition",
@@ -27273,11 +27273,20 @@
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_real_elf_interpreter_structure_preserves_both_reviewed_abis",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_source_archive_rejects_tampered_complete_transport_or_body",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_static_musl_wrappers_and_malformed_interp_are_not_dynamic_glibc",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_metadata_is_immutable_without_following_external_link",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_registration_digest_is_order_independent_and_binds_trust",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_ambiguous_manifest",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_corrupt_payload_before_store_write",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_escaping_registered_path",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_foreign_source",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_linked_payload",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_manifest_not_bound_by_producer",
+        "tests/infra_tests/reporting/test_native_document_preparation.py::test_store_snapshot_refuses_unlisted_payload",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_tampered_cache_cannot_trigger_build_or_publish_a_path",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_tool_selector_has_no_caller_selected_fallback",
         "tests/infra_tests/reporting/test_native_document_preparation.py::test_unknown_host_cannot_choose_a_provider"
       ],
-      "family_observations_sha256": "dd910a7ebf947b1cd57a2e00028b32234ae1914a3fe6208a984fafbd5340624e",
+      "family_observations_sha256": "aa8a5aa8e8faed07d619048f953194b97be529bd942907c372589f643a778280",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -27285,9 +27294,74 @@
       "exceptions": [],
       "evidence": [
         {
-          "line": 61,
+          "line": 102,
           "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
-          "source_sha256": "f0333c6a1fada2747d1683d987f561a981b7b4e678e575373421959686f38a27"
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 127,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 176,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 337,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 387,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 432,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 438,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 448,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 455,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 464,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 475,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 487,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 496,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
+        },
+        {
+          "line": 526,
+          "path": "tests/infra_tests/reporting/test_native_document_preparation.py",
+          "source_sha256": "d9124dd6c7a4247c062b25a9bc0e7a7e6f674d8c225420eb421960131585ab12"
         }
       ]
     },
