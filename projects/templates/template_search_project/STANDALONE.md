@@ -92,13 +92,13 @@ search, and LLM synthesis).
 
 ## Intentional Non-Standalone Dependencies
 
-Workspace mode resolves `infrastructure.*` via the root pyproject's
-`[tool.pytest.ini_options]` pythonpath, so it is intentionally **not** listed
-in this project's `dependencies`. A true standalone clone outside the
-monorepo must also bring `infrastructure/` along and add it to the Python
-path (e.g. `pip install -e ./infrastructure` after writing a thin pyproject
-for it) — see the header comment in `pyproject.toml` and
-[`docs/quickstart.md`](docs/quickstart.md).
+The project declares `research-project-template` as its runtime SDK dependency.
+Prepare the genuine matching SDK wheel and own development environment using
+the [shared standalone boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+Do not invent an infrastructure package, add a Source tree to `sys.path`, or
+borrow an arbitrary ancestor checkout. The configured default uses the local
+corpus without LLM/network enrichment; live retrieval/synthesis remains explicit
+and needs its separate providers and evidence.
 
 ## What Not To Claim
 

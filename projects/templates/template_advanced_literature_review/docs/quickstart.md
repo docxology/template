@@ -53,26 +53,21 @@ top-level `llm_filters` / `phase_integration.quality_gates` blocks — see `fork
 
 ## Execute the Pipeline
 
-Run from the template repository root:
+Prepare the [genuine providers and own runtime](../README.md#dependencies), then
+follow the [corpus bootstrap](../STANDALONE.md#multi-phase-corpus) if this clean
+export has no fixture. From the prepared project directory:
 
 ```bash
-# Stage 1 — Phase-aware search: writes per-phase corpora + combined_corpus.jsonl.
-# Live/network path — only run when intentionally refreshing the tracked snapshot.
-uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
-
-# Stage 2 — Meta-analysis over the combined corpus (subfields, temporal growth, TF-IDF,
-# NMF topics, citation network)
-uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
-
-# Stage 3 — (Optional) Knowledge graph + phase-aware hypothesis scoring. Requires Ollama.
-uv run python projects/templates/template_advanced_literature_review/scripts/03_build_knowledge_graph.py --max-papers 0
-
-# Stage 4 — Render publication-grade figures (PNG)
-uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
-
-# Stage 5 — Inject computed (including phase-aware) variables into the manuscript Markdown
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
+.venv/bin/python scripts/01b_fixture_phase_replay.py
+.venv/bin/python scripts/02_meta_analysis_pipeline.py
+.venv/bin/python scripts/03_build_knowledge_graph.py --max-papers 0
+.venv/bin/python scripts/04_generate_figures.py --dpi 300
+.venv/bin/python scripts/05_inject_variables.py
 ```
+
+This is synthetic replay, not live retrieval. `--max-papers 0` reloads retained
+assertions rather than calling a model. A separately authorized actual search
+uses `scripts/01_multi_phase_search.py --live` and retains engine/phase evidence.
 
 See `rendering_pipeline.md` for the full 11-stage sequence, including the optional
 full-text/reproducibility enrichment stages (10, 11) and the offline deep-research

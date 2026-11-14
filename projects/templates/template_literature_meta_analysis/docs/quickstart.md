@@ -1,19 +1,19 @@
 # Quick Start Guide
 
-Get up and running with the `template_literature_meta_analysis` exemplar in ~5 minutes. This
-template performs a full, reproducible literature review for a **single search term** across
-ten academic search engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, bioRxiv, medRxiv), then de-duplicates, analyzes, and visualizes the corpus. The
-bundled default term is **`modafinil`**; change one config key to re-target any topic.
+Run a deterministic synthetic literature corpus through the single-topic
+analysis pipeline before choosing live retrieval. The default topic is
+`modafinil`; the configured search adapters are a separate explicit network
+path. Fixture rows, generated identifiers and bibliometric plots are not
+retrieved studies or evidence of a clinical effect.
 
 ## Prerequisites
 
 - Python 3.14 (3.14 and 3.15 are the supported minors)
 - [`uv`](https://github.com/astral-sh/uv) package manager (repo invariant — see the root `CLAUDE.md`)
 - Git
-- Network access for the live search stage (arXiv, OpenAlex, Crossref, PubMed are keyless;
-  Semantic Scholar works without a key but is aggressively rate-limited — it degrades gracefully)
-- *(Optional)* a local [Ollama](https://ollama.com) server with `gemma3:4b` for the knowledge-graph stage
+- Network access is needed only for explicitly selected live retrieval/enrichment.
+- Optional local-model work requires its separately prepared, authorized provider;
+  the first offline route does not acquire or call a model.
 
 ## Setup (One-Time)
 
@@ -22,24 +22,29 @@ bundled default term is **`modafinil`**; change one config key to re-target any 
 git clone https://github.com/docxology/template.git
 cd template
 
-# 2. Install dependencies at the repository root
-uv sync
+# 2. Prepare Root and this project's declared own development environment
+uv sync --locked
+uv sync --locked --project projects/templates/template_literature_meta_analysis --extra dev \
+  --python "$PWD/.venv/bin/python"
 
-# 3. Verify installation
-uv run python --version
+# 3. Enter the project directory; subsequent local commands use its own interpreter
+cd projects/templates/template_literature_meta_analysis
+.venv/bin/python --version
 ```
 
 ## Run the Test Suite
 
-Validate the environment and confirm the project test suite passes with the ≥90% coverage gate (retrieval clients degrade to `skipped` without network/keys, and tests exercise the real degradation path via local HTTP servers — see `../tests/PATTERNS.md`):
-Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
+For whole own-suite coverage, use the prepared project interpreter and enable
+the declared 90% gate explicitly. This is not complete installed/native or
+live-provider acceptance; retain any declared missing capabilities rather than
+promoting skips to a pass.
 
 ```bash
-uv run pytest projects/templates/template_literature_meta_analysis/tests/ -v --tb=short
+.venv/bin/python -I -m pytest tests/ -v --tb=short --cov=src --cov-fail-under=90
 ```
 
-Expected: a passing suite. Live collection counts are tracked in
-[`../../../docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+Actual retained collection facts are in the monorepo's
+[COUNTS](../../../../docs/_generated/COUNTS.md); this guide does not assert a run result.
 
 ## The Single Control Surface
 
@@ -60,32 +65,26 @@ To run a literature review on a different topic, edit `term`, `query`, `arxiv_qu
 `relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions`, then re-run the stages
 below — no code changes required.
 
-## Execute the Pipeline (modafinil)
+## Execute the offline demonstration
 
-Run from the template directory: `cd projects/templates/template_literature_meta_analysis`.
+From the prepared project directory:
 
 ```bash
-# Stage 1 — Multi-engine search + cross-engine de-duplication -> output/data/corpus.jsonl
-#   --clear-corpus --no-resume forces a fresh live search (omit to resume an existing corpus)
-uv run python scripts/01_literature_search.py --clear-corpus --no-resume
-
-# Stage 2 — Meta-analysis: subfields, temporal growth, TF-IDF, NMF topics, citation network
-uv run python scripts/02_meta_analysis_pipeline.py
-
-# Stage 3 — (Optional) Knowledge graph + hypothesis scoring + RDF/TriG nanopublications.
-#   Requires Ollama. Cap the sample while testing with --max-papers; omit for the full corpus.
-uv run python scripts/03_build_knowledge_graph.py --max-papers 25
-
-# Stage 4 — Render publication-grade figures (PNG)
-uv run python scripts/04_generate_figures.py
-
-# Stage 5 — Inject computed variables into the manuscript Markdown
-uv run python scripts/05_inject_variables.py
+# The generator's default is data/fixtures/...; explicitly prepare the analysis input.
+.venv/bin/python scripts/generate_fixture_corpus.py --out output/data/corpus.jsonl
+.venv/bin/python scripts/02_meta_analysis_pipeline.py
+.venv/bin/python scripts/04_generate_figures.py
+.venv/bin/python scripts/05_inject_variables.py
 ```
 
-A fresh modafinil run typically yields ~2,300 unique papers in under a minute (OpenAlex +
-Crossref + PubMed dominate; arXiv is near-empty for clinical terms; S2 may return 0 on a 429).
-De-duplication is by `canonical_id` (priority `doi > arxiv_id > s2_id > openalex_id > title-hash`).
+This uses generated records and does not contact a retrieval engine or prove
+literature coverage. Keep the actual corpus and generated artifacts when
+interpreting counts. To perform a separately authorized live search, replace
+the fixture deliberately with `scripts/01_literature_search.py
+--clear-corpus --no-resume` and retain its genuine retrieval report. Do not mix
+fixture rows into a claimed live yield or promise a paper count or elapsed time.
+Optional knowledge-graph work (`scripts/03_build_knowledge_graph.py`) has its own
+prepared model/provider requirements; it is not part of the first offline run.
 
 ## Outputs
 
@@ -102,11 +101,12 @@ De-duplication is by `canonical_id` (priority `doi > arxiv_id > s2_id > openalex
 
 ## Render the Publication PDF
 
-Run this one **from the repository root** (`scripts/pipeline/stage_03_render.py` is a repo-level
-orchestrator, distinct from the project's own `scripts/03_build_knowledge_graph.py`):
+Return to the repository root before using the repository renderer. It consumes
+the already generated project artifacts and separately prepared rendering tools:
 
 ```bash
-uv run python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis
+cd ../../..
+uv run --no-sync --offline python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis
 ```
 
 Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/template_literature_meta_analysis_combined.pdf`
@@ -130,13 +130,9 @@ Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/temp
 
 ## Quick Command Reference
 
-| Task | Command |
-|---|---|
-| Run tests | `uv run pytest projects/templates/template_literature_meta_analysis/tests/ -v` |
-| Literature search | `uv run python scripts/01_literature_search.py --clear-corpus --no-resume` |
-| Meta-analysis | `uv run python scripts/02_meta_analysis_pipeline.py` |
-| Knowledge graph (optional, Ollama) | `uv run python scripts/03_build_knowledge_graph.py --max-papers 25` |
-| Generate figures | `uv run python scripts/04_generate_figures.py` |
-| Inject manuscript variables | `uv run python scripts/05_inject_variables.py` |
-| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis` |
-| Clean outputs | `rm -rf projects/templates/template_literature_meta_analysis/output/` |
+Project-local producer commands above run from the prepared project directory;
+`scripts/pipeline/` commands run from the monorepo root. Use the
+[shared run surface](../../../README.md#run-surface) for preparation and the
+[standalone guide](../STANDALONE.md) for independent exports. A live retrieval,
+model operation, corpus replacement or cleanup is an explicit separate action,
+not a hidden quickstart step.

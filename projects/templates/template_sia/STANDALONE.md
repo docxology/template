@@ -57,28 +57,26 @@ rsync -a \
 
 ## Validation Commands
 
-Run from the template repository root after copying into `projects/working/`:
+Use the [parent README's actual SDK/development preparation](README.md),
+including the real Docker requirements of complete selected tests. From the
+prepared project root:
 
 ```bash
-uv run pytest projects/working/my_sia/tests/ \
-  --cov=projects/working/my_sia/src --cov-fail-under=90
-uv run python projects/working/my_sia/scripts/run_sia_loop.py
-uv run python projects/working/my_sia/scripts/z_generate_manuscript_variables.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/run_sia_loop.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
 
-For the public exemplar:
-
-```bash
-uv run pytest projects/templates/template_sia/tests/ \
-  --cov=projects/templates/template_sia/src --cov-fail-under=90
-```
+Replay/reference diagnostics are not measured improvement. Actual local-model
+proposals are separate explicitly prepared/authorized work; missing Docker or
+native capability cannot be converted into complete acceptance through skips.
 
 ## Intentional Non-Standalone Dependencies
 
-The fixture-facing project modules are local, but the loop implementation and
-some tests intentionally call `infrastructure.sia` and shared rendering helpers.
-Treat the exemplar as forkable inside a full template checkout unless those
-adapters are vendored or replaced.
+This exemplar declares the genuine installed SDK for `infrastructure.sia` and
+shared supervision/rendering. Use the matching provider rather than vendoring
+adapters or borrowing an ancestor checkout. Fixture-only library behavior is
+narrower than the complete development/native/provider obligations.
 
 ## What Not To Claim
 

@@ -16,6 +16,17 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Separate installed SDK, checkout authoring and optional contributor checks.
+  Keep preparation, fork identity, runtime dispatch and publication under their
+  existing canonical guide owners instead of repeating setup and release recipes.
+- Clarify all 25 public examples' own SDK/provider/DATA/resource prerequisites.
+  Correct working directories, hydration/validation order, actual materialized
+  child paths and canonical-book versus new-draft boundaries without adding gates.
+- Label literature corpus replay as synthetic and live retrieval as explicit
+  `--live`; use the existing domain fixture generator for clean exports. Report
+  the retained experiment tree before recording any genuinely measured answer.
+  Remove authored workstation-credential claims while preserving generated
+  publication history and pending-release boundaries.
 - Isolate smoke-path refusals behind a valid complete fixture and distinguish
   hostile foreign Git epochs from the nominated candidate. Retire workflow
   structure, Source-substring and re-export assertion pins while retaining
@@ -41,8 +52,10 @@ locks.
 - Stage each new Root release as an owned draft and verify all four downloaded
   assets before public publication can trigger archival. Preserve existing-release
   refusal, exact tag identity, no-clobber uploads and independent public readback.
-- Import four authenticated changed-input coverage originals while preserving
-  the 21 input-identical original measurements and their dated baseline.
+- Preserve four authenticated changed-input coverage originals and the 21 dated
+  baseline originals as evidence for their actual input tuples. Project prose
+  remains in the existing coverage fingerprint; changed tuples require fresh
+  measurements rather than relabelled historical results.
 - Build Linux document providers with the qualified standard Source-patched GHC:
   canonical package-cache/preload ordering, with only unused profiling and
   compiler-documentation ways omitted. Closed v4 pins authenticate both ordered

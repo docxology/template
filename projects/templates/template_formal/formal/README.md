@@ -3,27 +3,18 @@
 Project-root directory (`projects/templates/template_formal/formal/`) holding
 two independent, non-Python, mathematically-checked models of the same
 handshake protocol that `src/template_formal/protocol/session.py` implements
-at runtime. Neither is required to build, test, or render this exemplar —
-`pytest`, `mypy --strict`, and the manuscript pipeline never touch this
-directory. It exists to back one specific claim in the manuscript
-(`05_results_discussion.md` §"The optional formal side-spec: shipped, not
-cut"): that a static-typing exemplar can also show what a *proof assistant*
-and a *model checker* — not just `mypy` — establish about the same protocol,
-and be honest about where each one's guarantee actually stops.
+at runtime. The pure domain package is independent of these tools, but the
+complete selected test suite includes actual Lean/TLC acceptance controls in
+`tests/test_tool_acceptance.py`; they are not decorative files exercised only
+by the shell wrapper. Prepare the declared `formal-tools` extra and real pinned
+capabilities before claiming that complete suite. Missing capability remains
+blocked, never a substituted success. Lean's proof and TLC's finite-model
+checks retain their separate guarantees and do not prove universal equivalence
+to the Python implementation.
 
-**This is the only `formal/` directory in the project.** An earlier
-`src/template_formal/formal/` package stub existed at one point but was never
-imported by any module, test, or script — dead weight sitting inside the
-typed `src/` surface that `ISC-36` (`## Verification` in `ISA.md`) exists
-specifically to forbid ("no vestigial/unwired formal-spec file exists in the
-shipped tree"). It was found and deleted this session; `find
-src/template_formal -mindepth 1 -type d -iname 'formal'` now returns nothing
-(note: `find src -type d -iname '*formal*'` is **not** the right check here —
-it also matches `src/template_formal` itself, since that directory name
-contains the substring "formal"). If you ever see a nested `formal/`
-directory under `projects/templates/template_formal/src/template_formal/` again, that is a regression — the
-side-spec belongs only here, at the project root, wired to
-`scripts/check_formal_specs.sh`.
+The side-specs live only in this project-root directory. Domain Python remains
+under `src/template_formal/`; executable checks belong to the canonical wrapper
+and complete-suite controls, not a duplicate decorative specification package.
 
 ## Layout
 

@@ -232,7 +232,7 @@ each complete public project plus separate Root checks, with four concurrent
 jobs and one serial 1,800-second operation per cell. This changes aggregate
 scheduling and compute allowance from the former global operation; earlier
 failures remain failures. Same-run live collection authenticates every unique
-producer attempt and complete original graph. Darwin print, the six Root
+producer attempt and complete original graph. Darwin print, the four Root
 host/runtime artifacts, common installed/runtime and full native-format
 originals retain their separate owners. Installed cells use three bounded
 dependency-aware workers. The independent installed candidate and fresh release

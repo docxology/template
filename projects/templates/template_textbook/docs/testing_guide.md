@@ -1,18 +1,17 @@
 # Testing Guide
 
-The book ships with a real test suite, a coverage gate, and a structural audit.
-Together they guarantee that the computational backbone is correct *and* that the
-manuscript never drifts from its contract — even as you fill thousands of pages.
+The declared tests, coverage and structural audit exercise the computational
+and manuscript contracts. They do not prove arbitrary scientific claims or
+replace content review and native rendering acceptance.
 
 ## Running the suite
 
-All commands use `uv` and assume you are **inside the project directory**
-(`projects/templates/template_textbook/`); the `--extra dev` form only resolves
-there. From the monorepo root, use the repo-root form instead (`uv run python -m
-pytest projects/templates/template_textbook/tests/
---cov=projects/templates/template_textbook/src --cov-fail-under=90`), as shown in
-the [`README.md`](../README.md) quick start. The `dev` extra provides `pytest`
-and `pytest-cov`.
+Prepare the project's own declared development environment using the
+[parent README](../README.md#quick-start), including the real matching SDK
+provider. The examples below run from the project directory with that prepared
+environment; an independent export follows the
+[standalone recipe](../README.md#standalone-project-commands), not an ancestor
+checkout or an assumed package-index release.
 
 ```bash
 # Full suite
@@ -98,10 +97,10 @@ checks every declared chapter exists and passes the contract, confirms each
 lab + question file is present, and prints a per-chapter stub-count / word-count
 progress table.
 
-Config validation is intentionally defensive: explicit `units:` takes precedence
-over `parts:`, and unsafe or duplicate manuscript paths fail before the audit
-walks the tree. The default audit is structural and allows deliberately generated draft
-exemplar's stubs; `--require-complete` is the separate zero-stub gate.
+Config validation rejects retired `parts:` outright; `units:` is the supported
+structure, not a precedence fallback. Unsafe or duplicate manuscript paths fail
+before traversal. Newly scaffolded drafts may contain declared stubs, while the
+authored canonical book must pass the existing zero-stub `--require-complete` gate.
 
 ```bash
 uv run python scripts/audit_textbook_quality.py

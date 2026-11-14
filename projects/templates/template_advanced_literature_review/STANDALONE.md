@@ -37,7 +37,10 @@ Additional locations are config-declared publication evidence; the central index
 
 ## Purpose
 
-`template_advanced_literature_review` is the canonical **advanced multi-phase literature review** exemplar: iterative search refinement, deterministic and optional LLM filtering, cross-phase validation, and phase-aware manuscript generation. The tracked exoplanet-atmosphere corpus is an evidence snapshot, not an offline fixture or a completeness claim.
+`template_advanced_literature_review` is the advanced phase-aware review exemplar:
+search design, deterministic/optional model filtering, cross-phase validation
+and manuscript generation. Its bundled exoplanet corpus is a generated synthetic
+fixture, not a retrieved empirical evidence snapshot or a completeness claim.
 
 ## Copy This When
 
@@ -79,9 +82,25 @@ rsync -a \
 
 ### Multi-Phase Corpus
 
-- For deterministic downstream development: use the tracked three-phase exoplanet evidence snapshot as a structural example without claiming live freshness.
-- For live deployment: Configure your field's phases and run `uv run python scripts/01_multi_phase_search.py` to build a real corpus.
-- Choose per-phase result limits from the review protocol rather than a hard-coded target.
+First prepare the actual SDK and Meta provider and this project's own runtime
+as described in [README Dependencies](README.md#dependencies). From the prepared
+project directory, a clean export explicitly creates its missing fixture:
+
+```bash
+.venv/bin/python scripts/generate_fixture_corpus.py --out output/data/corpus.jsonl
+.venv/bin/python scripts/01b_fixture_phase_replay.py
+```
+
+The generator defaults to a different `data/fixtures/...` path unless `--out`
+is supplied. It produces synthetic exoplanet records with generated authors and
+identifiers; replay demonstrates phase membership/overlap and downstream
+machinery, not real retrieval or scientific temporal findings. Do not regenerate
+over an actual live corpus merely to make a missing prerequisite disappear.
+
+For a separately authorized live application, configure the review protocol and
+call `scripts/01_multi_phase_search.py --live`; without `--live` that CLI also
+replays a fixture. Retain actual engine outcomes and source provenance. Choose
+per-phase limits from the protocol, not a promised yield.
 
 ## Validation Commands
 
@@ -135,16 +154,19 @@ The advanced template extends the single-term approach with:
 10. **Reproducibility Assessment** (`10_reproducibility_assessment.py`): Cross-phase workflow validation
 11. **Full-Text Download** (`11_fulltext_download.py`): Explicit network enrichment before stage 10
 
-## Real Data & Reproducibility
+## Fixture provenance and live evidence
 
-The committed corpus is a dated exoplanet-atmosphere evidence snapshot with source metadata and phase provenance. It demonstrates the artifact shape and downstream analysis path; it does not prove retrieval completeness or currentness. Refreshing it is an intentional live-network operation, while stages 02–09 can be rerun deterministically over the snapshot.
+The committed default corpus is synthetic. It demonstrates the artifact shape
+and deterministic analysis path, not exoplanet findings, retrieval completeness
+or freshness. A genuine live review must replace it deliberately, preserve
+retrieval/phase provenance and keep the exact consumed corpus/configuration.
 
 ## What You Can Claim
 
-- **Methodological patterns**: Cross-phase validation of search and filtering strategies
-- **Temporal dynamics**: Evolution of research focus across defined methodological eras
-- **Knowledge synthesis**: Aggregated insights from phase-aware knowledge graph analysis
-- **Pipeline effectiveness**: Demonstrated capability for complex multi-phase literature synthesis
+- **Method patterns:** phase membership, filtering, overlap and configured integration checks demonstrated on retained inputs.
+- **Fixture analytics:** descriptive calculations over generated records, not empirical history of a research field.
+- **Evidence lineage:** actual recorded artifacts and Source bindings, with missing/fixture/live states kept distinct.
+- **Domain claims:** only after independent source-backed review of a genuine live corpus; demonstration output alone is insufficient.
 
 ## What Not To Claim
 

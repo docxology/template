@@ -35,12 +35,11 @@ locked metadata, and `_template_resources/{fonds,rules,tools}/templates/`.
 Private `working/`, `archive/`, and lifecycle mirrors are excluded. The generated
 `.template-export.json` binds the actual source commit and copied bytes.
 
-Use an installed Python >=3.14, then from the export:
-
-```bash
-uv sync --locked
-uv build --wheel
-```
+Prepare the declared SDK and own `dev` environment using the
+[parent README](README.md) and the
+[shared standalone boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+The complete public resource bundle above is mandatory, not supplied by the
+SDK wheel. Build from that prepared export with `uv build --wheel`.
 
 `setup.py` delegates resource admission and copying to the tested
 `resource_paths.bundle_public_resources` implementation. The wheel includes
@@ -77,8 +76,8 @@ unnecessary.
 From the standalone project root:
 
 ```bash
-uv run pytest tests/ --cov=src --cov-branch --cov-fail-under=90
-uv run mypy src/ --strict
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-branch --cov-fail-under=90
+.venv/bin/python -m mypy src/ --strict
 ```
 
 The monorepo's `scripts/gates/installed_public.py` creates unique locked build and

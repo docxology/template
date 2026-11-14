@@ -63,14 +63,6 @@ _Keywords: active inference, pymdp, sophisticated inference, generalized notatio
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
-The 3 platforms still shown ⚪ available are not automatable to "published" with
-current tooling/credentials, not an oversight: **arXiv** has no submission API
-in this codebase (`infrastructure.publishing.arxiv` only prepares a local
-tarball — see `output/arxiv_submission_*.tar.gz` — a human must upload it via
-arxiv.org and the resulting `arxiv` URL would then be added to
-`publication.published_artifacts`); **Cloudflare Pages** needs a
-`CLOUDFLARE_ACCOUNT_ID` the configured API token cannot auto-discover;
-**IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_active_inference`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_active_inference/` in the monorepo; public output files above 50 MB stay out of git.

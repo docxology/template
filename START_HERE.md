@@ -114,15 +114,18 @@ tools are prepared separately when the selected workflow needs them.
 
 ---
 
-## Step 3: Install pre-commit hooks (mirrors CI lint)
+## Step 3: Optional contributor hooks
+
+If you will change Source, install the declared hooks from the prepared runtime:
 
 ```bash
-# after `uv sync` so pre-commit resolves from the project environment
-uv run pre-commit install
-uv run pre-commit install --hook-type pre-push
+uv run --no-sync --offline pre-commit install
+uv run --no-sync --offline pre-commit install --hook-type pre-push
 ```
 
-These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and push.
+These are contributor checks, not a prerequisite for the first document or
+evidence of release acceptance. See
+[ordinary CI](docs/development/ci.md) for their actual scope.
 
 ---
 
@@ -132,12 +135,14 @@ These run Ruff, mypy, Bandit, and smoke tests automatically on every commit and 
 ./run.sh --pipeline --project templates/template_code_project --mode core
 ```
 
-This runs 8 stages (clean → setup → infra tests → project tests → analysis → render PDF → validate → copy). No LLM or network required. Wall-clock: 2–5 minutes on a quiet machine.
+The resolved core DAG includes clean/setup, infrastructure pipeline-smoke,
+project tests, analysis, rendering, validation and copying. It needs no LLM;
+initial dependency/system-tool preparation is separate and may need network.
 
 **Expected success signals:**
 - All pipeline stages show ✅ (exit 0)
 - PDF at `output/templates/template_code_project/pdf/template_code_project_combined.pdf`
-- Test coverage ≥ 90% for project src, ≥ 60% for infrastructure
+- The selected project-test and infrastructure-smoke stages succeed; this is not whole Root coverage
 - Validation report: no critical errors
 
 ---
@@ -145,9 +150,7 @@ This runs 8 stages (clean → setup → infra tests → project tests → analys
 ## Step 5: Verify outputs
 
 ```bash
-# Run the output validator
-uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
-
+# Validation and copying already ran in the selected pipeline.
 # Open the PDF (macOS)
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 
@@ -155,7 +158,9 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 # xdg-open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
-**That's it.** If all five steps pass, the repo is fully operational.
+The selected exemplar's core run is complete when its actual stages and output
+checks pass. Whole Root, native-format, standalone and release acceptance remain
+separate; continue with the guide for your task.
 
 ---
 

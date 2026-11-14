@@ -40,7 +40,7 @@ reject private folders, credential files, and symlink ancestors when packaging.
 |---|---|
 | `src/` | Pure readers and validators — no `infrastructure` imports |
 | `scripts/` | Thin orchestrators; call pure domain APIs and the declared installed SDK publication/hydration adapters |
-| `tests/` | Real file paths; skip with `pytest.mark.skipif` when files absent |
+| `tests/` | Real files and explicit capability boundaries; exploratory reader skips/fallbacks do not establish complete exported-resource acceptance |
 | `manuscript/` | Self-contained prose sections referencing the integration |
 
 ---
@@ -85,12 +85,12 @@ uv run python projects/templates/template_pools_rules_tools/scripts/z_generate_m
 
 ## Resilience Policy
 
-Resource directories may not all exist (other subagents may still be populating
-them). All `src/` functions use graceful fallbacks:
-
-- Return `None` or empty collections when paths are absent
-- Log a warning but do not raise
-- Tests skip via `pytest.mark.skipif` when required files are missing
+Individual reader APIs can return `None` or empty collections for absent
+optional exploratory paths. This permissive API behavior is not the exported
+bundle contract: complete standalone packaging/adoption requires every declared
+public resource and rejects missing, private or symlinked members. Preserve the
+real resource-packaging negative controls. A skipped exploratory test is never
+evidence that the complete bundle was packaged or consumed.
 
 ---
 

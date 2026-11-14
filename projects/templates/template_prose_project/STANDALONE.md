@@ -58,27 +58,24 @@ rsync -a \
 
 ## Validation Commands
 
-Run from the template repository root after copying into `projects/working/`:
+Prepare the real SDK and own development environment with the
+[parent README's standalone recipe](README.md). From the prepared fork root:
 
 ```bash
-uv run pytest projects/working/my_prose_project/tests/ \
-  --cov=projects/working/my_prose_project/src --cov-fail-under=90
-uv run python projects/working/my_prose_project/scripts/run_prose_pipeline.py
-uv run python projects/working/my_prose_project/scripts/z_generate_manuscript_variables.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/run_prose_pipeline.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
 
-For the public exemplar:
-
-```bash
-uv run pytest projects/templates/template_prose_project/tests/ \
-  --cov=projects/templates/template_prose_project/src --cov-fail-under=90
-```
+The offline editorial artifacts are not a scientific finding or live model
+acceptance. Repository pipeline commands remain checkout-only.
 
 ## Intentional Non-Standalone Dependencies
 
-This exemplar intentionally uses shared `infrastructure.prose` and manuscript
-injection helpers. It is forkable as a project in a full template checkout. A
-copy outside that checkout must vendor or replace those prose-analysis adapters.
+This exemplar declares the matching installed `research-project-template` SDK
+for `infrastructure.prose` and manuscript injection. An independent fork uses
+that actual provider, not a copied infrastructure tree, arbitrary ancestor or
+invented infrastructure package. Keep optional live review separately explicit.
 
 ## What Not To Claim
 

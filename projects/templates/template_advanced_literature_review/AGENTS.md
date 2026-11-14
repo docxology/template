@@ -56,16 +56,19 @@ deterministic stages below (that is what `analysis.scripts` in
 template repository root:
 
 ```bash
-uv sync --group scientific --group llm
-uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
-uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
-uv run python projects/templates/template_advanced_literature_review/scripts/03_build_knowledge_graph.py --max-papers 0
-uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
-uv run python projects/templates/template_advanced_literature_review/scripts/06_fulltext_assessment.py
-uv run python projects/templates/template_advanced_literature_review/scripts/07_literature_evaluation.py
-uv run python projects/templates/template_advanced_literature_review/scripts/08_deep_research_dispatch.py
-uv run python projects/templates/template_advanced_literature_review/scripts/09_export_bibliography.py
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
+# Prepare the genuine SDK/Meta and own environment first (README Dependencies).
+PROJECT=projects/templates/template_advanced_literature_review
+PYTHON="$PWD/$PROJECT/.venv/bin/python"
+# This is an intentional live refresh, not the default fixture replay:
+"$PYTHON" "$PROJECT/scripts/01_multi_phase_search.py" --live
+"$PYTHON" "$PROJECT/scripts/02_meta_analysis_pipeline.py"
+"$PYTHON" "$PROJECT/scripts/03_build_knowledge_graph.py" --max-papers 0
+"$PYTHON" "$PROJECT/scripts/04_generate_figures.py" --dpi 300
+"$PYTHON" "$PROJECT/scripts/06_fulltext_assessment.py"
+"$PYTHON" "$PROJECT/scripts/07_literature_evaluation.py"
+"$PYTHON" "$PROJECT/scripts/08_deep_research_dispatch.py"
+"$PYTHON" "$PROJECT/scripts/09_export_bibliography.py"
+"$PYTHON" "$PROJECT/scripts/05_inject_variables.py"
 ```
 
 Full-text download and reproducibility scoring are explicit network/LLM
@@ -73,12 +76,14 @@ enrichments. Run their dependency chain in this order, then reinject the
 manuscript variables so the new evidence is visible:
 
 ```bash
-uv run python projects/templates/template_advanced_literature_review/scripts/11_fulltext_download.py
-uv run python projects/templates/template_advanced_literature_review/scripts/10_reproducibility_assessment.py
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
+PROJECT=projects/templates/template_advanced_literature_review
+PYTHON="$PWD/$PROJECT/.venv/bin/python"
+"$PYTHON" "$PROJECT/scripts/11_fulltext_download.py"
+"$PYTHON" "$PROJECT/scripts/10_reproducibility_assessment.py"
+"$PYTHON" "$PROJECT/scripts/05_inject_variables.py"
 ```
 
-Stage 01 (`01_multi_phase_search.py`) is the live/network multi-phase retrieval path with iterative refinement. Use it only when intentionally refreshing the tracked corpus snapshot. Stages 02–09 are the normal deterministic analysis path. Stages 11 and 10 are explicit network/full-text and reproducibility enrichments and must run in that order before rerunning stage 05 variable injection. Stage 01 writes per-phase corpora, `output/data/phase_metadata.json`, `output/data/cross_phase_analysis.json`, and `output/data/phase_artifact_manifest.json`. The cross-phase artifact reports membership, overlap, and configured citation sufficiency; its claim boundary explicitly excludes scientific support or causal inference. The manifest records the contributing phase set for each generated corpus/provenance artifact.
+Stage 01 (`01_multi_phase_search.py`) replays the fixture by default; only explicit `--live` selects multi-phase network retrieval with iterative refinement. Stages 02–09 are the normal deterministic analysis path. Stages 11 and 10 are explicit network/full-text and reproducibility enrichments and must run in that order before rerunning stage 05 variable injection. Stage 01 writes per-phase corpora, `output/data/phase_metadata.json`, `output/data/cross_phase_analysis.json`, and `output/data/phase_artifact_manifest.json`. The cross-phase artifact reports membership, overlap, and configured citation sufficiency; its claim boundary explicitly excludes scientific support or causal inference. The manifest records the contributing phase set for each generated corpus/provenance artifact.
 
 ## Optional gap-filler search (Monid)
 

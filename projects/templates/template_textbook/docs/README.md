@@ -51,9 +51,8 @@ live in the [authoring guide](authoring_guide.md).
 
 ## Tooling
 
-All commands use `uv` (never `pip`/`npm`). From inside the project directory,
-tests run with `uv run --extra dev python -m pytest`; from the monorepo root, use
-the repo-root form (`uv run python -m pytest
-projects/templates/template_textbook/tests/ …`) shown in the
-[`README.md`](../README.md) quick start. Figures and diagrams are produced by the
-scripts, never by hand. See each guide for exact invocations.
+Use the [parent README's prepared own-runtime commands](../README.md#quick-start)
+for checkout tests and its [standalone recipe](../README.md#standalone-project-commands)
+for an independent export. Do not substitute the Root environment for the
+declared project development dependencies. Figures and diagrams are produced
+by scripts, never by hand; generation is separate from native rendering acceptance.

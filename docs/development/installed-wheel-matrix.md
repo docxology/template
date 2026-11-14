@@ -221,15 +221,14 @@ checks succeed with the held live reader operation. Decoding a receipt cannot
 create that operation. Missing inputs or unsupported obligations remain blocked;
 actual execution, custody or validation failures remain failed.
 
-Current source declarations still report missing full-oracle obligations for
-PDF, browser HTML, native DOCX/EPUB readers, projected slides, pitch pairs,
-newspaper editions and storybook pages. Full format acceptance remains blocked
-for those applicable declarations until every required oracle is implemented,
-its original observations pass and independent readback succeeds. Existing files,
-nonblank rasters and a passing structural audit cannot substitute for the required
-source-content/layout, semantic, reader and visual negative controls. See
-[`native-format-acceptance.md`](../guides/native-format-acceptance.md) for the
-supervision and receipt boundaries. Runtime, installed/export, domain, live,
-transfer and publication evidence remain independent requirements. Release
-readiness must remain unknown, blocked, or failed until every applicable gate
-passes the strict candidate profile.
+The [complete Source-owned oracle contract](../guides/native-format-acceptance.md#complete-source-owned-oracle-requirements)
+compiles typed requirements for every applicable PDF, HTML, DOCX/EPUB,
+projection, configured pitch, newspaper and storybook artifact. Requirements
+are not observations or a pass. Actual positive originals, complete selected
+controls, Source-survival/layout/visual witnesses and independent current
+readback must satisfy their predicates; missing or unsupported work remains
+blocked and actual failures remain failed. Files, nonblank rasters and a
+structural audit cannot substitute for those obligations. Runtime,
+installed/export, domain, live, transfer and publication evidence remain
+independent requirements. Release readiness stays unknown, blocked or failed
+until every applicable strict candidate gate genuinely passes.

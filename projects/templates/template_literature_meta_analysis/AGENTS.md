@@ -42,16 +42,18 @@ or config and regenerate.
 For the deterministic offline path from the template repository root:
 
 ```bash
-uv sync --group scientific --group llm
-uv run python projects/templates/template_literature_meta_analysis/scripts/generate_fixture_corpus.py
-uv run python projects/templates/template_literature_meta_analysis/scripts/02_meta_analysis_pipeline.py
-uv run python projects/templates/template_literature_meta_analysis/scripts/03_build_knowledge_graph.py --max-papers 0
-uv run python projects/templates/template_literature_meta_analysis/scripts/04_generate_figures.py --dpi 300
-uv run python projects/templates/template_literature_meta_analysis/scripts/06_fulltext_assessment.py
-uv run python projects/templates/template_literature_meta_analysis/scripts/07_literature_evaluation.py
-uv run python projects/templates/template_literature_meta_analysis/scripts/08_deep_research_dispatch.py
-uv run python projects/templates/template_literature_meta_analysis/scripts/09_export_bibliography.py
-uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
+# Prepare the locked own environment first; see README/STANDALONE and the shared run surface.
+PROJECT=projects/templates/template_literature_meta_analysis
+PYTHON="$PWD/$PROJECT/.venv/bin/python"
+"$PYTHON" "$PROJECT/scripts/generate_fixture_corpus.py" --out "$PROJECT/output/data/corpus.jsonl"
+"$PYTHON" "$PROJECT/scripts/02_meta_analysis_pipeline.py"
+"$PYTHON" "$PROJECT/scripts/03_build_knowledge_graph.py" --max-papers 0
+"$PYTHON" "$PROJECT/scripts/04_generate_figures.py" --dpi 300
+"$PYTHON" "$PROJECT/scripts/06_fulltext_assessment.py"
+"$PYTHON" "$PROJECT/scripts/07_literature_evaluation.py"
+"$PYTHON" "$PROJECT/scripts/08_deep_research_dispatch.py"
+"$PYTHON" "$PROJECT/scripts/09_export_bibliography.py"
+"$PYTHON" "$PROJECT/scripts/05_inject_variables.py"
 ```
 
 Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`. Resuming a populated retained corpus skips network retrieval. If its prior report is absent, the new report records `run_mode="resume_without_prior_retrieval_report"` with empty engine observations; the retained corpus receives no reconstructed engine attribution or counts.
@@ -75,8 +77,9 @@ uv run python scripts/docgen/exemplar_roster.py --check
 uv run python scripts/audit/check_tracked_all.py
 ```
 
-These commands run from the monorepo root. Stage 01 creates/uses the project's
-isolated environment and installs dependencies declared in its `pyproject.toml`.
+These commands run from the monorepo root after explicit environment preparation.
+Stage 01 consumes the selected prepared interpreter; it neither creates an
+environment nor installs missing dependencies as a test fallback.
 
 For an independent source checkout, prepare its own Python 3.14/3.15 environment
 with the actual platform wheel matching `pyproject.toml` and this project's `dev` extra, following

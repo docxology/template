@@ -8,11 +8,11 @@ Derived documentation generator scripts.
 |--------|--------|
 | `active_projects.py` | `docs/_generated/active_projects.md` |
 | `api_reference.py` | `docs/reference/api-reference.md` (CI `--check`) |
-| `architecture_overview.py` | `docs/_generated/architecture_overview.mmd` / `.svg` |
+| `architecture_overview.py` | `docs/_generated/architecture_overview.mmd`, `.svg` and accessible `.md` summary |
 | `counts.py` | `docs/_generated/COUNTS.md` |
 | `coverage_history.py` | `docs/_generated/coverage_history.md` |
-| `stage_table.py` | Stage table marker block in `scripts/AGENTS.md` |
-| `exemplar_roster.py` | `docs/_generated/exemplar_roster.md` + `template_manifest.json` |
+| `stage_table.py --write` | Stage-table marker blocks in the canonical target documents; without `--write`, preview only |
+| `exemplar_roster.py` | `docs/_generated/exemplar_roster.md`, `template_manifest.json` and both README roster/skill marker blocks |
 | `publication_records.py` | `docs/_generated/publication_records.md` + GitHub README block + per-exemplar `STANDALONE.md` |
 
 ## Usage

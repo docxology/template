@@ -71,7 +71,8 @@ cd "projects/working/$NEW"
 # 3. Replace tests/ — real-data, no mocks, drive src/ coverage >= 90%
 # 4. Edit manuscript/config.yaml (title, authors)
 # 5. Update the notebook cells + scripts/eda_analysis.py to call your functions
-uv run pytest "projects/working/$NEW/tests" --cov="projects/working/$NEW/src" --cov-fail-under=90
+uv sync --extra dev
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 ## Verification Commands

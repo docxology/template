@@ -16,7 +16,7 @@ counts generated, and add negative controls for verifier-like gates.
 | --- | --- |
 | `src/template_formal/` (domain) | Pure typed domain code — ADTs, session types, affine handles, storage, network, agent, colony — **no** direct `infrastructure` imports |
 | `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
-| `formal/` | Optional Lean 4 + TLA+ side-specs, wired to `scripts/check_formal_specs.sh` only — never decorative |
+| `formal/` | Lean 4 + TLA+ side-specs consumed by the canonical wrapper and real complete-suite acceptance tests; acquire exact tools explicitly, never treat missing capability as success |
 | Live counts | Do not hardcode measured test totals or coverage % in this file |
 
 ## Overview

@@ -86,13 +86,6 @@ _Keywords: modafinil, meta-analysis, literature retrieval, bibliometrics, record
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
-The 3 platforms still shown ⚪ available are not automatable to "published" with
-current tooling/credentials, not an oversight: **arXiv** has no submission API
-in this codebase (`infrastructure.publishing.arxiv` only prepares a local
-tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
-would then be added to `publication.published_artifacts`); **Cloudflare
-Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
-auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_literature_meta_analysis`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_literature_meta_analysis/` in the monorepo; public output files above 50 MB stay out of git.
@@ -149,8 +142,9 @@ public exemplar also tracks its latest publication-evidence snapshot in Git. The
 output, and the project test suite plus the ≥90 % coverage gate validate `src/`
 before any figures or manuscript numbers are trusted.
 
-Run the project gate from the monorepo root through Stage 01 so it provisions
-the exemplar's isolated dependencies before collecting tests:
+Prepare the project's own declared environment first, following
+[the shared run surface](../../README.md#run-surface). Stage 01 admits that
+already prepared interpreter; it does not provision dependencies during testing:
 
 ```bash
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_literature_meta_analysis --project-only

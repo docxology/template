@@ -84,14 +84,14 @@ project config and the generated publication records are refreshed.
          deterministic_filters: {min_year: 2015}
    ```
 
-The default lane replays the committed fixture via
-`scripts/01b_fixture_phase_replay.py`; numbered scripts run from this
-template's own directory, while pipeline stages run from the repository root.
-
-2. **Replay the committed fixture (offline default)**:
-   ```bash
-   uv run python scripts/01b_fixture_phase_replay.py
-   ```
+The default lane replays a **synthetic** exoplanet fixture. Prepare the genuine
+SDK → Meta → Advanced environment described under Dependencies, then follow the
+[single corpus/replay recipe](STANDALONE.md#multi-phase-corpus). Clean exports
+omit `output/`, so a new fork must explicitly generate its local fixture before
+replay; no missing corpus is silently replaced with live search. Run numbered
+scripts with the own project interpreter, and repository pipeline stages from
+the monorepo root. An actual retrieval requires explicit `--live` and its own
+authorization/provenance, not a changed description of fixture output.
 
    Live retrieval is an explicit opt-in and never runs from the default
    command:

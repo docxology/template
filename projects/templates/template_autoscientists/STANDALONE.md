@@ -58,12 +58,14 @@ rsync -a \
 
 ## Validation Commands
 
-From the copied project root:
+Prepare the actual SDK and own environment with the
+[parent README's standalone recipe](README.md), including its reviewed
+installation projection. From the prepared copied project root:
 
 ```bash
-uv run pytest tests/ -m "not requires_ollama" --cov=src --cov-fail-under=90
-uv run python scripts/run_search_comparison.py
-uv run python scripts/run_ablation.py
+.venv/bin/python -I -m pytest tests/ -m "not requires_ollama" --cov=src --cov-fail-under=90
+.venv/bin/python scripts/run_search_comparison.py
+.venv/bin/python scripts/run_ablation.py
 ```
 
 For the public exemplar from the template repository root:

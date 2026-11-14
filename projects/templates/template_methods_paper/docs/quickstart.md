@@ -16,7 +16,9 @@ git clone https://github.com/docxology/template.git
 cd template
 
 # 2. Install dependencies at the repository root
-uv sync
+uv sync --locked
+uv sync --locked --project projects/templates/template_methods_paper --extra dev \
+  --python "$PWD/.venv/bin/python"
 
 # 3. Verify installation
 uv run python --version
@@ -28,7 +30,9 @@ Validate the environment and check that the project test suite passes with
 the ≥90% coverage gate:
 
 ```bash
-uv run pytest projects/templates/template_methods_paper/tests -v --tb=short
+uv run --no-sync --offline --project projects/templates/template_methods_paper \
+  python -m pytest projects/templates/template_methods_paper/tests/ -v --tb=short \
+  --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
 ```
 
 Expected: passing tests and coverage above the 90% gate. Live collection

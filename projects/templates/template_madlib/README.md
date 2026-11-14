@@ -52,13 +52,6 @@ _Keywords: madlib generation, token injection, conditional manuscripts, reproduc
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
-The 3 platforms still shown ⚪ available are not automatable to "published" with
-current tooling/credentials, not an oversight: **arXiv** has no submission API
-in this codebase (`infrastructure.publishing.arxiv` only prepares a local
-tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
-would then be added to `publication.published_artifacts`); **Cloudflare
-Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
-auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_madlib`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_madlib/` in the monorepo; public output files above 50 MB stay out of git.
@@ -212,8 +205,8 @@ uv venv --python 3.14 .venv
 uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
 .venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
 .venv/bin/python scripts/01_generate_madlib_artifacts.py
-.venv/bin/python scripts/02_validate_outputs.py
 .venv/bin/python scripts/z_generate_manuscript_variables.py
+.venv/bin/python scripts/02_validate_outputs.py
 ```
 
 `projects/templates/...`, `scripts/pipeline/`, and `scripts/audit/` commands

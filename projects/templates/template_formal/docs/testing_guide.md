@@ -14,11 +14,12 @@ root-venv `pytest` run is not sufficient evidence):
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_formal --project-only
 ```
 
-Or directly, from inside the project directory:
+Or directly, from the project directory after preparing `dev`, `formal-tools`
+and the real capabilities required by the complete selected suite:
 
 ```bash
-uv run pytest projects/templates/template_formal/tests/ -v
-uv run pytest projects/templates/template_formal/tests/ --cov=projects/templates/template_formal/src --cov-report=html
+.venv/bin/python -I -m pytest tests/ -v
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-report=html --cov-fail-under=90
 ```
 
 `pythonpath = [".", "src"]`, `testpaths`, and coverage settings live in

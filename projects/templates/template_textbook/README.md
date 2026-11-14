@@ -198,8 +198,9 @@ The workflow is always **edit config, then scaffold**:
    with `--require-complete`; it reports each section's stub count and fails
    until the total reaches zero.
 
-Because structure is declared once in YAML, the book can scale from this 12-chapter
-skeleton to an arbitrarily large work without renumbering anything by hand.
+Structure is declared once in YAML. The authored canonical book can grow
+without hand renumbering; newly scaffolded additions remain drafts until filled,
+reviewed and admitted by the unchanged complete-content gate.
 
 ## The design in one paragraph
 

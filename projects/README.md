@@ -9,14 +9,51 @@ shared `infrastructure/` modules.
 
 ## Run surface
 
-All public canonical exemplars under `projects/templates/` are **tested, analyzed,
-PDF-rendered, and CI-gated only through the public
-[docxology/template](https://github.com/docxology/template) monorepo**. Clone
-that repository, run `uv sync` at the repository root, then drive any exemplar
-with `./run.sh --project templates/<name>` (see [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md)).
-Several exemplars also publish standalone GitHub/Zenodo release mirrors for
-citation; those are pipeline outputs — the monorepo remains the canonical build
-and render checkout.
+The public monorepo is the canonical coordinated rendering/release checkout for
+all declared `projects/templates/` exemplars. Prepare it with `uv sync --locked`,
+then use `./run.sh --project templates/<name> --pipeline --mode core`.
+[RUN_GUIDE](../docs/RUN_GUIDE.md) owns dispatch and explicit prepared-runtime
+selection. A project-local analysis command is also supported where its README
+documents it; it is not automatically full coverage, native or publication
+acceptance. Standalone mirrors retain their own installation and adoption proof.
+
+### Prepare one canonical project's environment
+
+From the already prepared monorepo root:
+
+```bash
+PROJECT=projects/templates/template_code_project
+uv sync --locked --project "$PROJECT" --extra dev \
+  --python "$PWD/.venv/bin/python"
+```
+
+Choose a declared exemplar and then use its README's own-runtime commands from
+the stated working directory. Formal additionally selects `--extra formal-tools`
+and requires its real Lean/TLC capabilities; Advanced requires the genuine Meta
+provider in SDK → Meta → Advanced order. Stage 01 consumes already prepared
+interpreters; it never installs dependencies as a test fallback. Its default
+quick selection is not the whole release/native matrix.
+
+### Prepare an independent exported project
+
+At a fresh standalone project root, use an actual wheel matching the project's
+declared SDK version and its `dev` extra:
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+```
+
+This explicit wheel preparation does not treat checkout-local `tool.uv.sources`
+ancestors as released providers or assume that a candidate exists on PyPI. Use
+the prepared `.venv/bin/python` for project-local commands. Keep the project's
+specific recipe when it additionally needs Meta, `formal-tools`, admitted
+complete Root DATA, a resource bundle, Docker or native renderers. Library-only
+use may be narrower than the whole own test suite. Public mirror adoption uses
+the [reviewed installation projection](../docs/guides/standalone-install-projection.md)
+and actual accepted provider commits/assets; the preparation command alone is
+not installed, native, scientific or publication acceptance.
 
 ## Active Projects
 
@@ -629,13 +666,13 @@ flowchart LR
 
 ## Project Isolation
 
-Each project is completely independent:
+Each project has an explicit package and execution boundary:
 
 - ✅ Separate source code
 - ✅ Separate test suites
 - ✅ Separate outputs
 - ✅ Separate dependencies (via pyproject.toml)
-- ❌ No cross-project imports
+- No undeclared cross-project Source imports. Declared providers such as Meta → Advanced remain intentional dependencies.
 
 For shared utilities, use the `infrastructure/` modules.
 
@@ -675,7 +712,8 @@ own project-level contracts.
 
 ```bash
 # Run tests across all projects (prefer per-project invocation to avoid conftest collisions)
-uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects
+uv run --no-sync --offline python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects
+# This uses the default quick selection, not whole release/native acceptance.
 
 # Check public template source paths
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run ruff check
@@ -696,8 +734,8 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 
 ### Don'ts ❌
 
-- Don't share code between projects (use `infrastructure/`)
-- Don't commit `output/` directories (in `.gitignore`)
+- Reuse the SDK or an explicitly declared provider instead of copying shared code or relying on an ambient sibling import.
+- Keep private outputs, caches and runtime state untracked. Canonical public exemplar snapshots have a guarded exception; retain declared deliverables below the public file-size ceiling, not logs or intermediates.
 - Don't use spaces or special characters in project names
 - Don't create projects without `src/` and `tests/`
 - Don't violate AGENTS.md standards (testing, documentation, type hints, etc.)
@@ -735,7 +773,7 @@ manuscript-variable hydration, and thin project scripts.
 
 ```bash
 # Pipeline execution
-uv run python scripts/runner/execute_pipeline.py --project template_code_project --core-only
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ```
 
 ## Creating New Projects
@@ -797,6 +835,7 @@ ls -la projects/
 
 # Use infrastructure to list all valid projects
 uv run python -c "
+from pathlib import Path
 from infrastructure.project import discover_projects
 projects = discover_projects(Path('.'))
 for p in projects:

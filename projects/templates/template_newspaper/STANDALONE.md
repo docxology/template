@@ -57,12 +57,13 @@ rsync -a \
 
 ## Validation Commands
 
-From the copied project root:
+Use the [parent README's standalone preparation recipe](README.md) first.
+From the prepared copied project root:
 
 ```bash
-uv run pytest tests/ --cov=src --cov-fail-under=90
-uv run python scripts/10_generate_figures.py
-uv run python scripts/20_render_newspaper.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/10_generate_figures.py
+.venv/bin/python scripts/20_render_newspaper.py
 ```
 
 For the public exemplar from the template repository root:
@@ -74,9 +75,11 @@ uv run pytest projects/templates/template_newspaper/tests/ \
 
 ## Intentional Non-Standalone Dependencies
 
-The layout engine and project tests are project-local. The script bootstrap can
-use the template infrastructure logger when present, but falls back for ordinary
-project execution. Monorepo rendering/copy stages remain optional polish.
+The layout engine is project-local and its ReportLab output does not need an
+external PDF compiler. The complete package nevertheless declares the installed
+SDK; prepare it explicitly rather than relying on an ambient logger fallback.
+Overset failures, raster/geometry review and complete native acceptance remain
+separate from successful ordinary PDF generation.
 
 ## What Not To Claim
 

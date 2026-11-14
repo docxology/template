@@ -89,6 +89,9 @@ This is a **GitHub Template Repository** that gives you:
 ## 🗺️ Choose Your Path
 
 Pick the entry point that matches your goal:
+- **Installed SDK users** (use the Python package or console entry point):
+  [Installed SDK](#installed-sdk). The wheel is not an exemplar
+  checkout; manuscript authoring follows the checkout path below.
 
 - **Cold start, human or agent** (install prerequisites, run the canonical
   exemplar once): [`START_HERE.md`](START_HERE.md).
@@ -280,10 +283,8 @@ To regenerate any exemplar from the monorepo:
 ```bash
 git clone https://github.com/docxology/template
 cd template
-uv sync
+uv sync --locked
 ./run.sh --project templates/template_code_project --pipeline --mode core
-uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
-uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
 
 Replace `template_code_project` with any public exemplar name from the table
@@ -336,10 +337,10 @@ instead.
 
 ```bash
 ./run.sh                                     # Interactive project selection
-./run.sh --project templates/template_code_project --pipeline
+./run.sh --project templates/template_code_project --pipeline --mode core
 ./run.sh --all-projects --pipeline           # All discovered projects sequentially
 ./secure_run.sh --steganography-only --project templates/template_code_project  # Re-watermark PDFs
-mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
+# Create a runnable fork with the clean-copy helper; see "Forking an exemplar" below.
 ```
 
 **Lifecycle:** rendered = `projects/templates/` plus optional `projects/active/`
@@ -501,25 +502,39 @@ headers. Full surface and worked usage examples:
 
 ## 🛠️ Installation & Setup
 
-Prerequisites: `pandoc` and a TeX distribution (`texlive-xetex` on Debian/Ubuntu,
-MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
-`.venv/bin/python`; the template targets Python 3.14+ (`requires-python` in
-[`pyproject.toml`](pyproject.toml)) and required CI qualification covers infrastructure and public exemplars on 3.14 and 3.15, with
-[`.python-version`](.python-version) pinning 3.14 as the local default). Add per-project deps with
-`uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
-generate a manuscript, follow the [Quickstart](#quickstart) at the top.
+### Installed SDK
 
-One-shot setup: `bash scripts/shell/setup-system-deps.sh` installs and verifies
-that toolchain on macOS and Debian/Ubuntu — pandoc, a XeLaTeX TeX distribution,
-the LaTeX packages minimal distributions lack, and `uv` (idempotent; `--check`
-verifies without installing).
+Use an existing Python 3.14+ environment and an actual matching SDK wheel. Set
+`SDK_PYTHON` to that environment's interpreter and `SDK_WHEEL` to the wheel's
+local path; an intended version is not evidence that a download or package-index
+release exists.
 
-Layer 1 is also a standard Python distribution. Build it with `uv build`, or
-install the wheel attached to a GitHub release. Installation provides the
-`research-template` command (`research-template --help`). Optional pip extras
-mirror the major capability groups, for example
-`research-project-template[rendering,publishing]`; repository contributors
-should continue to use `uv sync --group ...` for development groups.
+```bash
+uv pip install --python "$SDK_PYTHON" "$SDK_WHEEL"
+"$(dirname "$SDK_PYTHON")/research-template" --help
+```
+
+The wheel contains the `infrastructure` SDK and its `research-template` entry
+point, not the exemplar trees or repository `scripts/`. The pipeline needs a
+real project and its declared script targets; use a checkout to author the
+canonical examples. Optional package extras, such as
+`research-project-template[rendering,publishing]`, are distinct from checkout
+development groups.
+
+### Checkout author
+
+Run `uv sync --locked` from the repository root to prepare `.venv/` from
+`pyproject.toml`, `uv.lock` and `.python-version`. The supported CI minors are
+3.14 and 3.15; the local default is 3.14. Already-prepared dispatch and explicit
+runtime nomination are documented in [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
+
+Pandoc and TeX are rendering prerequisites, not prerequisites for importing the
+SDK. Follow the canonical
+[startup and setup guide](docs/guides/startup-and-setup.md) for system tools,
+the first selected core pipeline, and optional contributor checks. It also
+documents `scripts/shell/setup-system-deps.sh`; `--check` observes preparation
+without installing. To generate a manuscript, continue with the
+[Quickstart](#quickstart).
 
 ## 🐳 Docker Support
 
@@ -546,45 +561,11 @@ examples), generated file headers, and cross-reference systems.
 
 ### Forking an exemplar
 
-`scripts/audit/copy_exemplar.py` produces a clean copy with its own identity; it
-never carries `.venv`, `output/` or caches:
-
-```bash
-uv run --no-sync --offline python scripts/audit/copy_exemplar.py \
-  --source templates/template_code_project \
-  --dest projects/working/my_paper \
-  --new-name my_paper \
-  --author-name "Ada Lovelace" --author-email ada@example.org \
-  --sdk-source path:../../..      # omit for a copy inside this checkout
-```
-
-- `--new-name` rewrites the project slug in paths, package names, `pyproject.toml`
-  and configuration keys. Suffixed identifiers such as `<slug>_extra` are
-  deliberately left alone.
-- `--sdk-source` states how the fork resolves the platform SDK:
-  `path:<dir>` (a template checkout), `url:<git-or-file-url>`, or `version-only`
-  (rely on the pinned release). A copy **inside** this checkout gets a relative
-  path for its own depth automatically; a copy outside it keeps the checkout you
-  pass here instead of silently inheriting a path that cannot resolve.
-- `--author-name` / `--author-email` replace the author in `pyproject.toml`,
-  `CITATION.cff`, `codemeta.json` and `.zenodo.json`, drop the source artifact's
-  own DOI, ORCID, repository URL and release date, and set the CFF/JSON version
-  to the fork's version. A fork must never claim the exemplar's publication
-  identity.
-- `--project-only` omits declared cross-root resources (the `infrastructure/`
-  dependency) for a truly standalone tree.
-
-Then make the fork runnable and verify it:
-
-```bash
-uv sync --project projects/working/my_paper --extra dev
-uv run --project projects/working/my_paper python -m pytest projects/working/my_paper/tests -q
-```
-
-`--dry-run` prints the planned file list without writing. `export_exemplar`
-(the default CLI path) additionally writes a content-addressed
-`.template-export.json` manifest binding every exported file and the source
-commit, which is what the standalone mirror and installed-acceptance lanes read.
+Use the canonical [fork guide](docs/guides/fork-an-exemplar.md) for the clean-copy
+helper, new project/author identity, SDK source selection and preparation of the
+fork's own environment. It also explains the source-bound `.template-export.json`
+manifest and the difference between checkout-local and independent exported use.
+Raw directory creation or copying is not an equivalent runnable-project setup.
 
 ### Adding Project-Specific Scripts
 

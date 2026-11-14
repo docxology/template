@@ -4,12 +4,15 @@
 
 ## Quick Start
 
+Commands below run from the prepared project root; output paths are relative
+to that same root. See the parent README for SDK/environment preparation.
+
 ```bash
 # Run analysis pipeline
 uv run python scripts/optimization_analysis.py
 
 # View generated outputs
-ls -la ../output/
+ls -la output/
 ```
 
 ## Key Features
@@ -24,7 +27,7 @@ ls -la ../output/
 ### Run Analysis
 
 ```bash
-uv run python optimization_analysis.py
+uv run --no-sync --offline python scripts/optimization_analysis.py
 ```
 
 Executes optimization experiments and generates all outputs.
@@ -32,8 +35,8 @@ Executes optimization experiments and generates all outputs.
 ### Check Outputs
 
 ```bash
-ls -la ../output/figures/
-ls -la ../output/data/
+ls -la output/figures/
+ls -la output/data/
 ```
 
 ## Scripts
