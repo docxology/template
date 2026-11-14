@@ -1,4 +1,4 @@
-name: Actual unchanged-source residual provider body capture
+name: Actual standard-compiler provider-way qualification
 
 on:
   workflow_dispatch:
@@ -138,7 +138,7 @@ jobs:
             sudo -n nix-store --init
           fi
           nix --version
-      - name: Capture unchanged genuine provider bodies and consumed compiler inputs
+      - name: Qualify genuine provider bodies and consumed compiler build-way inputs
         shell: bash
         env:
           REPLICA: ${{ matrix.replica }}
@@ -160,6 +160,9 @@ jobs:
           source_patch = Path('infrastructure/config/native-document-ghc-pkg-cache-order.patch').resolve()
           patch = root / source_patch.name
           patch.write_bytes(source_patch.read_bytes())
+          source_ways_patch = Path('infrastructure/config/native-document-ghc-provider-ways.patch').resolve()
+          ways_patch = root / source_ways_patch.name
+          ways_patch.write_bytes(source_ways_patch.read_bytes())
           source_tree = __import__('ast').parse(Path('infrastructure/reporting/native_document_preparation.py').read_text())
           source_options = next(__import__('ast').literal_eval(node.value) for node in source_tree.body if isinstance(node, __import__('ast').Assign) and any(isinstance(target, __import__('ast').Name) and target.id == '_NIX_OPTIONS' for target in node.targets))
           base = ['sudo', '-n', shutil.which('nix'), '--store', 'local', *source_options]
@@ -277,9 +280,16 @@ jobs:
           assert len(matching_patches) == 1
           assert hashlib.sha256(matching_patches[0].read_bytes()).hexdigest() == held_patch_hash
           assert str(matching_patches[0]) in prototype['actual_patch_inputs']
+          held_ways_patch_hash = hashlib.sha256(ways_patch.read_bytes()).hexdigest()
+          matching_ways_patches = [Path(path) for path in compiler_derivation['inputSrcs'] if Path(path).name.endswith(ways_patch.name)]
+          assert len(matching_ways_patches) == 1
+          assert hashlib.sha256(matching_ways_patches[0].read_bytes()).hexdigest() == held_ways_patch_hash
+          assert str(matching_ways_patches[0]) in prototype['actual_patch_inputs']
           write_json('prototype-source-binding.json', {
               'held_patch_sha256': held_patch_hash, 'actual_patch_path': str(matching_patches[0]),
-              **prototype, 'role': 'actual full compiler-source ordering prototype; old body pins are not changed or admitted',
+              'provider_ways_patch_sha256': held_ways_patch_hash,
+              'actual_provider_ways_patch_path': str(matching_ways_patches[0]),
+              **prototype, 'role': 'actual standard compiler ordering and unused-way Source qualification; no production pin admission',
           })
           body_observations = {}
           def retain_body(label, name, candidate):
@@ -410,13 +420,6 @@ jobs:
           compiler = Path(evaluated['compiler_output'])
           assert run('compiler-version', [str(compiler / 'bin/ghc'), '--numeric-version'], native=True).decode().strip() == '9.12.2'
           assert '-fobject-determinism' in run('compiler-options', [str(compiler / 'bin/ghc'), '--show-options'], native=True).decode().splitlines()
-          prepared_elapsed = time.monotonic()-started
-          write_json('complete-provider-preparation-timing.json', {
-              'elapsed_seconds': prepared_elapsed, 'production_outer_seconds': 4500,
-              'within_production_outer': prepared_elapsed <= 4500,
-              'includes_diagnostic_compiler_and_input_archiving': True,
-              'excludes_earlier_APT_acquisition': True,
-          })
           tools = {}
           for name, version in [('pandoc', '3.11'), ('pandoc-crossref', 'v0.3.25a')]:
               binary = (output / 'bin' / name).resolve(strict=True)
@@ -435,6 +438,13 @@ jobs:
               tools[name] = {'path': str(binary), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(),
                              'pt_interp': interpreters[0][:-1].decode(), 'rx_bytes': sum(row[5] for row in headers if row[0] == 1 and row[1]&1),
                              'version_stdout': version_output}
+          prepared_elapsed = time.monotonic()-started
+          write_json('complete-provider-preparation-timing.json', {
+              'elapsed_seconds': prepared_elapsed, 'production_outer_seconds': 4500,
+              'within_production_outer': prepared_elapsed <= 4500,
+              'includes_diagnostic_compiler_and_input_archiving': True,
+              'excludes_earlier_APT_acquisition': True,
+          })
           # A finite variance experiment, not retries for acceptance. Stop at the
           # first differing real output or command failure and preserve its bytes.
           lua_drv, _lua_output = unique_derivation_output('pandoc-lua-engine-lib-pandoc-lua-engine-0.5.4')
@@ -488,7 +498,7 @@ jobs:
                   break
           retain_build_logs('component-variance')
           rebuild = variance_records[-1]['command']
-          result = {'schema_version': 'template-deterministic-document-provider-census-v3', 'role': 'actual full compiler-source preload-order correction qualification only; no production pin admission',
+          result = {'schema_version': 'template-deterministic-document-provider-census-v4', 'role': 'actual standard compiler ordering and provider-way qualification only; no production pin admission',
                     'runtime_acceptance': False, 'source_commit': os.environ['GITHUB_SHA'], 'replica': os.environ['REPLICA'],
                     'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
                     'producer_base_commit': '60bfab1984e37a5ea4181518d3b96844f3d30219',
@@ -496,6 +506,7 @@ jobs:
                     'finite_producer_variance_observations': variance_records,
                     'upstream_source': source['locked'], 'compiler': 'ghc-9.12.2', 'ghc_options': ['-fobject-determinism'],
                     'compiler_pipeline_prototype': prototype, 'cache_source_patch_sha256': held_patch_hash,
+                    'provider_ways_patch_sha256': held_ways_patch_hash,
                     'complete_preparation_seconds': prepared_elapsed, 'fits_production_outer_4500': prepared_elapsed <= 4500,
                     'recipe_sha256': hashlib.sha256(recipe.read_bytes()).hexdigest(), 'freeze_sha256': hashlib.sha256(freeze.read_bytes()).hexdigest(),
                     'resolved_freeze_sha256': hashlib.sha256(resolved_freeze).hexdigest(), **evaluated, 'tools': tools}
@@ -503,6 +514,8 @@ jobs:
           print(json.dumps(result, indent=2))
           if rebuild['returncode']:
               raise SystemExit(rebuild['returncode'])
+          if prepared_elapsed > 4500:
+              raise SystemExit('actual complete provider preparation exceeded the unchanged 4500-second production clock')
           PYTHON
       - name: Retain all actual bodies and diagnostics without admission
         if: always()

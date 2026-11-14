@@ -11,7 +11,12 @@ let
   correctedCompiler = pkgs.haskell-nix.compiler.ghc9122.override (args: {
     # Compile both ordering corrections into the real compiler and ghc-pkg.
     # The standard constructor retains its compiler dependency metadata.
-    ghc-patches = (args.ghc-patches or []) ++ [ ./native-document-ghc-pkg-cache-order.patch ];
+    # These providers disable profiling: omit only those unused compiler ways
+    # and generated compiler docs, retaining normal/shared libraries and debug RTS.
+    ghc-patches = (args.ghc-patches or []) ++ [
+      ./native-document-ghc-pkg-cache-order.patch
+      ./native-document-ghc-provider-ways.patch
+    ];
   });
   project = pkgs.haskell-nix.cabalProject' {
     src = upstream.outPath;
