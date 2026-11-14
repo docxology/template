@@ -40,6 +40,10 @@ locks.
   root-private custody and unprivileged handoff; refuse foreign, linked,
   corrupt, busy or nonempty input. Keep signed clients, trust metadata,
   source/derivation/body verification and all original census clocks.
+- Refresh all 25 own release-profile coverage records from authenticated
+  November 14 originals, retaining exact current project/support inputs.
+  Import only the five actual percentage deltas; collection totals still come
+  from the canonical live generator rather than inferred test-count changes.
 - Isolate smoke-path refusals behind a valid complete fixture and distinguish
   hostile foreign Git epochs from the nominated candidate. Retire workflow
   structure, Source-substring and re-export assertion pins while retaining

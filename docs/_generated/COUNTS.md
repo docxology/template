@@ -121,16 +121,16 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **1843** project-scope infrastructure tests collected and **1336** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage baseline dated 2026-11-12, rebound after changed-input measurements; coverage values use the shared `release` test profile):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage baseline dated 2026-11-14, rebound after changed-input measurements; coverage values use the shared `release` test profile):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 990 | 91.16 % |
+| `template_active_inference` | 986 | 91.14 % |
 | `template_advanced_literature_review` | 170 | 94.12 % |
 | `template_autopoiesis` | 579 | 91.43 % |
 | `template_autoresearch_project` | 393 | 96.49 % |
 | `template_autoscientists` | 194 | 93.39 % |
-| `template_code_project` | 296 | 94.13 % |
+| `template_code_project` | 296 | 94.04 % |
 | `template_data_descriptor` | 78 | 96.26 % |
 | `template_eda_notebook` | 132 | 91.01 % |
 | `template_experiment_tree` | 32 | 91.85 % |
@@ -139,15 +139,15 @@ Result: **1843** project-scope infrastructure tests collected and **1336** publi
 | `template_literature_meta_analysis` | 1257 | 95.48 % |
 | `template_madlib` | 198 | 99.11 % |
 | `template_methods_paper` | 94 | 98.21 % |
-| `template_newspaper` | 156 | 99.25 % |
+| `template_newspaper` | 156 | 99.08 % |
 | `template_pitch_deck` | 162 | 96.43 % |
 | `template_pools_rules_tools` | 308 | 94.68 % |
 | `template_prose_project` | 189 | 91.67 % |
 | `template_redacted_report` | 156 | 97.03 % |
 | `template_registered_report` | 87 | 95.19 % |
-| `template_search_project` | 458 | 91.89 % |
+| `template_search_project` | 458 | 92.00 % |
 | `template_sia` | 130 | 92.72 % |
-| `template_storybook` | 45 | 95.38 % |
+| `template_storybook` | 45 | 95.57 % |
 | `template_template` | 158 | 95.55 % |
 | `template_textbook` | 303 | 96.07 % |
 
