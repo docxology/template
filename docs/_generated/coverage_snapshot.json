@@ -2,8 +2,8 @@
   "measured_at": "2026-11-12",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "91.15 %",
-      "source_hash": "c1fadfd652323bf6cdc2f860558d9912e2aee6fc39faf96a9c65436d2c1bc3e8"
+      "coverage_pct": "91.16 %",
+      "source_hash": "c945a2e9933badf086210168e8db0f2e1c9ef968b01e230d2342e5fbb7151d81"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "94.12 %",
@@ -38,8 +38,8 @@
       "source_hash": "57527aff3803bc99ae5080d0e58bdd16b6bef143a2bfe51215949abfb583362a"
     },
     "template_formal": {
-      "coverage_pct": "90.30 %",
-      "source_hash": "2dc82a6a91ca9a54697c87d11eb9ee3caf213eb92f22c47d8c34b0813d875fb6"
+      "coverage_pct": "90.15 %",
+      "source_hash": "9c74239f7e3dc7f255f7442997dabff03d69f051977674927e54d29353913d86"
     },
     "template_gold_refinement": {
       "coverage_pct": "92.81 %",
@@ -47,7 +47,7 @@
     },
     "template_literature_meta_analysis": {
       "coverage_pct": "95.48 %",
-      "source_hash": "ddd48b7386cd6b7e1ee4f57d0d251f1a5b558102aa896485a5dab0a6750514c5"
+      "source_hash": "63407ba7244cabfaad5bac1bcf871108746e074da025cb7edb1047c11d1d2704"
     },
     "template_madlib": {
       "coverage_pct": "99.11 %",
@@ -79,7 +79,7 @@
     },
     "template_registered_report": {
       "coverage_pct": "95.19 %",
-      "source_hash": "50a02087517a0a39431fdbd5798229584952640c1b6d225139d3749c4353c0c0"
+      "source_hash": "5029d8cec8d0d158c6850f700d090e3203ad86457ba3a2340d0a381e10519e52"
     },
     "template_search_project": {
       "coverage_pct": "91.89 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "da12ba7ef1bd1f51c03cdec65b44c4773ee53f29",
+  "source_commit": "6c03c898dca0bdd87e0c47b2782ecc1576e6b26c",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -111,12 +111,12 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "6f1b5d2e5f88d6d59e90f54fff2fb2e269b54c84cb25418333677641bdcd2a79",
+        "digest": "93e4db469951346aedcd49b136154c260b146b4af9a4b8e7d6a1363ad26f1771",
         "entries": [
           {
             "identity": "sha256",
             "path": "AGENTS.md",
-            "sha256": "774f7f2ca9285d502e5e0e87006f4618b9ed91f6303c25403fb800ffcafd4740",
+            "sha256": "872ddb982c8ebf3b88f7d748252302e61952bff4e7c222419500ceace3c64fe0",
             "type": "file"
           },
           {
@@ -157,7 +157,7 @@
           {
             "identity": "sha256",
             "path": "docs/guides/manuscript-semantics.md",
-            "sha256": "0853646c1c4349b36d50ee73954cb380769133aa3b54ec0462e2578b615876ff",
+            "sha256": "fa416c20ded9e8ceb40d2f7aa95686f442209f1bfebf1705d4e3de0858ef6cc6",
             "type": "file"
           },
           {
@@ -175,13 +175,13 @@
           {
             "identity": "sha256",
             "path": "docs/development/ci.md",
-            "sha256": "fe3792eb92608369bc29450a27afaab0e1625b03737cebc0b495030954995800",
+            "sha256": "6bf6d702e5fecd29bf487601bd444ed047ef9a898c48e19a5d80a30aa914eee8",
             "type": "file"
           },
           {
             "identity": "sha256",
             "path": "docs/development/public-runtime-matrix.md",
-            "sha256": "0e6f6dc0d01aa9183e7da3b99864a69a51b216e39c16fa1549b5477c9f16e061",
+            "sha256": "04f18580a9de5050cecf1bca9ffee34f1e96bb43d64058a83b599141917e7273",
             "type": "file"
           },
           {
@@ -205,7 +205,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "c1fadfd652323bf6cdc2f860558d9912e2aee6fc39faf96a9c65436d2c1bc3e8",
+      "template_active_inference": "c945a2e9933badf086210168e8db0f2e1c9ef968b01e230d2342e5fbb7151d81",
       "template_advanced_literature_review": "2c73c9b247b5168ab925877bc7473ff64e407681e2cff2d5ca0d35d7bd3bb615",
       "template_autopoiesis": "f581903b31ee29c5609575faa7261860fa80f212044cec75cb2f4295982e36ee",
       "template_autoresearch_project": "014a68a2d5c657211b47d9d77fba5efff9806fb9851e2fdc0bf13fe4a1a0ff51",
@@ -214,9 +214,9 @@
       "template_data_descriptor": "a5bf5df269f92d4b4c30324cfce6df31e5b4dd0dd9d223d351dac845720acbd3",
       "template_eda_notebook": "b3ab4ab87882e147912ad550ec7a510ccfea6d46f1b92b19608e8b2bb88c6c4f",
       "template_experiment_tree": "57527aff3803bc99ae5080d0e58bdd16b6bef143a2bfe51215949abfb583362a",
-      "template_formal": "2dc82a6a91ca9a54697c87d11eb9ee3caf213eb92f22c47d8c34b0813d875fb6",
+      "template_formal": "9c74239f7e3dc7f255f7442997dabff03d69f051977674927e54d29353913d86",
       "template_gold_refinement": "b04f83578c9341fbbdb8ed8de0e08275cff092d9d1466890d7f5896eb7677011",
-      "template_literature_meta_analysis": "ddd48b7386cd6b7e1ee4f57d0d251f1a5b558102aa896485a5dab0a6750514c5",
+      "template_literature_meta_analysis": "63407ba7244cabfaad5bac1bcf871108746e074da025cb7edb1047c11d1d2704",
       "template_madlib": "525f830027ad285cb2d8d10c32f49865c60c1475d208f2844269bc9f105042b3",
       "template_methods_paper": "bf2dc94f719d6088225b85e9541b567e7890a2cf20d94c8cf5b5a38599a05ae5",
       "template_newspaper": "139256ac4c5cc7e1f59e0ed7c5d2fc9627b61df9981d43837cb2b8fb098e673b",
@@ -224,7 +224,7 @@
       "template_pools_rules_tools": "3856ed5ff8a92e9340c5c92f2a2174c017a31b395290483475469e51e494c00b",
       "template_prose_project": "344b2e7a0d15cfbe60c208b62a209405236fa095077b9003acef6b7d3fdf0a71",
       "template_redacted_report": "34b599f2e04a2e1cb8d16e92ab66753b5a826e115dc0b501f72ab5bca2c73752",
-      "template_registered_report": "50a02087517a0a39431fdbd5798229584952640c1b6d225139d3749c4353c0c0",
+      "template_registered_report": "5029d8cec8d0d158c6850f700d090e3203ad86457ba3a2340d0a381e10519e52",
       "template_search_project": "dc4e5f8a1dbc64b2a80c5046bbafa86374db0c8e54e0719a73f0e03bdbad3ad0",
       "template_sia": "7d83307b50794708ca8ae85b2eeb5635e120273869da97da978e82c0c948c1bd",
       "template_storybook": "ee5e9c34bc47cfd33f7b784cd11d166aa6281bb64f4d1ad7cb4a2378176fe68e",
