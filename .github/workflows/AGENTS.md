@@ -20,10 +20,10 @@ Source-derived roster in one dispatch, with four concurrent projects and separat
 commit/input-hash bound artifacts. Its optional project input selects exactly
 one public exemplar. Require every selected measurement and the final matrix
 gate, then verify the retrieved artifacts before updating coverage provenance.
-The reusable coverage job prepares document providers only for Search's real
-Pandoc consumer and EDA's real XeLaTeX/font test. Other own suites retain their
-locked Python readers and existing tools; full native/publication acceptance
-still prepares every required provider separately.
+The reusable coverage job prepares converters for Search's real HTML/citeproc
+and Textbook's real EPUB consumer, and native providers for EDA's real
+XeLaTeX/font test. Other own suites retain their locked Python readers and
+existing tools; full native/publication acceptance prepares its own prerequisites.
 The ordinary `CI Gate` also requires both complementary infrastructure lanes and
 accepts the optional coverage job's skip only when unrequested.
 

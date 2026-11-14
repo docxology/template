@@ -27,10 +27,10 @@ locks.
   the retained experiment tree before recording any genuinely measured answer.
   Remove authored workstation-credential claims while preserving generated
   publication history and pending-release boundaries.
-- Limit own-coverage document setup to Search's real Pandoc consumer and EDA's
-  real XeLaTeX/font consumer. Preserve the complete release-profile suites,
-  locked readers, pinned Lean/TLC and Docker preparation, floors and deadlines;
-  complete native/publication acceptance retains its independent prerequisites.
+- Limit own-coverage document setup to Search's real HTML/citeproc, Textbook's
+  real EPUB and EDA's real XeLaTeX/font consumers. Preserve complete release
+  suites, locked readers, pinned Lean/TLC and Docker preparation, floors and
+  deadlines; full native/publication acceptance keeps its own prerequisites.
 - Retire Active's renderer Source-substring checks and duplicate-default pins.
   Strengthen the existing real preamble parser control to preserve both LaTeX
   fences while excluding prose and other languages; actual native rendering
