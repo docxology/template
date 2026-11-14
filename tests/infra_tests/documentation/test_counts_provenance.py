@@ -12,11 +12,9 @@ import pytest
 from infrastructure.documentation.counts_doc import (
     COVERAGE_PROVENANCE_RELATIVE_PATH,
     COVERAGE_PROVENANCE_SCHEMA_VERSION,
-    DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
     exemplar_source_hash,
-    render_counts_doc,
     validate_coverage_provenance,
     write_counts_doc,
 )
@@ -79,23 +77,6 @@ def test_coverage_report_result_fails_closed_and_accepts_one_finite_total() -> N
         _validated_coverage_report(BoundedSubprocessResult(**base, command_error="cannot execute"), "demo")
 
 
-def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:
-    """Writing supplied facts exercises real I/O without 23 subprocesses."""
-    repo_root = tmp_path / "repo"
-    repo_root.mkdir()
-    facts = CountsFacts(
-        public_projects=[s.name for s in EXEMPLAR_SNAPSHOT],
-        packages=["core"],
-        infra_py_count=1,
-        project_tests=2,
-        publishing_tests=3,
-        exemplar_tests={s.name: 1 for s in EXEMPLAR_SNAPSHOT},
-    )
-    target = tmp_path / "COUNTS.md"
-    write_counts_doc(repo_root, out_path=target, facts=facts)
-    assert target.read_text(encoding="utf-8") == render_counts_doc(facts)
-
-
 def test_write_canonical_counts_requires_coverage_provenance(tmp_path: Path) -> None:
     """The canonical writer cannot bypass source-bound coverage provenance."""
     facts = CountsFacts(
@@ -109,12 +90,6 @@ def test_write_canonical_counts_requires_coverage_provenance(tmp_path: Path) -> 
 
     with pytest.raises(RuntimeError, match="missing coverage provenance"):
         write_counts_doc(tmp_path, facts=facts)
-
-
-def test_doc_relative_path_points_at_counts_md() -> None:
-    """The generator targets COUNTS.md, not the retired COUNTS.md."""
-    assert DOC_RELATIVE_PATH == Path("docs/_generated/COUNTS.md")
-    assert COVERAGE_PROVENANCE_RELATIVE_PATH == Path("docs/_generated/coverage_snapshot.json")
 
 
 def test_coverage_inventory_union_preserves_tracked_ignored_and_newline_paths(tmp_path: Path) -> None:

@@ -55,11 +55,18 @@ published GitHub Release and no GitHub Release at `v5.0.2`; that observation is
 separate from this candidate's unperformed acceptance.
 
 Publication is create-only. The workflow checks every release page, including
-drafts, and refuses a matching tag before `gh release create --verify-tag`. It
-uses the already verified tag, authored notes and admitted assets; it does not
-edit an existing release, replace its assets or implicitly create a tag. A failed
-attempt does not authorize overwriting existing work. Acceptance and the
-separate archival-consent requirement remain unchanged.
+drafts, and refuses a matching tag. It checks the remote annotated tag against
+the accepted checkout, creates a new draft and captures its ID directly from
+the creation response. Admitted assets are uploaded without replacement.
+All four downloaded draft assets must match the installed receipt and sealed
+manifest before that newly created ID may become public and trigger archival.
+The workflow rechecks the same asset IDs before publication and independently
+verifies the public downloads afterwards.
+
+A failed attempt leaves its draft and evidence for owner-managed recovery; it
+does not authorize adopting an earlier draft, overwriting assets, implicitly
+creating a tag or replaying publication. Acceptance and the separate explicit
+archival-consent requirement remain unchanged.
 
 ## External archival consent
 

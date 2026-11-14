@@ -35,8 +35,12 @@ locks.
   remains a separate genuine release proof.
 - Preserve native Mermaid's original caller deadline and 120-second cap across
   Source custody, observation and cleanup; a shared ceiling cannot extend it.
-- Remove literal coverage-schema/inventory-version assertion pins while retaining
-  actual legacy-schema and stale-inventory refusals.
+- Retire literal coverage-schema, inventory-version and path pins plus
+  writer/renderer copy echoes; retain missing-provenance, legacy-schema and
+  stale-inventory refusals.
+- Stage each new Root release as an owned draft and verify all four downloaded
+  assets before public publication can trigger archival. Preserve existing-release
+  refusal, exact tag identity, no-clobber uploads and independent public readback.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.
