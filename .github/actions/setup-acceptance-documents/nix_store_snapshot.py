@@ -6,6 +6,7 @@ Only a fresh root-owned store and the exact producer Source/run/client may
 consume a snapshot. The caller bounds this privileged operation to 900 seconds.
 Normal document preparation must still evaluate, build and verify its pins.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -72,7 +73,9 @@ def _binding(nix: Path) -> dict[str, Any]:
         raise ValueError("snapshot requires the actual hosted repository context")
     actual_source = subprocess.check_output(
         ["git", "-c", f"safe.directory={ROOT}", "-C", str(ROOT), "rev-parse", "HEAD"],
-        env=CHILD_ENV, text=True, timeout=30,
+        env=CHILD_ENV,
+        text=True,
+        timeout=30,
     ).strip()
     if actual_source != values["GITHUB_SHA"]:
         raise ValueError("snapshot physical checkout differs from its hosted Source")
@@ -80,9 +83,12 @@ def _binding(nix: Path) -> dict[str, Any]:
     if version != "nix (Nix) 2.18.1":
         raise ValueError("snapshot transport is qualified only for the signed-APT Nix 2.18.1 client")
     return {
-        **values, "nix_version": version, "nix_sha256": _sha(nix),
-        "source_inputs": {name: _sha(ROOT / name) for name in
-                          (PIN_SOURCE, BUILD_RECIPE, BUILD_FREEZE, *BUILD_COMPILER_PATCHES)},
+        **values,
+        "nix_version": version,
+        "nix_sha256": _sha(nix),
+        "source_inputs": {
+            name: _sha(ROOT / name) for name in (PIN_SOURCE, BUILD_RECIPE, BUILD_FREEZE, *BUILD_COMPILER_PATCHES)
+        },
     }
 
 
@@ -224,8 +230,9 @@ def capture(directory: Path, store_binary: Path, binding: dict[str, Any]) -> dic
             size = 0
             with payload.open("xb") as encoded:
                 with gzip.GzipFile(filename="", mode="wb", fileobj=encoded, compresslevel=1, mtime=0) as compressed:
-                    with subprocess.Popen([str(store_binary), "--dump", path], env=CHILD_ENV,
-                                          stdout=subprocess.PIPE) as process:
+                    with subprocess.Popen(
+                        [str(store_binary), "--dump", path], env=CHILD_ENV, stdout=subprocess.PIPE
+                    ) as process:
                         assert process.stdout is not None
                         while chunk := process.stdout.read(CHUNK):
                             size += len(chunk)
@@ -240,13 +247,22 @@ def capture(directory: Path, store_binary: Path, binding: dict[str, Any]) -> dic
             entries.append({**_entry(payload), "path": path, "nar_sha256": digest.hexdigest(), "nar_size": size})
         if _db_info(DB / "db.sqlite")["logical_sha256"] != database["logical_sha256"]:
             raise ValueError("producer registrations changed during snapshot custody")
-        manifest = {"schema": SCHEMA, "binding": binding, "database": _entry(directory / "database.sqlite"),
-                    "schema_file": _entry(directory / "schema"), "database_logical_sha256": database["logical_sha256"],
-                    "paths": entries}
+        manifest = {
+            "schema": SCHEMA,
+            "binding": binding,
+            "database": _entry(directory / "database.sqlite"),
+            "schema_file": _entry(directory / "schema"),
+            "database_logical_sha256": database["logical_sha256"],
+            "paths": entries,
+        }
         (directory / "manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
     # Freeze the producer authority before any file becomes caller-writable.
-    result = {"manifest_sha256": _sha(directory / "manifest.json"), "registered_paths": len(entries),
-              "nar_bytes": sum(entry["nar_size"] for entry in entries), "preparation_DATA_only": True}
+    result = {
+        "manifest_sha256": _sha(directory / "manifest.json"),
+        "registered_paths": len(entries),
+        "nar_bytes": sum(entry["nar_size"] for entry in entries),
+        "preparation_DATA_only": True,
+    }
     names = ["manifest.json", "database.sqlite", "schema", *(entry["file"] for entry in entries)]
     for name in names:
         path = directory / name
@@ -304,8 +320,11 @@ def validate_manifest(content: bytes, expected_sha256: str, binding: dict[str, A
         if not re.fullmatch(r"[0-9a-f]{64}", str(entry["nar_sha256"])):
             raise ValueError("snapshot NAR lacks complete content custody")
     for key, name in (("database", "database.sqlite"), ("schema_file", "schema")):
-        if (type(manifest[key]) is not dict or set(manifest[key]) != {"file", "size", "sha256"}
-                or manifest[key]["file"] != name):
+        if (
+            type(manifest[key]) is not dict
+            or set(manifest[key]) != {"file", "size", "sha256"}
+            or manifest[key]["file"] != name
+        ):
             raise ValueError("snapshot control file is not the exact flat file")
     for entry in [manifest["database"], manifest["schema_file"], *entries]:
         if type(entry["size"]) is not int or not 0 < entry["size"] <= 64 * 1024**3:
@@ -329,7 +348,11 @@ def seal_snapshot(directory: Path, destination: Path, expected_sha256: str, bind
             content = source.read(MAX_MANIFEST + 1)
             after = os.fstat(source.fileno())
             if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
-                after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns
+                after.st_dev,
+                after.st_ino,
+                after.st_size,
+                after.st_mtime_ns,
+                after.st_ctime_ns,
             ):
                 raise ValueError("snapshot manifest changed during custody")
         manifest = validate_manifest(content, expected_sha256, binding)
@@ -356,7 +379,11 @@ def seal_snapshot(directory: Path, destination: Path, expected_sha256: str, bind
                         target.write(chunk)
                 after = os.fstat(source.fileno())
                 if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
-                    after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns
+                    after.st_dev,
+                    after.st_ino,
+                    after.st_size,
+                    after.st_mtime_ns,
+                    after.st_ctime_ns,
                 ):
                     raise ValueError("snapshot payload changed during custody")
                 if size != entry["size"] or digest.hexdigest() != entry["sha256"]:
@@ -371,7 +398,11 @@ def seal_snapshot(directory: Path, destination: Path, expected_sha256: str, bind
 
 
 def restore(
-    directory: Path, expected_sha256: str, nix: Path, store_binary: Path, binding: dict[str, Any],
+    directory: Path,
+    expected_sha256: str,
+    nix: Path,
+    store_binary: Path,
+    binding: dict[str, Any],
 ) -> dict[str, Any]:
     from infrastructure.reporting.native_document_preparation import _NIX_OPTIONS
 
@@ -385,8 +416,11 @@ def restore(
         raise ValueError("snapshot NAR roster differs from its complete genuine database")
     with _store_lock():
         current = _db_info(DB / "db.sqlite")
-        if (current["nonempty"] or current["schema"] != database["schema"]
-                or _sha(DB / "schema") != manifest["schema_file"]["sha256"]):
+        if (
+            current["nonempty"]
+            or current["schema"] != database["schema"]
+            or _sha(DB / "schema") != manifest["schema_file"]["sha256"]
+        ):
             raise ValueError("snapshot refuses a nonempty or incompatible destination database")
         if any(
             path.name != ".links" or not path.is_dir() or path.is_symlink() or any(path.iterdir())
@@ -398,8 +432,9 @@ def restore(
                 raise ValueError("snapshot refuses to overwrite a store path")
             digest, size = hashlib.sha256(), 0
             with gzip.open(stage / entry["file"], "rb") as decoded:
-                with subprocess.Popen([str(store_binary), "--restore", entry["path"]], env=CHILD_ENV,
-                                      stdin=subprocess.PIPE) as process:
+                with subprocess.Popen(
+                    [str(store_binary), "--restore", entry["path"]], env=CHILD_ENV, stdin=subprocess.PIPE
+                ) as process:
                     assert process.stdin is not None
                     try:
                         while chunk := decoded.read(CHUNK):
@@ -418,11 +453,14 @@ def restore(
         _backup(stage / "database.sqlite", DB / "db.sqlite", standalone=False)
         if _db_info(DB / "db.sqlite")["logical_sha256"] != database["logical_sha256"]:
             raise ValueError("snapshot restoration changed genuine registration or trust metadata")
-    subprocess.run([str(nix), *_NIX_OPTIONS, "--store", "local", "store", "verify", "--all"],
-                   env=CHILD_ENV, check=True)
+    subprocess.run([str(nix), *_NIX_OPTIONS, "--store", "local", "store", "verify", "--all"], env=CHILD_ENV, check=True)
     shutil.rmtree(stage)  # Only this process's newly created root-private copy.
-    return {"manifest_sha256": expected_sha256, "registered_paths": len(expected_paths),
-            "original_trust_metadata_preserved": True, "preparation_DATA_only": True}
+    return {
+        "manifest_sha256": expected_sha256,
+        "registered_paths": len(expected_paths),
+        "original_trust_metadata_preserved": True,
+        "preparation_DATA_only": True,
+    }
 
 
 def main() -> None:

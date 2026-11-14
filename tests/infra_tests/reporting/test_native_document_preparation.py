@@ -397,19 +397,32 @@ def _snapshot_transport_fixture(tmp_path: Path, store_snapshot):
     directory = tmp_path / "transport"
     directory.mkdir()
     body = b"parser-only NAR transport fixture"
-    contents = {"database.sqlite": b"parser-only database fixture", "schema": b"10\n",
-                "path-00000.nar.gz": gzip.compress(body, mtime=0)}
+    contents = {
+        "database.sqlite": b"parser-only database fixture",
+        "schema": b"10\n",
+        "path-00000.nar.gz": gzip.compress(body, mtime=0),
+    }
     for name, content in contents.items():
         (directory / name).write_bytes(content)
+
     def entry(name):
         return {"file": name, "size": len(contents[name]), "sha256": hashlib.sha256(contents[name]).hexdigest()}
+
     binding = {"GITHUB_SHA": "a" * 40, "fixture_only": True}
     manifest = {
-        "schema": store_snapshot["SCHEMA"], "binding": binding,
-        "database": entry("database.sqlite"), "schema_file": entry("schema"),
+        "schema": store_snapshot["SCHEMA"],
+        "binding": binding,
+        "database": entry("database.sqlite"),
+        "schema_file": entry("schema"),
         "database_logical_sha256": "b" * 64,
-        "paths": [{**entry("path-00000.nar.gz"), "path": "/nix/store/" + "0" * 32 + "-fixture",
-                   "nar_sha256": hashlib.sha256(body).hexdigest(), "nar_size": len(body)}],
+        "paths": [
+            {
+                **entry("path-00000.nar.gz"),
+                "path": "/nix/store/" + "0" * 32 + "-fixture",
+                "nar_sha256": hashlib.sha256(body).hexdigest(),
+                "nar_size": len(body),
+            }
+        ],
     }
     content = json.dumps(manifest).encode()
     (directory / "manifest.json").write_bytes(content)
@@ -498,7 +511,10 @@ def test_store_metadata_is_immutable_without_following_external_link(store_snaps
         assert stat.S_IMODE(executable.stat().st_mode) == 0o555
         assert stat.S_IMODE(tree.stat().st_mode) == 0o555
         assert all(path.lstat().st_mtime_ns == 1_000_000_000 for path in (tree, regular, executable, link))
-        assert (outside.stat().st_mode, outside.stat().st_mtime_ns) == (outside_before.st_mode, outside_before.st_mtime_ns)
+        assert (outside.stat().st_mode, outside.stat().st_mtime_ns) == (
+            outside_before.st_mode,
+            outside_before.st_mtime_ns,
+        )
         assert regular.read_bytes() == b"ordinary" and executable.read_bytes() == b"executable"
         assert outside.read_bytes() == b"must remain untouched"
     finally:
@@ -524,8 +540,10 @@ def test_store_registration_digest_is_order_independent_and_binds_trust(store_sn
             connection.executescript(schema)
             for index in order:
                 path = "/nix/store/" + str(index) * 32 + "-fixture"
-                connection.execute("INSERT INTO ValidPaths VALUES (?,?,?,?,?,?,?)",
-                                   (index, path, "sha256:" + "0" * 64, 42, 1, "fixture-signature", None))
+                connection.execute(
+                    "INSERT INTO ValidPaths VALUES (?,?,?,?,?,?,?)",
+                    (index, path, "sha256:" + "0" * 64, 42, 1, "fixture-signature", None),
+                )
                 connection.execute("INSERT INTO DerivationOutputs VALUES (?,?,?)", (index, "out", path))
         summaries.append(store_snapshot["_db_info"](database))
     assert summaries[0]["logical_sha256"] == summaries[1]["logical_sha256"]
