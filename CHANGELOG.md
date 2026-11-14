@@ -27,6 +27,10 @@ locks.
   the retained experiment tree before recording any genuinely measured answer.
   Remove authored workstation-credential claims while preserving generated
   publication history and pending-release boundaries.
+- Limit own-coverage document setup to Search's real Pandoc consumer and EDA's
+  real XeLaTeX/font consumer. Preserve the complete release-profile suites,
+  locked readers, pinned Lean/TLC and Docker preparation, floors and deadlines;
+  complete native/publication acceptance retains its independent prerequisites.
 - Isolate smoke-path refusals behind a valid complete fixture and distinguish
   hostile foreign Git epochs from the nominated candidate. Retire workflow
   structure, Source-substring and re-export assertion pins while retaining

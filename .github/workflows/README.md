@@ -20,6 +20,10 @@ Source-derived roster in one dispatch, with four concurrent projects and separat
 commit/input-hash bound artifacts. Its optional project input selects exactly
 one public exemplar. Require every selected measurement and the final matrix
 gate, then verify the retrieved artifacts before updating coverage provenance.
+The reusable coverage job prepares document providers only for Search's real
+Pandoc consumer and EDA's real XeLaTeX/font test. Other own suites retain their
+locked Python readers and existing tools; full native/publication acceptance
+still prepares every required provider separately.
 The ordinary `CI Gate` also requires both complementary infrastructure lanes and
 accepts the optional coverage job's skip only when unrequested.
 
@@ -214,9 +218,17 @@ For root 4+, the release body uses `docs/releases/<tag>.md` for its actual tag
 (see the [release-note index](../../docs/releases/README.md)) and appends
 the accepted commit, hosted run and receipt SHA256. Assets are the admitted
 installed wheel, exact final source distribution, tag-selected overview PNG and
-byte manifest; retrieved asset hashes must match. Publication creates a new
-release with authored notes, not automatic notes or an upsert: existing releases,
-including drafts, are refused before `gh release create --verify-tag`.
+byte manifest. The workflow refuses every existing matching release, including
+drafts, rechecks the tag commit, and creates one new owned draft through the
+GitHub API. It retains the returned release ID, uploads only those four assets,
+then independently retrieves and verifies their exact admitted bytes before
+publication. It rechecks the same draft ID, tag/source and stable uploaded asset
+inventory before publishing only that ID; this transition may trigger public
+Zenodo archival and requires the applicable publication consent. The public
+release and all four assets are independently retrieved and verified again.
+There is no automatic-notes release, upsert, existing-draft adoption, asset
+replacement or implicit tag creation. A failed owned draft is retained for
+explicit recovery; do not blindly replay publication.
 Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
 The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) uses the Node 24 JavaScript action runtime.

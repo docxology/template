@@ -20,6 +20,10 @@ Source-derived roster in one dispatch, with four concurrent projects and separat
 commit/input-hash bound artifacts. Its optional project input selects exactly
 one public exemplar. Require every selected measurement and the final matrix
 gate, then verify the retrieved artifacts before updating coverage provenance.
+The reusable coverage job prepares document providers only for Search's real
+Pandoc consumer and EDA's real XeLaTeX/font test. Other own suites retain their
+locked Python readers and existing tools; full native/publication acceptance
+still prepares every required provider separately.
 The ordinary `CI Gate` also requires both complementary infrastructure lanes and
 accepts the optional coverage job's skip only when unrequested.
 
@@ -336,8 +340,10 @@ Triggers only on `workflow_dispatch` with an explicit existing tag. Dispatches s
 5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
 7. Selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings
-8. Refuses existing releases, including drafts, then uses `gh release create --verify-tag` with authored notes and the admitted distributions, tag-selected overview PNG and byte manifest; no release upsert, asset replacement or implicit tag creation
-9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
+8. Refuses every existing matching release, including drafts, rechecks the exact tag commit, then creates one new owned draft through the GitHub API with authored notes; retains that returned release ID and never upserts, adopts a draft, replaces assets or creates a tag
+9. Uploads the four admitted assets only to that ID, independently retrieves all four and verifies their exact admitted bytes while the release is still a draft
+10. Rechecks the owned ID, tag/source and stable asset IDs, names, sizes and uploaded states before publishing only that draft ID; this transition may trigger public Zenodo archival and therefore requires the applicable publication consent
+11. Independently retrieves the same public release and all four public assets and verifies their exact admitted hashes again; tags containing `-rc`, `-beta` or `-alpha` are pre-releases. A failed owned draft remains evidence for explicit recovery, not permission to replay creation or overwrite assets
 
 The candidate [`platform-required-acceptance.yml`](platform-required-acceptance.yml)
 implements four supported Root host/minor units plus common and native

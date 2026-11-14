@@ -107,7 +107,9 @@ jobs:
         if: inputs.coverage-project == 'templates/template_advanced_literature_review'
         with:
           python-executable: projects/${{ inputs.coverage-project }}/.venv/bin/python
+      # Own-suite consumers only; complete native acceptance remains independent.
       - uses: ./.github/actions/setup-acceptance-documents
+        if: inputs.coverage-project == 'templates/template_eda_notebook' || inputs.coverage-project == 'templates/template_search_project'
         with:
           mode: ${{ inputs.coverage-project == 'templates/template_eda_notebook' && 'native' || 'converter' }}
       - name: Prepare the selected pinned Lean toolchain
