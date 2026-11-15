@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 10.495560646057129
+      "total_size_mb": 10.495976448059082
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -239,12 +239,12 @@
     ],
     "figures": {
       "files": 96,
-      "size_mb": 2.2752389907836914
+      "size_mb": 2.27545166015625
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 2.1206398010253906
+      "size_mb": 2.1208438873291016
     },
     "stable_inventory": {
       "categories": {
@@ -258,15 +258,15 @@
         },
         "epub": {
           "files": 1,
-          "size_bytes": 1233522
+          "size_bytes": 1233521
         },
         "figures": {
           "files": 96,
-          "size_bytes": 2385761
+          "size_bytes": 2385984
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 2223652
+          "size_bytes": 2223866
         },
         "release": {
           "files": 2,
@@ -283,7 +283,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 11005393
+      "total_size_bytes": 11005829
     }
   },
   "recommendations": [],
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-14T23:54:21Z",
+  "timestamp": "2026-11-15T03:41:43Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "07d79ddcceb8c40e74d6456da2c7e94f5391f5655ca346864976773ebecb4474",
+      "sha256": "b06b1973fc79ab77648ea2f098421b33f48a2736165b2ee70e4fe266d11ee90d",
       "size_bytes": 56388
     },
     "combined_manuscript": {
@@ -614,7 +614,7 @@
       },
       "output": {
         "file_count": 160,
-        "sha256": "59766f85a383b16731cfdc250ed809502bcd5a9a8cb29ecd8f4ce5ae8cd56b83"
+        "sha256": "63aed6d14f9919b776d6794a1d705d01334dcf9b9b020a7917e2e9f0d4999de0"
       },
       "source": {
         "file_count": 94,
