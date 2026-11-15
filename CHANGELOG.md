@@ -43,6 +43,12 @@ locks.
 - Bind Root-policy preparation and all four collectors directly to the immutable
   workflow-dispatch SHA. Keep the explicit caller-SHA equality assertion without
   letting caller input select code executed against that ref's caches.
+- Preserve declared external obligations in genuine Root authoring and optional
+  catalog controls. Retire obsolete declaration/count/wording pins without
+  replacing them with new totals; retain real selected-runtime and custody tests.
+- Retain failed provider command stdout and exits through bounded failure-only
+  artifacts, rather than losing them with disposable runners. Preserve original
+  failures, Source pins and clocks; diagnostics never authorize a retry or pass.
 - Refresh all 25 own release-profile coverage records from authenticated
   November 14 originals, retaining exact current project/support inputs.
   Import only the five actual percentage deltas; collection totals still come

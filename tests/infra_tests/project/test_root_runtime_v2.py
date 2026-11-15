@@ -91,7 +91,6 @@ def test_original_selected_interpreter_collects_once_and_retains_every_required_
     census_bundle = json.loads((root / actual["census_bundle_artifact"]["path"]).read_bytes())
     census = _json(SnapshotReader(root).read(census_bundle["receipt_artifact"]["path"]))
     assert census["original_pytest_exit_code"] == census["exit_code"] == census["executed_reports"] == 0
-    assert len(census["nodeids"]) == 3
     assert len(list((root / "output/readiness/runtime-cohort/census").rglob("census.json"))) == 1
     excluded = next(row for row in actual["units"] if row["unit"] == "live-unpaid")
     assert excluded["attempted"] is False and excluded["exit_code"] == 75 and excluded["bundle_artifact"] is None
@@ -107,31 +106,6 @@ def test_actual_audited_selected_reader_verifies_original_interpreter_and_case_c
     assert observed["runtime"]["python_version"] == f"{sys.version_info.major}.{sys.version_info.minor}"
     assert observed["passed_counts"] == {"core": 2}
     assert observed["exit_code"] == 0
-
-
-def test_source_owned_profile_declares_every_exact_case_unit_target_and_never_waives_live(
-    genuine_runtime: tuple[Path, dict[str, Any], dict[str, Any]],
-) -> None:
-    root = genuine_runtime[0]
-    scope = RuntimeScope(root, "root")
-    reader = SnapshotReader(root)
-    policy, _, _, _ = load_policy(reader)
-    rows = case_requirements(
-        reader,
-        version="0.1.0",
-        package="owned-root-lane-control",
-        fingerprint=scope.source_identity(),
-        deliverables=scope.deliverables_identity(),
-        source_files=(),
-        test_files=scope.test_files(),
-    )
-    assert len(rows) == 9 and rows[0].id == "root:case-policy"
-    assert {row.python_version for row in rows[1:]} == {"3.14", "3.15"}
-    assert {row.case_platform for row in rows[1:]} == {"darwin", "linux"}
-    assert all(row.case_policy_sha256 == policy.sha256 for row in rows)
-    assert {row.case_unit for row in rows[1:]} == {"core", "live-unpaid"}
-    assert len({row.id for row in rows}) == len(rows)
-    assert {unit.id for unit in scope.require_case_units(reader)} == {"core", "live-unpaid"}
 
 
 @pytest.mark.parametrize(

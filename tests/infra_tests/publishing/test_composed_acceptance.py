@@ -123,4 +123,3 @@ def test_origin_verdict_accepts_a_completed_successful_run() -> None:
         )
         == "observed"
     )
-

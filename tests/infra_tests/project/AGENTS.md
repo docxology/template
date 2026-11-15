@@ -50,3 +50,10 @@ admission, strict fresh member/fixture review binding, executable workflow input
 admission and macOS export programs, full four-target/preparation delivery, and
 real CLI refusal before census on wrong Source. Component DATA fixtures never
 stand in for an original census or classified runtime acceptance.
+
+Root authoring and optional-catalog runtime controls preserve every retained
+shared-fixture family's declared lane and required prerequisites, including
+external DATA. Do not default those cases to core or waive their obligations.
+Keep actual selected-interpreter, custody and unexecuted-catalog consumers,
+not declaration inventories or incidental family totals. Local nested pytest
+scratch must be physically outside every Source, Git and selected-runtime tree.

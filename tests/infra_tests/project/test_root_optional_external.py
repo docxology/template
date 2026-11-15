@@ -123,6 +123,8 @@ def test_actual_v3_runtime_retains_optional_catalog_without_executing_its_body(t
     from tests.infra_tests.project import test_root_case_lanes as controls
 
     root, _, _ = controls.genuine_lane.__wrapped__(tmp_path_factory)
+    fixture_policy = json.loads((root / "infrastructure/config/root-case-policy.json").read_bytes())
+    fixture_prerequisites = json.loads((root / "infrastructure/config/root-case-prerequisites.json").read_bytes())
     source = root / "tests/test_owned.py"
     source.write_text(source.read_text().split("@pytest.mark.requires_ollama")[0])
     catalog = root / OPTIONAL_MONID_FAMILY.split("::")[0]
@@ -144,31 +146,40 @@ def test_actual_v3_runtime_retains_optional_catalog_without_executing_its_body(t
     rows = _json(SnapshotReader(root).read(first["receipt_artifact"]["path"]))["census"]["families"]
     policy = _value()
     policy["obligations"][0]["eligibility"]["reference_sha256"] = hashlib.sha256(review_path.read_bytes()).hexdigest()
+    fixture_families = {row["id"]: row for row in fixture_policy["families"]}
+    retained_obligations = {
+        obligation
+        for row in rows
+        if row["id"] != OPTIONAL_MONID_FAMILY
+        for obligation in fixture_families[row["id"]]["obligations"]
+    }
+    policy["obligations"].extend(row for row in fixture_policy["obligations"] if row["id"] in retained_obligations)
     policy["families"] = [
         {key: row[key] for key in ("id", "members", "source_sha256", "metadata_sha256")}
-        | {
-            "lane": "optional-external" if row["id"] == OPTIONAL_MONID_FAMILY else "core",
-            "obligations": ["monid-discover"] if row["id"] == OPTIONAL_MONID_FAMILY else [],
-        }
+        | (
+            {"lane": "optional-external", "obligations": ["monid-discover"]}
+            if row["id"] == OPTIONAL_MONID_FAMILY
+            else {key: fixture_families[row["id"]][key] for key in ("lane", "obligations")}
+        )
         for row in rows
     ]
     (root / "infrastructure/config/root-case-policy.json").write_text(json.dumps(policy))
-    (root / "infrastructure/config/root-case-prerequisites.json").write_text(
-        json.dumps(
+    prerequisites = {
+        "schema_version": "template-root-case-prerequisites-v2",
+        "obligations": [
             {
-                "schema_version": "template-root-case-prerequisites-v2",
-                "obligations": [
-                    {
-                        "id": "monid-discover",
-                        "kind": "network-unverified",
-                        "environment_keys": ["MONID_API_KEY"],
-                        "executables": [],
-                        "platforms": [],
-                    }
-                ],
+                "id": "monid-discover",
+                "kind": "network-unverified",
+                "environment_keys": ["MONID_API_KEY"],
+                "executables": [],
+                "platforms": [],
             }
-        )
+        ],
+    }
+    prerequisites["obligations"].extend(
+        row for row in fixture_prerequisites["obligations"] if row["id"] in retained_obligations
     )
+    (root / "infrastructure/config/root-case-prerequisites.json").write_text(json.dumps(prerequisites))
     probe = _probe_runtime(
         root,
         root / "output/readiness/optional-probe",

@@ -179,6 +179,7 @@ runs:
           restore "$NIX_STORE_SNAPSHOT" --nix-binary "$(command -v nix)" \
           --manifest-sha256 "$NIX_STORE_MANIFEST_SHA256"
     - name: Prepare exact compatible Pandoc and cross-reference binaries
+      id: document-providers
       shell: bash
       env:
         PREPARED_PYTHON: ${{ inputs.python-executable }}
@@ -195,6 +196,8 @@ runs:
         archives="$RUNNER_TEMP/template-acceptance-document-archives"
         preparation=$(mktemp -d "$RUNNER_TEMP/template-document-preparation.XXXXXX")
         destination="$preparation/bin"
+        echo "diagnostics-directory=$destination" >> "$GITHUB_OUTPUT"
+        echo "diagnostics-id=$(basename "$preparation")" >> "$GITHUB_OUTPUT"
         arguments=(--source-root "$GITHUB_WORKSPACE" --archives "$archives" --destination "$destination")
         if [ "$RUNNER_OS" = Linux ]; then
           arguments+=(--nix-executable "$(command -v nix)" --nix-sudo)
@@ -204,6 +207,16 @@ runs:
           "$GITHUB_WORKSPACE" "${arguments[@]}"
         echo "$destination" >> "$GITHUB_PATH"
         echo "TEMPLATE_DOCUMENT_PROVIDER_PROVENANCE=$destination/document-provider-provenance.json" >> "$GITHUB_ENV"
+    - name: Retain original failed provider command diagnostics
+      if: failure() && runner.os == 'Linux' && steps.document-providers.outcome == 'failure' && steps.document-providers.outputs.diagnostics-directory != ''
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: document-provider-preparation-${{ github.job }}-${{ steps.document-providers.outputs.diagnostics-id }}-${{ github.run_id }}-${{ github.run_attempt }}
+        path: |
+          ${{ steps.document-providers.outputs.diagnostics-directory }}/nix-*.stdout
+          ${{ steps.document-providers.outputs.diagnostics-directory }}/nix-*.command.json
+        if-no-files-found: error
+        retention-days: 30
     - name: Prepare the frozen tagging-capable Linux TeX distribution
       if: steps.preparation-mode.outputs.mode == 'native' && runner.os == 'Linux'
       shell: bash

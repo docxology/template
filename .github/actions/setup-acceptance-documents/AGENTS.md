@@ -30,6 +30,13 @@ Cached data cannot supply test outcomes or acceptance.
 Run `actionlint` after edits and retain genuine failed preparation diagnostics.
 See [README.md](README.md) for usage.
 
+Linux provider failure retention uses only the actual fresh destination's
+`nix-*.stdout` and `nix-*.command.json` files. Publish that destination and its
+unique scratch identity before the command starts so a nonzero exit cannot
+erase its captured stdout. Retain the original job stderr and failed outcome;
+never upload a whole preparation tree/store, retry the producer, relax pins or
+promote diagnostics to runtime acceptance.
+
 The single pin source is `infrastructure/config/native-document-providers.json`,
 interpreted by the pure closed-union `native_document_provider_contracts` API.
 Do not duplicate platform archive pins in shell. Linux x86_64 uses the held,

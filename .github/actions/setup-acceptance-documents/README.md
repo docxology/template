@@ -71,8 +71,8 @@ checks, package selections or overall job budgets. This is not a total
 installation deadline or an acceptance result.
 
 In native mode, the action prepares pinned Pandoc and crossref before the shared system-dependency
-audit, then installs the complete Linux TeX/reader package union in one step or
-prepares BasicTeX and native readers on macOS. Both platforms probe the selected
+audit, then installs one frozen Linux TeX tree and its selected native readers;
+macOS prepares BasicTeX and native readers. Both platforms probe the selected
 Pandoc/crossref, XeLaTeX, BibTeX, `pdftoppm`, and `pdffonts` executables. Linux
 selects the upstream plain-generic collection, which supplies `soul.sty` for the
 selected Pandoc highlighting preamble. Both platforms resolve `soul.sty` with
@@ -102,6 +102,12 @@ paths in the fresh preparation directory. Its
 `runtime_acceptance: false`; native TeX provenance includes that record.
 Neither provenance nor a cache hit replaces the genuine Original/Current
 process, archive/body, loader, map, memory, lifecycle and readback admissions.
+When a Linux provider command fails, the action retains its original captured Nix
+stdout and command/exit JSON for thirty days as a uniquely named
+`document-provider-preparation-…` artifact. Stderr remains in the original job
+log. Only those bounded command files are uploaded, never a recursive Source
+tree, compiler store or runtime. The original failure remains a failure; this
+diagnostic supplies neither a retry nor acceptance evidence.
 
 Converter preparation supports the ordinary tests that require Pandoc and
 crossref; it cannot provide evidence for native-format acceptance. No test,
