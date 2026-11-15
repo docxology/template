@@ -8318,9 +8318,8 @@
     },
     {
       "path": "tests/infra_tests/documentation/test_counts_coverage_support.py",
-      "source_sha256": "282839655a172ef9b12c1bbaeabb9048c7871e953f977b4d566d38482e8bef98",
+      "source_sha256": "e6d5590136863d6ea5c799eece85ee13201ec2cc151ee731b668537b191086a4",
       "families": [
-        "tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_support_closure_exactly_matches_outward_documentation_links",
         "tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_support_identity_binds_contract_bytes_but_not_counts_content",
         "tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_support_identity_rejects_missing_or_wrong_type",
         "tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_workspace_passes_documentation_and_inventory_nodes",
@@ -8329,7 +8328,7 @@
         "tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_workspace_rejects_symlinked_path_component_without_touching_target",
         "tests/infra_tests/documentation/test_counts_coverage_support.py::test_active_coverage_workspace_rejects_symlinked_support_without_touching_target"
       ],
-      "family_observations_sha256": "8f2312e0a6eb2540e3911cd248e8884ad1d7dc5b4a694ed817b91e71e63a9981",
+      "family_observations_sha256": "0378b73e54b8c0ef6e0e824d8bfc5008f0b66e5e619b0663dfc9c47215457110",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -8347,7 +8346,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/documentation/test_counts_coverage_support.py",
-          "source_sha256": "282839655a172ef9b12c1bbaeabb9048c7871e953f977b4d566d38482e8bef98"
+          "source_sha256": "e6d5590136863d6ea5c799eece85ee13201ec2cc151ee731b668537b191086a4"
         }
       ]
     },
@@ -12922,20 +12921,13 @@
     },
     {
       "path": "tests/infra_tests/project/test_exemplar_roster.py",
-      "source_sha256": "8239f32f934635377f3f4c12fdbbaee6152dffcdcb47f2a7d2ba5d567ab38552",
+      "source_sha256": "8ee25f665065feb51082658f9def5040382bfadf73ef9797a7074160a9711c90",
       "families": [
-        "tests/infra_tests/project/test_exemplar_roster.py::test_collect_entries_covers_every_public_exemplar",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_committed_doc_in_sync_with_fresh_render",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_committed_manifest_in_sync_with_fresh_build",
         "tests/infra_tests/project/test_exemplar_roster.py::test_derived_guard_dirs_are_concrete_in_tree_template_dirs",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_readme_generated_rosters_in_sync",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_rendered_doc_has_one_row_per_exemplar",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_run_via_monorepo_sections_present",
         "tests/infra_tests/project/test_exemplar_roster.py::test_template_manifest_covers_every_public_exemplar",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_template_manifest_rows_are_agent_queryable",
-        "tests/infra_tests/project/test_exemplar_roster.py::test_use_when_sections_present_beyond_known_exceptions"
+        "tests/infra_tests/project/test_exemplar_roster.py::test_template_manifest_rows_are_agent_queryable"
       ],
-      "family_observations_sha256": "51cd0ee1b5989d17901733252d2625aeb2039fb6e6749a9e8cb1e9e3043f0c82",
+      "family_observations_sha256": "21cba72bbec8b465c525c7721334edd240eb9dffdf3d6c160fe922541f9cf21d",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -12945,7 +12937,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/project/test_exemplar_roster.py",
-          "source_sha256": "8239f32f934635377f3f4c12fdbbaee6152dffcdcb47f2a7d2ba5d567ab38552"
+          "source_sha256": "8ee25f665065feb51082658f9def5040382bfadf73ef9797a7074160a9711c90"
         }
       ]
     },
@@ -14776,7 +14768,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_capabilities.py",
-      "source_sha256": "b76093e2304c7f4badf4f18a4cfe6c08a1a37a101c9f9a8efa415a612453746d",
+      "source_sha256": "dd6e8a68237347de3594c810913ee322f3eafe208ceb7f8562657dbd884a4fac",
       "families": [
         "tests/infra_tests/project/test_public_capabilities.py::test_analysis_allowlist_fails_closed_on_escaping_entrypoint",
         "tests/infra_tests/project/test_public_capabilities.py::test_analysis_allowlist_retains_missing_producer_diagnostic",
@@ -14785,7 +14777,6 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_ci_python_floor_must_include_every_canonical_version",
         "tests/infra_tests/project/test_public_capabilities.py::test_disabled_formats_and_no_hydrator_are_valid_without_live_tokens",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_font_archive_cache_refuses_corruption_before_use",
-        "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_publishes_only_validated_mode",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_rejects_invalid_mode_before_setup",
         "tests/infra_tests/project/test_public_capabilities.py::test_document_preparation_requires_locked_python_for_native_or_linux",
         "tests/infra_tests/project/test_public_capabilities.py::test_hydration_entrypoint_must_be_confined_without_symlinks",
@@ -14807,7 +14798,7 @@
         "tests/infra_tests/project/test_public_capabilities.py::test_skip_decorator_requires_a_reason",
         "tests/infra_tests/project/test_public_capabilities.py::test_skipif_condition_is_not_mistaken_for_a_reason"
       ],
-      "family_observations_sha256": "170814cd66dcce211cb496130ad4cb264a7ec7412d27c823a6cc02f8944b5740",
+      "family_observations_sha256": "e029f9b492b6e7b685ec1fed4475b669e1b0be9d5af864813ef25c0c3a7f43fe",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -14815,9 +14806,9 @@
       "exceptions": [],
       "evidence": [
         {
-          "line": 82,
+          "line": 1,
           "path": "tests/infra_tests/project/test_public_capabilities.py",
-          "source_sha256": "b76093e2304c7f4badf4f18a4cfe6c08a1a37a101c9f9a8efa415a612453746d"
+          "source_sha256": "dd6e8a68237347de3594c810913ee322f3eafe208ceb7f8562657dbd884a4fac"
         }
       ]
     },
@@ -15108,19 +15099,18 @@
     },
     {
       "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-      "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7",
+      "source_sha256": "c5306b736de627c70abb5c641275448efd18f78592f0d9ea661f4c47422be8ab",
       "families": [
         "tests/infra_tests/project/test_public_root_policy_census.py::test_actual_cli_refuses_wrong_source_before_collecting_or_writing_evidence",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_actual_macos_export_program_keeps_hidden_evidence_and_excludes_only_declared_pytest_scratch",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_actual_workflow_shell_admits_only_exact_source_and_unambiguous_review_inputs",
-        "tests/infra_tests/project/test_public_root_policy_census.py::test_census_delivery_matches_current_root_frontdoor_and_all_supported_targets",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_fresh_decisions_bind_current_census_and_preserve_only_explicit_reviewed_classifications",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_real_failed_coordinator_retains_its_actual_streams_without_acceptance",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_review_refuses_missing_or_changed_family_member_and_fixture_metadata",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_template_reads_only_the_actual_committed_regular_source_bytes",
         "tests/infra_tests/project/test_public_root_policy_census.py::test_template_refuses_foreign_mutable_or_uncommitted_nominations"
       ],
-      "family_observations_sha256": "ef3e6135d5e575c8902cec1ccc789337eb82d103d4f43c93e2e94ffa55bee161",
+      "family_observations_sha256": "4d0c6e57077cad4064179b029a2674f794e11714648ae767240c231d0c4cf610",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -15135,11 +15125,6 @@
         },
         {
           "id": "tests/infra_tests/project/test_public_root_policy_census.py::test_actual_workflow_shell_admits_only_exact_source_and_unambiguous_review_inputs",
-          "lane": "core",
-          "obligations": []
-        },
-        {
-          "id": "tests/infra_tests/project/test_public_root_policy_census.py::test_census_delivery_matches_current_root_frontdoor_and_all_supported_targets",
           "lane": "core",
           "obligations": []
         },
@@ -15163,32 +15148,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-          "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7"
-        },
-        {
-          "line": 112,
-          "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-          "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7"
-        },
-        {
-          "line": 136,
-          "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-          "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7"
-        },
-        {
-          "line": 208,
-          "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-          "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7"
-        },
-        {
-          "line": 295,
-          "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-          "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7"
-        },
-        {
-          "line": 320,
-          "path": "tests/infra_tests/project/test_public_root_policy_census.py",
-          "source_sha256": "08a452cbf4810f88ef7e68fbc81d1134b97ca16bfd53e8c4ea3aff8b7f9ec2d7"
+          "source_sha256": "c5306b736de627c70abb5c641275448efd18f78592f0d9ea661f4c47422be8ab"
         }
       ]
     },
@@ -31393,11 +31353,12 @@
     },
     {
       "path": "tests/infra_tests/reporting/test_readiness_source_traversal.py",
-      "source_sha256": "b40a15b7560fa3c1925c806fb569eb6c942f244e16f15f2835e7a392e0a16946",
+      "source_sha256": "3b24136f262ad86ba1f1771c957349436425c5ebac1687fa38337f7cb41519db",
       "families": [
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_authored_add_delete_and_rename_remain_bound",
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_bounded_digest_refuses_symlink_after_warm_observation",
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_bounded_digest_reobserves_same_size_bytes_even_with_restored_mtime",
+        "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_current_source_census_reobserves_names_and_bytes_after_snapshot",
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_declared_lean_build_root_is_not_traversed",
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_declared_lean_pins_and_implementation_remain_source",
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_declared_lean_source_identity_is_portable_even_when_git_tracks_build_data",
@@ -31411,7 +31372,7 @@
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_undeclared_or_arbitrary_nested_lake_remains_authored_source",
         "tests/infra_tests/reporting/test_readiness_source_traversal.py::test_unexcluded_symlinks_are_still_rejected"
       ],
-      "family_observations_sha256": "6b4fbc2376271faaf0f907538e359eb2ca378d7b53eb95e65f63fac62b63b6b3",
+      "family_observations_sha256": "bd170a9800c2e4ce0520ce0b4e3f8bfcc66be5a4a0b1fb6beffeda1caad66679",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -31429,7 +31390,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/reporting/test_readiness_source_traversal.py",
-          "source_sha256": "b40a15b7560fa3c1925c806fb569eb6c942f244e16f15f2835e7a392e0a16946"
+          "source_sha256": "3b24136f262ad86ba1f1771c957349436425c5ebac1687fa38337f7cb41519db"
         }
       ]
     },

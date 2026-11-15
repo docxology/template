@@ -59,6 +59,10 @@ SHA-256 and length and have a real installed glibc ELF `PT_INTERP`; no binary
 instrumentation or wrapper is substituted. Canonical single-member `tar.xz`
 archives retain those unchanged binaries. Compression bytes and build JSON are
 transport/provenance, not authenticity: the pinned executable body is authoritative.
+Linux uses fast XZ transport encoding with unchanged canonical member headers.
+The 64 MiB compressed and 512 MiB executable ceilings, complete archive decoding
+and exact whole-executable pins still apply. Compression is preparation work,
+not a reason to increase the test clock or add another preparation allocation.
 The Nix output GC root remains in its separate private runtime directory, outside
 the public tool assets handed to the isolated CI user. The full store closure
 stays installed; the execution profile still refuses escaping asset symlinks.

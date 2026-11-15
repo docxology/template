@@ -205,7 +205,8 @@ def _official_archive(archives: Path, pin: dict[str, Any], *, deadline: float) -
 
 def _canonical_archive(body: bytes, member: str) -> bytes:
     stream = BytesIO()
-    with tarfile.open(fileobj=stream, mode="w:xz", format=tarfile.USTAR_FORMAT, preset=6) as archive:
+    # Source pins the unchanged executable, not expensive transport compression.
+    with tarfile.open(fileobj=stream, mode="w:xz", format=tarfile.USTAR_FORMAT, preset=1) as archive:
         row = tarfile.TarInfo(member)
         row.size, row.mode, row.mtime = len(body), 0o755, 0
         archive.addfile(row, BytesIO(body))

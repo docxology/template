@@ -63,6 +63,10 @@ locks.
   census reapplies public path policy. Preserve fresh digest comparisons,
   per-file and aggregate byte ceilings, and the final physical snapshot guard;
   retain real added-file, same-size overwrite, ABA and symlink controls.
+- Encode unchanged Source-built Linux document binaries with fast XZ transport
+  compression instead of spending the ordinary CI preparation window on the
+  archive envelope. Keep exact executable pins, canonical single-member headers,
+  complete decoding, both byte ceilings and every original clock unchanged.
 - Refresh all 25 own release-profile coverage records from authenticated
   November 14 originals, retaining exact current project/support inputs.
   Import only the five actual percentage deltas; collection totals still come
