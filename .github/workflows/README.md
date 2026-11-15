@@ -287,9 +287,11 @@ jobs:
 
 
 `root-policy-census.yml` is manual collection/review only. Its four Linux/Darwin
-3.14/3.15 targets admit the exact dispatch SHA and use the current Root-original
-locked groups and pinned fixture/document/browser/model preparation chain. The
-existing pinned model readiness inference is preparation, not an executed Root
+3.14/3.15 targets admit the exact dispatch SHA. Preparation and collection check
+out `github.sha` directly; `source_sha` is only an equality assertion, never a
+selector for code executed against the dispatch ref's caches. They retain the
+Root-original locked groups and pinned fixture/document/browser/model preparation
+chain. Model readiness inference remains preparation, not an executed Root
 test or unpaid-capability producer. Linux keeps the existing unprivileged
 execution profile; owned-daemon cleanup and bounded export run after collection.
 Both original CLI streams/exit and all census/ledger bindings are retained with

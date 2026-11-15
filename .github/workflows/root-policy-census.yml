@@ -67,9 +67,11 @@ jobs:
               ;;
             *) exit 1 ;;
           esac
+      # The caller's SHA is an assertion, never a checkout selector. Keep
+      # prepared code and caches within the immutable workflow-dispatch ref.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.source_sha }}
+          ref: ${{ github.sha }}
           submodules: true
           persist-credentials: false
       - uses: ./.github/actions/setup-python-env
@@ -124,7 +126,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.source_sha }}
+          ref: ${{ github.sha }}
           submodules: true
           persist-credentials: false
       - uses: ./.github/actions/setup-python-env

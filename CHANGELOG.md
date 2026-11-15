@@ -40,6 +40,9 @@ locks.
   root-private custody and unprivileged handoff; refuse foreign, linked,
   corrupt, busy or nonempty input. Keep signed clients, trust metadata,
   source/derivation/body verification and all original census clocks.
+- Bind Root-policy preparation and all four collectors directly to the immutable
+  workflow-dispatch SHA. Keep the explicit caller-SHA equality assertion without
+  letting caller input select code executed against that ref's caches.
 - Refresh all 25 own release-profile coverage records from authenticated
   November 14 originals, retaining exact current project/support inputs.
   Import only the five actual percentage deltas; collection totals still come
