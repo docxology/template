@@ -31,7 +31,7 @@
     },
     "template_eda_notebook": {
       "coverage_pct": "91.01 %",
-      "source_hash": "9750231b1ea97d79bd0f627fbc77dccd017551217023a0a7dc9d504e8d1712af"
+      "source_hash": "2db6a1e84814ade72ae173e018455c79750e53716f51f29f5b564bf2023d6d0d"
     },
     "template_experiment_tree": {
       "coverage_pct": "91.85 %",
@@ -103,7 +103,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "bd3ffc530a847b92251e0bd95808584dea8dec88",
+  "source_commit": "1c0fe146bfb31ebb1bfda560975277a2b54b3614",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -212,7 +212,7 @@
       "template_autoscientists": "34a36e60b65c27acdfe78f1fe14172e2ba67213a7601e89be01526a3327176c1",
       "template_code_project": "22f091204ee2a6a7fc36a25c09f4d39dc85e163fa21da85670930d499bc60e85",
       "template_data_descriptor": "2d691c2285ee7b78098fecbf7761b9e08558341bd14e6c744948fd2b2c54496a",
-      "template_eda_notebook": "9750231b1ea97d79bd0f627fbc77dccd017551217023a0a7dc9d504e8d1712af",
+      "template_eda_notebook": "2db6a1e84814ade72ae173e018455c79750e53716f51f29f5b564bf2023d6d0d",
       "template_experiment_tree": "0761a386d526e25a3122b1de2289d33cd7dd015f104a594e82402b301c844dbc",
       "template_formal": "94f333ff5445ae646acde89036fee2cf5df15796178c30b59f46de7fc187eb6d",
       "template_gold_refinement": "0bc7c6f07172dce7997bc10c944f0df7420dbf2db0a7b7041b7c072cc080565f",
