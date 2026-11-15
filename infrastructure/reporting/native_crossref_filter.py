@@ -16,6 +16,7 @@ from typing import Any, Iterator
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
+from infrastructure.rendering.combined_native_commands import PANDOC_HTML_WRITER
 from infrastructure.reporting.native_crossref_exit_dispatch import (
     SourceFilterExitObserver,
     register_filter_exit,
@@ -295,7 +296,7 @@ def prepare_source_crossref_filter(
     """Nominate current Source/SDK/wrapper before Pandoc consumes any filter JSON."""
     remaining(deadline)
     require_filter_exit_capability()
-    if output_format not in {"latex", "html", "docx", "epub", "epub3", "json"}:
+    if output_format not in {"latex", PANDOC_HTML_WRITER, "docx", "epub", "epub3", "json"}:
         raise ValueError("filter requires one exact Source-selected Pandoc output format")
     owner = current_native_producer_operation()
     if owner is None or reader.root != root.resolve() or owner.deadline < deadline:

@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 RENDERER_CROSSREF_SCHEMA = "template-source-native-renderer-crossref-parser-v1"
+PANDOC_HTML_WRITER = "html5"
 
 
 def pre_crossref_json_command(command: list[str], writer: str) -> list[str]:
@@ -39,7 +40,7 @@ def pre_crossref_json_command(command: list[str], writer: str) -> list[str]:
             raise ValueError("pre-Crossref PDF parser changed its exact selected writer")
         result[result.index("--to=latex")] = "--to=json"
     else:
-        if result.count("-t") != 1 or result[result.index("-t") + 1] != "html5":
+        if result.count("-t") != 1 or result[result.index("-t") + 1] != PANDOC_HTML_WRITER:
             raise ValueError("pre-Crossref HTML parser changed its exact selected writer")
         result[result.index("-t") + 1] = "json"
     return result
@@ -139,7 +140,7 @@ def html_combined_command(
         pandoc,
         str(combined),
         "-t",
-        "html5",
+        PANDOC_HTML_WRITER,
         "-o",
         str(output),
         "--standalone",

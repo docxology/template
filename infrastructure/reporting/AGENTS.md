@@ -569,6 +569,11 @@ Keep paired Crossref filter/compiler DATA in the enclosing fresh verification
 interval. Private DATA helpers must not become reusable admission, wrap native
 execution or bypass fresh public verification and live-callback custody.
 
+The combined renderer's `html` surface names the canonical Pandoc `html5`
+writer. `PANDOC_HTML_WRITER` owns that exact native filter token for both command
+construction and live filter nomination. Do not widen the paired launcher's
+exact argv check to accept aliases; all two-leg and live-original checks remain.
+
 
 Native hosted transport accepts one declared matrix scope or the complete ordered
 public roster; each receipt must match that exact completed selection. Original

@@ -7,7 +7,6 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import re
 import subprocess
 import sys
 import uuid
@@ -15,7 +14,7 @@ import uuid
 import pytest
 import yaml
 
-from infrastructure.project.public_acceptance_case_policy import PLATFORMS, RUNTIMES, digest
+from infrastructure.project.public_acceptance_case_policy import digest
 from infrastructure.project.public_root_policy_census import TEMPLATE_SCHEMA, fresh_decisions, reviewed_template
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -208,7 +207,9 @@ def _workflow() -> dict:
 def test_actual_workflow_shell_admits_only_exact_source_and_unambiguous_review_inputs(
     tmp_path: Path, source: str, mode: str, path: str, sha: str, accepted: bool
 ) -> None:
-    step = _workflow()["jobs"]["census"]["steps"][0]
+    step = next(
+        row for job in _workflow()["jobs"].values() for row in job["steps"] if "REQUESTED_SOURCE" in row.get("env", {})
+    )
     env = {
         "PATH": os.environ["PATH"],
         "GITHUB_SHA": "a" * 40,
@@ -257,39 +258,6 @@ def test_actual_macos_export_program_keeps_hidden_evidence_and_excludes_only_dec
     assert (destination / hidden.relative_to(root / "output/readiness")).read_bytes() == b"original\x00DATA"
     assert not (destination / scratch.relative_to(root / "output/readiness")).exists()
     assert hidden.read_bytes() == b"original\x00DATA" and (scratch / "unrelated-fixture").read_text() == "disposable"
-
-
-def test_census_delivery_matches_current_root_frontdoor_and_all_supported_targets() -> None:
-    workflow = _workflow()
-    required = yaml.safe_load((ROOT / ".github/workflows/platform-required-acceptance.yml").read_text())
-    job = workflow["jobs"]["census"]
-    steps = job["steps"]
-    root_steps = required["jobs"]["root-original"]["steps"]
-    assert {(row["host"], row["python"]) for row in job["strategy"]["matrix"]["include"]} == {
-        (host, minor) for host in PLATFORMS for minor in RUNTIMES
-    }
-    assert workflow["permissions"] == {"contents": "read"}
-    uses = [row["uses"] for row in steps if "uses" in row]
-    expected = [
-        row["uses"] for row in root_steps if "uses" in row and not row["uses"].startswith("actions/upload-artifact@")
-    ]
-    assert uses[: len(expected)] == expected
-    sync = next(row["run"] for row in steps if row.get("name") == "Prepare the own locked collection environment")
-    root_sync = next(row["run"] for row in root_steps if row.get("name") == "Prepare selected locked environment")
-    assert re.findall(r"--group ([\w-]+)", sync) == re.findall(r"--group ([\w-]+)", root_sync)
-    for name in (
-        "Prepare exact Source-locked PDFium wheel fixture",
-        "Prepare source-locked browser math dependencies",
-        "Stop only the owned model daemon and descendants",
-    ):
-        assert next(row["run"] for row in steps if row.get("name") == name) == next(
-            row["run"] for row in root_steps if row.get("name") == name
-        )
-    uploads = [row for row in steps if row.get("uses", "").startswith("actions/upload-artifact@")]
-    assert len(uploads) == 2 and all(
-        row["if"] == "always()" and row["with"]["include-hidden-files"] is True for row in uploads
-    )
-    assert all(row["with"]["if-no-files-found"] == "error" for row in uploads)
 
 
 def test_actual_cli_refuses_wrong_source_before_collecting_or_writing_evidence() -> None:

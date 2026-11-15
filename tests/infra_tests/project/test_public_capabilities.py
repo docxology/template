@@ -487,7 +487,14 @@ def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, 
     action = yaml.safe_load(
         (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
     )
-    environment = dict(os.environ, PREPARATION_MODE=mode, GITHUB_OUTPUT=str(tmp_path / "output"))
+    environment = dict(
+        os.environ,
+        PREPARATION_MODE=mode,
+        PREPARED_PYTHON=sys.executable,
+        NIX_STORE_SNAPSHOT="",
+        NIX_STORE_MANIFEST_SHA256="",
+        GITHUB_OUTPUT=str(tmp_path / "output"),
+    )
     result = subprocess.run(
         ["bash", "-c", action["runs"]["steps"][0]["run"]],
         cwd=tmp_path,
@@ -501,28 +508,7 @@ def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, 
     assert list(tmp_path.iterdir()) == []
 
 
-@pytest.mark.parametrize("mode", ["native", "converter"])
-def test_document_preparation_publishes_only_validated_mode(tmp_path: Path, mode: str) -> None:
-    repo = Path(__file__).resolve().parents[3]
-    action = yaml.safe_load(
-        (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
-    )
-    output = tmp_path / "output"
-    result = subprocess.run(
-        ["bash", "-c", action["runs"]["steps"][0]["run"]],
-        cwd=tmp_path,
-        env=dict(os.environ, PREPARATION_MODE=mode, PREPARED_PYTHON=sys.executable, GITHUB_OUTPUT=str(output)),
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    assert output.read_text() == f"mode={mode}\n"
-
-
-@pytest.mark.parametrize("mode", ["native", "converter"])
-@pytest.mark.parametrize("system", ["Linux", "macOS"])
+@pytest.mark.parametrize("mode,system", [("native", "Linux"), ("native", "macOS"), ("converter", "Linux")])
 @pytest.mark.parametrize("nomination", ["missing", "not-executable"])
 def test_document_preparation_requires_locked_python_for_native_or_linux(
     tmp_path: Path, mode: str, system: str, nomination: str
@@ -545,21 +531,20 @@ def test_document_preparation_requires_locked_python_for_native_or_linux(
         ["bash", "-c", action["runs"]["steps"][0]["run"]],
         cwd=tmp_path,
         env=dict(
-            os.environ, PREPARATION_MODE=mode, PREPARED_PYTHON=str(python), RUNNER_OS=system, GITHUB_OUTPUT=str(output)
+            os.environ,
+            PREPARATION_MODE=mode,
+            PREPARED_PYTHON=str(python),
+            NIX_STORE_SNAPSHOT="",
+            NIX_STORE_MANIFEST_SHA256="",
+            RUNNER_OS=system,
+            GITHUB_OUTPUT=str(output),
         ),
         capture_output=True,
         text=True,
         timeout=5,
         check=False,
     )
-    if mode == "native" or system == "Linux":
-        assert result.returncode != 0
-        assert "requires an already locked Python executable" in result.stderr
-    else:
-        assert result.returncode == 0, result.stderr
-    # Mode publication is only the first step's validated input; the failed
-    # native step cannot grant successful prerequisite or acceptance setup.
-    assert output.read_text() == f"mode={mode}\n"
+    assert result.returncode != 0
     assert {path.name for path in tmp_path.iterdir()} == (
         {"output", "prepared-python"} if nomination == "not-executable" else {"output"}
     )

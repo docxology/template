@@ -49,6 +49,16 @@ locks.
 - Retain failed provider command stdout and exits through bounded failure-only
   artifacts, rather than losing them with disposable runners. Preserve original
   failures, Source pins and clocks; diagnostics never authorize a retry or pass.
+- Exercise document-action refusals with the complete declared shell inputs and
+  find the actual dispatch guard by its input contract, not workflow step order.
+  Keep real Source and support-custody consumers; retire generated-copy,
+  heading-wording, outward-link inventory and output-echo assertions. Refresh the
+  public exemplar manifest and differentiation map through their canonical
+  generator rather than repinning stale test-file totals.
+- Nominate the actual `html5` Pandoc filter token from the shared combined-writer
+  contract instead of the `html` surface label. Preserve exact paired invocation,
+  live-process, Source, compiler and finite-clock checks; a host protocol smoke
+  is not frozen Linux native acceptance.
 - Refresh all 25 own release-profile coverage records from authenticated
   November 14 originals, retaining exact current project/support inputs.
   Import only the five actual percentage deltas; collection totals still come

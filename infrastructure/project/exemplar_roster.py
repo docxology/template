@@ -1,19 +1,11 @@
-"""Generated exemplar-roster differentiation map for the public template roster.
+"""Canonical public exemplar manifest, differentiation map and README routing.
 
-Builds ``docs/_generated/exemplar_roster.md`` from the single roster source of
-truth (:data:`infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`) plus
-each exemplar's own README and ``pyproject.toml``. The goal is a single,
-regenerable "copy THIS template when…" table so differentiation guidance can
-never silently rot in hand-maintained docs.
-
-Contract enforced here (and by ``tests/infra_tests/project/test_exemplar_roster.py``):
-
-- every public exemplar has a README with an H1 title;
-- every public exemplar README carries a ``## When to use this template``
-  section (temporary exceptions are pinned in :data:`KNOWN_MISSING_USE_WHEN`);
-- every public exemplar README carries a ``## Run via the template monorepo``
-  section linking to ``https://github.com/docxology/template``;
-- the generated doc contains exactly one row per public exemplar.
+All outputs derive from ``PUBLIC_PROJECT_NAMES`` and each exemplar's README,
+``pyproject.toml`` and actual test-file inventory. Regenerate with
+``scripts/docgen/exemplar_roster.py`` when those inputs change; its ``--check``
+mode is an explicit documentation-maintenance command, not native or release
+acceptance. Permanent tests cover the public manifest and physical tracking
+boundary rather than pinning generated copies, heading wording or test counts.
 """
 
 from __future__ import annotations

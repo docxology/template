@@ -143,6 +143,11 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 
 - `collect_entries(repo_root)` - build `ExemplarEntry` records from each public exemplar's README (H1 title + "When to use this template" section)
 - `ExemplarEntry` - structured roster entry; backs `docs/_generated/exemplar_roster.md`
+- `scripts/docgen/exemplar_roster.py` regenerates the JSON manifest, differentiation
+  map and README routing from those same inputs. Regenerate after exemplar
+  metadata or test-file inventory changes; `--check` is an explicit maintainer
+  command, not native or release acceptance. Tests retain public manifest and
+  physical tracking boundaries without pinning generated copies or headings.
 
 ### Package Discovery and Installed Acceptance
 
