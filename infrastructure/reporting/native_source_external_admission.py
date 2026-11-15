@@ -238,7 +238,14 @@ def _pure_source_records(root: Path, reader: SnapshotReader, deadline: float) ->
             if len(records) > MAX_FILES:
                 raise ValueError("native mirror source inventory exceeds the existing bound")
             if kind == "file":
-                snapshot = reader.read(relative)
+                # The fresh no-follow census applied lexical policy to every
+                # path. Reuse only its already-held bytes, never a validation
+                # result; the digest and final physical snapshot guard follow.
+                snapshot = reader.snapshots.get(path)
+                if snapshot is None:
+                    snapshot = reader.read(relative)
+                if len(snapshot.content) > 64 * 1024 * 1024:
+                    raise ValueError("held snapshot exceeds the admitted byte ceiling")
                 total_bytes += len(snapshot.content)
                 if snapshot.sha256 != digest or total_bytes > MAX_REFERENCE_BYTES:
                     raise ValueError("native mirror source changed or exceeds the existing held-byte bound")

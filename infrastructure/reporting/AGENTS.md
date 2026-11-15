@@ -574,6 +574,15 @@ writer. `PANDOC_HTML_WRITER` owns that exact native filter token for both comman
 construction and live filter nomination. Do not widen the paired launcher's
 exact argv check to accept aliases; all two-leg and live-original checks remain.
 
+The current-mirror Source census always freshly walks the no-follow canonical
+tree and reapplies public lexical policy. After that walk, immutable held file
+bytes may be reused, but their digest must match the fresh census, both byte
+ceilings still apply, and the final physical `SnapshotReader.unchanged()` guard
+must close the census. Never cache a validation result or merge this check across
+live tools or callbacks. The fast filesystem regression retains newly authored
+files and rejects same-size overwrites with restored mtime, Source ABA and
+symlink substitution. Local profiling is not native-format acceptance.
+
 
 Native hosted transport accepts one declared matrix scope or the complete ordered
 public roster; each receipt must match that exact completed selection. Original

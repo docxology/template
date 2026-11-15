@@ -59,6 +59,10 @@ locks.
   contract instead of the `html` surface label. Preserve exact paired invocation,
   live-process, Source, compiler and finite-clock checks; a host protocol smoke
   is not frozen Linux native acceptance.
+- Reuse immutable held Source bytes only after the fresh no-follow canonical
+  census reapplies public path policy. Preserve fresh digest comparisons,
+  per-file and aggregate byte ceilings, and the final physical snapshot guard;
+  retain real added-file, same-size overwrite, ABA and symlink controls.
 - Refresh all 25 own release-profile coverage records from authenticated
   November 14 originals, retaining exact current project/support inputs.
   Import only the five actual percentage deltas; collection totals still come
