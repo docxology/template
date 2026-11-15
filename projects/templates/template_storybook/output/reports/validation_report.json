@@ -203,7 +203,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 5.897022247314453
+      "total_size_mb": 5.8970232009887695
     },
     "figures": {
       "files": 15,
@@ -212,7 +212,7 @@
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 2,
-      "size_mb": 1.4801568984985352
+      "size_mb": 1.4801578521728516
     },
     "stable_inventory": {
       "categories": {
@@ -226,7 +226,7 @@
         },
         "pdf": {
           "files": 2,
-          "size_bytes": 1552057
+          "size_bytes": 1552058
         },
         "reports": {
           "files": 4,
@@ -243,7 +243,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 38,
-      "total_size_bytes": 6183476
+      "total_size_bytes": 6183477
     }
   },
   "recommendations": [],
@@ -254,11 +254,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-13T15:23:36Z",
+  "timestamp": "2026-11-14T23:54:21Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "7210617a8390fcd024b76dc1171f0d3b7a34e53c35878f8f481819b3c88b7184",
+      "sha256": "93c014f188908c594fb79b767bf6df4bd721ed50ecd5197ef4d9f9d3e2fd4bf6",
       "size_bytes": 12668
     },
     "combined_manuscript": {
@@ -316,15 +316,15 @@
       },
       "output": {
         "file_count": 38,
-        "sha256": "ee09516814f610c7672d15ce46e080967ce7d13dd32e46737a98a019a5db83c1"
+        "sha256": "1ec394bdb23a7ff2165b95ff8cadb57a0a50fd3e1d262f5f81096eaf3cf83a71"
       },
       "source": {
         "file_count": 35,
-        "sha256": "5e2252c9831dbe5a4f6f5778c880f1e01a33e7670938ec454e0a45aa2fe72fc0"
+        "sha256": "fe91c8a7fffe6a59e3b4a1a40b2497dc76f0c7f2f3ebbc1f9b1d90f03127327f"
       },
       "stage": {
-        "file_count": 1764,
-        "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
+        "file_count": 1774,
+        "sha256": "af443ba5952274510b7370964b36c97743bf968ea2a3c8d58ed6c09d461dd831"
       }
     },
     "project": "templates/template_storybook",

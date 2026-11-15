@@ -250,11 +250,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-13T15:23:36Z",
+  "timestamp": "2026-11-14T23:54:21Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "2ce0d9f97263089a6123aa036d3a552ef271ccad78300a5006039131a22351ae",
+      "sha256": "ad4a9b7883c4971cf753ca8e3e25a619247264cbb0633ed9cf657ec7d55c1f50",
       "size_bytes": 11447
     },
     "combined_manuscript": {
@@ -320,19 +320,19 @@
     "fingerprints": {
       "config": {
         "file_count": 14,
-        "sha256": "02760b61fdd287591b0df514af3b16e6da73033997259909a97a778975e0e9bc"
+        "sha256": "6324d55c20ae4fb9ac6b42082b906c1375d005415ad79c9f87c45c379dc14c6f"
       },
       "output": {
         "file_count": 35,
-        "sha256": "ba04261a4c7818b8752636a7eaa8856708ec6abe3c3b62d0c82db2c347d024c2"
+        "sha256": "7dcf3fe2f873779248feacdcc1bf32dd9e11e1b90d0e6459864280ba8211d659"
       },
       "source": {
         "file_count": 26,
         "sha256": "29c4b127e6feda496750dc2e9552e4eca3bbedfa77d924dccc39436d93959792"
       },
       "stage": {
-        "file_count": 1764,
-        "sha256": "259b1de3ed56ff437d39d3ed0200dd3e1b8c57ffdbba9b5558c0002a51325754"
+        "file_count": 1774,
+        "sha256": "af443ba5952274510b7370964b36c97743bf968ea2a3c8d58ed6c09d461dd831"
       }
     },
     "project": "templates/template_registered_report",
