@@ -15546,13 +15546,13 @@
     },
     {
       "path": "tests/infra_tests/project/test_root_optional_external.py",
-      "source_sha256": "f3f83f6b6fc4b4c1ef32d734920a84c14f1e75a2194f2e73820acbe100db32d3",
+      "source_sha256": "def3ca811e5b081b7cd56488c0b10c71d41f22fe96dc0fe124b9873e781f45e7",
       "families": [
         "tests/infra_tests/project/test_root_optional_external.py::test_actual_v3_runtime_retains_optional_catalog_without_executing_its_body",
         "tests/infra_tests/project/test_root_optional_external.py::test_optional_catalog_cannot_waive_another_case_or_scope",
         "tests/infra_tests/project/test_root_optional_external.py::test_optional_catalog_retains_full_census_and_every_mandatory_target_without_pass_claim"
       ],
-      "family_observations_sha256": "8909a84651c1d88eda33fd239b685808a2fa548767300041a6557bc3b15edc0e",
+      "family_observations_sha256": "03559a1c9c6e094b4f6aa915a9885565216d815719eb78f75f3ff50285b50c97",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -15562,13 +15562,13 @@
         {
           "line": 1,
           "path": "tests/infra_tests/project/test_root_optional_external.py",
-          "source_sha256": "f3f83f6b6fc4b4c1ef32d734920a84c14f1e75a2194f2e73820acbe100db32d3"
+          "source_sha256": "def3ca811e5b081b7cd56488c0b10c71d41f22fe96dc0fe124b9873e781f45e7"
         }
       ]
     },
     {
       "path": "tests/infra_tests/project/test_root_policy_authoring.py",
-      "source_sha256": "9cd1fbbec8d886d1e6f4603c5745f04ead388f4ecac315cb8ac3780d631159db",
+      "source_sha256": "001201702223c76e046fb42b2db389590240f181ea98d08264f220b21f0028dc",
       "families": [
         "tests/infra_tests/project/test_root_policy_authoring.py::test_actual_pinned_gitlink_is_inert_and_never_consumed_as_public_source_evidence",
         "tests/infra_tests/project/test_root_policy_authoring.py::test_genuine_census_cannot_default_or_omit_classification_and_public_source_evidence",
@@ -15577,7 +15577,7 @@
         "tests/infra_tests/project/test_root_policy_authoring.py::test_original_native_same_path_index_oid_change_is_refused_during_authoring",
         "tests/infra_tests/project/test_root_policy_authoring.py::test_rehashed_outer_failure_record_cannot_authorize_a_literal_policy"
       ],
-      "family_observations_sha256": "1bb60684b5e020ace34063a318683f9cfc893b3c62db8b94d19ebe0dfd9bbcb8",
+      "family_observations_sha256": "01c9326e488a6dd5d9dc4261c9a46918b89c105671d2582148a9ec1f04264557",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -15589,7 +15589,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/project/test_root_policy_authoring.py",
-          "source_sha256": "9cd1fbbec8d886d1e6f4603c5745f04ead388f4ecac315cb8ac3780d631159db"
+          "source_sha256": "001201702223c76e046fb42b2db389590240f181ea98d08264f220b21f0028dc"
         }
       ]
     },
@@ -15670,7 +15670,7 @@
     },
     {
       "path": "tests/infra_tests/project/test_root_runtime_v2.py",
-      "source_sha256": "1fc3a133ee6fd5b0fc6230a3bc431bcd98cad8944da15bd785e70ddc4b28944e",
+      "source_sha256": "ebee061dd29c3cbb80bcfb310719b63e486170ee828c2daca5968496c1e3312e",
       "families": [
         "tests/infra_tests/project/test_root_runtime_v2.py::test_actual_audited_selected_reader_verifies_original_interpreter_and_case_counts",
         "tests/infra_tests/project/test_root_runtime_v2.py::test_actual_per_case_deadline_retains_original_pytest_failure_and_cohort_timeout",
@@ -15682,10 +15682,9 @@
         "tests/infra_tests/project/test_root_runtime_v2.py::test_real_case_exit_zero_two_seven_cannot_create_a_passing_runtime_cohort",
         "tests/infra_tests/project/test_root_runtime_v2.py::test_rehashed_actual_raw_probe_must_match_true_original_selected_runtime",
         "tests/infra_tests/project/test_root_runtime_v2.py::test_runtime_invocation_refuses_before_any_new_source_case_body",
-        "tests/infra_tests/project/test_root_runtime_v2.py::test_source_owned_profile_declares_every_exact_case_unit_target_and_never_waives_live",
         "tests/infra_tests/project/test_root_runtime_v2.py::test_whole_root_case_api_refuses_replacement_without_new_gate_probe_or_receipt_writes"
       ],
-      "family_observations_sha256": "9680970132d52b6360bbc8fc3f0969a75ddb053c626a01c2c8b512124cb4c01d",
+      "family_observations_sha256": "5c05df5b472d4468e4f4f275ae4cc7f1ff0a5311949f0f904b2bc6b3f0370330",
       "decision": {
         "lane": "core",
         "obligations": []
@@ -15695,7 +15694,7 @@
         {
           "line": 1,
           "path": "tests/infra_tests/project/test_root_runtime_v2.py",
-          "source_sha256": "1fc3a133ee6fd5b0fc6230a3bc431bcd98cad8944da15bd785e70ddc4b28944e"
+          "source_sha256": "ebee061dd29c3cbb80bcfb310719b63e486170ee828c2daca5968496c1e3312e"
         }
       ]
     },
@@ -17007,7 +17006,7 @@
     },
     {
       "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-      "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7",
+      "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4",
       "families": [
         "tests/infra_tests/publishing/test_composed_acceptance.py::test_composed_receipt_with_a_stale_commit_is_refused",
         "tests/infra_tests/publishing/test_composed_acceptance.py::test_composed_receipt_with_an_unsupported_schema_is_refused",
@@ -17019,7 +17018,7 @@
         "tests/infra_tests/publishing/test_composed_acceptance.py::test_origin_verdict_treats_an_unobservable_origin_as_declared",
         "tests/infra_tests/publishing/test_composed_acceptance.py::test_partial_hosted_handoff_is_refused"
       ],
-      "family_observations_sha256": "2cd2aed3a02a13a319d1359ea601c9abeaf913667d239c6186ae219174609ea6",
+      "family_observations_sha256": "982b939d51cc957c01b87a7a0851dde52dfa618472922c77c3722d1c957670be",
       "decision": {
         "lane": "core",
         "obligations": [
@@ -17067,37 +17066,37 @@
         {
           "line": 57,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         },
         {
           "line": 63,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         },
         {
           "line": 86,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         },
         {
           "line": 99,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         },
         {
           "line": 107,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         },
         {
           "line": 112,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         },
         {
           "line": 118,
           "path": "tests/infra_tests/publishing/test_composed_acceptance.py",
-          "source_sha256": "cc0b8107b2a7454b37a9a83678a5b0c41b230bfaec41c378b51af0f219dbaaa7"
+          "source_sha256": "9fc4a3506c0a494b3de4f4d8763921f7cc24632f524d858a1c077a5093a758a4"
         }
       ]
     },
