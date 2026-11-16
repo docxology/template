@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 10.495359420776367
+      "total_size_mb": 10.496283531188965
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -239,12 +239,12 @@
     ],
     "figures": {
       "files": 96,
-      "size_mb": 2.275146484375
+      "size_mb": 2.275602340698242
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 2.1205291748046875
+      "size_mb": 2.1209983825683594
     },
     "stable_inventory": {
       "categories": {
@@ -258,15 +258,15 @@
         },
         "epub": {
           "files": 1,
-          "size_bytes": 1233524
+          "size_bytes": 1233523
         },
         "figures": {
           "files": 96,
-          "size_bytes": 2385664
+          "size_bytes": 2386142
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 2223536
+          "size_bytes": 2224028
         },
         "release": {
           "files": 2,
@@ -283,7 +283,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 11005182
+      "total_size_bytes": 11006151
     }
   },
   "recommendations": [],
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-15T22:42:25Z",
+  "timestamp": "2026-11-16T05:01:48Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "0266a65c9b30631126b1706e665dc72b66c5c78e76e062567a3574af240d8a0c",
+      "sha256": "bec0bf8b8481ac4604cd72cb1ef0637d882cda7aa3dd46239d1dbb3c3f720137",
       "size_bytes": 56388
     },
     "combined_manuscript": {
@@ -610,11 +610,11 @@
     "fingerprints": {
       "config": {
         "file_count": 18,
-        "sha256": "3d7b8ca4c9c34b46d3528dce2e01d37965dbf47519d807d2222a37735b58d550"
+        "sha256": "6fe0cb943e08d86fbaea8a9ef7746d5693c760da51c762b471a930535ef97c1b"
       },
       "output": {
         "file_count": 160,
-        "sha256": "9108c6ad1d3bfbc8a06f8fa2573bea8309b3d4f2963f4f37e7934ffd4e1a79f9"
+        "sha256": "6f6cb0581766d478aacb03dbd7be86c2464d076bb5656c41cef0efde053bbbb4"
       },
       "source": {
         "file_count": 94,
@@ -622,7 +622,7 @@
       },
       "stage": {
         "file_count": 1774,
-        "sha256": "5e0d25f64e6c5899eb7b794c24f7645cc19b945f741aea1498986e4c274da183"
+        "sha256": "e628bd12d8c2d15c31e56bac3937eb9adad40aee011a2e02063708e9b07c5bcf"
       }
     },
     "project": "templates/template_textbook",

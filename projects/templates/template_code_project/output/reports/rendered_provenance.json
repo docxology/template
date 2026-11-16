@@ -38,7 +38,7 @@
     },
     {
       "rendered_path": "output/manuscript/05_experimental_setup.md",
-      "rendered_sha256": "661de3842d5b560fc92b76c94ae2e72937626b17b742c13bc56f54314bae3ad6",
+      "rendered_sha256": "9150c1899f4cbf7284ab47dc204443041ae6c67927298bd9e7979982810fb12a",
       "source_path": "manuscript/05_experimental_setup.md",
       "source_sha256": "9092fabe5b0c77a70dd2ffff7fa3437011a360cb8fc73b97364b7fba5163d0e7"
     },
@@ -70,22 +70,22 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "a1cb93a7acfec34012c0834acbfc168d16bbbc45c8e0c815b1bcbad472ec748e",
+      "sha256": "51e66538ed05e1d9e9af55506b97d1b21b374e657e80477beb6b12f7fd3e106f",
       "size_bytes": 26174
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "6e89584f751849aadcf8265bf1bf616cc8c1224eaadde9ad1408dc794b258c9c",
+      "sha256": "b4ef6f4b7dc9ed8504db75d3ebf3bfd047f45b3404faf9689ad86e92b7369eb0",
       "size_bytes": 51113
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "42328ee72208aecca9778c0499acd5154f4d2a457a62bc918399e9fa86c88619",
+      "sha256": "8b16f96792c8f80e09b80b0dc2db9974bd508c1aefab3713239dcfd8028bff62",
       "size_bytes": 2753
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "961cbaeceb1d5959336740eec78c10690a9e37da02cfa41ce9cd680397f25c34",
+      "sha256": "bae6dc8b9ce55a7864f29f362d0fc192b5d79b1764446d9e0f0d737321ee5b11",
       "size_bytes": 13843
     }
   },
@@ -93,11 +93,11 @@
   "fingerprints": {
     "config": {
       "file_count": 18,
-      "sha256": "cad66276ce8b8e3406398ff56c0e6a8cbb0db8b82c2e00ae7477f426312815aa"
+      "sha256": "fad4c388fc609e15b0b1efc93d9be690a0d8b817b2892156acce8834a2198578"
     },
     "output": {
       "file_count": 80,
-      "sha256": "a66b9e1496d6cece6744576cbcc6b9f4879f4eeb0d5d02c117dc356fc5dfb205"
+      "sha256": "c4c2b58c083e6ae6300e8252743dd834c7b956eb7a581b0606639f23d0fcffb9"
     },
     "source": {
       "file_count": 55,
@@ -105,7 +105,7 @@
     },
     "stage": {
       "file_count": 1774,
-      "sha256": "5e0d25f64e6c5899eb7b794c24f7645cc19b945f741aea1498986e4c274da183"
+      "sha256": "e628bd12d8c2d15c31e56bac3937eb9adad40aee011a2e02063708e9b07c5bcf"
     }
   },
   "project": "templates/template_code_project",

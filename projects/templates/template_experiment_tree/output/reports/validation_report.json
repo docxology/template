@@ -225,12 +225,12 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 2.159008026123047
+      "total_size_mb": 2.1590089797973633
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 0.04753303527832031
+      "size_mb": 0.04753398895263672
     },
     "stable_inventory": {
       "categories": {
@@ -244,7 +244,7 @@
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 49842
+          "size_bytes": 49843
         },
         "reports": {
           "files": 3,
@@ -261,7 +261,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 30,
-      "total_size_bytes": 2263884
+      "total_size_bytes": 2263885
     }
   },
   "recommendations": [],
@@ -272,11 +272,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-15T22:42:25Z",
+  "timestamp": "2026-11-16T05:01:48Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "1712e3b8cd32756387a32612553254d5a95ff75bb67f46275d79bbc368a708a8",
+      "sha256": "de9ea7ca4b94c0608168342a9f5d7a6a6997810e7eb37d570d8345adcee7ee79",
       "size_bytes": 9766
     },
     "combined_manuscript": {
@@ -330,11 +330,11 @@
     "fingerprints": {
       "config": {
         "file_count": 14,
-        "sha256": "b8f403b1c97e6f4cf1024e30b33ec59a02b05dd3074177c41abcd74bee725cc6"
+        "sha256": "325dd4ac7398bc56388a90c042143a8b66082cf788c3a5291ac06e5ae7f13819"
       },
       "output": {
         "file_count": 30,
-        "sha256": "2ad68ff5d25d4ba525dda89dc6a348d42368b46f931e12874ab5a438a5f80b5d"
+        "sha256": "85b560eaabb3d6e850649a1b52e4bb492bcfea140bcc5f1d463f9dae26f64e1a"
       },
       "source": {
         "file_count": 22,
@@ -342,7 +342,7 @@
       },
       "stage": {
         "file_count": 1774,
-        "sha256": "5e0d25f64e6c5899eb7b794c24f7645cc19b945f741aea1498986e4c274da183"
+        "sha256": "e628bd12d8c2d15c31e56bac3937eb9adad40aee011a2e02063708e9b07c5bcf"
       }
     },
     "project": "templates/template_experiment_tree",
