@@ -57,6 +57,24 @@ Pipeline snapshots, generated counts and structural graphs are diagnostic
 observations. They cannot establish that the expected plans, required live
 capabilities or the whole public roster completed.
 
+Failed native workers retain the authenticated completed-stage prefix while its
+live producer owner still exists, even if Core fails before graph construction.
+A successfully captured graph prefix stays frozen; later stages still cause the
+unchanged final-custody check to refuse. `primary_diagnostic` preserves the worker
+failure and `closing_custody_diagnostics` appends each independent refusal; their
+combined `diagnostic` is not a replacement for the original process or pipeline
+result. Hosted native preflight failures remain failures while its always-run
+artifact transport retains the original evidence. None of this qualifies an
+incomplete native render or authorizes a retry, deadline change, merge or release.
+
+Hydration reconstruction selects its actual fixed Source writer before reading
+consumed bytes. Legacy resolved trees and ownership-aware normalized trees keep
+their distinct newline/token rules. Authored hashes and source offsets remain
+original; output offsets and replacement hashes follow exact normalized bytes.
+A serialized normalization flag or a matching alternative cannot select a writer.
+Selected raw config tokens are checked before home-prefix normalization, so a
+path-shaped unresolved token cannot disappear into a sanitized prefix.
+
 ## Producing complete evidence
 
 Use `required_profile(root, SnapshotReader(root), source_fingerprint(root))` to

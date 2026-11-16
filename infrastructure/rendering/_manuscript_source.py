@@ -12,10 +12,14 @@ if TYPE_CHECKING:
     from infrastructure.core.pipeline.hydration_recovery import HydrationRecoveryEvidence
 
 from infrastructure.core.exceptions import TemplateError, ValidationError
+from infrastructure.core.files.portability import sanitize_machine_local_text
+from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.validation.content.manuscript_config import is_project_resolved, unresolved_config_tokens
+from infrastructure.validation.content.manuscript_config import (
+    is_project_resolved, unresolved_config_text_tokens, unresolved_config_tokens,
+)
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.rendering import RenderManager
@@ -86,6 +90,19 @@ def verify_config_tokens_resolved(config_path: Path) -> None:
     )
 
 
+def _refresh_normalized_auxiliary(project_root: Path, source: Path, destination: Path) -> None:
+    """Apply hydration's normalization without translating authored newlines."""
+    content = read_bytes_confined(project_root, source).decode("utf-8")
+    if source.name == "config.yaml":
+        tokens = unresolved_config_text_tokens(content)
+        if tokens:
+            raise ValidationError(
+                "unresolved {{TOKEN}} placeholder(s) before config normalization: " + ", ".join(tokens)
+            )
+    normalized = sanitize_machine_local_text(content).encode("utf-8")
+    atomic_write_bytes_confined(project_root, destination, normalized)
+
+
 def resolve_manuscript_dir(project_root: Path) -> Path:
     """Return the manuscript directory to render from.
 
@@ -108,12 +125,12 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
                         cfg_dst,
                     )
                 else:
-                    _shutil.copy2(cfg_src, cfg_dst)
+                    _refresh_normalized_auxiliary(project_root, cfg_src, cfg_dst)
                     logger.info(f"Refreshed config.yaml in injected manuscript: {cfg_dst}")
             preamble_src = source_dir / "preamble.md"
             if preamble_src.is_file():
                 preamble_dst = injected_dir / preamble_src.name
-                _shutil.copy2(preamble_src, preamble_dst)
+                _refresh_normalized_auxiliary(project_root, preamble_src, preamble_dst)
                 logger.info(f"Refreshed {preamble_src.name} in injected manuscript: {preamble_dst}")
             for bib in sorted(source_dir.glob("*.bib")):
                 bib_dst = injected_dir / bib.name

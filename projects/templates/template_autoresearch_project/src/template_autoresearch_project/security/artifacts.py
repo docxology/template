@@ -59,3 +59,4 @@ def write_security_artifacts(
     )
     paths.extend(render_security_figures(figure_ctx))
     return paths
+

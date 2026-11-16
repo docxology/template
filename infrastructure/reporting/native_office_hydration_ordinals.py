@@ -18,14 +18,21 @@ from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
 from infrastructure.rendering._pdf_title_page_config import _rendering_options
-from infrastructure.rendering.manuscript_hydration_replay import combine_held_manuscripts, require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import (
+    SharedHydrationWriter,
+    combine_held_manuscripts,
+    require_shared_hydration,
+)
 from infrastructure.rendering.manuscript_ordinal_anchors import (
     annotate_manuscript_ordinals,
     require_complete_ordinal_ast_equivalence,
     require_unannotated_parser_bytes,
 )
 from infrastructure.reporting.native_format_acceptance_contracts import NativeArtifact, create_private_native_directory
-from infrastructure.reporting.native_hydration_reconstruction import observe_native_pdf_recomposition
+from infrastructure.reporting.native_hydration_reconstruction import (
+    observe_native_pdf_recomposition,
+    source_manuscript_hydration_writer,
+)
 from infrastructure.reporting.native_office_semantic_source import office_semantic_source_plan
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
@@ -134,10 +141,14 @@ def observe_office_hydration_ordinals(
     rows = {row["consumed"]["path"]: row for row in hydration["ordered_inputs"]}
     if len(rows) != len(hydration["ordered_inputs"]):
         raise ValueError("Office ordinal repeated a complete consumed input")
-    variable_snapshot = reader.read(hydration["variables"]["path"])
-    if _binding(variable_snapshot) != hydration["variables"]:
-        raise ValueError("Office ordinal changed complete actual hydration variables")
-    variables = variable_snapshot.json_object()
+    variable_binding = hydration.get("variables")
+    variables = {}
+    if variable_binding is not None:
+        variable_snapshot = reader.read(variable_binding["path"])
+        if _binding(variable_snapshot) != variable_binding:
+            raise ValueError("Office ordinal changed complete actual hydration variables")
+        variables = variable_snapshot.json_object()
+    writer, writer_binding = source_manuscript_hydration_writer(source, scope, reader)
     held_inputs = []
     for row in (*office_source["filters"], *office_source["bibliographies"]):
         for kind in ("source", "consumed"):
@@ -164,14 +175,27 @@ def observe_office_hydration_ordinals(
         consumed = reader.read(path)
         if consumed.content != body or _binding(consumed) != row["consumed"]:
             raise ValueError("Office ordinal changed actual complete consumed input bytes")
-        if row["transformation"] in {"Source-generated-transmission-boundary", "exact-authored-source-body"}:
+        if row["transformation"] == "Source-generated-transmission-boundary":
             continue
         authored = reader.read(row["source"]["path"])
+        if _binding(authored) != row["source"] or source.reference.read(authored.relative) != authored.content:
+            raise ValueError("Office ordinal changed its authored Source binding")
+        if row["transformation"] == "exact-authored-source-body":
+            if authored.content != body:
+                raise ValueError("Office ordinal changed an exact authored Source body")
+            continue
+        if row["transformation"] == "Source-normalized-authored-body":
+            if (
+                writer is None or writer is SharedHydrationWriter.RESOLVED_TREE
+                or row["writer"] != writer_binding
+                or require_shared_hydration(authored.content, {}, body, writer=writer).data() != row["hydration"]
+            ):
+                raise ValueError("Office ordinal normalized copy lost its actual Source writer binding")
+            continue
         if (
             row["transformation"] != "shared-uppercase-token-hydration"
-            or _binding(authored) != row["source"]
-            or source.reference.read(authored.relative) != authored.content
-            or require_shared_hydration(authored.content, variables, body).data() != row["hydration"]
+            or variable_binding is None or writer is None or row["writer"] != writer_binding
+            or require_shared_hydration(authored.content, variables, body, writer=writer).data() != row["hydration"]
         ):
             raise ValueError("Office ordinal changed the actual shared Source hydration adapter")
         for token in row["hydration"]["occurrences"]:

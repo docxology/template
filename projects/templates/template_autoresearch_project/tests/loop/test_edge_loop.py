@@ -14,9 +14,6 @@ from template_autoresearch_project.loop.loop import (
 )
 from template_autoresearch_project.loop.loop_phases import LoopRunContext, append_paths
 from template_autoresearch_project.loop.loop_phases import combine_readiness_reports as _combine_readiness_reports
-from template_autoresearch_project.loop.loop_phases import (
-    only_changed_artifact_manifest_issues as _only_changed_artifact_manifest_issues,
-)
 
 
 def test_build_stage_results_fallback_action_for_unknown_stage() -> None:
@@ -80,56 +77,6 @@ def test_combine_readiness_reports_both_valid() -> None:
     assert combined.valid is True
 
     assert combined.issues == ()
-
-
-def test_only_changed_artifact_manifest_issues_true_for_manifest_only() -> None:
-    """Returns True when all issues are ARTIFACT_MANIFEST_ISSUE with 'changed artifact:' prefix."""
-
-    issue = AutoResearchIssue(
-        code="AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE",
-        message="changed artifact: output/data/x.json",
-        severity="error",
-    )
-
-    report = AutoResearchReport(project_name="t", valid=False, issues=(issue,), plan=None)
-
-    assert _only_changed_artifact_manifest_issues(report) is True
-
-
-def test_only_changed_artifact_manifest_issues_false_for_valid_report() -> None:
-    """Returns False when report is valid (no action needed)."""
-
-    report = AutoResearchReport(project_name="t", valid=True, issues=(), plan=None)
-
-    assert _only_changed_artifact_manifest_issues(report) is False
-
-
-def test_only_changed_artifact_manifest_issues_false_for_empty_issues() -> None:
-    """Returns False when there are no issues (nothing to act on)."""
-
-    report = AutoResearchReport(project_name="t", valid=False, issues=(), plan=None)
-
-    assert _only_changed_artifact_manifest_issues(report) is False
-
-
-def test_only_changed_artifact_manifest_issues_false_for_mixed_issues() -> None:
-    """Returns False when any issue is NOT a manifest-checksum issue."""
-
-    issue_a = AutoResearchIssue(
-        code="AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE",
-        message="changed artifact: output/data/x.json",
-        severity="error",
-    )
-
-    issue_b = AutoResearchIssue(
-        code="AUTORESEARCH.MISSING_REQUIRED_ARTIFACT",
-        message="missing artifact",
-        severity="error",
-    )
-
-    report = AutoResearchReport(project_name="t", valid=False, issues=(issue_a, issue_b), plan=None)
-
-    assert _only_changed_artifact_manifest_issues(report) is False
 
 
 def test_final_output_path_payload_deduplicates_and_filters(tmp_path: Path) -> None:

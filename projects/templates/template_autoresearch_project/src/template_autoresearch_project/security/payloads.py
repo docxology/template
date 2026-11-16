@@ -10,8 +10,7 @@ from infrastructure.core.pipeline.artifacts import compute_sha256
 
 from ..loop.config import AutoResearchLoopConfig
 from ..loop.json_coerce import mapping_list
-
-from .constants import SECURITY_ARTIFACTS
+from ..writers.integrity_boundary import is_upstream_output
 
 
 def security_profile_payload(config: AutoResearchLoopConfig, *, generated_at: str) -> dict[str, object]:
@@ -181,7 +180,7 @@ def supply_chain_inventory_payload(
     *,
     generated_at: str,
 ) -> dict[str, object]:
-    """Return an SBOM-style local inventory of inputs and generated artifacts."""
+    """Checksum frozen upstream inputs/leaves, never downstream presentation bytes."""
     input_paths = (
         ("root_pyproject", project_root.parents[2] / "pyproject.toml", False),
         ("root_uv_lock", project_root.parents[2] / "uv.lock", False),
@@ -201,7 +200,7 @@ def supply_chain_inventory_payload(
     generated_paths = [
         path
         for path in sorted({path.resolve() for path in output_paths if path.exists()})
-        if _project_relative_path(project_root, path) not in SECURITY_ARTIFACTS
+        if is_upstream_output(project_root, path)
     ]
     return {
         "schema": "template-autoresearch-supply-chain-inventory-v1",
@@ -222,7 +221,10 @@ def supply_chain_inventory_payload(
             _file_record(project_root, f"generated-{index:03d}", path, required=True)
             for index, path in enumerate(generated_paths, start=1)
         ],
-        "claim_boundary": "Inventory is local checksum metadata and does not claim SPDX, CycloneDX, or SLSA provenance.",
+        "claim_boundary": (
+            "Checksums cover frozen upstream inputs and reviewed leaf outputs only; the primary artifact "
+            "manifest alone covers all final stable bytes. Not SPDX, CycloneDX, or SLSA provenance."
+        ),
     }
 
 

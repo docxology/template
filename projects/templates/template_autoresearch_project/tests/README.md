@@ -8,6 +8,13 @@ tracked artifacts. Output consumers explicitly request the actual deterministic
 session loop; source-only exports do not need precomputed outputs. Tests are mirrored one-to-one with the source subpackage
 layout under `tests/<cluster>/` (SUBMODULAR-2).
 
+Public-inventory sandboxes own genuine local Git repositories, so an enclosing
+checkout's packaging ignores cannot hide the sandbox's stable outputs. The
+manifest regression also nests its repository beneath an actual ignored parent
+directory and retains exact public-mode membership and digest checks. These local
+repository boundaries are neither platform-source nominations nor publication
+proof.
+
 ## Quick Start
 
 ```bash

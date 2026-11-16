@@ -11,6 +11,11 @@ PUBLICATION_TEXT_SUFFIXES: frozenset[str] = frozenset(
 _MACHINE_HOME_RE = re.compile(r"(?:/Users|/home)/[^/\s\"'<>]+")
 
 
+def sanitize_machine_local_text(text: str) -> str:
+    """Normalize publication text before its bytes are hashed or written."""
+    return _MACHINE_HOME_RE.sub("<home>", text)
+
+
 def sanitize_machine_local_paths(root: Path) -> tuple[Path, ...]:
     """Replace machine-local home prefixes in text artifacts under ``root``.
 
@@ -32,7 +37,7 @@ def sanitize_machine_local_paths(root: Path) -> tuple[Path, ...]:
             original = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
-        sanitized = _MACHINE_HOME_RE.sub("<home>", original)
+        sanitized = sanitize_machine_local_text(original)
         if sanitized == original:
             continue
         path.write_text(sanitized, encoding="utf-8")
@@ -40,4 +45,6 @@ def sanitize_machine_local_paths(root: Path) -> tuple[Path, ...]:
     return tuple(changed)
 
 
-__all__ = ["PUBLICATION_TEXT_SUFFIXES", "sanitize_machine_local_paths"]
+__all__ = [
+    "PUBLICATION_TEXT_SUFFIXES", "sanitize_machine_local_paths", "sanitize_machine_local_text",
+]

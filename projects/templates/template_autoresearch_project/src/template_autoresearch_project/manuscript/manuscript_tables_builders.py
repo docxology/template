@@ -553,13 +553,13 @@ def phase_ledger_table(phase_ledger: dict[str, Any]) -> str:
             string_value(row.get("phase", "N/A")).replace("_", " "),
             string_value(row.get("order", "N/A")),
             string_value(row.get("artifact_group", "N/A")),
-            string_value(row.get("observed_artifact_count", "N/A")),
+            string_value(row.get("declared_artifact_count", "N/A")),
             short_scope(string_value(row.get("description", "N/A")), limit=80),
         )
         for row in mapping_list(phase_ledger.get("phases"))
     ]
     return markdown_table(
-        ("Phase", "Order", "Group", "Observed artifacts", "Description"),
+        ("Phase", "Order", "Group", "Declared artifacts", "Description"),
         rows,
         "Deterministic phase ledger from `output/data/autoresearch_phase_ledger.json`; settlement order is not an autonomy claim. {#tbl:phase-ledger}",
     )

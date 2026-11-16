@@ -34,6 +34,12 @@ def has_generated_manuscript_ordering(config_path: Path) -> bool:
     return GENERATED_ORDERING_MARKER in config_path.read_text(encoding="utf-8")
 
 
+def unresolved_config_text_tokens(text: str) -> list[str]:
+    """Inspect exact selected UTF-8 text before normalization can consume tokens."""
+    text = _CODE_SPAN_RE.sub("", text)
+    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+
+
 def unresolved_config_tokens(config_path: Path) -> list[str]:
     """Return the sorted unique ``{{UPPER_SNAKE}}`` tokens still present in *config_path*.
 
@@ -42,8 +48,7 @@ def unresolved_config_tokens(config_path: Path) -> list[str]:
     """
     if not config_path.is_file():
         return []
-    text = _CODE_SPAN_RE.sub("", config_path.read_text(encoding="utf-8"))
-    return sorted({match.group(1) for match in _CONFIG_TOKEN_RE.finditer(text)})
+    return unresolved_config_text_tokens(config_path.read_text(encoding="utf-8"))
 
 
 def is_project_resolved(config_path: Path, source_config_path: Path | None = None) -> bool:

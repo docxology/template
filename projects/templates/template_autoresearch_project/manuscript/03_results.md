@@ -185,11 +185,12 @@ surface supports and what it does not support.
 
 The broader AutoResearch run writes the reproducibility, benchmark, review, and
 manuscript-hydration surfaces summarized below. The schema manifest records
-`{{SCHEMA_MANIFEST_SCHEMA_COUNT}}` schema-versioned governance payload(s), and
-the local research-object manifest records `{{RESEARCH_OBJECT_ARTIFACT_COUNT}}`
-observed artifact record(s) with checksums and approval state
-`{{RESEARCH_OBJECT_APPROVAL_STATE}}`. The phase ledger records
-`{{PHASE_LEDGER_SETTLEMENT_PASS_COUNT}}` settlement pass(es), while the
+`{{SCHEMA_MANIFEST_SCHEMA_COUNT}}` schema catalog row(s), including explicitly
+declared downstream hydration shapes. The local research-object catalog records
+`{{RESEARCH_OBJECT_ARTIFACT_COUNT}}` unique declared artifact path(s), partitioned
+into frozen upstream checksum records and downstream references, with approval
+state `{{RESEARCH_OBJECT_APPROVAL_STATE}}`. The phase ledger records
+`{{PHASE_LEDGER_SETTLEMENT_PASS_COUNT}}` bounded materialization pass(es), while the
 figure-quality report covers `{{FIGURE_QUALITY_FIGURE_COUNT}}` registered
 figure(s) with validity `{{FIGURE_QUALITY_VALID}}`.
 
@@ -217,7 +218,7 @@ The local security profile reports attestation status
 `{{SECURITY_ATTESTATION_MISSING_COUNT}}` missing record(s) and
 `{{SECURITY_ATTESTATION_MISMATCH_COUNT}}` checksum mismatch(es). The inventory
 contains `{{SECURITY_INVENTORY_INPUT_COUNT}}` input record(s) and
-`{{SECURITY_INVENTORY_ARTIFACT_COUNT}}` generated-artifact record(s). The
+`{{SECURITY_INVENTORY_ARTIFACT_COUNT}}` frozen upstream generated-artifact record(s). The
 integrity-chain figure is {{FIGURE_REF_INTEGRITY_CHAIN}}. These values support
 local artifact-integrity claims only; they do not claim external signing,
 production SLSA compliance, or runtime security monitoring.

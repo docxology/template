@@ -31,6 +31,7 @@ from infrastructure.reporting.native_project_domain import (
 )
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.native_format_acceptance_worker_closing import _record_native_closing_failure
 
 if TYPE_CHECKING:
     from infrastructure.reporting.native_format_pdf_source_decode_bounds import SourceImageDecodeBudget
@@ -493,6 +494,16 @@ def replay_native_scope_evidence(
         raise
 
 
+def _verify_native_stage_prefix(raw: dict[str, Any], producer: Any) -> None:
+    """Compare the captured graph or failed prefix against the still-live owner."""
+    expected = list(producer.stage_children)
+    if raw["stage_children"] != expected:
+        raise ValueError(
+            "native completed stage bindings changed after capture "
+            f"(completed={len(raw['stage_children'])}, expected={len(expected)})"
+        )
+
+
 def run_native_scope_worker(
     root: Path,
     specification: dict[str, Any],
@@ -606,16 +617,7 @@ def run_native_scope_worker(
                 "decoded_pixels": decoded_pixel_budget.decoded_pixels,
             }
             try:
-                if raw["stage_children"] != list(producer.stage_children):
-                    completed = len(raw["stage_children"])
-                    expected = len(producer.stage_children)
-                    detail = str(raw.get("diagnostic") or "").strip()
-                    raise ValueError(
-                        "native completed stage bindings changed after graph reconstruction "
-                        f"(completed={completed}, expected={expected}"
-                        + (f", worker diagnostic: {detail}" if detail else "")
-                        + ")"
-                    )
+                _verify_native_stage_prefix(raw, producer)
                 producer.verify(
                     SnapshotReader(root, native_producer_operation=producer),
                     run_id=specification["run_id"],
@@ -625,9 +627,8 @@ def run_native_scope_worker(
                 raw["status"] = "blocked"
                 if raw["execution_exit_code"] == 0:
                     raw["execution_exit_code"] = 75
-                raw["diagnostic"] = (
-                    str(raw.get("diagnostic", ""))
-                    + f"; actual native producer final Source/SDK custody refused: {error}"
+                _record_native_closing_failure(
+                    raw, f"actual native producer final Source/SDK custody refused: {error}"
                 )
             if raw["status"] == "pass" and raw["execution_exit_code"] == 0:
                 if len(oracle_phases) != 1:
@@ -655,5 +656,5 @@ def run_native_scope_worker(
             else 1
         )
         raw["closing_custody_refused"] = str(error)
-        raw["diagnostic"] = str(raw.get("diagnostic", "")) + f"; native post-return closing custody refused: {error}"
+        _record_native_closing_failure(raw, f"native post-return closing custody refused: {error}")
         return raw

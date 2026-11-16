@@ -8,7 +8,11 @@ import time
 
 import pytest
 
-from infrastructure.rendering.manuscript_hydration_replay import reconstruct_shared_hydration, require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import (
+    SharedHydrationWriter,
+    reconstruct_shared_hydration,
+    require_shared_hydration,
+)
 from infrastructure.reporting.native_code_contextual_compare import _remap
 from infrastructure.reporting.native_code_metadata_domains import PROJECT
 
@@ -59,13 +63,17 @@ def test_prior_body_and_temporal_fields_keep_their_exact_unproven_meaning() -> N
     assert all(projected[key] == record[key] for key in ("ordinal", "prior_registered_read_count", "producer"))
 
 
-@pytest.mark.parametrize("context", ["short", "different runtime label"])
+@pytest.mark.parametrize("context", ["short", "different runtime label", "/home/runner/workspace/µ"])
 def test_complete_source_reconstruction_canonicalizes_context_and_all_later_offsets(context: str) -> None:
     source = b"{{PLATFORM}} then science {{RESULT_MIN_ITERATIONS}} and again {{PLATFORM}}"
     variables = {"PLATFORM": context, "RESULT_MIN_ITERATIONS": "7"}
-    actual = reconstruct_shared_hydration(source, variables)
-    assert require_shared_hydration(source, variables, actual.output).data() == actual.data()
-    canonical = reconstruct_shared_hydration(source, {**variables, "PLATFORM": "{{PLATFORM}}"})
+    actual = reconstruct_shared_hydration(source, variables, writer=SharedHydrationWriter.RESOLVED_TREE)
+    assert require_shared_hydration(
+        source, variables, actual.output, writer=SharedHydrationWriter.RESOLVED_TREE
+    ).data() == actual.data()
+    canonical = reconstruct_shared_hydration(
+        source, {**variables, "PLATFORM": "{{PLATFORM}}"}, writer=SharedHydrationWriter.RESOLVED_TREE
+    )
     assert canonical.output == b"{{PLATFORM}} then science 7 and again {{PLATFORM}}"
     assert [(row.ordinal, row.key, row.source_start_byte, row.source_end_byte) for row in actual.occurrences] == [
         (row.ordinal, row.key, row.source_start_byte, row.source_end_byte) for row in canonical.occurrences
@@ -75,6 +83,10 @@ def test_complete_source_reconstruction_canonicalizes_context_and_all_later_offs
 
 def test_complete_source_reconstruction_retains_scientific_payload_drift() -> None:
     source = b"{{PLATFORM}} science {{RESULT_MIN_ITERATIONS}}"
-    first = reconstruct_shared_hydration(source, {"PLATFORM": "{{PLATFORM}}", "RESULT_MIN_ITERATIONS": "7"})
-    second = reconstruct_shared_hydration(source, {"PLATFORM": "{{PLATFORM}}", "RESULT_MIN_ITERATIONS": "8"})
+    first = reconstruct_shared_hydration(
+        source, {"PLATFORM": "{{PLATFORM}}", "RESULT_MIN_ITERATIONS": "7"}, writer=SharedHydrationWriter.RESOLVED_TREE
+    )
+    second = reconstruct_shared_hydration(
+        source, {"PLATFORM": "{{PLATFORM}}", "RESULT_MIN_ITERATIONS": "8"}, writer=SharedHydrationWriter.RESOLVED_TREE
+    )
     assert first.output != second.output and first.data() != second.data()

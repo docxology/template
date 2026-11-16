@@ -8,10 +8,25 @@ separate requirements even when these bytes match.
 from __future__ import annotations
 
 import hashlib
+import re
 from collections.abc import Mapping
 from dataclasses import asdict, dataclass
+from enum import Enum
 
-from infrastructure.rendering.manuscript_injection import _TOKEN_RE
+from infrastructure.core.files.portability import _MACHINE_HOME_RE, sanitize_machine_local_text
+from infrastructure.rendering.manuscript_injection import (
+    _HTML_OUTPUT_ATTR_RE,
+    _MARKDOWN_OUTPUT_TARGET_RE,
+    _TOKEN_RE,
+)
+
+
+class SharedHydrationWriter(Enum):
+    """Actual Source writer routes, selected before examining consumed bytes."""
+
+    RESOLVED_TREE = "write_resolved_manuscript_tree"
+    HYDRATED_UPPERCASE_TREE = "hydrate_manuscript_tree-uppercase-rebased"
+    HYDRATED_WORD_TREE = "hydrate_manuscript_tree-word-tokens"
 
 
 @dataclass(frozen=True)
@@ -35,9 +50,11 @@ class HydrationReconstruction:
     source: bytes
     output: bytes
     occurrences: tuple[HydrationOccurrence, ...]
+    writer: SharedHydrationWriter
 
     def data(self) -> dict[str, object]:
         return {
+            "writer": self.writer.value,
             "source_sha256": hashlib.sha256(self.source).hexdigest(),
             "source_bytes": len(self.source),
             "output_sha256": hashlib.sha256(self.output).hexdigest(),
@@ -46,69 +63,129 @@ class HydrationReconstruction:
         }
 
 
-def reconstruct_shared_hydration(source: bytes, variables: Mapping[str, str]) -> HydrationReconstruction:
-    """Apply the actual writer token rule with Python text-reader newline semantics.
+def _rewrite_spans(
+    text: str, spans: list[tuple[int, int]], edits: list[tuple[int, int, str]]
+) -> tuple[str, list[tuple[int, int]]]:
+    """Map complete edits, including a home prefix crossing a token boundary.
 
-    No paths, selected occurrence list, status or original execution object are
-    accepted. The full input is scanned in order. Values remain exact strings;
-    a missing variable remains literal and is explicitly marked unresolved.
+    A nonempty occurrence owns its complete resulting interval. If one edit
+    consumes several occurrences their intervals can overlap; native ordinal
+    annotation must still refuse overlapping ownership. Empty replacements
+    remain empty and cannot acquire authored bytes by normalization.
+    """
+    positions = sorted({point for span in spans for point in span})
+    bounds: dict[int, tuple[int, int]] = {}
+    point = cursor = delta = 0
+    parts: list[str] = []
+    for first, last, replacement in edits:
+        if not cursor <= first < last <= len(text):
+            raise ValueError("hydration rewrite overlaps or escapes its complete input")
+        while point < len(positions) and positions[point] <= first:
+            position = positions[point]
+            bounds[position] = (position + delta, position + delta)
+            point += 1
+        while point < len(positions) and positions[point] < last:
+            bounds[positions[point]] = (first + delta, first + delta + len(replacement))
+            point += 1
+        parts.extend((text[cursor:first], replacement))
+        cursor = last
+        delta += len(replacement) - (last - first)
+    while point < len(positions):
+        position = positions[point]
+        bounds[position] = (position + delta, position + delta)
+        point += 1
+    parts.append(text[cursor:])
+    return "".join(parts), [
+        (bounds[first][0], bounds[last][1] if first != last else bounds[first][0]) for first, last in spans
+    ]
+
+
+def reconstruct_shared_hydration(
+    source: bytes, variables: Mapping[str, str], *, writer: SharedHydrationWriter
+) -> HydrationReconstruction:
+    """Rebuild one explicit actual writer, never choose a rule by output equality.
+
+    Legacy read_text converts authored newlines and rebases destination links.
+    Ownership-aware hydration decodes raw bytes and normalizes home prefixes
+    after the Source-selected substitution callback (and its optional rebasing).
+    Authored bytes, hashes and raw occurrence positions always remain original.
     """
     if not isinstance(source, bytes) or len(source) > 64 * 1024 * 1024:
         raise ValueError("hydration requires a bounded exact UTF-8 source body")
+    if not isinstance(writer, SharedHydrationWriter):
+        raise ValueError("hydration requires its actual Source-selected writer route")
     if any(not isinstance(key, str) or not isinstance(value, str) for key, value in variables.items()):
         raise ValueError("shared hydration variables must retain exact string keys and values")
-    text = source.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
-    # Raw offsets refer to the admitted bytes, before read_text's universal
-    # newline conversion. This separate regex uses the same literal Source
-    # token grammar; occurrences cannot be merged by equal key/value/body.
     raw_text = source.decode("utf-8")
-    raw_matches = tuple(_TOKEN_RE.finditer(raw_text))
-    matches = tuple(_TOKEN_RE.finditer(text))
+    text = (
+        raw_text.replace("\r\n", "\n").replace("\r", "\n")
+        if writer is SharedHydrationWriter.RESOLVED_TREE else raw_text
+    )
+    # The literature callbacks use their genuine word-token grammar; the old
+    # shared writer and AutoResearch callback use the uppercase Source grammar.
+    pattern = re.compile(r"\{\{(\w+)\}\}") if writer is SharedHydrationWriter.HYDRATED_WORD_TREE else _TOKEN_RE
+    raw_matches, matches = tuple(pattern.finditer(raw_text)), tuple(pattern.finditer(text))
     if len(raw_matches) != len(matches) or len(matches) > 10000:
         raise ValueError("hydration newline normalization changed lexical token membership")
     parts: list[str] = []
-    rows = []
-    cursor = 0
-    raw_cursor = 0
-    raw_bytes = 0
-    output_bytes = 0
+    spans: list[tuple[int, int]] = []
+    identities: list[tuple[int, str, int, int, bool]] = []
+    cursor = raw_cursor = raw_bytes = output_chars = output_bytes = 0
     for ordinal, (raw_match, match) in enumerate(zip(raw_matches, matches, strict=True), 1):
         prefix = text[cursor : match.start()]
-        parts.append(prefix)
-        output_bytes += len(prefix.encode())
         key = match.group(1)
         replacement = variables.get(key, match.group(0))
         start = raw_bytes + len(raw_text[raw_cursor : raw_match.start()].encode())
         end = start + len(raw_match.group(0).encode())
-        replacement_bytes = replacement.encode()
-        rows.append(
-            HydrationOccurrence(
-                ordinal,
-                key,
-                start,
-                end,
-                output_bytes,
-                output_bytes + len(replacement_bytes),
-                hashlib.sha256(replacement_bytes).hexdigest(),
-                key in variables,
-            )
-        )
-        parts.append(replacement)
-        output_bytes += len(replacement_bytes)
-        cursor = match.end()
-        raw_cursor, raw_bytes = raw_match.end(), end
+        parts.extend((prefix, replacement))
+        output_chars += len(prefix)
+        spans.append((output_chars, output_chars + len(replacement)))
+        identities.append((ordinal, key, start, end, key in variables))
+        output_chars += len(replacement)
+        output_bytes += len(prefix.encode()) + len(replacement.encode())
         if output_bytes > 64 * 1024 * 1024:
             raise ValueError("hydrated manuscript exceeds its complete byte ceiling")
+        cursor, raw_cursor, raw_bytes = match.end(), raw_match.end(), end
     parts.append(text[cursor:])
-    output = "".join(parts).encode()
+    text = "".join(parts)
+    if len(text.encode()) > 64 * 1024 * 1024:
+        raise ValueError("hydrated manuscript exceeds its complete byte ceiling")
+    if writer is not SharedHydrationWriter.HYDRATED_WORD_TREE:
+        for link_pattern in (_MARKDOWN_OUTPUT_TARGET_RE, _HTML_OUTPUT_ATTR_RE):
+            text, spans = _rewrite_spans(
+                text, spans,
+                [(match.end("open") + 3, match.start("rest"), "") for match in link_pattern.finditer(text)],
+            )
+    if writer is not SharedHydrationWriter.RESOLVED_TREE:
+        text, spans = _rewrite_spans(
+            text, spans,
+            [(match.start(), match.end(), sanitize_machine_local_text(match.group()))
+             for match in _MACHINE_HOME_RE.finditer(text)],
+        )
+    output = text.encode()
     if len(output) > 64 * 1024 * 1024:
         raise ValueError("hydrated manuscript exceeds its complete byte ceiling")
-    return HydrationReconstruction(source, output, tuple(rows))
+    offsets: dict[int, int] = {}
+    cursor = byte_count = 0
+    for position in sorted({point for span in spans for point in span}):
+        byte_count += len(text[cursor:position].encode())
+        offsets[position] = byte_count
+        cursor = position
+    rows = tuple(
+        HydrationOccurrence(
+            ordinal, key, first, last, offsets[start], offsets[end],
+            hashlib.sha256(output[offsets[start]:offsets[end]]).hexdigest(), resolved,
+        )
+        for (ordinal, key, first, last, resolved), (start, end) in zip(identities, spans, strict=True)
+    )
+    return HydrationReconstruction(source, output, rows, writer)
 
 
-def require_shared_hydration(source: bytes, variables: Mapping[str, str], consumed: bytes) -> HydrationReconstruction:
+def require_shared_hydration(
+    source: bytes, variables: Mapping[str, str], consumed: bytes, *, writer: SharedHydrationWriter
+) -> HydrationReconstruction:
     """Refuse changed/omitted/reordered bytes and every unresolved real token."""
-    result = reconstruct_shared_hydration(source, variables)
+    result = reconstruct_shared_hydration(source, variables, writer=writer)
     if any(not row.resolved for row in result.occurrences):
         raise ValueError("native consumed shared hydration retains an unresolved source token")
     if result.output != consumed:

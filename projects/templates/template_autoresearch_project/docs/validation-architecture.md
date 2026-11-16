@@ -60,8 +60,14 @@ Honesty about scope is part of veridicality. The following are stated, not hidde
 - **Local integrity is self-attestation within a local boundary**, plus the one
   external anchor (the committed fixture-provenance hash). It does not claim
   external signing, SLSA, or runtime monitoring.
-- **The research-object manifest** is a path/size/checksum/empty inventory; it
-  surfaces empty artifacts but is not a content validator.
+- **The v2 research-object manifest** checksums frozen upstream leaves only;
+  derivative references make no byte or existence claims. Its path count is not
+  checksum coverage. Security records share this upstream boundary. The complete
+  lifecycle primary manifest alone binds all final stable bytes, including
+  inherited outputs. See [the settlement boundary](outputs.md#final-byte-boundary).
+- **Readiness is terminal**, not a copied preflight verdict: all candidate writes
+  precede the final primary snapshot and unchanged read-only extrinsic/primary
+  validation. Failure revokes the loop/readiness state consumed by strict hydration.
 
 ## Testing philosophy: negative controls
 

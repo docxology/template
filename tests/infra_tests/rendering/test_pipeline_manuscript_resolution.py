@@ -59,6 +59,38 @@ def test_resolve_manuscript_dir_refreshes_injected_auxiliary_files(tmp_path: Pat
     assert "fresh" in (injected / "references.bib").read_text(encoding="utf-8")
 
 
+def test_auxiliary_refresh_preserves_project_config_and_verbatim_bibliographies(tmp_path: Path) -> None:
+    """Normalize only refreshed config/preamble bytes, not project-owned output or bibs."""
+    source = tmp_path / "manuscript"
+    injected = tmp_path / "output/manuscript"
+    source.mkdir()
+    injected.mkdir(parents=True)
+    (injected / "01_intro.md").write_bytes(b"# Intro\n")
+    source_config = b"paper:\r\n  title: Source\r\n# /home/source/research/config.yaml\r\n"
+    project_config = b"# Project-resolved config\r\npaper:\r\n  title: Project\r\n# /Users/owner/research/config.yaml\r\n"
+    preamble = b"```latex\r\n% /home/source/research/preamble.tex\r\n```\r\n"
+    bibliography = b"@book{source,title={Source},note={/Users/source/research/reference}}\r\n"
+    (source / "config.yaml").write_bytes(source_config)
+    (injected / "config.yaml").write_bytes(project_config)
+    (source / "preamble.md").write_bytes(preamble)
+    for name in ("references.bib", "second.bib"):
+        (source / name).write_bytes(bibliography)
+        (injected / name).write_bytes(b"Stale bibliography\n")
+    unowned = injected / "notes.txt"
+    unowned.write_bytes(b"Human-owned /home/owner/notes\n")
+
+    assert resolve_manuscript_dir(tmp_path) == injected
+
+    assert (injected / "config.yaml").read_bytes() == project_config
+    assert (injected / "preamble.md").read_bytes() == preamble.replace(b"/home/source", b"<home>")
+    assert (source / "config.yaml").read_bytes() == source_config
+    assert (source / "preamble.md").read_bytes() == preamble
+    for name in ("references.bib", "second.bib"):
+        assert (injected / name).read_bytes() == bibliography
+        assert (source / name).read_bytes() == bibliography
+    assert unowned.read_bytes() == b"Human-owned /home/owner/notes\n"
+
+
 def test_resolve_manuscript_dir_falls_back_to_source(tmp_path: Path) -> None:
     """Falls back to manuscript/ when injected dir is absent."""
     result = resolve_manuscript_dir(tmp_path)
@@ -229,20 +261,23 @@ def test_is_project_resolved_false_when_injected_still_holds_the_token(tmp_path:
 # ---------------------------------------------------------------------------
 
 
-def test_resolve_manuscript_dir_rejects_unresolved_token_in_injected_config(tmp_path: Path) -> None:
+@pytest.mark.parametrize("title", ["{{PAPER_TITLE}}", "/home/{{PAPER_TITLE}}", "/Users/{{PAPER_TITLE}}"])
+def test_resolve_manuscript_dir_rejects_unresolved_token_in_injected_config(tmp_path: Path, title: str) -> None:
     """A token surviving into the injected config aborts before anything renders."""
     source = tmp_path / "manuscript"
     injected = tmp_path / "output" / "manuscript"
     source.mkdir()
     injected.mkdir(parents=True)
     (injected / "01_intro.md").write_text("# Intro", encoding="utf-8")
-    (source / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
-    (injected / "config.yaml").write_text('paper:\n  title: "{{PAPER_TITLE}}"\n', encoding="utf-8")
+    content = f'paper:\n  title: "{title}"\n'
+    (source / "config.yaml").write_text(content, encoding="utf-8")
+    (injected / "config.yaml").write_text(content, encoding="utf-8")
 
     with pytest.raises(ValidationError) as excinfo:
         resolve_manuscript_dir(tmp_path)
 
     assert "PAPER_TITLE" in str(excinfo.value)
+    assert (injected / "config.yaml").read_text(encoding="utf-8") == content
 
 
 def test_resolve_manuscript_dir_rejects_unresolved_token_in_source_config(tmp_path: Path) -> None:

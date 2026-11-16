@@ -238,18 +238,17 @@ def test_grade_payload_records_effective_threshold(tmp_path: Path) -> None:
 
 
 def test_research_object_manifest_surfaces_empty_artifacts(tmp_path: Path) -> None:
-    # The research-object inventory must surface present-but-empty artifacts, not
-    # just record their presence.
+    # Only frozen upstream checksum records make present/empty byte claims.
     from template_autoresearch_project.writers.research_object import research_object_manifest_payload
 
     (tmp_path / "output" / "data").mkdir(parents=True)
-    empty = tmp_path / "output" / "data" / "empty.json"
+    empty = tmp_path / "output" / "data" / "ml_task_results.json"
     empty.write_text("", encoding="utf-8")
-    full = tmp_path / "output" / "data" / "full.json"
+    full = tmp_path / "output" / "data" / "ml_candidate_ledger.json"
     full.write_text('{"value": 1}', encoding="utf-8")
     payload = research_object_manifest_payload(tmp_path, [empty, full], generated_at="t")
-    assert payload["empty_artifact_count"] == 1
-    assert any(str(a["path"]).endswith("empty.json") and a["empty"] for a in payload["artifacts"])
+    assert payload["empty_checksum_artifact_count"] == 1
+    assert any(a["path"].endswith("ml_task_results.json") and a["empty"] for a in payload["artifacts"])
 
 
 def test_provenance_blank_declared_hash_fails_closed(tmp_path: Path) -> None:

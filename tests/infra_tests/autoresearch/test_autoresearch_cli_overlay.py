@@ -119,14 +119,16 @@ def test_validate_autoresearch_overlay_surfaces_errors_and_writes_report(tmp_pat
     assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
 
 
-def test_validate_autoresearch_overlay_reports_failures_gracefully(tmp_path: Path) -> None:
+def test_validate_autoresearch_overlay_rejects_invalid_project_pipeline(tmp_path: Path) -> None:
     from infrastructure.autoresearch import validate_autoresearch_overlay
 
-    # Marker present but no pipeline.yaml scaffold -> build raises, surfaced as a string.
-    project = tmp_path / "projects" / "demo"
-    project.mkdir(parents=True)
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "pipeline.yaml").mkdir()
     (project / "autoresearch.yaml").write_text("strict: true\n", encoding="utf-8")
 
-    issues = validate_autoresearch_overlay(project, tmp_path)
+    issues = validate_autoresearch_overlay(project, repo_root)
 
     assert any("AutoResearch readiness validation failed" in issue for issue in issues)
+    assert any("project_pipeline" in issue and "not a file" in issue for issue in issues)
+    assert not (project / "output" / "reports" / "autoresearch_readiness.json").exists()

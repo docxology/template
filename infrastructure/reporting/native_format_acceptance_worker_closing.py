@@ -4,6 +4,8 @@ After the worker's own try/except, these checks close the outer custody: public
 source digest, decoder library custody, installed providers, original Source
 correspondence, host identity and interpreter identity. Failures are recorded
 on the raw outcome; they never raise.
+The worker's primary diagnostic and every additional closing refusal are retained
+separately; the combined diagnostic is only their human-readable projection.
 """
 
 from __future__ import annotations
@@ -28,6 +30,15 @@ if TYPE_CHECKING:
 __all__ = ["close_native_worker_custody"]
 
 
+def _record_native_closing_failure(raw: dict[str, Any], diagnostic: str) -> None:
+    """Append custody evidence without replacing the worker's primary cause."""
+    raw.setdefault("primary_diagnostic", str(raw.get("diagnostic", "")))
+    raw.setdefault("closing_custody_diagnostics", []).append(diagnostic)
+    raw["diagnostic"] = "; ".join(
+        filter(None, (raw["primary_diagnostic"], *raw["closing_custody_diagnostics"]))
+    )
+
+
 def close_native_worker_custody(
     raw: dict[str, Any],
     *,
@@ -44,17 +55,19 @@ def close_native_worker_custody(
     interpreter_before: dict[str, Any],
 ) -> None:
     """Close every outer custody check and record any failure on ``raw``."""
+    raw.setdefault("primary_diagnostic", str(raw.get("diagnostic", "")))
+    raw["diagnostic"] = "; ".join(
+        filter(None, (raw["primary_diagnostic"], *raw.get("closing_custody_diagnostics", [])))
+    )
     try:
         raw["source_digest_after"] = public_source_digest(root)
     except (OSError, ValueError) as error:
         raw["source_digest_after"] = ""
-        raw["diagnostic"] = f"public source custody unavailable after native execution: {error}"
+        _record_native_closing_failure(raw, f"public source custody unavailable after native execution: {error}")
     if raw["source_digest_after"] != before:
-        raw["status"], raw["execution_exit_code"], raw["diagnostic"] = (
-            "fail",
-            raw["execution_exit_code"] if raw["execution_exit_code"] in {130, 124} else 1,
-            raw["diagnostic"] or "public source changed during native execution",
-        )
+        raw["status"] = "fail"
+        raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {130, 124} else 1
+        _record_native_closing_failure(raw, "public source changed during native execution")
     if raw["library_custody_before"]:
         try:
             raw["library_custody_after"] = observe_native_library_custody(formats, repo_root=root)
@@ -68,7 +81,7 @@ def close_native_worker_custody(
         except (OSError, ValueError) as error:
             raw["status"] = "fail"
             raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
-            raw["diagnostic"] = f"native decoder custody unavailable or changed: {error}"
+            _record_native_closing_failure(raw, f"native decoder custody unavailable or changed: {error}")
     try:
         provider_after, _ = capture_runtime_providers(
             root,
@@ -88,14 +101,14 @@ def close_native_worker_custody(
     except (OSError, ValueError, RuntimeError) as error:
         raw["status"] = "fail"
         raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
-        raw["diagnostic"] = f"native original source/provider closing custody failed: {error}"
+        _record_native_closing_failure(raw, f"native original source/provider closing custody failed: {error}")
     raw["host_after"] = native_host_observation()
     if raw["host_after"] != host_before:
         raw["status"] = "fail"
         raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
-        raw["diagnostic"] = "native worker host changed during execution"
+        _record_native_closing_failure(raw, "native worker host changed during execution")
     raw["interpreter_observation_after"] = executable_observation(Path(sys.executable))
     if raw["interpreter_observation_after"] != interpreter_before:
         raw["status"] = "fail"
         raw["execution_exit_code"] = raw["execution_exit_code"] if raw["execution_exit_code"] in {124, 130} else 1
-        raw["diagnostic"] = "native interpreter changed during execution"
+        _record_native_closing_failure(raw, "native interpreter changed during execution")

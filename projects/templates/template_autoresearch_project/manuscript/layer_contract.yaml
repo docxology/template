@@ -5,6 +5,7 @@ allow_infrastructure_imports:
   - src/template_autoresearch_project/loop/loop.py
   - src/template_autoresearch_project/loop/config.py
   - src/template_autoresearch_project/loop/loop_phases.py
+  - src/template_autoresearch_project/loop/settlement.py
   - src/template_autoresearch_project/writers/manifests.py
   - src/template_autoresearch_project/writers/loop_artifacts.py
   - src/template_autoresearch_project/writers/benchmark.py

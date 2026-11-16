@@ -15,6 +15,7 @@ from pathlib import Path
 import pytest
 
 from autoresearch_source_provider import PLATFORM_VERSION
+from template_autoresearch_project.loop.models import AutoResearchLoopResult
 
 from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.files.secure_write import read_bytes_confined
@@ -193,27 +194,29 @@ def standalone_workspace() -> Iterator[Path]:
 def test_fresh_export_hydrates_with_actual_platform_distribution(
     repo_root: Path,
     project_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
     genuine_platform_environment: tuple[Path, dict[str, str]],
     standalone_workspace: Path,
     invalid_readiness: bool,
 ) -> None:
+    assert autoresearch_loop_result.readiness_valid
     python, environment = genuine_platform_environment
     standalone = standalone_workspace / "template_autoresearch_project"
     export_exemplar(repo_root, "templates/template_autoresearch_project", standalone)
     assert all(not (ancestor / "infrastructure").is_dir() for ancestor in (standalone, *standalone.parents))
-    # Hydration consumes real baseline domain outputs. The fresh source export
-    # deliberately excludes outputs, and the control must recreate hydration results.
+    # Retain the genuine primary that authenticates scientific baseline evidence.
+    # Only derived hydration leaves are removed and recreated by the fresh script.
     shutil.copytree(
         project_root / "output",
         standalone / "output",
         ignore=shutil.ignore_patterns("__pycache__", ".pipeline", "logs", "telemetry"),
     )
+    baseline_manifest = (standalone / "output/reports/artifact_manifest.json").read_bytes()
     shutil.rmtree(standalone / "output/manuscript", ignore_errors=True)
     for relative in (
         "output/data/manuscript_variables.json",
         "output/data/manuscript_variable_provenance.json",
         "output/data/manuscript_figure_blocks.json",
-        "output/reports/artifact_manifest.json",
     ):
         (standalone / relative).unlink(missing_ok=True)
     if invalid_readiness:
@@ -245,6 +248,16 @@ try:
     runpy.run_path(str(script),run_name='__main__')
 except SystemExit as error:
     if error.code not in (None,0): raise
+from template_autoresearch_project.loop.settlement import terminal_readiness
+from template_autoresearch_project.manuscript.manuscript_tokens_core import compute_variables_and_provenance
+from template_autoresearch_project.manuscript.manuscript_tokens_figures import FIGURE_BLOCK_KEYS
+from infrastructure.autoresearch import build_autoresearch_plan
+plan=build_autoresearch_plan(project,project.name,projects_dir=str(project.parent))
+assert terminal_readiness(plan,project).valid
+variables,provenance=compute_variables_and_provenance(project,require_valid=True)
+assert json.loads((project/'output/data/manuscript_variables.json').read_text()) == variables
+assert json.loads((project/'output/data/manuscript_variable_provenance.json').read_text()) == provenance
+assert json.loads((project/'output/data/manuscript_figure_blocks.json').read_text()) == {k:variables[k] for k in sorted(FIGURE_BLOCK_KEYS) if k in variables}
 for root in (origin.parent,project/'scripts',project/'src'):
     _audit_scope['verify_executed_source_code'](root,Path(sys.pycache_prefix))
 print(json.dumps({'actual_platform_origin':str(origin),'platform_version':infrastructure.__version__}))
@@ -261,12 +274,21 @@ print(json.dumps({'actual_platform_origin':str(origin),'platform_version':infras
     assert not observed.timed_out
     if invalid_readiness:
         assert observed.returncode != 0 and "valid final readiness" in observed.stderr
-        assert not resolved.exists() and not manifest.exists()
+        assert not resolved.exists() and manifest.read_bytes() == baseline_manifest
     else:
         assert observed.returncode == 0, observed.stdout + observed.stderr
         assert "actual_platform_origin" in observed.stdout
         assert resolved.is_file() and "{{" not in resolved.read_text()
         rows = json.loads(manifest.read_text())["entries"]
-        variables = standalone / "output/data/manuscript_variables.json"
-        record = next(row for row in rows if row["path"] == "output/data/manuscript_variables.json")
-        assert record["sha256"] == hashlib.sha256(variables.read_bytes()).hexdigest()
+        for record in rows:
+            actual = (standalone / record["path"]).read_bytes()
+            assert record["sha256"] == hashlib.sha256(actual).hexdigest()
+            assert record["size_bytes"] == len(actual)
+        research = json.loads((standalone / "output/data/research_object_manifest.json").read_text())
+        for record in [*research["artifacts"], *research["manuscript_outputs"], research["evidence_registry"], research["source_ledger"], research["schema_manifest"]]:
+            if record["record_kind"] == "derivative_reference":
+                assert set(record) == {"path", "record_kind", "integrity_authority"}
+            else:
+                actual = (standalone / record["path"]).read_bytes()
+                assert record["sha256"] == hashlib.sha256(actual).hexdigest()
+                assert record["size_bytes"] == len(actual)

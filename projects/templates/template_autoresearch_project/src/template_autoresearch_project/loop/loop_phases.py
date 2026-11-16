@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.autoresearch import AutoResearchPlan, AutoResearchReport, validate_autoresearch_plan
+from infrastructure.core.files.portability import sanitize_machine_local_paths
+from infrastructure.core.pipeline.artifacts import collect_stable_output_inventory, output_inventory_mode_for_project
 from infrastructure.autoresearch.models import AutoResearchIssue
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
@@ -25,7 +27,6 @@ from ..writers import (
     write_artifact_manifest,
     write_autoresearch_phase_ledger,
     write_final_visual_artifacts,
-    write_loop_bound_figures,
     write_method_contract_artifacts,
     write_research_object_manifest,
     write_schema_manifest,
@@ -106,16 +107,6 @@ def combine_readiness_reports(
     )
 
 
-def only_changed_artifact_manifest_issues(report: AutoResearchReport) -> bool:
-    """Return true when readiness only needs a manifest checksum refresh."""
-    if report.valid or not report.issues:
-        return False
-    return all(
-        issue.code == "AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE" and issue.message.startswith("changed artifact:")
-        for issue in report.issues
-    )
-
-
 def write_readiness_manifest(project_root: Path, repo_root: Path) -> Path:
     """Refresh the exact lifecycle-aware manifest after artifacts settle."""
     return write_artifact_manifest(project_root, repo_root=repo_root)
@@ -141,15 +132,7 @@ def run_method_contract_phase(ctx: LoopRunContext) -> None:
 
 def run_pre_readiness_visual_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
     """Emit loop-bound figures, optional security artifacts, and best-effort hydration."""
-    append_paths(
-        ctx,
-        write_loop_bound_figures(
-            ctx.project_root,
-            result,
-            ctx.ml_result,
-            diagnostics=ctx.diagnostics,
-        ),
-    )
+    sanitize_machine_local_paths(ctx.project_root / "output")
     if ctx.config.security_profile.enabled:
         append_paths(
             ctx,
@@ -161,13 +144,19 @@ def run_pre_readiness_visual_phase(ctx: LoopRunContext, result: AutoResearchLoop
                 ml_result=ctx.ml_result,
             ),
         )
+    append_paths(
+        ctx,
+        write_final_visual_artifacts(
+            ctx.project_root, result, ctx.ml_result, diagnostics=ctx.diagnostics,
+        ),
+    )
     append_paths(ctx, write_manuscript_hydration_artifacts(ctx.project_root, require_valid=False))
 
 
 def run_pre_readiness_settlement_phase(ctx: LoopRunContext, result: AutoResearchLoopResult) -> None:
-    """Refresh manifests, run settlement pass 2, and refresh manifests again."""
-    append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.repo_root))
-    run_settlement_manifest_phase(ctx, result, settlement_pass_count=2, write_final_manifest=False)
+    """Close membership and materialize provisional catalogs before preflight."""
+    close_output_membership(ctx)
+    run_settlement_manifest_phase(ctx, result, settlement_pass_count=1, write_final_manifest=False)
     append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.repo_root))
 
 
@@ -177,11 +166,8 @@ def resolve_extrinsic_readiness(
     ctx: LoopRunContext,
     readiness_pre: AutoResearchReport,
 ) -> tuple[bool, AutoResearchReport]:
-    """Validate extrinsic readiness and refresh manifests when only checksums drift."""
+    """Read the genuine preflight verdict without checksum retry or error suppression."""
     readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
-    if only_changed_artifact_manifest_issues(readiness_post):
-        append_paths(ctx, write_readiness_manifest(ctx.project_root, ctx.repo_root))
-        readiness_post = validate_autoresearch_plan(plan, project_root, phase="extrinsic")
     readiness_valid = readiness_pre.valid and readiness_post.valid
     readiness_report = combine_readiness_reports(readiness_pre, readiness_post, plan.project_name)
     return readiness_valid, readiness_report
@@ -206,7 +192,6 @@ def run_final_payload_and_visual_phase(ctx: LoopRunContext, result: AutoResearch
             build_project_evidence_registry(ctx.project_root),
         ),
     )
-    append_paths(ctx, write_manuscript_hydration_artifacts(ctx.project_root, require_valid=True))
 
 
 def run_settlement_manifest_phase(
@@ -229,20 +214,41 @@ def run_settlement_manifest_phase(
     )
     append_paths(
         ctx,
-        write_schema_manifest(ctx.project_root, ctx.output_paths, generated_at=ctx.generated_at),
+        write_research_object_manifest(ctx.project_root, ctx.output_paths, generated_at=ctx.generated_at),
     )
     append_paths(
         ctx,
-        write_research_object_manifest(ctx.project_root, ctx.output_paths, generated_at=ctx.generated_at),
+        write_schema_manifest(ctx.project_root, ctx.output_paths, generated_at=ctx.generated_at),
     )
     if write_final_manifest:
         append_paths(ctx, write_artifact_manifest(ctx.project_root, repo_root=ctx.repo_root))
 
 
 def run_post_readiness_final_phases(ctx: LoopRunContext, final: AutoResearchLoopResult) -> None:
-    """Run final payload/visual refresh and settlement pass 3."""
+    """Materialize the candidate once, then take the sole complete byte snapshot last."""
     run_final_payload_and_visual_phase(ctx, final)
-    run_settlement_manifest_phase(ctx, final, settlement_pass_count=3, write_final_manifest=True)
+    run_settlement_manifest_phase(ctx, final, settlement_pass_count=2, write_final_manifest=False)
+    append_paths(ctx, write_manuscript_hydration_artifacts(ctx.project_root, require_valid=final.readiness_valid))
+    append_paths(ctx, write_artifact_manifest(ctx.project_root, repo_root=ctx.repo_root))
+
+
+def close_output_membership(ctx: LoopRunContext) -> None:
+    """Freeze unique intended paths, including inherited evidence and later catalogs."""
+    mode = output_inventory_mode_for_project(ctx.repo_root, ctx.project_root)
+    inventory = collect_stable_output_inventory(ctx.project_root / "output", inventory_mode=mode)
+    planned = (
+        "output/data/autoresearch_phase_ledger.json",
+        "output/data/autoresearch_schema_manifest.json",
+        "output/data/research_object_manifest.json",
+        "output/reports/artifact_manifest.json",
+        "output/reports/autoresearch_readiness.json",
+        "output/reports/autoresearch_readiness.md",
+    )
+    ctx.output_paths[:] = sorted({
+        *(path.resolve() for path in ctx.output_paths),
+        *inventory.files,
+        *(ctx.project_root / name for name in planned),
+    })
 
 
 def run_pre_extrinsic_phases(ctx: LoopRunContext, pre_readiness: AutoResearchLoopResult) -> None:

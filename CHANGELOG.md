@@ -16,6 +16,12 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Settle AutoResearch catalogs, security evidence, loop visuals and hydration
+  before the complete lifecycle primary byte snapshot and terminal validation.
+  Keep downstream references acyclic and strict standalone failure refusal.
+- Retain genuine failed native-stage prefixes and the primary worker failure
+  alongside closing-custody refusals. Native preflight failures remain red while
+  always transporting original evidence; original deadlines are unchanged.
 - Separate installed SDK, checkout authoring and optional contributor checks.
   Keep preparation, fork identity, runtime dispatch and publication under their
   existing canonical guide owners instead of repeating setup and release recipes.
