@@ -102,8 +102,11 @@ def _occurrences(hydration: dict[str, Any]) -> tuple[list[dict[str, Any]], list[
             mapping, writer = row.get("hydration"), row.get("writer")
             route = _HYDRATED_CALLERS.get(hydration["scope"])
             if (
-                route is None or not isinstance(mapping, dict) or not isinstance(writer, dict)
-                or mapping.get("writer") != route[1].value or writer.get("algorithm") != route[1].value
+                route is None
+                or not isinstance(mapping, dict)
+                or not isinstance(writer, dict)
+                or mapping.get("writer") != route[1].value
+                or writer.get("algorithm") != route[1].value
                 or writer.get("source_binding") != hydration["source_binding"]
                 or mapping.get("source_sha256") != authored["sha256"]
                 or mapping.get("source_bytes") != authored["bytes"]

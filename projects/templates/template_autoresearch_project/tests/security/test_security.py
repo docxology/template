@@ -80,6 +80,7 @@ def test_inventory_and_attestation_report_pass_missing_and_mismatch_cases(
     assert any(row["id"] == "mnist_fixture" and row["exists"] for row in inventory["inputs"])
     assert inventory["generated_artifacts"]
     from template_autoresearch_project.writers.integrity_boundary import UPSTREAM_OUTPUTS
+
     assert {row["path"] for row in inventory["generated_artifacts"]} <= UPSTREAM_OUTPUTS
     export = local_inventory_export_payload(inventory, generated_at="2026-05-26T00:00:00+00:00")
     assert export["schema"] == "template-autoresearch-local-inventory-export-v1"

@@ -257,7 +257,10 @@ def _hydration_source_bytes(root: Path) -> dict[str, bytes]:
 
 
 def _stale_hydration_members(
-    root: Path, source: Path, destination: Path, current: Collection[str],
+    root: Path,
+    source: Path,
+    destination: Path,
+    current: Collection[str],
 ) -> list[tuple[Path, str]]:
     """Inspect prior ownership without granting authority beyond Source rules."""
     previous: dict[str, str] = {}

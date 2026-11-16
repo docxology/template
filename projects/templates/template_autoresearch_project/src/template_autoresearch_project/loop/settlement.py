@@ -7,14 +7,19 @@ import json
 from pathlib import Path
 
 from infrastructure.autoresearch import (
-    AutoResearchPlan, AutoResearchReport, build_autoresearch_plan,
-    validate_autoresearch_plan, write_autoresearch_report,
+    AutoResearchPlan,
+    AutoResearchReport,
+    build_autoresearch_plan,
+    validate_autoresearch_plan,
+    write_autoresearch_report,
 )
 from infrastructure.autoresearch.models import AutoResearchIssue
 from infrastructure.core.files.portability import sanitize_machine_local_paths
 from infrastructure.core.pipeline.artifacts import (
-    artifact_manifest_from_payload, collect_stable_output_inventory,
-    output_inventory_mode_for_project, validate_artifact_manifest,
+    artifact_manifest_from_payload,
+    collect_stable_output_inventory,
+    output_inventory_mode_for_project,
+    validate_artifact_manifest,
 )
 
 
@@ -25,17 +30,23 @@ def terminal_readiness(plan: AutoResearchPlan, project_root: Path) -> AutoResear
     manifest_path = project_root / "output/reports/artifact_manifest.json"
     manifest = artifact_manifest_from_payload(json.loads(manifest_path.read_text(encoding="utf-8")))
     primary = validate_artifact_manifest(
-        manifest, project_dir=project_root,
+        manifest,
+        project_dir=project_root,
         expected_inventory_mode=output_inventory_mode_for_project(plan.repo_root, project_root),
     )
-    issues = (*intrinsic.issues, *extrinsic.issues, *(
-        AutoResearchIssue(severity="error", code="AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE", message=message)
-        for message in primary.issues
-    ))
+    issues = (
+        *intrinsic.issues,
+        *extrinsic.issues,
+        *(
+            AutoResearchIssue(severity="error", code="AUTORESEARCH.ARTIFACT_MANIFEST_ISSUE", message=message)
+            for message in primary.issues
+        ),
+    )
     return AutoResearchReport(
         project_name=plan.project_name,
         valid=intrinsic.valid and extrinsic.valid and not primary.issues,
-        issues=issues, plan=plan,
+        issues=issues,
+        plan=plan,
     )
 
 
@@ -60,11 +71,16 @@ def invalidate_settlement(project_root: Path, plan: AutoResearchPlan, report: Au
 def failed_settlement_report(plan: AutoResearchPlan, error: Exception) -> AutoResearchReport:
     """Keep unexpected final-writer/reader failures explicit, never earlier success."""
     return AutoResearchReport(
-        project_name=plan.project_name, valid=False, plan=plan,
-        issues=(AutoResearchIssue(
-            severity="error", code="AUTORESEARCH.SETTLEMENT_FAILED",
-            message=f"Final-byte settlement failed: {type(error).__name__}: {error}",
-        ),),
+        project_name=plan.project_name,
+        valid=False,
+        plan=plan,
+        issues=(
+            AutoResearchIssue(
+                severity="error",
+                code="AUTORESEARCH.SETTLEMENT_FAILED",
+                message=f"Final-byte settlement failed: {type(error).__name__}: {error}",
+            ),
+        ),
     )
 
 
@@ -72,9 +88,9 @@ def _frozen_upstream_evidence(project_root: Path) -> tuple[dict, dict | None]:
     """Hold prior scientific evidence, authenticated by its existing primary entries."""
     from infrastructure.core.files.secure_write import read_bytes_confined
 
-    primary = artifact_manifest_from_payload(json.loads(
-        (project_root / "output/reports/artifact_manifest.json").read_text(encoding="utf-8")
-    ))
+    primary = artifact_manifest_from_payload(
+        json.loads((project_root / "output/reports/artifact_manifest.json").read_text(encoding="utf-8"))
+    )
     entries = {entry.path: entry for entry in primary.entries}
     names = ["output/data/research_object_manifest.json"]
     inventory_name = "output/data/autoresearch_supply_chain_inventory.json"
@@ -112,10 +128,14 @@ def _verify_frozen_upstream(project_root: Path, frozen: tuple[dict, dict | None]
     rows.append(ledger)
     for row in rows:
         content = read_bytes_confined(
-            project_root, project_root / row["path"], max_bytes=max(1, row["size_bytes"]),
+            project_root,
+            project_root / row["path"],
+            max_bytes=max(1, row["size_bytes"]),
         )
         if (len(content), hashlib.sha256(content).hexdigest(), not content) != (
-            row["size_bytes"], row["sha256"], row["empty"],
+            row["size_bytes"],
+            row["sha256"],
+            row["empty"],
         ):
             raise ValueError(f"Frozen upstream result changed: {row['path']}")
     if inventory is not None:
@@ -130,8 +150,11 @@ def settle_standalone_hydration(project_root: Path, repo_root: Path) -> list[Pat
     from ..manuscript.manuscript_variables import compute_variables, write_manuscript_hydration_artifacts
     from ..writers.manifests import write_artifact_manifest, write_research_object_manifest, write_schema_manifest
     from infrastructure.rendering.manuscript_injection import (
-        _hydration_member, _rebase_output_links_for_destination,
-        hydrate_manuscript_tree, stale_hydration_paths, substitute_manuscript_text,
+        _hydration_member,
+        _rebase_output_links_for_destination,
+        hydrate_manuscript_tree,
+        stale_hydration_paths,
+        substitute_manuscript_text,
     )
 
     # Refuse invalid inputs before writing sidecars, resolved sources or a primary manifest.
@@ -146,13 +169,19 @@ def settle_standalone_hydration(project_root: Path, repo_root: Path) -> list[Pat
         for path in (project_root / "manuscript").iterdir()
         if path.is_file() and _hydration_member(path.name)
     )
-    paths.update(project_root / name for name in (
-        "output/data/manuscript_variables.json", "output/data/manuscript_variable_provenance.json",
-        "output/data/manuscript_figure_blocks.json", "output/data/research_object_manifest.json",
-        "output/data/autoresearch_schema_manifest.json", "output/reports/artifact_manifest.json",
-        "output/manuscript/hydration_manifest.json",
-        "output/reports/evidence_registry.json",
-    ))
+    paths.update(
+        project_root / name
+        for name in (
+            "output/data/manuscript_variables.json",
+            "output/data/manuscript_variable_provenance.json",
+            "output/data/manuscript_figure_blocks.json",
+            "output/data/research_object_manifest.json",
+            "output/data/autoresearch_schema_manifest.json",
+            "output/reports/artifact_manifest.json",
+            "output/manuscript/hydration_manifest.json",
+            "output/reports/evidence_registry.json",
+        )
+    )
     declared = sorted(paths)
     report = None
     try:
@@ -164,7 +193,8 @@ def settle_standalone_hydration(project_root: Path, repo_root: Path) -> list[Pat
 
         rel_paths = [path.relative_to(project_root).as_posix() for path in declared]
         for relative in (
-            "output/data/autoresearch_loop.json", "output/reports/autoresearch_loop.json",
+            "output/data/autoresearch_loop.json",
+            "output/reports/autoresearch_loop.json",
             "output/data/autoresearch_review_packet.json",
         ):
             path = project_root / relative

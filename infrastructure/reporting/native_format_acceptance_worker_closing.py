@@ -34,9 +34,7 @@ def _record_native_closing_failure(raw: dict[str, Any], diagnostic: str) -> None
     """Append custody evidence without replacing the worker's primary cause."""
     raw.setdefault("primary_diagnostic", str(raw.get("diagnostic", "")))
     raw.setdefault("closing_custody_diagnostics", []).append(diagnostic)
-    raw["diagnostic"] = "; ".join(
-        filter(None, (raw["primary_diagnostic"], *raw["closing_custody_diagnostics"]))
-    )
+    raw["diagnostic"] = "; ".join(filter(None, (raw["primary_diagnostic"], *raw["closing_custody_diagnostics"])))
 
 
 def close_native_worker_custody(

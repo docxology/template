@@ -158,7 +158,8 @@ def observe_pdf_hydration_ordinals(
             continue
         if row["transformation"] == "Source-normalized-authored-body":
             if (
-                writer is None or writer is SharedHydrationWriter.RESOLVED_TREE
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
                 or row["writer"] != writer_binding
                 or require_shared_hydration(authored.content, {}, content, writer=writer).data() != row["hydration"]
             ):
@@ -167,8 +168,11 @@ def observe_pdf_hydration_ordinals(
         if row["transformation"] != "shared-uppercase-token-hydration":
             raise ValueError("ordinal parser requires the independently checked actual shared hydration adapter")
         if (
-            variable_binding is None or writer is None or row["writer"] != writer_binding
-            or require_shared_hydration(authored.content, variable_values, content, writer=writer).data() != row["hydration"]
+            variable_binding is None
+            or writer is None
+            or row["writer"] != writer_binding
+            or require_shared_hydration(authored.content, variable_values, content, writer=writer).data()
+            != row["hydration"]
         ):
             raise ValueError("ordinal parser differs from complete actual Source hydration occurrence reconstruction")
         for ordinal, token in enumerate(row["hydration"]["occurrences"], 1):

@@ -13,9 +13,12 @@ DERIVATIVE_SCHEMAS = {
     "output/data/manuscript_variable_provenance.json": "template-autoresearch-manuscript-provenance-v1",
     "output/manuscript/hydration_manifest.json": "template-hydrated-manuscript/v1",
 }
-DERIVATIVE_TABLES = frozenset((
-    "output/data/manuscript_variables.json", "output/data/manuscript_figure_blocks.json",
-))
+DERIVATIVE_TABLES = frozenset(
+    (
+        "output/data/manuscript_variables.json",
+        "output/data/manuscript_figure_blocks.json",
+    )
+)
 
 GENERIC_JSON_EXEMPTIONS: dict[str, str] = {
     "output/data/autoresearch_claims.json": "list of generated claim rows",
@@ -174,10 +177,13 @@ def schema_manifest_payload(
     for path in _candidate_artifact_paths(project_root, paths):
         rel_path = _relative_path(project_root, path)
         if rel_path in DERIVATIVE_SCHEMAS:
-            schema_rows.append({
-                "path": rel_path, "schema": DERIVATIVE_SCHEMAS[rel_path],
-                "conformance": "declared_derivative_not_observed",
-            })
+            schema_rows.append(
+                {
+                    "path": rel_path,
+                    "schema": DERIVATIVE_SCHEMAS[rel_path],
+                    "conformance": "declared_derivative_not_observed",
+                }
+            )
             continue
         if rel_path in DERIVATIVE_TABLES:
             exemption_rows.append({"path": rel_path, "reason": GENERIC_JSON_EXEMPTIONS[rel_path]})
@@ -225,7 +231,13 @@ def schema_manifest_payload(
 
 
 def _candidate_artifact_paths(project_root: Path, paths: list[Path]) -> tuple[Path, ...]:
-    candidates = {path.resolve() for path in paths if path.exists() or _relative_path(project_root, path) in DERIVATIVE_SCHEMAS or _relative_path(project_root, path) in DERIVATIVE_TABLES}
+    candidates = {
+        path.resolve()
+        for path in paths
+        if path.exists()
+        or _relative_path(project_root, path) in DERIVATIVE_SCHEMAS
+        or _relative_path(project_root, path) in DERIVATIVE_TABLES
+    }
     return tuple(sorted(candidates))
 
 

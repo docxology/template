@@ -186,7 +186,8 @@ def observe_office_hydration_ordinals(
             continue
         if row["transformation"] == "Source-normalized-authored-body":
             if (
-                writer is None or writer is SharedHydrationWriter.RESOLVED_TREE
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
                 or row["writer"] != writer_binding
                 or require_shared_hydration(authored.content, {}, body, writer=writer).data() != row["hydration"]
             ):
@@ -194,7 +195,9 @@ def observe_office_hydration_ordinals(
             continue
         if (
             row["transformation"] != "shared-uppercase-token-hydration"
-            or variable_binding is None or writer is None or row["writer"] != writer_binding
+            or variable_binding is None
+            or writer is None
+            or row["writer"] != writer_binding
             or require_shared_hydration(authored.content, variables, body, writer=writer).data() != row["hydration"]
         ):
             raise ValueError("Office ordinal changed the actual shared Source hydration adapter")

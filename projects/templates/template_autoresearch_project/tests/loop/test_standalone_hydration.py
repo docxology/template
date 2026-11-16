@@ -285,7 +285,13 @@ print(json.dumps({'actual_platform_origin':str(origin),'platform_version':infras
             assert record["sha256"] == hashlib.sha256(actual).hexdigest()
             assert record["size_bytes"] == len(actual)
         research = json.loads((standalone / "output/data/research_object_manifest.json").read_text())
-        for record in [*research["artifacts"], *research["manuscript_outputs"], research["evidence_registry"], research["source_ledger"], research["schema_manifest"]]:
+        for record in [
+            *research["artifacts"],
+            *research["manuscript_outputs"],
+            research["evidence_registry"],
+            research["source_ledger"],
+            research["schema_manifest"],
+        ]:
             if record["record_kind"] == "derivative_reference":
                 assert set(record) == {"path", "record_kind", "integrity_authority"}
             else:

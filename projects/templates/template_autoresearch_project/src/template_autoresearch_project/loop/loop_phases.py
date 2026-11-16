@@ -147,7 +147,10 @@ def run_pre_readiness_visual_phase(ctx: LoopRunContext, result: AutoResearchLoop
     append_paths(
         ctx,
         write_final_visual_artifacts(
-            ctx.project_root, result, ctx.ml_result, diagnostics=ctx.diagnostics,
+            ctx.project_root,
+            result,
+            ctx.ml_result,
+            diagnostics=ctx.diagnostics,
         ),
     )
     append_paths(ctx, write_manuscript_hydration_artifacts(ctx.project_root, require_valid=False))
@@ -244,11 +247,13 @@ def close_output_membership(ctx: LoopRunContext) -> None:
         "output/reports/autoresearch_readiness.json",
         "output/reports/autoresearch_readiness.md",
     )
-    ctx.output_paths[:] = sorted({
-        *(path.resolve() for path in ctx.output_paths),
-        *inventory.files,
-        *(ctx.project_root / name for name in planned),
-    })
+    ctx.output_paths[:] = sorted(
+        {
+            *(path.resolve() for path in ctx.output_paths),
+            *inventory.files,
+            *(ctx.project_root / name for name in planned),
+        }
+    )
 
 
 def run_pre_extrinsic_phases(ctx: LoopRunContext, pre_readiness: AutoResearchLoopResult) -> None:

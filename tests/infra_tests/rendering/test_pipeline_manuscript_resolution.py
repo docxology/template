@@ -67,7 +67,9 @@ def test_auxiliary_refresh_preserves_project_config_and_verbatim_bibliographies(
     injected.mkdir(parents=True)
     (injected / "01_intro.md").write_bytes(b"# Intro\n")
     source_config = b"paper:\r\n  title: Source\r\n# /home/source/research/config.yaml\r\n"
-    project_config = b"# Project-resolved config\r\npaper:\r\n  title: Project\r\n# /Users/owner/research/config.yaml\r\n"
+    project_config = (
+        b"# Project-resolved config\r\npaper:\r\n  title: Project\r\n# /Users/owner/research/config.yaml\r\n"
+    )
     preamble = b"```latex\r\n% /home/source/research/preamble.tex\r\n```\r\n"
     bibliography = b"@book{source,title={Source},note={/Users/source/research/reference}}\r\n"
     (source / "config.yaml").write_bytes(source_config)

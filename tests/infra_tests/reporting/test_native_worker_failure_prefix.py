@@ -172,45 +172,126 @@ def test_genuine_failed_stage_prefix_and_changed_capture_preserve_primary_closin
 
     def run(arguments: list[str], *, cwd: Path, timeout: float) -> None:
         result = subprocess.run(
-            arguments, cwd=cwd, env=environment, text=True, capture_output=True,
-            timeout=min(timeout, max(1.0, deadline - time.monotonic())), check=False,
+            arguments,
+            cwd=cwd,
+            env=environment,
+            text=True,
+            capture_output=True,
+            timeout=min(timeout, max(1.0, deadline - time.monotonic())),
+            check=False,
         )
         assert result.returncode == 0, result.stdout + result.stderr
 
     artifacts = tmp_path / "artifacts"
     run(
-        ["uv", "build", "--offline", "--no-config", "--no-build-isolation", "--python", sys.executable,
-         "--wheel", "--no-create-gitignore", "--out-dir", str(artifacts)],
-        cwd=original, timeout=90,
+        [
+            "uv",
+            "build",
+            "--offline",
+            "--no-config",
+            "--no-build-isolation",
+            "--python",
+            sys.executable,
+            "--wheel",
+            "--no-create-gitignore",
+            "--out-dir",
+            str(artifacts),
+        ],
+        cwd=original,
+        timeout=90,
     )
     wheels = list(artifacts.glob("*.whl"))
     assert len(wheels) == 1
     installed = tmp_path / "installed-sdk"
-    run(["uv", "venv", "--no-project", "--no-python-downloads", "--python", sys.executable, str(installed)],
-        cwd=tmp_path, timeout=15)
+    run(
+        ["uv", "venv", "--no-project", "--no-python-downloads", "--python", sys.executable, str(installed)],
+        cwd=tmp_path,
+        timeout=15,
+    )
     python = installed / "bin/python"
     requirements = tmp_path / "runtime-requirements.txt"
     run(
-        ["uv", "export", "--offline", "--locked", "--no-default-groups", "--group", "rendering", "--group", "dev",
-         "--no-emit-package", "desloppify", "--no-emit-project", "--no-emit-local", "--no-header", "--no-annotate", "--output-file", str(requirements)],
-        cwd=original, timeout=30,
+        [
+            "uv",
+            "export",
+            "--offline",
+            "--locked",
+            "--no-default-groups",
+            "--group",
+            "rendering",
+            "--group",
+            "dev",
+            "--no-emit-package",
+            "desloppify",
+            "--no-emit-project",
+            "--no-emit-local",
+            "--no-header",
+            "--no-annotate",
+            "--output-file",
+            str(requirements),
+        ],
+        cwd=original,
+        timeout=30,
     )
-    normalize_locked_dependency_export(original, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}")
+    normalize_locked_dependency_export(
+        original, requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
+    )
     run(
-        ["uv", "pip", "install", "--offline", "--no-config", "--no-build-isolation", "--no-deps", "--require-hashes",
-         "--python", str(python), "--requirements", str(requirements)],
-        cwd=tmp_path, timeout=120,
+        [
+            "uv",
+            "pip",
+            "install",
+            "--offline",
+            "--no-config",
+            "--no-build-isolation",
+            "--no-deps",
+            "--require-hashes",
+            "--python",
+            str(python),
+            "--requirements",
+            str(requirements),
+        ],
+        cwd=tmp_path,
+        timeout=120,
     )
-    run(["uv", "pip", "install", "--offline", "--no-config", "--no-build", "--no-deps", "--python", str(python), str(wheels[0])],
-        cwd=tmp_path, timeout=30)
+    run(
+        [
+            "uv",
+            "pip",
+            "install",
+            "--offline",
+            "--no-config",
+            "--no-build",
+            "--no-deps",
+            "--python",
+            str(python),
+            str(wheels[0]),
+        ],
+        cwd=tmp_path,
+        timeout=30,
+    )
     child = tmp_path / "genuine-native-prefix.py"
     child.write_text(_STAGE_PREFIX_CHILD, encoding="utf-8")
     prefix = tmp_path / "fresh-owned-bytecode-prefix"
     prefix.mkdir()
     result = subprocess.run(
-        [str(python), "-I", "-X", f"pycache_prefix={prefix}", str(child),
-         str(original), commit, fingerprint, str(mirror), str(deadline)],
-        cwd=tmp_path, env={"PATH": os.environ.get("PATH", os.defpath), "LC_ALL": "C", "HOME": str(tmp_path)},
-        text=True, capture_output=True, timeout=max(1.0, deadline - time.monotonic()), check=False,
+        [
+            str(python),
+            "-I",
+            "-X",
+            f"pycache_prefix={prefix}",
+            str(child),
+            str(original),
+            commit,
+            fingerprint,
+            str(mirror),
+            str(deadline),
+        ],
+        cwd=tmp_path,
+        env={"PATH": os.environ.get("PATH", os.defpath), "LC_ALL": "C", "HOME": str(tmp_path)},
+        text=True,
+        capture_output=True,
+        timeout=max(1.0, deadline - time.monotonic()),
+        check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr

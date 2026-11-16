@@ -18,7 +18,9 @@ from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.validation.content.manuscript_config import (
-    is_project_resolved, unresolved_config_text_tokens, unresolved_config_tokens,
+    is_project_resolved,
+    unresolved_config_text_tokens,
+    unresolved_config_tokens,
 )
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.project_paths import resolve_source_manuscript_dir

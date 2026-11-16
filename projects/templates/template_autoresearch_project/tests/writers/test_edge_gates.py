@@ -51,10 +51,13 @@ def test_research_object_manifest_names_intended_derivatives_without_byte_claims
 
     assert payload["artifact_count"] == 1
     assert payload["checksum_artifact_count"] == 0
-    assert payload["artifacts"] == [{
-        "path": "output/data/ghost.json", "record_kind": "derivative_reference",
-        "integrity_authority": "output/reports/artifact_manifest.json",
-    }]
+    assert payload["artifacts"] == [
+        {
+            "path": "output/data/ghost.json",
+            "record_kind": "derivative_reference",
+            "integrity_authority": "output/reports/artifact_manifest.json",
+        }
+    ]
 
 
 # ---------------------------------------------------------------------------

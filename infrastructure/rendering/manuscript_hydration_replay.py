@@ -119,7 +119,8 @@ def reconstruct_shared_hydration(
     raw_text = source.decode("utf-8")
     text = (
         raw_text.replace("\r\n", "\n").replace("\r", "\n")
-        if writer is SharedHydrationWriter.RESOLVED_TREE else raw_text
+        if writer is SharedHydrationWriter.RESOLVED_TREE
+        else raw_text
     )
     # The literature callbacks use their genuine word-token grammar; the old
     # shared writer and AutoResearch callback use the uppercase Source grammar.
@@ -153,14 +154,18 @@ def reconstruct_shared_hydration(
     if writer is not SharedHydrationWriter.HYDRATED_WORD_TREE:
         for link_pattern in (_MARKDOWN_OUTPUT_TARGET_RE, _HTML_OUTPUT_ATTR_RE):
             text, spans = _rewrite_spans(
-                text, spans,
+                text,
+                spans,
                 [(match.end("open") + 3, match.start("rest"), "") for match in link_pattern.finditer(text)],
             )
     if writer is not SharedHydrationWriter.RESOLVED_TREE:
         text, spans = _rewrite_spans(
-            text, spans,
-            [(match.start(), match.end(), sanitize_machine_local_text(match.group()))
-             for match in _MACHINE_HOME_RE.finditer(text)],
+            text,
+            spans,
+            [
+                (match.start(), match.end(), sanitize_machine_local_text(match.group()))
+                for match in _MACHINE_HOME_RE.finditer(text)
+            ],
         )
     output = text.encode()
     if len(output) > 64 * 1024 * 1024:
@@ -173,8 +178,14 @@ def reconstruct_shared_hydration(
         cursor = position
     rows = tuple(
         HydrationOccurrence(
-            ordinal, key, first, last, offsets[start], offsets[end],
-            hashlib.sha256(output[offsets[start]:offsets[end]]).hexdigest(), resolved,
+            ordinal,
+            key,
+            first,
+            last,
+            offsets[start],
+            offsets[end],
+            hashlib.sha256(output[offsets[start] : offsets[end]]).hexdigest(),
+            resolved,
         )
         for (ordinal, key, first, last, resolved), (start, end) in zip(identities, spans, strict=True)
     )

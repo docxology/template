@@ -405,9 +405,9 @@ def test_actual_enabled_renderer_bookends_remain_owned_by_the_render_stage(tmp_p
     if claimed:
         # Even exact prior-byte bindings cannot transfer these enabled reserved
         # filenames from their real render-stage owner to the hydration receipt.
-        manifest["files"].update({
-            path.name: hashlib.sha256(content).hexdigest() for path, content in originals.items()
-        })
+        manifest["files"].update(
+            {path.name: hashlib.sha256(content).hexdigest() for path, content in originals.items()}
+        )
         (output / "hydration_manifest.json").write_text(json.dumps(manifest))
     before = snapshot(output)
     assert stale_hydration_paths(project) == ()
@@ -428,14 +428,20 @@ def test_actual_enabled_renderer_bookends_remain_owned_by_the_render_stage(tmp_p
     assert snapshot(project / "output") == before
 
 
-@pytest.mark.parametrize("name,body", [
-    ("01_main.md", "Evidence at /Users/alice/research/result.json\n"),
-    ("config.yaml", "paper:\n  title: Portable\n# asset: /home/alice/research/cover.png\n"),
-    ("preamble.md", "```latex\n% Source: /Users/alice/research/preamble.tex\n```\n"),
-])
+@pytest.mark.parametrize(
+    "name,body",
+    [
+        ("01_main.md", "Evidence at /Users/alice/research/result.json\n"),
+        ("config.yaml", "paper:\n  title: Portable\n# asset: /home/alice/research/cover.png\n"),
+        ("preamble.md", "```latex\n% Source: /Users/alice/research/preamble.tex\n```\n"),
+    ],
+)
 @pytest.mark.parametrize("newline", ["\n", "\r\n"])
 def test_portability_normalization_precedes_hydration_ownership_hashes(
-    tmp_path: Path, name: str, body: str, newline: str,
+    tmp_path: Path,
+    name: str,
+    body: str,
+    newline: str,
 ) -> None:
     import hashlib
     import json
@@ -604,11 +610,7 @@ def test_stale_membership_rechecks_source_before_return_or_write(tmp_path: Path,
     observed = []
 
     def after_stale_read(frame, event, _arg):
-        if (
-            event == "return"
-            and frame.f_code is read_bytes_confined.__code__
-            and frame.f_locals["target"] == stale
-        ):
+        if event == "return" and frame.f_code is read_bytes_confined.__code__ and frame.f_locals["target"] == stale:
             # Edit real Source after the actual stale-byte validation; neither
             # the confined reader nor the owner being exercised is replaced.
             current.write_text("# Late Source edit\n")
@@ -632,7 +634,9 @@ def test_stale_membership_rechecks_source_before_return_or_write(tmp_path: Path,
 @pytest.mark.parametrize("home", ["/home/", "/Users/"])
 @pytest.mark.parametrize("dry_run", [False, True])
 def test_hydration_rejects_raw_config_tokens_before_home_normalization(
-    tmp_path: Path, home: str, dry_run: bool,
+    tmp_path: Path,
+    home: str,
+    dry_run: bool,
 ) -> None:
     from infrastructure.rendering.manuscript_injection import hydrate_manuscript_tree
 

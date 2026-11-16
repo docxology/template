@@ -141,7 +141,8 @@ def _selected_occurrences(
             continue
         if row["transformation"] == "Source-normalized-authored-body":
             if (
-                writer is None or writer is SharedHydrationWriter.RESOLVED_TREE
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
                 or row["writer"] != writer_binding
                 or require_shared_hydration(authored.content, {}, content, writer=writer).data() != row["hydration"]
             ):
@@ -149,7 +150,9 @@ def _selected_occurrences(
             continue
         if (
             row["transformation"] != "shared-uppercase-token-hydration"
-            or variables is None or writer is None or row["writer"] != writer_binding
+            or variables is None
+            or writer is None
+            or row["writer"] != writer_binding
             or require_shared_hydration(authored.content, values, content, writer=writer).data() != row["hydration"]
         ):
             raise ValueError("HTML ordinal needs its exact independently checked Source hydration adapter")

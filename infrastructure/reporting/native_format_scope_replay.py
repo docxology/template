@@ -627,9 +627,7 @@ def run_native_scope_worker(
                 raw["status"] = "blocked"
                 if raw["execution_exit_code"] == 0:
                     raw["execution_exit_code"] = 75
-                _record_native_closing_failure(
-                    raw, f"actual native producer final Source/SDK custody refused: {error}"
-                )
+                _record_native_closing_failure(raw, f"actual native producer final Source/SDK custody refused: {error}")
             if raw["status"] == "pass" and raw["execution_exit_code"] == 0:
                 if len(oracle_phases) != 1:
                     raise ValueError("Original native dispatch requires its one actual completed phase")

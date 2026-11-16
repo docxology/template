@@ -60,17 +60,32 @@ REMAINING = (
 )
 
 _HYDRATED_CALLERS = {
-    "templates/template_advanced_literature_review": ("scripts/05_inject_variables.py", SharedHydrationWriter.HYDRATED_WORD_TREE),
-    "templates/template_literature_meta_analysis": ("scripts/05_inject_variables.py", SharedHydrationWriter.HYDRATED_WORD_TREE),
+    "templates/template_advanced_literature_review": (
+        "scripts/05_inject_variables.py",
+        SharedHydrationWriter.HYDRATED_WORD_TREE,
+    ),
+    "templates/template_literature_meta_analysis": (
+        "scripts/05_inject_variables.py",
+        SharedHydrationWriter.HYDRATED_WORD_TREE,
+    ),
     "templates/template_autoresearch_project": (
-        "src/template_autoresearch_project/loop/settlement.py", SharedHydrationWriter.HYDRATED_UPPERCASE_TREE
+        "src/template_autoresearch_project/loop/settlement.py",
+        SharedHydrationWriter.HYDRATED_UPPERCASE_TREE,
     ),
 }
-_RESOLVED_CALLERS = frozenset({
-    "templates/template_autopoiesis", "templates/template_code_project", "templates/template_experiment_tree",
-    "templates/template_gold_refinement", "templates/template_madlib", "templates/template_methods_paper",
-    "templates/template_pools_rules_tools", "templates/template_prose_project", "templates/template_sia",
-})
+_RESOLVED_CALLERS = frozenset(
+    {
+        "templates/template_autopoiesis",
+        "templates/template_code_project",
+        "templates/template_experiment_tree",
+        "templates/template_gold_refinement",
+        "templates/template_madlib",
+        "templates/template_methods_paper",
+        "templates/template_pools_rules_tools",
+        "templates/template_prose_project",
+        "templates/template_sia",
+    }
+)
 
 
 def source_manuscript_hydration_writer(

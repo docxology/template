@@ -56,7 +56,13 @@ def test_research_object_manifest_records_local_boundaries(
     assert "does not claim RO-Crate" in payload["claim_boundary"]
     assert payload["artifact_count"] == len(payload["artifacts"])
     assert payload["artifact_count"] == payload["checksum_artifact_count"] + payload["derivative_reference_count"]
-    records = [*payload["artifacts"], *payload["manuscript_outputs"], payload["evidence_registry"], payload["source_ledger"], payload["schema_manifest"]]
+    records = [
+        *payload["artifacts"],
+        *payload["manuscript_outputs"],
+        payload["evidence_registry"],
+        payload["source_ledger"],
+        payload["schema_manifest"],
+    ]
     for record in records:
         if record["record_kind"] == "derivative_reference":
             assert set(record) == {"path", "record_kind", "integrity_authority"}
@@ -66,7 +72,9 @@ def test_research_object_manifest_records_local_boundaries(
             assert record["sha256"] == hashlib.sha256(actual).hexdigest()
             assert record["size_bytes"] == len(actual)
             assert record["empty"] == (not actual)
-    primary_reference = next(row for row in payload["artifacts"] if row["path"] == "output/reports/artifact_manifest.json")
+    primary_reference = next(
+        row for row in payload["artifacts"] if row["path"] == "output/reports/artifact_manifest.json"
+    )
     assert primary_reference["record_kind"] == "derivative_reference"
 
     inventory = json.loads((project_root / "output/data/autoresearch_supply_chain_inventory.json").read_text())
@@ -85,7 +93,9 @@ def test_research_object_manifest_records_local_boundaries(
         assert record["expected_sha256"] == record["actual_sha256"] == actual
 
 
-def test_final_hydration_recomputes_identically(project_root: Path, autoresearch_loop_result: AutoResearchLoopResult) -> None:
+def test_final_hydration_recomputes_identically(
+    project_root: Path, autoresearch_loop_result: AutoResearchLoopResult
+) -> None:
     from template_autoresearch_project.manuscript.manuscript_tokens_core import compute_variables_and_provenance
     from template_autoresearch_project.manuscript.manuscript_tokens_figures import FIGURE_BLOCK_KEYS
 

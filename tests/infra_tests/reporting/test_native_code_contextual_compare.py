@@ -68,9 +68,10 @@ def test_complete_source_reconstruction_canonicalizes_context_and_all_later_offs
     source = b"{{PLATFORM}} then science {{RESULT_MIN_ITERATIONS}} and again {{PLATFORM}}"
     variables = {"PLATFORM": context, "RESULT_MIN_ITERATIONS": "7"}
     actual = reconstruct_shared_hydration(source, variables, writer=SharedHydrationWriter.RESOLVED_TREE)
-    assert require_shared_hydration(
-        source, variables, actual.output, writer=SharedHydrationWriter.RESOLVED_TREE
-    ).data() == actual.data()
+    assert (
+        require_shared_hydration(source, variables, actual.output, writer=SharedHydrationWriter.RESOLVED_TREE).data()
+        == actual.data()
+    )
     canonical = reconstruct_shared_hydration(
         source, {**variables, "PLATFORM": "{{PLATFORM}}"}, writer=SharedHydrationWriter.RESOLVED_TREE
     )

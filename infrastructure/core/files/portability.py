@@ -46,5 +46,7 @@ def sanitize_machine_local_paths(root: Path) -> tuple[Path, ...]:
 
 
 __all__ = [
-    "PUBLICATION_TEXT_SUFFIXES", "sanitize_machine_local_paths", "sanitize_machine_local_text",
+    "PUBLICATION_TEXT_SUFFIXES",
+    "sanitize_machine_local_paths",
+    "sanitize_machine_local_text",
 ]

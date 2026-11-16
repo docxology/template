@@ -412,13 +412,17 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path
         ignore=shutil.ignore_patterns("output", ".pytest_cache", "__pycache__"),
     )
 
-    retained = {
-        "output/manuscript/retained.txt": b"retained manuscript evidence\n",
-        "output/pdf/retained.pdf": b"retained PDF bytes\n",
-        "output/web/retained.html": b"<p>retained web evidence</p>\n",
-        "output/release/retained.txt": b"retained release receipt\n",
-        "output/reports/retained.md": b"retained report\n",
-    } if inherited else {}
+    retained = (
+        {
+            "output/manuscript/retained.txt": b"retained manuscript evidence\n",
+            "output/pdf/retained.pdf": b"retained PDF bytes\n",
+            "output/web/retained.html": b"<p>retained web evidence</p>\n",
+            "output/release/retained.txt": b"retained release receipt\n",
+            "output/reports/retained.md": b"retained report\n",
+        }
+        if inherited
+        else {}
+    )
     for relative, content in retained.items():
         path = project / relative
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -448,10 +452,14 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path
     assert manifest.inventory_mode == STABLE_LOCAL_OUTPUT_INVENTORY_MODE
     assert {entry.path for entry in manifest.entries} == expected_paths
     formerly_omitted = {
-        "output/data/autoresearch_loop.json", "output/data/autoresearch_review_packet.json",
-        "output/data/manuscript_variables.json", "output/figures/autoresearch_stage_matrix.png",
-        "output/figures/figure_registry.json", "output/reports/autoresearch_loop.json",
-        "output/reports/autoresearch_loop.md", "output/reports/autoresearch_review_packet.md",
+        "output/data/autoresearch_loop.json",
+        "output/data/autoresearch_review_packet.json",
+        "output/data/manuscript_variables.json",
+        "output/figures/autoresearch_stage_matrix.png",
+        "output/figures/figure_registry.json",
+        "output/reports/autoresearch_loop.json",
+        "output/reports/autoresearch_loop.md",
+        "output/reports/autoresearch_review_packet.md",
         "output/reports/autoresearch_summary.md",
     }
     assert formerly_omitted | set(retained) <= {entry.path for entry in manifest.entries}
@@ -498,34 +506,58 @@ def test_phase_ledger_records_manifest_settlement_without_self_approval(
     assert "extrinsic_readiness" in phase_names
     assert "final_schema_manifest" in phase_names
     assert all(row["artifact_group"] for row in ledger["phases"])
-@pytest.mark.parametrize("relative,change", [
-    *[(path, "same-length") for path in (
-        "output/data/autoresearch_loop.json", "output/data/autoresearch_review_packet.json",
-        "output/data/manuscript_variables.json", "output/figures/autoresearch_stage_matrix.png",
-        "output/figures/figure_registry.json", "output/reports/autoresearch_loop.json",
-        "output/reports/autoresearch_loop.md", "output/reports/autoresearch_review_packet.md",
-        "output/reports/autoresearch_summary.md", "output/pdf/template_autoresearch_project_combined.pdf",
-        "output/web/index.html", "output/release/upload_receipts.json",
-    )],
-    ("output/data/autoresearch_loop.json", "size"),
-    ("output/data/autoresearch_loop.json", "missing"),
-    ("output/data/late.txt", "newfile"),
-    ("", "mode"),
-])
+
+
+@pytest.mark.parametrize(
+    "relative,change",
+    [
+        *[
+            (path, "same-length")
+            for path in (
+                "output/data/autoresearch_loop.json",
+                "output/data/autoresearch_review_packet.json",
+                "output/data/manuscript_variables.json",
+                "output/figures/autoresearch_stage_matrix.png",
+                "output/figures/figure_registry.json",
+                "output/reports/autoresearch_loop.json",
+                "output/reports/autoresearch_loop.md",
+                "output/reports/autoresearch_review_packet.md",
+                "output/reports/autoresearch_summary.md",
+                "output/pdf/template_autoresearch_project_combined.pdf",
+                "output/web/index.html",
+                "output/release/upload_receipts.json",
+            )
+        ],
+        ("output/data/autoresearch_loop.json", "size"),
+        ("output/data/autoresearch_loop.json", "missing"),
+        ("output/data/late.txt", "newfile"),
+        ("", "mode"),
+    ],
+)
 def test_settled_primary_rejects_late_drift(
-    tmp_path: Path, project_root: Path, autoresearch_loop_result: AutoResearchLoopResult,
-    relative: str, change: str,
+    tmp_path: Path,
+    project_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+    relative: str,
+    change: str,
 ) -> None:
     assert autoresearch_loop_result.readiness_valid
     project = tmp_path / "project"
     shutil.copytree(project_root / "output", project / "output")
-    manifest = artifact_manifest_from_payload(json.loads((project / "output/reports/artifact_manifest.json").read_text()))
+    manifest = artifact_manifest_from_payload(
+        json.loads((project / "output/reports/artifact_manifest.json").read_text())
+    )
     expected_mode = manifest.inventory_mode
     assert not validate_artifact_manifest(manifest, project_dir=project, expected_inventory_mode=expected_mode).issues
     path = project / relative
     if change == "mode":
         from infrastructure.core.pipeline.artifacts import STABLE_OUTPUT_INVENTORY_MODE
-        expected_mode = STABLE_OUTPUT_INVENTORY_MODE if manifest.inventory_mode == STABLE_LOCAL_OUTPUT_INVENTORY_MODE else STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+
+        expected_mode = (
+            STABLE_OUTPUT_INVENTORY_MODE
+            if manifest.inventory_mode == STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+            else STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+        )
     elif change == "newfile":
         path.write_text("late stable output\n")
     else:
@@ -541,7 +573,10 @@ def test_settled_primary_rejects_late_drift(
 
 
 def test_failed_terminal_validation_revokes_reusable_readiness(
-    tmp_path: Path, project_root: Path, repo_root: Path, autoresearch_loop_result: AutoResearchLoopResult,
+    tmp_path: Path,
+    project_root: Path,
+    repo_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
 ) -> None:
     from infrastructure.autoresearch import build_autoresearch_plan
     from template_autoresearch_project.loop.settlement import invalidate_settlement, terminal_readiness
@@ -561,11 +596,13 @@ def test_failed_terminal_validation_revokes_reusable_readiness(
         load_loop_artifacts(project, require_valid=True)
 
 
-
 @pytest.mark.parametrize("changed", ["scientific-input", "scientific-result", "baseline-inventory", "source-ledger"])
 def test_standalone_hydration_cannot_recertify_changed_science(
-    tmp_path: Path, project_root: Path, repo_root: Path,
-    autoresearch_loop_result: AutoResearchLoopResult, changed: str,
+    tmp_path: Path,
+    project_root: Path,
+    repo_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+    changed: str,
 ) -> None:
     import yaml
 
@@ -583,8 +620,11 @@ def test_standalone_hydration_cannot_recertify_changed_science(
         payload["task"]["seed"] += 1
         path.write_text(yaml.safe_dump(payload), encoding="utf-8")
     else:
-        path = {"scientific-result": result, "baseline-inventory": inventory,
-                "source-ledger": project / "manuscript/source_ledger.yaml"}[changed]
+        path = {
+            "scientific-result": result,
+            "baseline-inventory": inventory,
+            "source-ledger": project / "manuscript/source_ledger.yaml",
+        }[changed]
         path.write_bytes(path.read_bytes() + b"\n")
     retained_result = result.read_bytes()
     retained_inventory = inventory.read_bytes()
@@ -592,13 +632,17 @@ def test_standalone_hydration_cannot_recertify_changed_science(
         settle_standalone_hydration(project, repo_root)
     assert result.read_bytes() == retained_result
     assert inventory.read_bytes() == retained_inventory
-    assert json.loads((project / "output/data/autoresearch_loop.json").read_text())["metrics"]["readiness_valid"] is False
+    assert (
+        json.loads((project / "output/data/autoresearch_loop.json").read_text())["metrics"]["readiness_valid"] is False
+    )
     with pytest.raises(ValueError):
         load_loop_artifacts(project, require_valid=True)
 
 
 def test_standalone_catalogs_retain_registry_and_remove_owned_stale_members(
-    tmp_path: Path, project_root: Path, repo_root: Path,
+    tmp_path: Path,
+    project_root: Path,
+    repo_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,
 ) -> None:
     from template_autoresearch_project.loop.settlement import settle_standalone_hydration
@@ -607,7 +651,9 @@ def test_standalone_catalogs_retain_registry_and_remove_owned_stale_members(
     project = tmp_path / project_root.name
     shutil.copytree(project_root, project, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
     source = project / "manuscript/11_owned_extra.md"
-    source.write_text("# Additional bounded evidence\n\nExisting scientific results remain unchanged.\n", encoding="utf-8")
+    source.write_text(
+        "# Additional bounded evidence\n\nExisting scientific results remain unchanged.\n", encoding="utf-8"
+    )
     rendered = project / "output/manuscript" / source.name
     settle_standalone_hydration(project, repo_root)
     assert rendered.is_file()
@@ -617,7 +663,11 @@ def test_standalone_catalogs_retain_registry_and_remove_owned_stale_members(
     settle_standalone_hydration(project, repo_root)
     assert not rendered.exists()
     relative = rendered.relative_to(project).as_posix()
-    for name in ("output/data/autoresearch_loop.json", "output/reports/autoresearch_loop.json", "output/data/autoresearch_review_packet.json"):
+    for name in (
+        "output/data/autoresearch_loop.json",
+        "output/reports/autoresearch_loop.json",
+        "output/data/autoresearch_review_packet.json",
+    ):
         assert relative not in json.loads((project / name).read_text())["output_paths"]
     ledger = json.loads(ledger_path.read_text())
     assert relative not in ledger["declared_paths"]

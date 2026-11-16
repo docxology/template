@@ -222,9 +222,11 @@ def code_contextual_semantics(
             bodies.append(consumed.content)
         elif row["transformation"] == "Source-normalized-authored-body":
             if (
-                writer is None or writer is SharedHydrationWriter.RESOLVED_TREE
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
                 or row["writer"] != writer_binding
-                or require_shared_hydration(original.content, {}, consumed.content, writer=writer).data() != row["hydration"]
+                or require_shared_hydration(original.content, {}, consumed.content, writer=writer).data()
+                != row["hydration"]
             ):
                 raise ValueError("Code contextual normalized copy lost its actual Source writer binding")
             projected_rows.append(dict(row))

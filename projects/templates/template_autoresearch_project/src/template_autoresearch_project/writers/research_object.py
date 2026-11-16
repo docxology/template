@@ -21,7 +21,8 @@ def research_object_manifest_payload(
     """Catalog declared paths, with byte claims only for frozen upstream evidence."""
     review_decisions = _load_json_mapping(project_root / "output" / "data" / "review_decisions.json")
     artifacts = [
-        _file_record(project_root, path) if is_upstream_output(project_root, path)
+        _file_record(project_root, path)
+        if is_upstream_output(project_root, path)
         else derivative_reference(_relative_path(project_root, path))
         for path in _existing_project_paths(project_root, paths)
     ]

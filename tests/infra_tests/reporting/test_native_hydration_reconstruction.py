@@ -196,8 +196,7 @@ def test_real_ownership_writer_normalizes_after_replacement_without_touching_aut
     hydrate_manuscript_tree(project, render)
     consumed = (project / "output/manuscript/01_body.md").read_bytes()
     expected = (
-        "é <home>/cache\r\nprefix <home>/data µm | <home>/work\r"
-        "repeat µm <home>/work\n[plot](../figures/plot.png)\n"
+        "é <home>/cache\r\nprefix <home>/data µm | <home>/work\rrepeat µm <home>/work\n[plot](../figures/plot.png)\n"
     ).encode()
     proof = require_shared_hydration(source, values, consumed, writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE)
     assert authored.read_bytes() == source and proof.source == source and consumed == expected
@@ -211,10 +210,13 @@ def test_real_ownership_writer_normalizes_after_replacement_without_touching_aut
     )
     payloads = (b"<home>", "µm".encode(), b"<home>", "µm".encode(), b"<home>")
     for row, prefix, payload in zip(proof.occurrences, prefixes, payloads, strict=True):
-        assert (row.output_start_byte, row.output_end_byte) == (len(prefix.encode()), len(prefix.encode()) + len(payload))
-        assert expected[row.output_start_byte:row.output_end_byte] == payload
+        assert (row.output_start_byte, row.output_end_byte) == (
+            len(prefix.encode()),
+            len(prefix.encode()) + len(payload),
+        )
+        assert expected[row.output_start_byte : row.output_end_byte] == payload
         assert row.replacement_sha256 == hashlib.sha256(payload).hexdigest()
-        assert source[row.source_start_byte:row.source_end_byte] == ("{{" + row.key + "}}").encode()
+        assert source[row.source_start_byte : row.source_end_byte] == ("{{" + row.key + "}}").encode()
     with pytest.raises(ValueError, match="differs from exact"):
         require_shared_hydration(source, values, consumed, writer=SharedHydrationWriter.RESOLVED_TREE)
 
@@ -231,8 +233,8 @@ def test_legacy_writer_keeps_home_bytes_and_converts_only_authored_newlines(tmp_
     expected = "é /Users/authored/cache\n/home/generated/work\r\n\n[plot](../figures/plot.png)\n".encode()
     proof = require_shared_hydration(source, values, consumed, writer=SharedHydrationWriter.RESOLVED_TREE)
     assert proof.output == expected and proof.source == source
-    row, = proof.occurrences
-    assert consumed[row.output_start_byte:row.output_end_byte] == values["PATH"].encode()
+    (row,) = proof.occurrences
+    assert consumed[row.output_start_byte : row.output_end_byte] == values["PATH"].encode()
     with pytest.raises(ValueError, match="differs from exact"):
         require_shared_hydration(source, values, consumed, writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE)
 
@@ -257,10 +259,12 @@ def test_normalization_crossing_both_token_boundaries_retains_every_raw_ordinal(
     assert [(row.ordinal, row.key) for row in proof.occurrences] == [(1, "FIRST"), (2, "LAST"), (3, "FIRST")]
     assert [(row.output_start_byte, row.output_end_byte) for row in proof.occurrences[:2]] == [(first, first + 6)] * 2
     for row in proof.occurrences:
-        assert source[row.source_start_byte:row.source_end_byte] == ("{{" + row.key + "}}").encode()
-        assert row.replacement_sha256 == hashlib.sha256(output[row.output_start_byte:row.output_end_byte]).hexdigest()
-    selected = tuple((0, row.ordinal, row.key, row.output_start_byte, row.output_end_byte, row.replacement_sha256)
-                     for row in proof.occurrences)
+        assert source[row.source_start_byte : row.source_end_byte] == ("{{" + row.key + "}}").encode()
+        assert row.replacement_sha256 == hashlib.sha256(output[row.output_start_byte : row.output_end_byte]).hexdigest()
+    selected = tuple(
+        (0, row.ordinal, row.key, row.output_start_byte, row.output_end_byte, row.replacement_sha256)
+        for row in proof.occurrences
+    )
     with pytest.raises(ValueError, match="overlap"):
         annotate_manuscript_ordinals((output,), selected)
 
@@ -270,9 +274,12 @@ def test_normalization_cannot_hide_an_unresolved_token_or_promote_an_empty_repla
     with pytest.raises(ValueError, match="unresolved"):
         require_shared_hydration(source, {}, b"<home>/data", writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE)
     proof = require_shared_hydration(
-        b"/Users/al{{EMPTY}}ice/data", {"EMPTY": ""}, b"<home>/data", writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE
+        b"/Users/al{{EMPTY}}ice/data",
+        {"EMPTY": ""},
+        b"<home>/data",
+        writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE,
     )
-    row, = proof.occurrences
+    (row,) = proof.occurrences
     assert row.output_start_byte == row.output_end_byte == 0
     assert row.replacement_sha256 == hashlib.sha256(b"").hexdigest()
 
@@ -290,13 +297,22 @@ def test_source_writer_grammars_are_not_selected_by_equal_output_or_a_serialized
         require_shared_hydration(source, values, proof.output, writer={"normalize": True})
 
 
-@pytest.mark.parametrize("consumed", [
-    b"<home>/other 7 8", b"<home>/data -7 8", b"<home>/data 7", b"<home>/data 7 8 8", b"<home>/data 8 7",
-])
+@pytest.mark.parametrize(
+    "consumed",
+    [
+        b"<home>/other 7 8",
+        b"<home>/data -7 8",
+        b"<home>/data 7",
+        b"<home>/data 7 8 8",
+        b"<home>/data 8 7",
+    ],
+)
 def test_normalized_consumed_mutation_omission_and_duplication_still_refuse(consumed: bytes) -> None:
     with pytest.raises(ValueError, match="differs from exact"):
         require_shared_hydration(
-            b"/Users/author/data {{FIRST}} {{SECOND}}", {"FIRST": "7", "SECOND": "8"}, consumed,
+            b"/Users/author/data {{FIRST}} {{SECOND}}",
+            {"FIRST": "7", "SECOND": "8"},
+            consumed,
             writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE,
         )
 
@@ -304,8 +320,10 @@ def test_normalized_consumed_mutation_omission_and_duplication_still_refuse(cons
 def test_normalized_offsets_reach_complete_html_and_shared_pdf_office_parser_bytes() -> None:
     source = "α /home/author/work {{VALUE}} then {{VALUE}}\r\n".encode()
     proof = reconstruct_shared_hydration(source, {"VALUE": "µm"}, writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE)
-    selected = tuple((0, row.ordinal, row.key, row.output_start_byte, row.output_end_byte, row.replacement_sha256)
-                     for row in proof.occurrences)
+    selected = tuple(
+        (0, row.ordinal, row.key, row.output_start_byte, row.output_end_byte, row.replacement_sha256)
+        for row in proof.occurrences
+    )
     marked, anchors = annotate_manuscript_ordinals((proof.output,), selected)
     bodies = (proof.output,)
     pairs = (
@@ -329,7 +347,7 @@ def test_normalization_across_token_start_and_end_keeps_exact_resulting_interval
     )
     assert [(row.output_start_byte, row.output_end_byte) for row in proof.occurrences] == [(0, 6), (13, 19)]
     for row in proof.occurrences:
-        assert source[row.source_start_byte:row.source_end_byte] == ("{{" + row.key + "}}").encode()
+        assert source[row.source_start_byte : row.source_end_byte] == ("{{" + row.key + "}}").encode()
         assert row.replacement_sha256 == hashlib.sha256(b"<home>").hexdigest()
 
 
@@ -340,8 +358,8 @@ def test_equal_normalized_output_cannot_rebind_original_authored_token_offsets_o
     first = reconstruct_shared_hydration(source, values, writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE)
     second = reconstruct_shared_hydration(changed_source, values, writer=SharedHydrationWriter.HYDRATED_UPPERCASE_TREE)
     assert first.output == second.output
-    one, = first.occurrences
-    two, = second.occurrences
+    (one,) = first.occurrences
+    (two,) = second.occurrences
     assert one.output_start_byte == two.output_start_byte and one.replacement_sha256 == two.replacement_sha256
     shift = len(b"another-author") - len(b"alice")
     assert (two.source_start_byte, two.source_end_byte) == (one.source_start_byte + shift, one.source_end_byte + shift)
