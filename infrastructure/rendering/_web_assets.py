@@ -276,7 +276,7 @@ def harden_mathjax_script(html_file: Path) -> None:
     )
     content = config_line_re.sub("", content)
     content = config_re.sub("", content)
-    script_re = re.compile(r"<script\b(?P<attrs>[^>]*)>.*?</script>", flags=re.IGNORECASE | re.DOTALL)
+    script_re = re.compile(r"<script\b(?P<attrs>[^>]*)>.*?</script\b[^>]*>", flags=re.IGNORECASE | re.DOTALL)
     matched_loader = False
 
     def _replace(match: re.Match[str]) -> str:
