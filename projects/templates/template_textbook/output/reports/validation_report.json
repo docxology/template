@@ -219,7 +219,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 10.495976448059082
+      "total_size_mb": 10.495359420776367
     },
     "evidence_issues": [
       "appendix_format_gallery.md:328: unsupported number -8",
@@ -239,12 +239,12 @@
     ],
     "figures": {
       "files": 96,
-      "size_mb": 2.27545166015625
+      "size_mb": 2.275146484375
     },
     "inventory_mode": "stable-shippable-output-v1",
     "pdf": {
       "files": 1,
-      "size_mb": 2.1208438873291016
+      "size_mb": 2.1205291748046875
     },
     "stable_inventory": {
       "categories": {
@@ -258,15 +258,15 @@
         },
         "epub": {
           "files": 1,
-          "size_bytes": 1233521
+          "size_bytes": 1233524
         },
         "figures": {
           "files": 96,
-          "size_bytes": 2385984
+          "size_bytes": 2385664
         },
         "pdf": {
           "files": 1,
-          "size_bytes": 2223866
+          "size_bytes": 2223536
         },
         "release": {
           "files": 2,
@@ -283,7 +283,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 160,
-      "total_size_bytes": 11005829
+      "total_size_bytes": 11005182
     }
   },
   "recommendations": [],
@@ -294,11 +294,11 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-15T05:26:10Z",
+  "timestamp": "2026-11-15T22:42:25Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "b06b1973fc79ab77648ea2f098421b33f48a2736165b2ee70e4fe266d11ee90d",
+      "sha256": "0266a65c9b30631126b1706e665dc72b66c5c78e76e062567a3574af240d8a0c",
       "size_bytes": 56388
     },
     "combined_manuscript": {
@@ -614,7 +614,7 @@
       },
       "output": {
         "file_count": 160,
-        "sha256": "63aed6d14f9919b776d6794a1d705d01334dcf9b9b020a7917e2e9f0d4999de0"
+        "sha256": "9108c6ad1d3bfbc8a06f8fa2573bea8309b3d4f2963f4f37e7934ffd4e1a79f9"
       },
       "source": {
         "file_count": 94,
@@ -622,7 +622,7 @@
       },
       "stage": {
         "file_count": 1774,
-        "sha256": "af443ba5952274510b7370964b36c97743bf968ea2a3c8d58ed6c09d461dd831"
+        "sha256": "5e0d25f64e6c5899eb7b794c24f7645cc19b945f741aea1498986e4c274da183"
       }
     },
     "project": "templates/template_textbook",

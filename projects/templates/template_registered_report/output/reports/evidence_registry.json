@@ -1947,6 +1947,30 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "figure",
+      "source": "manuscript/04_results.md",
+      "source_field": "",
+      "source_path": "manuscript/04_results.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:permutation_result"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-14T14:20:53Z",
+      "kind": "figure",
+      "source": "output/figures/permutation_result.png",
+      "source_field": "",
+      "source_path": "output/figures/permutation_result.png",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:permutation_result"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-14T14:20:53Z",
+      "kind": "figure",
       "source": "manuscript/02_hypotheses.md",
       "source_field": "",
       "source_path": "manuscript/02_hypotheses.md",
@@ -2018,26 +2042,14 @@
     {
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "figure",
+      "kind": "section",
       "source": "manuscript/04_results.md",
       "source_field": "",
       "source_path": "manuscript/04_results.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "fig:permutation_result"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "figure",
-      "source": "output/figures/permutation_result.png",
-      "source_field": "",
-      "source_path": "output/figures/permutation_result.png",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "fig:permutation_result"
+      "value": "sec:results"
     },
     {
       "active": true,
@@ -2055,13 +2067,13 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "section",
-      "source": "manuscript/01_introduction.md",
+      "source": "manuscript/03_methods.md",
       "source_field": "",
-      "source_path": "manuscript/01_introduction.md",
+      "source_path": "manuscript/03_methods.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:introduction"
+      "value": "sec:methods"
     },
     {
       "active": true,
@@ -2079,25 +2091,13 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "section",
-      "source": "manuscript/06_discussion.md",
+      "source": "manuscript/05_deviations.md",
       "source_field": "",
-      "source_path": "manuscript/06_discussion.md",
+      "source_path": "manuscript/05_deviations.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:discussion"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-14T14:20:53Z",
-      "kind": "section",
-      "source": "manuscript/03_methods.md",
-      "source_field": "",
-      "source_path": "manuscript/03_methods.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:methods"
+      "value": "sec:deviations"
     },
     {
       "active": true,
@@ -2115,25 +2115,25 @@
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "section",
-      "source": "manuscript/05_deviations.md",
+      "source": "manuscript/06_discussion.md",
       "source_field": "",
-      "source_path": "manuscript/05_deviations.md",
+      "source_path": "manuscript/06_discussion.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:deviations"
+      "value": "sec:discussion"
     },
     {
       "active": true,
       "checked_at": "2026-08-14T14:20:53Z",
       "kind": "section",
-      "source": "manuscript/04_results.md",
+      "source": "manuscript/01_introduction.md",
       "source_field": "",
-      "source_path": "manuscript/04_results.md",
+      "source_path": "manuscript/01_introduction.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:results"
+      "value": "sec:introduction"
     },
     {
       "active": true,

@@ -58,7 +58,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "4914ede1a0af09528821d81579b13837743789b880aea2624ec1755b94b38961",
+      "sha256": "545a10d7af2ae874609cd9962de8451172aaa8c602b4a48ca4b8094a37ecedee",
       "size_bytes": 8515
     },
     "combined_manuscript": {
@@ -73,7 +73,7 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "90a508bd67a1886c2a715197607614fa359cb39e9e5a2fb1c8fae8ad37f78b56",
+      "sha256": "2a33ac9583b1b185286901b150a4ff8f1725624b64a4e0b37704b2ccb67c819d",
       "size_bytes": 10940
     }
   },
@@ -85,7 +85,7 @@
     },
     "output": {
       "file_count": 26,
-      "sha256": "2a4784b90e3be16e01ff149a4df2b4d983038e8486b320312c127240f5eda59e"
+      "sha256": "afaa2c6f61a161b05db235f4dbd5ba4c667e00a816b0e285de424066dd8557f1"
     },
     "source": {
       "file_count": 40,
@@ -93,7 +93,7 @@
     },
     "stage": {
       "file_count": 1774,
-      "sha256": "af443ba5952274510b7370964b36c97743bf968ea2a3c8d58ed6c09d461dd831"
+      "sha256": "5e0d25f64e6c5899eb7b794c24f7645cc19b945f741aea1498986e4c274da183"
     }
   },
   "project": "templates/template_autoscientists",
