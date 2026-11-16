@@ -17,7 +17,7 @@ from infrastructure.validation.paths import resolve_markdown_target
 
 logger = get_logger(__name__)
 
-_INDEX_FILES = ("AGENTS.md", "README.md", "index.md")
+_INDEX_FILES = ("AGENTS.md", "README.md", "GITHUB.md", "index.md")
 
 
 def _directory_index_relative(dir_path: Path, repo_root: Path) -> Path | None:

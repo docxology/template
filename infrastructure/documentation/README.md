@@ -147,7 +147,7 @@ uv run python -m infrastructure.documentation.generate_glossary_cli \
   `<!-- END:STAGE_SUMMARY -->`
   in a Markdown file (idempotent)
 - Driver: [`scripts/docgen/stage_table.py`](../../scripts/docgen/stage_table.py)
-  updates `README.md`, `.github/README.md`, `scripts/AGENTS.md`,
+  updates `README.md`, `.github/GITHUB.md`, `scripts/AGENTS.md`,
   `docs/RUN_GUIDE.md`, and `docs/core/workflow.md` in lockstep
 
 ### Public API Reference Generator

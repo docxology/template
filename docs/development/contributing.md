@@ -189,7 +189,7 @@ maintainer alignment first.
 
 ## 📚 **Resources**
 
-- **[`../../.github/README.md`](../../.github/README.md)** - GitHub Actions, branch protection, local CI mirror
+- **[`../../.github/GITHUB.md`](../../.github/GITHUB.md)** - GitHub Actions, branch protection, local CI mirror
 - **[`../../.github/AGENTS.md`](../../.github/AGENTS.md)** - exact CI jobs, matrices, and local parity commands
 - **[`contribution-map.md`](contribution-map.md)** - Overlap checks and practical contribution strategy
 - **[`../core/architecture.md`](../core/architecture.md)** - System design overview

@@ -25,7 +25,7 @@ assignees: ""
 # List the files that need updating, e.g.:
 # - docs/BUILD_SYSTEM.md
 # - projects/templates/template_code_project/AGENTS.md
-# - .github/README.md
+# - .github/GITHUB.md
 ```
 
 ## Actual Content

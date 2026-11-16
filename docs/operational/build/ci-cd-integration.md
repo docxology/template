@@ -280,7 +280,7 @@ Configure these secrets in GitHub repository settings:
 - `AUTHOR_ORCID` - ORCID identifier
 - `PROJECT_TITLE` - Project title
 - `DOI` - Digital Object Identifier (optional)
-- `CODECOV_TOKEN` — optional for Codecov uploads (public repos often work without); see [.github/README.md](../../../.github/README.md)
+- `CODECOV_TOKEN` — optional for Codecov uploads (public repos often work without); see [.github/GITHUB.md](../../../.github/GITHUB.md)
 
 ### Using Secrets
 
@@ -444,7 +444,7 @@ CI/CD integration provides automated testing, optional PDF pipelines, deployment
 
 Canonical paths for **this repo**:
 
-- [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), [`.github/AGENTS.md`](../../../.github/AGENTS.md), [`.github/README.md`](../../../.github/README.md)
+- [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), [`.github/AGENTS.md`](../../../.github/AGENTS.md), [`.github/GITHUB.md`](../../../.github/GITHUB.md)
 - [GitHub Actions documentation](https://docs.github.com/en/actions)
 - [Build System](build-system.md)
 - [Troubleshooting Guide](../../operational/troubleshooting/)

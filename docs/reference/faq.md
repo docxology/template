@@ -161,7 +161,7 @@ behavior tests for the selected project.
 
 ### **Q: How do I set up CI/CD?**
 
-**A:** See [`.github/README.md`](../../.github/README.md) for GitHub Actions setup, automated testing, and repository workflows.
+**A:** See [`.github/GITHUB.md`](../../.github/GITHUB.md) for GitHub Actions setup, automated testing, and repository workflows.
 
 ### **Q: Can I automate PDF generation in CI?**
 
