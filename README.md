@@ -14,7 +14,7 @@ does not establish acceptance or publication.
 [![Documentation](https://img.shields.io/badge/docs-documentation--index-lightgrey)](docs/documentation-index.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
-> **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
+> **📄 Publication reference**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — declared DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090). This reference does not establish availability of the prepared 5.2.0 release.
 >
 > **Template Repository** - Click "Use this template" to create a research project with this structure
 
@@ -22,11 +22,17 @@ does not establish acceptance or publication.
 
 Just cloned the repo? Do this:
 
-1. `git clone <this-repo> && cd template`
+1. `git clone https://github.com/docxology/template && cd template`
 2. `uv sync --locked` (installs the declared root environment; independent project runtimes retain their own locks)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --mode core` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`infrastructure/project/public_scope.py`](infrastructure/project/public_scope.py) and published in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+
+Prepare the selected project's declared runtime and system rendering tools before
+dispatch; use the [startup and setup guide](docs/guides/startup-and-setup.md)
+and [prepared-dispatch guide](docs/RUN_GUIDE.md). Ordinary `run.sh` dispatch uses
+an already prepared Root interpreter; it never installs uv or syncs dependencies
+as a fallback.
 
 **Repurposing for your research?** See [`docs/repurposing-architectures.md`](docs/repurposing-architectures.md) — maps every reusable architecture (DAG pipeline, two-layer separation, evidence registry, multi-format rendering, MCP server, publishing stack) to its module and adoption path.
 
@@ -40,7 +46,10 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) ([agent entry point](.github/README.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
-<a id="migration-from-quadmath"></a>
+For ordinary CI's shared exact-Source preparation DATA and independent project
+feedback, see [Fast functional CI](.github/workflows/README.md#fast-functional-ci).
+Preparation reuse does not supply hosted test results, complete Root/native
+acceptance, or release authorization.
 
 **Local hooks:** After `uv sync`, run `pre-commit install` and `pre-commit install --hook-type pre-push` to mirror Ruff, mypy, Bandit, and smoke tests locally (see [`.pre-commit-config.yaml`](.pre-commit-config.yaml)).
 
@@ -350,15 +359,16 @@ publication target); render sidecar projects explicitly with a qualified
 name such as `working/{name}` or `ongoing/{name}`. See [`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md)
 for lifecycle, slug rules, and discovery semantics.
 
-## 🚀 Quick Start {#quick-start}
+## Checkout preparation and dispatch
 
-See the [Quickstart](#quickstart) at the top of this file for the canonical
-clone-to-PDF flow. For headless cloud deployment use
-[`docs/CLOUD_DEPLOY.md`](docs/CLOUD_DEPLOY.md) (uv is installed automatically
-when you run `./run.sh --pipeline`). Beginner walkthrough:
-[`docs/guides/getting-started.md`](docs/guides/getting-started.md). One-page
-command reference:
-[`docs/reference/quick-start-cheatsheet.md`](docs/reference/quick-start-cheatsheet.md).
+Use the [Quickstart](#quickstart) for the clone-to-PDF flow and the
+[startup and setup guide](docs/guides/startup-and-setup.md) for explicit locked
+runtime and system-tool preparation. Ordinary `./run.sh --pipeline` does not
+install uv, reconcile dependencies, or fall back from a broken selected runtime;
+[RUN_GUIDE](docs/RUN_GUIDE.md) owns prepared dispatch and runtime selection.
+For headless deployment, see [`docs/CLOUD_DEPLOY.md`](docs/CLOUD_DEPLOY.md).
+Beginner walkthrough: [`docs/guides/getting-started.md`](docs/guides/getting-started.md).
+One-page command reference: [`docs/reference/quick-start-cheatsheet.md`](docs/reference/quick-start-cheatsheet.md).
 Twelve-level usage guide: [`docs/core/how-to-use.md`](docs/core/how-to-use.md).
 
 ## System Status
@@ -597,8 +607,8 @@ working-tree files. `gates`, `security`, `unit` and `infra` cover the remaining 
 TDD with strict coverage gates: **infrastructure ≥ 60 %**, **projects ≥ 90 %**.
 No unit-level mock frameworks — tests use real data, real files; HTTP boundaries use `pytest-httpserver` (in-process test server). The
 project pipeline runs a focused `pipeline-smoke` infrastructure contract plus
-the selected project's full coverage suite, so ordinary renders do not rerun
-the entire repository test matrix. Run the full infrastructure gate explicitly
+the selected project's declared test profile; its default quick selection is not
+the whole release/native matrix. Run the full infrastructure gate explicitly
 with `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`;
 run a project suite with `uv run python scripts/pipeline/stage_01_test.py --project-only
 --project <name>`. Per-suite commands and coverage report flags are documented in
@@ -609,11 +619,14 @@ live coverage / test counts live in
 
 ## Output
 
-Working outputs: `projects/{name}/output/`. Public exemplars retain only
-deterministic deliverables and evidence under that tree; runtime state
-(`.checkpoints/`, `.pipeline/`, `logs/`, telemetry, snapshots) and renderer
-intermediates are local-only and regenerated by the pipeline. Multi-project
-mode adds `output/executive_summary/` as a disposable copied-output surface.
+Public exemplars retain deterministic deliverables and evidence under both
+`projects/templates/<name>/output/` and the copied `output/templates/<name>/`
+surface. These are retained publication evidence, not blanket-disposable trees.
+Runtime state (`.checkpoints/`, `.pipeline/`, `logs/`, telemetry, snapshots) and
+renderer intermediates remain local-only under the tracking policy.
+Preserve retained public evidence before regeneration or cleanup; do not
+blanket-delete either output tree. Private project outputs remain local-only.
+See [Public Exemplar Outputs And Mirrors](#public-exemplar-outputs-and-mirrors).
 
 ## 🔍 How It Works
 
@@ -712,8 +725,10 @@ template in your research, please cite:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
-Cite the current release. Earlier versions retain their own Zenodo DOIs;
-the version-independent concept DOI always resolves to the latest.
+Use the citation metadata attached to the actual released version you consume.
+The concept DOI recorded here is metadata, not proof that a prepared version or
+its assets are available from Zenodo; verify the actual release and archival
+records through the [publication runbook](docs/guides/publication-runbook.md).
 
 **BibTeX:**
 
@@ -783,7 +798,7 @@ and CI-gated quality. Full benefits + rationale:
 
 **Ready to begin?** Choose your path:
 
-1. **New User?** → Start with **[Quick Start](#quick-start)** or **[docs/guides/getting-started.md](docs/guides/getting-started.md)**
+1. **New User?** → Start with **[Quickstart](#quickstart)** or **[docs/guides/getting-started.md](docs/guides/getting-started.md)**
 2. **Developer?** → Read **[docs/core/architecture.md](docs/core/architecture.md)** and **[docs/core/workflow.md](docs/core/workflow.md)**
 3. **Need Help?** → Check **[docs/reference/faq.md](docs/reference/faq.md)** or **[docs/operational/troubleshooting/README.md](docs/operational/troubleshooting/README.md)**
 4. **Explore All Docs?** → Browse **[docs/documentation-index.md](docs/documentation-index.md)**

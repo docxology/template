@@ -164,43 +164,71 @@ Track and figure registries remain in `tracks.yaml`,
 
 ## Quick start
 
-From the template repository root:
+Prepare Root and this project's own declared environment through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+Initial dependency preparation may need package access; the short checks below
+do not remove the declared Python/SDK/scientific dependencies. From the
+canonical monorepo root:
 
 ```bash
-uv sync --directory projects/templates/template_active_inference --extra dev
+uv sync --locked
+uv sync --locked --project projects/templates/template_active_inference --extra dev \
+  --python "$PWD/.venv/bin/python"
 cd projects/templates/template_active_inference
 ```
 
-From this project root:
+### First local checks
+
+From this prepared project root:
 
 ```bash
-uv run python scripts/compose_manuscript.py
-uv run python scripts/run_analytical_sweep.py
-uv run python scripts/simulate_si_tmaze.py
-uv run python scripts/simulate_si_graph_world.py
-uv run python scripts/compute_statistics.py
-uv run python scripts/generate_figures.py
-uv run python scripts/render_animation.py
-uv run python scripts/generate_validation_spine.py
-uv run python scripts/generate_toy_sweep_tracks.py
-uv run python scripts/generate_formal_interop_tracks.py
-uv run python scripts/generate_integration_audit.py
-uv run python scripts/generate_sheaf_tracks.py
-uv run python scripts/z_generate_manuscript_variables.py
-uv run python scripts/generate_method_inventory.py
+.venv/bin/python scripts/compose_manuscript.py --list-tracks
+.venv/bin/python scripts/compose_manuscript.py --validate-only --strict
+```
+
+The first command prints registered track IDs, order, renderer and optional
+status. The second validates the checked-in manifest/registry and reports
+issues, returning nonzero on validation errors without writing composed
+Markdown. These checks do not regenerate scientific outputs or establish
+scientific, Lean, native-rendering or publication acceptance. Inspect their
+actual results; no passing outcome is asserted here.
+
+### Full regeneration and release verification
+
+The existing full producer sequence below is separate from that small
+introduction. Prepare its genuine scientific/native tools before running it;
+retain the actual artifacts and the release-profile coverage requirements.
+From the same prepared project root:
+
+```bash
+.venv/bin/python scripts/compose_manuscript.py
+.venv/bin/python scripts/run_analytical_sweep.py
+.venv/bin/python scripts/simulate_si_tmaze.py
+.venv/bin/python scripts/simulate_si_graph_world.py
+.venv/bin/python scripts/compute_statistics.py
+.venv/bin/python scripts/generate_figures.py
+.venv/bin/python scripts/render_animation.py
+.venv/bin/python scripts/generate_validation_spine.py
+.venv/bin/python scripts/generate_toy_sweep_tracks.py
+.venv/bin/python scripts/generate_formal_interop_tracks.py
+.venv/bin/python scripts/generate_integration_audit.py
+.venv/bin/python scripts/generate_sheaf_tracks.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
+.venv/bin/python scripts/generate_method_inventory.py
 .venv/bin/python scripts/run_full_verification.py --profile release
 ```
 
-> Runtime: the gate-heavy suite is slow because real pandoc/xelatex rendering
-> and artifact-generation tests dominate. Prefer `scripts/run_full_verification.py`;
-> it now runs coverage in separate pytest chunks so source mutations and generated
-> manuscript refreshes do not share one long session. For a fast inner loop, scope
-> with `-k` (e.g. `uv run pytest tests/ -k "not gate and not figure" --no-cov`).
+> The gate-heavy suite includes real pandoc/xelatex rendering and artifact
+> generation. `scripts/run_full_verification.py --profile release` retains its
+> existing release selection and separate coverage chunks; it is not the
+> first-local-check recipe. The small registry/manifest checks above do not
+> replace whole-source, scientific, native or exhaustive release obligations.
 
-From repo root:
+Separate repository-stage operations run from the prepared monorepo root,
+following [RUN_GUIDE](https://github.com/docxology/template/blob/main/docs/RUN_GUIDE.md):
 
 ```bash
-uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference
+uv run --no-sync --offline python scripts/pipeline/stage_01_test.py --project templates/template_active_inference
 ./run.sh --project templates/template_active_inference --pipeline --mode core
 ```
 

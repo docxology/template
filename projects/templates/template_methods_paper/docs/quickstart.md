@@ -1,6 +1,7 @@
 # Quick Start Guide
 
-Get up and running with the `template_methods_paper` exemplar in 5 minutes.
+Prepare the `template_methods_paper` environment and generate local method
+artifacts, or continue to the separate manuscript-rendering workflow.
 
 ## Prerequisites
 
@@ -9,6 +10,13 @@ Get up and running with the `template_methods_paper` exemplar in 5 minutes.
 - Git
 
 ## Setup (One-Time)
+
+This walkthrough runs from the canonical monorepo root. Common environment
+preparation belongs to the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface);
+Root dispatch belongs to
+[RUN_GUIDE](https://github.com/docxology/template/blob/main/docs/RUN_GUIDE.md).
+Independent project boundaries remain in [STANDALONE.md](../STANDALONE.md).
 
 ```bash
 # 1. Clone the template repository (if you haven't already)
@@ -20,8 +28,8 @@ uv sync --locked
 uv sync --locked --project projects/templates/template_methods_paper --extra dev \
   --python "$PWD/.venv/bin/python"
 
-# 3. Verify installation
-uv run python --version
+# 3. Observe the selected own interpreter, not the Root interpreter
+uv run --no-sync --offline --project projects/templates/template_methods_paper python --version
 ```
 
 ## Run the Test Suite
@@ -45,7 +53,8 @@ worklist/CSV/Mermaid/JSON, demonstrate the trust hash-chain, and plot the
 step-count figure:
 
 ```bash
-uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py
+uv run --no-sync --offline --project projects/templates/template_methods_paper \
+  python projects/templates/template_methods_paper/scripts/methods_analysis.py
 ```
 
 **Outputs created under `projects/templates/template_methods_paper/output/`:**
@@ -56,7 +65,8 @@ uv run python projects/templates/template_methods_paper/scripts/methods_analysis
 ## Generate and Inject Manuscript Variables
 
 ```bash
-uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
+uv run --no-sync --offline --project projects/templates/template_methods_paper \
+  python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py
 ```
 
 This reads `manuscript/config.yaml` plus the analysis outputs above and
@@ -64,8 +74,11 @@ resolves every `{{TOKEN}}` in `manuscript/*.md`.
 
 ## Render the Publication PDF
 
+This is a separate Root operation with prepared rendering tools, not proof
+supplied by the local analysis command.
+
 ```bash
-uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
+uv run --no-sync --offline python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper
 ```
 
 ## View Results
@@ -96,11 +109,14 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_m
 
 ## Quick Command Reference
 
+Run these from the monorepo root after preparation above. Project-local rows
+select the own environment; render/copy rows use the prepared Root environment.
+
 | Task | Command |
 |---|---|
-| Run tests | `uv run pytest projects/templates/template_methods_paper/tests -v` |
-| Run analysis | `uv run python projects/templates/template_methods_paper/scripts/methods_analysis.py` |
-| Generate manuscript variables | `uv run python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py` |
-| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper` |
-| Copy final deliverables | `uv run python scripts/pipeline/stage_05_copy.py --project templates/template_methods_paper` |
-| Clean outputs | `rm -rf projects/templates/template_methods_paper/output/` |
+| Run tests | `uv run --no-sync --offline --project projects/templates/template_methods_paper python -m pytest projects/templates/template_methods_paper/tests -v` |
+| Run analysis | `uv run --no-sync --offline --project projects/templates/template_methods_paper python projects/templates/template_methods_paper/scripts/methods_analysis.py` |
+| Generate manuscript variables | `uv run --no-sync --offline --project projects/templates/template_methods_paper python projects/templates/template_methods_paper/scripts/z_generate_manuscript_variables.py` |
+| Root render PDF | `uv run --no-sync --offline python scripts/pipeline/stage_03_render.py --project templates/template_methods_paper` |
+| Root copy final deliverables | `uv run --no-sync --offline python scripts/pipeline/stage_05_copy.py --project templates/template_methods_paper` |
+| Output custody | Canonical project outputs and copied deliverables can be tracked publication evidence. Preserve retained snapshots and immutable receipts; do not use blanket output deletion as setup. |

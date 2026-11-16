@@ -59,6 +59,24 @@ dependency group and root lock/package/Python-selector inputs. Every caller
 still runs its declared locked reconciliation. Reused downloads or environments
 are preparation inputs, never accepted runtime results.
 
+Ordinary CI runs actionlint, lint/types and Source-derived selection before one
+`prepare-linux-documents` producer. Its 75-minute envelope includes the genuine
+Source-pinned converter build, complete root-owned Nix store capture and upload.
+Infrastructure smoke and document-consuming contract jobs retrieve that exact
+same-run artifact ID and manifest SHA-256. They restore original store
+registrations and trust metadata, then reverify the Source, run, attempt, signed
+client, compiler/dependency closure and executable-body pins before consumption.
+The snapshot is preparation DATA, never a cached test result or acceptance.
+The producer and every consumer remain blocking in `CI Gate`; neither a missing
+artifact nor failed revalidation falls back to an unverified tool.
+
+Project smoke starts independently from that producer. Search keeps its own
+converter preparation, so unrelated project feedback does not wait for a cold
+document build. The infrastructure smoke's 540-second body and ten-minute
+execution step, deep-contract budgets and coverage floors are unchanged.
+Hosted completion and timing must establish whether this preparation route fits;
+offline actionlint or a prior preparation run cannot establish that result.
+
 Hardening retains four infrastructure shards for Linux on both supported Python
 minors and macOS on Python 3.15. Linux uses `ubuntu-24.04`, matching the pinned
 Noble APT admission rather than admitting a new runner distribution implicitly.
@@ -142,9 +160,9 @@ missing or failed: these diagnostics do not grant Source admission, waive any
 provider or deadline check, or establish complete hardening, main or release
 acceptance.
 
-Infrastructure smoke prepares the converter first, admitting reviewed signed
-Ubuntu mirrors before its single Poppler and selected TeX install. Linux builds
-the Source-pinned dynamic converters; macOS uses exact official archives.
+Infrastructure smoke imports and revalidates the same-run converter store before
+its Poppler and selected TeX install. The Linux producer builds Source-pinned
+dynamic converters; macOS hardening uses exact official archives.
 Selected compiler controls verify the recommended fonts and `pzdr.tfm`, which
 XeTeX hyperlink support requires. The auxiliary contract additionally prepares
 its declared Pandoc/XeTeX producers and readers.

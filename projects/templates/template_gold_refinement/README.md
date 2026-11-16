@@ -96,28 +96,37 @@ belong to the template monorepo, not the standalone repository.
 
 ### Standalone repository (project root)
 
-Use Python 3.14 or 3.15, not a historical 3.13 interpreter pin. The commands
-require reviewed standalone installation metadata/lock resolving
-`research-project-template==5.2.0` against the actual released SDK. The canonical
-editable `../../..` SDK binding is monorepo-only: a raw source export is not an
-install-ready standalone release. Missing SDK publication, the reviewed
-installation projection, or a compatible standalone interpreter pin remains an
-adoption prerequisite.
+Use Python 3.14 or 3.15 and a genuine `research-project-template==5.2.0`
+wheel matching `pyproject.toml`, following the
+[shared standalone preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+The editable `../../..` SDK binding is monorepo-only; the explicit wheel
+installation below does not consult it. Initial dependencies need package access
+or a prepared cache. A candidate wheel and successful local analysis are not
+SDK publication, reviewed installation-projection or public adoption receipts.
+Those remain separate prerequisites for an accepted standalone release.
 The root-local recipe preserves the
 [standalone owner's usage contract](https://github.com/docxology/template_gold_refinement/blob/66bafceb2e8e3c1a21ea78ecfe3265e1e4fd1406/README.md#L91-L111).
 
 ```bash
-uv sync --extra dev --python 3.14
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
 
-# Run the refinement analysis pipeline
-uv run python scripts/refinement_analysis.py
+# First local artifacts, then SDK-backed manuscript hydration
+.venv/bin/python scripts/refinement_analysis.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
+```
 
-# Hydrate manuscript variables using the declared installed SDK
-uv run python scripts/z_generate_manuscript_variables.py
+Expected local artifacts include `output/data/refinery_results.json`,
+`output/reports/token_plan.json`, `output/data/manuscript_variables.json`, and
+hydrated `output/manuscript/`. These are source-derived expectations, not an
+observed successful run or physical/metallurgical findings.
 
-# Run tests and the project-local branch-coverage gate
-uv run --extra dev pytest tests/ -v
-uv run --extra dev pytest tests/ --cov=src --cov-branch --cov-fail-under=90
+The complete own suite and its branch-coverage gate are separate local checks:
+
+```bash
+.venv/bin/python -I -m pytest tests/ -v
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-branch --cov-fail-under=90
 ```
 
 The current scripts import the domain package `template_gold_refinement` from
@@ -130,10 +139,17 @@ it is not itself a full manuscript render.
 
 ### Template monorepo (root)
 
+Prepare Root and this project's own environment through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+From the monorepo root, select that prepared project environment explicitly:
+
 ```bash
-uv run python projects/templates/template_gold_refinement/scripts/refinement_analysis.py
-uv run python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py
-uv run pytest projects/templates/template_gold_refinement/tests/ \
+uv run --no-sync --offline --project projects/templates/template_gold_refinement \
+  python projects/templates/template_gold_refinement/scripts/refinement_analysis.py
+uv run --no-sync --offline --project projects/templates/template_gold_refinement \
+  python projects/templates/template_gold_refinement/scripts/z_generate_manuscript_variables.py
+uv run --no-sync --offline --project projects/templates/template_gold_refinement \
+  python -m pytest projects/templates/template_gold_refinement/tests/ \
   --cov=projects/templates/template_gold_refinement/src --cov-branch --cov-fail-under=90
 ```
 
@@ -142,8 +158,11 @@ render/validate/copy sequence.
 
 ## Generated artifact contract
 
-All rendered artifacts are source-owned and disposable. Do not hand-edit
-`output/`; regenerate it through Stage 02/03/04 or the project scripts.
+Generated artifacts are source-owned, and canonical public outputs can be tracked
+publication evidence. Do not hand-edit `output/` or delete retained/immutable
+evidence as setup. Regenerate only the intended working outputs through the
+project scripts or admitted Stage 02/03/04 workflow; preserve the selected
+execution epoch when refreshing tracked publication artifacts.
 
 | Artifact | Source owner | Purpose |
 | --- | --- | --- |

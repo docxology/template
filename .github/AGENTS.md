@@ -15,6 +15,10 @@ pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnost
 Routine automatic jobs contain at most twelve complete modules, with dedicated
 jobs for selected process measurement, run-matrix and Root acceptance modules. At most sixteen
 routine jobs run concurrently; the 540-second job-body clock is unchanged.
+Ordinary functional infrastructure shares one Source/run/attempt-bound Linux
+preparation artifact after the cheap gates; producer and consumer refusals remain
+blocking. Protocol and budget details belong to the
+[canonical CI guide](../docs/development/ci.md).
 Changed-contract lanes also run eight at a time (`max-parallel: 8`): over the 27
 measured modules the longest-path schedule is 2626s at 3 lanes, 1337s at 6, and
 1031s at 8, where the slowest module sets the floor. Native document contract

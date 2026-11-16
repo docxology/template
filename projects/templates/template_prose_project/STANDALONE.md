@@ -56,15 +56,46 @@ rsync -a \
 - Regenerate prose reports, figures, and manuscript variables after editing the
   corpus.
 
+## Standalone environment
+
+From an independent project root, use Python 3.14 or 3.15 and a genuine
+`research-project-template==5.2.0` wheel matching `pyproject.toml`. Follow the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+The checkout-only `tool.uv.sources` ancestor is not a standalone provider;
+`uv pip install` below does not consult it.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+```
+
+Initial dependency preparation needs package access or a prepared cache.
+Candidate metadata does not prove that this SDK is published on PyPI, that the
+project is installed correctly, or that public provider adoption is accepted.
+Use this prepared interpreter for the local commands below; do not re-enter
+checkout-only dependency resolution with an unqualified `uv run`.
+
 ## Validation Commands
 
-Prepare the real SDK and own development environment with the
-[parent README's standalone recipe](README.md). From the prepared fork root:
+After [standalone preparation](#standalone-environment), run the local editorial
+pipeline and hydrate its manuscript variables from the project root:
+
+```bash
+.venv/bin/python scripts/run_prose_pipeline.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
+```
+
+The local sequence writes `output/manuscript_report.json`, `output/checks.json`,
+`output/review_report.md`, `output/run_summary.json`,
+`output/data/manuscript_variables.json`, and hydrated `output/manuscript/`.
+These are expected artifact paths, not a claim that this recipe has been run.
+Optional figure generation is documented in the [quickstart](docs/quickstart.md).
+
+For the complete own suite, retain the declared coverage gate:
 
 ```bash
 .venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
-.venv/bin/python scripts/run_prose_pipeline.py
-.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
 
 The offline editorial artifacts are not a scientific finding or live model

@@ -69,7 +69,9 @@ To regenerate this exemplar from the public monorepo:
 ```bash
 git clone https://github.com/docxology/template
 cd template
-uv sync
+uv sync --locked
+uv sync --locked --project projects/templates/template_prose_project --extra dev \
+  --python "$PWD/.venv/bin/python"
 ./run.sh --project templates/template_prose_project --pipeline --mode core
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_prose_project
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_prose_project
@@ -78,6 +80,9 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_pro
 Standalone repositories are publication mirrors for source, DOI metadata, and
 tracked rendered artifacts. Use the monorepo above when you need the full shared
 infrastructure, pipeline stages, or cross-template validation.
+
+For an independent project, use the genuine SDK-wheel preparation and project-root
+commands in [STANDALONE.md](STANDALONE.md#standalone-environment).
 
 ## Why this template — the transferable pattern
 
@@ -120,21 +125,35 @@ flowchart LR
 
 ## Quick start
 
+For an independent checkout, start with the
+[standalone environment](STANDALONE.md#standalone-environment) and
+[project-root quickstart](docs/quickstart.md). The commands below instead run
+from the canonical monorepo root after preparing Root and this project's own
+environment through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+Dependency preparation may need network access; the default editorial run does
+not require Ollama.
+
 ```bash
 # Run the full prose review (offline, no Ollama)
-uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 
 # Strict mode: exit non-zero if any check fails
-uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
 
 # Generate figures (after a pipeline run)
-uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
 
 # Hydrate manuscript variables for the abstract
-uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 ```
 
-After the run, look in `output/`:
+After this sequence, look in `projects/templates/template_prose_project/output/`
+(`output/` relative to an independent project root):
 
 * `manuscript_report.json` — raw `ManuscriptReport`.
 * `checks.json` — list of `CheckResult` (one per configured check).
@@ -153,7 +172,8 @@ After the run, look in `output/`:
 Start your local Ollama service with an already installed model, then run:
 
 ```bash
-uv run python projects/templates/template_prose_project/scripts/_run_local_review.py \
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/_run_local_review.py \
   --mode live --model llama3.2:1b --timeout 120 --num-predict 1024
 ```
 
@@ -193,7 +213,8 @@ render — see [`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering
 alone is not proof; confirm tests collected > 0 and coverage ≥ 90%:
 
 ```bash
-uv run pytest projects/templates/template_prose_project/tests/ \
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python -m pytest projects/templates/template_prose_project/tests/ \
   --cov=projects/templates/template_prose_project/src --cov-fail-under=90
 # exemplar baseline → docs/_generated/COUNTS.md
 ```
@@ -201,7 +222,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 Full end-to-end (tests → analysis → render → validate → copy):
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_prose_project --mode core
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py --project templates/template_prose_project --mode core
 ```
 
 ## Configuration
@@ -258,7 +279,8 @@ experiments, mutate prompts, or run autonomous review agents.
 ## Testing
 
 ```bash
-uv run pytest projects/templates/template_prose_project/tests/ -v
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python -m pytest projects/templates/template_prose_project/tests/ -v
 ```
 
 All tests are offline; no mocks. The test suite uses real prose, real
@@ -279,7 +301,7 @@ of the orchestrator scripts.
 
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
-- Project validation: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
+- Project validation: `uv run --no-sync --offline --project projects/templates/template_prose_project python -m pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->

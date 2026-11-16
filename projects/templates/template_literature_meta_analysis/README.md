@@ -9,9 +9,11 @@ manuscript.
 
 The bundled default term is **`modafinil`** — a wakefulness-promoting agent with a
 large, multi-disciplinary literature (clinical, cognitive, pharmacological,
-psychiatric) that exercises every analysis path. Everything runs **offline and
-deterministically** out of the box from a committed synthetic fixture corpus; a live
-networked run swaps in real records.
+psychiatric) that exercises the analysis paths. The default allowlisted analysis
+runs **offline and deterministically** over a committed synthetic fixture
+corpus after dependency preparation. This does not make every script offline:
+`01_literature_search.py` is an explicit network retrieval command, and enabled
+keyless providers can make requests without credentials.
 
 The explicit bounded unpaid retrieval, licensed full-text, local-model extraction
 and RDF acceptance lane is documented in [unpaid acceptance](docs/unpaid-acceptance.md).
@@ -109,7 +111,7 @@ infrastructure, pipeline stages, or cross-template validation.
 
 | Capability | Where |
 | --- | --- |
-| Ten-engine dispatch (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with per-engine on/off toggles and graceful `skipped` degradation when a key/network is absent | `src/literature/*_client.py`, `src/literature/search_runner.py` |
+| Ten-engine live/network dispatch (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with per-engine toggles and recorded outcomes; missing credentials are not a blanket offline/`skipped` switch | `src/literature/*_client.py`, `src/literature/search_runner.py` |
 | Canonical `Paper` record + de-duplication/merge by DOI / arXiv / S2 / OpenAlex / title-hash | `src/literature/models.py`, `src/literature/corpus.py` |
 | Full-text resolution + download (Unpaywall / OA / direct PDF), opt-in & network-gated | `src/literature/fulltext_download.py` |
 | Descriptive statistics + consolidated meta-analysis report (counts, citation distribution + Gini, author productivity) | `src/analysis/descriptive_stats.py` |
@@ -119,6 +121,14 @@ infrastructure, pipeline stages, or cross-template validation.
 | Optional knowledge-graph layer: assertion extraction, hypothesis scoring, RDF/TriG nanopublications (LLM-gated, offline-safe) | `src/knowledge_graph/` |
 | Optional reproducibility assessment: workflow-graph extraction, content/structure scores, and full-text quote verification | `src/reproducibility/`, `scripts/10_reproducibility_assessment.py` |
 | Publication-ready figures + auto-injected manuscript | `src/visualization/`, `src/manuscript/` |
+
+Start with the fixture-backed default analysis, not live script `01`.
+For a separately authorized retrieval, configure each enabled engine's
+eligibility, credentials or contact identity and inspect
+`output/data/retrieval_report.json`. Engine-specific skipped/failure states are
+not successful retrieval. Resuming a populated `output/data/corpus.jsonl` can
+skip new network searches; retained data is not evidence of fresh retrieval.
+See the [existing stage commands](scripts/README.md#stage-commands).
 
 ## Configuration
 
@@ -155,7 +165,7 @@ with the actual platform wheel matching `pyproject.toml` and this project's `dev
 [`STANDALONE.md`](STANDALONE.md). From that checkout's root, run:
 
 ```bash
-python -IB -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python -IB -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 This command uses the project's `pyproject.toml` and tests; it does not require
@@ -169,6 +179,9 @@ unreleased, so provisioning must use an explicitly supplied platform wheel.
   is byte-stable across runs. It is **not** an empirical finding about modafinil.
 - Real bibliometric claims require a live retrieval run plus regenerated figures,
   reports, and manuscript variables. See [`STANDALONE.md`](STANDALONE.md).
+- Missing credentials do not disable enabled keyless engines. Preserve the
+  actual retrieval provenance and consumed corpus before claiming freshness or
+  empirical findings; a resumed corpus or fixture replay cannot supply them.
 
 ## Layout
 

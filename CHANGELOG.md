@@ -40,6 +40,12 @@ locks.
   root-private custody and unprivileged handoff; refuse foreign, linked,
   corrupt, busy or nonempty input. Keep signed clients, trust metadata,
   source/derivation/body verification and all original census clocks.
+- Share ordinary CI's genuine Source/run/attempt-bound Linux document store after
+  cheap gates, instead of repeating its cold compiler build in every prepared
+  infrastructure job. Restore complete original store registrations and trust
+  metadata, then reverify each consumer's pinned tools. Keep independent project
+  feedback, the producer's 75-minute transport-inclusive envelope, all test
+  selections and execution clocks, and the complete blocking `CI Gate`.
 - Bind Root-policy preparation and all four collectors directly to the immutable
   workflow-dispatch SHA. Keep the explicit caller-SHA equality assertion without
   letting caller input select code executed against that ref's caches.

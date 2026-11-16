@@ -110,6 +110,11 @@ downloads require network access; elapsed time depends on the machine and cache.
 Independent project runtimes retain their own lockfiles, and system rendering
 tools are prepared separately when the selected workflow needs them.
 
+Ordinary `run.sh` dispatch selects an existing Root `.venv/bin/python` or an
+explicit absolute `TEMPLATE_ROOT_PYTHON`. Missing or broken preparation blocks;
+dispatch does not install uv, sync dependencies, or select an unauthenticated
+fallback. See [RUN_GUIDE](docs/RUN_GUIDE.md) for the canonical dispatch contract.
+
 **Expected:** exit 0, no errors, `.venv/` directory created.
 
 ---
@@ -185,8 +190,16 @@ separate; continue with the guide for your task.
 2. **No mocks**: all tests use real data, real files, `pytest-httpserver` for HTTP.
 3. **Coverage gates**: infra ≥ 60%, per-project ≥ 90%.
 4. **Public exemplars only**: only `projects/templates/*` is committed. Every other project path is local-only.
-5. **Root `output/` is disposable** and never committed; the pipeline regenerates it. Canonical public exemplar evidence is the exception: deterministic files under `projects/templates/<name>/output/` are tracked publication evidence inside the 224 MiB `PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES` cap in `infrastructure/project/git_guards.py`.
+5. **Preserve public publication evidence**: admitted deterministic files under
+   `projects/templates/<name>/output/` and copied `output/templates/<name>/`
+   are retained public evidence, not disposable output trees. Runtime state,
+   caches, logs and renderer intermediates remain local-only under the existing
+   tracking guards. Preserve retained evidence before regeneration or cleanup;
+   do not blanket-delete either output tree.
 6. **One pytest invocation per project**: run each project's tests as its own pytest invocation — combining several `projects/*/tests/` trees in one process fails (see AGENTS.md operational gotchas).
+7. **Declared versioned providers**: prepare the SDK and each explicitly declared
+   provider before its consumer. Import their installed public APIs, never a
+   sibling project's Source tree; see [project preparation](projects/README.md#run-surface).
 
 ---
 
@@ -198,7 +211,7 @@ scripts/            Stage orchestrators (pipeline/, runner/, audit/, docgen/, sh
 tests/              Infrastructure test suite
 projects/templates/ Public canonical exemplars (tracked in git)
 projects/working/   Private working projects (local-only, symlinked from sidecar — edit the canonical sidecar copy, never the symlink)
-output/             Root deliverables (disposable, not committed; tracked exemplar evidence lives under projects/templates/*/output/)
+output/             Copied deliverables; admitted public output/templates/* evidence is retained, runtime residue is local-only
 docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
                     and docs/documentation-index.md)
 ```
@@ -219,7 +232,7 @@ docs/               Documentation corpus (hierarchy and index in docs/AGENTS.md
 | PDF shows `??` for references | Normal on first pass; pipeline runs multi-pass automatically |
 | Tests fail coverage gate | `uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
 | Pipeline stage fails | See [`docs/guides/startup-and-setup.md` §Troubleshooting](docs/guides/startup-and-setup.md#troubleshooting) |
-| Pipeline very slow on an external-drive checkout | I/O-bound; expect much longer wall-clock — clone to an internal disk for the documented 2–5-minute runs |
+| Pipeline very slow on an external-drive checkout | Filesystem I/O can dominate; use a supported writable local checkout and measure the selected run rather than relying on a fixed duration |
 | Sandbox / read-only `$HOME` | Use the sandbox env bootstrap: `scripts/shell/shell_bootstrap.sh` points `MPLCONFIGDIR` and `UV_CACHE_DIR` under `$TMPDIR`; see [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md) |
 
 Full troubleshooting: [`docs/operational/troubleshooting/README.md`](docs/operational/troubleshooting/README.md)

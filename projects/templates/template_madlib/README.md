@@ -198,15 +198,30 @@ From an independent project root, prepare Python 3.14/3.15 with the genuine SDK
 wheel matching `pyproject.toml` and this project's `dev` extra. The local
 `tool.uv.sources` ancestor is for monorepo development, not standalone SDK
 selection; an intended version is not a PyPI publication receipt.
+Reuse the [shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+Initial dependency preparation needs package access or a prepared cache.
 
 ```bash
 : "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
 uv venv --python 3.14 .venv
 uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
-.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
-.venv/bin/python scripts/01_generate_madlib_artifacts.py
 .venv/bin/python scripts/z_generate_manuscript_variables.py
 .venv/bin/python scripts/02_validate_outputs.py
+```
+
+The hydration entrypoint already generates the configured artifacts, then writes
+`output/data/manuscript_variables.json` and hydrated `output/manuscript/`.
+Only then run the validator, which consumes those outputs, writes
+`output/reports/output_validation.json`, and returns nonzero on failed checks.
+These are expected local artifacts, not an observed successful run or PDF,
+scientific, native or publication acceptance. Run
+`scripts/01_generate_madlib_artifacts.py` separately only when artifacts without
+manuscript hydration are the intended task.
+
+The complete own test suite remains a separate check:
+
+```bash
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 `projects/templates/...`, `scripts/pipeline/`, and `scripts/audit/` commands

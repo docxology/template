@@ -7,11 +7,12 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
-Document-consuming functional jobs (every infrastructure shard and Search) use a
-75-minute hosted envelope for cold Source-pinned compiler/tool preparation.
-Each actual smoke-execution step remains capped at 10 minutes; other project
-jobs retain their 10-minute outer limit. Native observation, regression, pytest
-and operation clocks are unchanged.
+Ordinary functional infrastructure and document-consuming contract jobs import
+one genuine same-run Source-bound Linux store, then revalidate pinned tools.
+The producer's 75-minute envelope includes capture/upload; consumer envelopes,
+ten-minute smoke-execution steps and original deep-contract clocks are unchanged.
+Project feedback remains independent; Search retains its own converter preparation.
+See [the canonical CI guide](../../docs/development/ci.md) for custody and budgets.
 
 Manual CI dispatch accepts an optional exact public `coverage-project` and calls
 `exemplar-coverage.yml` for its own locked release-profile measurement. The

@@ -126,12 +126,26 @@ chapters in all.
 
 ## Quick start
 
-All commands assume `uv` (never `pip`/`npm`). Run them from the monorepo root. The
-project-local scaffold, figures, and diagrams also run independently. The full
+The Python commands below use `uv` and run from the canonical monorepo root;
+common preparation follows the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+The project-local scaffold, figures, and diagrams also run independently. The full
 development suite includes declared SDK integration checks; its own `dev`
 extra selects the SDK from this checkout. An exported clone needs an explicitly
 prepared SDK wheel rather than an ancestor checkout or an assumed PyPI release;
 see [the standalone development boundary](STANDALONE.md#intentional-non-standalone-dependencies).
+
+Figure generation writes local image artifacts. Diagram generation always
+writes Mermaid sources under `output/figures/mermaid/`; PNGs additionally need
+a working Mermaid CLI/browser environment. The renderer prefers an ancestor
+`node_modules/.bin/mmdc`, then `mmdc` on `PATH`. Missing or failed rendering
+leaves `.mmd` files and the script can still exit successfully: inspect its
+reported PNG count and actual artifacts. Use the monorepo's
+[pinned Node/npm/Mermaid preparation](https://github.com/docxology/template/blob/main/README.md)
+when PNGs are required; Python dependency preparation is not that renderer setup.
+Source-only `.mmd` output is a local authoring result, not PNG, rendered-book,
+native-format or publication acceptance. This boundary also applies to the
+standalone commands below; no successful rendering is asserted here.
 
 ```bash
 # 1. Install dependencies for the workspace
@@ -140,7 +154,7 @@ uv sync
 # 2. For a new draft only, materialise missing files declared in config.yaml
 uv run python projects/templates/template_textbook/scripts/scaffold_chapter.py
 
-# 3. Generate deterministic figures and diagrams
+# 3. Generate figures and Mermaid sources; diagram PNGs need the separate renderer
 uv run python projects/templates/template_textbook/scripts/generate_figures.py
 uv run python projects/templates/template_textbook/scripts/generate_diagrams.py
 

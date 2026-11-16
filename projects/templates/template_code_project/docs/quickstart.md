@@ -11,6 +11,11 @@ Produce numerical analysis artifacts or choose the complete manuscript path for
 
 ## Setup (One-Time)
 
+This is a canonical monorepo walkthrough. Reuse the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface),
+the independent-project guidance in [STANDALONE.md](../STANDALONE.md), and the
+Root [dispatch guide](https://github.com/docxology/template/blob/main/docs/RUN_GUIDE.md).
+
 ```bash
 # 1. Clone the template repository (if you haven't already)
 git clone https://github.com/docxology/template.git
@@ -90,11 +95,14 @@ Final PDF: `projects/templates/template_code_project/output/pdf/template_code_pr
 
 ## Quick Command Reference
 
+Run these from the monorepo root after preparation above. Project-local rows
+select the own environment; render/copy rows use the prepared Root environment.
+
 | Task | Command |
 |---|---|
-| Run tests | `uv run pytest projects/templates/template_code_project/tests/ -v` |
-| Run analysis | `uv run python projects/templates/template_code_project/scripts/optimization_analysis.py` |
-| Hydrate manuscript variables | `uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
-| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project` |
-| Copy final deliverables | `uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project` |
-| Clean outputs | `rm -rf projects/templates/template_code_project/output/` |
+| Run tests | `uv run --no-sync --offline --project projects/templates/template_code_project python -m pytest projects/templates/template_code_project/tests/ -v` |
+| Run analysis | `uv run --no-sync --offline --project projects/templates/template_code_project python projects/templates/template_code_project/scripts/optimization_analysis.py` |
+| Hydrate manuscript variables | `uv run --no-sync --offline --project projects/templates/template_code_project python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
+| Root render PDF | `uv run --no-sync --offline python scripts/pipeline/stage_03_render.py --project templates/template_code_project` |
+| Root copy final deliverables | `uv run --no-sync --offline python scripts/pipeline/stage_05_copy.py --project templates/template_code_project` |
+| Output custody | Canonical project outputs and copied deliverables can be tracked publication evidence. Preserve retained snapshots and immutable receipts; do not use blanket output deletion as setup. |

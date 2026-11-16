@@ -7,11 +7,47 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
-Document-consuming functional jobs (every infrastructure shard and Search) use a
-75-minute hosted envelope for cold Source-pinned compiler/tool preparation.
-Each actual smoke-execution step remains capped at 10 minutes; other project
-jobs retain their 10-minute outer limit. Native observation, regression, pytest
-and operation clocks are unchanged.
+Cheap `actionlint`, `lint` and `detect-projects` gates must succeed before the
+shared `prepare-linux-documents` producer starts. That producer uses the existing
+[document-preparation action](../actions/setup-acceptance-documents/action.yml)
+in converter mode and captures the genuine complete Nix store. Its **75-minute
+job includes setup, provider preparation, capture and upload**; the policy-census
+workflow's separate 135-minute authorization does not enlarge ordinary CI.
+
+Infrastructure smoke and the existing document-consuming contract cells retrieve
+the producer's immutable artifact by exact artifact ID and take the expected
+manifest SHA256 only from that producer's frozen output. The existing transport
+binds repository, exact Source, run, attempt, Nix client body and provider
+recipes/pins. No store snapshot is reused across runs, Sources or attempts.
+Missing, corrupt or mismatched DATA fails the existing validators; there is no
+unchecked fallback.
+
+Restore requires a fresh root-owned store and verifies the complete payload,
+registrations, original trust metadata and closure. Normal Source-pinned
+provider preparation and full source/body/signature verification still run
+after restore; native consumers still prepare their declared TeX, fonts,
+readers and browser. This shared artifact is **prepDATA**, never test outcomes,
+native authority or runtime acceptance.
+
+Every infrastructure smoke job keeps its 75-minute outer envelope, 540-second
+child budget and **10-minute smoke-execution step**. Existing deep contracts
+retain their 6,600-second whole-module ceiling, explicit case clocks and
+120-minute outer envelope (165 minutes for native-document preparation).
+Source/SDK, pre-import/live-original and closing custody, unprivileged/offline
+execution, native observation clocks and coverage floors remain unchanged.
+
+The project matrix depends only on `detect-projects`, not the shared producer,
+so project feedback stays independent of that preparation. Search retains its
+original independent converter preparation and 75-minute job; other project
+jobs retain their 10-minute outer limit. Actual project smoke steps stay capped
+at 10 minutes.
+
+`CI Gate` requires the shared producer and the full existing selected job union,
+then verifies the complete disjoint infrastructure smoke/contract receipts.
+Only the declared documentation-only project skip and unrequested own-coverage
+skip are accepted. Prepared YAML or offline actionlint does not establish
+hosted CI timing/success, a complete exact-Source candidate/F, or release
+acceptance. See [the ordinary CI contract](../../docs/development/ci.md).
 
 Manual CI dispatch accepts an optional exact public `coverage-project` and calls
 `exemplar-coverage.yml` for its own locked release-profile measurement. The
@@ -32,10 +68,11 @@ The lint job delegates its public gates to
 public scopes once, preserves producer failure, and passes the same nonempty lint
 array to both Ruff commands while the type gate runs concurrently in its own log
 (`ci.yml` also folds the safety scan into that wave). The tracked-tree guards stay
-sequential. Infrastructure smoke exercises that failure, corrupt model-cache
-refusal, fixture preparation and source binding, native source copying and the TeX
-admission boundary without preparing a model or native tools. These focused
-tests keep preparation and gate regressions on the ordinary push path.
+sequential. Infrastructure smoke exercises those boundaries after declared
+preparation: Source-pinned converters and Poppler, selected real TeX controls
+and the installed browser. Contract cells retain their source-declared
+converter/native, TeX and browser preparation. These focused tests do not
+implicitly prepare a model or replace the complete native acceptance matrix.
 
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original
@@ -249,8 +286,8 @@ uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run r
 gh run list --workflow=CI --limit=5
 gh run view <run-id> --log-failed
 
-# Re-run failed jobs
-gh run rerun <run-id> --failed
+# A new attempt cannot reuse an earlier attempt's prepared-store artifact.
+# Preserve the failed original; use the preparation/dispatch guidance below.
 
 # Debug specific test
 uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
@@ -259,6 +296,12 @@ uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```
+
+A failed consumer cannot adopt an earlier attempt's store snapshot. Any
+owner-authorized fresh run/attempt must include its own successful producer and
+matching consumers; preserve the original failed receipts rather than relabeling
+them. Follow [ordinary CI](../../docs/development/ci.md) and the existing
+[`ci.yml`](ci.yml) dispatch contract, not a consumer-only retry that reuses DATA.
 
 ## Adding New Jobs
 

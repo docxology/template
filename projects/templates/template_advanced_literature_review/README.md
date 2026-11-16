@@ -84,33 +84,41 @@ project config and the generated publication records are refreshed.
          deterministic_filters: {min_year: 2015}
    ```
 
-The default lane replays a **synthetic** exoplanet fixture. Prepare the genuine
-SDK → Meta → Advanced environment described under Dependencies, then follow the
-[single corpus/replay recipe](STANDALONE.md#multi-phase-corpus). Clean exports
-omit `output/`, so a new fork must explicitly generate its local fixture before
-replay; no missing corpus is silently replaced with live search. Run numbered
-scripts with the own project interpreter, and repository pipeline stages from
-the monorepo root. An actual retrieval requires explicit `--live` and its own
-authorization/provenance, not a changed description of fixture output.
+2. **Prepare the project and its fixture**:
+   Use the explicit SDK/Meta-wheel
+   [standalone environment](STANDALONE.md#standalone-environment) for an
+   independent checkout, or the
+   [shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface)
+   for a canonical checkout. The default lane replays a **synthetic** exoplanet
+   fixture. From the prepared project root, follow the
+   [single corpus/replay recipe](STANDALONE.md#multi-phase-corpus).
+   A clean export omits `output/`, so generate its missing local fixture
+   explicitly; never overwrite an actual live corpus to satisfy this step.
+   Missing data is not silently replaced with live search.
 
-   Live retrieval is an explicit opt-in and never runs from the default
-   command:
+   Live retrieval is a separate authorized opt-in from that prepared project
+   root; it requires actual provider preparation and retained provenance:
 
    ```bash
-   uv run python scripts/01_multi_phase_search.py --live
+   .venv/bin/python scripts/01_multi_phase_search.py --live
    ```
 
-3. **Execute analysis pipeline**:
+3. **Execute analysis from the same prepared project root**:
    ```bash
-   uv run python scripts/02_meta_analysis_pipeline.py
-   uv run python scripts/04_generate_figures.py
-   uv run python scripts/05_inject_variables.py
+   .venv/bin/python scripts/02_meta_analysis_pipeline.py
+   .venv/bin/python scripts/04_generate_figures.py
+   .venv/bin/python scripts/05_inject_variables.py
    ```
 
 4. **Render manuscript** from the template repository root:
    ```bash
-   uv run python scripts/pipeline/stage_03_render.py --project templates/template_advanced_literature_review
+   uv run --no-sync --offline python scripts/pipeline/stage_03_render.py --project templates/template_advanced_literature_review
    ```
+
+The first fixture replay prints `output/data/phase_metadata.json`; it checks the
+phase machinery over synthetic records, not retrieval freshness or empirical
+astronomy. Rendering uses the separate prepared monorepo
+[dispatch/tool contract](https://github.com/docxology/template/blob/main/docs/RUN_GUIDE.md).
 
 ## Configuration
 
@@ -197,6 +205,11 @@ llm_filters:
 - Access to the configured retrieval providers; supply credentials when a provider requires them
 - Optional local LLM server for model-backed filtering when explicitly enabled
 - Standard scientific Python stack (pandas, matplotlib, networkx)
+
+For executable SDK/Meta preparation, use
+[STANDALONE.md](STANDALONE.md#standalone-environment), not a sibling source path
+or an assumed PyPI release. Initial third-party dependency preparation may need
+package access or a prepared cache.
 
 Provider ordering is **Literature Meta's intended 0.2.0 → its actual
 committed-source provider wheel → Advanced's intended 0.2.0 consumer**.

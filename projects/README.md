@@ -4,8 +4,9 @@ This directory contains multiple **forkable research projects**, each with
 independent source code, tests, analysis scripts, and manuscripts. Projects are
 executed, tested, and rendered by the overarching
 **[docxology/template](https://github.com/docxology/template/)** infrastructure;
-some exemplars are fully project-local, while others intentionally depend on
-shared `infrastructure/` modules.
+some exemplars are fully project-local, while others use the versioned
+`infrastructure` SDK and explicitly declared provider packages. Imports use
+those prepared packages' public APIs, never a sibling project's Source tree.
 
 ## Run surface
 
@@ -165,20 +166,20 @@ Preserved under [`archive/`](archive/) until moved back; the pipeline does not d
 ## Standalone Project Paradigm
 
 Each project in `projects/` carries three critical guarantees while remaining
-clear about any intentional shared-infrastructure dependencies:
+clear about its declared versioned SDK and provider dependencies:
 
 ### 🔒 **Tests**: Independent Test Suites
 
 - Each project has its own `tests/` directory with 90%+ coverage requirement
 - Tests use data only (no mocks policy)
-- Tests import from `projects/{name}/src/` and `infrastructure/`
+- Tests import their own package, the prepared `infrastructure` SDK, and declared versioned provider APIs, not sibling Source trees
 - Can be run independently: `uv run pytest projects/{name}/tests/`
 
 ### 🧠 **Methods**: Business Logic Isolation
 
 - All research algorithms in `projects/{name}/src/`
-- No cross-project imports or dependencies
-- Can import from `infrastructure/` modules for shared utilities
+- Reuse the SDK or an explicitly declared versioned provider package; no sibling-Source imports
+- Prepare providers before consumers using their own declared package and lock contracts
 - Scripts in `projects/{name}/scripts/` are thin orchestrators
 
 ### 📝 **Manuscript**: Independent Content
@@ -285,7 +286,7 @@ graph TD
         PROJ --> PROJ_SCRIPTS[scripts/<br/>Thin orchestrators]
         PROJ --> PROJ_MANUSCRIPT[manuscript/<br/>Research paper]
         PROJ --> PROJ_DOCS[docs/<br/>Modular documentation]
-        PROJ --> PROJ_OUTPUT[output/<br/>Generated outputs<br/>Disposable]
+        PROJ --> PROJ_OUTPUT[output/<br/>Retained evidence +<br/>local runtime residue]
         PROJ --> PROJ_CONFIG[pyproject.toml<br/>Project metadata]
     end
 
@@ -402,15 +403,19 @@ uv run python scripts/pipeline/stage_05_copy.py --project {name}
 
 ### ✅ **Shared Infrastructure Access**
 
-- **Import Pattern**: Projects import from `infrastructure/` but not from each other
+- **Import Pattern**: Use the SDK and declared versioned provider APIs, never ambient sibling Source imports
 - **Common Utilities**: Logging, validation, rendering, reporting shared across projects
 - **Quality Standards**: Projects align with root **[`AGENTS.md`](../AGENTS.md)** and **[`docs/rules/`](../docs/rules/)**
 
-### ❌ **No Cross-Project Dependencies**
+### Declared versioned providers
 
-- Projects cannot import from other projects
-- No shared business logic between projects
-- Each project maintains its own scientific domain and methodology
+- Declare each provider and version in the consumer's package/lock contracts,
+  and prepare the genuine provider distribution before tests or rendering.
+- Advanced's SDK → Meta → Advanced order is intentional; use the
+  [own-runtime preparation](#prepare-one-canonical-projects-environment).
+- Import installed public APIs, not a sibling project's `src/` through
+  `PYTHONPATH` or `sys.path` changes.
+- Keep scientific domain, test, manuscript and output ownership explicit.
 
 ## Standards compliance checklist
 
@@ -540,30 +545,17 @@ touch projects/myresearch/manuscript/01_introduction.md
 
 ## Workspace Management
 
-This template uses uv workspaces for unified dependency management across projects. All projects share common dependencies while maintaining project-specific packages.
+The Root and each project retain explicit package and runtime declarations.
+Root `uv sync --locked` prepares the Root environment; it does not turn every
+project into one shared interpreter or make checkout-local source overrides
+released providers.
 
-### Workspace Commands
-
-```bash
-# Sync all workspace dependencies
-uv sync
-
-# Add dependency to specific project
-uv run python scripts/maintenance/manage_workspace.py add numpy --project project
-
-# Show workspace status
-uv run python scripts/maintenance/manage_workspace.py status
-
-# Update all dependencies
-uv run python scripts/maintenance/manage_workspace.py update
-```
-
-### Workspace Benefits
-
-- **Unified Dependencies**: Shared packages managed centrally
-- **Faster Builds**: Single dependency resolution
-- **Consistent Environments**: Same versions across projects
-- **Simplified Maintenance**: Update once, benefit all projects
+Use [canonical project preparation](#prepare-one-canonical-projects-environment)
+or [independent exported-project preparation](#prepare-an-independent-exported-project)
+for the selected context. [RUN_GUIDE](../docs/RUN_GUIDE.md) owns dispatch and
+explicit runtime nomination. Preserve each declared SDK/provider version and
+prepare providers before consumers; do not replace those contracts with an
+ambient sibling import or assume a candidate is available on a package index.
 
 ## Running the Pipeline
 
@@ -647,7 +639,12 @@ Copied by `scripts/pipeline/stage_05_copy.py`:
 - All project outputs in one place
 - Ready for distribution
 
-**Important**: The root `output/` directory should only contain project-specific folders. Root-level directories (`data/`, `figures/`, `pdf/`, etc.) are automatically cleaned during the pipeline to maintain proper organization.
+**Preserve retained public outputs.** Admitted deterministic evidence lives under
+both `projects/templates/<name>/output/` and copied `output/templates/<name>/`.
+Runtime state, caches, logs and renderer intermediates are separate local-only
+residue; their presence does not make the retained trees disposable. Preserve
+existing public evidence before regeneration or cleanup, and never blanket-delete
+either output tree. See [the public-output policy](../README.md#public-exemplar-outputs-and-mirrors).
 
 Example:
 
@@ -672,7 +669,7 @@ Each project has an explicit package and execution boundary:
 - ✅ Separate test suites
 - ✅ Separate outputs
 - ✅ Separate dependencies (via pyproject.toml)
-- No undeclared cross-project Source imports. Declared providers such as Meta → Advanced remain intentional dependencies.
+- Versioned provider dependencies are declared and prepared; imports use their installed public APIs, never sibling Source
 
 For shared utilities, use the `infrastructure/` modules.
 
@@ -724,7 +721,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 
 ### Do's ✅
 
-- Keep each project independent
+- Keep each project's package, runtime, test, manuscript and output boundaries explicit
 - Use meaningful project names (not `project1`, `project2`)
 - Include `README.md` in each project
 - Add `pyproject.toml` with metadata
@@ -735,7 +732,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 ### Don'ts ❌
 
 - Reuse the SDK or an explicitly declared provider instead of copying shared code or relying on an ambient sibling import.
-- Keep private outputs, caches and runtime state untracked. Canonical public exemplar snapshots have a guarded exception; retain declared deliverables below the public file-size ceiling, not logs or intermediates.
+- Do not blanket-delete retained public evidence in project-local or copied root output trees; keep private outputs, caches, logs and runtime residue untracked under the existing guards.
 - Don't use spaces or special characters in project names
 - Don't create projects without `src/` and `tests/`
 - Don't violate AGENTS.md standards (testing, documentation, type hints, etc.)
@@ -997,7 +994,7 @@ infrastructure compliance:
 ### 🔒 **Forkability Guarantees**
 
 - **Tests**: Independent test suites (90%+ coverage, data only)
-- **Methods**: Isolated business logic with no cross-project imports
+- **Methods**: Project-owned business logic with declared versioned providers, never sibling-Source imports
 - **Manuscript**: Independent content with own references and metadata
 
 ### 🔧 **Infrastructure Integration**
@@ -1053,4 +1050,4 @@ Additional rotating projects are discovered from `docs/_generated/active_project
 4. **Execute**: Run via infrastructure scripts for testing, analysis, rendering
 5. **Deliver**: Final outputs organized in `output/{project}/`
 
-Each project is **completely independent** yet integrated with the template's infrastructure for quality assurance, rendering, and validation.
+Each project retains explicit package, runtime, test, manuscript and output boundaries while using the shared SDK and any declared versioned providers for coordinated execution, rendering and validation.

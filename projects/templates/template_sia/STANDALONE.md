@@ -55,17 +55,47 @@ rsync -a \
   live-execution settings before claiming a new task result.
 - Regenerate run summaries, reports, figures, and manuscript variables.
 
-## Validation Commands
+## Standalone environment
 
-Use the [parent README's actual SDK/development preparation](README.md),
-including the real Docker requirements of complete selected tests. From the
-prepared project root:
+From an independent project root, use Python 3.14 or 3.15 and a genuine
+`research-project-template==5.2.0` wheel matching `pyproject.toml`. Reuse the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface);
+the checkout-only `../../..` source mapping is not a standalone SDK provider.
 
 ```bash
-.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+```
+
+This explicit wheel installation does not consult `tool.uv.sources`.
+Initial dependencies require package access or a prepared cache. A candidate
+version or local installation is not evidence of accepted/public provider
+publication. Do not assume the candidate SDK or exemplar is available on PyPI.
+
+## Validation Commands
+
+After [standalone preparation](#standalone-environment), start with fixture
+replay from the project root:
+
+```bash
 .venv/bin/python scripts/run_sia_loop.py
 .venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
+
+The replay writes `output/reports/sia_loop_report.md` and prints its actual
+report/summary paths and generation count. These are expected local outputs,
+not observed success or measured self-improvement.
+
+The complete own suite is a separate selection and retains the coverage gate:
+
+```bash
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+```
+
+Complete selected tests require the genuine prepared Docker daemon/image
+described under [Optional hardening](README.md#optional-hardening). The small
+fixture demonstration does not discharge those native/provider obligations.
 
 Replay/reference diagnostics are not measured improvement. Actual local-model
 proposals are separate explicitly prepared/authorized work; missing Docker or
