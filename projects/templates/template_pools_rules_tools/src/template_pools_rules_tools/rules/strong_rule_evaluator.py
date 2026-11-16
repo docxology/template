@@ -322,15 +322,14 @@ def _evaluate_module_structure(
                             )
                         )
                         break
-            elif basename.endswith(".py"):
-                if any(src_root.rglob(basename)):
-                    violations.append(
-                        StrongRuleViolation(
-                            rule_name=rule_name,
-                            filename=filename,
-                            message=f"forbidden file matched under src/: {basename}",
-                        )
+            elif basename.endswith(".py") and any(src_root.rglob(basename)):
+                violations.append(
+                    StrongRuleViolation(
+                        rule_name=rule_name,
+                        filename=filename,
+                        message=f"forbidden file matched under src/: {basename}",
                     )
+                )
 
     max_depth = rule.get("max_depth")
     if isinstance(max_depth, dict):
