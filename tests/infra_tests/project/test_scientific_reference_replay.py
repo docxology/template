@@ -328,17 +328,15 @@ def test_rehashed_native_substitution_never_consumed_without_original_custody(or
         from pypdf import PdfReader, PdfWriter
         from reportlab.pdfgen.canvas import Canvas
 
-        reader = PdfReader(BytesIO(original))
+        # pypdf>=7 merges only onto writer-owned pages; clone the original first.
+        writer = PdfWriter(clone_from=BytesIO(original))
         overlay = BytesIO()
-        page = reader.pages[0]
+        page = writer.pages[0]
         canvas = Canvas(overlay, pagesize=(float(page.mediabox.width), float(page.mediabox.height)))
         canvas.setFillColorRGB(1, 1, 1)
         canvas.rect(0, 0, float(page.mediabox.width), float(page.mediabox.height), fill=1, stroke=0)
         canvas.save()
         page.merge_page(PdfReader(BytesIO(overlay.getvalue())).pages[0])
-        writer = PdfWriter()
-        for page in reader.pages:
-            writer.add_page(page)
         output = BytesIO()
         writer.write(output)
         changed = output.getvalue()

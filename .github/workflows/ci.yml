@@ -312,7 +312,9 @@ jobs:
         timeout-minutes: 10
         uses: ./.github/actions/setup-native-loader-fixture
       - name: Prepare hash-required offline cache for the installed credential contract
-        if: matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py'
+        if: >-
+          matrix.module == 'tests/infra_tests/reporting/test_native_hosted_credentials.py' ||
+          matrix.module == 'tests/infra_tests/reporting/test_native_worker_failure_prefix.py'
         timeout-minutes: 10
         uses: ./.github/actions/setup-native-offline-cache
       - name: Prepare full locked project-sync cache for the relocated native contract

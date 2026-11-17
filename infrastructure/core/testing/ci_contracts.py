@@ -35,6 +35,9 @@ CONTRACT_MODULES = frozenset(
         "tests/infra_tests/reporting/test_native_whole_portability.py",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        # Builds and installs the actual SDK wheel offline (1800s marker); it
+        # needs the hash-required offline cache, which smoke shards never warm.
+        "tests/infra_tests/reporting/test_native_worker_failure_prefix.py",
         "tests/infra_tests/reporting/test_project_verifier.py",
         "tests/infra_tests/project/test_root_case_lanes.py",
         "tests/infra_tests/project/test_root_no_model_acquisition.py",

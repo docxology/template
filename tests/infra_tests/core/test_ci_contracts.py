@@ -48,6 +48,7 @@ def test_actual_deep_owner_cannot_be_moved_back_into_smoke_or_omitted() -> None:
         "tests/infra_tests/reporting/test_native_pdf_math.py",
         "tests/infra_tests/reporting/test_native_pdf_source_witness.py",
         "tests/infra_tests/reporting/test_pdf_raw_natbib_source.py",
+        "tests/infra_tests/reporting/test_native_worker_failure_prefix.py",
     ):
         changed = (module,)
         assert module not in infrastructure_files(ROOT)

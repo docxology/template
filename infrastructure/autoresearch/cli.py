@@ -17,6 +17,7 @@ from infrastructure.autoresearch.reports import (
 )
 from infrastructure.autoresearch.validation import validate_autoresearch_plan
 from infrastructure.core.cli_scaffold import emit_schema
+from infrastructure.core.pipeline.definition import PipelineSourceResolutionError
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -57,7 +58,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return _dispatch(args)
-    except (ValueError, yaml.YAMLError, FileNotFoundError) as error:
+    except (ValueError, yaml.YAMLError, FileNotFoundError, PipelineSourceResolutionError) as error:
+        # No actual pipeline declaration is an invalid invocation, not a crash.
         print(f"AutoResearch invocation rejected: {error}")
         return 2
     except OSError as error:
