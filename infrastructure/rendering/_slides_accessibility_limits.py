@@ -10,31 +10,55 @@ from infrastructure.core.exceptions import RenderingError
 
 MAX_ACCESSIBLE_PANDOC_JSON_BYTES = 16 * 1024 * 1024
 MAX_ACCESSIBLE_PANDOC_AST_NODES = 100_000
+#: Archive decks project one whole manuscript section through Pandoc's own
+#: Beamer writer; no semantic composer or writer-fallback projection walks the
+#: tree. A book-scale IMRaD chapter legitimately exceeds the accessible ceiling
+#: (a measured methods chapter is ~130,000 nodes in ~1 MB of JSON), so the
+#: archive route keeps its own, still finite, node ceiling. The byte and depth
+#: bounds are shared and unchanged.
+MAX_ARCHIVE_PANDOC_AST_NODES = 250_000
 MAX_ACCESSIBLE_PANDOC_AST_DEPTH = 128
 
 
-def validate_accessible_ast_limits(document: dict[str, Any], *, source: str) -> None:
+def validate_accessible_ast_limits(
+    document: dict[str, Any],
+    *,
+    source: str,
+    maximum_nodes: int = MAX_ACCESSIBLE_PANDOC_AST_NODES,
+) -> None:
     """Reject an AST whose size or nesting exceeds the renderer contract.
 
     Pandoc's normal JSON tree is shallow. Explicit bounds keep every recursive
     semantic helper below Python's recursion ceiling and prevent a hostile
     in-memory caller from turning writer-fallback projection into unbounded
     allocation work.
+
+    ``maximum_nodes`` defaults to the accessible composition ceiling. The
+    archive route passes :data:`MAX_ARCHIVE_PANDOC_AST_NODES`; no caller can
+    raise the ceiling beyond that bound or disable it.
     """
 
+    if (
+        isinstance(maximum_nodes, bool)
+        or not isinstance(maximum_nodes, int)
+        or not 0 < maximum_nodes <= MAX_ARCHIVE_PANDOC_AST_NODES
+    ):
+        raise ValueError(
+            f"maximum_nodes must be an integer in (0, {MAX_ARCHIVE_PANDOC_AST_NODES}], got {maximum_nodes!r}"
+        )
     stack: list[tuple[object, int]] = [(document, 0)]
     observed_nodes = 0
     while stack:
         value, depth = stack.pop()
         observed_nodes += 1
-        if observed_nodes > MAX_ACCESSIBLE_PANDOC_AST_NODES:
+        if observed_nodes > maximum_nodes:
             raise RenderingError(
                 "[slides.schema.pandoc-limits] Accessible Pandoc AST exceeds the node limit",
                 context={
                     "source": source,
                     "diagnostic_code": "slides.schema.pandoc-limits",
                     "observed_nodes": observed_nodes,
-                    "maximum_nodes": MAX_ACCESSIBLE_PANDOC_AST_NODES,
+                    "maximum_nodes": maximum_nodes,
                 },
             )
         if depth > MAX_ACCESSIBLE_PANDOC_AST_DEPTH:
@@ -74,6 +98,7 @@ __all__ = [
     "MAX_ACCESSIBLE_PANDOC_AST_DEPTH",
     "MAX_ACCESSIBLE_PANDOC_AST_NODES",
     "MAX_ACCESSIBLE_PANDOC_JSON_BYTES",
+    "MAX_ARCHIVE_PANDOC_AST_NODES",
     "read_bounded_pandoc_json",
     "validate_accessible_ast_limits",
 ]
