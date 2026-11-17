@@ -16,6 +16,9 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Keep poisoned-bytecode controls bound to the ordinary isolated child's local
+  cache even when the Root test runner owns a separate fresh prefix. Preserve
+  timestamp validity and genuine fresh-prefix admission and refusal paths.
 - Settle AutoResearch catalogs, security evidence, loop visuals and hydration
   before the complete lifecycle primary byte snapshot and terminal validation.
   Keep downstream references acyclic and strict standalone failure refusal.

@@ -455,7 +455,15 @@ def poison_timestamp_cache(source: Path) -> None:
     before = source.stat()
     source.write_text("VALUE = 9\n")
     os.utime(source, ns=(before.st_atime_ns, before.st_mtime_ns))
-    py_compile.compile(str(source), doraise=True, invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
+    # The ordinary -I control uses its local cache, not the Root runner's prefix.
+    cache = source.parent / "__pycache__" / f"{source.stem}.{sys.implementation.cache_tag}.pyc"
+    py_compile.compile(
+        str(source),
+        cfile=str(cache),
+        doraise=True,
+        optimize=0,
+        invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP,
+    )
     source.write_text("VALUE = 1\n")
     os.utime(source, ns=(before.st_atime_ns, before.st_mtime_ns))
 
