@@ -4,6 +4,8 @@ Reproducible, validated pitch-deck generation — one token-resolved content
 source renders to six real artifacts: short/medium/long decks, each as both
 PDF and PPTX.
 
+![Two-layer pitch-deck architecture linking Layer 1 rendering, validation, publishing, and provenance modules with Layer 2 token-resolved deck content through thin orchestrators](output/figures/two_layer_architecture.png)
+
 **Location:** git-tracked public exemplar at `projects/templates/template_pitch_deck/` in the public template checkout.
 
 The standalone repository root corresponds to that project directory.

@@ -2,6 +2,8 @@
 
 `template_madlib` is a public canonical exemplar for configuration-driven manuscript generation. It uses a Mad Lib style vocabulary surface, but the point is not novelty prose. The point is to show how conditional text, section titles, method steps, design principles, QA probes, authoring obligations, configured-field origins, token provenance, and publication boundaries can be generated from tracked config plus project-local source code.
 
+![Deterministic token-injection cover overview from tracked YAML configuration through source-generated figures and hydrated IMRAD manuscript](output/figures/madlib_cover_overview.png)
+
 `manuscript/config.yaml` owns the `madlib:` schema: seed, lexicon, slots, section switches, section titles, narrative moves, method protocol, design principles, operational phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and contribution claims. The Python package expands that schema into token choices, configured-field origin inventories, evidence tables, reports, a figure registry, nine generated figure artifacts (the cover overview plus eight interior manuscript figures), and a hydrated IMRAD manuscript under `output/manuscript/`. The current method protocol is intentionally broad: it covers schema ingestion, review-scenario declaration, field-origin tracking, lexicon governance, digest construction, invariant review, slot expansion, section-condition handling, body composition, evidence-table assembly, claim-ledger alignment, figure registry generation, manuscript hydration, render validation, review-packet assembly, copy validation, and fork-migration documentation.
 
 ## When to use this template

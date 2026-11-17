@@ -2,6 +2,8 @@
 
 `template_registered_report` is a public exemplar for registered reports, preregistration, replication, and robustness-audit workflows. It makes the planned analysis, frozen hypothesis ledger, deviations, and post-run claims auditable.
 
+![Preregistered analysis DAG linking frozen hypotheses, exclusion rules, planned tests, deviation tracking, and claim-boundary audit](output/figures/analysis_dag.png)
+
 Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_registered_report --project-only`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and keep template integrity checks green.
 
 ### Standalone project commands

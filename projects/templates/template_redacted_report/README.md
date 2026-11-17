@@ -2,6 +2,8 @@
 
 `template_redacted_report` is a public exemplar for redacted release reports, disclosure control, and source-protection review. It is designed for lawful, accountable release workflows in intelligence, security, legal, or public-records contexts without publishing sensitive operational content.
 
+![Disclosure-control and redaction workflow from source review and authority decisions through hash ledgers, residual-risk gates, and sanitized public release](output/figures/redaction_flow.png)
+
 Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only`, then generate the canonical audit artifacts with `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_redacted_report`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks and preserve template integrity.
 
 ### Standalone project commands

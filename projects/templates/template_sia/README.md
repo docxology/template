@@ -3,6 +3,8 @@
 Public exemplar for the SIA (Self-Improvement Agent) harness: Meta → Target → Feedback
 loops with public/private task splits and canonical generation artifacts.
 
+![Self-Improvement Agent harness loop topology connecting Meta, Target, and Feedback stages across public and held-out task splits](output/figures/sia_loop_topology.png)
+
 ## When to use this template
 
 Use this template when you need a **self-improvement-agent evaluation

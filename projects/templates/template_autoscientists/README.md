@@ -6,6 +6,8 @@ for Long-Running Scientific Experimentation* (arXiv:2605.28655): a shared
 champion/experiment-log state, a dead-end registry, effect-size ranking,
 noise-band confirmation, and stagnation-driven team reorganization.
 
+![Deterministic ablation across AutoScientists coordination mechanisms comparing full coordination against single-mechanism removals](output/figures/ablation.png)
+
 It is a **microscope on the coordination primitives**, not a reproduction of the
 full agentic system. The deterministic core is the default. An explicit bounded
 local Ollama comparison runs actual multi-step coordinated and single-agent

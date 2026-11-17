@@ -18,6 +18,37 @@ does not establish acceptance or publication.
 >
 > **Template Repository** - Click "Use this template" to create a research project with this structure
 
+```mermaid
+graph TB
+    subgraph "Two-Layer Architecture (Infrastructure → Project)"
+        INFRA["Infrastructure<br/>infrastructure/"] --> |"provides tools"| PROJECT["Project Code<br/>projects/&lt;qualified-name&gt;/src/"]
+        PROJECT --> |"imported by"| SCRIPTS["Scripts<br/>projects/&lt;qualified-name&gt;/scripts/"]
+        SCRIPTS --> |"generate"| WORKING["Working outputs<br/>projects/&lt;qualified-name&gt;/output/"]
+        WORKING --> |"copy stage"| OUTPUTS["Final deliverables<br/>output/&lt;qualified-name&gt;/"]
+        TESTS["Tests<br/>tests/ and per-project tests/"] --> |"validate"| PROJECT
+        MANUSCRIPT["Manuscript<br/>projects/&lt;qualified-name&gt;/manuscript/"] --> |"references"| WORKING
+    end
+
+    subgraph "Core Pipeline (--mode core)"
+        direction LR
+        P_SETUP["Setup<br/>stage_00_setup.py"] --> P_TESTS["Tests<br/>stage_01_test.py"]
+        P_TESTS --> P_ANALYSIS["Analysis<br/>stage_02_analysis.py"]
+        P_ANALYSIS --> P_RENDER["Render<br/>stage_03_render.py"]
+        P_RENDER --> P_VALIDATE["Validate<br/>stage_04_validate.py"]
+        P_VALIDATE --> P_COPY["Copy<br/>stage_05_copy.py"]
+    end
+
+    SCRIPTS -.-> |"orchestrated by"| P_ANALYSIS
+    P_COPY -.-> |"publishes"| OUTPUTS
+
+    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#0f172a
+    classDef pipeline fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#0f172a
+    classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#0f172a
+    class INFRA,PROJECT,SCRIPTS,TESTS,MANUSCRIPT core
+    class P_SETUP,P_TESTS,P_ANALYSIS,P_RENDER,P_VALIDATE,P_COPY pipeline
+    class WORKING,OUTPUTS output
+```
+
 ## Quickstart
 
 Just cloned the repo? Do this:

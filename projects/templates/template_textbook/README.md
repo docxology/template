@@ -2,6 +2,8 @@
 
 An authored open textbook with twelve chapters on quantitative reasoning, systems, dynamics, control, and reproducible research. Every chapter includes a worked mathematical example, a generated figure, a lab with a solution, and answered practice questions. Front matter, unit introductions, a glossary, and reference appendices complete the configured book. The bibliography contains verified primary publications; the case-study dataset is an instructional fixture.
 
+![Rendered cover of The Template Textbook: Systems, Models, and Reproducible Research](manuscript/assets/cover/template_textbook_cover.png)
+
 [`manuscript/config.yaml`](manuscript/config.yaml) declares the `units:` structure, chapter order, companions, and rendering settings. The retired `parts:` configuration key raises a migration error. Rename it to `units:` before loading an older configuration. Relative, portable chapter paths and stable cross-reference labels keep the source and rendered numbering connected.
 
 The scaffolding API remains available for creating separate new drafts. Structural mode can validate their outlines; the canonical book uses `--require-complete` to require zero draft markers across every configured section. Intended release 0.2.0 remains pending: old publication identifiers and rendered evidence describe the historical published release.

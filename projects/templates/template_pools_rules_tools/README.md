@@ -2,6 +2,8 @@
 
 **Pools, Rules, and Tools: A Template-Integrated Resource Architecture**
 
+![Resource architecture overview integrating fonds data pools, formal and soft rule specifications, and executable tool contracts](output/figures/architecture_overview.png)
+
 In a standalone export, this repository root is the project directory and its
 scripts are `scripts/<name>.py`. In the monorepo, run from its root and prefix
 project scripts/tests with `projects/templates/template_pools_rules_tools/`.
