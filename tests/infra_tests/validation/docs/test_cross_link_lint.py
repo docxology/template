@@ -178,7 +178,7 @@ def test_find_broken_links_reports_missing_public_project_source_link(tmp_path: 
 
 def test_find_broken_links_reports_unqualified_public_template_links(tmp_path: Path) -> None:
     """Old ``projects/template_*`` links are stale public-exemplar paths."""
-    md = tmp_path / ".github" / "README.md"
+    md = tmp_path / ".github" / "GITHUB.md"
     _write(
         md,
         "[stale public exemplar](../projects/template_code_project/README.md)\n",

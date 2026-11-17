@@ -2,7 +2,7 @@
 
 The canonical pipeline definition lives in
 ``infrastructure/core/pipeline/pipeline.yaml``. Several Markdown files
-(``README.md``, ``.github/README.md``, ``scripts/AGENTS.md``,
+(``README.md``, ``.github/GITHUB.md``, ``scripts/AGENTS.md``,
 ``docs/RUN_GUIDE.md``, ``docs/core/workflow.md``) used to hand-maintain a
 copy of the same stage table. This module renders that table from the
 YAML and injects it between
@@ -42,7 +42,7 @@ DEFAULT_STAGE_TABLE_TARGETS = (
     "README.md",
     "AGENTS.md",
     "CLAUDE.md",
-    ".github/README.md",
+    ".github/GITHUB.md",
     "scripts/AGENTS.md",
     "docs/RUN_GUIDE.md",
     "docs/core/workflow.md",

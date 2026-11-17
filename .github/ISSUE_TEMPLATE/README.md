@@ -22,4 +22,4 @@ updates.
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md)
-- [`../README.md`](../README.md)
+- [`../GITHUB.md`](../GITHUB.md)

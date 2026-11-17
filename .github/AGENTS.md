@@ -85,7 +85,7 @@ acceptance.
 
 The `.github/` directory contains GitHub-specific configuration and automation for the Research Project Template. This includes continuous integration workflows, issue templates, PR templates, and other GitHub integrations that ensure code quality and collaborative development.
 
-**Human entry point:** [README.md](README.md) — GitHub overview, doc map, and [Agent & automation entry point](README.md#agent--automation-entry-point). **This file (`AGENTS.md`):** job names, paths, and thresholds for automation and agents.
+**Human entry point:** [GITHUB.md](GITHUB.md) — GitHub overview, doc map, and [Agent & automation entry point](GITHUB.md#agent--automation-entry-point). **This file (`AGENTS.md`):** job names, paths, and thresholds for automation and agents.
 
 ## Publication
 
@@ -94,7 +94,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 **License**: Apache 2.0
 
-Public exemplar GitHub/Zenodo records are generated into [`.github/README.md`](README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) from [`../docs/_generated/publication_records.md`](../docs/_generated/publication_records.md). Refresh them with:
+Public exemplar GitHub/Zenodo records are generated into [`.github/GITHUB.md`](GITHUB.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) from [`../docs/_generated/publication_records.md`](../docs/_generated/publication_records.md). Refresh them with:
 
 ```bash
 uv run python scripts/docgen/publication_records.py --refresh-external
@@ -105,7 +105,7 @@ uv run python scripts/docgen/publication_records.py --refresh-external
 ```mermaid
 flowchart TB
     GH[.github/]
-    GH --> META[AGENTS.md · README.md]
+    GH --> META[AGENTS.md · GITHUB.md]
     GH --> DEP[dependabot.yml<br/>Automated dependency updates]
     GH --> PRT[PULL_REQUEST_TEMPLATE.md]
     GH --> ITPL[ISSUE_TEMPLATE]
@@ -436,7 +436,7 @@ gh run view <run-id> --log
 
 ## See Also
 
-- [`README.md`](README.md) — Contributor-oriented GitHub integration guide
+- [`GITHUB.md`](GITHUB.md) — Contributor-oriented GitHub integration guide
 - [`workflows/AGENTS.md`](workflows/AGENTS.md) — Detailed CI/CD workflow documentation
 - [`../AGENTS.md`](../AGENTS.md) — Root system overview
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

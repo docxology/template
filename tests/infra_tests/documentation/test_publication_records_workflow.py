@@ -5,9 +5,9 @@ that are not covered by the existing ``test_publication_records.py`` and
 ``test_publication_records_additional.py`` suites — specifically:
 
 * ``write_publication_records_doc`` end-to-end (writes the generated markdown,
-  syncs the ``.github/README.md`` block, and updates ``STANDALONE.md`` identity blocks).
+  syncs the ``.github/GITHUB.md`` block, and updates ``STANDALONE.md`` identity blocks).
 * ``check_publication_records_doc`` drift paths: missing generated doc, missing
-  ``.github/README.md``, stale standalone blocks.
+  ``.github/GITHUB.md``, stale standalone blocks.
 * Internal helpers: ``_markdown_table_rows``, ``_row_map_differences``,
   ``_publication_matrix_source_rows``, ``_github_readme_source_rows``,
   ``_local_source_path_rows``.
@@ -142,13 +142,13 @@ def test_write_writes_generated_markdown_without_readme(tmp_path: Path) -> None:
 
 
 def test_write_updates_github_readme_block(tmp_path: Path) -> None:
-    """``write_publication_records_doc`` syncs the ``.github/README.md`` block."""
+    """``write_publication_records_doc`` syncs the ``.github/GITHUB.md`` block."""
     _scaffold_all_public_projects(tmp_path)
     records = load_publication_records(tmp_path)
     _sync_standalone_blocks(records)
     github_dir = tmp_path / ".github"
     github_dir.mkdir()
-    readme_path = github_dir / "README.md"
+    readme_path = github_dir / "GITHUB.md"
     readme_path.write_text(
         "\n".join(["# Template", "", README_BLOCK_BEGIN, "old block", README_BLOCK_END, "", "footer"]),
         encoding="utf-8",
@@ -216,7 +216,7 @@ def test_check_returns_missing_doc_when_generated_absent(tmp_path: Path) -> None
 
 
 def test_check_reports_missing_github_readme(tmp_path: Path) -> None:
-    """Missing ``.github/README.md`` is reported when ``update_github_readme=True``."""
+    """Missing ``.github/GITHUB.md`` is reported when ``update_github_readme=True``."""
     _scaffold_all_public_projects(tmp_path)
     records = load_publication_records(tmp_path)
     _sync_standalone_blocks(records)
@@ -228,7 +228,7 @@ def test_check_reports_missing_github_readme(tmp_path: Path) -> None:
 
     differences = check_publication_records_doc(tmp_path, update_github_readme=True)
 
-    readme_rel = (tmp_path / ".github" / "README.md").relative_to(tmp_path)
+    readme_rel = (tmp_path / ".github" / "GITHUB.md").relative_to(tmp_path)
     assert any(diff.endswith(f"missing {readme_rel}") for diff in differences)
 
 
@@ -242,7 +242,7 @@ def test_check_reports_stale_standalone_blocks(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     (tmp_path / ".github").mkdir()
-    (tmp_path / ".github" / "README.md").write_text(
+    (tmp_path / ".github" / "GITHUB.md").write_text(
         "\n".join(["before", render_github_readme_publication_block(records), "after"]),
         encoding="utf-8",
     )
@@ -264,7 +264,7 @@ def test_check_accepts_in_sync_repo(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     (tmp_path / ".github").mkdir()
-    (tmp_path / ".github" / "README.md").write_text(
+    (tmp_path / ".github" / "GITHUB.md").write_text(
         "\n".join(["before", render_github_readme_publication_block(records), "after"]),
         encoding="utf-8",
     )
@@ -668,7 +668,7 @@ def test_write_then_check_is_in_sync(tmp_path: Path) -> None:
     _scaffold_all_public_projects(tmp_path)
     github_dir = tmp_path / ".github"
     github_dir.mkdir()
-    (github_dir / "README.md").write_text(
+    (github_dir / "GITHUB.md").write_text(
         "\n".join(["# Template", "", README_BLOCK_BEGIN, "stale", README_BLOCK_END, ""]),
         encoding="utf-8",
     )
@@ -690,7 +690,7 @@ def test_write_then_check_with_refreshed_external(tmp_path: Path) -> None:
         record.zenodo_status = "not published separately"
     github_dir = tmp_path / ".github"
     github_dir.mkdir()
-    (github_dir / "README.md").write_text(
+    (github_dir / "GITHUB.md").write_text(
         "\n".join(["# Template", "", render_github_readme_publication_block(records), ""]),
         encoding="utf-8",
     )
