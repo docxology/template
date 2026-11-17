@@ -4,6 +4,8 @@ A public pipeline exemplar that implements multi-phase search, provenance-aware
 filtering, corpus description, and optional model-backed analysis. It is a
 reproducibility template, not a completed empirical domain review.
 
+![Multi-phase literature-review corpus summary generated from the committed synthetic fixture run](output/figures/field_summary.png)
+
 ## Overview
 
 The exemplar demonstrates a **three-phase search strategy** that combines:

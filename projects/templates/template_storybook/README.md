@@ -9,6 +9,8 @@ yin-yang-like symbol, a tetrahedron stabilizing the inside of a cube, shadow
 projection, a tensegrity lantern, and a vector garden. Its subtitle is
 `A geometric fable of belonging, bracing, and reciprocal form`.
 
+![Rendered cover page of The Shape Between: a geometric fable of belonging, bracing, and reciprocal form](output/figures/storybook_pages/00_cover.png)
+
 ## When to use this template
 
 Use this template when you need **full-page illustrated PDF storytelling**:
