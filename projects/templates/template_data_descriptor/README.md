@@ -2,6 +2,8 @@
 
 `template_data_descriptor` is a public exemplar for FAIR-style data descriptor papers and dataset release packets. It treats the dataset, schema, provenance, licensing, and validation report as the research object under test.
 
+![FAIR dataset descriptor schema overview showing field contracts, provenance bindings, and release validation surfaces](output/figures/schema_overview.png)
+
 Run via the template monorepo from the repository root with `uv run python scripts/pipeline/stage_01_test.py --project templates/template_data_descriptor --project-only`. Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` in forks, preserve template integrity, and keep output artifacts regenerated from source.
 
 ## When to use this template

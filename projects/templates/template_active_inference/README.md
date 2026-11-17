@@ -6,6 +6,8 @@ multi-track sections. The live surface is declared in [`tracks.yaml`](tracks.yam
 [`figures.yaml`](figures.yaml); generated artifacts and gates, not prose lists,
 define the current contract.
 
+![Multi-track sheaf-composed Active Inference architecture linking analytical oracle, simulation harness, formalization boundary, and shared notation into the hydrated manuscript](output/figures/multi_track_architecture.png)
+
 ## When to use this template
 
 Use this template when **several independent research tracks must compose into

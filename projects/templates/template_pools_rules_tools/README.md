@@ -2,6 +2,8 @@
 
 **Pools, Rules, and Tools: A Template-Integrated Resource Architecture**
 
+![Resource architecture overview integrating fonds data pools, formal and soft rule specifications, and executable tool contracts](output/figures/architecture_overview.png)
+
 Run via the template monorepo from the repository root with `uv run python scripts/…`
 or project-local scripts under `projects/templates/template_pools_rules_tools/scripts/`.
 Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` for forkable

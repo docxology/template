@@ -7,6 +7,8 @@ descriptive statistics, language/entity analysis, document embeddings, citation 
 temporal bibliometrics, an optional knowledge-graph layer, and an auto-injected
 manuscript.
 
+![Literature meta-analysis field summary across the bundled synthetic fixture corpus](output/figures/field_summary.png)
+
 The bundled default term is **`modafinil`** — a wakefulness-promoting agent with a
 large, multi-disciplinary literature (clinical, cognitive, pharmacological,
 psychiatric) that exercises every analysis path. Everything runs **offline and
