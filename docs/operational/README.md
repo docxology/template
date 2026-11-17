@@ -28,7 +28,7 @@
 |------|-------|
 | Pipeline stages and commands | [../RUN_GUIDE.md](../RUN_GUIDE.md) |
 | Build / uv / lockfiles | [build/](build/) |
-| CI/CD automation | [../../.github/README.md](../../.github/README.md) |
+| CI/CD automation | [../../.github/GITHUB.md](../../.github/GITHUB.md) |
 | Fix a build error | [troubleshooting/](troubleshooting/) |
 | Configure logging | [logging/](logging/) |
 | System configuration | [config/configuration.md](config/configuration.md) |

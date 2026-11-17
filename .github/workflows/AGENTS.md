@@ -503,7 +503,7 @@ print(s.getvalue())
 
 ## See Also
 
-- [`../README.md`](../README.md) — `.github/` human guide (workflows, Dependabot, templates)
+- [`../GITHUB.md`](../GITHUB.md) — `.github/` human guide (workflows, Dependabot, templates)
 - [`../AGENTS.md`](../AGENTS.md) — GitHub integration overview
 - [`../../AGENTS.md`](../../AGENTS.md) — Root system overview and pipeline stages
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

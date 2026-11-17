@@ -353,7 +353,7 @@ should produce or point at a Zenodo software version under that concept DOI.
    Also open `https://zenodo.org/records/19140303/latest`; it should redirect to
    the latest root software record. Do not hand-edit
    `docs/_generated/publication_records.md` or the generated block in
-   `.github/README.md`.
+   `.github/GITHUB.md`.
 
 ### Public exemplar release
 

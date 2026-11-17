@@ -141,7 +141,7 @@ def check_publication_records_doc(
     )
 
     if update_github_readme:
-        readme_path = repo_root / ".github" / "README.md"
+        readme_path = repo_root / ".github" / "GITHUB.md"
         if not readme_path.is_file():
             differences.append(f"missing {readme_path.relative_to(repo_root)}")
         else:
@@ -151,7 +151,7 @@ def check_publication_records_doc(
             )
             differences.extend(
                 _row_map_differences(
-                    ".github/README.md publication block source-owned columns",
+                    ".github/GITHUB.md publication block source-owned columns",
                     _github_readme_source_rows(readme_path.read_text(encoding="utf-8")),
                     _github_readme_source_rows(expected_readme),
                 )
@@ -181,7 +181,7 @@ def write_publication_records_doc(
     refresh_external: bool = False,
     update_github_readme: bool = True,
 ) -> tuple[Path, Path | None]:
-    """Write generated publication docs and optionally sync ``.github/README.md``."""
+    """Write generated publication docs and optionally sync ``.github/GITHUB.md``."""
     repo_root = Path(repo_root).resolve()
     records = load_publication_records(repo_root)
     if refresh_external:
@@ -197,7 +197,7 @@ def write_publication_records_doc(
 
     readme_path: Path | None = None
     if update_github_readme:
-        readme_path = repo_root / ".github" / "README.md"
+        readme_path = repo_root / ".github" / "GITHUB.md"
         block = render_github_readme_publication_block(records)
         readme_path.write_text(
             replace_github_readme_publication_block(readme_path.read_text(encoding="utf-8"), block),

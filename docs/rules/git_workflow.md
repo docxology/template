@@ -484,4 +484,4 @@ git lfs track "*.pdf"
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development standards
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
 - [docs/best-practices/version-control.md](../best-practices/version-control.md) - Version control best practices
-- [.github/README.md](../../.github/README.md) - Repository CI/CD and contribution automation
+- [.github/GITHUB.md](../../.github/GITHUB.md) - Repository CI/CD and contribution automation

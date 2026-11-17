@@ -557,7 +557,7 @@ Every permanent directory carries **`README.md`** (human navigation) and **`AGEN
 
 ```mermaid
 flowchart TB
-    GH[".github/README.md<br/>GitHub entry · CI · doc map"]
+    GH[".github/GITHUB.md<br/>GitHub entry · CI · doc map"]
     CL["CLAUDE.md<br/>Commands · CI mirror"]
     AG["AGENTS.md · per directory<br/>Local APIs · integration"]
     SK["SKILL.md · infrastructure + docs/prompts<br/>Workflow routing"]

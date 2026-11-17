@@ -62,6 +62,18 @@ SOURCE_TEST_OWNERS: dict[str, tuple[str, ...]] = {
         "tests/infra_tests/methods/test_methods_cli.py",
         "tests/infra_tests/methods/test_methods_orchestration.py",
     ),
+    "infrastructure/documentation/_publication_records_check.py": (
+        "tests/infra_tests/documentation/test_publication_records.py",
+        "tests/infra_tests/documentation/test_publication_records_additional.py",
+        "tests/infra_tests/documentation/test_publication_records_workflow.py",
+        "tests/infra_tests/test_docs_discovery_consistency.py",
+    ),
+    "infrastructure/documentation/_publication_records_render.py": (
+        "tests/infra_tests/documentation/test_publication_records.py",
+        "tests/infra_tests/documentation/test_publication_records_additional.py",
+        "tests/infra_tests/documentation/test_publication_records_workflow.py",
+        "tests/infra_tests/test_docs_discovery_consistency.py",
+    ),
     "infrastructure/core/testing/ci_test_ownership.py": (
         "tests/infra_tests/core/test_ci_infra.py",
         "tests/infra_tests/core/test_ci_infra_partition.py",

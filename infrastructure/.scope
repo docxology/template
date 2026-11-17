@@ -1,7 +1,7 @@
 description: infrastructure -- Python module (274 files)
 includes:
   - infrastructure/
-  - .github/README.md
+  - .github/GITHUB.md
   - AGENTS.md
   - README.md
   - coverage_project.json

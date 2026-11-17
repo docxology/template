@@ -596,7 +596,7 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 - **README.md** - Project overview and quick start
 - **.agents/AGENTS.md** - Shared agent instructions.
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
-- **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
+- **.github/GITHUB.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
 - **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** - Pipeline execution documentation
 - **docs/core/architecture.md** - Detailed architecture guide
 - **docs/core/workflow.md** - Development workflow details
