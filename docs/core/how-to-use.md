@@ -279,7 +279,7 @@ experience; this guide does not use a universal completion-time claim.
 - **[Two-Layer Architecture](../architecture/two-layer-architecture.md)** - architecture guide
 - **[Modules Guide](../modules/modules-guide.md)** - Using the infrastructure modules (current count in [`_generated/COUNTS.md`](../_generated/COUNTS.md))
 - **[Dependency management](../../README.md)** - `uv` usage and install/sync commands
-- **[CI/CD automation](../../.github/README.md)** - GitHub Actions and repository automation
+- **[CI/CD automation](../../.github/GITHUB.md)** - GitHub Actions and repository automation
 - **[Performance Optimization](../operational/config/performance-optimization.md)** - Build time optimization
 - **[Migration Guide](../best-practices/migration-guide.md)** - Migrating from other templates
 

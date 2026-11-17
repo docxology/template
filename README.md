@@ -44,7 +44,7 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Assistants and editors:** start with [`AGENTS.md`](AGENTS.md) for the repository contract and [`.agents/AGENTS.md`](.agents/AGENTS.md) for shared catalogs, workflows and local memory. [`CLAUDE.md`](CLAUDE.md) remains a command cheat sheet. For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
 
-**Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) ([agent entry point](.github/README.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
+**Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/GITHUB.md`](.github/GITHUB.md) ([agent entry point](.github/GITHUB.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
 For ordinary CI's shared exact-Source preparation DATA and independent project
 feedback, see [Fast functional CI](.github/workflows/README.md#fast-functional-ci).
@@ -266,7 +266,7 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 The permanent exemplars share the same core layout and verification checklist. The code/prose exemplars also carry the 12-file project `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`). New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars) for the full comparison.
 
-Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/README.md`](.github/README.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source. To publish a project modularly, start with the [Publication runbook](docs/guides/publication-runbook.md): it covers the standalone public GitHub mirror, first real Zenodo DOI, new-version releases, optional mirrors, status blocks, and archival handoff.
+Publication metadata for every public exemplar is generated from project config and sidecars into [`docs/_generated/publication_records.md`](docs/_generated/publication_records.md), and the GitHub-facing table in [`.github/GITHUB.md`](.github/GITHUB.md#published-exemplars--pipeline-productivity-advanced-provenance-and-autopoiesis) is auto-injected from that same source. To publish a project modularly, start with the [Publication runbook](docs/guides/publication-runbook.md): it covers the standalone public GitHub mirror, first real Zenodo DOI, new-version releases, optional mirrors, status blocks, and archival handoff.
 
 ### Public Exemplar Outputs And Mirrors
 

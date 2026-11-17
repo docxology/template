@@ -83,7 +83,7 @@ hardening choices and the local commands are in [`docs/development/ci.md`](../..
 
 GitHub Actions workflows for automated quality assurance, testing, and deployment. Enforces development standards across Python versions and environments.
 
-For Dependabot, issue/PR templates, and the full GitHub integration picture, see **[`../README.md`](../README.md)** in the parent `.github/` folder.
+For Dependabot, issue/PR templates, and the full GitHub integration picture, see **[`../GITHUB.md`](../GITHUB.md)** in the parent `.github/` folder.
 
 ## Workflows
 
@@ -323,7 +323,7 @@ jobs:
 
 ## See Also
 
-- [`../README.md`](../README.md) — Full `.github/` guide (templates, Dependabot, CI overview)
+- [`../GITHUB.md`](../GITHUB.md) — Full `.github/` guide (templates, Dependabot, CI overview)
 - [`AGENTS.md`](AGENTS.md) — Full CI/CD technical documentation
 - [`../AGENTS.md`](../AGENTS.md) — GitHub integration overview
 - [`../../AGENTS.md`](../../AGENTS.md) — Root system overview

@@ -81,18 +81,18 @@ def test_publication_records_doc_matches_public_scope() -> None:
 def test_github_readme_publication_block_matches_public_scope() -> None:
     """The GitHub README publication table is generated from public scope."""
     root = _repo_root()
-    text = (root / ".github" / "README.md").read_text(encoding="utf-8")
+    text = (root / ".github" / "GITHUB.md").read_text(encoding="utf-8")
     match = re.search(
         r"<!-- BEGIN:PUBLICATION_RECORDS -->(?P<block>.*?)<!-- END:PUBLICATION_RECORDS -->",
         text,
         flags=re.DOTALL,
     )
-    assert match, ".github/README.md must contain the generated publication records block"
+    assert match, ".github/GITHUB.md must contain the generated publication records block"
 
     discovered = set(public_project_names(root))
     documented = set(re.findall(r"\.\./projects/([a-z0-9_]+/[a-z0-9_]+)/", match.group("block")))
     assert documented == discovered, (
-        ".github/README.md publication table drifted from public project scope; "
+        ".github/GITHUB.md publication table drifted from public project scope; "
         "run uv run python scripts/docgen/publication_records.py --refresh-external\n"
         f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
     )
@@ -106,7 +106,7 @@ def test_top_level_docs_do_not_claim_stale_public_exemplar_counts() -> None:
         root / "README.md",
         root / "CLAUDE.md",
         root / ".agents" / "AGENTS.md",
-        root / ".github" / "README.md",
+        root / ".github" / "GITHUB.md",
         root / ".github" / "AGENTS.md",
         root / "projects" / "AGENTS.md",
         root / "projects" / "README.md",
@@ -135,7 +135,7 @@ def test_human_docs_do_not_carry_partial_public_exemplar_rosters() -> None:
         root / "README.md",
         root / "CLAUDE.md",
         root / ".agents" / "AGENTS.md",
-        root / ".github" / "README.md",
+        root / ".github" / "GITHUB.md",
         root / ".github" / "AGENTS.md",
         root / "projects" / "AGENTS.md",
         root / "projects" / "README.md",

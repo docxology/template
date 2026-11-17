@@ -24,7 +24,7 @@ This document provides documentation for the Research Project Template system, e
 | [`docs/documentation-index.md`](docs/documentation-index.md) | Flat index of long-lived docs |
 | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative public CI/documentation project names — never hard-code rotating private paths in docs |
 | [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) | Measured coverage and counts; refresh after changing gates or discovery |
-| [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
+| [`.github/GITHUB.md`](.github/GITHUB.md) | GitHub: CI overview, templates, Dependabot |
 | [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, local reproduction commands |
 | [`TO-DO.md`](TO-DO.md) | Current backlog, scoped by acceptance line |
 | [`CHANGELOG.md`](CHANGELOG.md) | Release history |

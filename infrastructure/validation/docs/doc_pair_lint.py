@@ -37,7 +37,7 @@ DOC_PAIR_EXCLUDE_PARTS: frozenset[str] = frozenset(
     }
 )
 
-DOC_FILENAMES = {"AGENTS.md", "README.md"}
+DOC_FILENAMES = {"AGENTS.md", "README.md", "GITHUB.md"}
 
 _VENDORED_EXCLUDED_ROOTS: tuple[tuple[str, ...], ...] = (("infrastructure", "steganography", "kmyth"),)
 
@@ -184,7 +184,10 @@ def find_doc_pair_issues(
     repo = Path(repo_root).resolve()
     issues: list[DocPairIssue] = []
     for directory in iter_doc_pair_candidate_dirs(repo, roots=roots):
-        missing_readme = not (directory / "README.md").is_file()
+        has_readme = (directory / "README.md").is_file() or (
+            directory.name == ".github" and (directory / "GITHUB.md").is_file()
+        )
+        missing_readme = not has_readme
         missing_agents = not (directory / "AGENTS.md").is_file()
         if missing_readme or missing_agents:
             issues.append(

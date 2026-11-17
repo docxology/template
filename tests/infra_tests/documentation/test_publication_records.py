@@ -223,7 +223,7 @@ def test_check_publication_records_doc_accepts_refreshed_external_columns(tmp_pa
         render_publication_records_doc(tmp_path, records, refreshed_external=True),
         encoding="utf-8",
     )
-    (tmp_path / ".github" / "README.md").write_text(
+    (tmp_path / ".github" / "GITHUB.md").write_text(
         "\n".join(["before", render_github_readme_publication_block(records), "after"]),
         encoding="utf-8",
     )
@@ -253,7 +253,7 @@ def test_check_publication_records_doc_reports_source_owned_drift(tmp_path: Path
     generated = render_publication_records_doc(tmp_path, records)
     generated = generated.replace("docxology/templates/template_active_inference", "docxology/stale", 1)
     (tmp_path / "docs" / "_generated" / "publication_records.md").write_text(generated, encoding="utf-8")
-    (tmp_path / ".github" / "README.md").write_text(
+    (tmp_path / ".github" / "GITHUB.md").write_text(
         "\n".join(["before", render_github_readme_publication_block(records), "after"]),
         encoding="utf-8",
     )
