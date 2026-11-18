@@ -11,6 +11,7 @@ from pathlib import Path
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.files.secure_write import atomic_write_text_confined
 from infrastructure.rendering._slides_accessibility_limits import (
+    MAX_ARCHIVE_PANDOC_AST_NODES,
     read_bounded_pandoc_json,
     validate_accessible_ast_limits,
 )
@@ -53,7 +54,7 @@ def prepare_archive_source(
         document = json.loads(read_bounded_pandoc_json(selected, source=str(source_file)))
         if not isinstance(document, dict) or not isinstance(document.get("blocks"), list):
             raise RenderingError("Archive source is not a Pandoc document")
-        validate_accessible_ast_limits(document, source=str(source_file))
+        validate_accessible_ast_limits(document, source=str(source_file), maximum_nodes=MAX_ARCHIVE_PANDOC_AST_NODES)
         roots = tuple(path for path in (source_file.parent, manuscript_dir, figures_dir) if path is not None)
         document = expand_presentation_variants(
             document,
@@ -69,7 +70,7 @@ def prepare_archive_source(
             roots=roots,
             figure_root=figures_dir,
         )
-        validate_accessible_ast_limits(document, source=str(source_file))
+        validate_accessible_ast_limits(document, source=str(source_file), maximum_nodes=MAX_ARCHIVE_PANDOC_AST_NODES)
         atomic_write_text_confined(output_dir, selected, json.dumps(document, ensure_ascii=False) + "\n")
         completed = True
         return selected, (selected,)
