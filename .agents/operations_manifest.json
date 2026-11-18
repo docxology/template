@@ -1072,6 +1072,15 @@
       "effect": "mutating"
     },
     {
+      "module": "infrastructure.reporting.native_document_preparation",
+      "invocation": "python -m infrastructure.reporting.native_document_preparation",
+      "source_path": "infrastructure/reporting/native_document_preparation.py",
+      "purpose": "Prepare exact Source-selected document providers; no runtime acceptance claim.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "mutating"
+    },
+    {
       "module": "infrastructure.reporting.native_epub_observer",
       "invocation": "python -m infrastructure.reporting.native_epub_observer",
       "source_path": "infrastructure/reporting/native_epub_observer.py",
