@@ -108,8 +108,7 @@ def _compiled(root: Path, scope: str, tracked: dict[str, dict[str, str]]) -> lis
     return targets
 
 
-# One reviewed semantic dependency: these producers consume live COUNTS/version
-# facts into Pitch DATA/decks. This is Source policy, never an operator list.
+# These reviewed dependencies run before rendering in refresh mode.
 DEPENDENT_ANALYSIS_SCOPE = "templates/template_pitch_deck"
 _DEPENDENT_INPUTS = (
     "docs/_generated/COUNTS.md",
@@ -128,13 +127,29 @@ _DEPENDENT_PRODUCERS = (
     "projects/templates/template_pitch_deck/src/template_pitch_deck/render_orchestration.py",
     "projects/templates/template_pitch_deck/src/template_pitch_deck/standalone_slides.py",
 )
+AUTORESEARCH_ANALYSIS_SCOPE = "templates/template_autoresearch_project"
+_AUTORESEARCH_ROOT = f"projects/{AUTORESEARCH_ANALYSIS_SCOPE}"
+_AUTORESEARCH_INPUTS = (
+    f"{_AUTORESEARCH_ROOT}/manuscript/config.yaml",
+    f"{_AUTORESEARCH_ROOT}/autoresearch.yaml",
+)
+_AUTORESEARCH_SCRIPTS = (
+    f"{_AUTORESEARCH_ROOT}/scripts/run_autoresearch_loop.py",
+    f"{_AUTORESEARCH_ROOT}/scripts/z_generate_manuscript_variables.py",
+)
+_AUTORESEARCH_PRODUCERS = (
+    _DEPENDENT_PRODUCERS[0],
+    *_AUTORESEARCH_SCRIPTS,
+    f"{_AUTORESEARCH_ROOT}/src/template_autoresearch_project/loop/loop.py",
+    f"{_AUTORESEARCH_ROOT}/src/template_autoresearch_project/loop/settlement.py",
+)
 
 
 def _dependent_analysis(root: Path, tracked: dict[str, dict[str, str]], mode: str) -> dict[str, dict[str, Any]]:
-    """Bind the finite reviewed consumer without changing generated ownership."""
+    """Bind the reviewed analysis chains while preserving generated ownership."""
     if mode == "rebind-only":
         return {}
-    if DEPENDENT_ANALYSIS_SCOPE not in PUBLIC_PROJECT_NAMES:
+    if not {DEPENDENT_ANALYSIS_SCOPE, AUTORESEARCH_ANALYSIS_SCOPE}.issubset(PUBLIC_PROJECT_NAMES):
         raise ValueError("dependent analysis must belong to the canonical public roster")
 
     def bindings(paths: tuple[str, ...]) -> list[dict[str, Any]]:
@@ -165,13 +180,24 @@ def _dependent_analysis(root: Path, tracked: dict[str, dict[str, str]], mode: st
     charts, decks = _DEPENDENT_PRODUCERS[1:3]
     if charts not in scripts or decks not in scripts or scripts.index(charts) >= scripts.index(decks):
         raise ValueError("dependent Pitch Stage 02 must select its charts before its deck producer")
+    autoresearch_scripts = tuple(
+        path.relative_to(root).as_posix() for path in discover_analysis_scripts(root, AUTORESEARCH_ANALYSIS_SCOPE)
+    )
+    if autoresearch_scripts != _AUTORESEARCH_SCRIPTS:
+        raise ValueError("dependent Autoresearch Stage 02 must select its loop before its hydration producer")
     return {
         DEPENDENT_ANALYSIS_SCOPE: {
             "inputs": input_bindings,
             "producers": producer_bindings,
             "analysis_scripts": bindings(scripts),
             "stage": "scripts/pipeline/stage_02_analysis.py",
-        }
+        },
+        AUTORESEARCH_ANALYSIS_SCOPE: {
+            "inputs": bindings(_AUTORESEARCH_INPUTS),
+            "producers": bindings(_AUTORESEARCH_PRODUCERS),
+            "analysis_scripts": bindings(autoresearch_scripts),
+            "stage": _AUTORESEARCH_PRODUCERS[0],
+        },
     }
 
 

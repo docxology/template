@@ -17,9 +17,10 @@ producer. A tracked `output/manuscript/config.yaml` identifies a materialized
 publication copy, not whether that project's rendered products depend on the
 current renderer. Projects without that copy must also acquire current global
 HTML semantics, mathematics and applicable EPUB styling through real generation.
-One reviewed semantic consumer, `templates/template_pitch_deck`, additionally
-reads COUNTS and version facts during canonical Stage 02; default refresh runs
-that genuine stage before its non-rebind refresh. There is no implicit
+The default refresh runs canonical Stage 02 before rendering for two projects.
+Pitch reads COUNTS and version facts to regenerate its charts and decks.
+Autoresearch runs its deterministic loop and hydration in order to produce
+current research-object evidence for Stage 03. There is no implicit
 unchanged-output complement. Provider dependencies finish before their consumers,
 with exactly one project worker per wave. The shared execution account uses
 strict same-UID process observation: concurrent project producers can appear in
@@ -47,10 +48,11 @@ outside Source; only the final successful payload admits a review upload.
 Original diagnostics remain available after a failed phase. Inputs are explicit
 CLI arguments; the account's runtime environment allowlist is unchanged.
 
-The v4 plan binds the one fixed dependent consumer, its actual canonical subject,
-COUNTS/version input bytes and reviewed Stage 02/reader/compiler paths to the exact
-Source commit. The actual canonical Stage 02 selection is also bound and must
-include chart generation before deck rendering. Private or unknown subjects,
+The v4 plan binds each fixed dependent project and its Stage 02 selection to
+the exact Source commit. The Pitch plan includes its canonical subject and
+COUNTS/version inputs, and requires chart generation before deck rendering.
+The Autoresearch plan binds its configuration, loop and hydration producers,
+and requires the loop to run before hydration. Private or unknown subjects,
 missing producers and changed inputs
 refuse before generation. This declaration grants no additional output paths.
 
@@ -78,7 +80,7 @@ The runner commits its generated candidate in the disposable checkout. Both
 existing strict all-public publication gates and the unchanged all-project
 exemplar-config guard then run on that committed tree.
 Only success of all three commands and every actual canonical generation command
-(including dependent Pitch analysis) admits the review artifact: an exact
+(including Pitch and Autoresearch analysis) admits the review artifact: an exact
 full-index binary patch from the dispatched base, the base/result commits and
 trees, a changed-path/blob/SHA-256 manifest, original producer and gate bytes/exits,
 and checksums. The v4 change records identify `A`, `M` and `D` explicitly;
