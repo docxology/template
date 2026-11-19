@@ -196,14 +196,41 @@ def source_file_bytes(path: Path) -> bytes:
     return _regular_bytes(path)
 
 
+def _distribution_name_version(item: Distribution) -> list[str]:
+    """Read Name and Version headers without email-parsing multi-KB descriptions."""
+    raw = item.read_text("METADATA") or item.read_text("PKG-INFO")
+    if raw is not None:
+        name: str | None = None
+        version: str | None = None
+        folded = False
+        for line in raw.splitlines():
+            if not line:
+                break
+            if line[0] in (" ", "\t"):
+                if name is not None or version is not None:
+                    folded = True
+                    break
+                continue
+            if name is None and line.startswith("Name:"):
+                name = line[5:].strip()
+            elif version is None and line.startswith("Version:"):
+                version = line[8:].strip()
+            if name is not None and version is not None:
+                return [name, version]
+        if not folded and version is not None:
+            return [name or "", version]
+    metadata = item.metadata
+    return [str(metadata.get("Name", "")), metadata["Version"]]
+
+
 def runtime_identity() -> dict[str, Any]:
     """Bind the venv-selecting launcher separately from physical executable bytes."""
     launcher = Path(sys.executable).absolute()
     binary = launcher.resolve()
-    packages = []
-    for item in distributions(path=sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")})):
-        metadata = item.metadata
-        packages.append([str(metadata.get("Name", "")), metadata["Version"]])
+    packages = [
+        _distribution_name_version(item)
+        for item in distributions(path=sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")}))
+    ]
     packages.sort()
     return {
         "python_launcher": str(launcher),

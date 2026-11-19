@@ -79,7 +79,7 @@ class SourceCrossrefFilter:
         self.actual: dict[str, Any] | None = None
         self.pair_invocation: dict[str, Any] | None = None
         self.exit_observer: SourceFilterExitObserver | None = None
-        self.verify()
+        self._verify_data()
 
     def close(self) -> None:
         if self.exit_observer is not None:
@@ -223,15 +223,15 @@ class SourceCrossrefFilter:
                 raise
         self.verify()
 
-    def finish(self, parent_tool: dict[str, str]) -> dict[str, str]:
-        """Close direct original facts after the parent ToolAPI retains its OS exit."""
+    def _finish_data(self, parent_tool: dict[str, str]) -> dict[str, str]:
+        """Close direct original facts inside an enclosing fresh Source guard."""
         from infrastructure.reporting.native_format_acceptance_evidence import _file
 
-        self.verify()
+        self._verify_data()
         if self.actual is None or self.owner is None or "kernel_exit" not in self.actual:
             raise ValueError("filter original child never completed its actual parent handshake")
         process = _file(parent_tool, self.reader).json_object()
-        self.owner.validate_tool(parent_tool, process, self.reader, run_id=self.owner.run_id)
+        self.owner._validate_tool_data(parent_tool, process, self.reader, run_id=self.owner.run_id)
         if (
             process["pid"] != self.actual["parent"]["pid"]
             or process["original_exit_code"] != 0
@@ -278,8 +278,17 @@ class SourceCrossrefFilter:
         }
         path = self.reader.root / specification["directory"] / "parent-observation.json"
         binding = write_json(self.reader.root, path, result)
-        self.verify()
+        self._verify_data()
         return binding
+
+    def finish(self, parent_tool: dict[str, str]) -> dict[str, str]:
+        """Close direct original facts after the parent ToolAPI retains its OS exit."""
+        remaining(self.deadline)
+        owner = self.owner
+        if owner is None:
+            raise ValueError("filter preparation lost its genuine enclosing Source producer")
+        with owner._verification_guard(self.reader, run_id=owner.run_id, deadline=self.deadline):
+            return self._finish_data(parent_tool)
 
 
 @contextmanager
@@ -292,6 +301,7 @@ def prepare_source_crossref_filter(
     env: dict[str, str],
     deadline: float,
     output_format: str,
+    preobserved_provider_archive: dict[str, str] | None = None,
 ) -> Iterator[SourceCrossrefFilter]:
     """Nominate current Source/SDK/wrapper before Pandoc consumes any filter JSON."""
     remaining(deadline)
@@ -302,7 +312,6 @@ def prepare_source_crossref_filter(
     if owner is None or reader.root != root.resolve() or owner.deadline < deadline:
         raise ValueError("filter preparation requires a genuine current Source/Pandoc owner and original clock")
     source = owner.source
-    owner.verify(reader, run_id=owner.run_id, deadline=owner.deadline)
     create_private_native_directory(root, directory)
     selected = shutil.which("pandoc-crossref", path=env.get("PATH"))
     if selected is None:
@@ -310,25 +319,41 @@ def prepare_source_crossref_filter(
     crossref = file_observation(Path(selected).resolve(strict=True))
     provider_archive = None
     if platform.system() == "Linux":
-        from infrastructure.reporting.native_crossref_archive import observe_crossref_provider_archive
-        from infrastructure.reporting.native_document_provider_contracts import PIN_SOURCE, select_document_tool
-
-        pin_source = source.current_source_reader.read(PIN_SOURCE)
-        host = {"system": platform.system(), "machine": platform.machine()}
-        pin = select_document_tool(pin_source.content, host, "crossref")
-        archive_root = env.get("RUNNER_TEMP")
-        if not archive_root or not Path(archive_root).is_absolute():
-            raise ValueError(
-                "Source native Linux filter lacks the actual prepared provider archive directory nomination"
+        if preobserved_provider_archive is not None:
+            expected_archive_path = (
+                (directory / "provider-archive" / "archive-admission.json").relative_to(root).as_posix()
             )
-        provider_archive = observe_crossref_provider_archive(
-            source,
-            directory / "provider-archive",
-            Path(archive_root) / "template-acceptance-document-archives" / pin["asset"],
-            Path(crossref["path"]),
-            reader,
-            deadline=owner.deadline,
-        )
+            observed_archive = reader.read(preobserved_provider_archive["path"])
+            if (
+                observed_archive.relative != expected_archive_path
+                or observed_archive.sha256 != preobserved_provider_archive["sha256"]
+                or observed_archive.json_object().get("run_id") != owner.run_id
+                or observed_archive.json_object().get("executable_observation", {}).get("sha256") != crossref["sha256"]
+            ):
+                raise ValueError("preobserved Crossref provider archive differs from this exact Source slot")
+            provider_archive = dict(preobserved_provider_archive)
+        else:
+            from infrastructure.reporting.native_crossref_archive import observe_crossref_provider_archive
+            from infrastructure.reporting.native_document_provider_contracts import PIN_SOURCE, select_document_tool
+
+            pin_source = source.current_source_reader.read(PIN_SOURCE)
+            host = {"system": platform.system(), "machine": platform.machine()}
+            pin = select_document_tool(pin_source.content, host, "crossref")
+            archive_root = env.get("RUNNER_TEMP")
+            if not archive_root or not Path(archive_root).is_absolute():
+                raise ValueError(
+                    "Source native Linux filter lacks the actual prepared provider archive directory nomination"
+                )
+            provider_archive = observe_crossref_provider_archive(
+                source,
+                directory / "provider-archive",
+                Path(archive_root) / "template-acceptance-document-archives" / pin["asset"],
+                Path(crossref["path"]),
+                reader,
+                deadline=owner.deadline,
+            )
+    elif preobserved_provider_archive is not None:
+        raise ValueError("preobserved Crossref provider archive is only valid on the reviewed Linux host")
     implementation_path = directory / "implementation.json"
     atomic_write_bytes_confined(
         root,
@@ -356,70 +381,71 @@ def prepare_source_crossref_filter(
             listener.bind(endpoint)
             os.chmod(endpoint, 0o600)
             listener.listen(1)
-            specification = {
-                "schema_version": SCHEMA,
-                "scope": scope,
-                "run_id": owner.run_id,
-                "directory": directory.relative_to(root).as_posix(),
-                "source": json.loads(source.descriptor(scope, deadline=deadline)),
-                "implementation": {
-                    "path": implementation.relative,
-                    "sha256": implementation.sha256,
-                },
-                "parent_owner_pid": owner.owner_pid,
-                "deadline_monotonic": deadline,
-                "caller_deadline_monotonic": owner.deadline,
-                "crossref": crossref,
-                "provider_archive": provider_archive,
-                "socket_address": endpoint,
-                "closure_identity": [identity.st_dev, identity.st_ino],
-                "expected_exit": 0,
-                "output_format": output_format,
-            }
-            spec = write_json(root, directory / "specification.json", specification)
-            bootstrap = format_selected_sdk_native_bootstrap(
-                hook,
-                source.bindings.selected_sdk_package_root,
-                (),
-                implementation_path,
-                implementation.sha256,
-                closure,
-                (identity.st_dev, identity.st_ino),
-                deadline,
-                required_worker_module=WORKER,
-            )
-            argv = [
-                "--root",
-                str(root),
-                "--specification",
-                spec["path"],
-                "--specification-sha256",
-                spec["sha256"],
-                "--implementation-sha256",
-                implementation.sha256,
-                "--deadline",
-                repr(deadline),
-                "--run-id",
-                owner.run_id,
-            ]
-            script = format_selected_sdk_native_script(
-                python,
-                "import sys\n"
-                f"if sys.argv[1:]!={[output_format]!r}: raise ValueError('actual Pandoc filter format differs')\n"
-                f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap,
-            )
-            launcher_path = directory / "source-crossref-filter"
-            atomic_write_bytes_confined(root, launcher_path, script, mode=0o700)
-            launch = reader.read(launcher_path.relative_to(root).as_posix())
-            filter_owner = SourceCrossrefFilter(
-                source,
-                reader,
-                listener,
-                spec,
-                {"path": launch.relative, "sha256": launch.sha256},
-                deadline=deadline,
-                key=_KEY,
-            )
+            with owner._verification_guard(reader, run_id=owner.run_id, deadline=deadline):
+                specification = {
+                    "schema_version": SCHEMA,
+                    "scope": scope,
+                    "run_id": owner.run_id,
+                    "directory": directory.relative_to(root).as_posix(),
+                    "source": json.loads(source._descriptor_data(scope, deadline=deadline)),
+                    "implementation": {
+                        "path": implementation.relative,
+                        "sha256": implementation.sha256,
+                    },
+                    "parent_owner_pid": owner.owner_pid,
+                    "deadline_monotonic": deadline,
+                    "caller_deadline_monotonic": owner.deadline,
+                    "crossref": crossref,
+                    "provider_archive": provider_archive,
+                    "socket_address": endpoint,
+                    "closure_identity": [identity.st_dev, identity.st_ino],
+                    "expected_exit": 0,
+                    "output_format": output_format,
+                }
+                spec = write_json(root, directory / "specification.json", specification)
+                bootstrap = format_selected_sdk_native_bootstrap(
+                    hook,
+                    source.bindings.selected_sdk_package_root,
+                    (),
+                    implementation_path,
+                    implementation.sha256,
+                    closure,
+                    (identity.st_dev, identity.st_ino),
+                    deadline,
+                    required_worker_module=WORKER,
+                )
+                argv = [
+                    "--root",
+                    str(root),
+                    "--specification",
+                    spec["path"],
+                    "--specification-sha256",
+                    spec["sha256"],
+                    "--implementation-sha256",
+                    implementation.sha256,
+                    "--deadline",
+                    repr(deadline),
+                    "--run-id",
+                    owner.run_id,
+                ]
+                script = format_selected_sdk_native_script(
+                    python,
+                    "import sys\n"
+                    f"if sys.argv[1:]!={[output_format]!r}: raise ValueError('actual Pandoc filter format differs')\n"
+                    f"sys.argv={['native-crossref-worker', *argv]!r}\n" + bootstrap,
+                )
+                launcher_path = directory / "source-crossref-filter"
+                atomic_write_bytes_confined(root, launcher_path, script, mode=0o700)
+                launch = reader.read(launcher_path.relative_to(root).as_posix())
+                filter_owner = SourceCrossrefFilter(
+                    source,
+                    reader,
+                    listener,
+                    spec,
+                    {"path": launch.relative, "sha256": launch.sha256},
+                    deadline=deadline,
+                    key=_KEY,
+                )
             # The actual process environment consumes Source admission labels only.
             filter_owner.environment = {**env, **source_environment(source)}
             try:
