@@ -357,11 +357,12 @@ surface supports and what it does not support.
 
 The broader AutoResearch run writes the reproducibility, benchmark, review, and
 manuscript-hydration surfaces summarized below. The schema manifest records
-`31` schema-versioned governance payload(s), and
-the local research-object manifest records `84`
-observed artifact record(s) with checksums and approval state
-`false`. The phase ledger records
-`3` settlement pass(es), while the
+`34` schema catalog row(s), including explicitly
+declared downstream hydration shapes. The local research-object catalog records
+`120` unique declared artifact path(s), partitioned
+into frozen upstream checksum records and downstream references, with approval
+state `false`. The phase ledger records
+`2` bounded materialization pass(es), while the
 figure-quality report covers `25` registered
 figure(s) with validity `false`.
 
@@ -470,24 +471,24 @@ figure(s) with validity `false`.
 
 : Benchmark grading table from `output/data/benchmark_scores.json`. {#tbl:benchmark-scores}
 
-| Phase | Order | Group | Observed artifacts | Description |
+| Phase | Order | Group | Declared artifacts | Description |
 | --- | --- | --- | --- | --- |
-| intrinsic readiness | 1 | readiness | 3 | validate configured project-intrinsic contracts |
+| intrinsic readiness | 1 | readiness | 1 | validate configured project-intrinsic contracts |
 | core artifacts | 2 | loop | 0 | write plan, stage matrix, and provisional loop outputs |
-| evidence registry | 3 | evidence | 2 | write local evidence registry |
-| ml task | 4 | ml | 54 | run fixed-seed bounded candidate evaluation |
+| evidence registry | 3 | evidence | 1 | write local evidence registry |
+| ml task | 4 | ml | 37 | run fixed-seed bounded candidate evaluation |
 | method contract | 5 | governance | 3 | write program, idea, run, review, and benchmark ledgers |
-| provisional payloads | 6 | settlement | 12 | refresh loop payloads before extrinsic validation |
-| security artifacts | 7 | security | 10 | write local security and integrity evidence |
-| final visuals | 8 | figures | 54 | write final registry-backed figures |
-| manuscript hydration | 9 | manuscript | 9 | write variables, provenance, and figure blocks |
-| readiness manifest | 10 | settlement | 12 | refresh checksum manifest before extrinsic validation |
-| schema manifest | 11 | schema | 1 | write generated JSON schema-version manifest |
-| research object manifest | 12 | packaging | 1 | write local research-object manifest |
-| extrinsic readiness | 13 | readiness | 3 | validate generated artifacts and extrinsic contracts |
-| final schema manifest | 14 | schema | 1 | refresh schema manifest after final payload updates |
-| final research object manifest | 15 | packaging | 1 | refresh local research-object manifest |
-| artifact manifest | 16 | settlement | 12 | write final artifact checksum manifest |
+| provisional payloads | 6 | settlement | 4 | refresh loop payloads before extrinsic validation |
+| security artifacts | 7 | security | 9 | checksum frozen upstream evidence only |
+| provisional catalogs | 8 | schema | 1 | close unique intended paths and build provisional catalogs |
+| readiness manifest | 9 | settlement | 4 | snapshot complete provisional stable inventory |
+| extrinsic readiness | 10 | readiness | 1 | validate real provisional artifacts before candidate success |
+| final visuals | 11 | figures | 28 | materialize candidate loop, report, figure and registry bytes |
+| final research object manifest | 12 | packaging | 1 | catalog upstream checksums and derivative references |
+| final schema manifest | 13 | schema | 1 | catalog final governance schemas |
+| manuscript hydration | 14 | manuscript | 23 | hydrate final catalogs without downstream byte claims |
+| artifact manifest | 15 | settlement | 4 | snapshot all final stable bytes last |
+| terminal validation | 16 | readiness | 1 | read-only extrinsic and exact primary validation decides success |
 
 : Deterministic phase ledger from `output/data/autoresearch_phase_ledger.json`; settlement order is not an autonomy claim. {#tbl:phase-ledger}
 
@@ -495,7 +496,7 @@ figure(s) with validity `false`.
 | --- | --- | --- | --- | --- |
 | `fig:autoresearch_candidate_lifecycle` | 1184x480 | 0.083 | True | True |
 | `fig:autoresearch_closure_flow` | 1664x448 | 0.016 | True | True |
-| `fig:autoresearch_integrity_chain` | 1440x736 | 0.041 | True | True |
+| `fig:autoresearch_integrity_chain` | 1440x736 | 0.040 | True | True |
 | `fig:autoresearch_security_control_matrix` | 1472x736 | 0.014 | True | True |
 | `fig:autoresearch_stage_matrix` | 1120x416 | 0.080 | True | True |
 | `fig:ml_bootstrap_intervals` | 1152x448 | 0.009 | True | True |
@@ -525,11 +526,11 @@ figure(s) with validity `false`.
 
 The local security profile reports attestation status
 `passed` after checking
-`80` file record(s), with
+`43` file record(s), with
 `0` missing record(s) and
 `0` checksum mismatch(es). The inventory
 contains `14` input record(s) and
-`69` generated-artifact record(s). The
+`32` frozen upstream generated-artifact record(s). The
 integrity-chain figure is @fig:autoresearch_integrity_chain. These values support
 local artifact-integrity claims only; they do not claim external signing,
 production SLSA compliance, or runtime security monitoring.
@@ -540,7 +541,7 @@ production SLSA compliance, or runtime security monitoring.
 | --- | --- |
 | status | passed |
 | algorithm | sha256 |
-| checked files | 80 |
+| checked files | 43 |
 | missing files | 0 |
 | checksum mismatches | 0 |
 | external signature | False |

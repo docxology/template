@@ -21,11 +21,6 @@
       97.03
     ],
     [
-      "template_autoresearch_project",
-      393,
-      96.49
-    ],
-    [
       "template_pitch_deck",
       162,
       96.43
@@ -39,6 +34,11 @@
       "template_textbook",
       303,
       96.07
+    ],
+    [
+      "template_autoresearch_project",
+      412,
+      96.04
     ],
     [
       "template_storybook",
@@ -63,7 +63,7 @@
     [
       "template_pools_rules_tools",
       308,
-      94.68
+      94.67
     ],
     [
       "template_advanced_literature_review",

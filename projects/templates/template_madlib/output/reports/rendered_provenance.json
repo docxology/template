@@ -44,7 +44,7 @@
     },
     {
       "rendered_path": "output/manuscript/07_reproducibility.md",
-      "rendered_sha256": "b418b49294f50bfd353a042e095162eeba6cfb19e5ca67034cec96a08ae23a20",
+      "rendered_sha256": "7818f1ac205c54a1205f2d6ef306223b94db9f029357e3c659280f3c720dcd94",
       "source_path": "manuscript/07_reproducibility.md",
       "source_sha256": "c159af59625c5aa2a96f227a6face4df46caca09df75437fd7df4676b871cbfa"
     },
@@ -76,34 +76,34 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "67fe91105833f3857d79a2d6ce9feae86e665a3cbdad43bcca1359293c1dc614",
+      "sha256": "fd05f1b95b24ff46d5d209205ee31b2d68d8a3b9638094398dbfbdbc0951fb27",
       "size_bytes": 22233
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "6f9ca7c0c7763656e1fc1251bd79129e90bea95aaae126a2621004eea91419df",
+      "sha256": "98c666ad54ea8011614ebb084f216aab03d2af7c1e9223657c623bb52aae4b4f",
       "size_bytes": 75792
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "de9541b9c0ef6c1aee40365aff2b83fe97a83317df8a5e3ccf66fada24365d24",
+      "sha256": "585118eb7fc5decfbf8b32266216df0e7e72098e64d4e917d9b8a1628fc8dbcd",
       "size_bytes": 2935
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "005d766bd8a1774c01feb6ddba00abd04e864cd69c6fb480d6924b8f28ae1a8e",
-      "size_bytes": 12738
+      "sha256": "f6cb77ce2713d2b76af2cccfad1f57bab938c5338be78186f2d982ff5e64ca87",
+      "size_bytes": 12737
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 17,
-      "sha256": "31b04d61206fef1c6565f0de397d617dc984fa52b20462871f68efafc331d0d8"
+      "sha256": "efffaae97fe9b6da9a4af8055c37c080b5d0be266fad196a15083336ad21eb92"
     },
     "output": {
       "file_count": 68,
-      "sha256": "c3045b13c892ea55e72301232c2803f24d508550a1c8e92e0e7bea0cdd5ff451"
+      "sha256": "d9b7c7fab500abdfcc63192f8853f1d95d02da754b4196ba618a74ccf7fdb544"
     },
     "source": {
       "file_count": 42,
@@ -111,7 +111,7 @@
     },
     "stage": {
       "file_count": 1774,
-      "sha256": "e628bd12d8c2d15c31e56bac3937eb9adad40aee011a2e02063708e9b07c5bcf"
+      "sha256": "fc0530926e2cdf44103a4f32d7b911df7593b59bcd76f84331f6a89887e9ce4f"
     }
   },
   "project": "templates/template_madlib",

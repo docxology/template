@@ -2140,12 +2140,14 @@ class="header-section-number">4.6</span> Readiness And Review
 Artifacts</h2>
 <p>The broader AutoResearch run writes the reproducibility, benchmark,
 review, and manuscript-hydration surfaces summarized below. The schema
-manifest records <code>31</code> schema-versioned governance payload(s),
-and the local research-object manifest records <code>84</code> observed
-artifact record(s) with checksums and approval state <code>false</code>.
-The phase ledger records <code>3</code> settlement pass(es), while the
-figure-quality report covers <code>25</code> registered figure(s) with
-validity <code>false</code>.</p>
+manifest records <code>34</code> schema catalog row(s), including
+explicitly declared downstream hydration shapes. The local
+research-object catalog records <code>120</code> unique declared
+artifact path(s), partitioned into frozen upstream checksum records and
+downstream references, with approval state <code>false</code>. The phase
+ledger records <code>2</code> bounded materialization pass(es), while
+the figure-quality report covers <code>25</code> registered figure(s)
+with validity <code>false</code>.</p>
 <figure id="fig:autoresearch_stage_matrix">
 <a class="figure-full-size-link" href="../figures/autoresearch_stage_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 23, Validated AutoResearch run with 7 stages, 6 supported claims"><img src="../figures/autoresearch_stage_matrix.png"
 alt="Horizontal bar chart showing configured stages, supported claims, and required artifacts." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
@@ -2588,7 +2590,7 @@ order is not an autonomy claim.</caption>
 <th>Phase</th>
 <th>Order</th>
 <th>Group</th>
-<th>Observed artifacts</th>
+<th>Declared artifacts</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -2597,7 +2599,7 @@ order is not an autonomy claim.</caption>
 <td>intrinsic readiness</td>
 <td>1</td>
 <td>readiness</td>
-<td>3</td>
+<td>1</td>
 <td>validate configured project-intrinsic contracts</td>
 </tr>
 <tr>
@@ -2611,14 +2613,14 @@ order is not an autonomy claim.</caption>
 <td>evidence registry</td>
 <td>3</td>
 <td>evidence</td>
-<td>2</td>
+<td>1</td>
 <td>write local evidence registry</td>
 </tr>
 <tr>
 <td>ml task</td>
 <td>4</td>
 <td>ml</td>
-<td>54</td>
+<td>37</td>
 <td>run fixed-seed bounded candidate evaluation</td>
 </tr>
 <tr>
@@ -2632,78 +2634,79 @@ order is not an autonomy claim.</caption>
 <td>provisional payloads</td>
 <td>6</td>
 <td>settlement</td>
-<td>12</td>
+<td>4</td>
 <td>refresh loop payloads before extrinsic validation</td>
 </tr>
 <tr>
 <td>security artifacts</td>
 <td>7</td>
 <td>security</td>
-<td>10</td>
-<td>write local security and integrity evidence</td>
+<td>9</td>
+<td>checksum frozen upstream evidence only</td>
 </tr>
 <tr>
-<td>final visuals</td>
+<td>provisional catalogs</td>
 <td>8</td>
-<td>figures</td>
-<td>54</td>
-<td>write final registry-backed figures</td>
-</tr>
-<tr>
-<td>manuscript hydration</td>
-<td>9</td>
-<td>manuscript</td>
-<td>9</td>
-<td>write variables, provenance, and figure blocks</td>
+<td>schema</td>
+<td>1</td>
+<td>close unique intended paths and build provisional catalogs</td>
 </tr>
 <tr>
 <td>readiness manifest</td>
-<td>10</td>
+<td>9</td>
 <td>settlement</td>
-<td>12</td>
-<td>refresh checksum manifest before extrinsic validation</td>
-</tr>
-<tr>
-<td>schema manifest</td>
-<td>11</td>
-<td>schema</td>
-<td>1</td>
-<td>write generated JSON schema-version manifest</td>
-</tr>
-<tr>
-<td>research object manifest</td>
-<td>12</td>
-<td>packaging</td>
-<td>1</td>
-<td>write local research-object manifest</td>
+<td>4</td>
+<td>snapshot complete provisional stable inventory</td>
 </tr>
 <tr>
 <td>extrinsic readiness</td>
-<td>13</td>
+<td>10</td>
 <td>readiness</td>
-<td>3</td>
-<td>validate generated artifacts and extrinsic contracts</td>
+<td>1</td>
+<td>validate real provisional artifacts before candidate success</td>
 </tr>
 <tr>
-<td>final schema manifest</td>
-<td>14</td>
-<td>schema</td>
-<td>1</td>
-<td>refresh schema manifest after final payload updates</td>
+<td>final visuals</td>
+<td>11</td>
+<td>figures</td>
+<td>28</td>
+<td>materialize candidate loop, report, figure and registry bytes</td>
 </tr>
 <tr>
 <td>final research object manifest</td>
-<td>15</td>
+<td>12</td>
 <td>packaging</td>
 <td>1</td>
-<td>refresh local research-object manifest</td>
+<td>catalog upstream checksums and derivative references</td>
+</tr>
+<tr>
+<td>final schema manifest</td>
+<td>13</td>
+<td>schema</td>
+<td>1</td>
+<td>catalog final governance schemas</td>
+</tr>
+<tr>
+<td>manuscript hydration</td>
+<td>14</td>
+<td>manuscript</td>
+<td>23</td>
+<td>hydrate final catalogs without downstream byte claims</td>
 </tr>
 <tr>
 <td>artifact manifest</td>
-<td>16</td>
+<td>15</td>
 <td>settlement</td>
-<td>12</td>
-<td>write final artifact checksum manifest</td>
+<td>4</td>
+<td>snapshot all final stable bytes last</td>
+</tr>
+<tr>
+<td>terminal validation</td>
+<td>16</td>
+<td>readiness</td>
+<td>1</td>
+<td>read-only extrinsic and exact primary validation decides
+success</td>
 </tr>
 </tbody>
 </table></div>
@@ -2745,7 +2748,7 @@ figure(s) were checked.</caption>
 <tr>
 <td><code>fig:autoresearch_integrity_chain</code></td>
 <td>1440x736</td>
-<td>0.041</td>
+<td>0.040</td>
 <td>True</td>
 <td>True</td>
 </tr>
@@ -2909,12 +2912,13 @@ figure(s) were checked.</caption>
 class="header-section-number">4.7</span> Security Readiness And
 Integrity Evidence</h2>
 <p>The local security profile reports attestation status
-<code>passed</code> after checking <code>80</code> file record(s), with
+<code>passed</code> after checking <code>43</code> file record(s), with
 <code>0</code> missing record(s) and <code>0</code> checksum
 mismatch(es). The inventory contains <code>14</code> input record(s) and
-<code>69</code> generated-artifact record(s). The integrity-chain figure
-is fig. <a href="#fig:autoresearch_integrity_chain">25</a>. These values
-support local artifact-integrity claims only; they do not claim external
+<code>32</code> frozen upstream generated-artifact record(s). The
+integrity-chain figure is fig. <a
+href="#fig:autoresearch_integrity_chain">25</a>. These values support
+local artifact-integrity claims only; they do not claim external
 signing, production SLSA compliance, or runtime security monitoring.</p>
 <figure id="fig:autoresearch_integrity_chain">
 <a class="figure-full-size-link" href="../figures/autoresearch_integrity_chain.png" target="_blank" rel="noopener" aria-label="Open full-size Figure 25, Local integrity chain from output/data/autoresearch_integrity_attestation.json"><img src="../figures/autoresearch_integrity_chain.png"
@@ -2946,7 +2950,7 @@ method, source artifact, and claim boundary for validation.</figcaption>
 </tr>
 <tr>
 <td>checked files</td>
-<td>80</td>
+<td>43</td>
 </tr>
 <tr>
 <td>missing files</td>
