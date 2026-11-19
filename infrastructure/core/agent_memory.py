@@ -54,6 +54,8 @@ def example_path(repo_root: Path) -> Path:
 
 def normalize_bullets(items: list[str], *, max_items: int = MAX_BULLETS) -> list[str]:
     """Strip, drop empties, dedupe case-insensitively, and cap list length."""
+    if max_items <= 0:
+        return []
     seen: set[str] = set()
     normalized: list[str] = []
     for raw in items:

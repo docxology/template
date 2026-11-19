@@ -90,17 +90,14 @@ Examples:
         logger.error("Falling back to environment variables only")
         return 0
 
-    env_vars = get_config_as_dict(repo_root, respect_existing=True)
+    env_vars = get_config_as_dict(repo_root, respect_existing=True, project_name=args.project)
 
-    # Export as bash variable assignments
+    # Export as bash variable assignments using single-quote escaping so
+    # values are inert data, never re-evaluated by the shell.
     for key, value in env_vars.items():
-        # Escape quotes for bash
-        if key == "AUTHOR_DETAILS":
-            # Preserve backslashes for LaTeX in AUTHOR_DETAILS
-            value_escaped = value.replace('"', '\\"')
-        else:
-            value_escaped = value.replace('"', '\\"')
-        print(f'export {key}="{value_escaped}"')
+        # Replace every single quote with the close-escape-reopen idiom.
+        escaped = value.replace("'", "'\\''")
+        print(f"export {key}='{escaped}'")
 
     return 0
 

@@ -192,13 +192,19 @@ def load_config(
     try:
         with open(config_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
-            if isinstance(data, dict):
-                validate_config_keys(
-                    data,
+            if not isinstance(data, dict):
+                logger.warning(
+                    "Config %s has non-mapping top level (%s); expected a YAML mapping",
                     config_path,
-                    project_name=resolved_project,
-                    strict=strict,
+                    type(data).__name__,
                 )
+                return None
+            validate_config_keys(
+                data,
+                config_path,
+                project_name=resolved_project,
+                strict=strict,
+            )
             return cast(ManuscriptConfig, data)
     except FileNotFoundError:
         return None
@@ -237,7 +243,11 @@ def _infer_project_name_from_path(config_path: Path) -> str:
     return ""
 
 
-def get_config_as_dict(repo_root: Path | str, respect_existing: bool = False) -> dict[str, str]:
+def get_config_as_dict(
+    repo_root: Path | str,
+    respect_existing: bool = False,
+    project_name: str | None = None,
+) -> dict[str, str]:
     """Get configuration as a dictionary of key-value pairs.
 
     Loads configuration from project/manuscript/config.yaml.
@@ -245,6 +255,7 @@ def get_config_as_dict(repo_root: Path | str, respect_existing: bool = False) ->
     Args:
         repo_root: Root directory of the repository
         respect_existing: If True, filter out keys already set in os.environ
+        project_name: Optional explicit project to load; auto-detected when None.
 
     Returns:
         Dictionary of configuration values (PROJECT_TITLE, AUTHOR_NAME, etc.)
@@ -252,7 +263,7 @@ def get_config_as_dict(repo_root: Path | str, respect_existing: bool = False) ->
     repo_root = Path(repo_root)
 
     # Find config file at standard location
-    config_path = find_config_file(repo_root)
+    config_path = find_config_file(repo_root, project_name=project_name)
     if not config_path:
         return {}
 

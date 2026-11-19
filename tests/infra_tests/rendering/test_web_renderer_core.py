@@ -176,6 +176,22 @@ def test_nested_manuscript_figures_keep_registry_identity_and_literal_paths(
     assert [code.strip() for code in reader.code] == [literal_tag, literal_tag, relative_image]
 
 
+def test_normalize_figure_paths_preserves_literal_output_paths() -> None:
+    """Literal output/figures/ paths in code spans and prose are not rewritten."""
+    from infrastructure.rendering._web_postprocess import normalize_figure_paths
+
+    # HTML img src is rewritten
+    assert normalize_figure_paths('<img src="output/figures/a.png">') == '<img src="../figures/a.png">'
+    # Raw Markdown is never rewritten; only emitted HTML image sources are.
+    assert normalize_figure_paths("![alt](output/figures/a.png)") == "![alt](output/figures/a.png)"
+    # Literal code span is NOT rewritten
+    assert normalize_figure_paths("<code>output/figures/a.png</code>") == "<code>output/figures/a.png</code>"
+    # Backtick code span is NOT rewritten
+    assert normalize_figure_paths("`output/figures/a.png`") == "`output/figures/a.png`"
+    # Prose is NOT rewritten
+    assert normalize_figure_paths("See output/figures/a.png here") == "See output/figures/a.png here"
+
+
 @pytest.mark.parametrize("combined", [False, True])
 def test_render_preserves_planted_temporary_symlink(tmp_path: Path, combined: bool) -> None:
     """Real Pandoc rendering must not overwrite a predictable temp link's target."""

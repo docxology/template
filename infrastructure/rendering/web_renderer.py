@@ -216,8 +216,11 @@ class WebRenderer:
             profile.validate_source(source_file)
         profile.prepare_output_directory(output_dir)
 
-        # Remove existing output file to ensure fresh generation
+        # Capture the existing page's mode before removing it so the
+        # replacement preserves restrictive permissions (e.g. 0600).
+        existing_mode: int | None = None
         if output_file.exists():
+            existing_mode = stat.S_IMODE(output_file.stat().st_mode)
             output_file.unlink()
             logger.debug(f"Removed existing output file: {output_file.name}")
 
@@ -294,8 +297,8 @@ class WebRenderer:
                 cmd, combined_md, source_files, writer="html", environment=options["env"]
             ):
                 subprocess.run(cmd, check=True, capture_output=True, text=True, **options)
-            if output_file.exists():
-                os.chmod(render_target, stat.S_IMODE(output_file.stat().st_mode))
+            if existing_mode is not None:
+                os.chmod(render_target, existing_mode)
             try:
                 os.replace(render_target, output_file)
             except OSError as exc:
