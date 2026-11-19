@@ -59,28 +59,26 @@ rsync -a \
 
 ## Validation Commands
 
-From the template repository root after copying into `projects/working/`:
+Use the [parent README's actual SDK/own-runtime recipe](README.md) before
+running project-local commands. From the prepared copied project root:
 
 ```bash
-uv run pytest projects/working/my_eda_project/tests \
-  --cov=projects/working/my_eda_project/src --cov-fail-under=90
-uv run python projects/working/my_eda_project/scripts/eda_analysis.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/eda_analysis.py
 ```
 
-For the public exemplar:
-
-```bash
-uv run pytest projects/templates/template_eda_notebook/tests \
-  --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
-```
+Fresh-kernel notebook execution, independent numerical readback and native
+rendering retain their complete original custody requirements; EDA-only output
+does not discharge them. Repository `scripts/pipeline/` commands require the
+monorepo and an already prepared project interpreter.
 
 ## Standalone By Design
 
-Unlike some exemplars, the EDA library is fully standalone: `src/template_eda_notebook/eda/` imports
-only `numpy` and `pandas` and never imports `infrastructure.*`. The only place
-that touches shared infrastructure is the thin analysis script and the
-manuscript-rendering pipeline, so the library itself is forkable as an
-infrastructure-free package.
+The EDA library uses NumPy/Pandas without direct SDK imports. The complete
+project still declares the installed SDK for its orchestration and notebook
+guardian. Prepare the genuine matching wheel and development dependencies as
+the README describes; an infrastructure-free library is not a dependency-free
+complete suite or an accepted notebook/native run.
 
 ## What Not To Claim
 

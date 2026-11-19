@@ -498,5 +498,5 @@ def validate_native_tool_data(
             original_deadline=original_deadline,
             original_completion=original_completion,
         )
-    elif "loader_lifecycle" in native or "loader_stdin" in native:
+    elif {"loader_lifecycle", "loader_stdin", "library_descriptor"} & set(native):
         raise ValueError("ordinary native tool cannot claim loader callback custody")

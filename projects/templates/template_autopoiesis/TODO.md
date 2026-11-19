@@ -1,7 +1,7 @@
 # template_autopoiesis TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -92,3 +92,99 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained open requests
+
+The [original bounded review](https://github.com/docxology/template_autopoiesis/blob/7f4e9b7e991751b7418f1f82ff4bafa40e93c2ca/TODO.md#L69-L152)
+reviewed base `eff704e8` without executing code. These requests remain unchecked;
+the P4 child-execution receipts do not establish their particular QR, decoder,
+or missing-vendor outcomes. Historical `src/*.py` evidence is retained at that
+immutable link; current modules live under `src/template_autopoiesis/`.
+Run the probes below from the standalone project root in its explicitly prepared
+Python environment with the project package and declared dependencies installed.
+The pytest commands are existing prerequisite controls, not closure by themselves.
+
+- [ ] `WFZ-20261110-1` · P1 · Minor · Fail loudly when required `qrcode` is unavailable rather than returning a non-decodable 5×5 checkerboard.
+  - Outcome: a generated QR encodes the actual seal payload; missing `qrcode` produces a clear dependency error or a seal that verification rejects, never a successful substitute.
+  - Evidence: the original review cites `src/sealing.py:21-34`, the required dependency declaration, and the fallback-accepting seal assertion. The current corresponding fallback is `src/template_autopoiesis/gates/sealing.py::qr_matrix`; seal and cover controls are in `tests/gates/test_seal_child.py` and `tests/figures/test_cover_art.py`.
+  - Acceptance / negative control:
+    ```bash
+    python -I - <<'PY'
+    import sys
+    from template_autopoiesis.gates.sealing import qr_matrix
+    sys.modules["qrcode"] = None
+    try:
+        matrix = qr_matrix("seal-payload")
+    except ImportError as exc:
+        assert "qrcode" in str(exc)
+    else:
+        raise AssertionError(f"missing qrcode silently returned a {len(matrix)}-row matrix")
+    PY
+    python -I -m pytest tests/gates/test_seal_child.py tests/figures/test_cover_art.py -q --no-cov
+    ```
+    With the real dependency installed, retain a decodable payload round trip and the seal/cover happy paths. A checkerboard must not satisfy seal verification or its assertions.
+  - Dependencies/constraints: keep `qrcode` required; no manifest weakening or silent minimal mode. Any reduced mode must be explicit opt-in. Coordinate QR generation with decoder availability and verification so unavailable or rejected evidence cannot pass as a valid seal.
+  - Proving artifact: paired missing-dependency and real-QR regression results plus independently checked seal payload/verification evidence.
+
+- [ ] `WFZ-20261110-2` · P1 · Minor · Reject missing vendored infrastructure rather than materializing a successful empty module or placeholder test.
+  - Outcome: `materialize()` names the unavailable module/path and fails, or its child fails `verify_child_full`; the real-source happy path vendors actual functional bytes. The original stub-module/stub-test evidence remains at the immutable review link. Current custody is `src/template_autopoiesis/gates/materialize.py::_vendor_infra_module`, `_vendor_test_file`, and `_build_tree`; the latter now emits real primitive oracle tests, which does not establish that a missing dependency is rejected.
+  - Acceptance / negative control: use the current grammar API and complete primitive/oracle inputs so an unrelated missing-file error cannot satisfy the probe.
+    ```bash
+    python -I - <<'PY'
+    import shutil
+    import tempfile
+    from pathlib import Path
+    from template_autopoiesis.core.grammar import parse_grammar
+    from template_autopoiesis.core.expand import expand
+    from template_autopoiesis.gates.materialize import materialize
+    from template_autopoiesis.gates.verify import verify_child_full
+    grammar = parse_grammar({
+        "seed": 42,
+        "slots": [
+            {"name": "primitive_domain", "options": ["optimization"]},
+            {"name": "dep_mode", "options": ["vendor"]},
+            {"name": "figure_profile", "options": ["minimal"]},
+            {"name": "qr_profile", "options": ["off"]},
+            {"name": "integrity_profile", "options": ["sha256"]},
+        ],
+        "deps": ["glossary_gen"],
+    })
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        template = root / "a" / "b" / "c"
+        for relative in ("src/template_autopoiesis/primitives", "tests/primitives"):
+            shutil.copytree(Path.cwd() / relative, template / relative)
+        try:
+            child = materialize(expand(grammar), root / "children", template)
+        except (FileNotFoundError, ValueError) as exc:
+            assert "glossary_gen" in str(exc) or "infrastructure" in str(exc), str(exc)
+        else:
+            assert not verify_child_full(child.root).all_passed, "missing vendor source verified clean"
+    PY
+    python -I -m pytest tests/gates/test_deps_vendoring.py tests/gates/test_materialize.py -q --no-cov
+    ```
+  - Dependencies/constraints: preserve the intentional `dep_mode="template"` `NotImplementedError` boundary, the actual `"vendor"` fixture literal, and routing through `src/template_autopoiesis/manuscript/emit_templates.py::emit_all`. Support genuine source resolution in the declared standalone/monorepo layouts; absent source remains an explicit blocker, not a stub.
+  - Proving artifact: a missing-vendor regression paired with a real-source materialization/verification receipt; importability-only placeholder tests cannot close this request.
+
+- [ ] `WFZ-20261110-3` · P2 · Minor · Distinguish unavailable/erroring QR decoding from a genuine no-payload result.
+  - Outcome: `read_qr_matrix` signals missing optional `pyzbar` or a decode error distinctly; only an actual decoder reporting no data may yield the empty result. Original evidence is `src/sealing.py:44-51`; current code is `src/template_autopoiesis/gates/sealing.py::read_qr_matrix`.
+  - Acceptance / negative control:
+    ```bash
+    python -I - <<'PY'
+    import sys
+    from template_autopoiesis.gates.sealing import qr_matrix, read_qr_matrix
+    matrix = qr_matrix("seal-payload")
+    sys.modules["pyzbar"] = None
+    sys.modules["pyzbar.pyzbar"] = None
+    try:
+        result = read_qr_matrix(matrix)
+    except (ImportError, OSError, RuntimeError):
+        pass
+    else:
+        assert result != "", "unavailable decoder collapsed into the no-data result"
+    PY
+    python -I -m pytest tests/gates/test_seal_child.py tests/gates/test_sealing.py -q --no-cov
+    ```
+    Pair this with a real installed-decoder payload round trip and a real no-payload image. An unavailable optional decoder is an explicit skip/blocker, not a passing round trip; an unexpected decode failure must not be swallowed as no data.
+  - Dependencies/constraints: keep `pyzbar` optional, retain deterministic/offline defaults, and scope any repair to error signalling consumed by seal verification.
+  - Proving artifact: separately identified success, no-data, unavailable-decoder, and decode-error results from the same source revision.

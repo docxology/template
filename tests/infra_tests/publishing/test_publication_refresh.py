@@ -33,7 +33,11 @@ from tests.infra_tests.validation._rendered_provenance_helpers import (
     _write_green_validation_report,
 )
 from infrastructure.publishing.publication_refresh_custody import (
+    AUTORESEARCH_ANALYSIS_SCOPE,
     DEPENDENT_ANALYSIS_SCOPE,
+    _AUTORESEARCH_INPUTS,
+    _AUTORESEARCH_PRODUCERS,
+    _AUTORESEARCH_SCRIPTS,
     _DEPENDENT_INPUTS,
     _DEPENDENT_PRODUCERS,
     _inventory_plan,
@@ -45,7 +49,7 @@ from infrastructure.publishing.publication_refresh_custody import (
     write_json,
 )
 from infrastructure.publishing.release_provider_graph import current_provider_graph
-from infrastructure.publishing._publication_refresh_protocol import successful_command_receipt
+from infrastructure.publishing._publication_refresh_protocol import generation_commands, successful_command_receipt
 
 ROOT = Path(__file__).resolve().parents[3]
 ACTIVE = "templates/template_active_inference"
@@ -124,9 +128,12 @@ def repository(tmp_path: Path) -> Path:
     )
     # Real current producer/input bytes are fixture Source, never a substitute
     # for executing the canonical analysis in a hosted publication run.
-    for relative in (*_DEPENDENT_INPUTS, *_DEPENDENT_PRODUCERS):
+    for relative in (*_DEPENDENT_INPUTS, *_DEPENDENT_PRODUCERS, *_AUTORESEARCH_INPUTS, *_AUTORESEARCH_PRODUCERS):
         if not (root / relative).exists():
             _write(root, relative, (ROOT / relative).read_bytes())
+    config = root / _AUTORESEARCH_INPUTS[0]
+    analysis = yaml.safe_load((ROOT / _AUTORESEARCH_INPUTS[0]).read_text())["analysis"]
+    config.write_text(config.read_text() + yaml.safe_dump({"analysis": analysis}))
     _commit(root)
     return root
 
@@ -484,7 +491,7 @@ def test_rebind_only_mode_tamper_refuses_reconstruction_and_dispatched_phase(rep
 
 
 def test_actual_rebind_refuses_changed_output_fingerprint_without_restamping(tmp_path: Path) -> None:
-    project = _green_project(tmp_path)
+    project = _green_project(tmp_path, track_sources=True)
     write_rendered_provenance_receipt(tmp_path, PROJECT)
     receipt = project / "output/reports/rendered_provenance.json"
     before = receipt.read_bytes()
@@ -512,7 +519,7 @@ def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_vers
     base = git(repository, "rev-parse", "HEAD").decode().strip()
     plan = build_plan(repository, base, version)
     assert plan["platform_version"] == version
-    assert set(plan["dependent_analysis"]) == {DEPENDENT_ANALYSIS_SCOPE}
+    assert set(plan["dependent_analysis"]) == {DEPENDENT_ANALYSIS_SCOPE, AUTORESEARCH_ANALYSIS_SCOPE}
     assert plan["publication_copies"] == [scope for scope in PUBLIC_PROJECT_NAMES if scope in (ACTIVE, META)]
     bound = plan["dependent_analysis"][DEPENDENT_ANALYSIS_SCOPE]
     for row in [*bound["inputs"], *bound["producers"], *bound["analysis_scripts"]]:
@@ -523,6 +530,28 @@ def test_dependent_pitch_analysis_plan_is_exact_source_bound_at_either_root_vers
     (repository / _DEPENDENT_INPUTS[0]).write_bytes(b"changed actual counts DATA")
     with pytest.raises(ValueError, match="differs"):
         check_footprint(repository, plan)
+
+
+def test_autoresearch_refresh_runs_current_loop_before_rendering(repository: Path) -> None:
+    plan = _plan(repository)
+    bound = plan["dependent_analysis"][AUTORESEARCH_ANALYSIS_SCOPE]
+    assert [row["path"] for row in bound["analysis_scripts"]] == list(_AUTORESEARCH_SCRIPTS)
+    commands = generation_commands(repository, plan, [AUTORESEARCH_ANALYSIS_SCOPE])
+    assert commands[0][1][1:] == [bound["stage"], "--project", AUTORESEARCH_ANALYSIS_SCOPE]
+    assert commands[1][1][1:] == [
+        "scripts/maintenance/refresh_rendered_provenance.py",
+        "--project",
+        AUTORESEARCH_ANALYSIS_SCOPE,
+        "--no-analysis-recovery",
+    ]
+
+    path = repository / _AUTORESEARCH_INPUTS[0]
+    config = yaml.safe_load(path.read_text())
+    config["analysis"]["scripts"].reverse()
+    path.write_text(yaml.safe_dump(config))
+    _commit(repository)
+    with pytest.raises(ValueError, match="loop before its hydration producer"):
+        _plan(repository)
 
 
 @pytest.mark.parametrize("subject", ["private_subject", "../template_template", "root"])
@@ -594,7 +623,7 @@ def test_actual_pitch_counts_reader_can_change_while_old_rendered_output_fingerp
     assert specification is not None and specification.loader is not None
     reader = importlib.util.module_from_spec(specification)
     specification.loader.exec_module(reader)
-    project = _green_project(tmp_path)
+    project = _green_project(tmp_path, track_sources=True)
     # This is a real valid HTML-only fixture, so an actual Stage 4 rebind can
     # succeed without inventing native PDF/PPTX output or relaxing production.
     config = yaml.safe_load((project / "manuscript/config.yaml").read_text())

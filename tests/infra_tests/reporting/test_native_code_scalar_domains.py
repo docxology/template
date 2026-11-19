@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.rendering.manuscript_hydration_replay import require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import SharedHydrationWriter, require_shared_hydration
 from infrastructure.reporting.native_code_consumed_value_join import _binding, _selected_occurrences
 from infrastructure.reporting.native_code_scalar_domains import (
     SCALAR_KEYS,
@@ -164,7 +164,9 @@ def test_equal_payloads_keep_distinct_source_keys_ordinals_and_output_intervals(
                 "source": _binding(source),
                 "consumed": _binding(held),
                 "transformation": "shared-uppercase-token-hydration",
-                "hydration": require_shared_hydration(raw, variables, output).data(),
+                "hydration": require_shared_hydration(
+                    raw, variables, output, writer=SharedHydrationWriter.RESOLVED_TREE
+                ).data(),
             }
         ]
     }

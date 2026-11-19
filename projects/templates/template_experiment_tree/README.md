@@ -19,12 +19,22 @@ tree state.
 
 ## Quick start
 
+From the prepared monorepo root, report the retained illustrative tree without
+initializing or answering another experiment:
+
 ```bash
-uv run python projects/templates/template_experiment_tree/scripts/init_tree.py
-uv run python projects/templates/template_experiment_tree/scripts/record_experiment.py E002 "halving did not help" dead_end
-uv run python projects/templates/template_experiment_tree/scripts/report.py
-uv run python projects/templates/template_experiment_tree/scripts/z_generate_manuscript_variables.py
+uv run --no-sync --offline --project projects/templates/template_experiment_tree \
+  python projects/templates/template_experiment_tree/scripts/report.py
+uv run --no-sync --offline --project projects/templates/template_experiment_tree \
+  python projects/templates/template_experiment_tree/scripts/z_generate_manuscript_variables.py
 ```
+
+Prepare the own environment using the [shared run surface](../../README.md#run-surface)
+or the standalone guide before running these commands. `init_tree.py` belongs
+to a deliberately new empty fork, not a refresh of an existing frozen store.
+Record an answer only from an actual measured experiment; never copy a literal
+negative-result command as evidence. The bundled tree demonstrates the record
+mechanics, not new empirical findings.
 
 ## When to use this template
 

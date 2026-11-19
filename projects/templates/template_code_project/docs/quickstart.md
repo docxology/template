@@ -1,6 +1,7 @@
 # Quick Start Guide
 
-Get up and running with the `template_code_project` exemplar in 5 minutes.
+Produce numerical analysis artifacts or choose the complete manuscript path for
+`template_code_project`. Actual elapsed time depends on the selected tools and inputs.
 
 ## Prerequisites
 
@@ -10,16 +11,23 @@ Get up and running with the `template_code_project` exemplar in 5 minutes.
 
 ## Setup (One-Time)
 
+This is a canonical monorepo walkthrough. Reuse the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface),
+the independent-project guidance in [STANDALONE.md](../STANDALONE.md), and the
+Root [dispatch guide](https://github.com/docxology/template/blob/main/docs/RUN_GUIDE.md).
+
 ```bash
 # 1. Clone the template repository (if you haven't already)
 git clone https://github.com/docxology/template.git
 cd template
 
-# 2. Install dependencies at the repository root
-uv sync
+# 2. Prepare the locked Root and this project's own declared development environment
+uv sync --locked
+uv sync --locked --project projects/templates/template_code_project --extra dev \
+  --python "$PWD/.venv/bin/python"
 
-# 3. Verify installation
-uv run python --version
+# 3. Observe the selected own interpreter
+uv run --no-sync --offline --project projects/templates/template_code_project python --version
 ```
 
 ## Run the Test Suite
@@ -28,32 +36,39 @@ Validate the environment and check that the project test suite passes with the �
 Falling below that floor fails the gate outright (`--cov-fail-under` enforces it), and zero-collected suites fail too rather than counting as a pass.
 
 ```bash
-uv run pytest projects/templates/template_code_project/tests/ -v --tb=short
+uv run --no-sync --offline --project projects/templates/template_code_project \
+  python -m pytest projects/templates/template_code_project/tests/ -v --tb=short \
+  --cov=projects/templates/template_code_project/src --cov-fail-under=90
 ```
 
 Expected: passing tests and coverage above the 90% gate. Live collection counts are tracked in [`../../../docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ## Execute the Analysis Pipeline
 
-Generate figures, data, reports, and the analysis dashboard:
+For analysis-only use, generate numerical figures, data, validation and citation
+artifacts. This command does not also build the dashboard or hydrate manuscripts:
 
 ```bash
-uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
+uv run --no-sync --offline --project projects/templates/template_code_project \
+  python projects/templates/template_code_project/scripts/optimization_analysis.py
 ```
 
 **Outputs created under `projects/templates/template_code_project/output/`:**
 - `figures/` — 6 PNG plots (convergence, stability, benchmarks)
 - `data/` — CSV and JSON results
-- `reports/` — HTML dashboard and validation JSON
-- `manuscript/` — token-substituted markdown sections
+- `reports/` — generated analysis validation JSON
 - `citations/` — APA/BibTeX/MLA citations
 
 ## Render the Publication PDF
 
-Convert the manuscript to a PDF with LaTeX:
+For the complete manuscript path, use the resolved core pipeline instead of
+the analysis-only command above. It executes the configured producers,
+including the separate dashboard and token hydration, then renders, validates
+and copies the deliverables. Rendering tools and the Root runtime must already
+be prepared; see the [shared run surface](../../../README.md#run-surface).
 
 ```bash
-uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
+./run.sh --pipeline --project templates/template_code_project --mode core
 ```
 
 Final PDF: `projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf`
@@ -80,11 +95,14 @@ Final PDF: `projects/templates/template_code_project/output/pdf/template_code_pr
 
 ## Quick Command Reference
 
+Run these from the monorepo root after preparation above. Project-local rows
+select the own environment; render/copy rows use the prepared Root environment.
+
 | Task | Command |
 |---|---|
-| Run tests | `uv run pytest projects/templates/template_code_project/tests/ -v` |
-| Run analysis | `uv run python projects/templates/template_code_project/scripts/optimization_analysis.py` |
-| Hydrate manuscript variables | `uv run python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
-| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project` |
-| Copy final deliverables | `uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project` |
-| Clean outputs | `rm -rf projects/templates/template_code_project/output/` |
+| Run tests | `uv run --no-sync --offline --project projects/templates/template_code_project python -m pytest projects/templates/template_code_project/tests/ -v` |
+| Run analysis | `uv run --no-sync --offline --project projects/templates/template_code_project python projects/templates/template_code_project/scripts/optimization_analysis.py` |
+| Hydrate manuscript variables | `uv run --no-sync --offline --project projects/templates/template_code_project python projects/templates/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
+| Root render PDF | `uv run --no-sync --offline python scripts/pipeline/stage_03_render.py --project templates/template_code_project` |
+| Root copy final deliverables | `uv run --no-sync --offline python scripts/pipeline/stage_05_copy.py --project templates/template_code_project` |
+| Output custody | Canonical project outputs and copied deliverables can be tracked publication evidence. Preserve retained snapshots and immutable receipts; do not use blanket output deletion as setup. |

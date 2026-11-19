@@ -16,7 +16,8 @@ def _pdf(content: bytes, target: PitchTarget, *, deadline: float) -> bytes:
     from pypdf.generic import ContentStream, NameObject, TextStringObject
     from reportlab.pdfgen.canvas import Canvas
 
-    document = PdfReader(BytesIO(content), strict=True)
+    # pypdf>=7 merges overlays only onto writer-owned pages; clone the strict read.
+    document = PdfWriter(clone_from=PdfReader(BytesIO(content), strict=True))
     if target.page is None or not 1 <= target.page <= len(document.pages):
         raise ValueError("Pitch PDF control did not select one exact actual page")
     page = document.pages[target.page - 1]

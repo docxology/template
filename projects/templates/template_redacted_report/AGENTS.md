@@ -6,6 +6,11 @@ Configuration lives in `manuscript/config.yaml`; invented public redaction fixtu
 
 ## Commands
 
+The block below is monorepo-root only. Standalone preparation and local writer,
+test, SDK-validator, and optional proof commands are in
+[`README.md`](README.md#standalone-project-commands); do not infer a monorepo
+ancestor or silently drop a requested provenance capability.
+
 ```bash
 uv run pytest projects/templates/template_redacted_report/tests --cov=projects/templates/template_redacted_report/src --cov-fail-under=90
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_redacted_report --project-only
@@ -26,4 +31,4 @@ they may expose sanitized metadata and cryptographic hashes, never source spans,
 review rationales, or the in-memory narrative packet. The second script renders
 the deterministic exemplar figures via `src/redacted_report/figures.py`.
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile numbers generated (not transcribed into prose), and pair every verifier-like gate (hash manifests, PDF proof verification, redaction ledgers) with a negative control — as the known-bad crafted-file cases in `tests/test_visuals_coverage.py` do.
+Decision memory and verifier hardening follow the monorepo's [decision records guide](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile numbers generated (not transcribed into prose), and pair every verifier-like gate (hash manifests, PDF proof verification, redaction ledgers) with a negative control — as the known-bad crafted-file cases in `tests/test_visuals_coverage.py` do.

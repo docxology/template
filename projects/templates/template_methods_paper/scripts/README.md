@@ -7,6 +7,9 @@ validation, and export logic lives in the library, never here.
 
 ## Quick Start
 
+Run from the prepared project root, not `scripts/`; see the parent README for
+the declared SDK and development environment.
+
 ```bash
 # Compile the example methods, run all gates, export artifacts, plot a figure
 uv run python scripts/methods_analysis.py
@@ -15,8 +18,8 @@ uv run python scripts/methods_analysis.py
 uv run python scripts/z_generate_manuscript_variables.py
 
 # View generated outputs
-ls -la ../output/data/
-cat ../output/reports/gate_report.json
+ls -la output/data/
+cat output/reports/gate_report.json
 ```
 
 ## Scripts

@@ -7,6 +7,13 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
+Ordinary functional infrastructure and document-consuming contract jobs import
+one genuine same-run Source-bound Linux store, then revalidate pinned tools.
+The producer's 75-minute envelope includes capture/upload; consumer envelopes,
+ten-minute smoke-execution steps and original deep-contract clocks are unchanged.
+Project feedback remains independent; Search retains its own converter preparation.
+See [the canonical CI guide](../../docs/development/ci.md) for custody and budgets.
+
 Manual CI dispatch accepts an optional exact public `coverage-project` and calls
 `exemplar-coverage.yml` for its own locked release-profile measurement. The
 **Public exemplar coverage** workflow calls the same job across the complete
@@ -14,6 +21,10 @@ Source-derived roster in one dispatch, with four concurrent projects and separat
 commit/input-hash bound artifacts. Its optional project input selects exactly
 one public exemplar. Require every selected measurement and the final matrix
 gate, then verify the retrieved artifacts before updating coverage provenance.
+The reusable coverage job prepares converters for Search's real HTML/citeproc
+and Textbook's real EPUB consumer, and native providers for EDA's real
+XeLaTeX/font test. Other own suites retain their locked Python readers and
+existing tools; full native/publication acceptance prepares its own prerequisites.
 The ordinary `CI Gate` also requires both complementary infrastructure lanes and
 accepts the optional coverage job's skip only when unrequested.
 
@@ -199,7 +210,7 @@ A negative control backs this contract: deliberately breaking any represented st
 - **Pinned source setup:** `test-infra` and `coverage-infra` both initialize the direct submodule declared by the actual Root gitlink and `.gitmodules` using the pinned checkout action's `submodules: true`. This checks out the committed kmyth object; the declaration's branch is not used to advance it. Initialization is an explicit network-capable setup boundary before Python setup and source observation. Tests subsequently clone this actual local checkout without network. Both jobs use `persist-credentials: false`, so setup credentials are removed before test or merge code runs. The merge runner receives the same complete source bytes as the coverage workers; missing pins remain failures, with no fixture fabrication or skip. Genuine clone/reference and submodule-tamper controls in `tests/infra_tests/project/test_public_reference.py` verify the native Git inventory and pinned object bytes without workflow Source-text guards. `test-project`, `test-infra-slow`, and `public-matrix-receipt` use the same pinned, credential-free checkout contract before their genuine standalone export controls.
 - **Sync:** `uv sync --locked --group public-exemplars --group installed-build`. Genuine wheel/sdist controls use the prepared, locked build backend.
 - **Offline warm:** a scratch `uv sync --frozen` against the selected interpreter re-populates the uv cache with every locked default-group wheel (setup-uv prunes registry wheels from the saved cache), so infra tests that build fresh environments with `uv sync --locked --offline` do not depend on a cold or pruned cache. The scratch environment is deleted.
-- **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. It verifies exact pinned Pandoc/crossref/font archives, prepares the complete TeX and native-reader package union, and probes the selected executables. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
+- **Document tools:** Both platforms invoke [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml) once. Linux verifies immutable source/compiler/dependency inputs and exact glibc-linked Pandoc/crossref bodies; macOS verifies exact official archives. Font archives, complete TeX/native-reader preparation and actual executable probes remain required. Linux installs `poppler-utils`; macOS installs `poppler`. Both lanes directly check `pdftoppm` and `pdffonts` before the actual PDF controls. Package caches cannot certify preparation or acceptance.
 - **Matrix:** Supported environments are: Linux Python 3.14/3.15 and macOS Python 3.15. The source-declared `ci_infra_partition.py` emits four complete module shards per environment (source-derived cell count). The four measured C4 families are assigned distinct shards; every other current or future collected module receives a stable SHA-256 assignment. No test is marked slow or removed by partitioning.
 - **Selection:** `ci_infra_shard_plugin` partitions actual pytest collection after the unchanged ordinary marker expression. Each selected case belongs to exactly one shard; empty/duplicate/noncanonical inventory, worker disagreement and incomplete actual completion fail. The plugin is explicitly loaded for this invocation, so nested pytest jobs retain their own selection.
 - **Diagnostics:** On the xdist controller the plugin also keeps a bounded, diagnostics-only record (`output/readiness/ordinary-infra-ci/diagnostics/shard-N.json`) of active cases, recent events, first failures and worker loss, labeled by declared public test family and member hash only. Every shard uploads it with `if: always()` as `infra-diagnostics-<os>-<python>-<shard>`; the manual `test-infra-slow` job loads the plugin with `--infra-ci-observer-only slow` to retain `shard-slow.json` as `infra-diagnostics-slow` without partition or selection admission. These records identify where a crashed or cancelled job was, and cannot replace a selection receipt or authorize coverage.
@@ -330,8 +341,10 @@ Triggers only on `workflow_dispatch` with an explicit existing tag. Dispatches s
 5. Every release follows this one authenticated path; the former pre-4 clean-export, install and import-smoke lane is retired. Root 4+ authenticates its retained complete matrix in step 3. Preparation and acceptance stay distinct
 6. Builds the final source distribution and admits its exact final bytes alongside the wheel already accepted by the installed matrix; the pristine published audit has already passed before derived execution
 7. Selects `docs/releases/<tag>.md` for the actual tag, with maintained notes listed in the [release-note index](../../docs/releases/README.md), and adds accepted-commit, hosted-run and receipt-hash bindings
-8. Refuses existing releases, including drafts, then uses `gh release create --verify-tag` with authored notes and the admitted distributions, tag-selected overview PNG and byte manifest; no release upsert, asset replacement or implicit tag creation
-9. Retrieves the published assets and requires exact admitted hashes; auto-marks as pre-release if the tag contains `-rc`, `-beta`, or `-alpha`
+8. Refuses every existing matching release, including drafts, rechecks the exact tag commit, then creates one new owned draft through the GitHub API with authored notes; retains that returned release ID and never upserts, adopts a draft, replaces assets or creates a tag
+9. Uploads the four admitted assets only to that ID, independently retrieves all four and verifies their exact admitted bytes while the release is still a draft
+10. Rechecks the owned ID, tag/source and stable asset IDs, names, sizes and uploaded states before publishing only that draft ID; this transition may trigger public Zenodo archival and therefore requires the applicable publication consent
+11. Independently retrieves the same public release and all four public assets and verifies their exact admitted hashes again; tags containing `-rc`, `-beta` or `-alpha` are pre-releases. A failed owned draft remains evidence for explicit recovery, not permission to replay creation or overwrite assets
 
 The candidate [`platform-required-acceptance.yml`](platform-required-acceptance.yml)
 implements four supported Root host/minor units plus common and native
@@ -545,9 +558,11 @@ or package-fallback tests. Missing compiler providers fail these contracts.
 
 
 `root-policy-census.yml` is manual collection/review only. Its four Linux/Darwin
-3.14/3.15 targets admit the exact dispatch SHA and use the current Root-original
-locked groups and pinned fixture/document/browser/model preparation chain. The
-existing pinned model readiness inference is preparation, not an executed Root
+3.14/3.15 targets admit the exact dispatch SHA. Preparation and collection check
+out `github.sha` directly; `source_sha` is only an equality assertion, never a
+selector for code executed against the dispatch ref's caches. They retain the
+Root-original locked groups and pinned fixture/document/browser/model preparation
+chain. Model readiness inference remains preparation, not an executed Root
 test or unpaid-capability producer. Linux keeps the existing unprivileged
 execution profile; owned-daemon cleanup and bounded export run after collection.
 Both original CLI streams/exit and all census/ledger bindings are retained with
@@ -555,6 +570,12 @@ hidden files for thirty days. Optional author mode creates only a canonical
 Linux 3.14 draft from an exhaustive reviewed committed template; the other three
 targets collect again and refuse any template/member/fixture drift. It cannot
 install policy, push, tag, publish or satisfy required runtime acceptance.
+One shared 135-minute Ubuntu preparation job transports the genuine complete
+Nix store only within the same Source/run/attempt/client. Linux consumers keep
+root ownership, original trust metadata and unconditional source/body/signature
+verification. Each of the four policy jobs still has its original 75-minute
+outer and 660-second collection clock. A snapshot is preparation DATA, not
+classified runtime acceptance or permission to replay an immutable original.
 
 
 ## Manual tagged PDF tool probe

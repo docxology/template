@@ -38,8 +38,8 @@ def test_research_object_manifest_excludes_out_of_tree_paths(tmp_path: Path) -> 
     assert not any("outside.json" in p for p in artifact_paths)
 
 
-def test_research_object_manifest_excludes_nonexistent_paths(tmp_path: Path) -> None:
-    """Paths that do not exist are silently excluded."""
+def test_research_object_manifest_names_intended_derivatives_without_byte_claims(tmp_path: Path) -> None:
+    """A declared derivative reference does not claim an unobserved file exists."""
 
     project = tmp_path / "project"
 
@@ -49,9 +49,15 @@ def test_research_object_manifest_excludes_nonexistent_paths(tmp_path: Path) -> 
 
     payload = research_object_manifest_payload(project, [nonexistent], generated_at="t")
 
-    assert payload["artifact_count"] == 0
-
-    assert payload["artifacts"] == []
+    assert payload["artifact_count"] == 1
+    assert payload["checksum_artifact_count"] == 0
+    assert payload["artifacts"] == [
+        {
+            "path": "output/data/ghost.json",
+            "record_kind": "derivative_reference",
+            "integrity_authority": "output/reports/artifact_manifest.json",
+        }
+    ]
 
 
 # ---------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 This index lists documentation files in the Research Project Template by category.
 
-**Project layout:** `projects/` is a **rotating** set of workspaces. The only path **guaranteed** for documentation examples is [`projects/templates/template_code_project/`](../projects/templates/template_code_project/). Authoritative current names: [`_generated/active_projects.md`](_generated/active_projects.md).
+**Project layout:** the declared public exemplars under `projects/templates/` are permanent scope. [`template_code_project`](../projects/templates/template_code_project/) is the default walkthrough, not the only supported exemplar. The authoritative roster is [`_generated/active_projects.md`](_generated/active_projects.md); other local lifecycle workspaces may rotate.
 
 ## Repo status and navigation
 
@@ -11,6 +11,14 @@ This index lists documentation files in the Research Project Template by categor
 - **[TO-DO.md](../TO-DO.md)** - Authoritative backlog
 
 ## Quick start by persona
+
+### Installed SDK user
+
+Start with [README installation](../README.md#installed-sdk) for an actual
+wheel and its console entry point. A package installation does not include the
+exemplar checkout or repository pipeline scripts. Checkout preparation belongs
+to [startup and setup](guides/startup-and-setup.md); project identity and SDK
+source selection belong to [forking an exemplar](guides/fork-an-exemplar.md).
 
 ### New user / content creator
 
@@ -208,7 +216,7 @@ Development standards are documented in **`docs/rules/`**. The shared agent entr
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Archival providers for the opt-in archival stage (stage index: see the generated stage table)
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/shell/ci_local.sh`)
 - **[maintenance/release-boundary.md](maintenance/release-boundary.md)** - Root package, tag, changelog, and GitHub release boundary
-- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Supported-Python contract (`requires-python = ">=3.10"` floor, 3.14 default)
+- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Authoritative supported-Python contract and prepared-runtime selection
 - **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Executable bundle design for the opt-in bundle stage (file predates the Ebook/Metadata stage insertion; kept its original name, and stage indices live only in the generated stage table)
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files

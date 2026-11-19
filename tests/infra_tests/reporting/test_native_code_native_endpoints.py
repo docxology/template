@@ -11,7 +11,7 @@ from typing import Any
 
 import pytest
 
-from infrastructure.rendering.manuscript_hydration_replay import require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import SharedHydrationWriter, require_shared_hydration
 from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
 from infrastructure.reporting.native_code_native_endpoints import pdf_native_endpoints, selected_ast_roles
 from infrastructure.reporting.native_code_native_locations import (
@@ -255,7 +255,9 @@ def test_real_html_owned_inputs_drive_occurrences_and_section_absence(
                 "source": _binding(reader.read((manuscript / name).relative_to(tmp_path).as_posix())),
                 "consumed": _binding(snapshot),
                 "transformation": "shared-uppercase-token-hydration",
-                "hydration": require_shared_hydration(content, values, snapshot.content).data(),
+                "hydration": require_shared_hydration(
+                    content, values, snapshot.content, writer=SharedHydrationWriter.RESOLVED_TREE
+                ).data(),
             }
             for ordinal, (name, content, snapshot) in enumerate(zip(names, authored, sources, strict=True), 1)
         ]

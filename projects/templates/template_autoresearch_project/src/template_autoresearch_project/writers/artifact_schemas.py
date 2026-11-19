@@ -8,6 +8,18 @@ from typing import Any
 
 SCHEMA_MANIFEST_SCHEMA = "template-autoresearch-schema-manifest-v1"
 
+# These later hydration products are declared shapes, NOT observed conformance.
+DERIVATIVE_SCHEMAS = {
+    "output/data/manuscript_variable_provenance.json": "template-autoresearch-manuscript-provenance-v1",
+    "output/manuscript/hydration_manifest.json": "template-hydrated-manuscript/v1",
+}
+DERIVATIVE_TABLES = frozenset(
+    (
+        "output/data/manuscript_variables.json",
+        "output/data/manuscript_figure_blocks.json",
+    )
+)
+
 GENERIC_JSON_EXEMPTIONS: dict[str, str] = {
     "output/data/autoresearch_claims.json": "list of generated claim rows",
     "output/data/autoresearch_loop.json": "project loop payload serialized from the public result model",
@@ -25,12 +37,19 @@ GENERIC_JSON_EXEMPTIONS: dict[str, str] = {
     "output/data/mnist_task_config.json": "task configuration snapshot",
     "output/data/research_program.json": "human-authored program snapshot",
     "output/data/run_ledger.json": "run budget ledger table",
+    "output/data/transmission_manifest.json": "platform transmission metadata payload",
     "output/figures/figure_registry.json": "figure-label keyed registry",
     "output/reports/autoresearch_loop.json": "project loop payload serialized from the public result model",
     "output/reports/autoresearch_readiness.json": "infrastructure readiness report payload",
     "output/reports/artifact_manifest.json": "pipeline artifact manifest table",
     "output/reports/benchmark_readiness_smoke.json": "benchmark grading row",
     "output/reports/ml_benchmark_score.json": "benchmark grading row",
+    "output/release/upload_receipts.json": "platform transport result receipt table",
+    "output/reports/test_results.json": "platform coverage and test summary table",
+}
+
+PLATFORM_SCHEMA_FIELDS = {
+    "output/reports/manuscript_composition.json": "schema_version",
 }
 
 
@@ -60,10 +79,13 @@ SCHEMA_FIELD_CONTRACTS: dict[str, dict[str, type | tuple[type, ...]]] = {
         "checks": list,
         "status": str,
     },
-    "template-autoresearch-research-object-manifest-v1": {
+    "template-autoresearch-research-object-manifest-v2": {
         "schema": str,
         "generated_at": str,
         "artifact_count": int,
+        "checksum_artifact_count": int,
+        "derivative_reference_count": int,
+        "artifact_count_semantics": str,
         "artifacts": list,
         "project_name": str,
     },
@@ -154,12 +176,25 @@ def schema_manifest_payload(
     nonconforming_rows: list[dict[str, str]] = []
     for path in _candidate_artifact_paths(project_root, paths):
         rel_path = _relative_path(project_root, path)
+        if rel_path in DERIVATIVE_SCHEMAS:
+            schema_rows.append(
+                {
+                    "path": rel_path,
+                    "schema": DERIVATIVE_SCHEMAS[rel_path],
+                    "conformance": "declared_derivative_not_observed",
+                }
+            )
+            continue
+        if rel_path in DERIVATIVE_TABLES:
+            exemption_rows.append({"path": rel_path, "reason": GENERIC_JSON_EXEMPTIONS[rel_path]})
+            continue
         if path.suffix != ".json":
             if rel_path in GENERIC_JSON_EXEMPTIONS:
                 exemption_rows.append({"path": rel_path, "reason": GENERIC_JSON_EXEMPTIONS[rel_path]})
             continue
         payload = _load_json(path)
-        schema = payload.get("schema") if isinstance(payload, dict) else None
+        schema_field = PLATFORM_SCHEMA_FIELDS.get(rel_path, "schema")
+        schema = payload.get(schema_field) if isinstance(payload, dict) else None
         if isinstance(schema, str) and schema:
             # A schema with a registered contract is held to it; a nonconforming
             # payload is pulled out of schema_artifacts into the failing bucket.
@@ -196,7 +231,13 @@ def schema_manifest_payload(
 
 
 def _candidate_artifact_paths(project_root: Path, paths: list[Path]) -> tuple[Path, ...]:
-    candidates = {path.resolve() for path in paths if path.exists()}
+    candidates = {
+        path.resolve()
+        for path in paths
+        if path.exists()
+        or _relative_path(project_root, path) in DERIVATIVE_SCHEMAS
+        or _relative_path(project_root, path) in DERIVATIVE_TABLES
+    }
     return tuple(sorted(candidates))
 
 

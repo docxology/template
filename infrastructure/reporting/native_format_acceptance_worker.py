@@ -14,6 +14,8 @@ from infrastructure.reporting.native_format_pdf_source_decode_bounds import (
 )
 
 import argparse
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 import json
 import os
 import sys
@@ -118,6 +120,34 @@ def _native_startup_phase(phase: str) -> None:
             observer(phase, sys._getframe(1))
     except Exception:
         pass
+
+
+@contextmanager
+def _retained_native_stage_prefix(raw: dict[str, Any], producer: Any) -> Iterator[Callable[[], None]]:
+    """Retain the real failed prefix, but never refresh an already captured graph."""
+    captured = False
+
+    def capture() -> None:
+        nonlocal captured
+        if captured:
+            raise ValueError("native completed stage prefix was already captured")
+        raw["stage_children"] = list(producer.stage_children)
+        captured = True
+
+    try:
+        yield capture
+    finally:
+        if not captured:
+            try:
+                capture()
+            except (OSError, ValueError, RuntimeError) as error:
+                # The worker handler still owns the primary exception. Keep this
+                # additional refusal separately until its closing diagnostics join.
+                raw.setdefault("closing_custody_diagnostics", []).append(
+                    f"actual native completed-stage prefix custody refused: {error}"
+                )
+                raw["status"] = "fail"
+                raw["execution_exit_code"] = raw["execution_exit_code"] or 1
 
 
 def require_canonical_native_stages(plan: Any) -> None:
@@ -275,7 +305,10 @@ def _run_native_worker(
             raw["tool_artifacts"].append(tool["artifact"])
             if tool["exit_code"] != 0 or tool["original_exit_code"] != 0:
                 raise ValueError("actual native tool version probe failed")
-        with project_output_lock(root / "projects" / scope, timeout=max(0.0, deadline - time.monotonic())):
+        with (
+            project_output_lock(root / "projects" / scope, timeout=max(0.0, deadline - time.monotonic())),
+            _retained_native_stage_prefix(raw, producer) as capture_stage_prefix,
+        ):
             published = build_native_published_audit(source_context, scope, native_reader, deadline=deadline)
             raw["published_source_audit_artifact"] = write_json(
                 root,
@@ -328,7 +361,7 @@ def _run_native_worker(
             from infrastructure.reporting.native_format_scope_replay import observe_native_scope_evidence
 
             checked_domain = observe_native_scope_evidence(source_context, raw, specification, native_reader, env)
-            raw["stage_children"] = list(producer.stage_children)
+            capture_stage_prefix()
             boundary_reader = SnapshotReader(root, native_producer_operation=producer)
             raw["analysis_data_graph"] = observe_native_analysis_boundary_graph(
                 source_context,

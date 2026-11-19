@@ -109,7 +109,7 @@ minimal local analogue of machine-readable provenance rather than a claim of
 full research-object packaging.
 
 The generated schema manifest at `output/data/autoresearch_schema_manifest.json`
-records `31` schema-versioned governance
+records `34` schema-versioned governance
 payload(s) plus documented generic-table exemptions. The local research-object
 manifest at `output/data/research_object_manifest.json` packages observed project paths,
 hashes, the evidence registry, the source ledger, the schema manifest, and the

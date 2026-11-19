@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -127,18 +128,20 @@ def test_duplicate_validation_display_name_is_rejected_before_child_execution(tm
 def test_direct_boundary_requires_the_planned_key_or_keyless_display_fallback(tmp_path: Path) -> None:
     """An explicit nonboundary key cannot borrow a canonical validator's name."""
     project, pipeline_path = _make_pipeline_repo(tmp_path, validation_key="commitment_check")
-    executor = PipelineExecutor(PipelineConfig("template_test", tmp_path, pipeline_path=pipeline_path, clean=False))
-    executor.preview_stage_names()
-    assert executor.execution_plan is not None
-    stages = executor.execution_plan.bind(executor)
-    render, validation = stages[:2]
+    with closing(
+        PipelineExecutor(PipelineConfig("template_test", tmp_path, pipeline_path=pipeline_path, clean=False))
+    ) as executor:
+        executor.preview_stage_names()
+        assert executor.execution_plan is not None
+        stages = executor.execution_plan.bind(executor)
+        render, validation = stages[:2]
 
-    executor._prepare_artifact_manifest_for_stage(render._replace(name=validation.name), [])
+        executor._prepare_artifact_manifest_for_stage(render._replace(name=validation.name), [])
 
-    assert not executor._artifact_manifest_sealed
-    assert not (project / "output/reports/artifact_manifest.json").exists()
-    executor._prepare_artifact_manifest_for_stage(validation._replace(key=""), [])
-    assert executor._artifact_manifest_sealed
+        assert not executor._artifact_manifest_sealed
+        assert not (project / "output/reports/artifact_manifest.json").exists()
+        executor._prepare_artifact_manifest_for_stage(validation._replace(key=""), [])
+        assert executor._artifact_manifest_sealed
 
 
 @pytest.mark.parametrize(

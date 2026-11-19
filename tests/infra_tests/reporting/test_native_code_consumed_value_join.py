@@ -8,7 +8,7 @@ from typing import Any
 
 import pytest
 
-from infrastructure.rendering.manuscript_hydration_replay import require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import SharedHydrationWriter, require_shared_hydration
 from infrastructure.reporting.native_code_consumed_value_join import (
     KEY,
     _binding,
@@ -62,7 +62,9 @@ def _held_occurrences(root: Path) -> tuple[SnapshotReader, dict[str, Any]]:
                 "source": _binding(authored),
                 "consumed": _binding(held),
                 "transformation": "shared-uppercase-token-hydration",
-                "hydration": require_shared_hydration(authored.content, values, held.content).data(),
+                "hydration": require_shared_hydration(
+                    authored.content, values, held.content, writer=SharedHydrationWriter.RESOLVED_TREE
+                ).data(),
             }
         ]
     }

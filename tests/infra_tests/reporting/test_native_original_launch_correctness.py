@@ -1,4 +1,4 @@
-"""Actual selected interpreters and environment DATA; no Source owner fabricated."""
+"""Actual selected interpreters, genuine Source loader launches and environment DATA."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import secrets
+import shutil
 import subprocess
 import sys
 import time
@@ -16,11 +17,25 @@ import pytest
 from infrastructure.core._bounded_kill import _RUN_IDS_ENV
 from infrastructure.core.pipeline.stages import PIPELINE_STAGE_TIMEOUT_SECONDS, _stage_launch_deadline
 from infrastructure.core.secrets import strip_secret_env
-from infrastructure.project.public_acceptance_evidence import bootstrap_command
+from infrastructure.project.public_acceptance_evidence import bootstrap_command, write_json
+from infrastructure.project.locked_dependency_export import normalize_locked_dependency_export
+from infrastructure.reporting.native_crossref_filter import SCHEMA as CROSSREF_FILTER_SCHEMA
+from infrastructure.reporting.native_crossref_pair import (
+    SCHEMA as CROSSREF_PAIR_SCHEMA,
+    pair_launcher,
+    validate_pair_leg,
+)
 from infrastructure.reporting.native_environment_custody import capture_native_environment, validate_native_environment
 from infrastructure.reporting.native_format_acceptance_contracts import native_environment
+from infrastructure.reporting.native_loader_maps import terminal_kernel_residents
+from infrastructure.reporting.native_loader_observation import ENV_KEYS
 from infrastructure.reporting.native_original_supervisor import _worker_environment
+from infrastructure.reporting.native_pdf_citation_runtime import NATIVE_OBSERVATION_CEILING_SECONDS, budget
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from tests.infra_tests.project.test_public_reference import (
+    _clone_complete_reference,
+    complete_reference as complete_reference,
+)
 
 
 @pytest.fixture(scope="module")
@@ -168,3 +183,643 @@ def test_stage_launch_keeps_existing_phase_ceiling_with_a_later_original_deadlin
     after = time.monotonic()
     assert before + PIPELINE_STAGE_TIMEOUT_SECONDS <= selected <= after + PIPELINE_STAGE_TIMEOUT_SECONDS
     assert selected <= deadline
+
+
+def test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_time() -> None:
+    assert NATIVE_OBSERVATION_CEILING_SECONDS == 600.0
+    assert budget(time.monotonic() + 1200) == 600.0
+    with pytest.raises(TimeoutError, match="exhausted its original finite deadline"):
+        budget(time.monotonic() - 1)
+
+
+@pytest.mark.parametrize(
+    "refusal", ["unclosed-file", "missing-close", "duplicate-close", "non-kernel", "aliased-kernel"]
+)
+def test_terminal_roster_refuses_unclosed_or_aliased_images(refusal: str) -> None:
+    opened = {
+        1: {"body": {"sha256": "a" * 64}, "path_label": "/proc/self/exe"},
+        2: {"body": None, "path_label": "linux-vdso.so.1"},
+    }
+    active, closed = {2: opened[2]}, [1]
+    if refusal == "unclosed-file":
+        active[1] = opened[1]
+        closed.clear()
+    elif refusal == "missing-close":
+        closed.clear()
+    elif refusal == "duplicate-close":
+        closed.append(1)
+    elif refusal == "non-kernel":
+        opened[2]["path_label"] = "unbacked-consumer.so"
+    else:
+        opened[3] = {"body": None, "path_label": "linux-vdso.so.2"}
+        active[3] = opened[3]
+    with pytest.raises(ValueError):
+        terminal_kernel_residents(opened, active, closed)
+
+
+def test_paired_filter_leg_accepts_transport_order_but_refuses_changed_commitment(tmp_path: Path) -> None:
+    """Preserve transported DATA selection; this predicate grants no native authority."""
+    directory = tmp_path / "output/readiness/pair"
+    directory.mkdir(parents=True)
+    python = str(Path(sys.executable).absolute())
+    implementation = write_json(
+        tmp_path, directory / "implementation.json", {"runtime_environment": {"python_launcher": python}}
+    )
+    owner = os.getpid()
+    deadline = time.monotonic() + 30
+    scope = "templates/template_data_descriptor"
+    source = {
+        "original_source": {"commit": "a" * 40, "source_identity": "b" * 64},
+        "current_mirror": {"root": str(tmp_path)},
+    }
+    base_spec = {
+        "schema_version": CROSSREF_FILTER_SCHEMA,
+        "scope": scope,
+        "run_id": "c" * 32,
+        "source": source,
+        "parent_owner_pid": owner,
+        "deadline_monotonic": deadline,
+        "caller_deadline_monotonic": deadline,
+        "crossref": {"archive_sha256": "d" * 64},
+        "expected_exit": 0,
+        "output_format": "latex",
+        "implementation": implementation,
+    }
+    specifications = []
+    slots = []
+    for ordinal in range(2):
+        leaf = directory / ("slot-" + str(ordinal))
+        leaf.mkdir()
+        spec = {**base_spec, "directory": leaf.relative_to(tmp_path).as_posix()}
+        specifications.append(spec)
+        slots.append(
+            {
+                "specification": write_json(tmp_path, leaf / "specification.json", spec),
+                "launcher": write_json(tmp_path, leaf / "source-crossref-filter", {"fixture_slot": ordinal}),
+            }
+        )
+    injections = {key: "e" * 64 for key in sorted(ENV_KEYS - {"LD_PRELOAD"}, reverse=True)}
+    declaration = {
+        "schema_version": CROSSREF_PAIR_SCHEMA,
+        "scope": scope,
+        "run_id": base_spec["run_id"],
+        "directory": directory.relative_to(tmp_path).as_posix(),
+        "source_binding": ["a" * 40, "b" * 64],
+        "owner_pid": owner,
+        "deadline_monotonic": deadline,
+        "slots": slots,
+        "parent_loader": {
+            "compiler": {},
+            "purpose": "source-renderer",
+            "owner_pid": owner,
+            "deadline_monotonic": deadline,
+            "environment_injections": injections,
+        },
+    }
+    declaration_binding = write_json(tmp_path, directory / "invocations.json", declaration)
+    parent_path = directory / "source-crossref-pair"
+    parent_path.write_bytes(pair_launcher(tmp_path, declaration, python, "latex"))
+    parent = SnapshotReader(tmp_path).read(parent_path.relative_to(tmp_path).as_posix())
+    child = {"pid": owner, "ppid": os.getppid(), "uid": os.getuid()}
+    claim = write_json(tmp_path, directory / "invocation-0.json", {"slot": 0, **child})
+    invocation = {
+        "declaration": declaration_binding,
+        "launcher": {"path": parent.relative, "sha256": parent.sha256},
+        "slot": 0,
+        "claim": claim,
+    }
+    assert validate_pair_leg(
+        invocation, slots[0]["specification"], slots[0]["launcher"], specifications[0], child, SnapshotReader(tmp_path)
+    ) == str(parent_path)
+    injections["TEMPLATE_LOADER_TOKEN"] = "f" * 64
+    invocation["declaration"] = write_json(tmp_path, directory / "invocations.json", declaration)
+    with pytest.raises(ValueError):
+        validate_pair_leg(
+            invocation,
+            slots[0]["specification"],
+            slots[0]["launcher"],
+            specifications[0],
+            child,
+            SnapshotReader(tmp_path),
+        )
+
+
+_GENUINE_PANDOC_INSTALLED_SDK_CHILD = r"""
+from copy import deepcopy
+import json
+import hashlib
+import os
+import socket
+from pathlib import Path
+import sys
+import subprocess
+import time
+from uuid import uuid4
+
+from contextlib import contextmanager
+
+import infrastructure
+from infrastructure.core.implementation_custody import capture_implementation_custody
+from infrastructure.project.public_acceptance_evidence import write_json
+from infrastructure.reporting.native_format_acceptance_checks import NativeToolUnavailable
+from infrastructure.reporting.native_format_acceptance_contracts import create_private_native_directory
+from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
+from infrastructure.reporting.native_loader_qualification import qualify_native_loader_tool
+from infrastructure.reporting.native_loader_replay import validate_native_loader_data
+from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, NATIVE_OBSERVATION_CEILING_SECONDS
+from infrastructure.reporting.native_source_external_admission import NativeExternalSourceBindings, admit_external_native_source
+from infrastructure.reporting.native_crossref_pair import pair_launcher
+from infrastructure.reporting.native_source_provider_bootstrap import (
+    CROSSREF_FILTER_WORKER_MODULE,
+    format_selected_sdk_native_bootstrap,
+    format_selected_sdk_native_script,
+)
+from infrastructure.reporting.native_tool_producer import native_producer_operation
+from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+
+@contextmanager
+def raises(exception_type):
+    try:
+        yield
+    except exception_type:
+        pass
+    else:
+        raise AssertionError(f"Expected {exception_type.__name__}")
+
+
+original = Path(sys.argv[1])
+commit = sys.argv[2]
+fingerprint = sys.argv[3]
+mirror = Path(sys.argv[4])
+tmp_path = Path(sys.argv[5])
+deadline = float(sys.argv[6])
+assert infrastructure.__file__ is not None
+sdk_root = Path(infrastructure.__file__).resolve(strict=True).parent
+assert sdk_root.is_relative_to(Path(sys.prefix).resolve(strict=True))
+custody = capture_implementation_custody()
+assert custody["binding_kind"] == "installed-distribution"
+runtime = custody["runtime_environment"]
+assert runtime["python_launcher"] == str(Path(sys.executable).absolute())
+assert runtime["python_executable"] == str(Path(sys.executable).resolve(strict=True))
+assert runtime["python_launcher"] != runtime["python_executable"]
+
+# These genuine installed-SDK --help executions prove launcher/import/Code
+# closure only. Their pair declarations are DATA, not native Source authority.
+# No VIRTUAL_ENV or checkout import root is supplied to either entry point.
+entry_directory = tmp_path / "cold-crossref-launcher-controls"
+entry_directory.mkdir()
+implementation_path = entry_directory / "implementation.json"
+implementation_bytes = json.dumps(custody, sort_keys=True).encode()
+implementation_path.write_bytes(implementation_bytes)
+entry_scripts = []
+entry_closures = []
+for ordinal in range(3):
+    leaf = entry_directory / ("slot-" + str(ordinal))
+    leaf.mkdir()
+    closure = leaf / "closure"
+    closure.mkdir()
+    held = closure.stat()
+    bootstrap = format_selected_sdk_native_bootstrap(
+        (sdk_root / "core/bytecode_audit.py").read_bytes(),
+        sdk_root,
+        (),
+        implementation_path,
+        hashlib.sha256(implementation_bytes).hexdigest(),
+        closure,
+        (held.st_dev, held.st_ino),
+        deadline,
+        required_worker_module=CROSSREF_FILTER_WORKER_MODULE,
+    )
+    entry = leaf / "source-crossref-filter"
+    entry.write_bytes(
+        format_selected_sdk_native_script(
+            runtime["python_launcher"],
+            "import sys\nsys.argv=['native-crossref-worker','--help']\n" + bootstrap,
+        )
+    )
+    entry.chmod(0o700)
+    entry_scripts.append(entry)
+    entry_closures.append(closure)
+
+pair_directory = entry_directory / "pair"
+pair_directory.mkdir()
+declaration = {
+    "directory": pair_directory.relative_to(tmp_path).as_posix(),
+    "deadline_monotonic": deadline,
+    "parent_loader": {"environment_injections": {}},
+    "slots": [
+        {
+            "launcher": {
+                "path": entry.relative_to(tmp_path).as_posix(),
+                "sha256": hashlib.sha256(entry.read_bytes()).hexdigest(),
+            }
+        }
+        for entry in entry_scripts[1:]
+    ],
+}
+pair_entry = pair_directory / "source-crossref-pair"
+pair_entry.write_bytes(pair_launcher(tmp_path, declaration, runtime["python_launcher"], "latex"))
+pair_entry.chmod(0o700)
+entry_environment = {
+    "PATH": os.defpath,
+    "LC_ALL": "C",
+    "HOME": str(tmp_path),
+}
+for entry in (entry_scripts[0], pair_entry, pair_entry):
+    completed = subprocess.run(
+        [str(entry), "latex"],
+        cwd=tmp_path,
+        env=entry_environment,
+        capture_output=True,
+        text=True,
+        timeout=min(NATIVE_OBSERVATION_CEILING_SECONDS, deadline - time.monotonic()),
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+for closure in entry_closures:
+    retained = json.loads((closure / "receipt.json").read_text())
+    assert retained["status"] == "pass", retained
+    assert retained["selected_sdk_package_root"] == str(sdk_root)
+    assert retained["worker_outcome"] == {
+        "kind": "raised", "class": "SystemExit", "module": "builtins", "system_exit_code": 0,
+    }
+    assert any(
+        row["source_path"] == str(sdk_root / "_version.py") and row["runs"]
+        for row in retained["executions"]
+    )
+assert [json.loads((pair_directory / ("invocation-" + str(slot) + ".json")).read_text())["slot"]
+        for slot in range(2)] == [0, 1]
+refused = subprocess.run(
+    [str(pair_entry), "latex"],
+    cwd=tmp_path,
+    env=entry_environment,
+    capture_output=True,
+    text=True,
+    timeout=min(NATIVE_OBSERVATION_CEILING_SECONDS, deadline - time.monotonic()),
+    check=False,
+)
+assert refused.returncode != 0
+assert "Source paired filter permits exactly two invocations" in refused.stderr
+
+metadata = mirror.stat()
+run_id = uuid4().hex
+source = admit_external_native_source(
+    NativeExternalSourceBindings(
+        original,
+        commit,
+        fingerprint,
+        mirror,
+        (metadata.st_dev, metadata.st_ino),
+        sdk_root,
+        json.dumps(custody, sort_keys=True).encode(),
+        run_id,
+    ),
+    deadline=deadline,
+)
+environment = {
+    "PATH": os.environ.get("PATH", os.defpath),
+    "LC_ALL": "C",
+    "HOME": str(tmp_path),
+}
+with native_producer_operation(source, run_id=run_id, deadline=deadline):
+    runtime = CitationRuntime(
+        mirror,
+        mirror / "output/readiness/native-loader-terminal-control",
+        env=environment,
+        deadline=deadline,
+        run_id=run_id,
+    )
+    reader = SnapshotReader(mirror)
+    try:
+        observed, qualification_binding, compiled = qualify_native_loader_tool(
+            runtime,
+            "pandoc",
+            ["--version"],
+            "pandoc-terminal-success",
+        )
+        assert len(os.fsencode(compiled.library)) >= 255
+    except BaseException:
+        failure_path = runtime.directory / "pandoc-terminal-success.native-process.json"
+        if failure_path.exists():
+            failure = reader.read(failure_path.relative_to(mirror).as_posix()).json_object()
+            print(
+                json.dumps(
+                    {
+                        key: failure[key]
+                        for key in (
+                            "pid", "original_exit_code", "timed_out", "diagnostics",
+                            "operation_begin", "operation_end", "launch_begin",
+                            "launch_returned", "cleanup",
+                        )
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            print(
+                sorted(
+                    path.relative_to(runtime.directory).as_posix()
+                    for path in runtime.directory.rglob("event-*-maps.bin")
+                ),
+                flush=True,
+            )
+        raise
+    qualification = reader.read(qualification_binding["path"]).json_object()
+    baseline = reader.read(qualification["baseline_tool"]["path"]).json_object()
+    observed = reader.read(qualification["observed_tool"]["path"]).json_object()
+    assert baseline["original_exit_code"] == observed["original_exit_code"] == 0
+    baseline_stdout = reader.read(baseline["raw_stdout"]["path"]).content
+    observed_stdout = reader.read(observed["raw_stdout"]["path"]).content
+    assert baseline_stdout == observed_stdout
+    assert baseline_stdout.startswith(b"pandoc ")
+    native = reader.read(observed["native_process_artifact"]["path"]).json_object()
+    lifecycle = reader.read(native["loader_lifecycle"]["path"]).json_object()
+    assert native["accepted"] is True and native["diagnostics"] == []
+    assert native["cleanup"]["guardian_finished"] is True
+    assert native["cleanup"]["root_reaped"] is True
+    assert lifecycle["complete_callbacks"] is True and lifecycle["channel_eof"] is True
+    assert lifecycle["events"][-1]["kind"] == "done"
+    residents = lifecycle["resident_terminal"]["resident_object_ids"]
+    assert len(lifecycle["opened"]) == len(lifecycle["closed"]) + len(residents)
+    assert set(lifecycle["opened"]) == set(lifecycle["closed"]) | set(residents)
+    assert set(lifecycle["closed"]).isdisjoint(residents)
+    kernel_opened = {
+        event["id"]
+        for event in lifecycle["events"]
+        if event["kind"] == "open" and event["body"] is None
+    }
+    assert set(residents) == kernel_opened
+    assert lifecycle["resident_terminal"]["original_exit_code"] == 0
+    assert (
+        validate_native_loader_data(
+            native,
+            reader,
+            original_deadline=deadline,
+            original_completion=native["operation_end"]["monotonic"],
+        )
+        == lifecycle
+    )
+    for mutation in ("missing-done", "post-done-frame", "library-descriptor", "library-inode"):
+        changed = deepcopy(lifecycle)
+        if mutation == "missing-done":
+            changed["events"].pop()
+        elif mutation == "post-done-frame":
+            post_done = deepcopy(changed["events"][-1])
+            post_done["sequence"] = len(changed["events"]) + 1
+            changed["events"].append(post_done)
+        elif mutation == "library-descriptor":
+            changed["library_descriptor"]["descriptor"] += 1
+        else:
+            changed["library_descriptor"]["identity"]["inode"] += 1
+        binding = write_json(mirror, runtime.directory / (mutation + ".lifecycle.json"), changed)
+        with raises(ValueError):
+            validate_native_loader_data(
+                {**native, "loader_lifecycle": binding},
+                reader,
+                original_deadline=deadline,
+                original_completion=native["operation_end"]["monotonic"],
+            )
+
+    purpose = "pandoc-terminal-nonzero"
+    leaf = compiled.directory / ("callbacks-" + purpose)
+    create_private_native_directory(mirror, leaf)
+    observer = NativeLoaderObservation(
+        compiled,
+        leaf,
+        purpose=purpose,
+        deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
+    )
+    with raises(NativeToolUnavailable):
+        runtime.tool(
+            "pandoc",
+            ["--definitely-not-a-pandoc-option"],
+            purpose,
+            loader=observer,
+        )
+    failed = reader.read(runtime.tools[-1]["path"]).json_object()
+    native = reader.read(failed["native_process_artifact"]["path"]).json_object()
+    assert failed["original_exit_code"] != 0
+    assert observer.done is True and observer.eof is True
+    assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
+
+    purpose = "pandoc-terminal-wrong-peer"
+    leaf = compiled.directory / ("callbacks-" + purpose)
+    create_private_native_directory(mirror, leaf)
+    observer = NativeLoaderObservation(
+        compiled,
+        leaf,
+        purpose=purpose,
+        deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
+    )
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as intruder:
+        # This actual owner-PID peer is not the original consuming child.
+        # Refusal must release its child, not wait for the child's ACK deadline.
+        intruder.connect(observer.address)
+        with raises(NativeToolUnavailable):
+            runtime.tool("pandoc", ["--version"], purpose, loader=observer)
+    failed = reader.read(runtime.tools[-1]["path"]).json_object()
+    native = reader.read(failed["native_process_artifact"]["path"]).json_object()
+    assert native["pid"] != os.getpid() and native["original_exit_code"] != 0
+    assert native["accepted"] is False and native["timed_out"] is False
+    assert native["cleanup"]["guardian_finished"] is True
+    assert native["cleanup"]["root_reaped"] is True
+    assert native["cleanup"]["final_token_sweep_matched_pids"] == []
+    assert observer.peer is None and observer.events == []
+
+    purpose = "python-terminal-premature-eof"
+    leaf = compiled.directory / ("callbacks-" + purpose)
+    create_private_native_directory(mirror, leaf)
+    observer = NativeLoaderObservation(
+        compiled,
+        leaf,
+        purpose=purpose,
+        deadline=min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS),
+    )
+    with raises(NativeToolUnavailable):
+        runtime.tool(
+            sys.executable,
+            ["-I", "-c", "import os; os._exit(0)"],
+            purpose,
+            loader=observer,
+        )
+    failed = reader.read(runtime.tools[-1]["path"]).json_object()
+    native = reader.read(failed["native_process_artifact"]["path"]).json_object()
+    assert failed["original_exit_code"] == 0
+    assert observer.done is False
+    assert native["accepted"] is False and native["cleanup"]["guardian_finished"] is True
+
+    retained = len(runtime.tools)
+    with raises(TimeoutError):
+        runtime.tool(
+            "pandoc",
+            ["--version"],
+            "pandoc-terminal-expired",
+            phase_deadline=time.monotonic() - 1,
+        )
+    assert len(runtime.tools) == retained
+    assert not (runtime.directory / "pandoc-terminal-expired.native-process.json").exists()
+"""
+
+
+@pytest.mark.timeout(1800)
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="genuine glibc audit callbacks require Linux")
+def test_genuine_pandoc_terminal_success_and_fail_closed_controls(
+    complete_reference: tuple[Path, str, str], tmp_path: Path
+) -> None:
+    """Exercise genuine native custody and cold direct/paired SDK entry points."""
+    if shutil.which("pandoc") is None or shutil.which("cc") is None:
+        pytest.skip("genuine Pandoc and the Source-selected C compiler are required")
+    original, commit, fingerprint = complete_reference
+    deadline = time.monotonic() + 1200
+    # Real stage/compiler paths exceeded glibc's 254-byte audit-name limit,
+    # while the former shallow --version fixture never exercised that boundary.
+    nested = tmp_path / ("render-" + "r" * 80) / ("stage-" + "s" * 80)
+    nested.mkdir(parents=True)
+    mirror = _clone_complete_reference(complete_reference, nested / "mirror", deadline=deadline)
+    environment = dict(os.environ, UV_OFFLINE="1", UV_PYTHON_DOWNLOADS="never")
+    runtime_requirements = tmp_path / "runtime-requirements.txt"
+    artifacts = tmp_path / "artifacts"
+    built = subprocess.run(
+        [
+            "uv",
+            "build",
+            "--offline",
+            "--no-config",
+            "--no-build-isolation",
+            "--python",
+            sys.executable,
+            "--wheel",
+            "--no-create-gitignore",
+            "--out-dir",
+            str(artifacts),
+        ],
+        cwd=original,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=90,
+        check=False,
+    )
+    assert built.returncode == 0, built.stdout + built.stderr
+    wheels = list(artifacts.glob("*.whl"))
+    assert len(wheels) == 1
+    installed = nested / "installed SDK's runtime"
+    created = subprocess.run(
+        [
+            "uv",
+            "venv",
+            "--no-project",
+            "--no-python-downloads",
+            "--python",
+            sys.executable,
+            str(installed),
+        ],
+        cwd=tmp_path,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=15,
+        check=False,
+    )
+    assert created.returncode == 0, created.stdout + created.stderr
+    selected_python = installed / "bin/python"
+    assert len(os.fsencode(selected_python)) > 255 and " " in str(selected_python)
+    exported = subprocess.run(
+        [
+            "uv",
+            "export",
+            "--offline",
+            "--locked",
+            "--no-default-groups",
+            "--group",
+            "rendering",
+            "--no-emit-project",
+            "--no-emit-local",
+            "--no-header",
+            "--no-annotate",
+            "--output-file",
+            str(runtime_requirements),
+        ],
+        cwd=original,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    assert exported.returncode == 0, exported.stdout + exported.stderr
+    normalize_locked_dependency_export(
+        original, runtime_requirements, minor=f"{sys.version_info.major}.{sys.version_info.minor}"
+    )
+    dependencies = subprocess.run(
+        [
+            "uv",
+            "pip",
+            "install",
+            "--offline",
+            "--no-config",
+            "--no-build-isolation",
+            "--no-deps",
+            "--require-hashes",
+            "--python",
+            str(selected_python),
+            "--requirements",
+            str(runtime_requirements),
+        ],
+        cwd=tmp_path,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=120,
+        check=False,
+    )
+    assert dependencies.returncode == 0, dependencies.stdout + dependencies.stderr
+    installed_result = subprocess.run(
+        [
+            "uv",
+            "pip",
+            "install",
+            "--offline",
+            "--no-config",
+            "--no-build",
+            "--no-deps",
+            "--python",
+            str(selected_python),
+            str(wheels[0]),
+        ],
+        cwd=tmp_path,
+        env=environment,
+        text=True,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+    assert installed_result.returncode == 0, installed_result.stdout + installed_result.stderr
+    child = tmp_path / "genuine-pandoc-installed-sdk.py"
+    child.write_text(_GENUINE_PANDOC_INSTALLED_SDK_CHILD, encoding="utf-8")
+    child_environment = {
+        "PATH": os.environ.get("PATH", os.defpath),
+        "LC_ALL": "C",
+        "HOME": str(tmp_path),
+    }
+    result = subprocess.run(
+        [
+            str(selected_python),
+            "-I",
+            str(child),
+            str(original),
+            commit,
+            fingerprint,
+            str(mirror),
+            str(tmp_path),
+            str(deadline),
+        ],
+        cwd=tmp_path,
+        env=child_environment,
+        text=True,
+        capture_output=True,
+        timeout=max(1.0, deadline - time.monotonic()),
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

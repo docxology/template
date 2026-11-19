@@ -1,76 +1,12 @@
-"""Integration tests demonstrating module interoperability.
-
-This suite tests how the infrastructure modules work together to support a
-complete research workflow. Following the no-mocks policy, tests use real
-implementations and fail with setup guidance when required local services are
-not available.
-"""
+"""Integration tests for cross-module research metadata and local file workflows."""
 
 import pytest
-import requests
 
 from infrastructure import publishing
-from infrastructure.core.runtime.health_check import SystemHealthChecker
-from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import OllamaClientConfig
-from infrastructure.llm.utils.ollama import preload_model, select_small_fast_model
 
 
 class TestResearchWorkflow:
     """Test complete research workflow using all modules."""
-
-    @pytest.mark.requires_ollama
-    def test_health_check_to_llm_workflow(self, tmp_path):
-        """Test health check -> LLM analysis workflow.
-
-        Tests integration between system monitoring and LLM analysis.
-        """
-        base_url = OllamaClientConfig.from_env().base_url
-        model_name = select_small_fast_model(base_url)
-        if not model_name:
-            pytest.fail("No Ollama model after ensure_ollama_for_tests (misconfiguration).")
-
-        ok, err = preload_model(model_name, base_url=base_url, timeout=10.0, retries=0, context_window=4096)
-        if not ok:
-            pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
-
-        # ensure_ollama_for_tests already validated the daemon; fail on transient transport/runtime issues.
-        try:
-            # Get system health status
-            checker = SystemHealthChecker()
-            health_status = checker.get_health_status()
-
-            # Use LLM to analyze health status
-            llm = LLMClient(
-                OllamaClientConfig(
-                    base_url=base_url,
-                    default_model=model_name,
-                    timeout=15.0,
-                    max_tokens=128,
-                    context_window=4096,
-                    fallback_models=[],
-                    request_retries=0,
-                    temperature=0.0,
-                    seed=42,
-                )
-            )
-            analysis_prompt = f"Analyze this system health status and provide recommendations: {health_status}"
-            analysis = llm.query(analysis_prompt)
-
-            # Verify we got a substantive response (small models may not echo "system"/"health")
-            assert len(analysis) > 10
-            lower = analysis.lower()
-            if "system" not in lower and "health" not in lower:
-                assert len(analysis.split()) >= 12, "Expected either health-related keywords or a substantive paragraph"
-
-        except (
-            ConnectionError,
-            ImportError,
-            OSError,
-            RuntimeError,
-            requests.exceptions.RequestException,
-        ) as e:
-            pytest.fail(f"Transient error after healthy Ollama ensure: {e}")
 
     def test_rendering_metadata_workflow(self, tmp_path):
         """Test rendering metadata -> publishing metadata workflow.

@@ -23,6 +23,7 @@ from infrastructure.rendering.manuscript_composition import (
     _digest_rows,
 )
 from infrastructure.rendering.manuscript_hydration_replay import (
+    SharedHydrationWriter,
     reconstruct_shared_hydration,
     require_shared_hydration,
 )
@@ -39,7 +40,11 @@ from infrastructure.reporting.native_code_metadata_domains import (
     _registered_metadata_origin,
     validate_metadata_observation,
 )
-from infrastructure.reporting.native_hydration_reconstruction import _pdf_body, _combined_body
+from infrastructure.reporting.native_hydration_reconstruction import (
+    _pdf_body,
+    _combined_body,
+    source_manuscript_hydration_writer,
+)
 from infrastructure.reporting.native_selected_manuscript_transforms import reconstruct_transmission_bookend
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import ArtifactSnapshot, SnapshotReader
@@ -177,6 +182,7 @@ def code_contextual_semantics(
 
     variable_binding = retain(variables, _json(canonical_variables))
     retain(observation, _json(canonical_capture))
+    writer, writer_binding = source_manuscript_hydration_writer(source, analysis["scope"], reader)
     projected_rows, bodies = [], []
     for row in hydration["ordered_inputs"]:
         remaining(deadline)
@@ -197,10 +203,12 @@ def code_contextual_semantics(
         if original.content != source.reference.read(original.relative):
             raise ValueError("Code contextual projection differs from complete authored Source bytes")
         if row["transformation"] == "shared-uppercase-token-hydration":
-            actual = require_shared_hydration(original.content, decoded, consumed.content)
+            if writer is None or row["writer"] != writer_binding:
+                raise ValueError("Code contextual projection lost its actual Source writer selection")
+            actual = require_shared_hydration(original.content, decoded, consumed.content, writer=writer)
             if actual.data() != row["hydration"]:
                 raise ValueError("Code contextual projection lost its complete real per-run occurrence ledger")
-            canonical_hydration = reconstruct_shared_hydration(original.content, canonical_variables)
+            canonical_hydration = reconstruct_shared_hydration(original.content, canonical_variables, writer=writer)
             projected_rows.append(
                 {
                     **row,
@@ -210,6 +218,17 @@ def code_contextual_semantics(
             )
             bodies.append(canonical_hydration.output)
         elif row["transformation"] == "exact-authored-source-body" and original.content == consumed.content:
+            projected_rows.append(dict(row))
+            bodies.append(consumed.content)
+        elif row["transformation"] == "Source-normalized-authored-body":
+            if (
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
+                or row["writer"] != writer_binding
+                or require_shared_hydration(original.content, {}, consumed.content, writer=writer).data()
+                != row["hydration"]
+            ):
+                raise ValueError("Code contextual normalized copy lost its actual Source writer binding")
             projected_rows.append(dict(row))
             bodies.append(consumed.content)
         else:

@@ -54,28 +54,6 @@ def test_run_autoresearch_loop_writes_artifacts_and_valid_readiness(
     assert readiness["summary"]["errors"] == 0
 
 
-def test_evidence_registry_report_is_compact_by_default(
-    project_root: Path,
-    autoresearch_loop_result: AutoResearchLoopResult,
-) -> None:
-    assert autoresearch_loop_result.readiness_valid is True
-    report_path = project_root / "output" / "reports" / "evidence_registry.json"
-    full_debug_path = project_root / "output" / "reports" / "evidence_registry_full.json"
-    payload = json.loads(report_path.read_text(encoding="utf-8"))
-    reports_size = sum(
-        path.stat().st_size for path in (project_root / "output" / "reports").rglob("*") if path.is_file()
-    )
-
-    assert payload["schema"] == "template-evidence-registry-report-v1"
-    assert payload["fact_count"] > len(payload["sample_facts"])
-    assert len(payload["sample_facts"]) <= 200
-    assert payload["omitted_fact_count"] == payload["fact_count"] - len(payload["sample_facts"])
-    assert report_path.stat().st_size < 1024 * 1024
-    assert reports_size < 10 * 1024 * 1024
-    assert full_debug_path.exists() is False
-    assert "output/reports/evidence_registry_full.json" not in autoresearch_loop_result.output_paths
-
-
 def test_loop_payload_contains_claims_metrics_and_output_paths(
     project_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,
@@ -424,7 +402,8 @@ def test_build_claims_only_supports_existing_files(project_root: Path, repo_root
 
 
 @pytest.mark.slow
-def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path) -> None:
+@pytest.mark.parametrize("inherited", [False, True], ids=["clean", "retained-publication"])
+def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path, inherited: bool) -> None:
     project = tmp_path / "template_autoresearch_project"
     source = Path(__file__).resolve().parents[2]
     shutil.copytree(
@@ -433,6 +412,21 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path
         ignore=shutil.ignore_patterns("output", ".pytest_cache", "__pycache__"),
     )
 
+    retained = (
+        {
+            "output/manuscript/retained.txt": b"retained manuscript evidence\n",
+            "output/pdf/retained.pdf": b"retained PDF bytes\n",
+            "output/web/retained.html": b"<p>retained web evidence</p>\n",
+            "output/release/retained.txt": b"retained release receipt\n",
+            "output/reports/retained.md": b"retained report\n",
+        }
+        if inherited
+        else {}
+    )
+    for relative, content in retained.items():
+        path = project / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
     result = _run_loop_without_coverage(project, repo_root)
 
     manifest_path = project / "output" / "reports" / "artifact_manifest.json"
@@ -457,6 +451,20 @@ def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path, repo_root: Path
     assert manifest_path.exists()
     assert manifest.inventory_mode == STABLE_LOCAL_OUTPUT_INVENTORY_MODE
     assert {entry.path for entry in manifest.entries} == expected_paths
+    formerly_omitted = {
+        "output/data/autoresearch_loop.json",
+        "output/data/autoresearch_review_packet.json",
+        "output/data/manuscript_variables.json",
+        "output/figures/autoresearch_stage_matrix.png",
+        "output/figures/figure_registry.json",
+        "output/reports/autoresearch_loop.json",
+        "output/reports/autoresearch_loop.md",
+        "output/reports/autoresearch_review_packet.md",
+        "output/reports/autoresearch_summary.md",
+    }
+    assert formerly_omitted | set(retained) <= {entry.path for entry in manifest.entries}
+    for relative, content in retained.items():
+        assert (project / relative).read_bytes() == content
     assert not validate_artifact_manifest(
         manifest,
         project_dir=project,
@@ -490,10 +498,181 @@ def test_phase_ledger_records_manifest_settlement_without_self_approval(
     )
     assert ledger["schema"] == "template-autoresearch-phase-ledger-v1"
     assert ledger["project_name"] == "template_autoresearch_project"
-    assert ledger["settlement_pass_count"] >= 2
+    assert ledger["settlement_pass_count"] == 2
+    assert ledger["declared_artifact_count"] == len(set(ledger["declared_paths"]))
     assert ledger["publication_approved"] is False
     phase_names = [row["phase"] for row in ledger["phases"]]
     assert phase_names[:4] == ["intrinsic_readiness", "core_artifacts", "evidence_registry", "ml_task"]
     assert "extrinsic_readiness" in phase_names
     assert "final_schema_manifest" in phase_names
     assert all(row["artifact_group"] for row in ledger["phases"])
+
+
+@pytest.mark.parametrize(
+    "relative,change",
+    [
+        *[
+            (path, "same-length")
+            for path in (
+                "output/data/autoresearch_loop.json",
+                "output/data/autoresearch_review_packet.json",
+                "output/data/manuscript_variables.json",
+                "output/figures/autoresearch_stage_matrix.png",
+                "output/figures/figure_registry.json",
+                "output/reports/autoresearch_loop.json",
+                "output/reports/autoresearch_loop.md",
+                "output/reports/autoresearch_review_packet.md",
+                "output/reports/autoresearch_summary.md",
+                "output/pdf/template_autoresearch_project_combined.pdf",
+                "output/web/index.html",
+                "output/release/upload_receipts.json",
+            )
+        ],
+        ("output/data/autoresearch_loop.json", "size"),
+        ("output/data/autoresearch_loop.json", "missing"),
+        ("output/data/late.txt", "newfile"),
+        ("", "mode"),
+    ],
+)
+def test_settled_primary_rejects_late_drift(
+    tmp_path: Path,
+    project_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+    relative: str,
+    change: str,
+) -> None:
+    assert autoresearch_loop_result.readiness_valid
+    project = tmp_path / "project"
+    shutil.copytree(project_root / "output", project / "output")
+    manifest = artifact_manifest_from_payload(
+        json.loads((project / "output/reports/artifact_manifest.json").read_text())
+    )
+    expected_mode = manifest.inventory_mode
+    assert not validate_artifact_manifest(manifest, project_dir=project, expected_inventory_mode=expected_mode).issues
+    path = project / relative
+    if change == "mode":
+        from infrastructure.core.pipeline.artifacts import STABLE_OUTPUT_INVENTORY_MODE
+
+        expected_mode = (
+            STABLE_OUTPUT_INVENTORY_MODE
+            if manifest.inventory_mode == STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+            else STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+        )
+    elif change == "newfile":
+        path.write_text("late stable output\n")
+    else:
+        before = path.read_bytes()
+        assert before
+        if change == "missing":
+            path.unlink()
+        elif change == "size":
+            path.write_bytes(before + b"\n")
+        else:
+            path.write_bytes(bytes([before[0] ^ 1]) + before[1:])
+    assert validate_artifact_manifest(manifest, project_dir=project, expected_inventory_mode=expected_mode).issues
+
+
+def test_failed_terminal_validation_revokes_reusable_readiness(
+    tmp_path: Path,
+    project_root: Path,
+    repo_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan
+    from template_autoresearch_project.loop.settlement import invalidate_settlement, terminal_readiness
+    from template_autoresearch_project.manuscript.artifact_loader import load_loop_artifacts
+
+    assert autoresearch_loop_result.readiness_valid
+    project = tmp_path / "project"
+    shutil.copytree(project_root, project, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    plan = build_autoresearch_plan(repo_root, project.name, projects_dir=str(project.parent))
+    assert terminal_readiness(plan, project).valid
+    (project / "output/data/late.txt").write_text("late unattested stable output\n")
+    failed = terminal_readiness(plan, project)
+    assert not failed.valid
+    invalidate_settlement(project, plan, failed)
+    assert json.loads((project / "output/reports/autoresearch_readiness.json").read_text())["valid"] is False
+    with pytest.raises(ValueError, match="valid final readiness"):
+        load_loop_artifacts(project, require_valid=True)
+
+
+@pytest.mark.parametrize("changed", ["scientific-input", "scientific-result", "baseline-inventory", "source-ledger"])
+def test_standalone_hydration_cannot_recertify_changed_science(
+    tmp_path: Path,
+    project_root: Path,
+    repo_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+    changed: str,
+) -> None:
+    import yaml
+
+    from template_autoresearch_project.loop.settlement import settle_standalone_hydration
+    from template_autoresearch_project.manuscript.artifact_loader import load_loop_artifacts
+
+    assert autoresearch_loop_result.readiness_valid
+    project = tmp_path / project_root.name
+    shutil.copytree(project_root, project, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    result = project / "output/data/ml_task_results.json"
+    inventory = project / "output/data/autoresearch_supply_chain_inventory.json"
+    if changed == "scientific-input":
+        path = project / "mnist_task.yaml"
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+        payload["task"]["seed"] += 1
+        path.write_text(yaml.safe_dump(payload), encoding="utf-8")
+    else:
+        path = {
+            "scientific-result": result,
+            "baseline-inventory": inventory,
+            "source-ledger": project / "manuscript/source_ledger.yaml",
+        }[changed]
+        path.write_bytes(path.read_bytes() + b"\n")
+    retained_result = result.read_bytes()
+    retained_inventory = inventory.read_bytes()
+    with pytest.raises(ValueError):
+        settle_standalone_hydration(project, repo_root)
+    assert result.read_bytes() == retained_result
+    assert inventory.read_bytes() == retained_inventory
+    assert (
+        json.loads((project / "output/data/autoresearch_loop.json").read_text())["metrics"]["readiness_valid"] is False
+    )
+    with pytest.raises(ValueError):
+        load_loop_artifacts(project, require_valid=True)
+
+
+def test_standalone_catalogs_retain_registry_and_remove_owned_stale_members(
+    tmp_path: Path,
+    project_root: Path,
+    repo_root: Path,
+    autoresearch_loop_result: AutoResearchLoopResult,
+) -> None:
+    from template_autoresearch_project.loop.settlement import settle_standalone_hydration
+
+    assert autoresearch_loop_result.readiness_valid
+    project = tmp_path / project_root.name
+    shutil.copytree(project_root, project, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+    source = project / "manuscript/11_owned_extra.md"
+    source.write_text(
+        "# Additional bounded evidence\n\nExisting scientific results remain unchanged.\n", encoding="utf-8"
+    )
+    rendered = project / "output/manuscript" / source.name
+    settle_standalone_hydration(project, repo_root)
+    assert rendered.is_file()
+    ledger_path = project / "output/data/autoresearch_phase_ledger.json"
+    previous_count = json.loads(ledger_path.read_text())["declared_artifact_count"]
+    source.unlink()
+    settle_standalone_hydration(project, repo_root)
+    assert not rendered.exists()
+    relative = rendered.relative_to(project).as_posix()
+    for name in (
+        "output/data/autoresearch_loop.json",
+        "output/reports/autoresearch_loop.json",
+        "output/data/autoresearch_review_packet.json",
+    ):
+        assert relative not in json.loads((project / name).read_text())["output_paths"]
+    ledger = json.loads(ledger_path.read_text())
+    assert relative not in ledger["declared_paths"]
+    assert ledger["declared_artifact_count"] == previous_count - 1
+    research = json.loads((project / "output/data/research_object_manifest.json").read_text())
+    assert relative not in {row["path"] for row in research["artifacts"]}
+    schemas = json.loads((project / "output/data/autoresearch_schema_manifest.json").read_text())
+    assert "output/reports/evidence_registry.json" in {row["path"] for row in schemas["schema_artifacts"]}

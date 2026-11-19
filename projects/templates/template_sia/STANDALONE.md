@@ -55,30 +55,58 @@ rsync -a \
   live-execution settings before claiming a new task result.
 - Regenerate run summaries, reports, figures, and manuscript variables.
 
+## Standalone environment
+
+From an independent project root, use Python 3.14 or 3.15 and a genuine
+`research-project-template==5.2.0` wheel matching `pyproject.toml`. Reuse the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface);
+the checkout-only `../../..` source mapping is not a standalone SDK provider.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+```
+
+This explicit wheel installation does not consult `tool.uv.sources`.
+Initial dependencies require package access or a prepared cache. A candidate
+version or local installation is not evidence of accepted/public provider
+publication. Do not assume the candidate SDK or exemplar is available on PyPI.
+
 ## Validation Commands
 
-Run from the template repository root after copying into `projects/working/`:
+After [standalone preparation](#standalone-environment), start with fixture
+replay from the project root:
 
 ```bash
-uv run pytest projects/working/my_sia/tests/ \
-  --cov=projects/working/my_sia/src --cov-fail-under=90
-uv run python projects/working/my_sia/scripts/run_sia_loop.py
-uv run python projects/working/my_sia/scripts/z_generate_manuscript_variables.py
+.venv/bin/python scripts/run_sia_loop.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
 
-For the public exemplar:
+The replay writes `output/reports/sia_loop_report.md` and prints its actual
+report/summary paths and generation count. These are expected local outputs,
+not observed success or measured self-improvement.
+
+The complete own suite is a separate selection and retains the coverage gate:
 
 ```bash
-uv run pytest projects/templates/template_sia/tests/ \
-  --cov=projects/templates/template_sia/src --cov-fail-under=90
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
 ```
+
+Complete selected tests require the genuine prepared Docker daemon/image
+described under [Optional hardening](README.md#optional-hardening). The small
+fixture demonstration does not discharge those native/provider obligations.
+
+Replay/reference diagnostics are not measured improvement. Actual local-model
+proposals are separate explicitly prepared/authorized work; missing Docker or
+native capability cannot be converted into complete acceptance through skips.
 
 ## Intentional Non-Standalone Dependencies
 
-The fixture-facing project modules are local, but the loop implementation and
-some tests intentionally call `infrastructure.sia` and shared rendering helpers.
-Treat the exemplar as forkable inside a full template checkout unless those
-adapters are vendored or replaced.
+This exemplar declares the genuine installed SDK for `infrastructure.sia` and
+shared supervision/rendering. Use the matching provider rather than vendoring
+adapters or borrowing an ancestor checkout. Fixture-only library behavior is
+narrower than the complete development/native/provider obligations.
 
 ## What Not To Claim
 

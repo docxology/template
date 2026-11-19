@@ -15,6 +15,10 @@ pytest selection/outcome receipts for an exact disjoint union. JUnit is diagnost
 Routine automatic jobs contain at most twelve complete modules, with dedicated
 jobs for selected process measurement, run-matrix and Root acceptance modules. At most sixteen
 routine jobs run concurrently; the 540-second job-body clock is unchanged.
+Ordinary functional infrastructure shares one Source/run/attempt-bound Linux
+preparation artifact after the cheap gates; producer and consumer refusals remain
+blocking. Protocol and budget details belong to the
+[canonical CI guide](../docs/development/ci.md).
 Changed-contract lanes also run eight at a time (`max-parallel: 8`): over the 27
 measured modules the longest-path schedule is 2626s at 3 lanes, 1337s at 6, and
 1031s at 8, where the slowest module sets the floor. Native document contract
@@ -32,6 +36,13 @@ Full contract jobs explicitly clear marker and keyword filters, refuse any
 deselection, and use the established 120-second infrastructure pytest default;
 explicit family/module markers and original operation deadlines retain authority.
 The CLI setting does not alter timeout defaults in nested producer environments.
+The installed-SDK native-loader correctness module uses a converter-prepared
+full contract lane, not a 540-second smoke shard. Its complete module selection,
+1,200-second original operation and 1,800-second pytest ceiling remain unchanged.
+Its cold SDK dependencies come from the hash-required Root lock and are warmed
+before the offline body; the same preparation precedes Linux Root originals.
+The glibc family remains mandatory on both Linux Python minors, with explicit
+compiler/build prerequisites, rather than becoming a passing Darwin skip.
 `platform-native-preflight.yml` adds an incomplete cold installed diagnostic;
 it prepares only the selected exemplar and its declared local providers, then
 uses the production Original/Current admissions without a duplicate all-project

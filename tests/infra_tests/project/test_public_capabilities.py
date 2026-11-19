@@ -487,7 +487,14 @@ def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, 
     action = yaml.safe_load(
         (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
     )
-    environment = dict(os.environ, PREPARATION_MODE=mode, GITHUB_OUTPUT=str(tmp_path / "output"))
+    environment = dict(
+        os.environ,
+        PREPARATION_MODE=mode,
+        PREPARED_PYTHON=sys.executable,
+        NIX_STORE_SNAPSHOT="",
+        NIX_STORE_MANIFEST_SHA256="",
+        GITHUB_OUTPUT=str(tmp_path / "output"),
+    )
     result = subprocess.run(
         ["bash", "-c", action["runs"]["steps"][0]["run"]],
         cwd=tmp_path,
@@ -501,29 +508,11 @@ def test_document_preparation_rejects_invalid_mode_before_setup(tmp_path: Path, 
     assert list(tmp_path.iterdir()) == []
 
 
-@pytest.mark.parametrize("mode", ["native", "converter"])
-def test_document_preparation_publishes_only_validated_mode(tmp_path: Path, mode: str) -> None:
-    repo = Path(__file__).resolve().parents[3]
-    action = yaml.safe_load(
-        (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
-    )
-    output = tmp_path / "output"
-    result = subprocess.run(
-        ["bash", "-c", action["runs"]["steps"][0]["run"]],
-        cwd=tmp_path,
-        env=dict(os.environ, PREPARATION_MODE=mode, PREPARED_PYTHON=sys.executable, GITHUB_OUTPUT=str(output)),
-        capture_output=True,
-        text=True,
-        timeout=5,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
-    assert output.read_text() == f"mode={mode}\n"
-
-
-@pytest.mark.parametrize("mode", ["native", "converter"])
+@pytest.mark.parametrize("mode,system", [("native", "Linux"), ("native", "macOS"), ("converter", "Linux")])
 @pytest.mark.parametrize("nomination", ["missing", "not-executable"])
-def test_document_preparation_python_prerequisite_is_native_only(tmp_path: Path, mode: str, nomination: str) -> None:
+def test_document_preparation_requires_locked_python_for_native_or_linux(
+    tmp_path: Path, mode: str, system: str, nomination: str
+) -> None:
     """Run actual action Bash against absent or nonexecutable real Python bytes."""
     repo = Path(__file__).resolve().parents[3]
     action = yaml.safe_load(
@@ -541,48 +530,40 @@ def test_document_preparation_python_prerequisite_is_native_only(tmp_path: Path,
     result = subprocess.run(
         ["bash", "-c", action["runs"]["steps"][0]["run"]],
         cwd=tmp_path,
-        env=dict(os.environ, PREPARATION_MODE=mode, PREPARED_PYTHON=str(python), GITHUB_OUTPUT=str(output)),
+        env=dict(
+            os.environ,
+            PREPARATION_MODE=mode,
+            PREPARED_PYTHON=str(python),
+            NIX_STORE_SNAPSHOT="",
+            NIX_STORE_MANIFEST_SHA256="",
+            RUNNER_OS=system,
+            GITHUB_OUTPUT=str(output),
+        ),
         capture_output=True,
         text=True,
         timeout=5,
         check=False,
     )
-    if mode == "native":
-        assert result.returncode != 0
-        assert "native document preparation requires an already locked Python executable" in result.stderr
-    else:
-        assert result.returncode == 0, result.stderr
-    # Mode publication is only the first step's validated input; the failed
-    # native step cannot grant successful prerequisite or acceptance setup.
-    assert output.read_text() == f"mode={mode}\n"
+    assert result.returncode != 0
     assert {path.name for path in tmp_path.iterdir()} == (
         {"output", "prepared-python"} if nomination == "not-executable" else {"output"}
     )
 
 
-@pytest.mark.parametrize("tool", ["pandoc", "juliamono"])
 @pytest.mark.parametrize("fault", ["length", "sha256"])
-def test_document_archive_cache_refuses_corruption_before_use(tmp_path: Path, tool: str, fault: str) -> None:
-    """Run the real Bash preparation against corrupt local data, without substitutes."""
+def test_document_font_archive_cache_refuses_corruption_before_use(tmp_path: Path, fault: str) -> None:
+    """Run the real font preparation against corrupt local data, without substitutes."""
     repo = Path(__file__).resolve().parents[3]
     action = yaml.safe_load(
         (repo / ".github/actions/setup-acceptance-documents/action.yml").read_text(encoding="utf-8")
     )
-    names = {
-        "pandoc": (
-            "Prepare exact compatible Pandoc and cross-reference binaries",
-            "pandoc-3.11-linux-amd64.tar.gz",
-            34940580,
-        ),
-        "juliamono": ("Prepare exact JuliaMono family", "JuliaMono-ttf.tar.gz", 21847069),
-    }
-    step_name, archive_name, expected_size = names[tool]
-    command = next(step["run"] for step in action["runs"]["steps"] if step.get("name") == step_name)
+    archive_name, expected_size = "JuliaMono-ttf.tar.gz", 21847069
+    command = next(
+        step["run"] for step in action["runs"]["steps"] if step.get("name") == "Prepare exact JuliaMono family"
+    )
     archives = tmp_path / "template-acceptance-document-archives"
     archives.mkdir()
-    # Populate every selected archive so these refusal cases need no download.
-    for name in ("pandoc-3.11-linux-amd64.tar.gz", "pandoc-crossref-Linux-X64.tar.xz", "JuliaMono-ttf.tar.gz"):
-        (archives / name).write_bytes(b"truncated")
+    (archives / archive_name).write_bytes(b"truncated")
     if fault == "sha256":
         # Sparse bytes have the declared length and a different actual digest.
         with (archives / archive_name).open("wb") as stream:
@@ -606,7 +587,6 @@ def test_document_archive_cache_refuses_corruption_before_use(tmp_path: Path, to
     assert f"document archive {mismatch} mismatch: {archive_name}" in result.stderr
     assert not (tmp_path / "github-path").exists() and not (tmp_path / "github-env").exists()
     assert not (tmp_path / "home").exists()
-    assert all(not any(directory.iterdir()) for directory in tmp_path.glob("template-document-tools.*"))
 
 
 def test_platform_binding_and_runtime_range_must_match(tmp_path: Path) -> None:

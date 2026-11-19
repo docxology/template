@@ -4,12 +4,12 @@ The intended 0.2.0 package pins `research-project-template` in `pyproject.toml`
 for its shared validator and platform adapters, and
 `template-literature-meta-analysis==0.2.0` for its canonical literature,
 bibliometric, knowledge-graph and reproducibility engines. The checkout's
-`tool.uv.sources` entries resolve these dependencies to the public monorepo; an
-independent source clone must remove that local resolver and install an explicitly
-built platform wheel matching `pyproject.toml` and canonical meta-analysis 0.2.0
-wheel alongside the exemplar wheel. These are unreleased
-candidate packages, so do not assume they exist on PyPI. Core validator imports
-must work from the installed distributions outside the checkout.
+`tool.uv.sources` entries resolve these dependencies to the public monorepo.
+For an independent source clone, the explicit wheel recipe below installs the
+matching SDK and Meta provider without consulting or editing that checkout-only
+resolver. These are unreleased candidate packages; do not assume they exist on
+PyPI. Installed-wheel acceptance separately exercises the actual distributions
+outside the checkout; local preparation alone is not that acceptance.
 
 The engine installs only `template_literature_meta_analysis.*`. Advanced owns
 its configuration loader, phase boundaries, calibration, cross-phase provenance
@@ -37,7 +37,10 @@ Additional locations are config-declared publication evidence; the central index
 
 ## Purpose
 
-`template_advanced_literature_review` is the canonical **advanced multi-phase literature review** exemplar: iterative search refinement, deterministic and optional LLM filtering, cross-phase validation, and phase-aware manuscript generation. The tracked exoplanet-atmosphere corpus is an evidence snapshot, not an offline fixture or a completeness claim.
+`template_advanced_literature_review` is the advanced phase-aware review exemplar:
+search design, deterministic/optional model filtering, cross-phase validation
+and manuscript generation. Its bundled exoplanet corpus is a generated synthetic
+fixture, not a retrieved empirical evidence snapshot or a completeness claim.
 
 ## Copy This When
 
@@ -63,6 +66,31 @@ rsync -a \
   projects/templates/template_advanced_literature_review/ projects/working/my_advanced_review/
 ```
 
+## Standalone environment
+
+From an independent project root, use Python 3.14 or 3.15 and the genuine
+`research-project-template==5.2.0` and
+`template-literature-meta-analysis==0.2.0` wheels matching `pyproject.toml`.
+Reuse the [shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface),
+with this project's additional Meta provider:
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+: "${TEMPLATE_META_WHEEL:?Set the absolute path to the genuine Meta 0.2.0 provider wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python \
+  "$TEMPLATE_SDK_WHEEL" "$TEMPLATE_META_WHEEL" ".[dev]"
+```
+
+Initial third-party dependencies need package access or a prepared cache.
+Use `.venv/bin/python` for project-local commands so a later `uv run` does not
+re-enter checkout-only provider resolution. A candidate version, successful
+import or local wheel installation is not accepted/public provider adoption.
+The genuine SDK must be qualified first, Meta's source-bound provider second,
+and Advanced's consumer third; retain their actual source/artifact identities
+and independent acceptance. See [README Dependencies](README.md#dependencies)
+and the [reviewed installation projection](https://github.com/docxology/template/blob/main/docs/guides/standalone-install-projection.md).
+
 ## Required Post-Fork Edits
 
 ### Core Configuration
@@ -79,25 +107,55 @@ rsync -a \
 
 ### Multi-Phase Corpus
 
-- For deterministic downstream development: use the tracked three-phase exoplanet evidence snapshot as a structural example without claiming live freshness.
-- For live deployment: Configure your field's phases and run `uv run python scripts/01_multi_phase_search.py` to build a real corpus.
-- Choose per-phase result limits from the review protocol rather than a hard-coded target.
+First complete the [standalone environment](#standalone-environment), or prepare
+the canonical own-project runtime through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+From that prepared project root, a clean export creates its missing local fixture:
+
+```bash
+.venv/bin/python scripts/generate_fixture_corpus.py --out output/data/corpus.jsonl
+.venv/bin/python scripts/01b_fixture_phase_replay.py
+```
+
+The generator prints its record count and destination; replay prints
+`output/data/phase_metadata.json`. These are expected local artifacts, not a
+claim that this recipe has passed or that a provider is publicly accepted.
+
+The generator defaults to a different `data/fixtures/...` path unless `--out`
+is supplied. It produces synthetic exoplanet records with generated authors and
+identifiers; replay demonstrates phase membership/overlap and downstream
+machinery, not real retrieval or scientific temporal findings. Do not regenerate
+over an actual live corpus merely to make a missing prerequisite disappear.
+
+For a separately authorized live application, configure the review protocol and
+call `scripts/01_multi_phase_search.py --live`; without `--live` that CLI also
+replays a fixture. Retain actual engine outcomes and source provenance. Choose
+per-phase limits from the protocol, not a promised yield.
 
 ## Validation Commands
+
+From the canonical monorepo root, prepare the selected fork's own environment
+through the shared run surface before these separate validation operations.
+For an independent project, use the same prepared project root as above and
+`.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90` instead;
+monorepo stage scripts are not shipped with it.
 
 From the template repository root after copying into `projects/working/`:
 
 ```bash
-uv run pytest projects/working/my_advanced_review/tests/ \
+uv run --no-sync --offline --project projects/working/my_advanced_review \
+  python -m pytest projects/working/my_advanced_review/tests/ \
   --cov=projects/working/my_advanced_review/src --cov-fail-under=90
-uv run python projects/working/my_advanced_review/scripts/02_meta_analysis_pipeline.py
-uv run python scripts/pipeline/stage_04_validate.py --project working/my_advanced_review
+uv run --no-sync --offline --project projects/working/my_advanced_review \
+  python projects/working/my_advanced_review/scripts/02_meta_analysis_pipeline.py
+uv run --no-sync --offline python scripts/pipeline/stage_04_validate.py --project working/my_advanced_review
 ```
 
 For the public exemplar:
 
 ```bash
-uv run pytest projects/templates/template_advanced_literature_review/tests/ \
+uv run --no-sync --offline --project projects/templates/template_advanced_literature_review \
+  python -m pytest projects/templates/template_advanced_literature_review/tests/ \
   --cov=projects/templates/template_advanced_literature_review/src --cov-fail-under=90
 ```
 
@@ -135,16 +193,19 @@ The advanced template extends the single-term approach with:
 10. **Reproducibility Assessment** (`10_reproducibility_assessment.py`): Cross-phase workflow validation
 11. **Full-Text Download** (`11_fulltext_download.py`): Explicit network enrichment before stage 10
 
-## Real Data & Reproducibility
+## Fixture provenance and live evidence
 
-The committed corpus is a dated exoplanet-atmosphere evidence snapshot with source metadata and phase provenance. It demonstrates the artifact shape and downstream analysis path; it does not prove retrieval completeness or currentness. Refreshing it is an intentional live-network operation, while stages 02–09 can be rerun deterministically over the snapshot.
+The committed default corpus is synthetic. It demonstrates the artifact shape
+and deterministic analysis path, not exoplanet findings, retrieval completeness
+or freshness. A genuine live review must replace it deliberately, preserve
+retrieval/phase provenance and keep the exact consumed corpus/configuration.
 
 ## What You Can Claim
 
-- **Methodological patterns**: Cross-phase validation of search and filtering strategies
-- **Temporal dynamics**: Evolution of research focus across defined methodological eras
-- **Knowledge synthesis**: Aggregated insights from phase-aware knowledge graph analysis
-- **Pipeline effectiveness**: Demonstrated capability for complex multi-phase literature synthesis
+- **Method patterns:** phase membership, filtering, overlap and configured integration checks demonstrated on retained inputs.
+- **Fixture analytics:** descriptive calculations over generated records, not empirical history of a research field.
+- **Evidence lineage:** actual recorded artifacts and Source bindings, with missing/fixture/live states kept distinct.
+- **Domain claims:** only after independent source-backed review of a genuine live corpus; demonstration output alone is insufficient.
 
 ## What Not To Claim
 

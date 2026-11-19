@@ -1,7 +1,7 @@
 # template_registered_report TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -80,3 +80,20 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained acceptance obligation
+
+- [ ] `RR-STANDALONE-FIGURES-1` · P1 · Minor · Prove standalone figure regeneration without an ancestor monorepo.
+  - Provenance: the [original owner request](https://github.com/docxology/template_registered_report/blob/18856f7ef7b6e8551c874593d042f196072e9746/TODO.md#L57-L59) cites the unconditional `infrastructure.documentation.generated_figure_registry` import in `scripts/generate_figures.py` and the README/AGENTS standalone promise.
+  - Outcome: from an independent project root, the real script produces all four PNGs, `output/data/demo_analysis.json`, and `output/figures/figure_registry.json`, prints the p-value summary, and retains the monorepo invocation.
+  - Current dependency boundary: install the genuine SDK version declared by `pyproject.toml` plus the project's development dependencies. The original suggestion to vendor a local registry fallback is superseded by this explicit SDK contract; do not create a second helper, ancestor-path shim, or fake registry.
+  - Acceptance from that prepared standalone root:
+    ```bash
+    probe="$(mktemp -d)"
+    MPLBACKEND=Agg python scripts/generate_figures.py \
+      --figures-dir "$probe/figs" --output-figures-dir "$probe/outfigs" --data-dir "$probe/data"
+    python -I -m pytest tests/test_figures.py tests/test_generate_review_artifacts_script.py -q --no-cov
+    ```
+    Independently inspect the complete four-figure/data/registry set and the actual argparse/`main()` path; exit zero or the existing review-artifact tests alone do not close the request.
+  - Negative control: in a separate disposable environment, make the required SDK registry capability unavailable and require a loud preparation/import failure rather than silent omission of the registry. An unrelated startup or missing fixture error cannot satisfy the control.
+  - Dependencies/constraints: preserve deterministic offline defaults, figure bytes, and the existing `publish_generated_figures` / `FIGURE_REGISTRY_SCHEMA` provenance contract. Proving artifact: same-source real standalone and monorepo script receipts plus the capability-absence control. No receipt is asserted here; the request remains unchecked alongside the P4 roadmap.

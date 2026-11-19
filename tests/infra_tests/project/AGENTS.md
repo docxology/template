@@ -47,6 +47,20 @@ The test_active_pipeline_diagnostics.py controls cover actual phase deltas/raw b
 
 `test_public_root_policy_census.py` checks actual Source-template Git/file
 admission, strict fresh member/fixture review binding, executable workflow input
-admission and macOS export programs, full four-target/preparation delivery, and
-real CLI refusal before census on wrong Source. Component DATA fixtures never
-stand in for an original census or classified runtime acceptance.
+admission and macOS export programs, and real CLI refusal before census on wrong
+Source. It discovers the real dispatch guard by its declared input contract,
+not a job name or positional step index. Component DATA fixtures never stand in
+for an original census or classified runtime acceptance.
+
+Root authoring and optional-catalog runtime controls preserve every retained
+shared-fixture family's declared lane and required prerequisites, including
+external DATA. Do not default those cases to core or waive their obligations.
+Keep actual selected-interpreter, custody and unexecuted-catalog consumers,
+not declaration inventories or incidental family totals. Local nested pytest
+scratch must be physically outside every Source, Git and selected-runtime tree.
+
+Document-action shell controls supply all declared optional inputs before
+exercising real invalid-mode and missing/nonexecutable-Python refusals. Do not
+replace these boundaries with output echoes. Public exemplar metadata comes
+from the canonical roster generator; keep public manifest and physical tracking
+checks, not generated-copy, heading-wording or test-count assertion pins.

@@ -7,44 +7,41 @@ not hand-edit output files; fix the producer and rerun the stage.
 
 ## Producer Sequence
 
+The [canonical corpus/replay recipe](../STANDALONE.md#multi-phase-corpus) owns
+preparation. The following commands run from the prepared project directory:
+
 ```bash
-# live/network multi-phase retrieval; runs all configured phases, writes per-phase
-# corpora and phase_metadata.json, then merges into combined_corpus.jsonl
-uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
-
-# deterministic offline analysis over the combined corpus
-uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
-
-# optional LLM/nanopublication layer with phase-aware hypothesis scoring; --max-papers 0
-# reloads existing assertions only
-uv run python projects/templates/template_advanced_literature_review/scripts/03_build_knowledge_graph.py --max-papers 0
+# Default synthetic fixture replay; never a live retrieval claim.
+.venv/bin/python scripts/01b_fixture_phase_replay.py
+.venv/bin/python scripts/02_meta_analysis_pipeline.py
+.venv/bin/python scripts/03_build_knowledge_graph.py --max-papers 0
 
 # figures, including the hypothesis dashboard
-uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
+.venv/bin/python scripts/04_generate_figures.py --dpi 300
 
 # token-hydrated manuscript copies (phase-aware tokens included)
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
+.venv/bin/python scripts/05_inject_variables.py
 
 # full-text availability report
-uv run python projects/templates/template_advanced_literature_review/scripts/06_fulltext_assessment.py
+.venv/bin/python scripts/06_fulltext_assessment.py
 
 # literature evaluation harness
-uv run python projects/templates/template_advanced_literature_review/scripts/07_literature_evaluation.py
+.venv/bin/python scripts/07_literature_evaluation.py
 
 # deterministic offline deep-research replay (or live dispatch, opt-in)
-uv run python projects/templates/template_advanced_literature_review/scripts/08_deep_research_dispatch.py
+.venv/bin/python scripts/08_deep_research_dispatch.py
 
 # unified bibliography export
-uv run python projects/templates/template_advanced_literature_review/scripts/09_export_bibliography.py
+.venv/bin/python scripts/09_export_bibliography.py
 
-# optional reproducibility-assessment enrichment (run after 11_fulltext_download.py)
-uv run python projects/templates/template_advanced_literature_review/scripts/10_reproducibility_assessment.py
-
-# optional full-text enrichment stage (network); run before stage 10
-uv run python projects/templates/template_advanced_literature_review/scripts/11_fulltext_download.py
+# Optional, separately authorized network/full-text and reproducibility enrichment:
+.venv/bin/python scripts/11_fulltext_download.py
+.venv/bin/python scripts/10_reproducibility_assessment.py
+# Rehydrate only after that actual enrichment:
+.venv/bin/python scripts/05_inject_variables.py
 
 # deterministic evidence/artifact validation report
-uv run python projects/templates/template_advanced_literature_review/scripts/11_validate_outputs.py
+.venv/bin/python scripts/11_validate_outputs.py
 ```
 
 Two scripts share the `11_` prefix (`11_fulltext_download.py`,

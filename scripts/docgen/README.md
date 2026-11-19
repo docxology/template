@@ -8,11 +8,11 @@ Derived documentation generator scripts.
 |--------|--------|
 | `active_projects.py` | `docs/_generated/active_projects.md` |
 | `api_reference.py` | `docs/reference/api-reference.md` (CI `--check`) |
-| `architecture_overview.py` | `docs/_generated/architecture_overview.mmd` / `.svg` |
+| `architecture_overview.py` | `docs/_generated/architecture_overview.mmd`, `.svg` and accessible `.md` summary |
 | `counts.py` | `docs/_generated/COUNTS.md` |
 | `coverage_history.py` | `docs/_generated/coverage_history.md` |
-| `stage_table.py` | Stage table marker block in `scripts/AGENTS.md` |
-| `exemplar_roster.py` | `docs/_generated/exemplar_roster.md` + `template_manifest.json` |
+| `stage_table.py --write` | Stage-table marker blocks in the canonical target documents; without `--write`, preview only |
+| `exemplar_roster.py` | `docs/_generated/exemplar_roster.md`, `template_manifest.json` and both README roster/skill marker blocks |
 | `publication_records.py` | `docs/_generated/publication_records.md` + GitHub README block + per-exemplar `STANDALONE.md` |
 
 ## Usage
@@ -26,6 +26,23 @@ uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/exemplar_roster.py
 uv run python scripts/docgen/publication_records.py --refresh-external
 ```
+
+`counts.py --write` and `--check` collect test metadata; they do not rerun
+coverage or execute the suites. Collection uses an existing project `.venv`,
+otherwise the invoking runtime; a broken nominated environment is an error.
+Prepare any missing declared dependency closure rather than adding import-path
+shortcuts or omitting the exemplar. For Advanced's canonical local Meta provider:
+
+```bash
+uv sync --locked --project projects/templates/template_advanced_literature_review \
+  --extra dev --python "$PWD/.venv/bin/python"
+```
+
+That checkout resolver uses the declared local Meta/SDK sources, not an
+unpublished package-index release. Standalone adoption still needs its genuinely
+published provider pins. Coverage is separate: the
+[requested-project workflow](../../.github/workflows/public-exemplar-coverage.yml)
+can measure changed inputs without repeating unchanged original measurements.
 
 Prepare the nominated DATA file by independently copying the selected SDK's
 `counts_coverage.py` byte-for-byte outside both the repository and SDK. Retain

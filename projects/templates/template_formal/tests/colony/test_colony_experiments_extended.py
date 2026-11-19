@@ -141,6 +141,8 @@ from template_formal.colony.stats import (
     wilson_score_interval,
 )
 
+pytestmark = [pytest.mark.timeout(600)]
+
 _BASE_KWARGS: dict[str, object] = {
     "num_agents": 8,
     "locations": ("north", "south"),

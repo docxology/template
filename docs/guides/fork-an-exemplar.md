@@ -6,51 +6,25 @@ environments, rendered outputs, or stale package metadata.
 
 ## Pick the right exemplar
 
-| Your work shape | Fork this exemplar | Standalone notes |
-|---|---|---|
-| Multi-track active-inference research with sheaf composition | [`template_active_inference`](../../projects/templates/template_active_inference/) | [`STANDALONE.md`](../../projects/templates/template_active_inference/STANDALONE.md) |
-| Multi-phase, provenance-aware literature-review pipeline | [`template_advanced_literature_review`](../../projects/templates/template_advanced_literature_review/) | [`STANDALONE.md`](../../projects/templates/template_advanced_literature_review/STANDALONE.md) |
-| Combinatoric grammar that deterministically generates whole runnable child projects | [`template_autopoiesis`](../../projects/templates/template_autopoiesis/) | [`STANDALONE.md`](../../projects/templates/template_autopoiesis/STANDALONE.md) |
-| Bounded AutoResearch loop with evidence/artifact gates | [`template_autoresearch_project`](../../projects/templates/template_autoresearch_project/) | [`STANDALONE.md`](../../projects/templates/template_autoresearch_project/STANDALONE.md) |
-| Coordination-mechanism ablations for agent teams | [`template_autoscientists`](../../projects/templates/template_autoscientists/) | [`STANDALONE.md`](../../projects/templates/template_autoscientists/STANDALONE.md) |
-| Code-driven computational research | [`template_code_project`](../../projects/templates/template_code_project/) | [`STANDALONE.md`](../../projects/templates/template_code_project/STANDALONE.md) |
-| Dataset descriptor or data-paper release package | [`template_data_descriptor`](../../projects/templates/template_data_descriptor/) | [`STANDALONE.md`](../../projects/templates/template_data_descriptor/STANDALONE.md) |
-| Exploratory data analysis notebook over a tested library | [`template_eda_notebook`](../../projects/templates/template_eda_notebook/) | [`STANDALONE.md`](../../projects/templates/template_eda_notebook/STANDALONE.md) |
-| Strongly-typed multiagent ant-robot colony (illegal-states-unrepresentable design) | [`template_formal`](../../projects/templates/template_formal/) | [`STANDALONE.md`](../../projects/templates/template_formal/STANDALONE.md) |
-| Analogical manuscript composition with mega-madlib token injection | [`template_gold_refinement`](../../projects/templates/template_gold_refinement/) | [`AGENTS.md`](../../projects/templates/template_gold_refinement/AGENTS.md) |
-| Reproducible literature meta-analysis (multi-engine retrieval, de-dup, bibliometrics) | [`template_literature_meta_analysis`](../../projects/templates/template_literature_meta_analysis/) | [`STANDALONE.md`](../../projects/templates/template_literature_meta_analysis/STANDALONE.md) |
-| Conditional token-injection manuscripts | [`template_madlib`](../../projects/templates/template_madlib/) | [`STANDALONE.md`](../../projects/templates/template_madlib/STANDALONE.md) |
-| Controlled-method specification DSL with staged validation gates | [`template_methods_paper`](../../projects/templates/template_methods_paper/) | [`STANDALONE.md`](../../projects/templates/template_methods_paper/STANDALONE.md) |
-| Data-driven newspaper or print-layout engine | [`template_newspaper`](../../projects/templates/template_newspaper/) | [`STANDALONE.md`](../../projects/templates/template_newspaper/STANDALONE.md) |
-| Validated pitch-deck generation from one token-resolved content source | [`template_pitch_deck`](../../projects/templates/template_pitch_deck/) | [`STANDALONE.md`](../../projects/templates/template_pitch_deck/STANDALONE.md) |
-| Template-integrated pools/rules/tools resource-architecture meta-exemplar | [`template_pools_rules_tools`](../../projects/templates/template_pools_rules_tools/) | [`STANDALONE.md`](../../projects/templates/template_pools_rules_tools/STANDALONE.md) |
-| Manuscript-focused prose review | [`template_prose_project`](../../projects/templates/template_prose_project/) | [`STANDALONE.md`](../../projects/templates/template_prose_project/STANDALONE.md) |
-| Redacted release-review report with audit ledger | [`template_redacted_report`](../../projects/templates/template_redacted_report/) | [`STANDALONE.md`](../../projects/templates/template_redacted_report/STANDALONE.md) |
-| Registered report or preregistered replication | [`template_registered_report`](../../projects/templates/template_registered_report/) | [`STANDALONE.md`](../../projects/templates/template_registered_report/STANDALONE.md) |
-| Literature-search -> BibTeX -> LLM-synthesis pipeline | [`template_search_project`](../../projects/templates/template_search_project/) | [`STANDALONE.md`](../../projects/templates/template_search_project/STANDALONE.md) |
-| Self-improvement-agent fixture/live harness | [`template_sia`](../../projects/templates/template_sia/) | [`STANDALONE.md`](../../projects/templates/template_sia/STANDALONE.md) |
-| Full-page illustrated storybook PDF | [`template_storybook`](../../projects/templates/template_storybook/) | [`STANDALONE.md`](../../projects/templates/template_storybook/STANDALONE.md) |
-| Meta-research over a template-like checkout | [`template_template`](../../projects/templates/template_template/) | [`STANDALONE.md`](../../projects/templates/template_template/STANDALONE.md) |
-| Book-length fillable scaffold | [`template_textbook`](../../projects/templates/template_textbook/) | [`STANDALONE.md`](../../projects/templates/template_textbook/STANDALONE.md) |
-
-The live tracked roster is
-[`docs/_generated/active_projects.md`](../_generated/active_projects.md); this
-table is representative, not exhaustive.
-
-For one-glance differentiation, see the generated
-[`docs/_generated/exemplar_roster.md`](../_generated/exemplar_roster.md).
-Measured test counts and coverage live in
-[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md).
+Start with `template_code_project` for the basic computational walkthrough.
+Choose a domain-specific seed from the generated
+[all-public exemplar differentiation map](../_generated/exemplar_roster.md),
+then read that project's `README.md` and `STANDALONE.md` for its actual
+dependencies and claim boundaries. The permanent public roster is owned by
+[`active_projects.md`](../_generated/active_projects.md), not a second manual
+table here. Measured counts and coverage are retained in
+[`COUNTS.md`](../_generated/COUNTS.md).
 
 ## Clean copy
 
-From the repository root:
+From a [prepared template checkout](startup-and-setup.md), at the repository root:
 
 ```bash
-uv run python scripts/audit/copy_exemplar.py \
+uv run --no-sync --offline python scripts/audit/copy_exemplar.py \
   --source templates/template_code_project \
   --dest projects/working/my_project \
-  --new-name my_project
+  --new-name my_project \
+  --author-name "Ada Lovelace" --author-email ada@example.org
 ```
 
 Change `--source` to any `templates/<name>` from the table above. The helper
@@ -59,15 +33,25 @@ artifacts (`.venv/`, caches, `htmlcov/`, `output/`, egg-info, `.DS_Store`, Lean
 build products), and substitutes the exemplar slug in UTF-8 text files only.
 Binaries are copied byte-for-byte.
 
-Fallback when the helper is unavailable:
+The helper owns the fork's identity and export manifest; a raw `rsync` copy is
+not equivalent. `--dry-run` previews the files without writing.
 
-```bash
-rsync -a \
-  --exclude '.venv/' --exclude '.pytest_cache/' --exclude '.ruff_cache/' \
-  --exclude 'htmlcov/' --exclude 'output/' --exclude 'rendered/' --exclude '*.egg-info/' \
-  --exclude '.DS_Store' --exclude '.lake/' --exclude 'lake-packages/' \
-  projects/templates/template_code_project/ projects/working/my_project/
-```
+- `--new-name` rewrites the project slug in paths, package metadata and
+  configuration; suffixed identifiers such as `<slug>_extra` are left alone.
+- `--author-name` / `--author-email` replace the source author and remove the
+  exemplar's DOI, ORCID, repository URL and release-date identity. A fork must
+  not claim the source exemplar's publication.
+- `--sdk-source path:<dir>` selects a checkout, `url:<git-or-file-url>` an
+  explicitly available provider, and `version-only` the declared version from
+  an actually available package source. Inside this checkout the helper derives
+  the correct relative path automatically; outside it, nominate the real
+  provider rather than an arbitrary ancestor.
+- `--project-only` omits declared cross-root resource copies. It does not remove
+  an SDK dependency or make missing DATA/resource prerequisites optional.
+
+The default export writes `.template-export.json`, binding copied bytes,
+resource dependencies and the original Source commit. Installed and mirror
+acceptance consume this manifest; its existence alone is not acceptance.
 
 ## Forkability contract
 
@@ -89,13 +73,23 @@ blocks accidental commits of non-template project trees.
 
 ## Validate the fork
 
-Use the `STANDALONE.md` file in the chosen exemplar for exact commands. The
-common starting point for a copied project under `projects/working/<name>/` is:
+Prepare the copied project's declared environment before executing its tests.
+For the checkout-local copy above, from the repository root:
 
 ```bash
-uv run pytest projects/working/<name>/tests/ \
-  --cov=projects/working/<name>/src --cov-fail-under=90
+uv sync --project projects/working/my_project --extra dev \
+  --python "$PWD/.venv/bin/python"
+uv run --no-sync --offline --project projects/working/my_project \
+  python -m pytest projects/working/my_project/tests/ \
+  --cov=projects/working/my_project/src --cov-fail-under=90
 ```
+
+This prepares the new fork's identity and lock; canonical unchanged exemplars
+use `--locked`. For an independent export, follow its `README.md` / `STANDALONE.md`
+and the [shared preparation boundary](../../projects/README.md#run-surface).
+Formal tools, Advanced's Meta provider, admitted Root DATA and resource bundles
+remain explicit project-specific prerequisites. A selected test run is not
+whole native or publication acceptance.
 
 `uv run python scripts/audit/check_template_drift.py --strict` validates the canonical
 public exemplars under `projects/templates/`; run it before changing upstream

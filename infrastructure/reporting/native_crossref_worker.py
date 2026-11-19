@@ -167,8 +167,8 @@ def main() -> int:
                 if platform.system() == "Linux":
                     from infrastructure.reporting.native_loader_qualification import qualify_native_loader_tool
 
-                    if spec["official_archive"] is None:
-                        raise ValueError("Source Linux Crossref lacks its official archive/body admission")
+                    if spec["provider_archive"] is None:
+                        raise ValueError("Source Linux Crossref lacks its provider archive/body admission")
                     version, version_qualification, compiled = qualify_native_loader_tool(
                         runtime,
                         "pandoc-crossref",
@@ -209,7 +209,7 @@ def main() -> int:
                         "sha256": live_reader.read(output_path.relative_to(root).as_posix()).sha256,
                     },
                     "tool_artifacts": [*compiler_tools, *runtime.tools],
-                    "official_archive": spec["official_archive"],
+                    "provider_archive": spec["provider_archive"],
                     "loader_qualifications": qualifications,
                     "source_exit_intent": 0,
                     "version": version["stdout"],

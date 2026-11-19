@@ -46,10 +46,13 @@ Before a fork claims a new method, update the config-owned method surface first:
 - Add `data/claim_ledger.yaml` rows only for claims backed by local artifacts.
 - Add domain validators before making empirical, theoretical, or benchmark claims.
 
-Run the project-local gate after edits:
+Use the [parent README's genuine SDK/standalone recipe](README.md) and retain
+its explicit execution epoch. From the prepared project root:
 
 ```bash
-uv run pytest tests/ --cov=src --cov-fail-under=90
-uv run python scripts/refinement_analysis.py
-uv run python scripts/z_generate_manuscript_variables.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/refinement_analysis.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
+
+Analogy/refinery demonstrations are not physical or metallurgical evidence.

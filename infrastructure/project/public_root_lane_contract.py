@@ -26,8 +26,8 @@ LAUNCH_SCHEMA = "template-root-lane-launch-v2"
 COORDINATOR_SCHEMA = "template-root-lane-coordinator-v2"
 COORDINATOR_PROCESS_SCHEMA = "template-root-lane-coordinator-process-v2"
 CHUNK_SCHEMA = "template-root-lane-chunk-v2"
-LANE_SCHEMA = "template-root-lane-result-v2"
-PROCESS_SCHEMA = "template-root-lane-native-process-v2"
+LANE_SCHEMA = "template-root-lane-result-v3"
+PROCESS_SCHEMA = "template-root-lane-native-process-v3"
 
 
 def write(root: Path, path: Path, payload: object, identity: list[int]) -> dict[str, str]:
@@ -48,10 +48,24 @@ def selection(admitted: RootCaseAdmission, unit_id: str) -> RootCaseUnit:
     return selected
 
 
-def groups(nodeids: tuple[str, ...]) -> tuple[tuple[str, ...], ...]:
+def chunk_workers(unit: RootCaseUnit) -> int:
+    """Overlap only independently owned external-fixture subprocesses."""
+    return 2 if unit.lane == "external-fixture" and len(unit.nodeids) > 1 else 1
+
+
+def groups(unit: RootCaseUnit) -> tuple[tuple[str, ...], ...]:
+    """Bound receipts while amortizing complete Source admission across core cases."""
+    nodeids = unit.nodeids
     if not nodeids or len(set(nodeids)) != len(nodeids):
         raise ValueError("Root lane execution requires a nonempty unique exact case set")
-    return tuple(nodeids[index : index + 100] for index in range(0, len(nodeids), 100))
+    workers = chunk_workers(unit)
+    if unit.lane == "core":
+        size = 1000
+    elif workers == 1:
+        size = 100
+    else:
+        size = min(100, (len(nodeids) + 2 * workers - 1) // (2 * workers))
+    return tuple(nodeids[index : index + size] for index in range(0, len(nodeids), size))
 
 
 def lane_command(

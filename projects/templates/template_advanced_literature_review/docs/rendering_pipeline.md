@@ -5,36 +5,36 @@ then hydrating manuscript variables from generated JSON artifacts (same as
 the single-term sibling), then delegating PDF/HTML/DOCX/EPUB work to the root
 template renderers.
 
-## Phase 0: Multi-Phase Search (only when refreshing the corpus)
+## Phase 0: Replay or explicitly retrieve the corpus
 
-```bash
-uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
-```
-
-Writes `output/data/phase_1_foundation_corpus.jsonl`,
-`phase_2_jwst_corpus.jsonl`, `phase_3_molecules_corpus.jsonl`,
-`combined_corpus.jsonl`, and `phase_metadata.json`. Skip this stage for a
-deterministic replay of the tracked corpus snapshot.
+Use the [prepared own-runtime corpus recipe](../STANDALONE.md#multi-phase-corpus).
+A clean export must explicitly generate its synthetic fixture; retained outputs
+are not copied as part of a clean Source export. From the prepared project root,
+`scripts/01b_fixture_phase_replay.py` writes the phase corpora and metadata.
+Only a separately authorized `scripts/01_multi_phase_search.py --live` performs
+actual retrieval. Keep fixture and live provenance distinct.
 
 ## Phase 1: Produce Data Artifacts
 
+From that same prepared project root:
+
 ```bash
-uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
-uv run python projects/templates/template_advanced_literature_review/scripts/03_build_knowledge_graph.py --max-papers 0
-uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
+.venv/bin/python scripts/02_meta_analysis_pipeline.py
+.venv/bin/python scripts/03_build_knowledge_graph.py --max-papers 0
+.venv/bin/python scripts/04_generate_figures.py --dpi 300
 ```
 
 Optional enrichment, in dependency order (network/LLM):
 
 ```bash
-uv run python projects/templates/template_advanced_literature_review/scripts/11_fulltext_download.py
-uv run python projects/templates/template_advanced_literature_review/scripts/10_reproducibility_assessment.py
+.venv/bin/python scripts/11_fulltext_download.py
+.venv/bin/python scripts/10_reproducibility_assessment.py
 ```
 
 ## Phase 2: Hydrate Manuscript Tokens
 
 ```bash
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
+.venv/bin/python scripts/05_inject_variables.py
 ```
 
 Inputs are `manuscript/config.yaml` plus `output/data/*.json` /
@@ -46,8 +46,10 @@ reproducibility/full-text evidence reflected in the manuscript.
 
 ## Phase 3: Validate Markdown Before Render
 
+Return to the monorepo root before using repository validation/render commands:
+
 ```bash
-uv run python -m infrastructure.validation.cli prerender \
+uv run --no-sync --offline python -m infrastructure.validation.cli prerender \
   projects/templates/template_advanced_literature_review/manuscript --repo-root .
 ```
 
@@ -68,7 +70,8 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_adv
 ## Phase 5: Validate Outputs (project-local)
 
 ```bash
-uv run python projects/templates/template_advanced_literature_review/scripts/11_validate_outputs.py
+projects/templates/template_advanced_literature_review/.venv/bin/python \
+  projects/templates/template_advanced_literature_review/scripts/11_validate_outputs.py
 ```
 
 Writes `output/reports/validation_report.json` / `.md` — a deterministic
@@ -81,9 +84,9 @@ and the repo-level test/evidence reports also written under `output/reports/`.
 - Literal `{{TOKEN}}`: rerun `scripts/05_inject_variables.py`; if still
   present, add the token in `src/manuscript/variables/compute.py` (or the
   relevant `extractors/` module) and test it.
-- Missing per-phase corpus or `phase_metadata.json`: rerun
-  `scripts/01_multi_phase_search.py`, or confirm the tracked snapshot under
-  `output/data/` wasn't deleted.
+- Missing per-phase corpus or `phase_metadata.json`: use the explicit fixture
+  bootstrap/replay recipe, or supply the genuine live input. Do not silently
+  replace a missing corpus with live retrieval or relabel synthetic records.
 - Missing figure: rerun `scripts/04_generate_figures.py --dpi 300` and check
   `output/figures/figure_registry.json`.
 - Citation error: check `manuscript/references.bib` and the generated

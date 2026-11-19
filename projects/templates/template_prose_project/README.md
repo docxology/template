@@ -3,7 +3,7 @@
 A configurable, reproducible **prose-review** pipeline built on
 `infrastructure/prose/` (readability + structure + quality) and
 `infrastructure/reference/` (BibTeX validation). Exemplar roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## When to use this template
 
@@ -11,10 +11,10 @@ Use this template for **manuscript-focused editorial pipelines**: readability
 gates (Flesch-Kincaid bands), structural checking, citation/BibTeX
 validation, and prose-quality review workflows where the document itself is
 the artifact under test. If you are implementing algorithms with numerical
-experiments, start from [`template_code_project`](../template_code_project/)
+experiments, start from [`template_code_project`](https://github.com/docxology/template/blob/main/projects/templates/template_code_project)
 instead; for book-length structure see
-[`template_textbook`](../template_textbook/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_textbook`](https://github.com/docxology/template/blob/main/projects/templates/template_textbook). Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -60,13 +60,6 @@ _Keywords: prose analysis, readability, editorial review, reproducible research,
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
-The 3 platforms still shown ⚪ available are not automatable to "published" with
-current tooling/credentials, not an oversight: **arXiv** has no submission API
-in this codebase (`infrastructure.publishing.arxiv` only prepares a local
-tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
-would then be added to `publication.published_artifacts`); **Cloudflare
-Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
-auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_prose_project`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_prose_project/` in the monorepo; public output files above 50 MB stay out of git.
@@ -76,7 +69,9 @@ To regenerate this exemplar from the public monorepo:
 ```bash
 git clone https://github.com/docxology/template
 cd template
-uv sync
+uv sync --locked
+uv sync --locked --project projects/templates/template_prose_project --extra dev \
+  --python "$PWD/.venv/bin/python"
 ./run.sh --project templates/template_prose_project --pipeline --mode core
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_prose_project
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_prose_project
@@ -85,6 +80,9 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_pro
 Standalone repositories are publication mirrors for source, DOI metadata, and
 tracked rendered artifacts. Use the monorepo above when you need the full shared
 infrastructure, pipeline stages, or cross-template validation.
+
+For an independent project, use the genuine SDK-wheel preparation and project-root
+commands in [STANDALONE.md](STANDALONE.md#standalone-environment).
 
 ## Why this template — the transferable pattern
 
@@ -127,21 +125,35 @@ flowchart LR
 
 ## Quick start
 
+For an independent checkout, start with the
+[standalone environment](STANDALONE.md#standalone-environment) and
+[project-root quickstart](docs/quickstart.md). The commands below instead run
+from the canonical monorepo root after preparing Root and this project's own
+environment through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+Dependency preparation may need network access; the default editorial run does
+not require Ollama.
+
 ```bash
 # Run the full prose review (offline, no Ollama)
-uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
 
 # Strict mode: exit non-zero if any check fails
-uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
 
 # Generate figures (after a pipeline run)
-uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
 
 # Hydrate manuscript variables for the abstract
-uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
 ```
 
-After the run, look in `output/`:
+After this sequence, look in `projects/templates/template_prose_project/output/`
+(`output/` relative to an independent project root):
 
 * `manuscript_report.json` — raw `ManuscriptReport`.
 * `checks.json` — list of `CheckResult` (one per configured check).
@@ -160,7 +172,8 @@ After the run, look in `output/`:
 Start your local Ollama service with an already installed model, then run:
 
 ```bash
-uv run python projects/templates/template_prose_project/scripts/_run_local_review.py \
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python projects/templates/template_prose_project/scripts/_run_local_review.py \
   --mode live --model llama3.2:1b --timeout 120 --num-predict 1024
 ```
 
@@ -200,7 +213,8 @@ render — see [`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering
 alone is not proof; confirm tests collected > 0 and coverage ≥ 90%:
 
 ```bash
-uv run pytest projects/templates/template_prose_project/tests/ \
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python -m pytest projects/templates/template_prose_project/tests/ \
   --cov=projects/templates/template_prose_project/src --cov-fail-under=90
 # exemplar baseline → docs/_generated/COUNTS.md
 ```
@@ -208,7 +222,7 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 Full end-to-end (tests → analysis → render → validate → copy):
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_prose_project --mode core
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py --project templates/template_prose_project --mode core
 ```
 
 ## Configuration
@@ -265,7 +279,8 @@ experiments, mutate prompts, or run autonomous review agents.
 ## Testing
 
 ```bash
-uv run pytest projects/templates/template_prose_project/tests/ -v
+uv run --no-sync --offline --project projects/templates/template_prose_project \
+  python -m pytest projects/templates/template_prose_project/tests/ -v
 ```
 
 All tests are offline; no mocks. The test suite uses real prose, real
@@ -276,17 +291,17 @@ of the orchestrator scripts.
 
 * [`AGENTS.md`](AGENTS.md) — agent-oriented walkthrough.
 * [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation / cross-reference conventions for this project.
-* [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
+* [`../../docs/guides/manuscript-semantics.md`](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics.
 * [`docs/architecture.md`](docs/architecture.md) — architectural diagram.
 * [`docs/quickstart.md`](docs/quickstart.md) — getting started guide.
-* [`infrastructure/prose/SKILL.md`](../../../infrastructure/prose/SKILL.md) —
+* [`infrastructure/prose/SKILL.md`](https://github.com/docxology/template/blob/main/infrastructure/prose/SKILL.md) —
   underlying prose-analysis API.
 
 ## Template integrity
 
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
-- Project validation: `uv run pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
+- Project validation: `uv run --no-sync --offline --project projects/templates/template_prose_project python -m pytest projects/templates/template_prose_project/tests/ --cov=projects/templates/template_prose_project/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->

@@ -148,9 +148,13 @@ embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
 
 - The `docxology/kmyth` fork (of upstream `NationalSecurityAgency/kmyth`)
   is mounted as `infrastructure/steganography/kmyth` on the
-  `docxology/macos-build-stubs` branch, which carries the macOS build
+  `main` branch, retaining the reviewed macOS build
   stubs (network/KMIP no-ops) and the FlushContext fix documented in
   `AGENTS.md`.
+  The Root gitlink selects the exact reviewed commit. Its narrow logging,
+  SGX C-flag and network-header corrections are recorded in
+  [the dated software evidence](../../docs/maintenance/exemplar-backlog-history.md#reviewed-kmyth-software-corrections--2026-11-12);
+  the pin does not imply TPM/SGX hardware acceptance.
 - `secure_run.sh --validate-kmyth` checks for `kmyth-seal` and
   `kmyth-unseal` in either `kmyth_binary_dir`, the submodule's `bin/`
   directory, or `PATH`.

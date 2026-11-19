@@ -1,8 +1,12 @@
 # Startup and Setup Guide
 
-Complete installation and validation procedure for the Research Project Template. This guide is written for both human users and AI agents — every step is a concrete, copy-pasteable shell command with a clear expected outcome.
+Prepare a checkout and produce one selected exemplar's first document. This guide
+owns system/Python preparation; [RUN_GUIDE](../RUN_GUIDE.md) owns dispatch and
+runtime nomination. A successful walkthrough establishes that selected core
+pipeline, not whole Root, native-format, provider or release acceptance.
 
-**Validation target:** `projects/templates/template_code_project/` — the canonical, always-present exemplar that agents use to confirm the system is fully operational.
+**Walkthrough project:** `projects/templates/template_code_project/`. All declared
+public exemplars remain supported; this is the default starting point.
 
 **For the agent-executable skill version, see:** [`../prompts/startup/SKILL.md`](../prompts/startup/SKILL.md)
 
@@ -18,9 +22,9 @@ Check these before running anything. The pipeline will fail at specific, known s
 # Check each tool is on PATH
 pandoc --version        # need 2.x or 3.x
 xelatex --version       # need any version
-uv --version            # need 0.4.x or later
-python3 --version       # 3.10–3.14; managed by uv, not required on PATH  # noqa: docs-lint
-pre-commit --version    # installed via uv; check after uv sync
+uv --version            # use a version compatible with the repository's lock/configuration
+# Python >=3.14 is prepared by uv; supported CI minors are 3.14 and 3.15.
+# Pre-commit is optional contributor setup after Python preparation.
 ```
 
 ### Install missing tools
@@ -64,34 +68,41 @@ uv run python -m infrastructure.rendering.latex_package_validator
 
 ```bash
 # From the template repository root
-uv sync
+uv sync --locked
 ```
 
 **Expected:** No errors. Creates/updates `.venv/` in the repo root.
 
-**Installs (default groups):** `dev`, `rendering`, `discopy`, `steganography` — everything needed for the core pipeline.
-
-**If you need monitoring extras (mirrors CI):**
-```bash
-uv sync --group monitoring
-```
+**Default groups:** `dev`, `rendering`, `discopy`, `steganography` and
+`public-exemplars`. The last already includes scientific, LLM, monitoring and
+PPTX dependencies; do not perform a second monitoring sync for the normal
+checkout. System tools remain separate. A project's own environment is prepared
+from its declared metadata, as described in the
+[shared project guide](../../projects/README.md#run-surface).
 
 ---
 
-## Phase 2: Install Pre-commit Hooks
+## Phase 2: Optional contributor hooks
+
+Hooks are useful when changing Source, not a prerequisite for reading the SDK or
+producing the first document:
 
 ```bash
-pre-commit install
-pre-commit install --hook-type pre-push
+uv run --no-sync --offline pre-commit install
+uv run --no-sync --offline pre-commit install --hook-type pre-push
 ```
 
-**Expected:** `pre-commit installed at .git/hooks/commit-msg` (or similar). This mirrors CI lint locally — Ruff, mypy, Bandit, and smoke tests run before any push.
+These install the repository's declared pre-commit/pre-push checks. Their scope
+is documented in [ordinary CI](../development/ci.md); they do not qualify a release.
 
 ---
 
 ## Phase 3: Run the Core Pipeline
 
-The canonical non-LLM pipeline run against `template_code_project`. This validates 8 stages: clean, setup, infra tests, project tests, analysis, render, validate, copy.
+Run the selected non-LLM pipeline. Its infrastructure stage is `pipeline-smoke`,
+not the whole Root coverage suite. The DAG already includes project tests,
+analysis, rendering, validation and copying; do not rerun those stages merely to
+complete this walkthrough.
 
 ```bash
 ./run.sh --pipeline --project templates/template_code_project --mode core
@@ -99,7 +110,7 @@ The canonical non-LLM pipeline run against `template_code_project`. This validat
 
 **Equivalent explicit form:**
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
+uv run --no-sync --offline python scripts/runner/execute_pipeline.py --project templates/template_code_project --mode core
 ```
 
 **Expected stage log (abbreviated):**
@@ -114,33 +125,25 @@ uv run python scripts/runner/execute_pipeline.py --project templates/template_co
 [8/8] Copy Outputs                 ✅
 ```
 
-**Wall-clock time:** 2–5 minutes on a typical laptop (dominated by PDF rendering).
+Elapsed time depends on the actual tools, machine and inputs; a timing estimate
+is not an acceptance result.
 
 ---
 
 ## Phase 4: Validate Outputs
 
-### Check tests and coverage
-```bash
-# Project tests with coverage report
-uv run pytest projects/templates/template_code_project/tests/ \
-  --cov=projects/templates/template_code_project/src \
-  --cov-fail-under=90 \
-  --cov-report=term-missing
+### Read the selected run's result
 
-# Infrastructure tests
-uv run pytest tests/infra_tests/ \
-  --cov=infrastructure \
-  --cov-fail-under=60
-```
-
-**Expected:** Both suites pass. Coverage ≥ 90% (project) and ≥ 60% (infra).
+Use the pipeline's original exit, stage logs and generated validation reports.
+If you need to investigate a project-test failure separately, follow that
+project's prepared own-environment commands. Full Root coverage and the complete
+installed/native release matrix are separate workflows, not extra first-document
+steps. See [ordinary CI](../development/ci.md) and the
+[release boundary](../maintenance/release-boundary.md).
 
 ### Check PDF output
 ```bash
-# Validate the PDF (content + references)
-uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
-
+# The selected pipeline has already validated and copied this PDF.
 # Open the PDF
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf   # macOS
 xdg-open output/templates/template_code_project/pdf/template_code_project_combined.pdf  # Linux
@@ -167,59 +170,48 @@ uv run python -m infrastructure.validation.cli markdown \
 
 ---
 
-## Phase 5: Validate Gates
+## Phase 5: Optional contributor checks
 
-Run the gates that CI runs. These confirm the repo is in a publishable state.
+When changing canonical public Source, use the existing checks selected by
+[ordinary CI](../development/ci.md). For example, the strict template drift audit
+checks the canonical exemplars, not an arbitrary new fork:
 
 ```bash
-# Thin-orchestrator drift check
-uv run python scripts/audit/check_template_drift.py --strict
-
-# Module line count gate
-uv run python scripts/gates/module_line_count_check.py
-
-# Unified health check
-uv run python -m infrastructure.core.health
-
-# Doc linter
-uv run python scripts/audit/lint_docs.py
+uv run --no-sync --offline python scripts/audit/check_template_drift.py --strict
 ```
 
-**Expected:** All exit 0. Any non-zero output is a real failure.
+A successful local audit is its own bounded result. It does not establish a
+publishable state or replace required whole native/provider/release evidence.
 
 ---
 
 ## Phase 6: Optional — Full Pipeline with LLM Stages
 
-If you have Ollama running locally:
+Live mode is an explicit choice after preparing an authorized local Ollama/model
+provider; follow the [LLM guide](llm-integration-guide.md). It is not needed for
+the core walkthrough and is not implicitly enabled by bare `--pipeline`.
 
 ```bash
-# Pull a model
-ollama pull gemma3:4b
-
-# Run full pipeline (includes LLM review + translation stages)
-./run.sh --pipeline --project templates/template_code_project
+./run.sh --pipeline --project templates/template_code_project --mode live
 ```
 
-**Expected:** Two additional stages complete — LLM Manuscript Review and LLM Translations — producing files under `output/templates/template_code_project/llm/`.
-
-LLM stages are skipped gracefully (not failed) when Ollama is absent.
+The resolved live DAG includes optional review/translation stages. Unavailable
+optional providers can report their declared skip; a skip is not live acceptance
+or permission to acquire a model, call a paid provider or publish anything.
 
 ---
 
 ## Success Checklist
 
-After completing all phases, confirm every item:
+For the first-document path, retain these actual outcomes:
 
-- [ ] `uv sync` exits 0
-- [ ] Pre-commit hooks installed at `.git/hooks/`
-- [ ] `./run.sh --pipeline --project templates/template_code_project --mode core` exits 0
-- [ ] `uv run pytest projects/templates/template_code_project/tests/ --cov=... --cov-fail-under=90` passes
-- [ ] `output/templates/template_code_project/pdf/template_code_project_combined.pdf` exists
-- [ ] `uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project` exits 0
-- [ ] `uv run python scripts/audit/check_template_drift.py --strict` exits 0
+- `uv sync --locked` succeeds, or the explicitly nominated runtime was already prepared.
+- The selected `--mode core` pipeline exits 0 and retains its stage results.
+- The copied PDF opens and the selected run's validation report has no critical error.
 
-If all items are checked: the system is fully operational. Proceed to your actual work.
+This establishes a prepared checkout and the selected exemplar run. Contributor
+hooks/audits, full Root coverage, native formats, standalone adoption and
+publication each retain their separate evidence and authorization requirements.
 
 ---
 

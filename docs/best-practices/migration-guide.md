@@ -585,7 +585,7 @@ cp quadmath/scripts/* scripts/
 # Update dependencies
 ```
 
-**See:** [README.md Migration Section](../../README.md#migration-from-quadmath)
+**See:** [README.md Migration Section](../../README.md#-migration-from-other-projects)
 
 ### From Other Research Templates
 

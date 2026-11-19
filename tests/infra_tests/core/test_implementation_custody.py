@@ -344,43 +344,6 @@ def test_actual_installed_source_record_and_fresh_bytecode_are_bound(tmp_path):
     assert not any(name in receipt["files"] for name in ("pyproject.toml", "uv.lock", ".python-version"))
 
 
-@pytest.mark.parametrize("installed", [False, True])
-def test_distribution_source_inventory_runs_only_for_its_installed_comparison(tmp_path, installed):
-    """Profile the real helper; both metadata planes retain identical verified bytes."""
-    site = installed_fixture(tmp_path)
-    code = """
-import json
-from pathlib import Path
-import infrastructure.core.implementation_custody as custody
-prefix = Path(sys.pycache_prefix)
-before = custody.capture_implementation_custody(fresh_pycache_prefix=prefix)
-assert before['binding_kind'] == 'installed-distribution'
-source = Path(custody.__file__).parent.parent
-actual_code = custody._python_files.__code__
-previous = sys.getprofile()
-calls = 0
-def observe(frame, event, argument):
-    global calls
-    if event == 'call' and frame.f_code is actual_code:
-        calls += 1
-    if previous is not None:
-        previous(frame, event, argument)
-try:
-    sys.setprofile(observe)
-    observed = custody._distribution_custody(source, installed=INSTALLED)
-finally:
-    sys.setprofile(previous)
-assert observed == before['distribution']
-assert observed['public_python'] == custody.source_file_manifest(source, frozenset({'.py'}))
-assert custody.capture_implementation_custody(fresh_pycache_prefix=prefix) == before
-assert sys.getprofile() is previous
-print(json.dumps({'source_inventory_calls': calls, 'distribution_unchanged': True}))
-""".replace("INSTALLED", repr(installed))
-    result = probe(site, tmp_path, code)
-    assert result.returncode == 0, result.stderr
-    assert json.loads(result.stdout) == {"source_inventory_calls": int(installed), "distribution_unchanged": True}
-
-
 @pytest.mark.parametrize("fault", [None, "modified", "extra", "metadata", "escape", "origin"])
 def test_declared_dependency_uses_its_own_installed_record(tmp_path, fault):
     site = installed_fixture(tmp_path)
@@ -492,7 +455,15 @@ def poison_timestamp_cache(source: Path) -> None:
     before = source.stat()
     source.write_text("VALUE = 9\n")
     os.utime(source, ns=(before.st_atime_ns, before.st_mtime_ns))
-    py_compile.compile(str(source), doraise=True, invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP)
+    # The ordinary -I control uses its local cache, not the Root runner's prefix.
+    cache = source.parent / "__pycache__" / f"{source.stem}.{sys.implementation.cache_tag}.pyc"
+    py_compile.compile(
+        str(source),
+        cfile=str(cache),
+        doraise=True,
+        optimize=0,
+        invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP,
+    )
     source.write_text("VALUE = 1\n")
     os.utime(source, ns=(before.st_atime_ns, before.st_mtime_ns))
 

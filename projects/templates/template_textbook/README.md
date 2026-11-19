@@ -14,10 +14,10 @@ Use this template for **book-length manuscripts**: units → chapters → labs �
 question banks declared in a single `config.yaml`, with auto-numbering,
 deterministic figure/diagram generation, and structural-contract tests that
 keep hundreds of pages from drifting. For a single-paper computational
-project see [`template_code_project`](../template_code_project/); for
+project see [`template_code_project`](https://github.com/docxology/template/tree/main/projects/templates/template_code_project); for
 editorial/prose review see
-[`template_prose_project`](../template_prose_project/). Full roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`template_prose_project`](https://github.com/docxology/template/tree/main/projects/templates/template_prose_project). Full roster:
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -128,12 +128,26 @@ chapters in all.
 
 ## Quick start
 
-All commands assume `uv` (never `pip`/`npm`). Run them from the monorepo root. The
-project-local scaffold, figures, and diagrams also run independently. The full
+The Python commands below use `uv` and run from the canonical monorepo root;
+common preparation follows the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+The project-local scaffold, figures, and diagrams also run independently. The full
 development suite includes declared SDK integration checks; its own `dev`
 extra selects the SDK from this checkout. An exported clone needs an explicitly
 prepared SDK wheel rather than an ancestor checkout or an assumed PyPI release;
 see [the standalone development boundary](STANDALONE.md#intentional-non-standalone-dependencies).
+
+Figure generation writes local image artifacts. Diagram generation always
+writes Mermaid sources under `output/figures/mermaid/`; PNGs additionally need
+a working Mermaid CLI/browser environment. The renderer prefers an ancestor
+`node_modules/.bin/mmdc`, then `mmdc` on `PATH`. Missing or failed rendering
+leaves `.mmd` files and the script can still exit successfully: inspect its
+reported PNG count and actual artifacts. Use the monorepo's
+[pinned Node/npm/Mermaid preparation](https://github.com/docxology/template/blob/main/README.md)
+when PNGs are required; Python dependency preparation is not that renderer setup.
+Source-only `.mmd` output is a local authoring result, not PNG, rendered-book,
+native-format or publication acceptance. This boundary also applies to the
+standalone commands below; no successful rendering is asserted here.
 
 ```bash
 # 1. Install dependencies for the workspace
@@ -142,7 +156,7 @@ uv sync
 # 2. For a new draft only, materialise missing files declared in config.yaml
 uv run python projects/templates/template_textbook/scripts/scaffold_chapter.py
 
-# 3. Generate deterministic figures and diagrams
+# 3. Generate figures and Mermaid sources; diagram PNGs need the separate renderer
 uv run python projects/templates/template_textbook/scripts/generate_figures.py
 uv run python projects/templates/template_textbook/scripts/generate_diagrams.py
 
@@ -156,6 +170,27 @@ uv run --project projects/templates/template_textbook --locked --extra dev \
 # 5. Audit the complete canonical book
 uv run python projects/templates/template_textbook/scripts/audit_textbook_quality.py --require-complete
 ```
+
+### Standalone project commands
+
+From an independent project root, prepare the declared SDK/development
+dependencies using a real matching wheel; its intended version is not proof
+of a PyPI release. Do not use the checkout-only `tool.uv.sources` ancestor:
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python scripts/generate_figures.py
+.venv/bin/python scripts/generate_diagrams.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/audit_textbook_quality.py --require-complete
+```
+
+For a new draft only, `scripts/scaffold_chapter.py` is the local scaffolding
+entry point. Preserve the authored canonical book; do not generate over it or
+omit SDK-dependent test modules. Stage scripts under `scripts/pipeline/` and
+the repository drift checker remain monorepo-root commands.
 
 > Exit code 0 alone is not proof: confirm the suite collected more than zero
 > tests and that coverage met the floor. The default audit proves scaffold
@@ -179,8 +214,9 @@ The workflow is always **edit config, then scaffold**:
    with `--require-complete`; it reports each section's stub count and fails
    until the total reaches zero.
 
-Because structure is declared once in YAML, the book can scale from this 12-chapter
-skeleton to an arbitrarily large work without renumbering anything by hand.
+Structure is declared once in YAML. The authored canonical book can grow
+without hand renumbering; newly scaffolded additions remain drafts until filled,
+reviewed and admitted by the unchanged complete-content gate.
 
 ## The design in one paragraph
 

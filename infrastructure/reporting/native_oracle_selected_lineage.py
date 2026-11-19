@@ -13,7 +13,10 @@ from typing import Any
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_analysis_boundary_replay import REMAINING as ANALYSIS_LIMITS
-from infrastructure.reporting.native_hydration_reconstruction import REMAINING as HYDRATION_LIMITS
+from infrastructure.reporting.native_hydration_reconstruction import (
+    REMAINING as HYDRATION_LIMITS,
+    _HYDRATED_CALLERS,
+)
 from infrastructure.reporting.native_project_domain import REMAINING as DOMAIN_LIMITS
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -93,6 +96,33 @@ def _occurrences(hydration: dict[str, Any]) -> tuple[list[dict[str, Any]], list[
             source = _binding(row.get("source"))
             if (source["sha256"], source["bytes"]) != (consumed["sha256"], consumed["bytes"]):
                 raise ValueError("exact authored Source row no longer contains its actual Source bytes")
+            continue
+        if transformation == "Source-normalized-authored-body":
+            authored = _binding(row.get("source"))
+            mapping, writer = row.get("hydration"), row.get("writer")
+            route = _HYDRATED_CALLERS.get(hydration["scope"])
+            if (
+                route is None
+                or not isinstance(mapping, dict)
+                or not isinstance(writer, dict)
+                or mapping.get("writer") != route[1].value
+                or writer.get("algorithm") != route[1].value
+                or writer.get("source_binding") != hydration["source_binding"]
+                or mapping.get("source_sha256") != authored["sha256"]
+                or mapping.get("source_bytes") != authored["bytes"]
+                or mapping.get("output_sha256") != consumed["sha256"]
+                or mapping.get("output_bytes") != consumed["bytes"]
+                or mapping.get("occurrences") != []
+            ):
+                raise ValueError("normalized authored copy lost its checked exact Source/writer/body binding")
+            inputs = writer.get("inputs")
+            expected = [
+                f"projects/{hydration['scope']}/{route[0]}",
+                "infrastructure/rendering/manuscript_injection.py",
+                "infrastructure/core/files/portability.py",
+            ]
+            if not isinstance(inputs, list) or [_binding(item)["path"] for item in inputs] != expected:
+                raise ValueError("normalized authored copy omitted/reordered its fixed Source writer inputs")
             continue
         if transformation != "shared-uppercase-token-hydration":
             if transformation == "Source-generated-transmission-boundary":

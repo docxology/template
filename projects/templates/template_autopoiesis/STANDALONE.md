@@ -50,14 +50,17 @@ Optional infrastructure modules (logging, glossary_gen, figure_manager, etc.) ar
 
 ## Running standalone (outside repo)
 
-```bash
-# Python 3.14/3.15; from the standalone project directory:
-uv sync --extra dev
-uv run pytest tests/primitives tests/core/test_grammar_and_expand.py tests/gates/test_materialize.py --no-cov -q
+Prepare the declared SDK and `dev` environment using the
+[shared standalone boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+From that prepared project root:
 
-# To generate a child project:
-uv run python scripts/autopoiesis.py materialize --out-root /tmp/children
+```bash
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/autopoiesis.py materialize --out-root output/children
 ```
+
+A selected `--no-cov` generation subset is diagnostic, not the complete own
+coverage gate or genuine selected-child realization/native acceptance.
 
 The full selected-child execution capability requires the platform SDK version
 bound in `pyproject.toml`, as a package or checkout, for shared process supervision. Without it,

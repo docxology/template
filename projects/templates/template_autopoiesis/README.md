@@ -93,8 +93,9 @@ uv run python scripts/autopoiesis.py expand
 # Materialize a child project
 uv run python scripts/autopoiesis.py materialize --out-root output/children
 
-# Verify a child
-uv run python scripts/autopoiesis.py verify output/children/child_optimization_XXXX
+# Verify the exact path printed after "Materialized:" above, not a guessed child name.
+: "${CHILD:?Set CHILD to the actual materialized child path}"
+uv run --no-sync --offline python scripts/autopoiesis.py verify "$CHILD"
 
 # Check the falsifiable honesty manifest (this template's headline feature)
 uv run python scripts/autopoiesis.py honesty

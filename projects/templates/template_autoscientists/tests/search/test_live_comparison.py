@@ -443,12 +443,22 @@ def test_actual_fresh_standalone_controller_runs_controlled_model_workers(tmp_pa
     assert all(arm["generation_calls_used"] == 3 for arm in receipt["arms"].values())
 
 
+@pytest.mark.parametrize("platform_layout", ["source", "installed"])
 @pytest.mark.parametrize("fault", [None, "missing-project-root", "changed-hook-digest"])
-def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fault) -> None:
-    """Run the real script under a real pre-import hook, including refusal controls."""
+def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fault, platform_layout) -> None:
+    """Run the real script with Source or installed SDK roots, including refusal controls."""
     root = project_copy(tmp_path)
     output = root / "output/launcher-reference"
     script = PROJECT / "scripts/run_search_comparison.py"
+    source_platform_root = Path(platform_custody.__file__).resolve().parents[2]
+    platform_root = source_platform_root
+    if platform_layout == "installed":
+        platform_root = tmp_path / "installed-sdk"
+        shutil.copytree(
+            source_platform_root / "infrastructure",
+            platform_root / "infrastructure",
+            ignore=shutil.ignore_patterns("__pycache__"),
+        )
     prefix = tmp_path.resolve() / "launcher-cache"
     prefix.mkdir()
     # Use the real stage launcher roots. Optional installed packages are not
@@ -456,13 +466,14 @@ def test_core_controller_preserves_and_authenticates_launcher_audit(tmp_path, fa
     # pre-import scope merely because find_spec can discover them.
     provider_bootstrap = r"""
 import sys
-import tomllib
 from pathlib import Path
+sys.path.insert(0,sys.argv[4])
 from infrastructure.core import implementation_custody
 platform_root=Path(implementation_custody.__file__).resolve().parents[2]
+source_root=Path(sys.argv[5])
 project=Path(sys.argv[1])
 prefix=Path(sys.argv[2])
-roots=(platform_root/'infrastructure',platform_root/'scripts',project/'scripts')
+roots=(platform_root/'infrastructure',source_root/'scripts',project/'scripts')
 if sys.argv[3]=='include':
     roots+=(project/'src',)
 print(implementation_custody.bytecode_audit_bootstrap(roots,prefix),end='')
@@ -477,11 +488,14 @@ print(implementation_custody.bytecode_audit_bootstrap(roots,prefix),end='')
             str(PROJECT),
             str(prefix),
             "omit" if fault == "missing-project-root" else "include",
+            str(platform_root),
+            str(PROJECT.parents[2]),
         ],
         cwd=tmp_path,
         text=True,
         timeout=30,
     )
+    bootstrap = f"import sys;sys.path.insert(0,{str(platform_root)!r});" + bootstrap
     if fault == "changed-hook-digest":
         bootstrap += (
             "from types import MappingProxyType;"

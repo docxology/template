@@ -75,7 +75,8 @@ def extract_citation(ctx: ExtractContext) -> dict[str, str]:
             if key == "top_pagerank":
                 variables["TOP_PAGERANK_DOI"] = ""
     variables.update(_empty_advanced())
-    variables["DEGREE_ASSORTATIVITY"] = f"{citation.get('degree_assortativity', 0):.4f}"
+    assortativity = citation.get("degree_assortativity", 0)
+    variables["DEGREE_ASSORTATIVITY"] = "N/A" if assortativity is None else f"{assortativity:.4f}"
     variables["AVG_CLUSTERING"] = f"{citation.get('avg_clustering', 0):.4f}"
     top_betw = citation.get("top_betweenness", {})
     if isinstance(top_betw, dict) and top_betw:

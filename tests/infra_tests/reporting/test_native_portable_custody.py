@@ -24,6 +24,7 @@ from infrastructure.reporting.native_format_portable_custody import (
 from infrastructure.reporting.native_projection_contracts import ProjectionSourceUnsupported
 from infrastructure.reporting.native_tool_replay import validate_native_tool_data
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+from infrastructure.reporting.required_acceptance_aggregate import _evidence_closure
 
 REPO = Path(__file__).absolute().parents[3]
 # Portable admission of a retained native tool receipt needs the externally
@@ -82,9 +83,55 @@ def test_actual_tool_receipt_relocated_reader_and_tamper(tmp_path: Path) -> None
     shutil.rmtree(producer)
     raw = SnapshotReader(reader).read(record["artifact"]["path"]).json_object()
     assert raw["stdout"].strip() == "original actual execution"
+    closure_reader = SnapshotReader(reader)
+    closure = _evidence_closure(closure_reader, record["artifact"]["path"])
+    assert set(closure) == {
+        record["artifact"]["path"],
+        raw["native_process_artifact"]["path"],
+        raw["raw_stdout"]["path"],
+        raw["raw_stderr"]["path"],
+    }
+    assert closure[raw["raw_stdout"]["path"]].decode().strip() == "original actual execution"
+    assert closure[raw["raw_stderr"]["path"]] == b""
+    assert set(closure_reader.snapshots) == {reader / relative for relative in closure}
+    assert closure_reader.unchanged()
     # The relocated original PID/OS/stream/guardian DATA remains consistent
     # under the clock this caller actually held for the original launch.
     validate_native_tool_data(raw, SnapshotReader(reader), original_deadline=deadline, original_completion=completed)
+    native_path = reader / raw["native_process_artifact"]["path"]
+    original_native = native_path.read_bytes()
+    try:
+        for channel in ("stdout", "stderr"):
+            for fault in ("legacy", "schema", "hash", "bytes", "name", "extra"):
+                changed_native = json.loads(original_native)
+                stream = changed_native[f"raw_{channel}"]
+                if fault == "legacy":
+                    stream.pop("schema_version")
+                elif fault == "schema":
+                    stream["schema_version"] = "unrecognized-stream-observation"
+                elif fault == "hash":
+                    stream["sha256"] = "0" * 64
+                elif fault == "bytes":
+                    stream["bytes"] += 1
+                elif fault == "name":
+                    stream["path"] += ".changed"
+                else:
+                    stream["extra"] = True
+                # Rebind the changed process so refusal must inspect stream DATA,
+                # not merely notice an obsolete enclosing artifact hash.
+                changed_raw = {
+                    **raw,
+                    "native_process_artifact": write_json(reader, native_path, changed_native),
+                }
+                with pytest.raises(ValueError):
+                    validate_native_tool_data(
+                        changed_raw,
+                        SnapshotReader(reader),
+                        original_deadline=deadline,
+                        original_completion=completed,
+                    )
+    finally:
+        native_path.write_bytes(original_native)
     with pytest.raises(ProjectionSourceUnsupported, match=UNADMITTED):
         _tool(record["artifact"], SnapshotReader(reader), "a" * 32, str(executable), "portable-actual", args)
     # Another actual interpreter loading the same source cannot mint custody either.

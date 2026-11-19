@@ -55,3 +55,8 @@ rsync -a \
 - Replace `manuscript/deck_content_{short,medium,long}.yaml` with your own pitch narrative; update `src/deck_tokens.py::build_deck_tokens` to source facts from whatever project/organization you are pitching (it does not have to be another exemplar in this monorepo).
 - Every slide referencing a live-sourced fact token needs a `source` citation — `src/diligence_audit.py` enforces this; extend `FACT_TOKEN_PREFIXES` if your fork's token naming differs.
 - `infrastructure/rendering/{slide_deck,pptx_deck}.py` are shared, generic infrastructure — do not fork those; only the project-local `manuscript/` and `src/` content should change.
+
+Prepare the actual SDK, admitted complete Root DATA and real renderers using
+the [parent README](README.md) and its AGENTS DATA contract before running deck
+commands. The short/medium/long PDF/PPTX six-artifact boundary remains mandatory;
+an SDK wheel, fact-token audit or successful partial rendering is not acceptance.

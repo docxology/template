@@ -249,8 +249,8 @@ jobs:
             --verify --repo-root "$RELEASE_ROOT" --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" \
             --installed-receipt "$INSTALLED_RECEIPT"
 
-      - name: Create a new GitHub Release only
-        id: publish
+      - name: Create a new owned release draft and upload admitted assets
+        id: create_release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.tag.outputs.name }}
@@ -262,27 +262,103 @@ jobs:
           # Refuse existing releases, including drafts, rather than updating them.
           gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
             | jq -se 'all(.[][]; .tag_name != env.TAG)'
-          prerelease_args=()
+          remote_tag=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" \
+            --jq 'select(.object.type == "tag") | .object.sha')
+          test -n "$remote_tag"
+          test "$remote_tag" = "$(git rev-parse "refs/tags/$TAG")"
+          prerelease=false
           case "$TAG" in
-            *-rc*|*-beta*|*-alpha*) prerelease_args=(--prerelease) ;;
+            *-rc*|*-beta*|*-alpha*) prerelease=true ;;
           esac
-          # --verify-tag forbids implicit tag creation; no edit or upload --clobber.
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
-            --target "$SOURCE_COMMIT" --title "Research Project Template $TAG" \
-            --notes-file "$RELEASE_NOTES" "${prerelease_args[@]}" \
-            "$RELEASE_ROOT"/dist/* \
-            "$RELEASE_ROOT/docs/releases/template-$TAG-overview.png"
+          # Capture the new ID from creation itself; never adopt an existing draft.
+          gh api --method POST "repos/$GITHUB_REPOSITORY/releases" \
+            -f tag_name="$TAG" -f target_commitish="$SOURCE_COMMIT" \
+            -f name="Research Project Template $TAG" -F "body=@$RELEASE_NOTES" \
+            -F draft=true -F prerelease="$prerelease" \
+            > "$RUNNER_TEMP/template-root-created-release.json"
+          release_id=$(jq -er --arg tag "$TAG" --arg source "$SOURCE_COMMIT" \
+            'select(.draft == true and .tag_name == $tag and .target_commitish == $source)
+            | .id | select(type == "number" and . > 0)' \
+            "$RUNNER_TEMP/template-root-created-release.json")
+          echo "release_id=$release_id" >> "$GITHUB_OUTPUT"
+          # No --clobber: publication cannot replace any asset.
+          gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" \
+            "$RELEASE_ROOT"/dist/* "$RELEASE_ROOT/docs/releases/template-$TAG-overview.png"
 
-      - name: Verify retrieved release assets
-        id: retrieved_assets
+      - name: Verify all retrieved draft assets before public archival
+        id: draft_assets
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.tag.outputs.name }}
+          SOURCE_COMMIT: ${{ steps.tag_checkout.outputs.source_commit }}
+          RELEASE_ID: ${{ steps.create_release.outputs.release_id }}
           MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
           RELEASE_ROOT: ${{ steps.release_inputs.outputs.root }}
           INSTALLED_RECEIPT: ${{ steps.release_inputs.outputs.installed_receipt }}
         run: |
           set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" \
+            > "$RUNNER_TEMP/template-root-draft-assets.json"
+          jq -e --argjson id "$RELEASE_ID" --arg tag "$TAG" --arg source "$SOURCE_COMMIT" \
+            '.id == $id and .draft == true and .tag_name == $tag and .target_commitish == $source
+            and all(.assets[]; .state == "uploaded")' "$RUNNER_TEMP/template-root-draft-assets.json"
+          destination="$RUNNER_TEMP/template-release-draft-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir "$destination"
+          uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
+            --verify --repo-root "$RELEASE_ROOT" --tag "$TAG" --manifest-sha256 "$MANIFEST_SHA256" --retrieved "$destination" \
+            --installed-receipt "$INSTALLED_RECEIPT"
+          jq -cS '[.assets[] | {id, name, size, state}] | sort_by(.id)' \
+            "$RUNNER_TEMP/template-root-draft-assets.json" > "$RUNNER_TEMP/template-root-verified-asset-ids.json"
+
+      - name: Publish only this newly created verified draft
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.name }}
+          SOURCE_COMMIT: ${{ steps.tag_checkout.outputs.source_commit }}
+          RELEASE_ID: ${{ steps.create_release.outputs.release_id }}
+        run: |
+          set -euo pipefail
+          remote_tag=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" \
+            --jq 'select(.object.type == "tag") | .object.sha')
+          test -n "$remote_tag"
+          test "$remote_tag" = "$(git rev-parse "refs/tags/$TAG")"
+          gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" \
+            > "$RUNNER_TEMP/template-root-before-publication.json"
+          jq -e --argjson id "$RELEASE_ID" --arg tag "$TAG" --arg source "$SOURCE_COMMIT" \
+            '.id == $id and .draft == true and .tag_name == $tag and .target_commitish == $source' \
+            "$RUNNER_TEMP/template-root-before-publication.json"
+          jq -cS '[.assets[] | {id, name, size, state}] | sort_by(.id)' \
+            "$RUNNER_TEMP/template-root-before-publication.json" > "$RUNNER_TEMP/template-root-before-publication-asset-ids.json"
+          cmp "$RUNNER_TEMP/template-root-verified-asset-ids.json" "$RUNNER_TEMP/template-root-before-publication-asset-ids.json"
+          # Only this POST's ID may be published, after independent byte verification.
+          # This transition can trigger Zenodo; never patch an earlier release.
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" -F draft=false \
+            > "$RUNNER_TEMP/template-root-published-release.json"
+          jq -e --argjson id "$RELEASE_ID" --arg tag "$TAG" --arg source "$SOURCE_COMMIT" \
+            '.id == $id and .draft == false and .tag_name == $tag and .target_commitish == $source' \
+            "$RUNNER_TEMP/template-root-published-release.json"
+
+      - name: Verify all retrieved public release assets
+        id: retrieved_assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.name }}
+          SOURCE_COMMIT: ${{ steps.tag_checkout.outputs.source_commit }}
+          RELEASE_ID: ${{ steps.create_release.outputs.release_id }}
+          MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
+          RELEASE_ROOT: ${{ steps.release_inputs.outputs.root }}
+          INSTALLED_RECEIPT: ${{ steps.release_inputs.outputs.installed_receipt }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" \
+            > "$RUNNER_TEMP/template-root-public-assets.json"
+          jq -e --argjson id "$RELEASE_ID" --arg tag "$TAG" --arg source "$SOURCE_COMMIT" \
+            '.id == $id and .draft == false and .tag_name == $tag and .target_commitish == $source' \
+            "$RUNNER_TEMP/template-root-public-assets.json"
+          jq -cS '[.assets[] | {id, name, size, state}] | sort_by(.id)' \
+            "$RUNNER_TEMP/template-root-public-assets.json" > "$RUNNER_TEMP/template-root-public-asset-ids.json"
+          cmp "$RUNNER_TEMP/template-root-verified-asset-ids.json" "$RUNNER_TEMP/template-root-public-asset-ids.json"
           destination="$RUNNER_TEMP/template-release-retrieved-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir "$destination"
           uv run --no-sync --offline python -m infrastructure.publishing.root_release_artifacts \
@@ -300,6 +376,9 @@ jobs:
           WHEEL_ADMISSION: ${{ steps.distributions.outcome }}
           MANIFEST_SHA256: ${{ steps.distributions.outputs.manifest_sha256 }}
           ASSET_RECHECK: ${{ steps.asset_recheck.outcome }}
+          OWNED_DRAFT: ${{ steps.create_release.outcome }}
+          RELEASE_ID: ${{ steps.create_release.outputs.release_id }}
+          DRAFT_ASSETS: ${{ steps.draft_assets.outcome }}
           RELEASE_PUBLICATION: ${{ steps.publish.outcome }}
           RETRIEVED_ASSETS: ${{ steps.retrieved_assets.outcome }}
           JOB_STATUS: ${{ job.status }}
@@ -313,6 +392,8 @@ jobs:
             printf '| Fresh installed candidate readback | %s | |\n' "${CANDIDATE_READER:-not run}"
             printf '| Exact installed wheel/receipt and source distribution admission | %s | |\n' "${WHEEL_ADMISSION:-not run}"
             printf '| Admitted publication byte recheck | %s | |\n' "${ASSET_RECHECK:-not run}"
+            printf '| New owned release draft and asset upload | %s | ID=%s |\n' "${OWNED_DRAFT:-not run}" "${RELEASE_ID:-not created}"
+            printf '| Retrieved draft bytes verified before public archival | %s | |\n' "${DRAFT_ASSETS:-not run}"
             printf '| GitHub release publication | %s | |\n' "${RELEASE_PUBLICATION:-not run}"
             printf '| Retrieved release asset verification | %s | |\n\n' "${RETRIEVED_ASSETS:-not run}"
             if [ "$WHEEL_ADMISSION" = success ] && [ "$ASSET_RECHECK" = success ]; then

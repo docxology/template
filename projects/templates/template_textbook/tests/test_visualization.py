@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import json
+import re
 from pathlib import Path
 
 import pytest
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 
 from textbook.config import iter_chapters, load_config
+from textbook.content import scaffold_chapter
 from visualization import _scaffold, plots
 from visualization.registry import FIGURE_ALT_TEXT, collect_figure_registry_entries, write_figure_registry
 
@@ -95,17 +98,81 @@ def test_figure_registry_entries_match_manuscript_labels(tmp_path):
     assert all(entry.alt_text.strip() for entry in entries)
 
 
-def test_figure_registry_rejects_missing_explicit_alt_text(tmp_path):
+def test_figure_registry_accepts_configured_new_chapter_authored_alt_text(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "output" / "figures"
+    chapter_dir = manuscript / "part_I"
+    chapter_dir.mkdir(parents=True)
+    (manuscript / "config.yaml").write_text(
+        """units:
+  - id: part_I
+    title: Fundamentals
+    label: I
+    directory: part_I
+    chapters:
+      - file: first_principles.md
+        title: First Principles
+      - file: my_new_chapter.md
+        title: My New Chapter
+""",
+        encoding="utf-8",
+    )
+    config = load_config(manuscript)
+    existing, added = iter_chapters(config)
+    existing.path(manuscript).write_text(
+        existing.path(PROJECT_ROOT / "manuscript").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    authored_alt = (
+        "A blue-bordered panel without axes carries the bold title My New Chapter above\n"
+        "a smaller gray instruction to replace the placeholder through the plotting module."
+    )
+    added.path(manuscript).write_text(
+        re.sub(
+            r"<!-- alt:.*?-->",
+            f"<!-- alt: {authored_alt} -->",
+            scaffold_chapter(added),
+            flags=re.DOTALL,
+        ),
+        encoding="utf-8",
+    )
+
+    paths = plots.generate_chapter_figures(figures, config)
+    added_figure = paths[1]
+    _png_is_nonempty(added_figure)
+    registry = write_figure_registry(manuscript, figures)
+    records = {entry["label"]: entry for entry in json.loads(registry.read_text(encoding="utf-8"))["figures"]}
+    assert set(records) == {"fig:part_I_first_principles", "fig:part_I_my_new_chapter"}
+    added_record = records["fig:part_I_my_new_chapter"]
+    assert added_record["alt_text"] == " ".join(authored_alt.split())
+    assert added_record["filename"] == added_figure.name
+    assert added_record["source_markdown"] == added.path(manuscript).relative_to(manuscript).as_posix()
+    assert added_record["generated_by"] == "scripts/generate_figures.py"
+    assert records["fig:part_I_first_principles"]["filename"] == "logistic_growth.png"
+    ok, issues = validate_figure_registry(registry, manuscript, require_accessibility=True)
+    assert ok, issues
+
+
+@pytest.mark.parametrize(
+    ("label", "alt_comment"),
+    [
+        ("fig:unknown", ""),
+        ("fig:unknown", "<!-- alt: -->"),
+        ("fig:unknown", "<!-- alt:\n \t -->"),
+        ("fig:gallery_bar", "<!-- alt: -->"),
+    ],
+)
+def test_figure_registry_rejects_missing_explicit_alt_text(tmp_path, label, alt_comment):
     manuscript = tmp_path / "manuscript"
     figures = tmp_path / "figures"
     manuscript.mkdir()
     figures.mkdir()
     (manuscript / "chapter.md").write_text(
-        "![A caption is not an alt-text substitute.](../figures/unknown.png){#fig:unknown}\n",
+        f"![A caption is not an alt-text substitute.](../figures/unknown.png){{#{label}}}\n\n{alt_comment}\n",
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="Missing explicit alt-text specification.*fig:unknown"):
+    with pytest.raises(ValueError, match=f"Missing explicit alt-text specification.*{label}"):
         collect_figure_registry_entries(manuscript, figures)
 
 

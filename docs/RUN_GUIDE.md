@@ -397,13 +397,14 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Default full run (see STAGE_SUMMARY)
-./run.sh --pipeline --resume # Resume from last checkpoint
+./run.sh --pipeline --mode core          # Default non-LLM selection (see STAGE_SUMMARY)
+./run.sh --pipeline --mode core --resume # Resume that selection from its checkpoint
 uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
 uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only
 uv run python scripts/pipeline/stage_03_render.py --project {name}      # Render configured manuscript formats
 
 # LLM Operations (requires Ollama)
+./run.sh --pipeline --mode live          # Explicit live selection; not release acceptance
 uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only        # LLM manuscript review only (English)
 uv run python scripts/pipeline/stage_06_llm_review.py --translations-only   # LLM translations only
 

@@ -530,6 +530,12 @@ No guard spans execution, accepts callbacks or yields reusable verification.
 Public independent verification APIs remain fresh; clocks and original signed
 failure outcomes retain authority.
 
+Paired Crossref verification checks its two filter records and held compiler
+output within one fresh complete Source interval. Private DATA comparisons
+retain every owner, process, physical library, declaration, launcher, environment
+and deadline predicate. They do not cache admission or span actual tool execution;
+each public verification and live callback still opens fresh Source custody.
+
 
 Native hosted transport accepts one declared matrix scope or the complete ordered
 public roster; each receipt must match that exact completed selection. Original

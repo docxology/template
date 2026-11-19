@@ -18,14 +18,16 @@ Additional locations are config-declared publication evidence; the central index
 
 ## Purpose
 
-`template_textbook` is the modular, fillable book scaffold exemplar: a
-book-length manuscript structure, generated chapter/lab/question surfaces,
-deterministic figures, Mermaid diagrams, and structural integrity tests.
+`template_textbook` demonstrates an authored canonical technical book plus
+config-owned tools for growing a new draft: chapters, labs, question banks,
+worked models, figures and diagrams. The canonical book and a newly generated
+stub scaffold are different products.
 
 ## Copy This When
 
-Use it for a new technical book where the author wants a scalable scaffold
-rather than a finished domain manuscript.
+Use it when you need the book structure and authoring tools. Replace the domain
+content deliberately; generated missing-file scaffolds are drafts, not finished
+chapters or proof of a complete textbook.
 
 ## Clean Copy Command
 
@@ -101,5 +103,6 @@ markers until it replaces scaffolding with reviewed domain content.
 
 ## What Not To Claim
 
-Do not claim the scaffold is a completed textbook. The stub markers are part of
-the honest contract and should remain until replaced by reviewed content.
+Do not call a newly scaffolded draft a completed textbook. Replace its stub
+markers with reviewed content and retain `--require-complete`; the authored
+canonical book is required to pass that gate, not exempted as a skeleton.

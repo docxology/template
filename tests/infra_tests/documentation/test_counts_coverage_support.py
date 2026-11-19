@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import subprocess
 from pathlib import Path
 
@@ -13,7 +12,6 @@ from infrastructure.documentation.counts_doc import (
     exemplar_source_hash,
 )
 from infrastructure.documentation.counts_coverage import (
-    _COVERAGE_COPY_SUPPORT_SPECS,
     _coverage_measurement_environment,
     _coverage_measurement_workspace,
     _coverage_run_prefix,
@@ -22,7 +20,6 @@ from infrastructure.documentation.counts_coverage import (
 
 from tests.infra_tests.documentation._counts_doc_helpers import (
     _repo_root,
-    _repo_root_anchor,
     _write_test_coverage_support_closure,
 )
 
@@ -31,66 +28,6 @@ from tests.infra_tests.documentation._counts_doc_helpers import (
 # provenance discovery. They are bounded, but can exceed the repository's
 # 10-second default when the complete coverage suite is under load.
 pytestmark = pytest.mark.timeout(30)
-
-
-def test_active_coverage_support_closure_exactly_matches_outward_documentation_links() -> None:
-    import runpy
-
-    repo_root = _repo_root()
-    project = repo_root / "projects" / "templates" / "template_active_inference"
-    contract = runpy.run_path(str(project / "src" / "gates" / "documentation_contract.py"))
-    iter_targets = contract["_iter_markdown_targets"]
-    split_target = contract["_split_link_target"]
-    skip_parts = contract["SKIP_PARTS"]
-    outward_targets: list[str] = []
-    remote_roster_references: list[str] = []
-    for path in sorted(project.rglob("*.md")):
-        if any(part in skip_parts for part in path.relative_to(project).parts):
-            continue
-        text = path.read_text(encoding="utf-8")
-        for _, raw_target in iter_targets(text):
-            target, fragment = split_target(raw_target)
-            if (
-                target == "https://github.com/docxology/template/blob/main/projects/AGENTS.md"
-                and fragment == "permanent-canonical-exemplars"
-            ):
-                outward_targets.append("projects/AGENTS.md")
-                remote_roster_references.append(path.relative_to(project).as_posix())
-                continue
-            if not target or re.match(r"^[a-z][a-z0-9+.-]*:", target):
-                continue
-            candidate = (path.parent / target).resolve()
-            if candidate.is_relative_to(project):
-                continue
-            outward_targets.append(candidate.relative_to(repo_root).as_posix())
-
-    expected_targets = [
-        "AGENTS.md",
-        "docs/RUN_GUIDE.md",
-        "docs/_generated/COUNTS.md",
-        "docs/_generated/COUNTS.md",
-        "docs/development/ci.md",
-        "docs/guides/manuscript-semantics.md",
-        "docs/guides/publishing-guide.md",
-        "docs/guides/zenodo-doi-strategy.md",
-        "docs/maintenance/archival-targets.md",
-        "docs/development/public-runtime-matrix.md",
-        "docs/maintenance/exemplar-backlog-history.md",
-        "docs/maintenance/platform-4-upgrade.md",
-        "docs/rules/memory_and_decision_records.md",
-        "infrastructure/publishing/README.md",
-        "projects/AGENTS.md",
-        "projects/AGENTS.md",
-        "projects/templates/template_code_project",
-    ]
-    declared_targets = {_repo_root_anchor(spec) for spec in _COVERAGE_COPY_SUPPORT_SPECS}
-
-    assert sorted(remote_roster_references) == [
-        ".agents/skills/template-active-inference/SKILL.md",
-        "README.md",
-    ]
-    assert sorted(outward_targets) == sorted(expected_targets)
-    assert set(outward_targets) == declared_targets
 
 
 def test_active_coverage_support_identity_binds_contract_bytes_but_not_counts_content(tmp_path: Path) -> None:

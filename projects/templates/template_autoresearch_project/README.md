@@ -22,11 +22,11 @@ explicit keep/reject/defer-style ledgers, and confidence claims must disclose
 baseline, best result, and the measurable noise floor rather than standing in
 for human publication approval.
 
-Choose [`template_autoscientists`](../template_autoscientists/) instead if
+Choose [`template_autoscientists`](https://github.com/docxology/template/blob/main/projects/templates/template_autoscientists) instead if
 your focus is agent-team **coordination primitives** (dead-end registries,
 noise-band confirmation, stagnation-driven reorganization) rather than
 AutoResearch loop infrastructure. For the full exemplar roster see
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -72,13 +72,6 @@ _Keywords: autoresearch, reproducible research, machine learning benchmark, arti
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
-The 3 platforms still shown ⚪ available are not automatable to "published" with
-current tooling/credentials, not an oversight: **arXiv** has no submission API
-in this codebase (`infrastructure.publishing.arxiv` only prepares a local
-tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
-would then be added to `publication.published_artifacts`); **Cloudflare
-Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
-auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_autoresearch_project`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_autoresearch_project/` in the monorepo; public output files above 50 MB stay out of git.
@@ -273,7 +266,7 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/data/autoresearch_evidence_overview.json`
 - `output/data/benchmark_boundary.json`
 - `output/reports/autoresearch_evidence_overview.md`
-- `output/data/publication_ledger.json` — release-stage; written by `write_transmission_bookends()` when `manuscript/config.yaml`'s `publication.transmission_bookends.enabled` is `true` (see [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md))
+- `output/data/publication_ledger.json` — release-stage; written by `write_transmission_bookends()` when `manuscript/config.yaml`'s `publication.transmission_bookends.enabled` is `true` (see [`docs/guides/publishing-guide.md`](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md))
 - `output/data/transmission_manifest.json` — release-stage; see `publication.transmission_bookends` above
 - `output/figures/autoresearch_stage_matrix.png`
 - `output/figures/ml_candidate_scores.png`

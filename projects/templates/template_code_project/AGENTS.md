@@ -1,8 +1,8 @@
 # Code Project - Optimization Research Exemplar
 
-**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Public exemplar roster and comparison: [`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars). Publication DOI layout: [`docs/guides/zenodo-doi-strategy.md`](../../../docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md).
+**This is a public canonical exemplar** under `projects/templates/` in the monorepo, also byte-copied to a standalone repository. Public exemplar roster and comparison: [monorepo `projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars). Publication DOI layout: [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md). Manuscript semantics: [shared guide](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md).
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow [monorepo `docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Layer contract
 
@@ -10,8 +10,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | --- | --- |
 | `src/template_code_project/core/optimizer.py`, `src/template_code_project/core/invariants.py` (mathematical core) | Pure optimization and invariant logic — **no** direct `infrastructure` imports |
 | `src/template_code_project/analysis/_infra.py`, `src/template_code_project/core/_runtime.py`, `src/template_code_project/core/benchmark_support.py` | Declared monorepo adapters only (analysis services, rendering/runtime helpers, benchmark rubric) |
-| `scripts/` | Thin orchestrators; may import `infrastructure/` and `src/` |
-| Live counts | Link [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
+| `scripts/` | Thin orchestrators; call project domain APIs and declared platform SDK services, not arbitrary source-tree internals; business logic stays in `src/` |
+| Live counts | Link [monorepo generated counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md); do not hardcode measured test totals or coverage % |
 
 Enforced by `check_project_src_infrastructure_boundary` via `scripts/audit/check_template_drift.py --strict` and `manuscript/layer_contract.yaml`.
 
@@ -30,7 +30,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/templates/template_code_project/src/` measures well above the 90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline. Live test count + achieved coverage: [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md).
+- **Test suite**: covers edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; the 90% minimum gate is declared in project [`pyproject.toml`](pyproject.toml) and enforced by the root pipeline. Live test count + achieved coverage: [monorepo generated counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md).
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -46,9 +46,9 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 Double publish (Zenodo + GitHub) via `scripts/publish/publish_project_release.py`. Manuscript config enables transmission bookends, steganography profile documentation, and metadata-driven deposit filenames (`Author_2026_Convergence_{hash8}.pdf` — local working PDF remains `template_code_project_combined.pdf`).
 
-Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [`docs/_generated/publication_records.md`](../../../docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
+Current release/DOI records are generated from `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, GitHub, and Zenodo into [monorepo publication records](https://github.com/docxology/template/blob/main/docs/_generated/publication_records.md). Do not copy per-version DOI rows here.
 
-Workflow reference: [`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections) · [`infrastructure/publishing/README.md`](../../../infrastructure/publishing/README.md) (publishing module reference) · [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md) (archival targets). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
+Workflow reference (monorepo): [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) (transmission bookends + deposit filename sections) · [Publishing module reference](https://github.com/docxology/template/blob/main/infrastructure/publishing/README.md) · [Archival targets](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md). Render/stego path: [`docs/rendering_pipeline.md`](docs/rendering_pipeline.md).
 
 ### Scientific Validation & Analysis
 
@@ -96,9 +96,13 @@ flowchart TB
 
 ## Installation/Setup
 
-Install dependencies from the **repository root** with `uv sync` (see root [`pyproject.toml`](../../../pyproject.toml)). The root `[tool.uv.workspace]` has `members = []`, so this directory is not a separate uv workspace package; [`projects/templates/template_code_project/pyproject.toml`](pyproject.toml) still pins **pytest/coverage** settings, documents the project name, and lists scientific dependencies used when running tools against this tree in isolation.
+For monorepo development, install dependencies from the **monorepo root** with `uv sync` (see [Root `pyproject.toml`](https://github.com/docxology/template/blob/main/pyproject.toml)). Its `[tool.uv.workspace]` has `members = []`, so this directory is not a separate uv workspace package. The project's own [`pyproject.toml`](pyproject.toml) owns its declared SDK/dependencies and pytest/coverage settings for isolated preparation.
 
 ## Usage Examples
+
+The qualified command examples here run from the **monorepo root**. Shared
+pipeline, publishing and drift scripts are not standalone project entry points;
+isolated preparation uses this project's own metadata and declared SDK.
 
 ### Basic Optimization
 
@@ -327,15 +331,15 @@ These issues were discovered during development and are documented here for futu
 
 4. **`MPLBACKEND=Agg` in conftest**: Without this, matplotlib tests may try to open display windows and hang. Set `os.environ.setdefault("MPLBACKEND", "Agg")` at the top of `conftest.py`.
 
-> **See also**: [New Project Setup Guide](../../../docs/guides/new-project-setup.md) for the full checklist.
+> **See also**: [Monorepo New Project Setup Guide](https://github.com/docxology/template/blob/main/docs/guides/new-project-setup.md) for the full checklist.
 
-Development follows the shared instructions in [root `AGENTS.md`](../../../AGENTS.md),
-[`.agents/AGENTS.md`](../../../.agents/AGENTS.md), and
-[`docs/rules/`](../../../docs/rules/).
+Development follows the shared monorepo instructions in [Root `AGENTS.md`](https://github.com/docxology/template/blob/main/AGENTS.md),
+[`.agents/AGENTS.md`](https://github.com/docxology/template/blob/main/.agents/AGENTS.md), and
+[`docs/rules/`](https://github.com/docxology/template/tree/main/docs/rules/).
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: live test count and achieved coverage tracked in [`COUNTS.md`](../../../docs/_generated/COUNTS.md); the current suite runs well above the 90% gate
+- **90%+ coverage contract**: project [`pyproject.toml`](pyproject.toml) declares the gate; live test count and achieved coverage belong in [monorepo generated counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md), not a hand-maintained success claim
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)
@@ -514,9 +518,9 @@ Step sizes: 100%|██████████████████| 4/4 [00
 
 ## See Also
 
-- [Root AGENTS.md](../../AGENTS.md) - Template documentation
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) — split `publication.doi` (concept) / `version_doi` layout
-- [infrastructure/scientific/](../../../infrastructure/scientific/AGENTS.md) - Scientific utilities
+- [Root AGENTS.md](https://github.com/docxology/template/blob/main/AGENTS.md) - Monorepo documentation
+- [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md) — split `publication.doi` (concept) / `version_doi` layout
+- [infrastructure/scientific/](https://github.com/docxology/template/blob/main/infrastructure/scientific/AGENTS.md) - Monorepo scientific utilities
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax for this project
-- [`../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics
-- [`../../AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars) — public exemplar roster
+- [Monorepo manuscript semantics](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md) — Repository-wide manuscript semantics
+- [Public exemplar roster](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars)

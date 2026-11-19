@@ -1,7 +1,7 @@
 # template_redacted_report TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -76,3 +76,40 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained open request
+
+The [immutable owner request](https://github.com/docxology/template_redacted_report/blob/669131e7b962a21ba5d85c2483dcd2d05566ccc0/TODO.md#L61-L65)
+remains unchecked. Generic P4 proof-matrix or coverage acceptance does not prove
+byline provenance for malformed configuration.
+
+- [ ] `WFZ-RR-001` · ready · Minor · Make neutral-byline fallback explicit.
+  - Outcome: an intentionally absent configuration may take a documented neutral-byline path, but present unreadable/malformed YAML or missing/invalid author fields must fail clearly rather than silently stamp `("Template Author", "")` into proof PDFs.
+  - Evidence: `src/redacted_report/publication_meta.py::publication_author_and_date` catches every exception at lines 27–28; the module's own purpose is to source proof-page and steganography authorship from `manuscript/config.yaml`. The immutable review preserves the original complete evidence and probe.
+  - Acceptance from the prepared standalone project root:
+    ```bash
+    python -I - <<'PY'
+    import tempfile
+    from pathlib import Path
+    import redacted_report.publication_meta as publication
+    original = publication._CONFIG_PATH
+    try:
+        with tempfile.TemporaryDirectory() as directory:
+            config = Path(directory) / "config.yaml"
+            publication._CONFIG_PATH = config
+            config.write_text('authors: [{name: "Fixture Author"}]\npaper: {date: "2026-01-01"}\n')
+            assert publication.publication_author_and_date() == ("Fixture Author", "2026-01-01")
+            config.write_text("authors: [broken\n")
+            try:
+                publication.publication_author_and_date()
+            except Exception as exc:
+                assert str(exc), "configuration failure must be actionable"
+            else:
+                raise AssertionError("present malformed config silently produced a byline")
+    finally:
+        publication._CONFIG_PATH = original
+    PY
+    python -I -m pytest tests/test_visuals_proofs.py -q --no-cov
+    ```
+  - Negative controls: distinguish the malformed present file, present invalid/missing author fields, and deliberately absent configuration; the valid fixture must retain its exact configured author/date. Add focused behavioral coverage and regenerated proof metadata showing either that byline or the explicit configuration failure.
+  - Dependencies/constraints: no new dependency; retain deterministic defaults and the fixed proof-matrix byte contract. Document any intentional standalone fallback; generic exception swallowing is not provenance evidence.

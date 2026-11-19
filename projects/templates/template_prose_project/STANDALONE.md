@@ -56,29 +56,57 @@ rsync -a \
 - Regenerate prose reports, figures, and manuscript variables after editing the
   corpus.
 
+## Standalone environment
+
+From an independent project root, use Python 3.14 or 3.15 and a genuine
+`research-project-template==5.2.0` wheel matching `pyproject.toml`. Follow the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+The checkout-only `tool.uv.sources` ancestor is not a standalone provider;
+`uv pip install` below does not consult it.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+```
+
+Initial dependency preparation needs package access or a prepared cache.
+Candidate metadata does not prove that this SDK is published on PyPI, that the
+project is installed correctly, or that public provider adoption is accepted.
+Use this prepared interpreter for the local commands below; do not re-enter
+checkout-only dependency resolution with an unqualified `uv run`.
+
 ## Validation Commands
 
-Run from the template repository root after copying into `projects/working/`:
+After [standalone preparation](#standalone-environment), run the local editorial
+pipeline and hydrate its manuscript variables from the project root:
 
 ```bash
-uv run pytest projects/working/my_prose_project/tests/ \
-  --cov=projects/working/my_prose_project/src --cov-fail-under=90
-uv run python projects/working/my_prose_project/scripts/run_prose_pipeline.py
-uv run python projects/working/my_prose_project/scripts/z_generate_manuscript_variables.py
+.venv/bin/python scripts/run_prose_pipeline.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
 
-For the public exemplar:
+The local sequence writes `output/manuscript_report.json`, `output/checks.json`,
+`output/review_report.md`, `output/run_summary.json`,
+`output/data/manuscript_variables.json`, and hydrated `output/manuscript/`.
+These are expected artifact paths, not a claim that this recipe has been run.
+Optional figure generation is documented in the [quickstart](docs/quickstart.md).
+
+For the complete own suite, retain the declared coverage gate:
 
 ```bash
-uv run pytest projects/templates/template_prose_project/tests/ \
-  --cov=projects/templates/template_prose_project/src --cov-fail-under=90
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
 ```
+
+The offline editorial artifacts are not a scientific finding or live model
+acceptance. Repository pipeline commands remain checkout-only.
 
 ## Intentional Non-Standalone Dependencies
 
-This exemplar intentionally uses shared `infrastructure.prose` and manuscript
-injection helpers. It is forkable as a project in a full template checkout. A
-copy outside that checkout must vendor or replace those prose-analysis adapters.
+This exemplar declares the matching installed `research-project-template` SDK
+for `infrastructure.prose` and manuscript injection. An independent fork uses
+that actual provider, not a copied infrastructure tree, arbitrary ancestor or
+invented infrastructure package. Keep optional live review separately explicit.
 
 ## What Not To Claim
 

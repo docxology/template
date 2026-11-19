@@ -70,7 +70,7 @@ first `import matplotlib.pyplot`, and run with `uv run` from the repository root
 `CLAUDE.md` — is `uv`-only; never bootstrap `uv` through `pip`):
 
 ```bash
-Follow the [checksum-verified uv installation instructions](../../../../docs/operational/build/dependency-management.md#installing-uv),
+Follow the [checksum-verified uv installation instructions](https://github.com/docxology/template/blob/main/docs/operational/build/dependency-management.md#installing-uv),
 or install it with Homebrew on macOS.
 ```
 

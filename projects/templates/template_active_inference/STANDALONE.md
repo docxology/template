@@ -59,27 +59,28 @@ rsync -a \
 
 ## Validation Commands
 
-From the copied project root:
+Prepare the declared SDK/development environment before validation, using the
+[parent README](README.md) and the
+[shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+From the prepared copied project root:
 
 ```bash
-uv run pytest tests/ --cov=src --cov-fail-under=90
-uv run python scripts/compose_manuscript.py --validate-only --strict
-uv run python scripts/check_documentation_contract.py --check
-uv run python scripts/validate_outputs.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/compose_manuscript.py --validate-only --strict
+.venv/bin/python scripts/check_documentation_contract.py --check
+.venv/bin/python scripts/validate_outputs.py
 ```
 
-Template-root only, the public exemplar gate remains:
-
-```bash
-uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference
-```
+Canonical repository Stage 01 commands are checkout-only and consume a prepared
+own environment; they do not establish standalone installed/native acceptance.
 
 ## Intentional Non-Standalone Dependencies
 
-The project ships a standalone renderer and does not need the monorepo
-`infrastructure/` layer for its project-local tests, scripts, or PDF renderer.
-The monorepo pipeline can still render it with additional publication bookends,
-but that is the polished template-repo path, not the minimum standalone path.
+The domain computation and standalone renderer are project-local, but the
+complete development suite declares the platform SDK in its `dev` extra.
+Use the real matching provider; do not equate infrastructure-free runtime
+functions with a dependency-free complete suite. PyMDP, Lean, native rendering
+and public adoption retain their own capabilities and evidence.
 
 ## What Not To Claim
 

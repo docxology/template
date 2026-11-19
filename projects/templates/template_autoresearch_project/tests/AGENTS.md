@@ -20,7 +20,6 @@ the matching source subpackage (SUBMODULAR-2).
 - `test_loop.py` — file-backed loop orchestration, declared stage status, clean
   scaffold run against the real template repo root, pre-extrinsic phase table
 - `test_models.py` — dataclass JSON serialization
-- `test_scripts.py` — thin script smoke tests (all four scripts)
 - `test_source_provider.py` — actual commit-bound checkout admission and source
   substitution controls for source-only standalone exports
 

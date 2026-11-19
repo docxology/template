@@ -140,6 +140,8 @@ from template_formal.colony.stats import (
 )
 from template_formal.colony.sweep import run_parameter_sweep
 
+pytestmark = [pytest.mark.timeout(600)]
+
 _BASE_KWARGS: dict[str, object] = {
     "num_agents": 8,
     "locations": ("north", "south"),

@@ -46,6 +46,14 @@ authenticates source bytes; it does not authenticate mutable derived cached whee
 bytes. This cache ownership boundary is an explicit prerequisite, and a successful
 dependency preparation alone establishes no full installed or native acceptance.
 
+The separate
+[`setup-native-loader-fixture`](../../.github/actions/setup-native-loader-fixture/action.yml)
+preparation follows the same build ordering: its fresh temporary venv receives
+the hash-locked `installed-build` group before any non-isolated runtime sdist
+build. Installing that group into Root's `.venv` does not provision the separate
+builder. This matters on Python 3.15, where the pinned PyYAML release uses its
+locked source archive rather than a CPython 3.14 wheel.
+
 The installed native original and current reader export the Root lock's default
 execution dependencies plus PPTX rendering. These supply the actual test stack,
 type checker and scientific providers required by full-suite replay. The export
@@ -213,15 +221,14 @@ checks succeed with the held live reader operation. Decoding a receipt cannot
 create that operation. Missing inputs or unsupported obligations remain blocked;
 actual execution, custody or validation failures remain failed.
 
-Current source declarations still report missing full-oracle obligations for
-PDF, browser HTML, native DOCX/EPUB readers, projected slides, pitch pairs,
-newspaper editions and storybook pages. Full format acceptance remains blocked
-for those applicable declarations until every required oracle is implemented,
-its original observations pass and independent readback succeeds. Existing files,
-nonblank rasters and a passing structural audit cannot substitute for the required
-source-content/layout, semantic, reader and visual negative controls. See
-[`native-format-acceptance.md`](../guides/native-format-acceptance.md) for the
-supervision and receipt boundaries. Runtime, installed/export, domain, live,
-transfer and publication evidence remain independent requirements. Release
-readiness must remain unknown, blocked, or failed until every applicable gate
-passes the strict candidate profile.
+The [complete Source-owned oracle contract](../guides/native-format-acceptance.md#complete-source-owned-oracle-requirements)
+compiles typed requirements for every applicable PDF, HTML, DOCX/EPUB,
+projection, configured pitch, newspaper and storybook artifact. Requirements
+are not observations or a pass. Actual positive originals, complete selected
+controls, Source-survival/layout/visual witnesses and independent current
+readback must satisfy their predicates; missing or unsupported work remains
+blocked and actual failures remain failed. Files, nonblank rasters and a
+structural audit cannot substitute for those obligations. Runtime,
+installed/export, domain, live, transfer and publication evidence remain
+independent requirements. Release readiness stays unknown, blocked or failed
+until every applicable strict candidate gate genuinely passes.

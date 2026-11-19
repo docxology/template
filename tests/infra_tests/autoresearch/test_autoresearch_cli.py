@@ -205,7 +205,13 @@ def test_malformed_yaml_and_missing_plan_are_invalid_invocations(tmp_path: Path,
     repo_root = _scaffold_repo(tmp_path)
     pipeline = repo_root / "infrastructure/core/pipeline/pipeline.yaml"
     pipeline.write_text("stages: [unterminated\n")
+    # A malformed winning declaration is an error, never a reason to fall back.
     assert main(["plan", "--project", "template_test", "--repo-root", str(repo_root)]) == 2
     assert "invocation rejected" in capsys.readouterr().out
     pipeline.unlink()
+    # A checkout candidate that exists but is not a file is not an actual
+    # declaration; the shared resolver refuses it rather than silently falling
+    # back to the installed SDK's packaged declaration.
+    pipeline.mkdir()
     assert main(["plan", "--project", "template_test", "--repo-root", str(repo_root)]) == 2
+    assert "invocation rejected" in capsys.readouterr().out

@@ -37,6 +37,15 @@ uv run python projects/templates/template_pools_rules_tools/scripts/03_generate_
 uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py
 ```
 
+Standalone exports use project-root paths instead:
+`python scripts/01_validate_sources.py`, `python scripts/02_run_integration.py`,
+`python scripts/03_generate_manuscript.py`, and
+`python scripts/04_validate_strong_rules.py`. Use the real SDK/dev preparation
+and full `python -I -m pytest tests/ --cov=src --cov-fail-under=90` command in
+[`README.md`](../README.md#quick-start). The current export/wheel must contain
+its declared `_template_resources/` bundle; the old resource-less mirror's
+reduced coverage is not the current acceptance contract.
+
 ## Documentation in this tree
 
 - [`AGENTS.md`](AGENTS.md) — agent-facing layout and conventions.

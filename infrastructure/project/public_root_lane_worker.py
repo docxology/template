@@ -21,7 +21,6 @@ from infrastructure.core.testing.pytest_scratch import external_pytest_scratch
 
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.implementation_custody import verify_implementation_custody
-from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.project.public_acceptance_case_observer import RootCaseObserver
 from infrastructure.project.public_acceptance_case_policy import digest
 from infrastructure.project.public_acceptance_evidence import runtime_identity, verify_runtime_execution
@@ -29,16 +28,14 @@ from infrastructure.project.public_acceptance_scope import MissingRootCasePolicy
 from infrastructure.project.public_root_case_admission import lane_blockers
 from infrastructure.project.public_root_case_contract import _artifact, _fresh_prefix, _json
 from infrastructure.project.public_root_lane_coverage import capture, measurement, merge, report
-from infrastructure.project.public_root_lane_diagnostics import CaseDiagnostics, retain_output
+from infrastructure.project.public_root_lane_diagnostics import CaseDiagnostics
+from infrastructure.project.public_root_lane_execution import execute_chunks
 from infrastructure.project.public_root_lane_contract import (
     CHUNK_SCHEMA,
     LANE_SCHEMA,
-    PROCESS_SCHEMA,
     admission,
     arguments,
-    environment,
     groups,
-    lane_command,
     selection,
     write,
 )
@@ -193,7 +190,7 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         raise ValueError("Root lane original specification changed before actual case execution")
     spec, admitted = admission(reader, snapshot)
     selected = selection(admitted, spec["lane"])
-    pieces = groups(selected.nodeids)
+    pieces = groups(selected)
     if not 0 <= index < len(pieces):
         raise ValueError("Root chunk is outside its exact resolved lane")
     directory = root / spec["directory"] / f"chunk-{index:04d}"
@@ -229,18 +226,19 @@ def chunk(root: Path, snapshot_path: Path, expected: str, index: int) -> int:
         elif original != 0:
             code = 124 if observer.timed_out else 1
         else:
+            expected_nodes = set(pieces[index])
             expected_metadata = {
-                case["nodeid"]: case for case in census_receipt["cases"] if case["nodeid"] in pieces[index]
+                case["nodeid"]: case for case in census_receipt["cases"] if case["nodeid"] in expected_nodes
             }
             actual_metadata = {case["nodeid"]: case for case in observer.cases}
             if (
                 actual_metadata != expected_metadata
-                or set(observer.nodeids) != set(pieces[index])
+                or set(observer.nodeids) != expected_nodes
                 or len(observer.nodeids) != len(pieces[index])
                 or observer.collection_errors
                 or observer.collection_skips
                 or observer.deselected
-                or set(observer.reports) != set(pieces[index])
+                or set(observer.reports) != expected_nodes
                 or any(
                     observer.reports[node] != [("setup", "passed"), ("call", "passed"), ("teardown", "passed")]
                     for node in pieces[index]
@@ -333,76 +331,7 @@ def coordinate(root: Path, snapshot_path: Path, expected: str) -> int:
             if remaining <= 0:
                 raise TimeoutError("lane deadline exhausted before lock acquisition")
             with project_output_lock(root, timeout=remaining):
-                for index, nodes in enumerate(groups(selected.nodeids)):
-                    remaining = math.floor(deadline - time.monotonic())
-                    if remaining < 1:
-                        raise TimeoutError("lane deadline exhausted before actual chunk")
-                    chunk_dir = directory / f"chunk-{index:04d}"
-                    chunk_started = time.monotonic()
-                    command = lane_command(root, snapshot, chunk=index)
-                    observed = run_with_policy(
-                        command,
-                        cwd=root,
-                        env=environment(admitted, selected.id, root, chunk_dir, spec["mode"]),
-                        policy=SubprocessPolicy(
-                            policy_id="root-v2-lane-chunk",
-                            source_path=__name__,
-                            timeout_seconds=remaining,
-                            credential_free=spec["mode"] == "core",
-                        ),
-                    )
-                    receipt_binding = None
-                    try:
-                        held = SnapshotReader(root).read((chunk_dir / "receipt.json").relative_to(root).as_posix())
-                        receipt_binding = {"path": held.relative, "sha256": held.sha256}
-                    except (OSError, ValueError):
-                        pass
-                    code = (
-                        130
-                        if observed.returncode in (-2, 130)
-                        else 124
-                        if observed.timed_out or observed.returncode == 124
-                        else 75
-                        if observed.returncode == 75
-                        else 0
-                        if observed.returncode == 0
-                        and receipt_binding is not None
-                        and not observed.custody_refused
-                        and not observed.command_error
-                        else 1
-                    )
-                    process_binding = write(
-                        root,
-                        chunk_dir / "process.json",
-                        {
-                            "schema_version": PROCESS_SCHEMA,
-                            "command": list(command),
-                            "run_id": spec["run_id"],
-                            "nonce": spec["nonce"],
-                            "spec_artifact": {"path": snapshot.relative, "sha256": snapshot.sha256},
-                            "index": index,
-                            "receipt_artifact": receipt_binding,
-                            "returncode": observed.returncode,
-                            "original_returncode": observed.original_returncode,
-                            "timed_out": observed.timed_out,
-                            "custody_refused": observed.custody_refused,
-                            "command_error": observed.command_error,
-                            "remaining_budget_seconds": remaining,
-                            "duration_seconds": time.monotonic() - chunk_started,
-                            "output_artifact": retain_output(root, chunk_dir, observed, spec["root_identity"]),
-                        },
-                        spec["root_identity"],
-                    )
-                    records.append(
-                        {
-                            "index": index,
-                            "nodes": list(nodes),
-                            "receipt_artifact": receipt_binding,
-                            "process_artifact": process_binding,
-                        }
-                    )
-                    if code:
-                        break
+                code = execute_chunks(root, snapshot, spec, admitted, selected, started, records)
                 if code == 0:
                     measured = measurement(root)
                     original_bundle = _json(_artifact(reader, spec["census_bundle_artifact"]))

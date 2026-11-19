@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -23,6 +24,7 @@ from infrastructure.project.public_acceptance_auxiliary_supervision import (
     MAX_STREAM_BYTES,
     complete_auxiliary_observation,
     supervise,
+    supervise_sandbox_transfer_api,
 )
 
 
@@ -86,6 +88,221 @@ def test_deadline_must_be_finite_before_evidence_or_launch(tmp_path: Path, deadl
     with pytest.raises(ValueError, match="finite original deadline"):
         observe_bounded_run_processes(uuid.uuid4().hex, deadline=deadline)
     assert not (tmp_path / "output").exists()
+
+
+def test_scoped_transfer_requires_explicit_token_without_ambient_auth_fallback(tmp_path: Path) -> None:
+    source_root = Path(__file__).resolve().parents[3]
+    sentinel = "harmless-" + uuid.uuid4().hex
+    program = """import os,sys,time
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+from infrastructure.project.public_acceptance_auxiliary import run_sandbox_transfer
+from infrastructure.project.public_acceptance_auxiliary_supervision import supervise_sandbox_transfer_api
+root=Path(sys.argv[2])
+def no_launch(event,args):
+ if event=='subprocess.Popen':raise AssertionError('missing nomination launched a process')
+sys.addaudithook(no_launch)
+for token in (None,''):
+ try:
+  supervise_sandbox_transfer_api([sys.executable,'api','--hostname','github.com','repos/docxology/template'],
+   root,root/'output/readiness/forbidden',time.monotonic()+10,
+   repository='docxology/template',artifact_id='1',gh_token=token)
+ except ValueError as error:
+  assert 'explicit existing GH_TOKEN nomination' in str(error)
+ else:raise AssertionError('ambient credential replaced explicit nomination')
+try:
+ run_sandbox_transfer(root/'missing-source-root',export_receipt=root/'missing.json',
+  upload_outputs=root/'missing-outputs.json',downloaded_directory=root/'output/readiness/download',
+  repository='docxology/template',run_id='1',source_commit='a'*40,
+  evidence_dir=root/'output/readiness/transfer')
+except FileNotFoundError:pass
+else:raise AssertionError('missing Source root was admitted')
+assert 'GH_TOKEN' not in os.environ
+try:
+ run_sandbox_transfer(root,export_receipt=root/'missing.json',upload_outputs=root/'missing-outputs.json',
+  downloaded_directory=root/'output/readiness/download',repository='docxology/template',run_id='1',
+  source_commit='a'*40,evidence_dir=root/'output/readiness/transfer')
+except ValueError as error:
+ assert 'explicit existing GH_TOKEN nomination' in str(error)
+else:raise AssertionError('GITHUB_TOKEN or local gh state replaced missing GH_TOKEN')
+assert not (root/'output').exists()
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", program, str(source_root), str(tmp_path)],
+        env={"PATH": os.environ.get("PATH", os.defpath), "GH_TOKEN": sentinel, "GITHUB_TOKEN": sentinel},
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == ""
+    assert sentinel not in result.stdout + result.stderr
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.parametrize(
+    "fault", ["command", "executable", "hostname", "owner", "artifact", "download", "absolute", "method", "query"]
+)
+def test_scoped_transfer_refuses_arbitrary_commands_hosts_and_endpoints(tmp_path: Path, fault: str) -> None:
+    gh = shutil.which("gh")
+    if gh is None:
+        pytest.skip("requires the existing gh CLI, never a replacement executable")
+    command = [gh, "api", "--hostname", "github.com", "repos/docxology/template/actions/artifacts/1"]
+    if fault == "command":
+        command = [sys.executable, "-I", "-c", "raise AssertionError('forbidden launch')"]
+    elif fault == "executable":
+        command[0] = sys.executable
+    elif fault == "hostname":
+        command[3] = "example.invalid"
+    elif fault == "owner":
+        command[-1] = "repos/another/owner/actions/artifacts/1"
+    elif fault == "artifact":
+        command[-1] = "repos/docxology/template/actions/artifacts/2"
+    elif fault == "download":
+        command[-1] += "/zip"
+    elif fault == "absolute":
+        command[-1] = "https://example.invalid/leak"
+    elif fault == "method":
+        command[1:1] = ["--method", "POST"]
+    elif fault == "query":
+        command[-1] += "?per_page=100"
+    with pytest.raises(ValueError, match="arbitrary commands, hosts or endpoints"):
+        supervise_sandbox_transfer_api(
+            command,
+            tmp_path,
+            tmp_path / "output/readiness/forbidden",
+            time.monotonic() + 10,
+            repository="docxology/template",
+            artifact_id="1",
+            gh_token="harmless-" + uuid.uuid4().hex,
+        )
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.timeout(90)
+def test_actual_scoped_transfer_only_fixed_api_children_receive_nominated_token(tmp_path: Path) -> None:
+    """Real gh, kernel environments and a refusing loopback proxy; no remote success claim."""
+    if shutil.which("gh") is None:
+        pytest.skip("requires the existing gh CLI, never a replacement executable")
+    source_root = Path(__file__).resolve().parents[3]
+    sentinel = "harmless-" + uuid.uuid4().hex
+    program = """import json,os,shutil,socketserver,sys,threading,time
+from pathlib import Path
+import psutil
+sys.path.insert(0,sys.argv[1])
+from infrastructure.project.public_acceptance_auxiliary_supervision import (
+ complete_auxiliary_observation,supervise,supervise_sandbox_transfer_api)
+root=Path(sys.argv[2])
+nominated=os.environ.pop('GH_TOKEN')
+os.environ['GH_TOKEN']='ambient-not-nominated'
+protected={'GH_TOKEN','GITHUB_TOKEN','GH_ENTERPRISE_TOKEN','UNRELATED_TOKEN'}
+gh=shutil.which('gh')
+git=shutil.which('git')
+assert gh is not None and git is not None
+commands=[
+ [gh,'api','--hostname','github.com','repos/docxology/template/actions/artifacts/1'],
+ [gh,'api','--hostname','github.com','repos/docxology/template']]
+ordinary=[sys.executable,'-I','-c',
+ "import os; assert {'GH_TOKEN','GITHUB_TOKEN','GH_ENTERPRISE_TOKEN','UNRELATED_TOKEN'}.isdisjoint(os.environ)"]
+checkout=[git,'rev-parse','HEAD']
+launches=[]
+def audit(event,args):
+ if event!='subprocess.Popen':return
+ _,argv,_,environment=args
+ argv=list(argv)
+ guardian=argv[1:4]==['-I','-S','-c']
+ if argv in commands:
+  assert environment is not None and environment.get('GH_TOKEN')==nominated
+  assert (protected-{'GH_TOKEN'}).isdisjoint(environment)
+  launches.append('api')
+ elif argv in (ordinary,checkout) or guardian:
+  assert environment is not None and protected.isdisjoint(environment)
+  launches.append('guardian' if guardian else 'ordinary')
+sys.addaudithook(audit)
+deadline=time.monotonic()+60
+records=[
+ supervise(ordinary,root,root/'output/readiness/ordinary',deadline),
+ supervise(checkout,root,root/'output/readiness/checkout',deadline)]
+assert records[0]['exit_code']==0
+assert all(complete_auxiliary_observation(record) for record in records)
+observed=[]
+errors=[]
+class RefusingProxy(socketserver.BaseRequestHandler):
+ def handle(self):
+  try:
+   self.request.settimeout(5)
+   request=b''
+   while b'\\r\\n\\r\\n' not in request and len(request)<8192:
+    block=self.request.recv(4096)
+    if not block:break
+    request+=block
+   assert request.startswith(b'CONNECT api.github.com:443 HTTP/1.1\\r\\n')
+   assert nominated.encode() not in request
+   children=psutil.Process().children()
+   api=[process for process in children if process.cmdline() in commands]
+   guardians=[process for process in children if process.cmdline()[1:4]==['-I','-S','-c']]
+   assert len(api)==len(guardians)==1
+   environment=api[0].environ()
+   assert environment.get('GH_TOKEN')==nominated
+   assert (protected-{'GH_TOKEN'}).isdisjoint(environment)
+   assert protected.isdisjoint(guardians[0].environ())
+   observed.append((api[0].pid,api[0].cmdline()))
+  except BaseException as error:
+   errors.append(error)
+  finally:
+   try:
+    self.request.sendall(b'HTTP/1.1 502 Bad Gateway\\r\\nContent-Length: 0\\r\\nConnection: close\\r\\n\\r\\n')
+   except OSError:pass
+with socketserver.TCPServer(('127.0.0.1',0),RefusingProxy) as proxy:
+ address='http://127.0.0.1:'+str(proxy.server_address[1])
+ for key in ('HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','http_proxy','https_proxy','all_proxy'):
+  os.environ[key]=address
+ os.environ['NO_PROXY']=os.environ['no_proxy']=''
+ thread=threading.Thread(target=proxy.serve_forever,kwargs={'poll_interval':0.02},daemon=True)
+ thread.start()
+ try:
+  for label,command in zip(('artifact','repository'),commands,strict=True):
+   record=supervise_sandbox_transfer_api(command,root,root/'output/readiness'/label,deadline,
+    repository='docxology/template',artifact_id='1',gh_token=nominated)
+   records.append(record)
+   assert complete_auxiliary_observation(record),record
+   assert record['exit_code'] not in (0,4)
+   assert record['command']==command
+   assert record['original_deadline_monotonic']==deadline
+   assert record['executable_sha256_before']==record['executable_sha256_after']
+ finally:
+  proxy.shutdown()
+  thread.join(timeout=5)
+assert not thread.is_alive()
+if errors:raise errors[0]
+assert observed==[(record['pid'],record['command']) for record in records[2:]]
+assert launches.count('api')==2 and launches.count('guardian')==4 and launches.count('ordinary')==2
+assert nominated not in json.dumps(records)
+assert all(nominated.encode() not in path.read_bytes() for path in root.rglob('*') if path.is_file())
+assert os.environ['GH_TOKEN']=='ambient-not-nominated'
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", program, str(source_root), str(tmp_path)],
+        env={
+            "PATH": os.environ.get("PATH", os.defpath),
+            "HOME": str(tmp_path / "home"),
+            "GH_CONFIG_DIR": str(tmp_path / "gh-config"),
+            "GH_PROMPT_DISABLED": "1",
+            "SOURCE_DATE_EPOCH": "1700000000",
+            "GH_TOKEN": sentinel,
+            "GITHUB_TOKEN": "unselected-control",
+            "GH_ENTERPRISE_TOKEN": "unselected-control",
+            "UNRELATED_TOKEN": "unselected-control",
+        },
+        capture_output=True,
+        text=True,
+        timeout=75,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == ""
+    assert sentinel not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("forward", [False, True])

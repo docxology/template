@@ -26,25 +26,25 @@ def phase_ledger_payload(
         ("ml_task", "ml", "run fixed-seed bounded candidate evaluation"),
         ("method_contract", "governance", "write program, idea, run, review, and benchmark ledgers"),
         ("provisional_payloads", "settlement", "refresh loop payloads before extrinsic validation"),
-        ("security_artifacts", "security", "write local security and integrity evidence"),
-        ("final_visuals", "figures", "write final registry-backed figures"),
-        ("manuscript_hydration", "manuscript", "write variables, provenance, and figure blocks"),
-        ("readiness_manifest", "settlement", "refresh checksum manifest before extrinsic validation"),
-        ("schema_manifest", "schema", "write generated JSON schema-version manifest"),
-        ("research_object_manifest", "packaging", "write local research-object manifest"),
-        ("extrinsic_readiness", "readiness", "validate generated artifacts and extrinsic contracts"),
-        ("final_schema_manifest", "schema", "refresh schema manifest after final payload updates"),
-        ("final_research_object_manifest", "packaging", "refresh local research-object manifest"),
-        ("artifact_manifest", "settlement", "write final artifact checksum manifest"),
+        ("security_artifacts", "security", "checksum frozen upstream evidence only"),
+        ("provisional_catalogs", "schema", "close unique intended paths and build provisional catalogs"),
+        ("readiness_manifest", "settlement", "snapshot complete provisional stable inventory"),
+        ("extrinsic_readiness", "readiness", "validate real provisional artifacts before candidate success"),
+        ("final_visuals", "figures", "materialize candidate loop, report, figure and registry bytes"),
+        ("final_research_object_manifest", "packaging", "catalog upstream checksums and derivative references"),
+        ("final_schema_manifest", "schema", "catalog final governance schemas"),
+        ("manuscript_hydration", "manuscript", "hydrate final catalogs without downstream byte claims"),
+        ("artifact_manifest", "settlement", "snapshot all final stable bytes last"),
+        ("terminal_validation", "readiness", "read-only extrinsic and exact primary validation decides success"),
     )
-    rel_paths = [_relative_path(project_root, path) for path in output_paths if path.exists()]
+    rel_paths = sorted({_relative_path(project_root, path) for path in output_paths})
     phases = [
         {
             "order": index,
             "phase": phase,
             "artifact_group": group,
             "description": description,
-            "observed_artifact_count": _artifact_count_for_group(rel_paths, group),
+            "declared_artifact_count": _artifact_count_for_group(rel_paths, group),
         }
         for index, (phase, group, description) in enumerate(phase_specs, start=1)
     ]
@@ -53,6 +53,9 @@ def phase_ledger_payload(
         "generated_at": generated_at,
         "project_name": result.project_name,
         "settlement_pass_count": settlement_pass_count,
+        "declared_artifact_count": len(rel_paths),
+        "declared_paths": rel_paths,
+        "settlement_pass_count_semantics": "bounded provisional and candidate materializations, not convergence retries",
         "readiness_valid": result.readiness_valid,
         "publication_approved": result.config.human_review.publication_approved,
         "phases": phases,

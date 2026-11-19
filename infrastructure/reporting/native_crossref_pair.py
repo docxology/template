@@ -15,6 +15,7 @@ from infrastructure.reporting.native_format_acceptance_contracts import create_p
 from infrastructure.reporting.native_environment_custody import loader_environment_injections, value_commitment
 from infrastructure.reporting.native_loader_build import CompiledNativeLoader
 from infrastructure.reporting.native_loader_observation import NativeLoaderObservation
+from infrastructure.reporting.native_source_provider_bootstrap import format_selected_sdk_native_script
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
@@ -32,8 +33,9 @@ def pair_launcher(root: Path, declaration: dict[str, Any], python: str, output_f
     slots = [(str(root / item["launcher"]["path"]), item["launcher"]["sha256"]) for item in declaration["slots"]]
     directory = str(root / declaration["directory"])
     injections = declaration["parent_loader"]["environment_injections"]
-    return (
-        f"#!{python} -I\nimport hashlib,json,os,stat,sys,time\n"
+    return format_selected_sdk_native_script(
+        python,
+        "import hashlib,json,os,stat,sys,time\n"
         f"if sys.argv[1:]!={[output_format]!r}: raise ValueError('actual paired filter format differs')\n"
         f"deadline={declaration['deadline_monotonic']!r}\n"
         "if time.monotonic()>=deadline: raise TimeoutError('paired filter original clock exhausted')\n"
@@ -54,7 +56,7 @@ def pair_launcher(root: Path, declaration: dict[str, Any], python: str, output_f
         "stream.write(claim);stream.flush();os.fsync(stream.fileno())\n"
         " except BaseException: raise\n"
         "finally: os.close(directory_fd)\n"
-        f"injections={injections!r}\n"
+        f"injections={dict(sorted(injections.items()))!r}\n"
         "selected=injections if slot==1 else {}\n"
         "present={key for key in os.environ if key in injections or key=='LD_PRELOAD' "
         "or key.startswith('DYLD_') or key.startswith('TEMPLATE_LOADER_')}\n"
@@ -76,8 +78,8 @@ def pair_launcher(root: Path, declaration: dict[str, Any], python: str, output_f
         "hashlib.sha256(body).hexdigest()!=expected: "
         "raise ValueError('paired filter selected Source launcher changed')\n"
         "if time.monotonic()>=deadline: raise TimeoutError('paired filter admission exhausted original clock')\n"
-        "exec(compile(body,path,'exec'),{'__name__':'__main__','__file__':path})\n"
-    ).encode()
+        "exec(compile(body,path,'exec'),{'__name__':'__main__','__file__':path})\n",
+    )
 
 
 def validate_pair_leg(
@@ -174,7 +176,7 @@ def validate_pair_leg(
         ):
             raise ValueError("paired filter changed the complete two-slot Source selection")
     implementation = _file(spec["implementation"], reader).json_object()
-    python = implementation["runtime_environment"]["python_executable"]
+    python = implementation["runtime_environment"]["python_launcher"]
     original_root = Path(spec["source"]["current_mirror"]["root"])
     parent_launcher = _file(value["launcher"], reader)
     if parent_launcher.relative != (
@@ -278,13 +280,21 @@ class SourceCrossrefPair:
 
     def verify(self) -> None:
         remaining(self.deadline)
+        owner = self.owner
+        if owner is None:
+            raise ValueError("paired filter lost its genuine live Source owner")
+        with owner._verification_guard(self.reader, run_id=owner.run_id, deadline=self.deadline):
+            self._verify_data()
+
+    def _verify_data(self) -> None:
+        """Check both fixed filter records within one fresh Source interval."""
+        remaining(self.deadline)
         if (
             self.owner is None
             or current_native_producer_operation() is not self.owner
             or self.owner.owner_pid != os.getpid()
         ):
             raise ValueError("paired filter lost its genuine live Source owner")
-        self.owner.verify(self.reader, run_id=self.owner.run_id, deadline=self.owner.deadline)
         if any(
             item.owner is not self.owner or item.deadline != self.deadline or item.environment != self.environment
             for item in self.filters
@@ -298,12 +308,12 @@ class SourceCrossrefPair:
             or self.parent_loader.compiled.owner is not self.owner
         ):
             raise ValueError("paired filter lost its concrete Source parent loader")
-        self.parent_loader.compiled.verify(deadline=self.deadline)
+        self.parent_loader.compiled._verify_data(deadline=self.deadline)
         loader = self.reader.read(self.declaration["path"]).json_object()["parent_loader"]
         if loader != _parent_loader_selection(self.parent_loader):
             raise ValueError("paired filter changed its exact Source-selected parent audit overlay")
         for item in self.filters:
-            item.verify()
+            item._verify_data()
 
     def observe(self, slot: int, live: NativeLiveToolProcess) -> None:
         self.verify()
@@ -374,7 +384,7 @@ def prepare_source_crossref_pair(
         }
         declaration = write_json(root, directory / "invocations.json", declaration_data)
         implementation = reader.read(filters[0].declaration["path"]).json_object()["implementation"]
-        python = reader.read(implementation["path"]).json_object()["runtime_environment"]["python_executable"]
+        python = reader.read(implementation["path"]).json_object()["runtime_environment"]["python_launcher"]
         launcher_path = directory / "source-crossref-pair"
         atomic_write_bytes_confined(
             root, launcher_path, pair_launcher(root, declaration_data, python, output_format), mode=0o700

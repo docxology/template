@@ -1,7 +1,7 @@
 # template_search_project TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo review history](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10) (not bundled in standalone exports)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -108,3 +108,19 @@ No active rows are currently scoped at this size.
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
 A blocked row is a deliberate boundary, not a skipped success.
+
+## Workflowz review — 2026-11-10: retained acceptance obligation
+
+- [ ] `WF-20261110-001` · P1 · Minor · Prove entry-point startup in a real standalone clone.
+  - Provenance: the [immutable original review](https://github.com/docxology/template_search_project/blob/85fff4ae6a54dac7076f9ff5db2a0f5fbf4567ed/TODO.md#workflowz-review--2026-11-10) records `scripts/run_search_pipeline.py:28-33` and `scripts/run_deep_search.py:28-33` deriving an unrelated ancestor through `_project_root.parents[2]`.
+  - Outcome: both entry points operate outside `projects/templates/<name>/` with the declared installed SDK, or fail with a clear SDK-preparation diagnostic; neither inserts `/` or another unrelated ancestor into the import path.
+  - Current source mapping: both scripts now select the SDK through `scripts/_search_sdk_bootstrap.py::select_platform_sdk` before exposing `src/template_search_project/`. That source change is not a same-source standalone acceptance receipt, so this historical request remains unchecked. The old suggestion to discover a sibling `infrastructure/` tree is not the current dependency contract and must not be restored as a shim.
+  - Acceptance: export/copy the complete source to a fresh shallow standalone directory, prepare its genuine declared SDK/project/development environment, use fixture configuration with `project_config.search.sources: [local]`, and run from that project root:
+    ```bash
+    python scripts/run_search_pipeline.py --no-llm --corpus data/corpus.json
+    python scripts/run_deep_search.py --no-llm --enable --corpus data/corpus.json
+    python -I -m pytest tests/ --cov=src --cov-fail-under=90
+    ```
+    Retain the actual process results and generated corpus/BibTeX/report evidence; do not trim output into a success-shaped excerpt. Paid retrieval and model spending are not authorized by this probe.
+  - Negative controls: a separately unprepared standalone environment must identify the missing/mismatched SDK rather than accidentally importing an ancestor/sibling package. Repeat both unchanged entry points in the monorepo layout; `python scripts/run_search_pipeline.py --help` is only a startup control, not pipeline acceptance.
+  - Dependencies/constraints: preserve public CLI flags, deterministic/offline fixture behavior and normal monorepo operation; no new required arguments, compatibility aliases, or generic P4 closure. Proving artifact: paired genuine standalone/monorepo execution and explicit missing-SDK results from the same source.

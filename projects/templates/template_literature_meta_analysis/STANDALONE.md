@@ -32,8 +32,10 @@ Additional locations are config-declared publication evidence; the central index
 exemplar: multi-engine retrieval with graceful degradation, record de-duplication,
 full-text resolution, descriptive statistics, language/entity analysis, document
 embeddings, citation and temporal bibliometrics, an optional knowledge-graph layer,
-and an auto-injected manuscript — all deterministic and offline by default
-(bundled term: **modafinil**).
+and an auto-injected manuscript. Default allowlisted analysis consumes the
+synthetic fixture offline after dependency preparation (bundled term:
+**modafinil**); explicit retrieval/enrichment commands have their own network
+and provider prerequisites.
 
 ## Copy This When
 
@@ -68,11 +70,20 @@ rsync -a \
   `hypothesis_definitions` blocks for the new domain.
 - Update `CITATION.cff`, `.zenodo.json`, `codemeta.json`, and `pyproject.toml`
   (title, keywords, repository).
-- Regenerate the offline seed corpus:
-  `uv run python scripts/generate_fixture_corpus.py --term <your_term>`.
-- For a live (networked) run, enable engines and supply any optional credentials
-  (Unpaywall email, Semantic Scholar key) — every engine degrades to `skipped`
-  without them, so the pipeline still completes.
+- For a new fork's offline seed corpus, first prepare its actual SDK/dev
+  environment below, then run from that project root:
+  `.venv/bin/python scripts/generate_fixture_corpus.py --term <your_term>`.
+  Do not overwrite an actual live corpus to satisfy an onboarding step.
+- Script `01_literature_search.py` is an explicit network retrieval command,
+  not the offline starter. Configure engine toggles and each provider's
+  eligibility, credentials or contact identity before invoking it; enabled
+  keyless engines can still make network requests. Engine-specific failures and
+  skipped states are recorded in `output/data/retrieval_report.json`.
+- Default allowlisted analysis consumes fixture/current corpus data without
+  launching script `01`. Resuming a populated `output/data/corpus.jsonl` can
+  skip new network searches; retain actual retrieval provenance before
+  claiming freshness or empirical findings. See the
+  [existing stage commands](scripts/README.md#stage-commands).
 
 ## Validation Commands
 
@@ -97,9 +108,9 @@ requirements. Replace the wheel path with the actual reviewed artifact:
 ```bash
 python3.14 -m venv .venv
 . .venv/bin/activate
-python -m pip install /absolute/path/to/research_project_template-4.3.0-py3-none-any.whl
+python -m pip install /absolute/path/to/research_project_template-5.2.0-py3-none-any.whl
 python -m pip install '.[dev]'
-python -I -m pytest tests/ --cov=src --cov-fail-under=90
+python -IB -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 Pip uses the declared package dependency rather than the checkout-only
@@ -115,9 +126,16 @@ corpus analysis and the default tests use deterministic fixtures or local server
 ## Determinism & Offline Default
 
 The committed `data/fixtures/<term>_corpus.jsonl` is **synthetic** (reserved
-`10.5555/` test DOIs, generated authors) so CI and a fresh clone exercise the whole
-pipeline with no network and byte-identical outputs. Live retrieval replaces it with
-real records; only then may you cite real bibliometric findings.
+`10.5555/` test DOIs, generated authors). After dependency preparation, the
+default analysis allowlist consumes fixture/current corpus data without
+launching live script `01`; it does not promise that every script is network
+free or that every failure becomes `skipped`.
+
+Live retrieval is separately authorized and provider-prepared, including any
+enabled keyless engines. A populated resumed corpus can avoid new requests, so
+its existence alone does not prove retrieval freshness. Real bibliometric
+claims require actual retained retrieval provenance, regenerated analysis and
+independent domain assessment, not relabeled fixture or resumed output.
 
 ## What Not To Claim
 

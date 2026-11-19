@@ -6,6 +6,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+from contextlib import closing
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -48,16 +49,15 @@ def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path, mon
     )
     assert not (repo_root / "infrastructure").exists()
     monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
-    executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
+    with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor:
+        resolved = executor._resolve_pipeline_yaml()
+        assert resolved == Path(__file__).parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
 
-    resolved = executor._resolve_pipeline_yaml()
-    assert resolved == Path(__file__).parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
-
-    expected = PipelineDAG.from_yaml(resolved)
-    expected.filter_tags(exclude=set(expected.opt_in_tags) | {"llm"})
-    expected_names = [stage.name for stage in expected.sorted_stages()]
-    actual_names = [stage.name for stage in executor._build_stage_list(skip_clean=False)]
-    assert actual_names == expected_names
+        expected = PipelineDAG.from_yaml(resolved)
+        expected.filter_tags(exclude=set(expected.opt_in_tags) | {"llm"})
+        expected_names = [stage.name for stage in expected.sorted_stages()]
+        actual_names = [stage.name for stage in executor._build_stage_list(skip_clean=False)]
+        assert actual_names == expected_names
 
 
 def test_missing_canonical_stage_does_not_run_unrelated_root_copy(tmp_path: Path) -> None:
@@ -70,11 +70,11 @@ def test_missing_canonical_stage_does_not_run_unrelated_root_copy(tmp_path: Path
     sentinel = tmp_path / "unrelated-root-copy-ran"
     unrelated.write_text(f"from pathlib import Path\nPath({str(sentinel)!r}).write_text('ran')\n", encoding="utf-8")
 
-    executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
-    outcome = executor._run_script("scripts/pipeline/stage_02_analysis.py", "--project", "p")
-    assert not outcome
-    assert outcome.status is StageStatus.BLOCKED and outcome.child_exit_code is None
-    assert not sentinel.exists()
+    with closing(PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))) as executor:
+        outcome = executor._run_script("scripts/pipeline/stage_02_analysis.py", "--project", "p")
+        assert not outcome
+        assert outcome.status is StageStatus.BLOCKED and outcome.child_exit_code is None
+        assert not sentinel.exists()
 
 
 def test_canonical_entrypoints_export_their_own_implementations() -> None:

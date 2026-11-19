@@ -52,6 +52,10 @@ jobs:
       - uses: ./.github/actions/setup-acceptance-documents
       - name: Prepare source-locked browser math dependencies
         run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
+      - name: Prepare locked dependencies for the Linux-only installed loader fixture
+        if: runner.os == 'Linux'
+        timeout-minutes: 10
+        uses: ./.github/actions/setup-native-loader-fixture
       - uses: ./.github/actions/setup-acceptance-model
       - uses: ./.github/actions/setup-ci-execution-user
         if: runner.os == 'Linux'
@@ -572,18 +576,10 @@ jobs:
       # the readiness action derives the full roster after its own `uv sync`, which
       # is the only point where an interpreter exists.
       - uses: ./.github/actions/setup-native-installed-readiness
-      - name: Strict rendered publication evidence gate
-        # The native worker refuses on this same strict rendered predicate before
-        # any stage executes, so run it first: a stale receipt fails in seconds
-        # instead of after the bounded native lifecycle. It skips and weakens
-        # nothing; the lane still owns every native check.
-        #
-        # --rendered is deliberately NOT asserted here, for the same reason as in
-        # platform-native-preflight.yml: rendered receipts are rebound only by
-        # rebind.yml, which is dispatch-only and acts on the tip of origin/main.
-        # Asserting a current rendered receipt inside a dispatch-only acceptance
-        # run demands a rebind this run cannot perform. Every source, methods,
-        # evidence, figure, artifact and placeholder check below still blocks.
+      - name: Strict source publication precheck
+        # Refuse invalid source, methods, evidence, figures and artifacts first.
+        # This is not the rendered-provenance gate: the native worker admits
+        # current rendered evidence before stages and audits it again afterward.
         run: >-
           .venv/bin/python -m infrastructure.validation.cli publication-audit --all-public
           --strict --require-figure-accessibility --format markdown
@@ -698,6 +694,17 @@ jobs:
       - uses: ./.github/actions/setup-native-installed-readiness
         with:
           matrix-cell: ${{ matrix.cell }}
+      - name: Prepare the exact immutable SIA sandbox image
+        if: matrix.cell == 'template_sia'
+        timeout-minutes: 10
+        shell: bash
+        env:
+          SIA_SANDBOX_IMAGE: python@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
+        run: |
+          set -euo pipefail
+          docker pull "$SIA_SANDBOX_IMAGE"
+          image=$(docker image inspect --format '{{.Id}}' "$SIA_SANDBOX_IMAGE")
+          echo "TEMPLATE_SIA_TEST_IMAGE=$image" >> "$GITHUB_ENV"
       - name: Keep the declared capacity before native allocation
         uses: ./.github/actions/reclaim-native-runner-capacity
       - name: Original authenticated installed native format inventory (one project)

@@ -69,6 +69,12 @@ The module composes existing template surfaces:
 - bounded method ledgers: `research_program.json`, `idea_ledger.json`,
   `run_ledger.json`, `review_decisions.json`, and `benchmark_scores.json`
 
+Pipeline declarations use the shared resolver: project-local `pipeline.yaml`
+first, then the checkout's `infrastructure/core/pipeline/pipeline.yaml`, then
+the installed SDK's packaged declaration. An existing non-file or malformed
+winning declaration is an error, not a reason to substitute another pipeline.
+Planning fails if no actual declaration is available.
+
 For benchmark stdout or similar command output, `parse_metric_lines(output)`
 extracts only exact `METRIC name=value` lines into finite floats and rejects
 malformed or duplicate metric evidence. `metric_unit_from_name(name)` provides

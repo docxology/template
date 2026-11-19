@@ -6,6 +6,9 @@ from `src/template_eda_notebook/eda/`, plot the returned data with matplotlib, a
 
 ## Quick Start
 
+Run from the prepared project root, not the `scripts/` directory; use the
+environment described in the parent README.
+
 ```bash
 # Run the EDA analysis pipeline
 uv run python scripts/eda_analysis.py
@@ -14,8 +17,8 @@ uv run python scripts/eda_analysis.py
 uv run python scripts/generate_measurements_data.py
 
 # View generated outputs
-ls -la ../output/figures/
-cat ../output/data/summary_statistics.csv
+ls -la output/figures/
+cat output/data/summary_statistics.csv
 ```
 
 ## Scripts

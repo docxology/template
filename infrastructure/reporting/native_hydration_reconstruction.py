@@ -31,7 +31,11 @@ from infrastructure.rendering._paper_frontmatter import (
 )
 from infrastructure.rendering.manuscript_composition import COMPOSITION_RELATIVE_PATH, read_manuscript_composition
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
-from infrastructure.rendering.manuscript_hydration_replay import combine_held_manuscripts, require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import (
+    SharedHydrationWriter,
+    combine_held_manuscripts,
+    require_shared_hydration,
+)
 from infrastructure.rendering._web_markdown_preprocess import html_safe_markdown
 from infrastructure.rendering._web_source_context import compose_web_source_context
 from infrastructure.reporting.native_format_joint_source import require_native_operation
@@ -54,6 +58,68 @@ REMAINING = (
     "source-owned-complete-registry-reconstruction-and-original-stage-custody",
     "complete-native-semantic-and-visual-consumption-of-reconstructed-source-occurrences",
 )
+
+_HYDRATED_CALLERS = {
+    "templates/template_advanced_literature_review": (
+        "scripts/05_inject_variables.py",
+        SharedHydrationWriter.HYDRATED_WORD_TREE,
+    ),
+    "templates/template_literature_meta_analysis": (
+        "scripts/05_inject_variables.py",
+        SharedHydrationWriter.HYDRATED_WORD_TREE,
+    ),
+    "templates/template_autoresearch_project": (
+        "src/template_autoresearch_project/loop/settlement.py",
+        SharedHydrationWriter.HYDRATED_UPPERCASE_TREE,
+    ),
+}
+_RESOLVED_CALLERS = frozenset(
+    {
+        "templates/template_autopoiesis",
+        "templates/template_code_project",
+        "templates/template_experiment_tree",
+        "templates/template_gold_refinement",
+        "templates/template_madlib",
+        "templates/template_methods_paper",
+        "templates/template_pools_rules_tools",
+        "templates/template_prose_project",
+        "templates/template_sia",
+    }
+)
+
+
+def source_manuscript_hydration_writer(
+    source: NativeSourceContext, scope: str, reader: SnapshotReader
+) -> tuple[SharedHydrationWriter | None, dict[str, Any] | None]:
+    """Select only fixed actual Source callers, never a receipt or byte match.
+
+    The enclosing native operation authenticates the complete Source and SDK.
+    These exact held caller/implementation bindings make that transformation
+    edge explicit and are independently re-read by every occurrence consumer.
+    """
+    if not isinstance(source, NativeSourceContext) or reader.root != source.bindings.current_root:
+        raise ValueError("hydration writer selection needs its actual admitted Source")
+    if scope in _HYDRATED_CALLERS:
+        caller, writer = _HYDRATED_CALLERS[scope]
+    elif scope in _RESOLVED_CALLERS:
+        caller, writer = "scripts/z_generate_manuscript_variables.py", SharedHydrationWriter.RESOLVED_TREE
+    else:
+        return None, None
+    inputs = []
+    for relative in (
+        f"projects/{scope}/{caller}",
+        "infrastructure/rendering/manuscript_injection.py",
+        "infrastructure/core/files/portability.py",
+    ):
+        item = reader.read(relative)
+        if item.content != source.reference.read(relative):
+            raise ValueError("hydration writer differs from independently admitted complete Source")
+        inputs.append(_binding(item))
+    return writer, {
+        "algorithm": writer.value,
+        "source_binding": [source.reference.commit, source.reference.source_identity],
+        "inputs": inputs,
+    }
 
 
 def _binding(item: ArtifactSnapshot) -> dict[str, Any]:
@@ -185,6 +251,9 @@ def _reconstruct(
     variables = None
     values: dict[str, Any] = {}
     project_writer = None
+    writer, writer_binding = (None, None)
+    if consumed_root == project / "output/manuscript":
+        writer, writer_binding = source_manuscript_hydration_writer(source, scope, reader)
     if consumed_root == project / "output/manuscript":
         variable_name = "metrics.json" if scope == "templates/template_template" else "manuscript_variables.json"
         variable_path = project / "output/data" / variable_name
@@ -259,10 +328,16 @@ def _reconstruct(
             if source.reference.read(original.relative) != original.content:
                 raise ValueError("hydration authored manuscript differs from independently admitted Source")
             row["source"] = _binding(original)
-            if variables is None:
-                if original.content != item.content:
-                    raise ValueError("direct Source manuscript body differs from actual consumed source")
-                row["transformation"] = "exact-authored-source-body"
+            if variables is None or writer is SharedHydrationWriter.RESOLVED_TREE and path.name == "preamble.md":
+                if writer in {SharedHydrationWriter.HYDRATED_UPPERCASE_TREE, SharedHydrationWriter.HYDRATED_WORD_TREE}:
+                    rebuilt = require_shared_hydration(original.content, {}, item.content, writer=writer)
+                    row["transformation"] = "Source-normalized-authored-body"
+                    row["writer"] = writer_binding
+                    row["hydration"] = rebuilt.data()
+                else:
+                    if original.content != item.content:
+                        raise ValueError("direct Source manuscript body differs from actual consumed source")
+                    row["transformation"] = "exact-authored-source-body"
             elif project_writer is not None:
                 # Template's numbered chapters are substituted; ancillary
                 # manuscript text is copied verbatim by the same Source writer.
@@ -278,8 +353,11 @@ def _reconstruct(
                 row["transformation"] = "Source-selected-project-authored-hydration"
                 row["project_hydration"] = {**custom[1], "writer": _binding(project_writer)}
             else:
-                rebuilt = require_shared_hydration(original.content, values, item.content)
+                if writer is None:
+                    raise ValueError("shared hydration lacks an implemented actual Source writer route")
+                rebuilt = require_shared_hydration(original.content, values, item.content, writer=writer)
                 row["transformation"] = "shared-uppercase-token-hydration"
+                row["writer"] = writer_binding
                 row["hydration"] = rebuilt.data()
         rows.append(row)
     combined = reader.read(f"projects/{scope}/{parsed.combined_path}")

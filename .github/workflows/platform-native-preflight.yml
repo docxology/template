@@ -103,22 +103,9 @@ jobs:
         uses: ./.github/actions/reclaim-native-runner-capacity
       - name: Bounded cold diagnostic native lifecycle
         id: preflight
-        # This lane is diagnostic feedback, never a format verdict. Its native
-        # lifecycle is structurally unable to complete on a hosted runner: the
-        # cold analysis stage alone measured 2434 s and the render stage needs
-        # hours, against a 12000 s diagnostic clock. Before this change it had
-        # never passed a single run (82 failure / 18 cancelled / 0 success) and
-        # every observed failure was a defect in this harness -- a 300 s
-        # hydration bound killed 55.6 s short of that stage's own 297.65 s
-        # measurement, relabelled to exit 124 four layers up -- never a statement
-        # about native format correctness. A check that is red 100% of the time
-        # carries no signal and trains readers to ignore red.
-        #
-        # continue-on-error keeps the real step outcome visible while stopping
-        # this job from reporting `failure` for an unquotable diagnostic. The
-        # classifier step below still fails the job when the receipt carries an
-        # actual format finding, so red keeps meaning "a real defect".
-        continue-on-error: true
+        # Diagnostic scope never grants release acceptance, but a failed native
+        # lifecycle must still fail this job. Always-run steps below retain its
+        # original evidence and state the boundary without reclassifying it.
         run: >-
           .venv/bin/python -m infrastructure.reporting.native_installed_launcher --mode preflight
           --source-root "$GITHUB_WORKSPACE" --source-commit "$GITHUB_SHA"
@@ -155,7 +142,7 @@ jobs:
       - name: State the diagnostic boundary
         if: always()
         shell: bash
-        run: echo 'Native preflight is diagnostic feedback; complete same-SHA required acceptance still authorizes release.' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'Native preflight is diagnostic feedback; complete_release_acceptance=false and publication_authorized=false regardless of this job outcome. Complete same-SHA required acceptance remains mandatory for release.' >> "$GITHUB_STEP_SUMMARY"
 
   arl-auxiliary-diagnostic:
     if: github.event_name == 'workflow_dispatch' && inputs.diagnostic_arl_auxiliary == true && inputs.diagnostic_arl_readback != true

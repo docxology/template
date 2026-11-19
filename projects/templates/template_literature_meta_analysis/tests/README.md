@@ -11,7 +11,7 @@ environment following [`../STANDALONE.md`](../STANDALONE.md), then run its
 configured coverage gate:
 
 ```bash
-python -I -m pytest tests/ --cov=src --cov-fail-under=90
+python -IB -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 The suite uses real fixtures, real files, and `pytest-httpserver`; do not add mocks. See `AGENTS.md` for the test map and `PATTERNS.md` for test idioms.

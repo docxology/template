@@ -143,6 +143,11 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 
 - `collect_entries(repo_root)` - build `ExemplarEntry` records from each public exemplar's README (H1 title + "When to use this template" section)
 - `ExemplarEntry` - structured roster entry; backs `docs/_generated/exemplar_roster.md`
+- `scripts/docgen/exemplar_roster.py` regenerates the JSON manifest, differentiation
+  map and README routing from those same inputs. Regenerate after exemplar
+  metadata or test-file inventory changes; `--check` is an explicit maintainer
+  command, not native or release acceptance. Tests retain public manifest and
+  physical tracking boundaries without pinning generated copies or headings.
 
 ### Package Discovery and Installed Acceptance
 
@@ -790,6 +795,7 @@ The `infrastructure/project/` module enables multi-project support by:
 | `public_root_census_encoding.py` | Lossless original census JSON DAG; limits and every observation remain intact. |
 | `public_root_lane_contract.py` | Exact Root v2 lane admission and source-owned pytest invocations. |
 | `public_root_lane_coverage.py` | Real in-memory coverage observations, exact source mapping and confined JSON. |
+| `public_root_lane_execution.py` | Bound independent external-fixture chunk supervision to one original clock; retain every launched result. |
 | `public_root_lane_producer.py` | Whole-budget Root v2 lane API; only original supervised outcomes can pass. |
 | `public_root_lane_readback.py` | Independently validate exact Root v2 lane processes, source policy and case reports. |
 | `public_root_lane_worker.py` | Real exact-node Root v2 execution, guarded chunks and original case outcomes. |

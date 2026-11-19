@@ -298,3 +298,49 @@ def test_fulltext_round_robin_covers_phases_before_repeat() -> None:
     assert [paper.id for paper in selected] == [paper.id for paper in (foundation, jwst, molecules)]
     assert _fulltext_candidates({"foundation": [foundation], "jwst": [repeated, jwst]}) == [foundation, jwst]
     assert _fulltext_candidates({}) == []
+
+
+@pytest.mark.parametrize(
+    "citation_fields,eligible",
+    [
+        ({"is-referenced-by-count": 12}, True),
+        ({"is-referenced-by-count": 6}, True),
+        ({"is-referenced-by-count": 5}, False),
+        ({"is-referenced-by-count": 0}, False),
+        ({"is-referenced-by-count": None}, True),
+        ({}, True),
+    ],
+    ids=["above-threshold", "at-threshold", "below-threshold", "measured-zero", "unavailable", "absent"],
+)
+def test_retrieved_citation_count_survives_phase_filter_and_corpus(
+    tmp_path: Path, citation_fields: dict[str, int | None], eligible: bool
+) -> None:
+    from infrastructure.search.literature.crossref_backend import crossref_item_to_paper
+
+    from literature.corpus import Corpus
+    from multi_phase.live_acceptance import _domain_paper
+    from multi_phase.search import MultiPhaseSearchRunner
+
+    config_path = tmp_path / "config.yaml"
+    config_path.write_text("project_config: {}\n", encoding="utf-8")
+    runner = MultiPhaseSearchRunner(config_path, project_root=tmp_path)
+    paper = _domain_paper(
+        crossref_item_to_paper(
+            {
+                "DOI": DOI,
+                "title": ["Citation eligibility boundary"],
+                "issued": {"date-parts": [[2024]]},
+                **citation_fields,
+            }
+        )
+    )
+    expected_count = citation_fields.get("is-referenced-by-count")
+    assert paper.citation_count == expected_count
+    retained = runner.apply_deterministic_filters([paper], {"min_citation_count": 6})
+    expected = [(paper.canonical_id, expected_count)] if eligible else []
+    assert [(row.canonical_id, row.citation_count) for row in retained] == expected
+    corpus_path = tmp_path / "retained_corpus.jsonl"
+    Corpus(papers=retained).save(corpus_path)
+    restored = Corpus.load(corpus_path).papers
+    assert [(row.canonical_id, row.citation_count) for row in restored] == expected
+    assert runner.apply_deterministic_filters(restored, {"min_citation_count": 6}) == restored

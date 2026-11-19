@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import stat
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -149,35 +150,35 @@ def test_out_of_order_checkpoint_cannot_execute_missing_prefix(tmp_path: Path) -
 
 
 def _paused_analysis(root: Path, *, prefix: bool) -> PipelineExecutor:
-    executor = _executor(root)
-    stage = root / "scripts/pipeline/stage_02_analysis.py"
-    stage.parent.mkdir()
-    stage.write_text(
-        "from pathlib import Path\n"
-        "target=Path('projects/demo/output/data/analysis-count.txt')\n"
-        "target.parent.mkdir(parents=True,exist_ok=True)\n"
-        "count=int(target.read_text()) if target.exists() else 0\n"
-        "target.write_text(str(count+1))\n"
-    )
-    stages = [{"name": "Prefix", "key": "prefix", "script": "scripts/child.py"}] if prefix else []
-    stages.append(
-        {
-            "name": "Scientific Work",
-            "key": "scientific-work",
-            "script": "scripts/pipeline/stage_02_analysis.py",
-            "contract": {"output_artifacts": ["output/data/analysis-count.txt"]},
-            **({"depends_on": ["Prefix"]} if prefix else {}),
-        }
-    )
-    (executor.config.project_dir / "pipeline.yaml").write_text(
-        yaml.safe_dump(
+    with closing(_executor(root)) as executor:
+        stage = root / "scripts/pipeline/stage_02_analysis.py"
+        stage.parent.mkdir()
+        stage.write_text(
+            "from pathlib import Path\n"
+            "target=Path('projects/demo/output/data/analysis-count.txt')\n"
+            "target.parent.mkdir(parents=True,exist_ok=True)\n"
+            "count=int(target.read_text()) if target.exists() else 0\n"
+            "target.write_text(str(count+1))\n"
+        )
+        stages = [{"name": "Prefix", "key": "prefix", "script": "scripts/child.py"}] if prefix else []
+        stages.append(
             {
-                "telemetry": {"enabled": False},
-                "stages": stages,
-                "control": {"stage_policies": {len(stages): {"require_approval": True, "pause_before": True}}},
+                "name": "Scientific Work",
+                "key": "scientific-work",
+                "script": "scripts/pipeline/stage_02_analysis.py",
+                "contract": {"output_artifacts": ["output/data/analysis-count.txt"]},
+                **({"depends_on": ["Prefix"]} if prefix else {}),
             }
         )
-    )
+        (executor.config.project_dir / "pipeline.yaml").write_text(
+            yaml.safe_dump(
+                {
+                    "telemetry": {"enabled": False},
+                    "stages": stages,
+                    "control": {"stage_policies": {len(stages): {"require_approval": True, "pause_before": True}}},
+                }
+            )
+        )
     # The executor reads controls when constructed; use the finished declaration.
     return PipelineExecutor(executor.config)
 
@@ -233,12 +234,12 @@ def test_resume_rejection_preserves_unexecuted_analysis_and_checkpoint(tmp_path:
 
 @pytest.mark.timeout(240)
 def test_failed_resume_cannot_rebind_checkpoint_to_changed_output(tmp_path: Path) -> None:
-    executor = _paused_analysis(tmp_path, prefix=True)
-    (tmp_path / "scripts/pipeline/stage_02_analysis.py").write_text(
-        "from pathlib import Path\n"
-        "Path('projects/demo/output/data/value.txt').write_text('failed attempt output')\n"
-        "raise SystemExit(7)\n"
-    )
+    with closing(_paused_analysis(tmp_path, prefix=True)) as executor:
+        (tmp_path / "scripts/pipeline/stage_02_analysis.py").write_text(
+            "from pathlib import Path\n"
+            "Path('projects/demo/output/data/value.txt').write_text('failed attempt output')\n"
+            "raise SystemExit(7)\n"
+        )
     executor = PipelineExecutor(executor.config)
     assert executor.run_result(executor.execute_pipeline()).exit_code == 75
     checkpoint = executor.checkpoint_manager.checkpoint_file
@@ -262,18 +263,18 @@ def test_failed_resume_cannot_rebind_checkpoint_to_changed_output(tmp_path: Path
 
 @pytest.mark.timeout(180)
 def test_failed_fresh_run_cannot_rebind_checkpoint_to_changed_output(tmp_path: Path) -> None:
-    executor = _paused_analysis(tmp_path, prefix=True)
-    declaration = executor.config.project_dir / "pipeline.yaml"
-    payload = yaml.safe_load(declaration.read_text())
-    payload.pop("control")
-    declaration.write_text(yaml.safe_dump(payload))
-    (tmp_path / "scripts/pipeline/stage_02_analysis.py").write_text(
-        "from pathlib import Path\n"
-        "checkpoint=Path('projects/demo/output/.checkpoints/pipeline_checkpoint.json')\n"
-        "Path('checkpoint-before-failure.json').write_bytes(checkpoint.read_bytes())\n"
-        "Path('projects/demo/output/data/value.txt').write_text('failed fresh output')\n"
-        "raise SystemExit(7)\n"
-    )
+    with closing(_paused_analysis(tmp_path, prefix=True)) as executor:
+        declaration = executor.config.project_dir / "pipeline.yaml"
+        payload = yaml.safe_load(declaration.read_text())
+        payload.pop("control")
+        declaration.write_text(yaml.safe_dump(payload))
+        (tmp_path / "scripts/pipeline/stage_02_analysis.py").write_text(
+            "from pathlib import Path\n"
+            "checkpoint=Path('projects/demo/output/.checkpoints/pipeline_checkpoint.json')\n"
+            "Path('checkpoint-before-failure.json').write_bytes(checkpoint.read_bytes())\n"
+            "Path('projects/demo/output/data/value.txt').write_text('failed fresh output')\n"
+            "raise SystemExit(7)\n"
+        )
     executor = PipelineExecutor(executor.config)
     results = executor.execute_pipeline()
     assert executor.run_result(results).exit_code == 1

@@ -36,7 +36,7 @@ Conftest: `projects/templates/template_eda_notebook/tests/conftest.py`
 (sets `MPLBACKEND=Agg`, selects the declared SDK from the environment before adding own `src/`).
 
 Live test count and coverage percentage:
-[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)
+[`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)
 (or `uv run pytest tests/ --collect-only -q` from the project directory).
 
 ## Test Class Inventory

@@ -22,6 +22,10 @@ Use this exemplar when starting a data descriptor project outside the monorepo.
 2. Replace `data/example_descriptor.json` with your descriptor.
 3. Add units, bounds, allowed values, and pattern constraints for every publishable field.
 4. Update `manuscript/config.yaml` and `domain_profile.yaml`.
-5. Run `uv run pytest tests --cov=src --cov-fail-under=90` from the fork root after adapting imports.
+5. Prepare the declared SDK and own `dev` environment using the
+   [shared standalone boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface),
+   then run `.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90`
+   from the fork root after adapting imports. Descriptor fixtures remain
+   demonstrations, not empirical scientific evidence.
 
 Do not copy generated `output/`, local virtual environments, or cache folders.

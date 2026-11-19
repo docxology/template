@@ -346,7 +346,7 @@ should produce or point at a Zenodo software version under that concept DOI.
 5. Verify both public surfaces after publishing:
 
    ```bash
-   gh-axi release view vX.Y.Z --repo docxology/template
+   gh release view vX.Y.Z --repo docxology/template
    uv run python scripts/docgen/publication_records.py --refresh-external
    ```
 
@@ -357,25 +357,13 @@ should produce or point at a Zenodo software version under that concept DOI.
 
 ### Public exemplar release
 
-Standalone public exemplars use `publish_project_release.py`. Use the qualified
-project name from `docs/_generated/publication_records.md`, not the short leaf
-name.
-
-```bash
-uv run python scripts/runner/execute_pipeline.py --project templates/<name> --mode core
-uv run python scripts/publish/publish_project_release.py \
-  --project templates/<name> \
-  --tag vX.Y.Z \
-  --repo docxology/<name> \
-  --production \
-  --new-version
-uv run python scripts/docgen/publication_records.py --refresh-external
-```
-
-For a first standalone exemplar release, use `--reserve-doi-first` instead of
-`--new-version`. After the run, commit the updated
-`manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, generated publication
-records, and any release-note docs.
+Use the [canonical publication runbook](publication-runbook.md) for standalone
+public exemplar releases. It owns first-release versus existing-series DOI
+reservation, final DOI-bearing rendering, the exact accepted standalone commit
+and independently retrieved GitHub/Zenodo asset parity. Do not use a shortened
+new-version recipe that uploads or tags before that final Source exists.
+An intended version, historical DOI or available adapter is not publication
+authority; each target requires its own authorization and acceptance.
 
 Public exemplars also track their deterministic rendered evidence. In the root
 monorepo, keep both `projects/templates/<name>/output/` and the copied
@@ -394,10 +382,8 @@ The render source of truth is still the public monorepo:
 ```bash
 git clone https://github.com/docxology/template
 cd template
-uv sync
+uv sync --locked
 ./run.sh --project templates/<name> --pipeline --mode core
-uv run python scripts/pipeline/stage_04_validate.py --project templates/<name>
-uv run python scripts/pipeline/stage_05_copy.py --project templates/<name>
 ```
 
 The standalone repositories are publication mirrors for source, DOI metadata,

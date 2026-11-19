@@ -139,38 +139,16 @@ For CI that exercises Windows, ship **`setup_hook.py`**, not only `.sh`. An opti
 `setup_hook.yaml` manifest next to the hook can declare `required_tools`, `required_env`,
 and timeouts (see [`infrastructure/project/AGENTS.md`](../../infrastructure/project/AGENTS.md)).
 
-### `pyproject.toml` — Minimum Viable
+### `pyproject.toml` — Start from declared project metadata
 
-```toml
-[project]
-name = "<project-name>"
-version = "1.0.0"
-description = "Short description"
-readme = "README.md"
-requires-python = ">=3.14"
-dependencies = [
-    "matplotlib>=3.10.0",
-    "research-project-template==4.3.0",
-    # Add your project-specific deps here
-]
-
-[tool.uv.sources]
-# Inside this repository the SDK resolves to the checkout; an external fork
-# pins the released version instead.
-research-project-template = { path = "../../..", editable = true }
-
-[tool.template]
-platform_version = "4.3.0"
-tested_python_versions = ["3.14", "3.15"]
-required_unpaid_capabilities = []
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = "test_*.py"
-
-[tool.coverage.run]
-source = ["src/<package_name>"]
-```
+Use the [canonical fork helper](fork-an-exemplar.md) to copy a working exemplar,
+rewrite its identity and select its real SDK provider. Keep the copied project's
+dependency groups, supported Python contract and coverage configuration; do not
+construct a second minimum SDK/version recipe here. Prepare the new fork's own
+environment before running it. Independent public adoption additionally follows
+the [reviewed installation projection](standalone-install-projection.md), using
+actual accepted provider commits/assets rather than an assumed package-index
+release or checkout ancestor.
 
 ### `manuscript/config.yaml` — Minimum Viable
 

@@ -15,6 +15,7 @@ Proves:
 
 from __future__ import annotations
 
+from contextlib import closing
 from pathlib import Path
 
 from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor
@@ -77,11 +78,11 @@ class TestDefaultOff:
         assert config.incremental.enabled is False  # default-off invariant
 
         calls: list[str] = []
-        executor = PipelineExecutor(config)
-        plan = _build_two_stage_plan(project_dir, calls)
+        with closing(PipelineExecutor(config)) as executor:
+            plan = _build_two_stage_plan(project_dir, calls)
 
-        executor._execute_pipeline(plan)
-        executor._execute_pipeline(plan)
+            executor._execute_pipeline(plan)
+            executor._execute_pipeline(plan)
 
         # Both stages ran on BOTH runs -> 4 invocations, no skipping.
         assert calls == ["Upstream", "Downstream", "Upstream", "Downstream"]
@@ -103,19 +104,18 @@ class TestIncrementalSkip:
         (project_dir / "manuscript" / "a.md").write_text("seed", encoding="utf-8")
 
         config = self._config(repo_root)
-        executor = PipelineExecutor(config)
+        with closing(PipelineExecutor(config)) as executor:
+            calls: list[str] = []
+            plan = _build_two_stage_plan(project_dir, calls)
 
-        calls: list[str] = []
-        plan = _build_two_stage_plan(project_dir, calls)
-
-        first = executor._execute_pipeline(plan)
-        assert calls == ["Upstream", "Downstream"]
-        assert all(r.success for r in first)
+            first = executor._execute_pipeline(plan)
+            assert calls == ["Upstream", "Downstream"]
+            assert all(r.success for r in first)
 
         calls.clear()
-        second_executor = PipelineExecutor(config)
-        plan2 = _build_two_stage_plan(project_dir, calls)
-        second = second_executor._execute_pipeline(plan2)
+        with closing(PipelineExecutor(config)) as second_executor:
+            plan2 = _build_two_stage_plan(project_dir, calls)
+            second = second_executor._execute_pipeline(plan2)
 
         # Nothing changed -> both stages skipped.
         assert calls == []
@@ -134,7 +134,8 @@ class TestIncrementalSkip:
         config = self._config(repo_root)
 
         calls: list[str] = []
-        PipelineExecutor(config)._execute_pipeline(_build_two_stage_plan(project_dir, calls))
+        with closing(PipelineExecutor(config)) as executor:
+            executor._execute_pipeline(_build_two_stage_plan(project_dir, calls))
         assert calls == ["Upstream", "Downstream"]
 
         # Mutate Upstream's declared input. Upstream re-runs; its output changes;
@@ -142,7 +143,8 @@ class TestIncrementalSkip:
         src.write_text("seed-CHANGED", encoding="utf-8")
 
         calls.clear()
-        PipelineExecutor(config)._execute_pipeline(_build_two_stage_plan(project_dir, calls))
+        with closing(PipelineExecutor(config)) as executor:
+            executor._execute_pipeline(_build_two_stage_plan(project_dir, calls))
         assert calls == ["Upstream", "Downstream"]
 
     def test_only_downstream_reruns_when_only_its_own_input_changes(self, tmp_path: Path) -> None:
@@ -190,12 +192,14 @@ class TestIncrementalSkip:
 
         config = self._config(repo_root)
         calls: list[str] = []
-        PipelineExecutor(config)._execute_pipeline(make_plan(calls))
+        with closing(PipelineExecutor(config)) as executor:
+            executor._execute_pipeline(make_plan(calls))
         assert calls == ["Upstream", "Downstream"]
 
         extra.write_text("x-CHANGED", encoding="utf-8")
         calls.clear()
-        PipelineExecutor(config)._execute_pipeline(make_plan(calls))
+        with closing(PipelineExecutor(config)) as executor:
+            executor._execute_pipeline(make_plan(calls))
         # Upstream unchanged -> skipped; only Downstream re-runs.
         assert calls == ["Downstream"]
 
@@ -205,14 +209,16 @@ class TestIncrementalSkip:
 
         config = self._config(repo_root)
         calls: list[str] = []
-        PipelineExecutor(config)._execute_pipeline(_build_two_stage_plan(project_dir, calls))
+        with closing(PipelineExecutor(config)) as executor:
+            executor._execute_pipeline(_build_two_stage_plan(project_dir, calls))
         assert calls == ["Upstream", "Downstream"]
 
         # Delete a declared output: fail-safe must force re-run despite matching hash.
         (project_dir / "output" / "up.txt").unlink()
 
         calls.clear()
-        PipelineExecutor(config)._execute_pipeline(_build_two_stage_plan(project_dir, calls))
+        with closing(PipelineExecutor(config)) as executor:
+            executor._execute_pipeline(_build_two_stage_plan(project_dir, calls))
         # Upstream re-runs (output absent); its rewritten output is identical so
         # Downstream's input hash matches and Downstream stays skipped.
         assert calls == ["Upstream"]

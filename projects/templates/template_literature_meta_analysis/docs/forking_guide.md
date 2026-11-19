@@ -135,10 +135,10 @@ that reads `pending` until stage 03 runs.
 
 | Stage | Script | Reads | Writes | Notes |
 |---|---|---|---|---|
-| 1 | `01_literature_search.py` | config | `output/data/corpus.jsonl` | 7-engine dispatch + cross-engine de-dup; `--clear-corpus --no-resume` for a fresh run |
+| 1 | `01_literature_search.py` | config | `output/data/corpus.jsonl` | Ten-engine capability registry in [`ENGINE_SPECS`](../src/literature/engine_dispatch.py): arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv; enabled engines are config-owned. Cross-engine de-dup; `--clear-corpus --no-resume` for a fresh run. |
 | 2 | `02_meta_analysis_pipeline.py` | corpus | subfield/temporal/tfidf/topics/citation JSON + `citation_graph.gml` | deterministic (seeded) |
 | 3 | `03_build_knowledge_graph.py` | corpus | nanopublications (JSONL + RDF/TriG), hypothesis scores | **optional** — needs Ollama; `--max-papers N` to sample |
-| 4 | `04_generate_figures.py` | stage-2/3 JSON | up to 12 PNGs in `output/figures/` | KG-dependent figures skip gracefully if 03 didn't run |
+| 4 | `04_generate_figures.py` | stage-2/3 JSON | Up to 21 registered PNGs in `output/figures/`; current filenames/captions come from [`FIGURE_CAPTIONS`](../src/visualization/figure_runner.py) | The actual output subset depends on available analysis/KG artifacts; KG-dependent figures skip explicitly if 03 did not run. |
 | 5 | `05_inject_variables.py` | config + all outputs | `output/manuscript/*.md` | injects `{{TOKENS}}`; **raises on any unresolved token** |
 | 6 | `06_fulltext_assessment.py` | corpus | full-text assessment | optional |
 

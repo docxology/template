@@ -75,6 +75,49 @@ def test_bounded_digest_refuses_symlink_after_warm_observation(tmp_path: Path, a
     assert (outside / path.name).read_bytes() == b"outside!"
 
 
+@pytest.mark.parametrize("change", ["addition", "overwrite", "aba", "symlink"])
+def test_current_source_census_reobserves_names_and_bytes_after_snapshot(tmp_path: Path, change: str) -> None:
+    import time
+
+    from infrastructure.reporting.native_source_external_admission import _pure_source_records
+    from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
+
+    source = _public(tmp_path)
+    for base in _public_roots(tmp_path)[0]:
+        if not base.exists():
+            base.mkdir(parents=True)
+    reader = SnapshotReader(tmp_path)
+    deadline = time.monotonic() + 30
+    before = _pure_source_records(tmp_path, reader, deadline)
+    target = source / "nested/model.py"
+    original = target.read_bytes()
+    identity = target.stat()
+    assert (target.relative_to(tmp_path).as_posix(), "file", hashlib.sha256(original).hexdigest()) in before
+    if change == "addition":
+        added = source / "new.py"
+        added.write_bytes(b"new_source = 3\n")
+        after = _pure_source_records(tmp_path, reader, deadline)
+        assert (added.relative_to(tmp_path).as_posix(), "file", hashlib.sha256(added.read_bytes()).hexdigest()) in after
+        assert set(before).issubset(after)
+        return
+    if change == "overwrite":
+        target.write_bytes(original.replace(b"2", b"3"))
+        assert target.stat().st_size == identity.st_size and target.read_bytes() != original
+        os.utime(target, ns=(identity.st_atime_ns, identity.st_mtime_ns))
+    elif change == "aba":
+        target.write_bytes(b"changed source\n")
+        target.write_bytes(original)
+        assert target.stat().st_ctime_ns != identity.st_ctime_ns
+    else:
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        (outside / target.name).write_bytes(original)
+        target.unlink()
+        target.symlink_to(outside / target.name)
+    with pytest.raises(ValueError):
+        _pure_source_records(tmp_path, reader, deadline)
+
+
 def _source(root: Path) -> Path:
     source = root / "source"
     (source / "nested/empty").mkdir(parents=True)

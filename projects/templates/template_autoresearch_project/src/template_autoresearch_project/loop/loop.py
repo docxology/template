@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from dataclasses import replace
 from pathlib import Path
 
 from infrastructure.autoresearch import (
@@ -34,6 +35,7 @@ from .loop_phases import (
 )
 from ..ml.task import MLTaskResult, run_bounded_ml_task
 from .models import AutoResearchClaim, AutoResearchLoopResult, LoopStageResult
+from .settlement import failed_settlement_report, invalidate_settlement, terminal_readiness
 from ..writers import (
     relative_path,
     write_core_loop_artifacts,
@@ -151,7 +153,18 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         output_paths=_final_output_path_payload(project_root, ctx.output_paths, config.required_artifacts),
         ml_result=ml_result,
     )
-    run_post_readiness_final_phases(ctx, final)
+    try:
+        run_post_readiness_final_phases(ctx, final)
+        terminal = terminal_readiness(plan, project_root)
+        readiness_valid = readiness_valid and terminal.valid
+        if not readiness_valid:
+            # Failure presentation is a separate, bounded failure settlement, not a
+            # retry that can convert a failed terminal verdict into success.
+            invalidate_settlement(project_root, plan, terminal if not terminal.valid else readiness_report)
+            run_post_readiness_final_phases(ctx, replace(final, readiness_valid=False))
+    except Exception as error:  # noqa: BLE001 - final handler revokes readiness for every failure, then re-raises
+        invalidate_settlement(project_root, plan, failed_settlement_report(plan, error))
+        raise
 
     return _loop_result(
         project_name,

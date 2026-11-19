@@ -1,7 +1,7 @@
 # template_code_project TODO
 
 This backlog is future-only. Completed validation and dated review evidence are preserved in
-[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+[monorepo `docs/maintenance/exemplar-backlog-history.md`](https://github.com/docxology/template/blob/main/docs/maintenance/exemplar-backlog-history.md#bounded-workflowz-reviews--2026-11-10)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
 next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
@@ -36,9 +36,9 @@ keeps a capability blocked rather than silently promoting it.
 
 The rows below describe remaining acceptance and repairs, not a claim that
 existing implementations are missing. Inspect current source and the dated
-[program record](../../../docs/maintenance/platform-4-upgrade.md) first.
+[monorepo program record](https://github.com/docxology/template/blob/main/docs/maintenance/platform-4-upgrade.md) first.
 Set `P4_PROJECT_ROOT` to this project's absolute canonical checkout and prepare
-its locked environment using the [runtime matrix guide](../../../docs/development/public-runtime-matrix.md).
+its locked environment using the [monorepo runtime matrix guide](https://github.com/docxology/template/blob/main/docs/development/public-runtime-matrix.md).
 Run one project per pytest process under the producer's declared finite outer
 deadline and source-owned per-case limits. The whole-selection domain command
 is an explicit acceptance opt-in: prepare its declared unpaid tool/model

@@ -1,7 +1,7 @@
 {
   "claim_boundary": "Schemas version generated governance payload shapes; payloads of schemas with a registered field contract are checked for field/type conformance; exemptions are generic tables.",
   "contracted_schema_count": 9,
-  "generated_at": "2026-11-04T15:41:21+00:00",
+  "generated_at": "2026-11-18T18:55:15+00:00",
   "generic_table_exemptions": [
     {
       "path": "output/data/autoresearch_claims.json",
@@ -68,8 +68,16 @@
       "reason": "run budget ledger table"
     },
     {
+      "path": "output/data/transmission_manifest.json",
+      "reason": "platform transmission metadata payload"
+    },
+    {
       "path": "output/figures/figure_registry.json",
       "reason": "figure-label keyed registry"
+    },
+    {
+      "path": "output/release/upload_receipts.json",
+      "reason": "platform transport result receipt table"
     },
     {
       "path": "output/reports/artifact_manifest.json",
@@ -80,16 +88,16 @@
       "reason": "project loop payload serialized from the public result model"
     },
     {
-      "path": "output/reports/autoresearch_readiness.json",
-      "reason": "infrastructure readiness report payload"
-    },
-    {
       "path": "output/reports/benchmark_readiness_smoke.json",
       "reason": "benchmark grading row"
     },
     {
       "path": "output/reports/ml_benchmark_score.json",
       "reason": "benchmark grading row"
+    },
+    {
+      "path": "output/reports/test_results.json",
+      "reason": "platform coverage and test summary table"
     }
   ],
   "missing_schema_artifacts": [],
@@ -145,6 +153,7 @@
       "schema": "template-autoresearch-figure-style-v1"
     },
     {
+      "conformance": "declared_derivative_not_observed",
       "path": "output/data/manuscript_variable_provenance.json",
       "schema": "template-autoresearch-manuscript-provenance-v1"
     },
@@ -209,16 +218,29 @@
       "schema": "template-autoresearch-training-diagnostics-v1"
     },
     {
+      "path": "output/data/publication_ledger.json",
+      "schema": "template-publication-ledger-v1"
+    },
+    {
       "path": "output/data/research_object_manifest.json",
-      "schema": "template-autoresearch-research-object-manifest-v1"
+      "schema": "template-autoresearch-research-object-manifest-v2"
     },
     {
       "path": "output/data/review_decisions.json",
       "schema": "template-autoresearch-review-decisions-v1"
     },
     {
+      "conformance": "declared_derivative_not_observed",
+      "path": "output/manuscript/hydration_manifest.json",
+      "schema": "template-hydrated-manuscript/v1"
+    },
+    {
       "path": "output/reports/evidence_registry.json",
       "schema": "template-evidence-registry-report-v1"
+    },
+    {
+      "path": "output/reports/manuscript_composition.json",
+      "schema": "template-manuscript-composition-v1"
     }
   ],
   "valid": true

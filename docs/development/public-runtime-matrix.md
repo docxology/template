@@ -93,8 +93,8 @@ ignored local output. `--project templates/template_code_project` is a
 diagnostic subset and records `matrix_complete: false`.
 
 The default diagnostic command without `--acceptance-matrix`, including
-`--profile release --json`, does not produce the required whole-selection,
-three-runtime receipts. Do not use it to close the runtime-matrix backlog.
+`--profile release --json`, does not produce the required whole-selection
+receipts for both supported minors. Do not use it to close the runtime matrix.
 
 The existing `ProjectTestTask` matrix supplies credential-free supervised
 children with finite deadlines. At most three projects run concurrently.
@@ -159,7 +159,7 @@ files, including root `conftest.py`. Source identity binds the full public
 source fingerprint and all 25 stable public deliverable identities. Root branch
 coverage measures infrastructure with a 60 percent floor. The existing
 `root:coverage` requirement is explicitly bound to `.python-version`;
-the three supported root runtime requirements remain separate.
+the four Linux/Darwin × 3.14/3.15 original Root owners remain separate.
 
 The production Root policy and prerequisites are now declared under
 `infrastructure/config/root-case-policy.json` and

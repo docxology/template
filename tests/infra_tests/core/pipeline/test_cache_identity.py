@@ -8,7 +8,7 @@ import signal
 import subprocess
 import time
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from pathlib import Path
 
 import pytest
@@ -197,22 +197,22 @@ def test_environment_changed_during_real_child_blocks_success(tmp_path: Path) ->
 
 
 def test_completion_guard_rechecks_effective_environment_and_deadline(tmp_path: Path) -> None:
-    executor = _executor(tmp_path)
-    with _environment({"TEMPLATE_CACHE_SCIENTIFIC_VALUE": "first"}):
-        executor.preview_stage_names()
-        plan = executor.execution_plan
-    assert plan is not None
-    with _environment({"TEMPLATE_CACHE_SCIENTIFIC_VALUE": "second"}):
-        blocked = execution_guard_result(
-            config=executor.config, plan=plan, deadline=time.monotonic() + 10, completion=True
-        )
-        assert blocked is not None and blocked.exit_code == 75
-        assert "before completion validation" in blocked.error_message
-    with _environment({"TEMPLATE_CACHE_SCIENTIFIC_VALUE": "first"}):
-        expired = execution_guard_result(
-            config=executor.config, plan=plan, deadline=time.monotonic() - 1, completion=True
-        )
-        assert expired is not None and expired.exit_code == 124
+    with closing(_executor(tmp_path)) as executor:
+        with _environment({"TEMPLATE_CACHE_SCIENTIFIC_VALUE": "first"}):
+            executor.preview_stage_names()
+            plan = executor.execution_plan
+        assert plan is not None
+        with _environment({"TEMPLATE_CACHE_SCIENTIFIC_VALUE": "second"}):
+            blocked = execution_guard_result(
+                config=executor.config, plan=plan, deadline=time.monotonic() + 10, completion=True
+            )
+            assert blocked is not None and blocked.exit_code == 75
+            assert "before completion validation" in blocked.error_message
+        with _environment({"TEMPLATE_CACHE_SCIENTIFIC_VALUE": "first"}):
+            expired = execution_guard_result(
+                config=executor.config, plan=plan, deadline=time.monotonic() - 1, completion=True
+            )
+            assert expired is not None and expired.exit_code == 124
 
 
 @pytest.mark.parametrize("frozen", [False, True])

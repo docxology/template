@@ -6,14 +6,54 @@ variable provenance, and review material.
 
 How these artifacts are *validated* (which gates bind their truth, which are hard
 gates vs. opt-in) is documented in [validation-architecture.md](validation-architecture.md).
-The integrity attestation and research-object manifest now surface present-but-empty
-artifacts (`empty` / `empty_artifact_count`); the schema manifest fails the run on a
-nonconforming governance payload.
+The upstream integrity attestation and research-object checksum records surface
+present-but-empty evidence (`empty` / `empty_checksum_artifact_count`); the schema
+manifest fails the run on a nonconforming governance payload.
 
 Review packets are built by `writers.reports.build_review_packet()` and checked
 by `validate_review_packet()` against the current schema. Readiness does not
 grant publication approval: approval is copied only from the existing
 human-authored decision source.
+
+
+## Final-byte boundary
+
+`output/reports/artifact_manifest.json` is the sole complete stable-byte authority.
+Its existing lifecycle-selected inventory includes inherited deliverables and every
+stable loop, registry, report and hydration product; it does not use a private
+caller path list or extra exclusions.
+
+The v2 research-object catalog hashes only reviewed upstream leaf evidence after
+path sanitization. Its generic artifacts and dedicated manuscript, registry and
+schema fields represent downstream products as `derivative_reference` records:
+path, record kind, and primary integrity authority only. Such references make no
+existence, size, emptiness or digest assertion. `artifact_count` counts unique
+declared paths in the generic array, not checksum coverage; `checksum_artifact_count`
+and `derivative_reference_count` partition that count. Dedicated role records are
+not counted. `empty_checksum_artifact_count` counts empty upstream checksum records.
+Security inventory/export/attestation checksums use the same upstream leaf boundary.
+
+Close unique intended membership before phase/count projections. Final loop and
+visual bytes precede the phase/research-object/schema catalogs and final hydration.
+Schema rows for later hydration products explicitly declare their known shape,
+not observed conformance; schema-count tokens count catalog rows. The primary
+snapshot is last, followed only by unchanged read-only extrinsic and exact-primary
+validation. A failed terminal verdict revokes reusable readiness; preflight success
+is not terminal success. There are no checksum convergence retries.
+
+The standalone variable script uses the same catalog/primary/terminal-validation
+contract and the platform's ownership-aware resolved-manuscript writer. It keeps
+strict invalid-input refusal and inherited publication evidence; rendering owns
+optional transmission bookends. Final variables, provenance and figure-block
+sidecars must recompute identically from the settled catalogs.
+
+Standalone hydration authenticates its retained upstream catalog and optional
+security inventory against the prior primary entries, then verifies those held
+inputs/results before and after derived rewrites. It never re-certifies changed
+scientific inputs or refreshes security attestations. Prospective membership
+excludes only unchanged, Source-owned stale hydration members; governance
+catalogs still include the evidence registry independently of primary exclusions.
+The dedicated source-ledger checksum is part of the same held baseline.
 
 Core data:
 

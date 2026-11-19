@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 import json
+import subprocess
 from pathlib import Path
 from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
@@ -46,6 +47,7 @@ def _green_project(
     *,
     hydrated: bool = True,
     composition_algorithm: str = "web-renderer-combine-v1",
+    track_sources: bool = False,
 ) -> Path:
     project = make_project(
         root,
@@ -104,6 +106,9 @@ def _green_project(
         algorithm=composition_algorithm,
     )
     write_doc(project / "output" / "data" / "result.json", '{"count": 7}\n')
+    if track_sources:
+        subprocess.run(["git", "init", "-q"], cwd=root, stdin=subprocess.DEVNULL, check=True)
+        subprocess.run(["git", "add", "--", "."], cwd=root, stdin=subprocess.DEVNULL, check=True)
     snapshot_current_artifact_manifest(project / "output")
     _write_green_validation_report(root, project)
     return project

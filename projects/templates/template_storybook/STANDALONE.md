@@ -54,13 +54,17 @@ rsync -a \
 
 ## Validation Commands
 
-From the template repository root after copying into `projects/working/`:
+Prepare the real SDK and own environment with the
+[parent README's standalone recipe](README.md). From the prepared copied
+project root:
 
 ```bash
-uv run pytest projects/working/my_storybook/tests/ \
-  --cov=projects/working/my_storybook/src --cov-fail-under=90
-uv run python projects/working/my_storybook/scripts/90_build_storybook_pdf.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/90_build_storybook_pdf.py
 ```
+
+Inspect every generated page/contact sheet; a build is not independent visual
+or native acceptance. Repository pipeline commands require the monorepo.
 
 ## What Not To Claim
 

@@ -22,7 +22,7 @@
       "qualified_name": "templates/template_autoresearch_project",
       "title": "template_autoresearch_project",
       "use_when": "Use this template when you need a **bounded, offline AutoResearch loop**: deterministic ML candidate evaluation over a fixed local dataset, with evidence-linked claims, machine-readable ledgers, artifact-integrity manifests, and deferred human-review gates.",
-      "test_file_count": 23,
+      "test_file_count": 22,
       "coverage_floor": 90
     },
     {

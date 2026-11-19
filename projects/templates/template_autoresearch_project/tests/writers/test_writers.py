@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 import shutil
@@ -30,7 +31,13 @@ from template_autoresearch_project.writers import (
 )
 
 
-def test_artifact_manifest_uses_public_mode_and_exact_stable_set(tmp_path: Path) -> None:
+def test_artifact_manifest_uses_public_mode_and_exact_stable_set(
+    tmp_path: Path,
+    initialize_git_repository: Callable[[Path], None],
+) -> None:
+    # Prove a genuine nested repository does not inherit an outer packaging ignore.
+    initialize_git_repository(tmp_path)
+    (tmp_path / ".gitignore").write_text("/repo/\n", encoding="utf-8")
     repo_root = tmp_path / "repo"
     project_root = repo_root / "projects" / "templates" / "demo"
     stable = project_root / "output" / "data" / "stable.json"
@@ -39,6 +46,7 @@ def test_artifact_manifest_uses_public_mode_and_exact_stable_set(tmp_path: Path)
     ignored.parent.mkdir(parents=True)
     stable.write_text('{"value": 1}\n', encoding="utf-8")
     ignored.write_text("runtime-only\n", encoding="utf-8")
+    initialize_git_repository(repo_root)
 
     manifest_path = write_artifact_manifest(project_root, repo_root=repo_root)
     manifest = artifact_manifest_from_payload(json.loads(manifest_path.read_text(encoding="utf-8")))
@@ -234,7 +242,7 @@ def test_schema_and_research_object_manifests_are_local(project_root: Path, tmp_
     research_object = json.loads(object_path.read_text(encoding="utf-8"))
     assert schema_manifest["schema"] == "template-autoresearch-schema-manifest-v1"
     assert not schema_manifest["missing_schema_artifacts"]
-    assert research_object["schema"] == "template-autoresearch-research-object-manifest-v1"
+    assert research_object["schema"] == "template-autoresearch-research-object-manifest-v2"
     assert research_object["approval_state"]["publication_approved"] is False
     assert "RO-Crate" in research_object["claim_boundary"]
 

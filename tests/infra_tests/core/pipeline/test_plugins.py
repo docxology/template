@@ -8,6 +8,7 @@ plan is byte-identical to today, which is asserted explicitly here.
 
 from __future__ import annotations
 
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -188,11 +189,11 @@ class TestMergePluginStages:
         dag = PipelineDAG([StageDefinition(name="Clean", key="clean", method="_run_clean_outputs")])
         declarations = parse_plugin_stages([_entry("Extra Report", script="scripts/report.py", depends_on=["Clean"])])
         merge_plugin_stages(dag, declarations)
-        executor = PipelineExecutor(PipelineConfig(project_name="demo", repo_root=tmp_path))
-        spec = next(stage for stage in dag.to_stage_specs(executor) if stage.key == "extra_report")
-        assert bool(spec.func())
-        assert (project / "output" / "report.txt").read_text(encoding="utf-8") == "real child"
-        assert spec.contract == declarations[0].contract
+        with closing(PipelineExecutor(PipelineConfig(project_name="demo", repo_root=tmp_path))) as executor:
+            spec = next(stage for stage in dag.to_stage_specs(executor) if stage.key == "extra_report")
+            assert bool(spec.func())
+            assert (project / "output" / "report.txt").read_text(encoding="utf-8") == "real child"
+            assert spec.contract == declarations[0].contract
 
 
 @pytest.mark.parametrize("field", ["key", "contract"])

@@ -14,11 +14,11 @@ and fail-closed loop validation. Its opt-in local Ollama lane proposes one
 numeric classifier parameter, evaluates the resulting source in Docker, and
 records sandbox selection and exact rollback. For
 agent-team coordination mechanisms see
-[`template_autoscientists`](../template_autoscientists/); for a bounded
+[`template_autoscientists`](https://github.com/docxology/template/blob/main/projects/templates/template_autoscientists); for a bounded
 AutoResearch loop see
-[`template_autoresearch_project`](../template_autoresearch_project/). Full
+[`template_autoresearch_project`](https://github.com/docxology/template/blob/main/projects/templates/template_autoresearch_project). Full
 roster:
-[`projects/AGENTS.md`](../../AGENTS.md#permanent-canonical-exemplars).
+[`projects/AGENTS.md`](https://github.com/docxology/template/blob/main/projects/AGENTS.md#permanent-canonical-exemplars).
 
 ## Publication and rendering
 
@@ -92,10 +92,18 @@ infrastructure, pipeline stages, or cross-template validation.
 
 ## Quick start
 
+For an independent fixture demonstration, use the genuine SDK-wheel
+[standalone environment](STANDALONE.md#standalone-environment) and
+[project-root quickstart](docs/quickstart.md). The following commands instead
+run from the canonical monorepo root after preparing Root and this project's
+own environment through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+
 ```bash
-uv run python projects/templates/template_sia/scripts/run_sia_loop.py
-uv run python projects/templates/template_sia/scripts/z_generate_manuscript_variables.py
-uv run python scripts/pipeline/stage_01_test.py --project templates/template_sia --project-only
+uv run --no-sync --offline --project projects/templates/template_sia \
+  python projects/templates/template_sia/scripts/run_sia_loop.py
+uv run --no-sync --offline --project projects/templates/template_sia \
+  python projects/templates/template_sia/scripts/z_generate_manuscript_variables.py
 ```
 
 Default runs replay fixtures under `src/template_sia/fixtures/recorded_generations/`.
@@ -103,13 +111,29 @@ Default runs replay fixtures under `src/template_sia/fixtures/recorded_generatio
 The reusable Layer-2 adapter is `src/template_sia/loop/loop.py`; `scripts/run_sia_loop.py` is a
 thin CLI that parses flags, calls that adapter, and prints artifact paths.
 
+The fixture CLI prints report/summary paths and the generation count; the local
+report is `projects/templates/template_sia/output/reports/sia_loop_report.md`.
+These expected paths are not a passing execution or model-performance claim.
+
+The selected Stage 01 test lane is a separate Root operation:
+
+```bash
+uv run --no-sync --offline python scripts/pipeline/stage_01_test.py \
+  --project templates/template_sia --project-only
+```
+
+The complete own suite and real Docker/native obligations remain separately
+documented under [Optional hardening](#optional-hardening), not prerequisites
+invented for the fixture-only demonstration.
+
 ## Bounded live numeric proposals
 
 Select an already available local Ollama model and an immutable local Docker
 Python image ID, then use a fresh output directory:
 
 ```bash
-uv run python projects/templates/template_sia/scripts/run_sia_loop.py \
+uv run --no-sync --offline --project projects/templates/template_sia \
+  python projects/templates/template_sia/scripts/run_sia_loop.py \
   --live-proposals --model <local-model-name> \
   --container-image sha256:<existing-local-image-id> \
   --proposal-output-dir projects/templates/template_sia/output/live_proposals_example
@@ -142,13 +166,13 @@ separate run against the selected local model.
 
 - [`AGENTS.md`](AGENTS.md) — module map and contracts
 - [`docs/quickstart.md`](docs/quickstart.md) — fork and extend
-- [`../../../infrastructure/sia/README.md`](../../../infrastructure/sia/README.md) — Layer 1 API
+- [`../../../infrastructure/sia/README.md`](https://github.com/docxology/template/blob/main/infrastructure/sia/README.md) — Layer 1 API
 
 ## Template integrity
 
 - Forward backlog: [`TODO.md`](TODO.md).
 - Copy-and-customize config: [`manuscript/config.yaml.example`](manuscript/config.yaml.example).
-- Project validation: `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`.
+- Project validation: `uv run --no-sync --offline --project projects/templates/template_sia python -m pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
 <!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->

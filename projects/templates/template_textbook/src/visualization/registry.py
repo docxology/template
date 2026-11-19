@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 _IMAGE_LABEL_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+\.png)\)\{#(fig:[-A-Za-z0-9_.:]+)(?:\s[^}]*)?\}")
+_ALT_COMMENT_RE = re.compile(r"\s*<!--\s*alt:(.*?)-->", re.DOTALL)
 _SKIPPED_DOCS = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
 
 FIGURE_ALT_TEXT: dict[str, str] = {
@@ -81,7 +82,7 @@ class FigureRegistryEntry:
 
 
 def collect_figure_registry_entries(manuscript_dir: Path, figures_dir: Path) -> tuple[FigureRegistryEntry, ...]:
-    """Collect figure registry entries from a directory."""
+    """Collect figures using adjacent authored alt comments or explicit source specifications."""
     entries: dict[str, FigureRegistryEntry] = {}
     filename_owners: dict[str, str] = {}
     figures_root = figures_dir.resolve()
@@ -89,7 +90,8 @@ def collect_figure_registry_entries(manuscript_dir: Path, figures_dir: Path) -> 
         if markdown_file.name in _SKIPPED_DOCS:
             continue
         text = markdown_file.read_text(encoding="utf-8")
-        for caption, image_path, label in _IMAGE_LABEL_RE.findall(text):
+        for image in _IMAGE_LABEL_RE.finditer(text):
+            caption, image_path, label = image.groups()
             resolved = (markdown_file.parent / image_path).resolve()
             filename = _figure_filename(image_path, resolved, figures_root)
             existing_owner = filename_owners.get(filename)
@@ -98,10 +100,10 @@ def collect_figure_registry_entries(manuscript_dir: Path, figures_dir: Path) -> 
                     f"Figure filename {filename!r} is claimed by multiple labels: {existing_owner}, {label}"
                 )
             filename_owners[filename] = label
-            try:
-                alt = FIGURE_ALT_TEXT[label]
-            except KeyError as exc:
-                raise ValueError(f"Missing explicit alt-text specification for manuscript figure: {label}") from exc
+            alt_comment = _ALT_COMMENT_RE.match(text, image.end())
+            alt = " ".join(alt_comment.group(1).split()) if alt_comment is not None else FIGURE_ALT_TEXT.get(label)
+            if not alt or not alt.strip():
+                raise ValueError(f"Missing explicit alt-text specification for manuscript figure: {label}")
             entries.setdefault(
                 label,
                 FigureRegistryEntry(

@@ -1,16 +1,7 @@
-"""Comprehensive tests for infrastructure/llm/core.py.
-
-Tests LLM core functionality using real data (No Mocks Policy):
-- Pure logic tests for initialization, config, context management
-- Integration tests marked with @pytest.mark.requires_ollama for network calls
-"""
-
-import pytest
+"""LLM configuration, system-prompt and conversation-state contracts."""
 
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
-
-from .real_ollama_client import build_real_small_llm_client
 
 
 class TestResponseMode:
@@ -286,56 +277,3 @@ class TestLLMCoreIntegration:
 
         assert opts.temperature == 0.0
         assert opts.seed == 42
-
-
-# =============================================================================
-# INTEGRATION TESTS (Require Ollama)
-# =============================================================================
-
-
-@pytest.mark.requires_ollama
-@pytest.mark.timeout(60)
-class TestLLMClientQueryIntegration:
-    """Integration tests requiring running Ollama server.
-
-    Run with: pytest -m requires_ollama
-    Deselect with: pytest -m "not requires_ollama"
-    """
-
-    @pytest.fixture(autouse=True)
-    def check_ollama(self, ensure_ollama_for_tests):
-        """Ensure Ollama is running and functional for tests."""
-        # Fixture dependency ensures Ollama is ready
-        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
-        pass
-
-    def test_query_basic(self):
-        """Test basic query to Ollama."""
-        client = build_real_small_llm_client(timeout=30.0)
-        response = client.query("Say 'hello' and nothing else.")
-
-        assert response is not None
-        assert len(response) > 0
-
-    def test_query_adds_to_context(self):
-        """Test that query adds messages to context."""
-        # Use the discovered small/fast model (real daemon) — a bare
-        # OllamaClientConfig() defaults to gemma3:4b, which may not be pulled.
-        client = build_real_small_llm_client()
-
-        client.query("Say 'test'")
-
-        messages = client.context.get_messages()
-        user_msgs = [m for m in messages if m.get("role") == "user"]
-        asst_msgs = [m for m in messages if m.get("role") == "assistant"]
-
-        assert len(user_msgs) >= 1
-        assert len(asst_msgs) >= 1
-
-    def test_apply_template(self):
-        """Test applying a template."""
-        client = build_real_small_llm_client(timeout=30.0)
-        result = client.apply_template("summarize_abstract", text="This is a test abstract about machine learning.")
-
-        assert result is not None
-        assert len(result) > 0

@@ -4,7 +4,7 @@ Agent-facing reference for working inside the **template_textbook** exemplar: a
 complete authored textbook with a separate draft scaffolding API. Read this before editing anything. For the
 human-facing overview and quick-start commands, see [`README.md`](README.md).
 
-Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Invariants (do not violate)
 
@@ -103,8 +103,8 @@ The scaffold API is a separate authoring tool. Test generated draft outlines in 
   `gallery.py` + `gallery_specs.yaml`); `src/mermaid/` — diagrams.
 
 For monorepo-wide pipeline semantics, CI job names, and the two-layer
-architecture, see the root [`AGENTS.md`](../../../AGENTS.md) and
-[`CLAUDE.md`](../../../CLAUDE.md).
+architecture, see the root [`AGENTS.md`](https://github.com/docxology/template/blob/main/AGENTS.md) and
+[`CLAUDE.md`](https://github.com/docxology/template/blob/main/CLAUDE.md).
 
 ## Tracked public exemplar
 
@@ -127,4 +127,4 @@ quick reference commands, and pitfalls.
 ## Publishing
 
 - Forward backlog: [`TODO.md`](TODO.md) · standalone fork/publish guide: [`STANDALONE.md`](STANDALONE.md) · docs index: [`docs/README.md`](docs/README.md)
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
+- [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Publishing module reference](https://github.com/docxology/template/blob/main/infrastructure/publishing/README.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md) · [Archival targets](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md)

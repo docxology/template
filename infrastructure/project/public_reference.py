@@ -13,6 +13,7 @@ from typing import Any
 
 from infrastructure.core.implementation_custody import capture_implementation_custody, verify_implementation_custody
 from infrastructure.core.pipeline.artifacts._inventory import collect_stable_output_inventory
+from infrastructure.core.pipeline.fingerprint_files import _relative_name
 from infrastructure.core.pipeline.fingerprints import tree_records
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.public_acceptance_scope import RuntimeScope
@@ -70,7 +71,7 @@ def _path_admission(reader: SnapshotReader) -> Callable[[Path], None]:
     roots = frozenset(_public_roots(reader.root)[0])
 
     def admitted(path: Path) -> None:
-        relative = path.relative_to(reader.root).as_posix()
+        relative = _relative_name(path, reader.root)
         if path in roots and path.is_dir():
             reader._public_lexical_path(relative + "/.reference-directory-policy")
         else:
@@ -94,7 +95,7 @@ def _canonical_inventory(root: Path) -> tuple[tuple[str, str, str], ...]:
             path_admission=path_admission,
         ):
             path = base if name == "." else base / name
-            observed.append((path.relative_to(root).as_posix(), kind, digest))
+            observed.append((_relative_name(path, root), kind, digest))
             if len(observed) > MAX_FILES:
                 raise ValueError("canonical public source DATA exceeds its entry bound")
     for project in PUBLIC_PROJECT_NAMES:
@@ -104,8 +105,9 @@ def _canonical_inventory(root: Path) -> tuple[tuple[str, str, str], ...]:
             if stable.issues:
                 raise ValueError("public reference stable deliverable inventory is unavailable")
             for path in stable.files:
-                reader.public_path(path.relative_to(root).as_posix())
-                observed.append((path.relative_to(root).as_posix(), "deliverable", ""))
+                relative = _relative_name(path, root)
+                reader.public_path(relative)
+                observed.append((relative, "deliverable", ""))
                 if len(observed) > MAX_FILES:
                     raise ValueError("canonical public reference exceeds its entry bound")
     result = tuple(sorted(observed))

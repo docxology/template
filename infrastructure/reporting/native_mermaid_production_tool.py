@@ -141,9 +141,6 @@ def run_source_native_mermaid(
 
         if role not in CALLERS or type(timeout) is not int or timeout <= 0 or not isinstance(raw_source, str):
             raise ValueError("Mermaid production role/timeout/caller source is absent")
-        stage_directory = current_native_stage_directory(require_render=True)
-        if stage_directory is None:
-            raise ValueError("native Mermaid production requires its actual fixed Source-admitted stage child")
         root = owner.source.bindings.current_root
         reader = SnapshotReader(root, native_producer_operation=owner)
         owner.verify(reader, run_id=owner.run_id, deadline=owner.deadline)
@@ -163,6 +160,15 @@ def run_source_native_mermaid(
         ):
             raise ValueError("Mermaid production inputs/output/CWD differ from a real selected Source project role")
         scope = matches[0]
+        stage_directory = current_native_stage_directory(
+            require_render=role == "inline",
+            require_analysis=role == "standalone",
+            expected_scope=scope,
+        )
+        if stage_directory is None:
+            raise ValueError("native Mermaid production requires its actual fixed Source-admitted stage child")
+        # Preserve the caller's original clock for custody, observation and cleanup;
+        # the shared observation ceiling cannot lengthen this tool invocation.
         phase_deadline = min(owner.deadline, time.monotonic() + min(timeout, 120))
         remaining(phase_deadline)
         paths = tuple(dict.fromkeys((source_path, *(path.absolute() for path in input_paths))))
@@ -286,7 +292,6 @@ def run_source_native_mermaid(
             retain_native_stage_artifact(reader.read(selected["path"]), tool_artifacts=runtime.tools)
             runtime.unchanged()
             owner.verify(reader, run_id=owner.run_id, deadline=owner.deadline)
-            remaining(phase_deadline)
         except BaseException as error:
             attempt = {
                 "artifact": selected,

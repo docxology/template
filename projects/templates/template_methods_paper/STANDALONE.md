@@ -65,20 +65,17 @@ rsync -a \
 
 ## Validation Commands
 
-From the template repository root after copying into `projects/working/`:
+Prepare the declared SDK and own `dev` environment using the
+[shared standalone boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+From the prepared copied project root:
 
 ```bash
-uv run pytest projects/working/my_methods_paper/tests \
-  --cov=projects/working/my_methods_paper/src --cov-fail-under=90
-uv run python projects/working/my_methods_paper/scripts/methods_analysis.py
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+.venv/bin/python scripts/methods_analysis.py
 ```
 
-For the public exemplar:
-
-```bash
-uv run pytest projects/templates/template_methods_paper/tests \
-  --cov=projects/templates/template_methods_paper/src --cov-fail-under=90
-```
+Repository pipeline/audit commands are monorepo entry points, not files supplied
+by an installed SDK wheel or an independent export.
 
 ## Standalone By Design
 

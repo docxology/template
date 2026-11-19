@@ -54,13 +54,6 @@ _Keywords: madlib generation, token injection, conditional manuscripts, reproduc
 _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
 <!-- PUBLISHING-STATUS:END -->
 
-The 3 platforms still shown ⚪ available are not automatable to "published" with
-current tooling/credentials, not an oversight: **arXiv** has no submission API
-in this codebase (`infrastructure.publishing.arxiv` only prepares a local
-tarball — a human must upload it via arxiv.org and the resulting `arxiv` URL
-would then be added to `publication.published_artifacts`); **Cloudflare
-Pages** needs a `CLOUDFLARE_ACCOUNT_ID` the configured API token cannot
-auto-discover; **IPFS (Web3.Storage)** has no `WEB3_STORAGE_TOKEN` configured.
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_madlib`
 - Tracked outputs: [`output/`](output/) in this project and `output/templates/template_madlib/` in the monorepo; public output files above 50 MB stay out of git.
@@ -161,7 +154,7 @@ the truth of the substituted content itself.
 
 ## Variants
 
-[`template_gold_refinement`](../template_gold_refinement/README.md) is a worked
+[`template_gold_refinement`](https://github.com/docxology/template_gold_refinement) is a worked
 **domain-specialization** of this exemplar. It reuses the same deterministic
 token-injection composition core (`src/composition.py`, `src/config.py`,
 `src/manuscript_variables.py`, and a near-identical `manuscript/config.yaml`
@@ -200,6 +193,46 @@ Navigation links to in-tree documents (keeps them discoverable):
 - [Tests](tests/README.md)
 
 <!-- foam-orphan-nav:end -->
+
+## Standalone project commands
+
+From an independent project root, prepare Python 3.14/3.15 with the genuine SDK
+wheel matching `pyproject.toml` and this project's `dev` extra. The local
+`tool.uv.sources` ancestor is for monorepo development, not standalone SDK
+selection; an intended version is not a PyPI publication receipt.
+Reuse the [shared preparation boundary](https://github.com/docxology/template/blob/main/projects/README.md#run-surface).
+Initial dependency preparation needs package access or a prepared cache.
+
+```bash
+: "${TEMPLATE_SDK_WHEEL:?Set the absolute path to the genuine matching SDK wheel}"
+uv venv --python 3.14 .venv
+uv pip install --python .venv/bin/python "$TEMPLATE_SDK_WHEEL" ".[dev]"
+.venv/bin/python scripts/z_generate_manuscript_variables.py
+.venv/bin/python scripts/02_validate_outputs.py
+```
+
+The hydration entrypoint already generates the configured artifacts, then writes
+`output/data/manuscript_variables.json` and hydrated `output/manuscript/`.
+Only then run the validator, which consumes those outputs, writes
+`output/reports/output_validation.json`, and returns nonzero on failed checks.
+These are expected local artifacts, not an observed successful run or PDF,
+scientific, native or publication acceptance. Run
+`scripts/01_generate_madlib_artifacts.py` separately only when artifacts without
+manuscript hydration are the intended task.
+
+The complete own test suite remains a separate check:
+
+```bash
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+```
+
+`projects/templates/...`, `scripts/pipeline/`, and `scripts/audit/` commands
+elsewhere in these docs run from a [docxology/template](https://github.com/docxology/template)
+monorepo checkout. They do not exist at a standalone project root. The shared
+[publishing guides](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md)
+and [decision-memory rules](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md)
+are monorepo documentation, not a second local implementation.
+
 
 
 ## Optional hardening

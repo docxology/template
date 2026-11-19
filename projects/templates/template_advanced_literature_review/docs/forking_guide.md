@@ -31,8 +31,8 @@ and has no phase-integration surface to configure.
 ## TL;DR
 
 ```bash
-# 0. From the repo root, install deps once
-uv sync --group scientific --group llm
+# 0. Prepare the locked Root; genuine Meta/provider prerequisites remain explicit.
+uv sync --locked
 
 # 1. Clean-copy the exemplar to your new project name (local-only fork)
 uv run python scripts/audit/copy_exemplar.py \
@@ -40,18 +40,23 @@ uv run python scripts/audit/copy_exemplar.py \
   --dest projects/working/my_phased_review \
   --new-name my_phased_review
 
-# 2. Edit ONE file: projects/working/my_phased_review/manuscript/config.yaml
+# 2. Adapt manuscript/config.yaml and the actual Meta provider in pyproject.toml.
+#    In this checkout-local working fork, Meta's path resolver is
+#    ../../templates/template_literature_meta_analysis, not the copied ../ sibling.
+#    An independent export instead requires its real accepted Meta provider.
 #    → project_config.search_phases        (your phase design)
 #    → project_config.llm_filters           (your content classifiers, if any)
 #    → project_config.phase_integration     (dedup/validation/quality-gate policy)
 #    → project_config.hypothesis_definitions (your hypotheses, tagged with relevant_phases)
 
-# 3. Run the pipeline (from inside the project dir)
+# 3. Prepare the new fork's own declared environment, then bootstrap synthetic replay.
+uv sync --project projects/working/my_phased_review --extra dev --python "$PWD/.venv/bin/python"
 cd projects/working/my_phased_review
-uv run python scripts/01_multi_phase_search.py
-uv run python scripts/02_meta_analysis_pipeline.py
-uv run python scripts/04_generate_figures.py --dpi 300
-uv run python scripts/05_inject_variables.py     # fails loudly on any unresolved token
+.venv/bin/python scripts/generate_fixture_corpus.py --out output/data/corpus.jsonl
+.venv/bin/python scripts/01b_fixture_phase_replay.py
+.venv/bin/python scripts/02_meta_analysis_pipeline.py
+.venv/bin/python scripts/04_generate_figures.py --dpi 300
+.venv/bin/python scripts/05_inject_variables.py
 
 # 4. Render the PDF (from the repo root)
 cd -

@@ -1,8 +1,9 @@
 # Functional CI and optional hardening
 
 The public template should be easy to install and use. Default CI checks that
-contract on Linux/Python 3.14, without starting Docker, Lean, a browser, or a
-native document acceptance matrix.
+contract on Linux/Python 3.14, without starting Docker, Lean, or the complete
+native document acceptance matrix. Selected behavioral controls prepare and use
+their actual browser and document tools.
 
 On main and manual runs, every public template builds a wheel and runs the real behavioral tests listed
 in `.github/project-smoke.json`, in a separate pytest process. Most tests use a disposable project copy; tests
@@ -24,8 +25,9 @@ planning preference. Broad rosters expand beyond that preference when needed
 to retain the twelve-module cap; hosted concurrency remains sixteen jobs. Without any applicable measurement, file capacity determines job count
 and byte sizes only balance placement. Neither estimate proves a cell will fit its deadline. Explicit one-to-eight shard
 requests retain their existing manual packing behavior.
-Smoke keeps its 540-second child budget and ten-minute job limit;
-contract jobs use the existing full-infrastructure 120-second per-test default,
+Smoke keeps its 540-second child budget and ten-minute execution-step limit;
+the surrounding infrastructure job allows 75 minutes including preparation.
+Contract jobs use the existing full-infrastructure 120-second per-test default,
 retain explicit test-owned timeout markers, and have a separate 6600-second
 whole-module ceiling below the existing Root acceptance budget. The explicit
 pytest option applies to this test process; nested producer environments retain
@@ -56,6 +58,24 @@ The environment cache includes the resolved Python version, OS, architecture,
 dependency group and root lock/package/Python-selector inputs. Every caller
 still runs its declared locked reconciliation. Reused downloads or environments
 are preparation inputs, never accepted runtime results.
+
+Ordinary CI runs actionlint, lint/types and Source-derived selection before one
+`prepare-linux-documents` producer. Its 75-minute envelope includes the genuine
+Source-pinned converter build, complete root-owned Nix store capture and upload.
+Infrastructure smoke and document-consuming contract jobs retrieve that exact
+same-run artifact ID and manifest SHA-256. They restore original store
+registrations and trust metadata, then reverify the Source, run, attempt, signed
+client, compiler/dependency closure and executable-body pins before consumption.
+The snapshot is preparation DATA, never a cached test result or acceptance.
+The producer and every consumer remain blocking in `CI Gate`; neither a missing
+artifact nor failed revalidation falls back to an unverified tool.
+
+Project smoke starts independently from that producer. Search keeps its own
+converter preparation, so unrelated project feedback does not wait for a cold
+document build. The infrastructure smoke's 540-second body and ten-minute
+execution step, deep-contract budgets and coverage floors are unchanged.
+Hosted completion and timing must establish whether this preparation route fits;
+offline actionlint or a prior preparation run cannot establish that result.
 
 Hardening retains four infrastructure shards for Linux on both supported Python
 minors and macOS on Python 3.15. Linux uses `ubuntu-24.04`, matching the pinned
@@ -140,10 +160,12 @@ missing or failed: these diagnostics do not grant Source admission, waive any
 provider or deadline check, or establish complete hardening, main or release
 acceptance.
 
-Infrastructure smoke prepares genuine Poppler tools for raster controls. Its
-selected compiler controls also install the recommended TeX fonts and verify
-`pzdr.tfm`, which XeTeX hyperlink support requires. The auxiliary contract
-additionally prepares the declared Pandoc/XeTeX document producers and readers.
+Infrastructure smoke imports and revalidates the same-run converter store before
+its Poppler and selected TeX install. The Linux producer builds Source-pinned
+dynamic converters; macOS hardening uses exact official archives.
+Selected compiler controls verify the recommended fonts and `pzdr.tfm`, which
+XeTeX hyperlink support requires. The auxiliary contract additionally prepares
+its declared Pandoc/XeTeX producers and readers.
 Native portability and Auto prepare fresh caches with Source-locked build tools
 in a backend-only environment. Online runtime preparation uses those tools
 without build isolation or dependency resolution and installs into a separate
@@ -157,7 +179,7 @@ Run a project's same selection locally after locked root setup:
 
 ```bash
 uv sync --locked --group installed-build
-uv run python scripts/gates/ci_smoke.py --project templates/template_code_project
+.venv/bin/python scripts/gates/ci_smoke.py --project templates/template_code_project
 ```
 
 Advanced Literature Review also needs its declared Meta provider installed;
@@ -228,7 +250,7 @@ each complete public project plus separate Root checks, with four concurrent
 jobs and one serial 1,800-second operation per cell. This changes aggregate
 scheduling and compute allowance from the former global operation; earlier
 failures remain failures. Same-run live collection authenticates every unique
-producer attempt and complete original graph. Darwin print, the six Root
+producer attempt and complete original graph. Darwin print, the four Root
 host/runtime artifacts, common installed/runtime and full native-format
 originals retain their separate owners. Installed cells use three bounded
 dependency-aware workers. The independent installed candidate and fresh release

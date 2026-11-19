@@ -18,6 +18,11 @@ Additional locations are config-declared publication evidence; the central index
 
 Use this exemplar for lawful release-review and redaction workflows outside the monorepo.
 
+Before these steps, prepare the real matching SDK and own development runtime
+using the [parent README](README.md). Preserve its separate genuine development
+proof and initialized Kmyth/Root prerequisites; a successful SDK import is not
+that proof or permission to invent an approval record.
+
 1. Copy with `uv run python scripts/audit/copy_exemplar.py --source templates/template_redacted_report --dest <destination> --new-name <project_slug>`.
 2. Replace public fixture segments with cleared sample content only.
 3. Configure the lawful classification taxonomy, release ceiling, residual-risk patterns, and required reviewer roles for your organization.

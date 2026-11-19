@@ -8,6 +8,13 @@ tracked artifacts. Output consumers explicitly request the actual deterministic
 session loop; source-only exports do not need precomputed outputs. Tests are mirrored one-to-one with the source subpackage
 layout under `tests/<cluster>/` (SUBMODULAR-2).
 
+Public-inventory sandboxes own genuine local Git repositories, so an enclosing
+checkout's packaging ignores cannot hide the sandbox's stable outputs. The
+manifest regression also nests its repository beneath an actual ignored parent
+directory and retains exact public-mode membership and digest checks. These local
+repository boundaries are neither platform-source nominations nor publication
+proof.
+
 ## Quick Start
 
 ```bash
@@ -45,7 +52,7 @@ commits are not public release evidence.
 
 | Cluster | Files | Focus |
 | --- | --- | --- |
-| `loop/` | `test_adapters.py`, `test_config.py`, `test_edge_config.py`, `test_edge_loop.py`, `test_gate_negative_controls.py`, `test_loop.py`, `test_models.py`, `test_scripts.py` | Loop orchestration, configuration parsing, adapters, models, gate negative controls, script smoke coverage |
+| `loop/` | `test_adapters.py`, `test_config.py`, `test_edge_config.py`, `test_edge_loop.py`, `test_gate_negative_controls.py`, `test_loop.py`, `test_models.py`, `test_source_provider.py` | Loop orchestration, configuration parsing, adapters, models, gate negative controls, and source-only checkout admission |
 | `manuscript/` | `test_format_helpers.py`, `test_manuscript_tables.py`, `test_manuscript_variables.py` | Manuscript token coverage, formatters, table builders, and resolved manuscript output |
 | `writers/` | `test_artifact_schemas.py`, `test_edge_gates.py`, `test_gate_improvements.py`, `test_reports.py`, `test_writers.py` | Artifact writers, schema conformance, gate improvements, report rendering |
 | `diagnostics/` | `test_edge_ledger.py`, `test_source_ledger.py` | Source-ledger contract and edge cases |

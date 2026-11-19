@@ -114,7 +114,8 @@ def main() -> int:
         canvas.save()
         candidate = stream.getvalue()
     elif args.mode != "baseline":
-        reader = PdfReader(BytesIO(original))
+        # pypdf>=7 merges overlays only onto writer-owned pages.
+        reader = PdfWriter(clone_from=PdfReader(BytesIO(original)))
         writer = PdfWriter()
         pages = list(reader.pages)
         if args.mode == "omitted":

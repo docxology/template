@@ -8,8 +8,8 @@ Tests for `infrastructure.llm` follow the **no mocks** rule: `MagicMock` /
 `pull_ollama_model`) use **real stub scripts** and optional injectable ``which`` /
 ``run`` parameters instead of patching `subprocess.run`.
 
-**Scale:** 66 `test_*.py` modules (hundreds of tests). Run subsets while
-developing; CI-quality gate is the full deterministic suite.
+Keep protocol/state tests deterministic and real-provider acceptance separately
+source-bound; neither layer substitutes for the other.
 
 **Coverage (informal):** re-measure after substantive edits (live aggregate → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)):
 
@@ -26,15 +26,14 @@ flowchart LR
     T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>ollama_test_server ·<br/>patch_llm_client_for_tests<br/>OLLAMA_HOST → stub]
     T --> STUB[ollama_stub_server.py<br/>POST /api/chat handler rules<br/>models · prompts · stream shapes]
-    T --> REAL[real_ollama_client.py<br/>Real daemon helpers · requires_ollama]
-    T --> TESTS[test_*.py<br/>54 modules · core client · streaming ·<br/>review · validation · CLI · ...]
+    T --> TESTS[test_*.py<br/>core client · streaming ·<br/>review · validation · CLI · ...]
     T --> AG[AGENTS.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class INIT,CFG,STUB,REAL,TESTS code
+    class INIT,CFG,STUB,TESTS code
     class AG doc
 ```
 
@@ -67,7 +66,7 @@ Model names `primary-model` / `fallback1` still yield HTTP 500 for fallback test
 
 ### 2. Real daemon (`@pytest.mark.requires_ollama`)
 
-Smoke checks against a local Ollama install (`ollama serve`, at least one model).
+Real-daemon cases check availability, explicit model selection, absent-model lookup and preload outcomes against an owned prepared daemon.
 
 **These tests FAIL (not skip) when Ollama is unavailable — by design.** The
 session fixture auto-starts Ollama first and, if it cannot, fails with concrete
@@ -151,59 +150,34 @@ def sample_schema():
 
 ## Integration Test Behavior
 
-Integration tests are designed to be robust against external service variability:
+### Consumer contracts versus model-runtime evidence
 
-### Loud Failures
+Owned HTTP endpoints exercise response parsing, transport failures, retry counts,
+stream reconstruction and conversation state. These fixtures are protocol inputs,
+not a fabricated model backend or evidence of real inference.
 
-Tests now FAIL loudly when:
-- Ollama server cannot be started automatically
-- Ollama server is running but has no models
-- Connection issues persist after auto-start attempts
+The `requires_ollama` layer retains actual daemon status, model selection,
+missing-model lookup and preload state. Do not add smokes whose only oracle is
+nonempty output, response length, canned wording, history-count growth or forwarded
+defaults. Deterministic conversation-state contracts do not certify real inference.
 
-Tests use the `ensure_ollama_for_tests` session fixture which:
-- Automatically starts Ollama if not running
-- Verifies Ollama has at least one model installed
-- Provides detailed error messages with troubleshooting steps
+Actual generation remains required by the Source-owned local-provider/native
+`local-review` and `translation` consumers. They retain the selected model digest,
+exact request and response, completion/token evidence, prompt identity and
+unchanged manuscript inputs. Daemon health or HTTP fixtures cannot satisfy that
+obligation.
 
-The real-daemon path is intentionally a smoke layer: it verifies `/api/tags`,
-model discovery, connection checks, and representative query/streaming paths
-without attempting to fully certify every Ollama deployment state.
+### Failure and timeout boundaries
 
-```python
-@pytest.mark.requires_ollama
-class TestLLMClientWithOllama:
-    @pytest.fixture(autouse=True)
-    def check_ollama(self, ensure_ollama_for_tests):
-        """Ensure Ollama is running and functional for tests."""
-        # Fixture dependency ensures Ollama is ready
-        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
-        pass
-```
+`ensure_ollama_for_tests` fails loudly when its real daemon/model prerequisite is
+unavailable. Release workflows provide authenticated pinned bytes and an owned
+daemon, with implicit model acquisition disabled.
 
-### Timeout Handling
-
-Long queries use extended timeouts:
-
-```python
-def test_query_long(self, client, default_config):
-    # Extended timeout for long-form generation
-    extended_config = default_config.with_overrides(timeout=120.0)
-    try:
-        response = client.query_long("...")
-    except LLMConnectionError as e:
-        if "timed out" in str(e).lower():
-            pytest.fail(f"Ollama timed out after setup: {e}")
-```
-
-### Empty Response Handling
-
-Structured queries handle model quality issues:
-
-```python
-def test_query_structured(self, ...):
-    result = client.query_structured(...)
-    assert result, "Model returned empty JSON"
-```
+A successful short warm-up proves actual inference, not throughput for a later
+prompt or output budget. Preserve each consumer's request, pytest and operation
+clocks, model, seed, prompt and token budget. Diagnose actual cancellation,
+loading, prefill and generation from retained owned-daemon output. Do not
+reinterpret a whole-response timeout as a streaming idle timeout to hide failure.
 
 ## Coverage Summary
 
@@ -214,78 +188,43 @@ CLI and daemon-only paths stay thin until exercised manually or with
 
 ## Adding Tests
 
-### For Pure Logic
+Assert an observable consumer invariant: exact decoded data, accumulated
+conversation state, transformed output, request-count boundaries or a refusal
+that occurs before external work. Existing HTTP fixtures and owned subprocesses
+should exercise the real client implementation.
 
-```python
-# test_new_feature.py
-class TestNewFeature:
-    def test_basic_functionality(self, default_config):
-        """Test without network access."""
-        client = LLMClient(default_config)
-        # Test logic that doesn't require Ollama
-        assert client.config is not None
-```
+Generated prose presence, length, guessed wording and copied configuration
+defaults are not permanent correctness tests. Delete such cases instead of
+re-pinning their expectations or increasing clocks until they pass.
 
-### For Integration
-
-```python
-@pytest.mark.requires_ollama
-class TestNewIntegration:
-    @pytest.fixture(autouse=True)
-    def check_ollama(self, ensure_ollama_for_tests):
-        assert ensure_ollama_for_tests
-
-    def test_with_ollama(self, client):
-        """Test with real Ollama server."""
-        try:
-            response = client.query("Test")
-            assert response is not None
-        except LLMConnectionError as e:
-            pytest.fail(f"Ollama issue after setup: {e}")
-```
+Use `requires_ollama` only when the invariant genuinely depends on a prepared
+daemon. Keep actual provider acceptance source-bound and distinct from fixture
+coverage, and never replace it with an HTTP echo server.
 
 ## Pipeline Integration
 
-### Automated Pipeline (run.sh)
-
-LLM integration tests are **skipped** during automated pipeline runs for speed:
-
-```bash
-# In run.sh (option 8 / --pipeline)
-uv run pytest tests/infra_tests/ -m "not requires_ollama" ...
-```
-
-### Manual Testing
-
-Run integration tests separately when needed:
+Repository marker defaults exclude `requires_ollama`; that default profile does
+not establish live-provider acceptance. Run the explicit daemon contracts only
+against an owned prepared daemon:
 
 ```bash
-# Ensure Ollama is running
-ollama serve
-
-# Run integration tests
-uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
+OLLAMA_SKIP_TEST_MODEL_PULL=1 uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```
+
+The release owner separately executes the complete Source-bound native
+local-provider obligations with the existing pinned preparation and
+identity-checked daemon cleanup.
 
 ## Troubleshooting
 
-### Tests Skip Unexpectedly
-
-1. Check if Ollama is running: `ollama list`
-2. Verify model is available: `ollama list | grep llama`
-3. Check connection: `curl http://localhost:11434/api/tags`
-
-### Tests Timeout
-
-1. Increase timeout: `default_config.with_overrides(timeout=180.0)`
-2. Use simpler prompts for testing
-3. Check Ollama model size (smaller models are faster)
-
-### Empty JSON Responses
-
-This is a model quality issue, not a code bug:
-- Try a different model with better JSON capabilities
-- Use `use_native_json=True` for Ollama's format="json" mode
+- If daemon cases are not selected, inspect the actual marker selection; a
+  deselected case is not a passing case.
+- If a request times out, retain the owned daemon's output and exact consumer
+  command/result. Separate loading, prompt evaluation, generation and actual
+  cancellation before proposing a source change.
+- Invalid or incomplete provider responses remain failures. Do not acquire a
+  replacement model, suppress an exception, reduce the workload or extend clocks
+  to make a prose smoke pass.
 
 ## See Also
 

@@ -13,7 +13,12 @@ from typing import Any
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.reporting.native_loader_build import SOURCE, elf_segments
 from infrastructure.reporting.native_loader_observation import SCHEMA
-from infrastructure.reporting.native_loader_maps import census_images, executable_census, parse_maps
+from infrastructure.reporting.native_loader_maps import (
+    census_images,
+    executable_census,
+    parse_maps,
+    terminal_kernel_residents,
+)
 from infrastructure.reporting.native_loader_protocol import mapped_segment
 from infrastructure.reporting.native_loader_protocol import CHUNK, MAX_EVENTS, MAX_TOTAL, chunks_content
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
@@ -27,6 +32,7 @@ MODULES = (
     "reporting/native_loader_observation.py",
     "reporting/native_loader_maps.py",
     "reporting/native_loader_qualification.py",
+    "reporting/native_document_elf.py",
     "reporting/native_loader_compilation_replay.py",
     "reporting/native_loader_helper_memory.py",
     "reporting/native_environment_custody.py",
@@ -64,6 +70,7 @@ def validate_native_loader_data(
         "compiler",
         "purpose",
         "owner_pid",
+        "library_descriptor",
         "consuming_process",
         "command",
         "original_deadline_monotonic",
@@ -82,6 +89,7 @@ def validate_native_loader_data(
         set(raw) != fields
         or raw.get("schema_version") != SCHEMA
         or raw.get("owner_pid") != native.get("owner_pid")
+        or raw.get("library_descriptor") != native.get("library_descriptor")
         or raw.get("consuming_process", {}).get("pid") != native.get("pid")
         or raw.get("consuming_process", {}).get("ppid") != native.get("owner_pid")
         or raw.get("command") != native.get("command")
@@ -108,13 +116,25 @@ def validate_native_loader_data(
         original_deadline=original_deadline,
         original_completion=original_completion,
     )
+    descriptor = raw["library_descriptor"]
+    if (
+        not isinstance(descriptor, dict)
+        or set(descriptor) != {"descriptor", "identity"}
+        or type(descriptor["descriptor"]) is not int
+        or not 3 <= descriptor["descriptor"] < 2**31
+        or descriptor["identity"] != compiler["library_identity"]
+    ):
+        raise ValueError("loader inherited descriptor differs from its exact original compiler inode")
     events = raw.get("events")
     if not isinstance(events, list) or not 0 < len(events) <= MAX_EVENTS or events[0].get("kind") != "hello":
         raise ValueError("loader complete original callback cohort is absent or unbounded")
     active, opened, closed, previous, total = {}, {}, [], 0, 0
     preinit = False
+    terminal_done = False
     for sequence, event in enumerate(events, 1):
         remaining(deadline)
+        if terminal_done:
+            raise ValueError("loader callback followed its validated terminal callback")
         if (
             event.get("sequence") != sequence
             or event.get("pid") != native["pid"]
@@ -247,8 +267,15 @@ def validate_native_loader_data(
                 raise ValueError("loader original preinit omitted its complete kernel executable map census")
             preinit = True
         elif kind == "done":
-            if active or not preinit:
-                raise ValueError("loader original terminal callback left an unclosed image")
+            if (
+                not preinit
+                or sequence < 2
+                or events[sequence - 2]["kind"] != "activity"
+                or events[sequence - 2]["base"] != 0
+            ):
+                raise ValueError("loader original terminal callback lacks its final consistency boundary")
+            terminal_kernel_residents(opened, active, closed)
+            terminal_done = True
         elif kind == "hello":
             if sequence != 1:
                 raise ValueError("loader original initialization repeats")
@@ -289,6 +316,8 @@ def validate_native_loader_data(
             )
             if declared != expected_census:
                 raise ValueError("loader declared census differs from independently reconstructed every-map coverage")
+    if not terminal_done:
+        raise ValueError("loader lifecycle EOF preceded its validated terminal callback")
     main = [event for event in opened.values() if event["path_label"] == "/proc/self/exe"]
     if (
         len(main) != 1
@@ -298,6 +327,7 @@ def validate_native_loader_data(
     ):
         raise ValueError("loader actual consuming main image differs from its directly nominated executable body")
     terminal = raw.get("resident_terminal")
+    residents = terminal_kernel_residents(opened, active, closed)
     if (
         not preinit
         or raw["opened"] != list(opened)
@@ -305,7 +335,7 @@ def validate_native_loader_data(
         or not isinstance(terminal, dict)
         or terminal.get("kind") != "actual-parent-Popen-signed-OS-reaping"
         or terminal.get("original_exit_code") != native["original_exit_code"]
-        or terminal.get("resident_object_ids") != list(active)
+        or terminal.get("resident_object_ids") != residents
         or type(terminal.get("observed_monotonic")) not in {float, int}
         or not math.isfinite(terminal["observed_monotonic"])
         or not previous <= terminal["observed_monotonic"] < native["original_deadline_monotonic"]

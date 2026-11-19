@@ -20,6 +20,7 @@ from infrastructure.project.public_root_lane_contract import (
     LANE_SCHEMA,
     PROCESS_SCHEMA,
     admission,
+    chunk_workers,
     groups,
     lane_command,
     selection,
@@ -126,7 +127,7 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
         or result["exit_code"] != 0
         or not _within_deadline(result["duration_seconds"], spec["timeout_seconds"])
         or not isinstance(result["records"], list)
-        or len(result["records"]) != len(groups(selected.nodeids))
+        or len(result["records"]) != len(groups(selected))
     ):
         raise ValueError("Root lane completion does not match its current complete policy and original native process")
     original_bundle = _json(_artifact(reader, spec["census_bundle_artifact"]))
@@ -140,9 +141,9 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
     ):
         raise ValueError("Root lane original worker duration exceeds its coordinator boundary")
     seen: set[str] = set()
-    chunk_duration = 0.0
-    previous_remaining = spec["timeout_seconds"]
-    for index, (record, nodes) in enumerate(zip(result["records"], groups(selected.nodeids), strict=True)):
+    timeline: list[tuple[float, int]] = []
+    intervals: list[tuple[float, float]] = []
+    for index, (record, nodes) in enumerate(zip(result["records"], groups(selected), strict=True)):
         if (
             not isinstance(record, dict)
             or set(record) != {"index", "nodes", "receipt_artifact", "process_artifact"}
@@ -180,6 +181,8 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
                 "custody_refused",
                 "command_error",
                 "remaining_budget_seconds",
+                "launch_offset_seconds",
+                "finish_offset_seconds",
                 "duration_seconds",
                 "output_artifact",
             }
@@ -191,8 +194,16 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
             or type(native["index"]) is not int
             or native["index"] != index
             or type(native["remaining_budget_seconds"]) is not int
-            or not 1 <= native["remaining_budget_seconds"] <= previous_remaining
+            or not 1 <= native["remaining_budget_seconds"] <= spec["timeout_seconds"]
             or not _within_deadline(native["duration_seconds"], native["remaining_budget_seconds"])
+            or any(
+                type(native[key]) not in (int, float) or not math.isfinite(native[key])
+                for key in ("launch_offset_seconds", "finish_offset_seconds")
+            )
+            or not 0 <= native["launch_offset_seconds"] < native["finish_offset_seconds"] <= result["duration_seconds"]
+            or native["remaining_budget_seconds"]
+            != math.floor(spec["timeout_seconds"] - native["launch_offset_seconds"])
+            or native["duration_seconds"] != native["finish_offset_seconds"] - native["launch_offset_seconds"]
             or set(child)
             != {
                 "schema_version",
@@ -263,10 +274,19 @@ def _read_lane_result(reader: SnapshotReader, bundle: object, *, origin: Any = N
         if coverage_data.path != chunk_directory / "coverage-data.json":
             raise ValueError("Root lane coverage input is outside its original chunk")
         merge(measured, _json(coverage_data), original_spec["implementation"])
-        chunk_duration += native["duration_seconds"]
-        previous_remaining = native["remaining_budget_seconds"]
-    if chunk_duration > result["duration_seconds"]:
-        raise ValueError("Root lane chunk duration exceeds original worker boundary")
+        timeline.extend(((native["launch_offset_seconds"], 1), (native["finish_offset_seconds"], -1)))
+        intervals.append((native["launch_offset_seconds"], native["finish_offset_seconds"]))
+    workers = chunk_workers(selected)
+    for index, (launch, _) in enumerate(intervals):
+        if sum(finish <= launch for _, finish in intervals[:index]) < max(0, index + 1 - workers):
+            raise ValueError("Root lane chunk timeline exceeds its source-owned concurrency or launch order")
+    active = 0
+    for _, change in sorted(timeline):
+        active += change
+        if not 0 <= active <= workers:
+            raise ValueError("Root lane chunk timeline exceeds its source-owned concurrency")
+    if active:
+        raise ValueError("Root lane chunk timeline lacks a completed original process")
     coverage = _artifact(reader, result["coverage_artifact"])
     expected_coverage = report(measured)
     actual_coverage = _json(coverage)

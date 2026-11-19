@@ -14,7 +14,7 @@ does not establish acceptance or publication.
 [![Documentation](https://img.shields.io/badge/docs-documentation--index-lightgrey)](docs/documentation-index.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
-> **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
+> **📄 Publication reference**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — declared DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090). This reference does not establish availability of the prepared 5.2.0 release.
 >
 > **Template Repository** - Click "Use this template" to create a research project with this structure
 
@@ -53,25 +53,34 @@ graph TB
 
 Just cloned the repo? Do this:
 
-1. `git clone <this-repo> && cd template`
+1. `git clone https://github.com/docxology/template && cd template`
 2. `uv sync --locked` (installs the declared root environment; independent project runtimes retain their own locks)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --mode core` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`infrastructure/project/public_scope.py`](infrastructure/project/public_scope.py) and published in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
+Prepare the selected project's declared runtime and system rendering tools before
+dispatch; use the [startup and setup guide](docs/guides/startup-and-setup.md)
+and [prepared-dispatch guide](docs/RUN_GUIDE.md). Ordinary `run.sh` dispatch uses
+an already prepared Root interpreter; it never installs uv or syncs dependencies
+as a fallback.
+
 **Repurposing for your research?** See [`docs/repurposing-architectures.md`](docs/repurposing-architectures.md) — maps every reusable architecture (DAG pipeline, two-layer separation, evidence registry, multi-format rendering, MCP server, publishing stack) to its module and adoption path.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
-**Thin-orchestrator gates:** `uv run python scripts/audit/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
+**Thin-orchestrator gates:** after locked preparation, use `.venv/bin/python scripts/audit/check_template_drift.py --strict`, `.venv/bin/python scripts/gates/module_line_count_check.py`, and `.venv/bin/python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
 
-**Fast local test loop:** for agent edit/test iterations, run the documented high-signal subset (`uv run --frozen pytest tests/infra_tests/git_hook_smoke tests/infra_tests/core/test_pytest_orchestration.py tests/infra_tests/core/test_pipeline.py -q`) — see [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md). The full infrastructure gate remains the merge authority.
+**Fast local test loop:** after locked preparation, run the high-signal subset (`.venv/bin/python -m pytest tests/infra_tests/git_hook_smoke tests/infra_tests/core/test_pytest_orchestration.py tests/infra_tests/core/test_pipeline.py -q`) — see [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md). Required `CI Gate` owns ordinary PR admission; complete Root/native acceptance is a separate release requirement, not the local edit loop.
 
 **Assistants and editors:** start with [`AGENTS.md`](AGENTS.md) for the repository contract and [`.agents/AGENTS.md`](.agents/AGENTS.md) for shared catalogs, workflows and local memory. [`CLAUDE.md`](CLAUDE.md) remains a command cheat sheet. For routable agent workflows, start at [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) and the generated skill index [`docs/_generated/skills_index.md`](docs/_generated/skills_index.md).
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/GITHUB.md`](.github/GITHUB.md) ([agent entry point](.github/GITHUB.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
-<a id="migration-from-quadmath"></a>
+For ordinary CI's shared exact-Source preparation DATA and independent project
+feedback, see [Fast functional CI](.github/workflows/README.md#fast-functional-ci).
+Preparation reuse does not supply hosted test results, complete Root/native
+acceptance, or release authorization.
 
 **Local hooks:** After `uv sync`, run `pre-commit install` and `pre-commit install --hook-type pre-push` to mirror Ruff, mypy, Bandit, and smoke tests locally (see [`.pre-commit-config.yaml`](.pre-commit-config.yaml)).
 
@@ -120,6 +129,9 @@ This is a **GitHub Template Repository** that gives you:
 ## 🗺️ Choose Your Path
 
 Pick the entry point that matches your goal:
+- **Installed SDK users** (use the Python package or console entry point):
+  [Installed SDK](#installed-sdk). The wheel is not an exemplar
+  checkout; manuscript authoring follows the checkout path below.
 
 - **Cold start, human or agent** (install prerequisites, run the canonical
   exemplar once): [`START_HERE.md`](START_HERE.md).
@@ -311,10 +323,8 @@ To regenerate any exemplar from the monorepo:
 ```bash
 git clone https://github.com/docxology/template
 cd template
-uv sync
+uv sync --locked
 ./run.sh --project templates/template_code_project --pipeline --mode core
-uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
-uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
 ```
 
 Replace `template_code_project` with any public exemplar name from the table
@@ -367,10 +377,10 @@ instead.
 
 ```bash
 ./run.sh                                     # Interactive project selection
-./run.sh --project templates/template_code_project --pipeline
+./run.sh --project templates/template_code_project --pipeline --mode core
 ./run.sh --all-projects --pipeline           # All discovered projects sequentially
 ./secure_run.sh --steganography-only --project templates/template_code_project  # Re-watermark PDFs
-mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
+# Create a runnable fork with the clean-copy helper; see "Forking an exemplar" below.
 ```
 
 **Lifecycle:** rendered = `projects/templates/` plus optional `projects/active/`
@@ -380,15 +390,16 @@ publication target); render sidecar projects explicitly with a qualified
 name such as `working/{name}` or `ongoing/{name}`. See [`projects/PROJECTS_PARADIGM.md`](projects/PROJECTS_PARADIGM.md)
 for lifecycle, slug rules, and discovery semantics.
 
-## 🚀 Quick Start {#quick-start}
+## Checkout preparation and dispatch
 
-See the [Quickstart](#quickstart) at the top of this file for the canonical
-clone-to-PDF flow. For headless cloud deployment use
-[`docs/CLOUD_DEPLOY.md`](docs/CLOUD_DEPLOY.md) (uv is installed automatically
-when you run `./run.sh --pipeline`). Beginner walkthrough:
-[`docs/guides/getting-started.md`](docs/guides/getting-started.md). One-page
-command reference:
-[`docs/reference/quick-start-cheatsheet.md`](docs/reference/quick-start-cheatsheet.md).
+Use the [Quickstart](#quickstart) for the clone-to-PDF flow and the
+[startup and setup guide](docs/guides/startup-and-setup.md) for explicit locked
+runtime and system-tool preparation. Ordinary `./run.sh --pipeline` does not
+install uv, reconcile dependencies, or fall back from a broken selected runtime;
+[RUN_GUIDE](docs/RUN_GUIDE.md) owns prepared dispatch and runtime selection.
+For headless deployment, see [`docs/CLOUD_DEPLOY.md`](docs/CLOUD_DEPLOY.md).
+Beginner walkthrough: [`docs/guides/getting-started.md`](docs/guides/getting-started.md).
+One-page command reference: [`docs/reference/quick-start-cheatsheet.md`](docs/reference/quick-start-cheatsheet.md).
 Twelve-level usage guide: [`docs/core/how-to-use.md`](docs/core/how-to-use.md).
 
 ## System Status
@@ -532,25 +543,39 @@ headers. Full surface and worked usage examples:
 
 ## 🛠️ Installation & Setup
 
-Prerequisites: `pandoc` and a TeX distribution (`texlive-xetex` on Debian/Ubuntu,
-MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
-`.venv/bin/python`; the template targets Python 3.14+ (`requires-python` in
-[`pyproject.toml`](pyproject.toml)) and required CI qualification covers infrastructure and public exemplars on 3.14 and 3.15, with
-[`.python-version`](.python-version) pinning 3.14 as the local default). Add per-project deps with
-`uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
-generate a manuscript, follow the [Quickstart](#quickstart) at the top.
+### Installed SDK
 
-One-shot setup: `bash scripts/shell/setup-system-deps.sh` installs and verifies
-that toolchain on macOS and Debian/Ubuntu — pandoc, a XeLaTeX TeX distribution,
-the LaTeX packages minimal distributions lack, and `uv` (idempotent; `--check`
-verifies without installing).
+Use an existing Python 3.14+ environment and an actual matching SDK wheel. Set
+`SDK_PYTHON` to that environment's interpreter and `SDK_WHEEL` to the wheel's
+local path; an intended version is not evidence that a download or package-index
+release exists.
 
-Layer 1 is also a standard Python distribution. Build it with `uv build`, or
-install the wheel attached to a GitHub release. Installation provides the
-`research-template` command (`research-template --help`). Optional pip extras
-mirror the major capability groups, for example
-`research-project-template[rendering,publishing]`; repository contributors
-should continue to use `uv sync --group ...` for development groups.
+```bash
+uv pip install --python "$SDK_PYTHON" "$SDK_WHEEL"
+"$(dirname "$SDK_PYTHON")/research-template" --help
+```
+
+The wheel contains the `infrastructure` SDK and its `research-template` entry
+point, not the exemplar trees or repository `scripts/`. The pipeline needs a
+real project and its declared script targets; use a checkout to author the
+canonical examples. Optional package extras, such as
+`research-project-template[rendering,publishing]`, are distinct from checkout
+development groups.
+
+### Checkout author
+
+Run `uv sync --locked` from the repository root to prepare `.venv/` from
+`pyproject.toml`, `uv.lock` and `.python-version`. The supported CI minors are
+3.14 and 3.15; the local default is 3.14. Already-prepared dispatch and explicit
+runtime nomination are documented in [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
+
+Pandoc and TeX are rendering prerequisites, not prerequisites for importing the
+SDK. Follow the canonical
+[startup and setup guide](docs/guides/startup-and-setup.md) for system tools,
+the first selected core pipeline, and optional contributor checks. It also
+documents `scripts/shell/setup-system-deps.sh`; `--check` observes preparation
+without installing. To generate a manuscript, continue with the
+[Quickstart](#quickstart).
 
 ## 🐳 Docker Support
 
@@ -577,45 +602,11 @@ examples), generated file headers, and cross-reference systems.
 
 ### Forking an exemplar
 
-`scripts/audit/copy_exemplar.py` produces a clean copy with its own identity; it
-never carries `.venv`, `output/` or caches:
-
-```bash
-uv run --no-sync --offline python scripts/audit/copy_exemplar.py \
-  --source templates/template_code_project \
-  --dest projects/working/my_paper \
-  --new-name my_paper \
-  --author-name "Ada Lovelace" --author-email ada@example.org \
-  --sdk-source path:../../..      # omit for a copy inside this checkout
-```
-
-- `--new-name` rewrites the project slug in paths, package names, `pyproject.toml`
-  and configuration keys. Suffixed identifiers such as `<slug>_extra` are
-  deliberately left alone.
-- `--sdk-source` states how the fork resolves the platform SDK:
-  `path:<dir>` (a template checkout), `url:<git-or-file-url>`, or `version-only`
-  (rely on the pinned release). A copy **inside** this checkout gets a relative
-  path for its own depth automatically; a copy outside it keeps the checkout you
-  pass here instead of silently inheriting a path that cannot resolve.
-- `--author-name` / `--author-email` replace the author in `pyproject.toml`,
-  `CITATION.cff`, `codemeta.json` and `.zenodo.json`, drop the source artifact's
-  own DOI, ORCID, repository URL and release date, and set the CFF/JSON version
-  to the fork's version. A fork must never claim the exemplar's publication
-  identity.
-- `--project-only` omits declared cross-root resources (the `infrastructure/`
-  dependency) for a truly standalone tree.
-
-Then make the fork runnable and verify it:
-
-```bash
-uv sync --project projects/working/my_paper --extra dev
-uv run --project projects/working/my_paper python -m pytest projects/working/my_paper/tests -q
-```
-
-`--dry-run` prints the planned file list without writing. `export_exemplar`
-(the default CLI path) additionally writes a content-addressed
-`.template-export.json` manifest binding every exported file and the source
-commit, which is what the standalone mirror and installed-acceptance lanes read.
+Use the canonical [fork guide](docs/guides/fork-an-exemplar.md) for the clean-copy
+helper, new project/author identity, SDK source selection and preparation of the
+fork's own environment. It also explains the source-bound `.template-export.json`
+manifest and the difference between checkout-local and independent exported use.
+Raw directory creation or copying is not an equivalent runnable-project setup.
 
 ### Adding Project-Specific Scripts
 
@@ -647,8 +638,8 @@ working-tree files. `gates`, `security`, `unit` and `infra` cover the remaining 
 TDD with strict coverage gates: **infrastructure ≥ 60 %**, **projects ≥ 90 %**.
 No unit-level mock frameworks — tests use real data, real files; HTTP boundaries use `pytest-httpserver` (in-process test server). The
 project pipeline runs a focused `pipeline-smoke` infrastructure contract plus
-the selected project's full coverage suite, so ordinary renders do not rerun
-the entire repository test matrix. Run the full infrastructure gate explicitly
+the selected project's declared test profile; its default quick selection is not
+the whole release/native matrix. Run the full infrastructure gate explicitly
 with `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`;
 run a project suite with `uv run python scripts/pipeline/stage_01_test.py --project-only
 --project <name>`. Per-suite commands and coverage report flags are documented in
@@ -659,11 +650,14 @@ live coverage / test counts live in
 
 ## Output
 
-Working outputs: `projects/{name}/output/`. Public exemplars retain only
-deterministic deliverables and evidence under that tree; runtime state
-(`.checkpoints/`, `.pipeline/`, `logs/`, telemetry, snapshots) and renderer
-intermediates are local-only and regenerated by the pipeline. Multi-project
-mode adds `output/executive_summary/` as a disposable copied-output surface.
+Public exemplars retain deterministic deliverables and evidence under both
+`projects/templates/<name>/output/` and the copied `output/templates/<name>/`
+surface. These are retained publication evidence, not blanket-disposable trees.
+Runtime state (`.checkpoints/`, `.pipeline/`, `logs/`, telemetry, snapshots) and
+renderer intermediates remain local-only under the tracking policy.
+Preserve retained public evidence before regeneration or cleanup; do not
+blanket-delete either output tree. Private project outputs remain local-only.
+See [Public Exemplar Outputs And Mirrors](#public-exemplar-outputs-and-mirrors).
 
 ## 🔍 How It Works
 
@@ -762,8 +756,10 @@ template in your research, please cite:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
-Cite the current release. Earlier versions retain their own Zenodo DOIs;
-the version-independent concept DOI always resolves to the latest.
+Use the citation metadata attached to the actual released version you consume.
+The concept DOI recorded here is metadata, not proof that a prepared version or
+its assets are available from Zenodo; verify the actual release and archival
+records through the [publication runbook](docs/guides/publication-runbook.md).
 
 **BibTeX:**
 
@@ -833,7 +829,7 @@ and CI-gated quality. Full benefits + rationale:
 
 **Ready to begin?** Choose your path:
 
-1. **New User?** → Start with **[Quick Start](#quick-start)** or **[docs/guides/getting-started.md](docs/guides/getting-started.md)**
+1. **New User?** → Start with **[Quickstart](#quickstart)** or **[docs/guides/getting-started.md](docs/guides/getting-started.md)**
 2. **Developer?** → Read **[docs/core/architecture.md](docs/core/architecture.md)** and **[docs/core/workflow.md](docs/core/workflow.md)**
 3. **Need Help?** → Check **[docs/reference/faq.md](docs/reference/faq.md)** or **[docs/operational/troubleshooting/README.md](docs/operational/troubleshooting/README.md)**
 4. **Explore All Docs?** → Browse **[docs/documentation-index.md](docs/documentation-index.md)**

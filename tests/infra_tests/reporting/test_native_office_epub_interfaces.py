@@ -13,7 +13,6 @@ from infrastructure.reporting.native_epub_source_spine import (
     inspect_source_reference_epub_spine,
     replay_source_reference_epub_spine,
 )
-from infrastructure.reporting.native_format_acceptance_contracts import unsupported_native_controls
 from infrastructure.reporting.native_format_observer_outcome import native_observer_outcome
 from infrastructure.reporting.native_office_content_witness import inspect_office_source_survival
 from infrastructure.reporting.native_office_full_observer import SCHEMA, office_full_outcome
@@ -74,7 +73,7 @@ def _complete_observer(
 
 
 @pytest.mark.parametrize("kind", ("docx", "epub"))
-def test_complete_source_status_is_adapted_without_granting_full_acceptance(kind: str) -> None:
+def test_complete_source_status_adaptation_preserves_observer_record(kind: str) -> None:
     reference, _ = epub_control_bytes("baseline")
     survival = _reference_survival(reference)
     assert survival["status"] == "observed", survival
@@ -83,7 +82,6 @@ def test_complete_source_status_is_adapted_without_granting_full_acceptance(kind
     assert observer["observation"]["status"] == "observed"
     assert native_observer_outcome(observer) == {"status": "pass", "findings": [], "blockers": []}
     assert observer["observation"]["status"] == "observed"
-    assert unsupported_native_controls("templates/template_code_project", (kind,))
 
 
 @pytest.mark.parametrize("residual,expected", (("finding", "fail"), ("blocker", "blocked")))

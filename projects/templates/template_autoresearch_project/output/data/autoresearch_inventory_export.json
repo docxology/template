@@ -1,34 +1,34 @@
 {
   "claim_boundary": "Local inventory export for project artifacts only; it is not a complete dependency SBOM.",
-  "component_count": 83,
+  "component_count": 46,
   "components": [
     {
       "id": "root_pyproject",
       "kind": "input",
-      "path": "<home>/Documents/Git/gitvault/Local/worktrees/docx-5.0.0-merge-verify-20261103/pyproject.toml",
+      "path": "<home>/work/template/template/pyproject.toml",
       "required": false,
-      "sha256": "08adcd31d8e381b03353827776c17a4613af908ddfe36d6a9fd2f2900445695b"
+      "sha256": "c03b2250c72220a458886e4d83dcee651a13106b53fcf1fe11b4a914abf6ebc6"
     },
     {
       "id": "root_uv_lock",
       "kind": "input",
-      "path": "<home>/Documents/Git/gitvault/Local/worktrees/docx-5.0.0-merge-verify-20261103/uv.lock",
+      "path": "<home>/work/template/template/uv.lock",
       "required": false,
-      "sha256": "9dab6a4a62c7aeaf11659ce1252f5fc9c18c4ea08c9f73d0abbb7e50ab22b882"
+      "sha256": "4cde862fe700836761a0ee609186d2cf6e72c703c3a7469a79cabc6e3453aecc"
     },
     {
       "id": "project_pyproject",
       "kind": "input",
       "path": "pyproject.toml",
       "required": false,
-      "sha256": "3d89ad11c0522c2e6c39d78559744aa0a3d2f3d0577a92409214412b7d3be79f"
+      "sha256": "2b72e7992a82310c6fd690e0ead0415d91fb6f4302b259168afe03c4d6ae09b1"
     },
     {
       "id": "project_uv_lock",
       "kind": "input",
       "path": "uv.lock",
       "required": false,
-      "sha256": "8178f1d5a7032947fca0a49b44484562627640f12e67c2c9b465fb8d2233771b"
+      "sha256": "d06bf0be84a081e7251e803ae1b42445f7e1014cdb79a76cff1af872cc7d1c0b"
     },
     {
       "id": "autoresearch_config",
@@ -98,486 +98,227 @@
       "kind": "input",
       "path": "manuscript/config.yaml",
       "required": true,
-      "sha256": "4e282cf2b4ef6a22ee831f047be616d35d64cd567c9341526969bc4866e1ff3b"
+      "sha256": "bc5720e336d670a05a4018b48c178ed2767a7d6a3ce02b832eff6a25102ac534"
     },
     {
       "id": "generated-001",
       "kind": "generated_artifact",
-      "path": "output/data/autoresearch_claims.json",
+      "path": "output/data/autoresearch_plan.json",
       "required": true,
-      "sha256": "471b9b4711e81f5092ee5cbbeb709e2f83ef6e88759d5d786c5f3024fe8b5665"
+      "sha256": "bd79dfdea0dca5c919067dd13882397cdc44175674b11e717561b7dc63405415"
     },
     {
       "id": "generated-002",
-      "kind": "generated_artifact",
-      "path": "output/data/autoresearch_evidence_overview.json",
-      "required": true,
-      "sha256": "0904ec7bd9f2f1ed49ac2ea7537c46b58d42594db77c53745437a99a5fa0c3e2"
-    },
-    {
-      "id": "generated-003",
-      "kind": "generated_artifact",
-      "path": "output/data/autoresearch_loop.json",
-      "required": true,
-      "sha256": "4baec1feb7c929f162133b829c456d3266aed8dbf48231f9b0b4483d9c4f215d"
-    },
-    {
-      "id": "generated-004",
-      "kind": "generated_artifact",
-      "path": "output/data/autoresearch_plan.json",
-      "required": true,
-      "sha256": "01d0e53b92e3a80a08683e254f9143078a42f8ec4edb8eaed16d5b163cd0d126"
-    },
-    {
-      "id": "generated-005",
-      "kind": "generated_artifact",
-      "path": "output/data/autoresearch_review_packet.json",
-      "required": true,
-      "sha256": "a812eef8a8ac827009b2be4d27f4f8299a751557637da54497f0cb2751b2cd6e"
-    },
-    {
-      "id": "generated-006",
       "kind": "generated_artifact",
       "path": "output/data/autoresearch_stage_matrix.csv",
       "required": true,
       "sha256": "b2b5edc34ab9120064659c083b2dd6001cb215cec0f542007536b07e75fe967b"
     },
     {
-      "id": "generated-007",
+      "id": "generated-003",
       "kind": "generated_artifact",
       "path": "output/data/benchmark_boundary.json",
       "required": true,
       "sha256": "254e4899219c95d52766497cd31283526f7a3884b28083b4184e5d864ebeb109"
     },
     {
-      "id": "generated-008",
+      "id": "generated-004",
       "kind": "generated_artifact",
       "path": "output/data/benchmark_scores.json",
       "required": true,
-      "sha256": "87634cff93b404b8c1e3601454c724b4e2b2a9081cf5bb834115a0b62645e60d"
+      "sha256": "7a71267972d9e2938c7e384e6f9daa89cac3b6ce9622397735ac0f0f98fd8060"
     },
     {
-      "id": "generated-009",
-      "kind": "generated_artifact",
-      "path": "output/data/figure_quality_report.json",
-      "required": true,
-      "sha256": "4001ab6173701e7977d88452a1af1f9ae3d48319e1cd8df457af7e9f3f773806"
-    },
-    {
-      "id": "generated-010",
-      "kind": "generated_artifact",
-      "path": "output/data/figure_style.json",
-      "required": true,
-      "sha256": "6c77bd31124fc4ebaefb3fadd2b4d099bdb8b6e26cdc859fe621c5ebd7adbe01"
-    },
-    {
-      "id": "generated-011",
+      "id": "generated-005",
       "kind": "generated_artifact",
       "path": "output/data/idea_ledger.json",
       "required": true,
-      "sha256": "f1c63c870248bf64f0dcad4b111aea1f89febffcf062572953f380f47c153c5e"
+      "sha256": "ac9bb13978260afddfd34f0439f82234568fe089e662cc5a89b9690c8db51057"
     },
     {
-      "id": "generated-012",
-      "kind": "generated_artifact",
-      "path": "output/data/manuscript_variables.json",
-      "required": true,
-      "sha256": "53776272bc6408c5f1aa918a03a263c2f9797a7a523c733c006e4e41fb9d1902"
-    },
-    {
-      "id": "generated-013",
+      "id": "generated-006",
       "kind": "generated_artifact",
       "path": "output/data/ml_bootstrap_intervals.json",
       "required": true,
       "sha256": "c2f064d5b9fcbeacf22161e0f5d71e55d1c62336110f9056ce5d44eaa79034ca"
     },
     {
-      "id": "generated-014",
+      "id": "generated-007",
       "kind": "generated_artifact",
       "path": "output/data/ml_calibration_bin_intervals.json",
       "required": true,
       "sha256": "3c4bfd9647d4ef142a91f4b02dc0f2588e6c0d513dbd457fb1c73d0964aaa046"
     },
     {
-      "id": "generated-015",
+      "id": "generated-008",
       "kind": "generated_artifact",
       "path": "output/data/ml_calibration_report.json",
       "required": true,
       "sha256": "66688f17c65f73a241c546a9c6088b0f9e3104d80671b257ce2b3639d001a729"
     },
     {
-      "id": "generated-016",
+      "id": "generated-009",
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_intervals.json",
       "required": true,
       "sha256": "4a9a962e02ede0683c331008d3af6ccd1b13f5603a8bb3df356b5b7ca1829b8d"
     },
     {
-      "id": "generated-017",
+      "id": "generated-010",
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_ledger.json",
       "required": true,
-      "sha256": "b00cbc3fbcddcf150db0b6af5f1897d0ab43c122ded2379b1cffc01b906a6a55"
+      "sha256": "9a0daf04b7bcf958e9c0d2af6b12994f88b1e789dc44232a51c9ef1b06f5babf"
     },
     {
-      "id": "generated-018",
+      "id": "generated-011",
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_rank_stability.json",
       "required": true,
       "sha256": "0ec9b7d69a77b3b34a0c260b6bf17cac4ef9a961b10f7c3c28202fd62bd3d6c2"
     },
     {
-      "id": "generated-019",
+      "id": "generated-012",
       "kind": "generated_artifact",
       "path": "output/data/ml_candidate_selection_audit.json",
       "required": true,
       "sha256": "403b4c03b19df06aa578adced842ae730afa36983907c84ba9cb3a584422c912"
     },
     {
-      "id": "generated-020",
+      "id": "generated-013",
       "kind": "generated_artifact",
       "path": "output/data/ml_class_balance.json",
       "required": true,
       "sha256": "f963ea4157257905e8fced1ff25c3020ad6c02a939dcf1fc14fb03e357b3908d"
     },
     {
-      "id": "generated-021",
+      "id": "generated-014",
       "kind": "generated_artifact",
       "path": "output/data/ml_classification_diagnostics.json",
       "required": true,
       "sha256": "18c47e9219b48feb1f3fe4f968e1dc96356eb5096ee4b83741f6ab1c7078c784"
     },
     {
-      "id": "generated-022",
+      "id": "generated-015",
       "kind": "generated_artifact",
       "path": "output/data/ml_confusion_matrix.csv",
       "required": true,
       "sha256": "1fb05684e12e2e7b822e19112b9c372aeda465cd5bed276e7bcafe7b3ac88acc"
     },
     {
-      "id": "generated-023",
+      "id": "generated-016",
       "kind": "generated_artifact",
       "path": "output/data/ml_diagnostic_boundary.json",
       "required": true,
       "sha256": "7e8a24d59f69fa81862740053cbb9a49db2b8ff604359108bc9c6ed32a723a2b"
     },
     {
-      "id": "generated-024",
+      "id": "generated-017",
       "kind": "generated_artifact",
       "path": "output/data/ml_error_examples.json",
       "required": true,
       "sha256": "661c834edecaff3e4ee048e92732d4be452d97399353500cb3c2aef3df3a6e7b"
     },
     {
-      "id": "generated-025",
+      "id": "generated-018",
       "kind": "generated_artifact",
       "path": "output/data/ml_paired_comparison.json",
       "required": true,
       "sha256": "5b653f3b4ab801faec1f654f23a4ca0dd73348f87f344724076f8e9abe6f706a"
     },
     {
-      "id": "generated-026",
+      "id": "generated-019",
       "kind": "generated_artifact",
       "path": "output/data/ml_prediction_records.json",
       "required": true,
       "sha256": "776042f500647b929d3813dea6f7b372656c6adca3f27bdf074061eb3cf619fc"
     },
     {
-      "id": "generated-027",
+      "id": "generated-020",
       "kind": "generated_artifact",
       "path": "output/data/ml_probability_diagnostics.json",
       "required": true,
       "sha256": "586e106d87a8acac55f4867796b724fd44e14fd9a8cea81f8869017d0b149373"
     },
     {
-      "id": "generated-028",
+      "id": "generated-021",
       "kind": "generated_artifact",
       "path": "output/data/ml_robustness_report.json",
       "required": true,
       "sha256": "6c352cc10bf38e1b0e28589f27272192a7f73f70895ba930cb013b682541a366"
     },
     {
-      "id": "generated-029",
+      "id": "generated-022",
       "kind": "generated_artifact",
       "path": "output/data/ml_statistical_summary.json",
       "required": true,
       "sha256": "8be7a0af61d556c49b283ee1e5c5c6d513c8e51906ed10415d63cf8e449d997b"
     },
     {
-      "id": "generated-030",
+      "id": "generated-023",
       "kind": "generated_artifact",
       "path": "output/data/ml_task_results.json",
       "required": true,
       "sha256": "5a282269047ca90cce1176551807971eee71115025fc1f82369305d42825da7e"
     },
     {
-      "id": "generated-031",
+      "id": "generated-024",
       "kind": "generated_artifact",
       "path": "output/data/ml_training_diagnostics.json",
       "required": true,
       "sha256": "93f0a3fa095bcfc1dcaa0bd5b1450cde4ddc6f1162ef85a2af990df11534a74b"
     },
     {
-      "id": "generated-032",
+      "id": "generated-025",
       "kind": "generated_artifact",
       "path": "output/data/ml_training_history.csv",
       "required": true,
       "sha256": "54d2600b742fd9a651da220944460d8d14d8b5cbfa79a6d3288e4f6818f5c1ad"
     },
     {
-      "id": "generated-033",
+      "id": "generated-026",
       "kind": "generated_artifact",
       "path": "output/data/mnist_task_config.json",
       "required": true,
       "sha256": "087ea62556a9315b8be8e53b12e5f569cf5116fa83e981a5e63ea69206d3ad13"
     },
     {
-      "id": "generated-034",
+      "id": "generated-027",
       "kind": "generated_artifact",
       "path": "output/data/research_program.json",
       "required": true,
       "sha256": "a7460fc55af47481844372bc82d9c7409e066b7217e472742ac7f1e6faa67e97"
     },
     {
-      "id": "generated-035",
+      "id": "generated-028",
       "kind": "generated_artifact",
       "path": "output/data/review_decisions.json",
       "required": true,
-      "sha256": "cdfcda4883d50168268830abfacd6fa0c953034498ae287dfc4180531c0d9a5f"
+      "sha256": "71ef95d9f66dcadbc540bf977cbcd494b5ec22f63866df3427b61c25889834a6"
     },
     {
-      "id": "generated-036",
+      "id": "generated-029",
       "kind": "generated_artifact",
       "path": "output/data/run_ledger.json",
       "required": true,
       "sha256": "617db1e431fbaa53ccd97199f28a444716f6af4e0ab00b3212724d62e6defbd9"
     },
     {
-      "id": "generated-037",
-      "kind": "generated_artifact",
-      "path": "output/figures/autoresearch_candidate_lifecycle.png",
-      "required": true,
-      "sha256": "76250e27e168d031092f1f80282e1e9217c491e500a97786f3eb0af81684646c"
-    },
-    {
-      "id": "generated-038",
-      "kind": "generated_artifact",
-      "path": "output/figures/autoresearch_closure_flow.png",
-      "required": true,
-      "sha256": "f64096a0825147f8be9661c1a5ec2f473701c02e438841dd8064bdb65bee8395"
-    },
-    {
-      "id": "generated-039",
-      "kind": "generated_artifact",
-      "path": "output/figures/autoresearch_stage_matrix.png",
-      "required": true,
-      "sha256": "bd2357cfeeee6b8e57af9a400efdfe33c015f78b2c318648833d705e9b61211e"
-    },
-    {
-      "id": "generated-040",
-      "kind": "generated_artifact",
-      "path": "output/figures/figure_registry.json",
-      "required": true,
-      "sha256": "3f0ac3930d0f48aa09df9aeca9d1fc89c1e76557552a03c4ebbdbb31a673d417"
-    },
-    {
-      "id": "generated-041",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_bootstrap_intervals.png",
-      "required": true,
-      "sha256": "8661ea71c7d13e9607c00d756efa40e0aebde25f3f1d0d3ccef33ab1e53784cf"
-    },
-    {
-      "id": "generated-042",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_calibration_reliability.png",
-      "required": true,
-      "sha256": "6b95147d4937a95529db8214949d0283790cdf467cd739ba44b75d4d04444461"
-    },
-    {
-      "id": "generated-043",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_candidate_rank_stability.png",
-      "required": true,
-      "sha256": "2edfb5756f4c65f60a4ae623b15aeed47fb9130987acee8c665aa8934ac67fe5"
-    },
-    {
-      "id": "generated-044",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_candidate_scores.png",
-      "required": true,
-      "sha256": "936f60fbcf9c5a9dd3a8435a4883c7c320a138466e00bc1ca076901fde80bbc6"
-    },
-    {
-      "id": "generated-045",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_classification_metrics_heatmap.png",
-      "required": true,
-      "sha256": "53bdbef26f503a92444dde696238b4552da2c5a08535752f46a5539ee7f9341c"
-    },
-    {
-      "id": "generated-046",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_complexity_accuracy.png",
-      "required": true,
-      "sha256": "e4467d38fd371d408ed14c03c0be18ca67c24ea21a7179b8f8620a0b4c8f0239"
-    },
-    {
-      "id": "generated-047",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_confusion_matrix.png",
-      "required": true,
-      "sha256": "c379a89553ee3bd383b3f576b7b953bb2c03e9d3f5d51259545cc0fb6a853b23"
-    },
-    {
-      "id": "generated-048",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_confusion_pairs.png",
-      "required": true,
-      "sha256": "56fdfa36253c63ebdf230a6997ca93bef4064c8503f6338940c5704a8714e830"
-    },
-    {
-      "id": "generated-049",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_generalization_gap.png",
-      "required": true,
-      "sha256": "c225d51fca59ab492a207f5b284b290d35f84f8671b04039686efbe0054c266c"
-    },
-    {
-      "id": "generated-050",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_learning_curves.png",
-      "required": true,
-      "sha256": "9bba83f6a4361f5aa2e51813c88d43f29824d713407ca4e27510737177da9240"
-    },
-    {
-      "id": "generated-051",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_paired_correctness.png",
-      "required": true,
-      "sha256": "6145fc8f2375ea1a6853c9174f854131563365543eebecb3aab1f492f60c71a1"
-    },
-    {
-      "id": "generated-052",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_per_class_accuracy.png",
-      "required": true,
-      "sha256": "06d4e115bc0129d8cbc13b16d63370aa47a717b6881ced3713f0b7ea7342bf9d"
-    },
-    {
-      "id": "generated-053",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_probability_margin_distribution.png",
-      "required": true,
-      "sha256": "bdfd786fc481af7b2935a69cd0517b3fe0879be511f391bbc13141d44ea6698c"
-    },
-    {
-      "id": "generated-054",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_probability_quality.png",
-      "required": true,
-      "sha256": "98d65701288da7de52500a29e12c409987eb13a0d0f510e2f099ac2c2b4a6e59"
-    },
-    {
-      "id": "generated-055",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_robustness_matrix.png",
-      "required": true,
-      "sha256": "ae6a2cdd7ec1fc7c936ad2896703b85168b45e91c07aeb502cfc12127d9216b5"
-    },
-    {
-      "id": "generated-056",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_selective_accuracy.png",
-      "required": true,
-      "sha256": "6868465748e8b91e1cea81fdc1f894bc7c8e3076747af5289df74d7b68763cd7"
-    },
-    {
-      "id": "generated-057",
-      "kind": "generated_artifact",
-      "path": "output/figures/ml_training_dynamics.png",
-      "required": true,
-      "sha256": "6ca208cb42065c6f439f18ed7f14ef60cad271d33494a9f790420906a6736b63"
-    },
-    {
-      "id": "generated-058",
-      "kind": "generated_artifact",
-      "path": "output/figures/mnist_class_balance.png",
-      "required": true,
-      "sha256": "db5b3abf0a3bc86ebd7e8044c10c46a1915c13a8c090418a0612bb38964babe1"
-    },
-    {
-      "id": "generated-059",
-      "kind": "generated_artifact",
-      "path": "output/figures/mnist_error_examples.png",
-      "required": true,
-      "sha256": "d2e70c0859f57a7f4b54538ff9378b929174b6026efa0cd865cdcda40c2866d7"
-    },
-    {
-      "id": "generated-060",
-      "kind": "generated_artifact",
-      "path": "output/figures/mnist_subset_contact_sheet.png",
-      "required": true,
-      "sha256": "7a9fb9b3cea9f2354bdfe77c394180c487aecb3ecf4a83ef2cf94e08e6f2e988"
-    },
-    {
-      "id": "generated-061",
-      "kind": "generated_artifact",
-      "path": "output/reports/autoresearch_evidence_overview.md",
-      "required": true,
-      "sha256": "ec71a9178fb1a46cb8ec5991c5214fb8d99022e7a447ae6432c2bb4c74cae00f"
-    },
-    {
-      "id": "generated-062",
-      "kind": "generated_artifact",
-      "path": "output/reports/autoresearch_loop.json",
-      "required": true,
-      "sha256": "4baec1feb7c929f162133b829c456d3266aed8dbf48231f9b0b4483d9c4f215d"
-    },
-    {
-      "id": "generated-063",
-      "kind": "generated_artifact",
-      "path": "output/reports/autoresearch_loop.md",
-      "required": true,
-      "sha256": "e6063b4c032ee370c184bffdec4d6f5fea90f2c13c518edea230ae3fda1239d3"
-    },
-    {
-      "id": "generated-064",
-      "kind": "generated_artifact",
-      "path": "output/reports/autoresearch_review_packet.md",
-      "required": true,
-      "sha256": "0dc8ef45794dc097e701555a16c11df3dbabd1882c63250eb0aba9bdd09b1778"
-    },
-    {
-      "id": "generated-065",
-      "kind": "generated_artifact",
-      "path": "output/reports/autoresearch_summary.md",
-      "required": true,
-      "sha256": "86f697d1b0c18ac0e58f3b43fd6965719dc023329f56c84f5842c8822bd30d2a"
-    },
-    {
-      "id": "generated-066",
+      "id": "generated-030",
       "kind": "generated_artifact",
       "path": "output/reports/benchmark_readiness_smoke.json",
       "required": true,
       "sha256": "a3e8b2cd314a9f669ea1cd13a90e6baff1441921eac7583e7578945e39cbb7f2"
     },
     {
-      "id": "generated-067",
-      "kind": "generated_artifact",
-      "path": "output/reports/evidence_registry.json",
-      "required": true,
-      "sha256": "a3f58398bdc219361e6d4bca243c732bbbabf7b06369b78604f1902e8260747f"
-    },
-    {
-      "id": "generated-068",
+      "id": "generated-031",
       "kind": "generated_artifact",
       "path": "output/reports/ml_benchmark_score.json",
       "required": true,
       "sha256": "228e3d3db32e7dbf547b7c6ded6e32ba103cd2d1a3f406b71e1f6a3551a4c003"
     },
     {
-      "id": "generated-069",
+      "id": "generated-032",
       "kind": "generated_artifact",
       "path": "output/reports/ml_experiment_report.md",
       "required": true,
@@ -587,7 +328,7 @@
   "cyclonedx_complete": false,
   "formal_sbom": false,
   "format": "template_autoresearch_local_inventory",
-  "generated_at": "2026-11-04T15:41:21+00:00",
+  "generated_at": "2026-11-18T18:55:15+00:00",
   "not_external_signing": true,
   "not_network_security_assessment": true,
   "not_runtime_monitoring": true,

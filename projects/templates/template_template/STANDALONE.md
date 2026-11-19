@@ -58,28 +58,25 @@ rsync -a \
 
 ## Validation Commands
 
-Run from a full template-like checkout after copying into `projects/working/`:
+First satisfy the [parent README's exact complete Root DATA, native Git/Kmyth
+and SDK prerequisites](README.md). The wheel alone and an arbitrary
+template-like directory are insufficient. From the prepared project root:
 
 ```bash
-uv run pytest projects/working/my_template_meta_project/tests/ \
-  --cov=projects/working/my_template_meta_project/src --cov-fail-under=90
-uv run python projects/working/my_template_meta_project/scripts/generate_architecture_viz.py
-uv run python projects/working/my_template_meta_project/scripts/generate_manuscript_metrics.py
+.venv/bin/python -I -m pytest tests/ --cov=src/template_template --cov-fail-under=90
+.venv/bin/python scripts/generate_architecture_viz.py
+.venv/bin/python scripts/generate_manuscript_metrics.py
 ```
 
-For the public exemplar:
-
-```bash
-uv run pytest projects/templates/template_template/tests/ \
-  --cov=projects/templates/template_template/src/template_template --cov-fail-under=90
-```
+The admitted reference remains input DATA, not a producer checkout to execute
+or modify. Source/index/case custody and live readback requirements remain intact.
 
 ## Intentional Non-Standalone Dependencies
 
-This exemplar is not a generic standalone paper. It intentionally imports
-template infrastructure and inspects a template-like repository root. A copy is
-standalone only when it lives in, or is pointed at, a checkout with equivalent
-`infrastructure/`, `projects/`, and pipeline contracts.
+This is not a generic standalone paper. It consumes the declared installed SDK
+and a genuinely admitted complete Root DATA reference with native Git and
+initialized Kmyth, as specified by the README/AGENTS contract. Equivalent-looking
+directories, decoded receipts or a wheel import do not establish that reference.
 
 ## What Not To Claim
 

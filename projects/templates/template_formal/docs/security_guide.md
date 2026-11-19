@@ -17,12 +17,14 @@ silently-republished release asset would run unverified).
 [`template_formal.tool_acceptance`](../src/template_formal/tool_acceptance.py);
 [`scripts/check_formal_specs.sh`](../scripts/check_formal_specs.sh) delegates to it.
 
-- Explicit `--acquire` fetches the fixed stable `v1.7.4` artifact through its
-  official immutable asset API, with `Accept: application/octet-stream`, never
-  `latest`, a browser-download fallback or the rolling `v1.8.0` pre-release.
-  Official asset 184694200 is 2,274,532 bytes, from commit
-  `5a47802b5c391f59ecdd44117981f4ff8c0656ba`; the tag label does not establish
-  version or integrity.
+- Explicit `--acquire` fetches the fixed stable `v1.7.4` artifact from its
+  [official release-download URL](https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar).
+  [GitHub's metadata for asset 184694200](https://api.github.com/repos/tlaplus/tlaplus/releases/assets/184694200)
+  identifies that exact `browser_download_url` and the 2,274,532-byte body.
+  Acquisition uses this single anonymous route, not the asset API, an
+  authenticated fallback, `latest` or the rolling `v1.8.0` pre-release.
+  The asset was built from commit `5a47802b5c391f59ecdd44117981f4ff8c0656ba`;
+  the tag label does not establish version or integrity.
 - The single source-owned `TLC_URL`/`TLC_BYTES`/`TLC_SHA256` tuple binds SHA-256
   `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`
   independently matched through the release download and the asset API on

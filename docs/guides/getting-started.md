@@ -49,43 +49,17 @@ By the end of this guide, you'll be able to:
 
 ### Step 2: Install Dependencies
 
-**macOS:**
-
-```bash
-# Install Homebrew if not already installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install system dependencies
-brew install pandoc
-brew install --cask mactex
-
-# Install uv and Python dependencies
-brew install uv
-uv sync
-```
-
-**Ubuntu/Debian:**
-
-```bash
-# Install system dependencies
-sudo apt-get update
-sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
-
-# Install uv and Python dependencies. Use the checksum-verified instructions
-# in docs/operational/build/dependency-management.md, or your OS package manager.
-# macOS: brew install uv
-# Linux: install uv with your distribution package manager or pipx
-uv sync
-```
+Follow the canonical [startup and setup guide](startup-and-setup.md) for your
+operating system's rendering tools and locked Python preparation. It owns that
+recipe; this guide continues after preparation. A wheel-only SDK installation
+does not supply the checkout's examples or `scripts/`.
 
 ### Step 3: Generate Your First PDF
 
 ```bash
-# Run the unified interactive menu and select Option 8 (Core Pipeline) for your
-# first run — it needs no LLM or network, matching START_HERE.md's quick path.
-# Option 9 (Full Pipeline) adds the two Ollama-backed LLM stages once you have
-# a local model set up. See `docs/RUN_GUIDE.md` for the full menu map.
-./run.sh
+# From the prepared repository root; core does not need Ollama.
+./run.sh --pipeline --project templates/template_code_project --mode core
+# Live review/translation requires explicit --mode live and its own prepared provider.
 
 # Open the result (example project template_code_project)
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf  # macOS

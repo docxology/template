@@ -19,14 +19,21 @@ from infrastructure.project.public_reference_git import remaining
 from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
 from infrastructure.rendering._pdf_mermaid import _MERMAID_BLOCK_RE
 from infrastructure.rendering._pdf_title_page_config import _rendering_options
-from infrastructure.rendering.manuscript_hydration_replay import combine_held_manuscripts, require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import (
+    SharedHydrationWriter,
+    combine_held_manuscripts,
+    require_shared_hydration,
+)
 from infrastructure.rendering.manuscript_ordinal_anchors import (
     annotate_manuscript_ordinals,
     require_complete_ordinal_ast_equivalence,
     require_unannotated_parser_bytes,
 )
 from infrastructure.reporting.native_format_pdf_source import PDFSourceInputs
-from infrastructure.reporting.native_hydration_reconstruction import observe_native_pdf_recomposition
+from infrastructure.reporting.native_hydration_reconstruction import (
+    observe_native_pdf_recomposition,
+    source_manuscript_hydration_writer,
+)
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.native_tool_producer import current_native_producer_operation
@@ -132,6 +139,7 @@ def observe_pdf_hydration_ordinals(
         if _binding(variables_snapshot) != variable_binding:
             raise ValueError("ordinal parser changed actual completed hydration variables")
         variable_values = variables_snapshot.json_object()
+    writer, writer_binding = source_manuscript_hydration_writer(source, scope, reader)
     for index, (row, (path, content)) in enumerate(zip(rows, inputs.sources, strict=True)):
         snapshot = reader.read(path)
         if row["ordinal"] != index + 1 or snapshot.content != content or _binding(snapshot) != row["consumed"]:
@@ -148,11 +156,23 @@ def observe_pdf_hydration_ordinals(
             if authored.content != content:
                 raise ValueError("ordinal parser changed an exact authored Source body")
             continue
+        if row["transformation"] == "Source-normalized-authored-body":
+            if (
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
+                or row["writer"] != writer_binding
+                or require_shared_hydration(authored.content, {}, content, writer=writer).data() != row["hydration"]
+            ):
+                raise ValueError("ordinal parser normalized copy lost its actual Source writer binding")
+            continue
         if row["transformation"] != "shared-uppercase-token-hydration":
             raise ValueError("ordinal parser requires the independently checked actual shared hydration adapter")
         if (
             variable_binding is None
-            or require_shared_hydration(authored.content, variable_values, content).data() != row["hydration"]
+            or writer is None
+            or row["writer"] != writer_binding
+            or require_shared_hydration(authored.content, variable_values, content, writer=writer).data()
+            != row["hydration"]
         ):
             raise ValueError("ordinal parser differs from complete actual Source hydration occurrence reconstruction")
         for ordinal, token in enumerate(row["hydration"]["occurrences"], 1):

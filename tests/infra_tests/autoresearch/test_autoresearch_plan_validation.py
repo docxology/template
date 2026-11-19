@@ -40,6 +40,32 @@ required_artifacts: [output/data/result.csv]
     assert "output/data/result.csv" in plan.required_artifacts
 
 
+def test_build_plan_honors_project_pipeline_override(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "pipeline.yaml").write_text(
+        """
+stages:
+  - key: project
+    name: Project Pipeline
+    script: scripts/project_analysis.py
+    contract:
+      input_artifacts: ["projects/{project}/src/"]
+      output_artifacts: ["projects/{project}/output/data/result.csv"]
+      definition_of_done: "Project pipeline writes its result."
+      failure_code: "PROJECT_PIPELINE_FAILED"
+      retry_policy: 0
+""",
+        encoding="utf-8",
+    )
+
+    plan = build_autoresearch_plan(repo_root, "demo")
+
+    assert [stage.name for stage in plan.stages] == ["Project Pipeline"]
+
+
 def test_validation_reports_invalid_stage_and_missing_artifact(tmp_path: Path) -> None:
     from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
 

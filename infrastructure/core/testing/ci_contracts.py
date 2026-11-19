@@ -14,12 +14,13 @@ _NATIVE_PREPARATION = {
     "tests/infra_tests/project/test_scientific_reference_replay.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_browser_oracles.py": ("converter", False, True),
     "tests/infra_tests/reporting/test_native_browser_scientific_structure.py": ("converter", False, True),
+    "tests/infra_tests/reporting/test_native_original_launch_correctness.py": ("converter", False, False),
     "tests/infra_tests/reporting/test_native_pdf_citations.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_pdf_math.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_native_pdf_source_witness.py": ("converter", True, False),
     "tests/infra_tests/reporting/test_pdf_raw_natbib_source.py": ("converter", True, False),
     "tests/infra_tests/rendering/test_latex_texttt_native.py": ("converter", True, False),
-    "tests/infra_tests/rendering/test_latex_utils.py": ("none", True, False),
+    "tests/infra_tests/rendering/test_latex_utils.py": ("converter", True, False),
 }
 CONTRACT_MODULES = frozenset(
     {
@@ -34,6 +35,9 @@ CONTRACT_MODULES = frozenset(
         "tests/infra_tests/reporting/test_native_whole_portability.py",
         "tests/infra_tests/reporting/test_native_hosted_credentials.py",
         "tests/infra_tests/reporting/test_native_project_provider_batch.py",
+        # Builds and installs the actual SDK wheel offline (1800s marker); it
+        # needs the hash-required offline cache, which smoke shards never warm.
+        "tests/infra_tests/reporting/test_native_worker_failure_prefix.py",
         "tests/infra_tests/reporting/test_project_verifier.py",
         "tests/infra_tests/project/test_root_case_lanes.py",
         "tests/infra_tests/project/test_root_no_model_acquisition.py",

@@ -21,6 +21,14 @@ is exhausted. An enclosing program must supervise synchronous API admission and
 final receipt writes if it requires a hard deadline for the entire multi-runtime
 program. The CLI `--timeout` is the finite per-interpreter cohort allowance.
 
+Units remain serial within that cohort. Only independent `external-fixture`
+chunks overlap, capped at two guarded processes; each executes real serial pytest
+with its own collection observer, timer ownership, audited bytecode and coverage.
+Lane-result/chunk-process schema 3 records actual launch/finish offsets and exact
+remaining budgets. Independent readback rejects overlapping serial work, excess
+concurrency, reordered launches, reset budgets and intervals outside the original
+cohort boundary. No case selection, native clock or whole-cohort budget is waived.
+
 Original child exit codes remain in native artifacts. An executed incomplete
 case process with original 0, 2 or 7 fails acceptance. Interruption 130 precedes
 timeout 124, then failure 1, required unavailable work 75 and complete 0.

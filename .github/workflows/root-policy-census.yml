@@ -34,18 +34,15 @@ env:
   MPLBACKEND: Agg
 
 jobs:
-  census:
-    name: Root policy census (${{ matrix.host }}, ${{ matrix.python }})
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 75
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {runner: ubuntu-24.04, host: linux, python: "3.14"}
-          - {runner: ubuntu-24.04, host: linux, python: "3.15"}
-          - {runner: macos-latest, host: darwin, python: "3.14"}
-          - {runner: macos-latest, host: darwin, python: "3.15"}
+  prepare-linux-documents:
+    name: Prepare one genuine same-run Linux document store
+    runs-on: ubuntu-24.04
+    # Explicit owner authorization: unchanged 7200s provider operation plus
+    # bounded transport, not an extension of any 75-minute Root original.
+    timeout-minutes: 135
+    outputs:
+      snapshot-id: ${{ steps.snapshot-upload.outputs.artifact-id }}
+      manifest-sha256: ${{ steps.snapshot.outputs.manifest-sha256 }}
     steps:
       - name: Admit the exact dispatch and review mode
         shell: bash
@@ -70,9 +67,66 @@ jobs:
               ;;
             *) exit 1 ;;
           esac
+      # The caller's SHA is an assertion, never a checkout selector. Keep
+      # prepared code and caches within the immutable workflow-dispatch ref.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.source_sha }}
+          ref: ${{ github.sha }}
+          submodules: true
+          persist-credentials: false
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.14"
+      - name: Prepare only the locked provider runtime
+        run: uv sync --locked --inexact --group dev --group installed-build --python '3.14'
+      - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          mode: converter
+      - name: Capture the actual root-owned complete store and trust metadata
+        id: snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          preparation_python="$GITHUB_WORKSPACE/.venv/bin/python"
+          report=$(sudo -n --preserve-env=GITHUB_ACTIONS,GITHUB_REPOSITORY,GITHUB_SHA,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT \
+            timeout --signal=TERM --kill-after=5s 900s \
+            "$preparation_python" -I -B \
+            "$GITHUB_WORKSPACE/.github/actions/setup-acceptance-documents/nix_store_snapshot.py" \
+            capture "$RUNNER_TEMP/template-linux-document-store" --nix-binary "$(command -v nix)")
+          printf '%s\n' "$report" > "$RUNNER_TEMP/linux-document-store-capture.json"
+          manifest_sha=$("$preparation_python" -I -c \
+            'import json, sys; print(json.load(open(sys.argv[1]))["manifest_sha256"])' \
+            "$RUNNER_TEMP/linux-document-store-capture.json")
+          [[ "$manifest_sha" =~ ^[0-9a-f]{64}$ ]]
+          printf 'manifest-sha256=%s\n' "$manifest_sha" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/linux-document-store-capture.json"
+      - name: Retain the immutable same-run preparation snapshot
+        id: snapshot-upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: same-run-linux-document-store-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/template-linux-document-store/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 30
+
+  census:
+    needs: prepare-linux-documents
+    name: Root policy census (${{ matrix.host }}, ${{ matrix.python }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {runner: ubuntu-24.04, host: linux, python: "3.14"}
+          - {runner: ubuntu-24.04, host: linux, python: "3.15"}
+          - {runner: macos-latest, host: darwin, python: "3.14"}
+          - {runner: macos-latest, host: darwin, python: "3.15"}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
           submodules: true
           persist-credentials: false
       - uses: ./.github/actions/setup-python-env
@@ -92,7 +146,16 @@ jobs:
           echo "TEMPLATE_TEST_PDFIUM_WHEEL=$wheel" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-acceptance-fixtures
       - uses: ./.github/actions/setup-docs-lint
+      - name: Retrieve only this run's genuine Linux preparation snapshot
+        if: runner.os == 'Linux'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          artifact-ids: ${{ needs.prepare-linux-documents.outputs.snapshot-id }}
+          path: ${{ runner.temp }}/template-linux-document-store
       - uses: ./.github/actions/setup-acceptance-documents
+        with:
+          nix-store-snapshot: ${{ runner.os == 'Linux' && format('{0}/template-linux-document-store', runner.temp) || '' }}
+          nix-store-manifest-sha256: ${{ runner.os == 'Linux' && needs.prepare-linux-documents.outputs.manifest-sha256 || '' }}
       - name: Prepare source-locked browser math dependencies
         run: .venv/bin/python -m infrastructure.reporting.native_dependency_preparation --repo-root .
       - uses: ./.github/actions/setup-acceptance-model

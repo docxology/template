@@ -4,6 +4,12 @@ Technical specification for the pitch-deck generation exemplar.
 
 **Location:** [`projects/templates/template_pitch_deck/`](.) — public canonical exemplar (`infrastructure.project.public_scope`).
 
+In a standalone checkout this repository root is the project directory.
+Commands below containing `projects/templates/`, `scripts/pipeline/`, or
+`scripts/audit/` run from the monorepo root; they are not local standalone files.
+Use the explicit SDK/DATA preparation and project-root command under
+[Standalone complete-source DATA](#standalone-complete-source-data) instead.
+
 ## Purpose
 
 Reproducible, validated pitch-deck generation: one token-resolved content
@@ -147,7 +153,7 @@ uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.
 - [`README.md`](README.md)
 - [`manuscript/README.md`](manuscript/README.md)
 - [`src/README.md`](src/README.md)
-- Memory and decision records: [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md)
+- Memory and decision records: [`../../../docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md)
 
 
 ## Standalone complete-source DATA

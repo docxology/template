@@ -17,7 +17,7 @@
 ## Integrity Attestation
 
 - Status: `passed`
-- Checked files: `80`
+- Checked files: `43`
 - Missing files: `0`
 - Checksum mismatches: `0`
 - External signature: `false`
@@ -25,7 +25,7 @@
 ## Inventory Summary
 
 - Input records: `14`
-- Generated artifact records: `69`
+- Generated artifact records: `32`
 
 ## Non-Claims
 

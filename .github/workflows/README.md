@@ -7,6 +7,48 @@ and the required `CI Gate`. `.github/project-smoke.json` names the actual tests;
 the smoke runner refuses missing projects, empty selections and escaping paths.
 These are functional checks, with no full-suite coverage or native acceptance claim.
 
+Cheap `actionlint`, `lint` and `detect-projects` gates must succeed before the
+shared `prepare-linux-documents` producer starts. That producer uses the existing
+[document-preparation action](../actions/setup-acceptance-documents/action.yml)
+in converter mode and captures the genuine complete Nix store. Its **75-minute
+job includes setup, provider preparation, capture and upload**; the policy-census
+workflow's separate 135-minute authorization does not enlarge ordinary CI.
+
+Infrastructure smoke and the existing document-consuming contract cells retrieve
+the producer's immutable artifact by exact artifact ID and take the expected
+manifest SHA256 only from that producer's frozen output. The existing transport
+binds repository, exact Source, run, attempt, Nix client body and provider
+recipes/pins. No store snapshot is reused across runs, Sources or attempts.
+Missing, corrupt or mismatched DATA fails the existing validators; there is no
+unchecked fallback.
+
+Restore requires a fresh root-owned store and verifies the complete payload,
+registrations, original trust metadata and closure. Normal Source-pinned
+provider preparation and full source/body/signature verification still run
+after restore; native consumers still prepare their declared TeX, fonts,
+readers and browser. This shared artifact is **prepDATA**, never test outcomes,
+native authority or runtime acceptance.
+
+Every infrastructure smoke job keeps its 75-minute outer envelope, 540-second
+child budget and **10-minute smoke-execution step**. Existing deep contracts
+retain their 6,600-second whole-module ceiling, explicit case clocks and
+120-minute outer envelope (165 minutes for native-document preparation).
+Source/SDK, pre-import/live-original and closing custody, unprivileged/offline
+execution, native observation clocks and coverage floors remain unchanged.
+
+The project matrix depends only on `detect-projects`, not the shared producer,
+so project feedback stays independent of that preparation. Search retains its
+original independent converter preparation and 75-minute job; other project
+jobs retain their 10-minute outer limit. Actual project smoke steps stay capped
+at 10 minutes.
+
+`CI Gate` requires the shared producer and the full existing selected job union,
+then verifies the complete disjoint infrastructure smoke/contract receipts.
+Only the declared documentation-only project skip and unrequested own-coverage
+skip are accepted. Prepared YAML or offline actionlint does not establish
+hosted CI timing/success, a complete exact-Source candidate/F, or release
+acceptance. See [the ordinary CI contract](../../docs/development/ci.md).
+
 Manual CI dispatch accepts an optional exact public `coverage-project` and calls
 `exemplar-coverage.yml` for its own locked release-profile measurement. The
 **Public exemplar coverage** workflow calls the same job across the complete
@@ -14,6 +56,10 @@ Source-derived roster in one dispatch, with four concurrent projects and separat
 commit/input-hash bound artifacts. Its optional project input selects exactly
 one public exemplar. Require every selected measurement and the final matrix
 gate, then verify the retrieved artifacts before updating coverage provenance.
+The reusable coverage job prepares converters for Search's real HTML/citeproc
+and Textbook's real EPUB consumer, and native providers for EDA's real
+XeLaTeX/font test. Other own suites retain their locked Python readers and
+existing tools; full native/publication acceptance prepares its own prerequisites.
 The ordinary `CI Gate` also requires both complementary infrastructure lanes and
 accepts the optional coverage job's skip only when unrequested.
 
@@ -22,10 +68,11 @@ The lint job delegates its public gates to
 public scopes once, preserves producer failure, and passes the same nonempty lint
 array to both Ruff commands while the type gate runs concurrently in its own log
 (`ci.yml` also folds the safety scan into that wave). The tracked-tree guards stay
-sequential. Infrastructure smoke exercises that failure, corrupt model-cache
-refusal, fixture preparation and source binding, native source copying and the TeX
-admission boundary without preparing a model or native tools. These focused
-tests keep preparation and gate regressions on the ordinary push path.
+sequential. Infrastructure smoke exercises those boundaries after declared
+preparation: Source-pinned converters and Poppler, selected real TeX controls
+and the installed browser. Contract cells retain their source-declared
+converter/native, TeX and browser preparation. These focused tests do not
+implicitly prepare a model or replace the complete native acceptance matrix.
 
 The former cross-version/full-suite matrix remains in `hardening.yml`, invoked
 manually. `platform-required-acceptance.yml` is also manual-only; its original
@@ -88,8 +135,8 @@ flowchart TB
 `test-infra` retains its 90-minute hosted budget and unchanged per-case
 timeouts. Its Linux/macOS cells invoke the shared
 [`setup-acceptance-documents`](../actions/setup-acceptance-documents/action.yml)
-once before the tests; pinned archive verification, native package preparation,
-and actual executable probes remain required.
+once before the tests; Source-pinned Linux builds or exact macOS archives,
+native package preparation and actual executable probes remain required.
 
 ### Quality Gates
 
@@ -208,9 +255,17 @@ For root 4+, the release body uses `docs/releases/<tag>.md` for its actual tag
 (see the [release-note index](../../docs/releases/README.md)) and appends
 the accepted commit, hosted run and receipt SHA256. Assets are the admitted
 installed wheel, exact final source distribution, tag-selected overview PNG and
-byte manifest; retrieved asset hashes must match. Publication creates a new
-release with authored notes, not automatic notes or an upsert: existing releases,
-including drafts, are refused before `gh release create --verify-tag`.
+byte manifest. The workflow refuses every existing matching release, including
+drafts, rechecks the tag commit, and creates one new owned draft through the
+GitHub API. It retains the returned release ID, uploads only those four assets,
+then independently retrieves and verifies their exact admitted bytes before
+publication. It rechecks the same draft ID, tag/source and stable uploaded asset
+inventory before publishing only that ID; this transition may trigger public
+Zenodo archival and requires the applicable publication consent. The public
+release and all four assets are independently retrieved and verified again.
+There is no automatic-notes release, upsert, existing-draft adoption, asset
+replacement or implicit tag creation. A failed owned draft is retained for
+explicit recovery; do not blindly replay publication.
 Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
 The pinned [checkout action](https://raw.githubusercontent.com/actions/checkout/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml) uses the Node 24 JavaScript action runtime.
@@ -231,8 +286,8 @@ uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run r
 gh run list --workflow=CI --limit=5
 gh run view <run-id> --log-failed
 
-# Re-run failed jobs
-gh run rerun <run-id> --failed
+# A new attempt cannot reuse an earlier attempt's prepared-store artifact.
+# Preserve the failed original; use the preparation/dispatch guidance below.
 
 # Debug specific test
 uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
@@ -241,6 +296,12 @@ uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```
+
+A failed consumer cannot adopt an earlier attempt's store snapshot. Any
+owner-authorized fresh run/attempt must include its own successful producer and
+matching consumers; preserve the original failed receipts rather than relabeling
+them. Follow [ordinary CI](../../docs/development/ci.md) and the existing
+[`ci.yml`](ci.yml) dispatch contract, not a consumer-only retry that reuses DATA.
 
 ## Adding New Jobs
 
@@ -269,9 +330,11 @@ jobs:
 
 
 `root-policy-census.yml` is manual collection/review only. Its four Linux/Darwin
-3.14/3.15 targets admit the exact dispatch SHA and use the current Root-original
-locked groups and pinned fixture/document/browser/model preparation chain. The
-existing pinned model readiness inference is preparation, not an executed Root
+3.14/3.15 targets admit the exact dispatch SHA. Preparation and collection check
+out `github.sha` directly; `source_sha` is only an equality assertion, never a
+selector for code executed against the dispatch ref's caches. They retain the
+Root-original locked groups and pinned fixture/document/browser/model preparation
+chain. Model readiness inference remains preparation, not an executed Root
 test or unpaid-capability producer. Linux keeps the existing unprivileged
 execution profile; owned-daemon cleanup and bounded export run after collection.
 Both original CLI streams/exit and all census/ledger bindings are retained with
@@ -279,6 +342,12 @@ hidden files for thirty days. Optional author mode creates only a canonical
 Linux 3.14 draft from an exhaustive reviewed committed template; the other three
 targets collect again and refuse any template/member/fixture drift. It cannot
 install policy, push, tag, publish or satisfy required runtime acceptance.
+One shared 135-minute Ubuntu preparation job transports the genuine complete
+Nix store only within the same Source/run/attempt/client. Linux consumers keep
+root ownership, original trust metadata and unconditional source/body/signature
+verification. Each of the four policy jobs still has its original 75-minute
+outer and 660-second collection clock. A snapshot is preparation DATA, not
+classified runtime acceptance or permission to replay an immutable original.
 
 
 ## Focused tagged PDF capability probe

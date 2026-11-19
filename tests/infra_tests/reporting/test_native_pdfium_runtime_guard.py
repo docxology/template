@@ -410,6 +410,7 @@ def _clone_with_deadline(fixture: tuple[Path, str, str], destination: Path, *, d
             ["clone", "--quiet", "--no-local", "--no-hardlinks", "--no-checkout", str(original / link.path), link.path],
         ),
         (destination / link.path, ["checkout", "--quiet", "--detach", link.oid]),
+        (destination, ["submodule", "init", "--", link.path]),
     )
     environment = {"PATH": os.defpath, "LC_ALL": "C", "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
     for position, (cwd, arguments) in enumerate(commands):

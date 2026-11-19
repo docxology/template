@@ -16,6 +16,110 @@ locks retain their project-specific pins; the reviewed refresh records the
 changed tzdata and Active Inference JAX/jaxlib entries in the owning project
 locks.
 
+- Keep poisoned-bytecode controls bound to the ordinary isolated child's local
+  cache even when the Root test runner owns a separate fresh prefix. Preserve
+  timestamp validity and genuine fresh-prefix admission and refusal paths.
+- Settle AutoResearch catalogs, security evidence, loop visuals and hydration
+  before the complete lifecycle primary byte snapshot and terminal validation.
+  Keep downstream references acyclic and strict standalone failure refusal.
+- Retain genuine failed native-stage prefixes and the primary worker failure
+  alongside closing-custody refusals. Native preflight failures remain red while
+  always transporting original evidence; original deadlines are unchanged.
+- Separate installed SDK, checkout authoring and optional contributor checks.
+  Keep preparation, fork identity, runtime dispatch and publication under their
+  existing canonical guide owners instead of repeating setup and release recipes.
+- Clarify all 25 public examples' own SDK/provider/DATA/resource prerequisites.
+  Correct working directories, hydration/validation order, actual materialized
+  child paths and canonical-book versus new-draft boundaries without adding gates.
+- Label literature corpus replay as synthetic and live retrieval as explicit
+  `--live`; use the existing domain fixture generator for clean exports. Report
+  the retained experiment tree before recording any genuinely measured answer.
+  Remove authored workstation-credential claims while preserving generated
+  publication history and pending-release boundaries.
+- Limit own-coverage document setup to Search's real HTML/citeproc, Textbook's
+  real EPUB and EDA's real XeLaTeX/font consumers. Preserve complete release
+  suites, locked readers, pinned Lean/TLC and Docker preparation, floors and
+  deadlines; full native/publication acceptance keeps its own prerequisites.
+- Retire Active's renderer Source-substring checks and duplicate-default pins.
+  Strengthen the existing real preamble parser control to preserve both LaTeX
+  fences while excluding prose and other languages; actual native rendering
+  remains mandatory rather than being replaced by an import-shape assertion.
+- Share genuine Linux converter preparation within one exact Root-policy run.
+  Transport complete original Nix registrations and content-bound NARs through
+  root-private custody and unprivileged handoff; refuse foreign, linked,
+  corrupt, busy or nonempty input. Keep signed clients, trust metadata,
+  source/derivation/body verification and all original census clocks.
+- Share ordinary CI's genuine Source/run/attempt-bound Linux document store after
+  cheap gates, instead of repeating its cold compiler build in every prepared
+  infrastructure job. Restore complete original store registrations and trust
+  metadata, then reverify each consumer's pinned tools. Keep independent project
+  feedback, the producer's 75-minute transport-inclusive envelope, all test
+  selections and execution clocks, and the complete blocking `CI Gate`.
+- Bind Root-policy preparation and all four collectors directly to the immutable
+  workflow-dispatch SHA. Keep the explicit caller-SHA equality assertion without
+  letting caller input select code executed against that ref's caches.
+- Preserve declared external obligations in genuine Root authoring and optional
+  catalog controls. Retire obsolete declaration/count/wording pins without
+  replacing them with new totals; retain real selected-runtime and custody tests.
+- Retain failed provider command stdout and exits through bounded failure-only
+  artifacts, rather than losing them with disposable runners. Preserve original
+  failures, Source pins and clocks; diagnostics never authorize a retry or pass.
+- Exercise document-action refusals with the complete declared shell inputs and
+  find the actual dispatch guard by its input contract, not workflow step order.
+  Keep real Source and support-custody consumers; retire generated-copy,
+  heading-wording, outward-link inventory and output-echo assertions. Refresh the
+  public exemplar manifest and differentiation map through their canonical
+  generator rather than repinning stale test-file totals.
+- Nominate the actual `html5` Pandoc filter token from the shared combined-writer
+  contract instead of the `html` surface label. Preserve exact paired invocation,
+  live-process, Source, compiler and finite-clock checks; a host protocol smoke
+  is not frozen Linux native acceptance.
+- Reuse immutable held Source bytes only after the fresh no-follow canonical
+  census reapplies public path policy. Preserve fresh digest comparisons,
+  per-file and aggregate byte ceilings, and the final physical snapshot guard;
+  retain real added-file, same-size overwrite, ABA and symlink controls.
+- Encode unchanged Source-built Linux document binaries with fast XZ transport
+  compression instead of spending the ordinary CI preparation window on the
+  archive envelope. Keep exact executable pins, canonical single-member headers,
+  complete decoding, both byte ceilings and every original clock unchanged.
+- Refresh all 25 own release-profile coverage records from authenticated
+  November 14 originals, retaining exact current project/support inputs.
+  Import only the five actual percentage deltas; collection totals still come
+  from the canonical live generator rather than inferred test-count changes.
+- Isolate smoke-path refusals behind a valid complete fixture and distinguish
+  hostile foreign Git epochs from the nominated candidate. Retire workflow
+  structure, Source-substring and re-export assertion pins while retaining
+  actual selector and aggregate-script consumers.
+- Fetch the same size/SHA-pinned stable TLC body through its official anonymous
+  release-download URL in Formal and hosted preparation, retaining atomic
+  admission, tool proofs and every existing deadline.
+- Retire composed-receipt mutations masked by mandatory hosted authentication
+  and declaration-only union assertions. Retain real unauthenticated CLI,
+  revision/schema refusals and pure origin verdicts; illustrative DATA never
+  becomes hosted release evidence.
+- Classify native Office HTML comments by their first literal closing token,
+  not a full-comment filtering regexp. Preserve multiline alternatives and
+  reject empty-abrupt openings, mixed visible content and trailing comments.
+- Keep pre-profile handoff schema/revision refusals on small real Git metadata
+  fixtures, not repeated complete-publication copies. Full-profile CLI admission
+  remains a separate genuine release proof.
+- Preserve native Mermaid's original caller deadline and 120-second cap across
+  Source custody, observation and cleanup; a shared ceiling cannot extend it.
+- Retire literal coverage-schema, inventory-version and path pins plus
+  writer/renderer copy echoes; retain missing-provenance, legacy-schema and
+  stale-inventory refusals.
+- Stage each new Root release as an owned draft and verify all four downloaded
+  assets before public publication can trigger archival. Preserve existing-release
+  refusal, exact tag identity, no-clobber uploads and independent public readback.
+- Preserve four authenticated changed-input coverage originals and the 21 dated
+  baseline originals as evidence for their actual input tuples. Project prose
+  remains in the existing coverage fingerprint; changed tuples require fresh
+  measurements rather than relabelled historical results.
+- Build Linux document providers with the qualified standard Source-patched GHC:
+  canonical package-cache/preload ordering, with only unused profiling and
+  compiler-documentation ways omitted. Closed v4 pins authenticate both ordered
+  patches before acquisition; complete executable bodies, signed closure,
+  preparation clocks and every native admission remain mandatory.
 - Resolve optional NumPy only for scientific consumers, keeping psutil-only
   logging and resource-monitor imports independent of numerical providers.
   Preserve actual provider identity and existing optional-import semantics.
@@ -99,6 +203,144 @@ locks.
 - Measure current release-profile coverage, regenerate dependent publication
   outputs and validate the resulting committed tree before exact-main
   acceptance and authenticated publication.
+- Give the heavyweight Formal colony experiment modules explicit 600-second
+  per-test ceilings applied at module scope while preserving their real on-disk
+  trials, seeds and scientific assertions.
+- Provision the pinned SIA sandbox image in its native acceptance cell and audit
+  the Autoscientists comparison against the actual Source repository scripts
+  root when the SDK is installed separately.
+- Authenticate native loader terminal callbacks before reaping a completed
+  process, and use one finite 600-second native observation ceiling for custody,
+  callbacks, cleanup and retention without relaxing fail-closed acceptance.
+  Admit standalone Mermaid production only in the actual analysis stage; inline
+  manuscript fences remain render-stage only.
+- Preserve the reviewed Ubuntu APT mirror allowlist while appending lower-priority
+  EC2 regional fallbacks so hosted document setup can continue through primary
+  archive DNS failures. Run converter preparation before CI's raster and TeX APT
+  installs so those steps use the same policy, and bound each connection attempt
+  so a stalled mirror falls through to the next reviewed row.
+- Run the installed-SDK native-loader regression in its prepared full-module
+  contract lane, preserving its complete selection and original clocks instead
+  of truncating it at the routine smoke shard's 540-second deadline.
+  Prepare hash-verified locked dependencies before the offline body and declare
+  its Linux/compiler applicability without waiving either supported Python minor.
+  Document the cache action's actual preparation/consumer boundary in its
+  required README/AGENTS pair so the Root auxiliary docs gate can admit it.
+- Preserve the selected installed-SDK Python launcher separately from its
+  resolved executable image. Share a PID-preserving quoted shell/Python entry
+  header across direct and paired Crossref production and portable replay, so
+  cold virtual environments retain their actual SDK metadata on deep or quoted
+  paths without weakening executable-byte or final Source custody.
+- Canonicalize paired Crossref loader injection commitments before embedding
+  them in the Source-owned parent launcher. JSON transport must preserve exact
+  independently reconstructed launcher bytes; changed commitments and original
+  environment, owner, process, Source and deadline checks remain enforced.
+- Reject both Python 3.15 lazy-import forms explicitly in the current 3.14-floor
+  audit when a newer interpreter's best-effort parser admits them. Preserve
+  supported syntax, ordinary `lazy` identifiers and guarded API backports.
+  Keep the explicit build-epoch child regression independent of inherited
+  execution mode; production core/live precedence is unchanged.
+- Amortize complete Root Source admission across bounded 1000-case core
+  batches and reuse each batch's exact held node set for metadata checks.
+  Preserve real serial pytest, complete selection, bytecode and branch
+  coverage, external-fixture concurrency, cleanup and every original clock.
+- Check paired Crossref filter/compiler DATA within one fresh complete Source
+  opening/closing interval instead of nesting whole-Source verification for
+  each held record. Public verification stays fresh, live callbacks and actual
+  tool execution remain separate, and the 600-second ceiling is unchanged.
+- Give the deliberately timed-out macOS descendant control a shorter armed-body
+  window inside its unchanged whole deadline. Require the real guardian to
+  finish and the final process census to be empty in both producer and reader;
+  direct PID absence alone no longer establishes cleanup. Retire the private
+  refusal-message wording oracle while retaining real supervision controls.
+- Avoid rebuilding every lexical path ancestor during fresh Source inventory.
+  Compare current held DATA within its fresh no-follow census and closing
+  guards, preserving fresh per-file mode checks and both original/current
+  Source, SDK and Git boundaries; no verified admission is cached.
+- Batch each completed compiler or baseline/observed DATA pair inside the
+  existing fresh opening/closing Source guard, without spanning actual child
+  execution or live native callbacks. Read each runtime distribution's metadata
+  once per capture and reuse one digest of each already-held RECORD payload,
+  preserving physical reads, identity, byte/size, mutation and closing checks.
+  Retire the incidental inventory-helper call-count profiler oracle rather than
+  pinning implementation counts; genuine installed/Code/cache/refusal controls
+  and every original native deadline remain unchanged.
+- Close preview and direct-stage executor leases in test consumers, preserving
+  live peer logging and restoration after the last owner. Remove the malformed
+  metadata fixture's incidental `None` expectation, which Python 3.15 rejects
+  with `KeyError`, while retaining valid metadata and mutation-freshness checks.
+- Keep isolated Meta SDK-origin and canonical-startup readers bytecode-readonly
+  from interpreter startup, including when isolated mode ignores Python
+  environment settings. Preserve genuine standalone corpus, provider-shadow,
+  invalid-domain and empty-selection consumers; retire documentation-command,
+  tuple-copy and exception-wording pins instead of repinning them.
+- Overlap only independently owned external-fixture Root chunks, with at most two
+  original guarded processes, serial per-child pytest and unchanged case/cohort
+  clocks. Bind actual launch/finish offsets and remaining budgets in schema-3
+  lane/process evidence; independently refuse excess concurrency, invalid launch
+  order, incomplete phases and reset deadlines rather than trusting green jobs.
+- Retire prose-presence, wording, length, history-count-growth and redundant
+  metric/default smoke oracles, plus their unused test helpers. Preserve concrete
+  daemon and deterministic protocol/state contracts and the four Source-owned
+  native local-review/translation obligations without changing model, prompt,
+  token limits, retries, lifecycle or request budgets.
+- Prepare Linux Pandoc and Crossref from immutable upstream source and frozen
+  GHC 9.12.2/dependency inputs and project-wide object determinism, retaining
+  exact Source-selected executable and provider archive correspondence instead
+  of asking static binaries for glibc callbacks.
+  Keep its GC root outside the public execution asset tree without weakening
+  the isolated CI user's escaping-link refusal.
+  Keep official macOS archives pinned. Authenticate the final loader-consistency
+  boundary and all file-backed closes; retain the kernel vDSO until the actual
+  original OS exit rather than fabricating a close callback.
+  Observe the complete Source-pinned Pandoc executable image under a finite
+  256 MiB code-image ceiling; retain the 512 MiB backing-file and 1 GiB cohort
+  ceilings and existing observation clocks without truncating evidence.
+  Match the pin producer's bounded two-job/two-core source-build execution and
+  construct nonempty platform arguments under macOS system Bash 3.
+- Accept the real stdlib Linux `MsgFlag` for `MSG_CMSG_CLOEXEC`, preserving
+  close-on-exec descriptor transport instead of rejecting its integer enum.
+- Keep native Office raw comments within the first actual `-->` or `--!>`
+  terminator. Mixed visible HTML cannot become nonvisible metadata or an image
+  alternative; the independent source oracle and actual Lua producer retain
+  the same finite boundary. Preserve escaped braces in linked slide-image
+  targets instead of treating an escaped closer as a direct image wrapper.
+- Reconcile authored standalone navigation, execution-context warnings, dated
+  review records and unchecked Workflowz requests into canonical exemplar
+  sources before exact export. Remove unexercised passing-test counts and
+  retain immutable review provenance rather than silently replacing it.
+- Advance the pinned Kmyth fork through its reviewed main correction, preserving
+  the existing macOS baseline while removing a missing logging format argument,
+  restoring the intended SGX release C flags and selecting network-test headers
+  from their own directory. Retire only the software-verified vendor requests;
+  no TPM or SGX hardware acceptance is inferred.
+- Canonicalize package-cache serialization in the actual GHC 9.12.2 `ghc-pkg`
+  source, preserving frozen library versions and object determinism while
+  removing independently observed executable linker-order drift. Authenticate
+  the tracked compiler patch alongside recipe and freeze in the closed v3
+  provider manifest; retain exact complete executable pins and unchanged clocks.
+- Remove the superseded unconditional missing-oracle checklist and its
+  self-pinning test. Document the actual Source-compiled complete oracle graph,
+  keeping component status adaptation separate from full acceptance authority.
+- Resolve Redacted's standalone utilities through their prepared SDK instead of
+  injecting a monorepo ancestor into Python's import path.
+- Keep all Pools public figure defaults inside their actual project and bind
+  figure provenance to the real producer namespace.
+- Read Textbook figure alternatives from authored chapter metadata, preserving
+  the explicit legacy mapping while refusing missing or blank alternatives.
+- Preserve undefined citation-network metrics as `N/A` through strict JSON and
+  manuscript hydration instead of treating unavailable values as finite numbers.
+- Bind Advanced Literature Review's polite contact identity to admitted
+  configuration bytes, preserve actual citation-count eligibility and remove its
+  false MIT classifier without changing the project's CC-BY license.
+- Restore Registered Report's four actual generated figure declarations without
+  changing frozen study permissions or implying deposition authority.
+- Retire source-text, forwarding, log-wording, minimum-count and tautological
+  test pins; retain the real hydration, enumeration and standalone-source
+  consumer regressions.
+- Re-author the complete Root case policy from four fresh same-job originals
+  and explicit module decisions. Preserve independent original census bindings;
+  policy serialization and collection do not grant runtime acceptance.
 - Observe optional guardian-lifetime process ages with portable POSIX `ps etime`
   on Darwin and Linux. Preserve the strict default census, unreadable newer-holder
   refusal, original shared deadline and age margin; exercise real process-age
@@ -163,11 +405,12 @@ locks.
   including the normal pull-request merge checkout. A real-Git regression
   rejects an ordinary child checkout whose parent matches the trigger SHA;
   ancestry alone cannot authorize a different Source or bypass the shared clock.
-- Refresh reviewed policy metadata from genuine complete Linux/macOS collection
-  on Python 3.14 and 3.15: 994 modules, 13,023 families and 17,224 members.
-  Keep the new exact-checkout family in Core with the existing Git prerequisite;
-  preserve the other 993 module reviews and all 31 obligation definitions.
-  This metadata review does not grant runtime acceptance or human approval.
+- Preserve the preceding main-lane policy review's genuine complete Linux/macOS
+  collection on Python 3.14 and 3.15: 994 modules, 13,023 families and 17,224
+  members. That review kept the exact-checkout family in Core with its Git
+  prerequisite and all 31 then-declared obligations. Final merged-Source policy
+  requires fresh four-target authorship; metadata is not runtime acceptance
+  or human approval.
 - Export hosted native diagnostics only from numbered xdist case directories
   and explicit original diagnostic leaves. Avoid fixture symlink loops,
   `current` aliases, copied Source/environments and browser profiles.

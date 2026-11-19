@@ -18,7 +18,7 @@ import yaml
 from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.rendering._web_markdown_preprocess import html_safe_markdown
-from infrastructure.rendering.manuscript_hydration_replay import require_shared_hydration
+from infrastructure.rendering.manuscript_hydration_replay import SharedHydrationWriter, require_shared_hydration
 from infrastructure.rendering._paper_frontmatter import declared_frontmatter
 from infrastructure.rendering._web_source_context import compose_web_source_context
 from infrastructure.rendering.manuscript_ordinal_anchors import (
@@ -42,7 +42,10 @@ from infrastructure.reporting.native_format_semantic_source import (
     semantic_contract_ast,
 )
 from infrastructure.validation.output.render_formats import render_config_manuscript_dir
-from infrastructure.reporting.native_hydration_reconstruction import observe_native_hydration_reconstruction
+from infrastructure.reporting.native_hydration_reconstruction import (
+    observe_native_hydration_reconstruction,
+    source_manuscript_hydration_writer,
+)
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
 from infrastructure.reporting.native_source_external_admission import NativeSourceContext
 from infrastructure.reporting.native_tool_producer import NativeProducerOperation, current_native_producer_operation
@@ -119,6 +122,7 @@ def _selected_occurrences(
         raise ValueError("HTML ordinal input order differs from actual Source hydration")
     variables = hydration.get("variables")
     values = _held(variables, reader).json_object() if variables is not None else {}
+    writer, writer_binding = source_manuscript_hydration_writer(source, hydration["scope"], reader)
     selected, occurrences = [], []
     for index, (row, (path, content)) in enumerate(zip(own_rows, sources, strict=True)):
         consumed = reader.read(path)
@@ -135,10 +139,21 @@ def _selected_occurrences(
             if authored.content != content:
                 raise ValueError("HTML ordinal exact authored body changed")
             continue
+        if row["transformation"] == "Source-normalized-authored-body":
+            if (
+                writer is None
+                or writer is SharedHydrationWriter.RESOLVED_TREE
+                or row["writer"] != writer_binding
+                or require_shared_hydration(authored.content, {}, content, writer=writer).data() != row["hydration"]
+            ):
+                raise ValueError("HTML ordinal normalized copy lost its actual Source writer binding")
+            continue
         if (
             row["transformation"] != "shared-uppercase-token-hydration"
             or variables is None
-            or require_shared_hydration(authored.content, values, content).data() != row["hydration"]
+            or writer is None
+            or row["writer"] != writer_binding
+            or require_shared_hydration(authored.content, values, content, writer=writer).data() != row["hydration"]
         ):
             raise ValueError("HTML ordinal needs its exact independently checked Source hydration adapter")
         for ordinal, token in enumerate(row["hydration"]["occurrences"], 1):

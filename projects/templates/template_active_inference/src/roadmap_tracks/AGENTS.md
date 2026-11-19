@@ -37,7 +37,7 @@ private data, or nondeterministic research behavior.
   (`build_analytical_observable_sweep` through `build_causal_ablation_matrix`)
   for finite toy sweeps, uncertainty summaries, benchmark matrices, policy grids,
   graph-world topology sweeps/traces/invariants, state-space catalogs, and
-  causal-ablation matrices; reads JSON via `from json_io import load_json`.
+  causal-ablation matrices; reads JSON via `from template_active_inference.json_io import load_json`.
 - `formal_interop.py` - GNN, ontology, Lean, model-checking, and interop
   witness artifacts plus proof extraction.
 - `integration_audit.py` - validation dependency graph, producer completeness,

@@ -6,9 +6,9 @@ A reproducible, validated **pitch-deck generation exemplar**: one
 token-resolved content source renders to six real artifacts
 (short/medium/long × PDF/PPTX), with every fact traced live to the repository,
 cliché linting, citation-coverage (diligence) auditing, and per-slide QR
-deep-links. Rendering logic itself lives in the monorepo's
-`infrastructure/rendering/{slide_deck,pptx_deck,mermaid_figure}.py`; this
-project owns content, validation, and orchestration. See the repo
+deep-links. Rendering logic belongs to the SDK's
+`infrastructure/rendering/{slide_deck,pptx_deck,mermaid_figure}.py` modules;
+this project owns content, validation, and orchestration. See the repo
 [`README.md`](../README.md) and [`../AGENTS.md`](../AGENTS.md).
 
 ## Directory map
@@ -33,6 +33,13 @@ uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_conte
 uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py
 uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.py
 ```
+
+For a standalone export, use the genuine installed SDK, real renderer tools,
+and admitted complete-source DATA described in
+[`AGENTS.md`](../AGENTS.md#standalone-complete-source-data).
+Its project root contains `scripts/` and `tests/` directly; the prefixed
+monorepo commands above are not local standalone files. The DATA reference is
+read-only input, never an ambient import provider.
 
 ## Documentation in this tree
 

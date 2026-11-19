@@ -43,3 +43,25 @@ def test_real_phase_runner_consumes_admitted_config_under_path_replacement(tmp_p
     if restore:
         owned.write_bytes(admitted)
     assert actual.config != {"project_config": {"search_phases": {"injected": {"queries": ["changed"]}}}}
+
+
+def test_admitted_contact_identity_ignores_config_path_replacement(tmp_path: Path) -> None:
+    from infrastructure.search.literature.live_providers import polite_pool_identity
+
+    from multi_phase.live_acceptance import _declared_contact_email
+
+    config_path = tmp_path / "manuscript/config.yaml"
+    config_path.parent.mkdir()
+    config_path.write_text(
+        "authors: [{corresponding: true, email: admitted@example.invalid}]\nproject_config: {}\n",
+        encoding="utf-8",
+    )
+    admitted = config_path.read_bytes()
+    config_path.write_text(
+        "authors: [{corresponding: true, email: replacement@example.invalid}]\nproject_config: {}\n",
+        encoding="utf-8",
+    )
+    runner = MultiPhaseSearchRunner(config_path, project_root=tmp_path, config_source_bytes=admitted)
+    identity = polite_pool_identity(_declared_contact_email(runner.config))
+    assert identity["mailto"] == "admitted@example.invalid"
+    assert identity["user_agent"].endswith(" mailto:admitted@example.invalid")

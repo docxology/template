@@ -16,7 +16,7 @@ From an independent checkout's root, after the platform wheel and project `dev`
 extra are installed in its own environment (see [`../STANDALONE.md`](../STANDALONE.md)):
 
 ```bash
-python -I -m pytest tests/ --cov=src --cov-fail-under=90
+python -IB -m pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 `test_canonical_test_command.py` runs bounded configured-pytest children against

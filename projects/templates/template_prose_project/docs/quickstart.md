@@ -1,31 +1,22 @@
 # Quickstart
 
-```mermaid
-flowchart TB
-    S1[Step 1<br/>uv run pytest projects/templates/template_prose_project/tests/]
-    S2[Step 2<br/>scripts/run_prose_pipeline.py]
-    S3[Step 3<br/>scripts/y_generate_prose_figures.py<br/>scripts/z_generate_manuscript_variables.py]
-    S4[Step 4<br/>./run.sh --project template_prose_project --pipeline]
-    S5[Step 5<br/>tighten thresholds in config.yaml]
 
-    S1 --> S2 --> S3 --> S4 --> S5
+## 1. Prepare the selected environment
 
-    classDef step fill:#1e3a8a,stroke:#0f172a,color:#fff
-    class S1,S2,S3,S4,S5 step
-```
+For an independent project, follow the genuine SDK-wheel recipe in
+[STANDALONE.md](../STANDALONE.md#standalone-environment). For a canonical monorepo
+checkout, prepare Root and the project's own development environment through the
+[shared run surface](https://github.com/docxology/template/blob/main/projects/README.md#run-surface),
+then enter `projects/templates/template_prose_project/`.
 
-## 1. Smoke-test in 5 seconds
-
-```bash
-uv run pytest projects/templates/template_prose_project/tests/ -q
-```
-
-All tests should pass without an internet connection.
+Sections 2, 3, 5 and 6 run from that prepared project root with
+`.venv/bin/python`. Initial dependency installation may need network access;
+fixture-backed editorial checks are distinct from live review and publication.
 
 ## 2. Run the orchestrator
 
 ```bash
-uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py
+.venv/bin/python scripts/run_prose_pipeline.py
 ```
 
 Reads `manuscript/config.yaml`, runs prose analysis on
@@ -39,8 +30,8 @@ Reads `manuscript/config.yaml`, runs prose analysis on
 ## 3. Generate figures + variables
 
 ```bash
-uv run python projects/templates/template_prose_project/scripts/y_generate_prose_figures.py
-uv run python projects/templates/template_prose_project/scripts/z_generate_manuscript_variables.py
+.venv/bin/python scripts/y_generate_prose_figures.py
+.venv/bin/python scripts/z_generate_manuscript_variables.py
 ```
 
 Outputs:
@@ -52,14 +43,19 @@ Outputs:
 
 ## 4. Run under the full pipeline
 
+This is a separate monorepo operation, not a standalone script. Return to the
+prepared monorepo root and follow the
+[dispatch contract](https://github.com/docxology/template/blob/main/docs/RUN_GUIDE.md).
+
 ```bash
-./run.sh --project template_prose_project --pipeline
+./run.sh --project templates/template_prose_project --pipeline --mode core
 ```
 
-The infrastructure pipeline runner cleans `output/`, runs tests,
-executes every `scripts/*.py` (alphabetical: `run_prose_pipeline.py`,
-`y_generate_prose_figures.py`, `z_generate_manuscript_variables.py`),
-renders the PDF with Pandoc, and validates outputs.
+The selected core DAG includes tests, discovered analysis, rendering, validation
+and copying. Rendering has its own prepared system-tool requirements; a local
+editorial report is not PDF, scientific, native or publication acceptance.
+Canonical public outputs can be tracked evidence: preserve retained snapshots
+and immutable receipts rather than treating every `output/` tree as disposable.
 
 ## 5. Tighten thresholds
 
@@ -75,7 +71,18 @@ prose:
 Then run with `--strict`:
 
 ```bash
-uv run python projects/templates/template_prose_project/scripts/run_prose_pipeline.py --strict
+.venv/bin/python scripts/run_prose_pipeline.py --strict
 ```
 
-The script exits non-zero if any check fails — perfect for CI.
+The script exits nonzero if a configured check fails; inspect the actual report.
+
+## 6. Complete own test suite
+
+From the prepared project root:
+
+```bash
+.venv/bin/python -I -m pytest tests/ --cov=src --cov-fail-under=90
+```
+
+The suite uses offline fixtures after dependency preparation. No fixed duration
+or passing outcome is promised; inspect collection, failures and coverage.

@@ -27,9 +27,14 @@
 - Keep publication claims local unless a real DOI, release, or external validation exists.
 - Regenerate output through Stages 02-05 after source or config edits; do not hand-edit generated Markdown, PDFs, HTML, slides, figures, reports, or copied deliverables.
 
-Decision memory and verifier hardening follow [`../../../docs/rules/memory_and_decision_records.md`](../../../docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
+Decision memory and verifier hardening follow the monorepo's [decision records guide](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md): use nearby `WHY:` comments only for surprising local choices, keep volatile counts generated, and add negative controls for verifier-like gates.
 
 ## Verification
+
+The prefixed commands below run from the monorepo root. A standalone project's
+root instead contains `tests/` and `scripts/` directly; use the genuine SDK/dev
+setup and local entry points in
+[`README.md`](README.md#standalone-project-commands), without an ancestor shim.
 
 ```bash
 uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90
@@ -49,4 +54,4 @@ quick reference commands, and pitfalls.
 
 ## Publishing
 
-- [Publishing guide](../../../docs/guides/publishing-guide.md) · [Publishing module reference](../../../infrastructure/publishing/README.md) · [Zenodo DOI strategy](../../../docs/guides/zenodo-doi-strategy.md) · [Archival targets](../../../docs/maintenance/archival-targets.md)
+- [Publishing guide](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md) · [Publishing module reference](https://github.com/docxology/template/blob/main/infrastructure/publishing/README.md) · [Zenodo DOI strategy](https://github.com/docxology/template/blob/main/docs/guides/zenodo-doi-strategy.md) · [Archival targets](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md)

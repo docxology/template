@@ -44,7 +44,8 @@ def mutate_print(content: bytes, name: str, kind: str) -> bytes:
             return stream.getvalue()
         finally:
             image.close()
-    document = PdfReader(BytesIO(content), strict=True)
+    # pypdf>=7 merges overlays only onto writer-owned pages; clone the strict read.
+    document = PdfWriter(clone_from=PdfReader(BytesIO(content), strict=True))
     pages = list(document.pages)
     if kind == "storybook" and name == "pdf-font":
         from reportlab.lib.utils import ImageReader

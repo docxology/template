@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import closing
 from pathlib import Path
 from dataclasses import replace
 import time
@@ -49,10 +50,10 @@ def test_compiler_creates_no_project_output_and_matches_executor(tmp_path: Path)
     assert plan.schema_version == 3
     assert not (config.project_dir / "output").exists()
     assert {path.relative_to(tmp_path): path.read_bytes() for path in tmp_path.rglob("*") if path.is_file()} == before
-    executor = PipelineExecutor(config)
-    executor.preview_stage_names()
-    assert executor.execution_plan is not None
-    assert executor.execution_plan.to_dict() == plan.to_dict()
+    with closing(PipelineExecutor(config)) as executor:
+        executor.preview_stage_names()
+        assert executor.execution_plan is not None
+        assert executor.execution_plan.to_dict() == plan.to_dict()
 
 
 def test_read_only_compiler_includes_plugins_and_preserves_target_policy(tmp_path: Path) -> None:

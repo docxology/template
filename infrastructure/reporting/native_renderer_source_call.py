@@ -17,7 +17,11 @@ from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.public_acceptance_evidence import write_json
 from infrastructure.project.public_reference_git import remaining
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.rendering.combined_native_commands import RENDERER_CROSSREF_SCHEMA, pre_crossref_json_command
+from infrastructure.rendering.combined_native_commands import (
+    PANDOC_HTML_WRITER,
+    RENDERER_CROSSREF_SCHEMA,
+    pre_crossref_json_command,
+)
 from infrastructure.rendering.native_render_custody import NATIVE_ORIGIN_KEYS
 from infrastructure.reporting.native_crossref_pandoc import source_crossref_pandoc
 from infrastructure.reporting.native_pdf_citation_runtime import CitationRuntime, file_observation
@@ -276,7 +280,7 @@ def run_source_native_pandoc(
             scope,
             command[1:],
             "source-renderer",
-            output_format=writer,
+            output_format=PANDOC_HTML_WRITER if writer == "html" else writer,
             input_paths=input_paths,
             cwd=cwd,
             output_paths=(output,),

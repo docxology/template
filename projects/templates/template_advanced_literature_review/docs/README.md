@@ -15,17 +15,13 @@ Project-local rulebook for `template_advanced_literature_review`, a retargetable
 
 ## Canonical Commands
 
-```bash
-uv sync --group scientific --group llm
-
-uv run pytest projects/templates/template_advanced_literature_review/tests/ \
-  --cov=projects/templates/template_advanced_literature_review/src --cov-fail-under=90 -q
-
-uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
-uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
-uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
-```
+Use the [single prepared corpus/replay recipe](../STANDALONE.md#multi-phase-corpus)
+and [README provider order](../README.md#dependencies). A clean export omits
+`output/`, so explicitly generate its synthetic fixture before replay. The
+project's prepared own interpreter runs the numbered producers; Stage 01 admits
+prepared runtimes and does not provision dependencies. See
+[quickstart](quickstart.md) for the offline producer order and
+[rendering pipeline](rendering_pipeline.md) for the separate repository render handoff.
 
 Live test counts and coverage snapshots belong in `../../../../docs/_generated/COUNTS.md`; do not duplicate them here.
 
@@ -40,4 +36,6 @@ Live test counts and coverage snapshots belong in `../../../../docs/_generated/C
 - `src/deep_research/` owns the deterministic offline replay of the optional deep-research dispatch stage.
 - `scripts/` (11 numbered stages) are thin orchestrators only.
 
-Generated `output/` files are tracked as the current evidence snapshot when they stay below the public output ceiling; regenerate them from source rather than editing them by hand.
+Generated `output/` files can be tracked as a guarded public snapshot below the
+size ceiling. The default corpus is synthetic; neither tracking nor regeneration
+promotes it to live scientific evidence. Fix producers, never hand-edit outputs.

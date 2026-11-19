@@ -48,6 +48,10 @@ _EC2_REGIONS = (
     "us-west-2",
 )
 _PRIMARY_HOSTS = ("azure.archive.ubuntu.com", *(f"{region}.ec2.archive.ubuntu.com" for region in _EC2_REGIONS))
+_FALLBACKS = tuple(
+    (f"{region}.ec2.archive.ubuntu.com", priority)
+    for region, priority in zip(("us-east-1", "us-west-2", "eu-west-1"), (4, 5, 6))
+)
 
 
 def _rows(host: str, primary_priority: int, archive_priority: int) -> bytes:
@@ -58,16 +62,30 @@ def _rows(host: str, primary_priority: int, archive_priority: int) -> bytes:
     ).encode("ascii")
 
 
-# Exact serialization gives three rows, fixed paths/protocols and only the two
-# reviewed priority permutations. No URL or whitespace normalization occurs.
+def _fallback_rows(host: str) -> bytes:
+    return b"".join(
+        f"http://{fallback}/ubuntu/\tpriority:{priority}\n".encode("ascii")
+        for fallback, priority in _FALLBACKS
+        if fallback != host
+    )
+
+
+# Exact serialization gives the three reviewed rows, fixed paths/protocols and
+# only the two reviewed priority permutations. Outputs append the three reviewed
+# regional fallbacks, omitting a fallback that duplicates the current primary.
+# Already-extended outputs are also exact accepted inputs, making this idempotent.
+# No URL or whitespace normalization occurs.
 _PREFERRED_BY_INPUT = {
-    _rows(host, primary, archive): _rows(host, 2, 1) for host in _PRIMARY_HOSTS for primary, archive in ((1, 2), (2, 1))
+    _rows(host, primary, archive): _rows(host, 2, 1) + _fallback_rows(host)
+    for host in _PRIMARY_HOSTS
+    for primary, archive in ((1, 2), (2, 1))
 }
+_PREFERRED_BY_INPUT.update({output: output for output in _PREFERRED_BY_INPUT.values()})
 MAX_MIRROR_BYTES = max(map(len, _PREFERRED_BY_INPUT))
 
 
 def prefer_primary_archive(data: bytes) -> bytes:
-    """Return the approved priority swap, preserving every URL and row order."""
+    """Return the approved priority swap and regional fallbacks, preserving row order."""
     if type(data) is not bytes:
         raise ValueError("Ubuntu mirror input must be bytes")
     try:

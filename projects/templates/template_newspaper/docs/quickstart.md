@@ -2,14 +2,18 @@
 
 ## Prerequisites
 
-The workspace `.venv` (managed by `uv` at the repo root) already provides
-`reportlab`, `Pillow`, `matplotlib` and `pyyaml`. No system tools are required
-to produce the newspaper PDF.
+For a standalone checkout, follow the genuine SDK/dev setup in
+[`README.md`](../README.md#quick-start), then activate that project's environment.
+It provides `reportlab`, `Pillow`, `matplotlib`, and PyYAML. In the monorepo,
+enter `projects/templates/template_newspaper/` first and select its prepared
+environment. No external PDF compiler is needed for the newspaper itself;
+`pdftoppm` is a separate visual-review prerequisite.
 
 ## Render the paper
 
+Run from the project directory (already the repository root in a standalone clone):
+
 ```bash
-cd projects/templates/template_newspaper
 python scripts/10_generate_figures.py     # halftone scenes + charts → output/figures/
 python scripts/20_render_newspaper.py      # 12-page PDF → output/pdf/the-triplicate.pdf
 open output/pdf/the-triplicate.pdf
@@ -35,7 +39,7 @@ open /tmp/triplicate-01.png
 ## Run via the repository orchestrator
 
 ```bash
-# from the repo root
+# From the monorepo root only; this script is not shipped at a standalone root
 ./run.sh --project templates/template_newspaper --pipeline
 ```
 
@@ -50,3 +54,7 @@ python -m pytest --cov=newspaper  # ~99% branch coverage (gate: 90%)
 mypy src/newspaper                # clean
 ruff check src scripts tests      # clean
 ```
+
+Ruff and mypy require the monorepo toolchain or separate explicit preparation;
+they are not declared by this project's `dev` extra. Standalone source tests
+retain the same 90% floor; do not infer visual acceptance from their exit status.

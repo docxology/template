@@ -7,8 +7,9 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.pipeline.artifacts import compute_sha256
+from .integrity_boundary import derivative_reference, is_upstream_output
 
-RESEARCH_OBJECT_SCHEMA = "template-autoresearch-research-object-manifest-v1"
+RESEARCH_OBJECT_SCHEMA = "template-autoresearch-research-object-manifest-v2"
 
 
 def research_object_manifest_payload(
@@ -17,32 +18,41 @@ def research_object_manifest_payload(
     *,
     generated_at: str,
 ) -> dict[str, object]:
-    """Return a local research-object manifest without claiming an external standard."""
+    """Catalog declared paths, with byte claims only for frozen upstream evidence."""
     review_decisions = _load_json_mapping(project_root / "output" / "data" / "review_decisions.json")
-    artifacts = [_file_record(project_root, path) for path in _existing_project_paths(project_root, paths)]
+    artifacts = [
+        _file_record(project_root, path)
+        if is_upstream_output(project_root, path)
+        else derivative_reference(_relative_path(project_root, path))
+        for path in _existing_project_paths(project_root, paths)
+    ]
     return {
         "schema": RESEARCH_OBJECT_SCHEMA,
         "generated_at": generated_at,
         "project_name": project_root.name,
         "artifact_count": len(artifacts),
-        "empty_artifact_count": sum(1 for artifact in artifacts if artifact.get("empty")),
+        "checksum_artifact_count": sum(row["record_kind"] == "upstream_checksum" for row in artifacts),
+        "derivative_reference_count": sum(row["record_kind"] == "derivative_reference" for row in artifacts),
+        "artifact_count_semantics": "unique declared paths in artifacts; dedicated role records are not counted",
+        "empty_checksum_artifact_count": sum(1 for artifact in artifacts if artifact.get("empty")),
         "artifacts": artifacts,
         "manuscript_outputs": [
-            _expected_file_record(project_root, "output/pdf/template_autoresearch_project_combined.pdf"),
-            _expected_file_record(project_root, "output/web/index.html"),
-            _expected_file_record(project_root, "output/manuscript/00_abstract.md"),
+            derivative_reference("output/pdf/template_autoresearch_project_combined.pdf"),
+            derivative_reference("output/web/index.html"),
+            derivative_reference("output/manuscript/00_abstract.md"),
         ],
-        "evidence_registry": _expected_file_record(project_root, "output/reports/evidence_registry.json"),
+        "evidence_registry": derivative_reference("output/reports/evidence_registry.json"),
         "source_ledger": _expected_file_record(project_root, "manuscript/source_ledger.yaml"),
-        "schema_manifest": _expected_file_record(project_root, "output/data/autoresearch_schema_manifest.json"),
+        "schema_manifest": derivative_reference("output/data/autoresearch_schema_manifest.json"),
         "approval_state": {
             "publication_approved": bool(review_decisions.get("publication_approved", False)),
             "decision_source": str(review_decisions.get("human_review_source", "human_review.yaml")),
             "decision_source_exists": bool(review_decisions.get("human_review_source_exists", False)),
         },
         "claim_boundary": (
-            "Local research-object manifest for paths and checksums only; it does not claim RO-Crate, "
-            "SLSA, external signing, or runtime monitoring compliance."
+            "Local research-object catalog: frozen upstream checksums and downstream derivative references; "
+            "artifact_count counts paths, not checksums. It does not claim RO-Crate, SLSA, external signing, "
+            "or runtime monitoring compliance. The primary artifact manifest alone attests all stable bytes."
         ),
     }
 
@@ -52,8 +62,6 @@ def _existing_project_paths(project_root: Path, paths: list[Path]) -> tuple[Path
     self_path = (project_root / "output" / "data" / "research_object_manifest.json").resolve()
     candidates: set[Path] = set()
     for path in paths:
-        if not path.exists() or not path.is_file():
-            continue
         resolved = path.resolve()
         if resolved == self_path:
             continue
@@ -70,6 +78,7 @@ def _file_record(project_root: Path, path: Path) -> dict[str, object]:
     size_bytes = path.stat().st_size if path.exists() else 0
     return {
         "path": rel_path,
+        "record_kind": "upstream_checksum",
         "exists": path.exists(),
         "size_bytes": size_bytes,
         # Surface present-but-empty artifacts so the inventory binds to substance,
