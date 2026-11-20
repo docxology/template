@@ -312,7 +312,17 @@ def prepare_source_crossref_filter(
     if owner is None or reader.root != root.resolve() or owner.deadline < deadline:
         raise ValueError("filter preparation requires a genuine current Source/Pandoc owner and original clock")
     source = owner.source
-    create_private_native_directory(root, directory)
+    if preobserved_provider_archive is None:
+        create_private_native_directory(root, directory)
+    else:
+        if (
+            directory.is_symlink()
+            or directory.absolute() != directory.resolve(strict=True)
+            or not directory.is_relative_to(root)
+            or not directory.is_dir()
+            or {child.name for child in directory.iterdir()} != {"provider-archive"}
+        ):
+            raise ValueError("preobserved Crossref slot directory must contain only its fresh provider-archive")
     selected = shutil.which("pandoc-crossref", path=env.get("PATH"))
     if selected is None:
         raise ValueError("filter lacks its independently nominated current crossref executable")

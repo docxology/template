@@ -91,7 +91,7 @@ class CurrencyReport:
 
     def format_table(self) -> str:
         """Render the commit table and ``RESULT:`` line, unchanged."""
-        current = len(self.rows) - len(self.stale) - len(self.unavailable)
+        current = sum(1 for row in self.rows if row.verdict == "CURRENT")
         lines = [
             f"receipt currency on {self.ref} since {self.since or '(beginning)'} — {len(self.rows)} commit(s)\n",
             f"{'commit':13s} {'stored':18s} {'computed':18s} verdict",
@@ -111,10 +111,10 @@ class CurrencyReport:
         return f"\n{len(self.unavailable)} commit(s) could not be measured; this is not a clean result."
 
     def exit_code(self, *, require_current: bool) -> int:
-        """Return 2 when unmeasurable, 1 for stale under ``require_current``, else 0."""
+        """Return 2 when unmeasurable, 1 for stale/skipped under ``require_current``, else 0."""
         if self.unavailable:
             return 2
-        if self.stale and require_current:
+        if require_current and any(row.verdict in ("STALE", "SKIP") for row in self.rows):
             return 1
         return 0
 

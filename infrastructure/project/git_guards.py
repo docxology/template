@@ -6,6 +6,7 @@ import fnmatch
 import hashlib
 import re
 import subprocess
+from collections.abc import Iterator
 from pathlib import Path
 
 from infrastructure.core.files.portability import PUBLICATION_TEXT_SUFFIXES
@@ -270,12 +271,14 @@ def _offending_tracked_paths(
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     offenders: list[str] = []
     for path in paths:
-        normalized = path.replace("\\", "/")
-        if normalized in allowed_toplevel:
+        # Git paths always use '/'. Do NOT replace backslashes: on POSIX a
+        # literal backslash is a valid filename character, and normalizing it
+        # would alias a non-allowlisted path onto an allowlisted one.
+        if path in allowed_toplevel:
             continue
-        if any(normalized.startswith(prefix) for prefix in allowed_dirs):
+        if any(path.startswith(prefix) for prefix in allowed_dirs):
             continue
-        offenders.append(normalized)
+        offenders.append(path)
     return sorted(offenders)
 
 
@@ -420,21 +423,67 @@ def tracked_public_output_secrets(repo_root: Path) -> list[str]:
     return secrets
 
 
+def _tracked_blob_bytes(repo_root: Path) -> Iterator[tuple[str, bytes]]:
+    """Yield ``(path, content)`` for stage-zero tracked text blobs.
+
+    Reads through ``git cat-file --batch`` so unstaged worktree edits cannot
+    hide what will actually be pushed. Gitlinks (submodule pointers) are
+    skipped. Binary blobs (NUL in the first 4096 bytes) are skipped.
+    """
+    index_proc = _run_git(repo_root, ["ls-files", "--stage", "-z"])
+    batch = subprocess.Popen(
+        ["git", "cat-file", "--batch"],
+        cwd=repo_root,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert batch.stdin is not None
+    assert batch.stdout is not None
+    assert batch.stderr is not None
+    try:
+        for row in index_proc.stdout.split(b"\0"):
+            if not row:
+                continue
+            try:
+                metadata, indexed_path = row.split(b"\t", 1)
+                mode, object_id, stage = metadata.split(b" ", 2)
+            except ValueError:
+                continue
+            if stage != b"0" or mode == b"160000":
+                continue
+            batch.stdin.write(object_id + b"\n")
+            batch.stdin.flush()
+            header = batch.stdout.readline()
+            if not header:
+                break
+            # Header: "<sha> <type> <size>\n" or "<sha> missing\n"
+            parts = header.split()
+            if len(parts) < 3 or parts[1] != b"blob":
+                continue
+            size = int(parts[2])
+            content = batch.stdout.read(size)
+            batch.stdout.read(1)  # trailing newline
+            if b"\x00" in content[:4096]:
+                continue
+            path = indexed_path.decode("utf-8", errors="surrogateescape")
+            yield path, content
+    finally:
+        batch.stdin.close()
+        batch.stdout.close()
+        batch.stderr.close()
+        batch.wait()
+
+
 def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
     """Scan tracked publication text once for local paths and secrets."""
-    proc = _run_git(repo_root, ["ls-files", "-z"])
-    paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     local_paths: list[str] = []
     secrets: list[str] = []
-    for path in paths:
+    for path, content in _tracked_blob_bytes(repo_root):
         normalized = path.replace("\\", "/")
         if not is_public_template_output_path(normalized):
             continue
         if Path(normalized).suffix.lower() not in PUBLICATION_TEXT_SUFFIXES:
-            continue
-        try:
-            content = (repo_root / normalized).read_bytes()
-        except OSError:
             continue
         if _MACHINE_LOCAL_HOME_RE.search(content):
             local_paths.append(normalized)
@@ -451,16 +500,9 @@ def tracked_secret_findings(repo_root: Path) -> list[str]:
     security tests and documentation are ignored; real credentials must not
     be hidden behind a broad test-directory exclusion.
     """
-    proc = _run_git(repo_root, ["ls-files", "-z"])
     findings: list[str] = []
-    for raw_path in proc.stdout.decode("utf-8").split("\0"):
-        if not raw_path:
-            continue
+    for raw_path, content in _tracked_blob_bytes(repo_root):
         path = raw_path.replace("\\", "/")
-        try:
-            content = (repo_root / path).read_bytes()
-        except OSError:
-            continue
         if b"\x00" in content[:4096]:
             continue
         for kind, pattern in _TRACKED_SECRET_RES:
