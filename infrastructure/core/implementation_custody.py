@@ -19,7 +19,7 @@ import sys
 import sysconfig
 import time
 import tomllib
-from email.parser import BytesParser
+from email.parser import BytesParser, HeaderParser
 from importlib.metadata import Distribution, distributions
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -199,26 +199,17 @@ def source_file_bytes(path: Path) -> bytes:
 def _distribution_name_version(item: Distribution) -> list[str]:
     """Read Name and Version headers without email-parsing multi-KB descriptions."""
     raw = item.read_text("METADATA") or item.read_text("PKG-INFO")
-    if raw is not None:
-        name: str | None = None
-        version: str | None = None
-        folded = False
-        for line in raw.splitlines():
-            if not line:
-                break
-            if line[0] in (" ", "\t"):
-                if name is not None or version is not None:
-                    folded = True
-                    break
-                continue
-            if name is None and line.startswith("Name:"):
-                name = line[5:].strip()
-            elif version is None and line.startswith("Version:"):
-                version = line[8:].strip()
-            if name is not None and version is not None:
-                return [name, version]
-        if not folded and version is not None:
-            return [name or "", version]
+    if raw:
+        header_end = re.search(r"\r?\n\r?\n|\r\r", raw)
+        headers = HeaderParser().parsestr(raw[: header_end.start()] if header_end else raw)
+        name = headers.get("Name", "")
+        version = headers.get("Version")
+        if (
+            isinstance(name, str)
+            and isinstance(version, str)
+            and not any(separator in value for value in (name, version) for separator in ("\n", "\r"))
+        ):
+            return [name, version]
     metadata = item.metadata
     return [str(metadata.get("Name", "")), metadata["Version"]]
 
