@@ -14,7 +14,7 @@ from typing import Any
 from infrastructure.core.implementation_custody import capture_implementation_custody, verify_implementation_custody
 from infrastructure.core.pipeline.artifacts._inventory import collect_stable_output_inventory
 from infrastructure.core.pipeline.fingerprint_files import _relative_name
-from infrastructure.core.pipeline.fingerprints import tree_records
+from infrastructure.core.pipeline.fingerprints import canonical_digest
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.public_acceptance_scope import RuntimeScope
 from infrastructure.project.public_reference_git import (
@@ -29,7 +29,7 @@ from infrastructure.project.public_source_body_admission import (
     admit_source_bodies,
 )
 from infrastructure.project.public_template_contract import validate_public_template_contract
-from infrastructure.reporting.readiness_receipts import _READINESS_SOURCE_METADATA_NAMES, _public_roots
+from infrastructure.reporting.readiness_receipts import _deliverable_fingerprint, _public_roots, _public_source_trees
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
 MAX_REFERENCE_BYTES = 512 * 1024 * 1024
@@ -81,23 +81,25 @@ def _path_admission(reader: SnapshotReader) -> Callable[[Path], None]:
 
 
 def _canonical_inventory(root: Path) -> tuple[tuple[str, str, str], ...]:
-    """Reuse the exact readiness source exclusions and stable output policy."""
-    roots, excluded = _public_roots(root)
+    """Return the canonical inventory without hashing stable deliverable bodies."""
+    return _observe_reference(root, fingerprint=False)[0]
+
+
+def _observe_reference(root: Path, *, fingerprint: bool) -> tuple[tuple[tuple[str, str, str], ...], str | None]:
+    """Derive the roster and optional fingerprint from the same fresh Source census."""
     reader = SnapshotReader(root)
-    path_admission = _path_admission(reader)
     observed = []
-    for base in roots:
-        for name, kind, digest in tree_records(
-            base,
-            source=True,
-            excluded_roots=excluded,
-            excluded_names=_READINESS_SOURCE_METADATA_NAMES,
-            path_admission=path_admission,
-        ):
+    trees = []
+    for relative_root, tree in _public_source_trees(root, path_admission=_path_admission(reader)):
+        if fingerprint:
+            trees.append((relative_root, tree))
+        base = root / relative_root
+        for name, kind, digest in tree:
             path = base if name == "." else base / name
             observed.append((_relative_name(path, root), kind, digest))
             if len(observed) > MAX_FILES:
                 raise ValueError("canonical public source DATA exceeds its entry bound")
+    deliverables = {}
     for project in PUBLIC_PROJECT_NAMES:
         output = root / "projects" / project / "output"
         if output.exists():
@@ -110,10 +112,17 @@ def _canonical_inventory(root: Path) -> tuple[tuple[str, str, str], ...]:
                 observed.append((relative, "deliverable", ""))
                 if len(observed) > MAX_FILES:
                     raise ValueError("canonical public reference exceeds its entry bound")
+            if fingerprint:
+                deliverables[project] = _deliverable_fingerprint(root, output, stable.files)
+        elif fingerprint:
+            deliverables[project] = canonical_digest([])
     result = tuple(sorted(observed))
     if len({row[0] for row in result}) != len(result):
         raise ValueError("canonical source DATA repeats an admitted path")
-    return result
+    source_identity = (
+        canonical_digest({"sources": canonical_digest(trees), "deliverables": deliverables}) if fingerprint else None
+    )
+    return result, source_identity
 
 
 @dataclass(frozen=True)
@@ -157,12 +166,10 @@ class PublicReference:
         for relative, expected in self.directories:
             if _identity(_directory(self.reader, relative)) != expected:
                 raise ValueError("public source DATA directory changed after admission")
-        if _canonical_inventory(self.root) != self.records:
+        records, source_identity = _observe_reference(self.root, fingerprint=True)
+        if records != self.records:
             raise ValueError("complete public source DATA inventory changed after admission")
-        if (
-            RuntimeScope(self.root, "root").source_identity(path_admission=_path_admission(self.reader))
-            != self.source_identity
-        ):
+        if source_identity != self.source_identity:
             raise ValueError("complete public source DATA fingerprint changed after admission")
         if inventory(self.root, self.commit, deadline) != self.git:
             raise ValueError("native committed public source DATA custody changed")

@@ -120,6 +120,22 @@ and hosted cost must be measured after genuine execution.
 
 See [AGENTS.md](AGENTS.md) for ownership and cleanup requirements.
 
+## External converter callers
+
+Pin both the action and the `docxology/template` checkout to full commit SHAs.
+Check out Template into a separate directory with credentials persistence
+disabled, then run `uv sync --locked --project .ci-template-sdk` with the
+selected Python. Set `mode: converter`, `source-root: .ci-template-sdk`,
+`source-sha` to the exact checkout SHA, and `python-executable` to
+`${{ github.workspace }}/.ci-template-sdk/.venv/bin/python`. The pinned checkout
+must contain the provider entrypoint and manifest.
+
+The action verifies Template's checkout root, origin, HEAD and lock inputs.
+It loads provider code and pins from a private export of that commit and keys
+the external archive cache on the same commit. The caller's locked Python
+environment runs the provider checks on Linux and macOS. Call this action
+before making any local changes to Template's lock or project metadata.
+
 ## Frozen Linux TeX and tagged-PDF capability
 
 Native Linux preparation installs one upstream TeX Live 2025 final tree from

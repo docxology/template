@@ -135,6 +135,26 @@ def test_facts_and_digest_use_the_same_bytes_after_file_replacement(tmp_path: Pa
     assert reader.unchanged() is False
 
 
+def test_snapshot_closure_rereads_bytes_when_file_identity_matches(tmp_path: Path) -> None:
+    relative = "docs/evidence.json"
+    evidence = tmp_path / relative
+    evidence.parent.mkdir()
+    evidence.write_bytes(b'{"value": 1}\n')
+    reader = SnapshotReader(tmp_path)
+    previous = reader.read(relative)
+    assert reader.unchanged()
+    before = evidence.stat()
+
+    evidence.write_bytes(b'{"value": 2}\n')
+    os.utime(evidence, ns=(before.st_atime_ns, before.st_mtime_ns))
+    current = SnapshotReader(tmp_path).read(relative)
+    assert current.identity[:3] == previous.identity[:3]
+    assert current.content != previous.content
+    # Filesystems with coarse ctime can report this same identity naturally.
+    reader.snapshots[previous.path] = replace(previous, identity=current.identity)
+    assert reader.unchanged() is False
+
+
 @pytest.mark.parametrize(
     "reference",
     [
