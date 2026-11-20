@@ -9,6 +9,12 @@ inputs:
     description: Already locked Python for Source provider preparation, the Linux mirror guard and native LaTeX validator; does not sync or acquire Python.
     required: false
     default: .venv/bin/python
+  source-root:
+    description: Template Git checkout for an external converter caller, relative to the caller workspace or absolute.
+    default: ""
+  source-sha:
+    description: Full commit SHA pinned by the external caller when checking out Template.
+    default: ""
   nix-store-snapshot:
     description: Optional flat preparation DATA from this exact workflow run; never a substitute for normal provider verification.
     required: false
@@ -26,14 +32,59 @@ runs:
       env:
         PREPARATION_MODE: ${{ inputs.mode }}
         PREPARED_PYTHON: ${{ inputs.python-executable }}
+        SOURCE_ROOT: ${{ inputs.source-root }}
+        SOURCE_SHA: ${{ inputs.source-sha }}
         NIX_STORE_SNAPSHOT: ${{ inputs.nix-store-snapshot }}
         NIX_STORE_MANIFEST_SHA256: ${{ inputs.nix-store-manifest-sha256 }}
       run: |
         set -euo pipefail
         case "$PREPARATION_MODE" in
-          native|converter) echo "mode=$PREPARATION_MODE" >> "$GITHUB_OUTPUT" ;;
+          native|converter) ;;
           *) echo "document preparation mode must be native or converter" >&2; exit 1 ;;
         esac
+        provider_root="$GITHUB_WORKSPACE"
+        if [ -n "$SOURCE_ROOT" ] || [ -n "$SOURCE_SHA" ]; then
+          if [ "$PREPARATION_MODE" != converter ] || [ -z "$SOURCE_ROOT" ] || [[ ! "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo 'An explicit Template checkout requires converter mode, source-root and a full source-sha' >&2
+            exit 1
+          fi
+          if [ -n "$NIX_STORE_SNAPSHOT" ] || [ -n "$NIX_STORE_MANIFEST_SHA256" ]; then
+            echo 'External converter preparation cannot restore native store preparation DATA' >&2
+            exit 1
+          fi
+          checkout=$(cd -- "$SOURCE_ROOT" && pwd -P)
+          if [ "$(git -C "$checkout" rev-parse --show-toplevel)" != "$checkout" ] ||
+             [ "$(git -C "$checkout" rev-parse --verify HEAD)" != "$SOURCE_SHA" ]; then
+            echo 'Template checkout root or HEAD does not match the supplied source pin' >&2
+            exit 1
+          fi
+          case "$(git -C "$checkout" remote get-url origin)" in
+            https://github.com/docxology/template|https://github.com/docxology/template.git) ;;
+            *) echo 'External converter preparation requires the docxology/template checkout' >&2; exit 1 ;;
+          esac
+          if [[ "$PREPARED_PYTHON" != /* ]] || [ ! -f "$PREPARED_PYTHON" ] || [ ! -x "$PREPARED_PYTHON" ]; then
+            echo 'External converter preparation requires an absolute python-executable from the locked environment' >&2
+            exit 1
+          fi
+          if ! "$PREPARED_PYTHON" -I -B -c 'import sys; raise SystemExit(sys.prefix == sys.base_prefix)'; then
+            echo 'External converter preparation requires a prepared Python virtual environment' >&2
+            exit 1
+          fi
+          # Import the pinned files only. The caller can keep its worktree and environment intact.
+          provider_root=$(mktemp -d "$RUNNER_TEMP/template-document-source.XXXXXX")
+          git -C "$checkout" archive "$SOURCE_SHA" infrastructure pyproject.toml uv.lock | tar -x -C "$provider_root"
+          if [ ! -f "$provider_root/infrastructure/reporting/native_document_preparation.py" ] ||
+             [ ! -f "$provider_root/infrastructure/config/native-document-providers.json" ]; then
+            echo 'Pinned Template source is missing its document preparation entrypoint or provider manifest' >&2
+            exit 1
+          fi
+          cmp "$checkout/pyproject.toml" "$provider_root/pyproject.toml"
+          cmp "$checkout/uv.lock" "$provider_root/uv.lock"
+          echo "cache-source=external-$SOURCE_SHA" >> "$GITHUB_OUTPUT"
+        elif ! [ "$GITHUB_ACTION_PATH" -ef "$GITHUB_WORKSPACE/.github/actions/setup-acceptance-documents" ]; then
+          echo 'External converter preparation requires explicit Template source-root and source-sha inputs' >&2
+          exit 1
+        fi
         if [ "$PREPARATION_MODE" = native ] || [ "${RUNNER_OS:-}" = Linux ]; then
           if [ ! -f "$PREPARED_PYTHON" ] || [ ! -x "$PREPARED_PYTHON" ]; then
             echo "native/Linux document preparation requires an already locked Python executable" >&2
@@ -45,11 +96,13 @@ runs:
           [ -d "$NIX_STORE_SNAPSHOT" ] && [ ! -L "$NIX_STORE_SNAPSHOT" ]
           [[ "$NIX_STORE_MANIFEST_SHA256" =~ ^[0-9a-f]{64}$ ]]
         fi
+        echo "mode=$PREPARATION_MODE" >> "$GITHUB_OUTPUT"
+        echo "provider-root=$provider_root" >> "$GITHUB_OUTPUT"
     - name: Restore exact document provider archives
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.temp }}/template-acceptance-document-archives
-        key: acceptance-document-archives-v3-${{ runner.os }}-${{ runner.arch }}-${{ steps.preparation-mode.outputs.mode }}-${{ hashFiles('infrastructure/config/native-document-providers.json', 'infrastructure/reporting/native_document_*.py', '.github/actions/setup-acceptance-documents/action.yml', '.github/actions/setup-acceptance-documents/ubuntu_apt_mirrors.py') }}
+        key: acceptance-document-archives-v3-${{ runner.os }}-${{ runner.arch }}-${{ steps.preparation-mode.outputs.mode }}-${{ steps.preparation-mode.outputs.cache-source || hashFiles('infrastructure/config/native-document-providers.json', 'infrastructure/reporting/native_document_*.py', '.github/actions/setup-acceptance-documents/action.yml', '.github/actions/setup-acceptance-documents/ubuntu_apt_mirrors.py') }}
     - name: Prepare reviewed Linux acquisition and Nix
       if: runner.os == 'Linux'
       shell: bash
@@ -184,6 +237,7 @@ runs:
       env:
         PREPARED_PYTHON: ${{ inputs.python-executable }}
         PREPARATION_MODE: ${{ steps.preparation-mode.outputs.mode }}
+        PROVIDER_ROOT: ${{ steps.preparation-mode.outputs.provider-root }}
       run: |
         set -euo pipefail
         preparation_python="$PREPARED_PYTHON"
@@ -198,13 +252,13 @@ runs:
         destination="$preparation/bin"
         echo "diagnostics-directory=$destination" >> "$GITHUB_OUTPUT"
         echo "diagnostics-id=$(basename "$preparation")" >> "$GITHUB_OUTPUT"
-        arguments=(--source-root "$GITHUB_WORKSPACE" --archives "$archives" --destination "$destination")
+        arguments=(--source-root "$PROVIDER_ROOT" --archives "$archives" --destination "$destination")
         if [ "$RUNNER_OS" = Linux ]; then
           arguments+=(--nix-executable "$(command -v nix)" --nix-sudo)
         fi
         "$preparation_python" -I -B -c \
           'import runpy, sys; sys.path.insert(0, sys.argv.pop(1)); runpy.run_module("infrastructure.reporting.native_document_preparation", run_name="__main__")' \
-          "$GITHUB_WORKSPACE" "${arguments[@]}"
+          "$PROVIDER_ROOT" "${arguments[@]}"
         echo "$destination" >> "$GITHUB_PATH"
         echo "TEMPLATE_DOCUMENT_PROVIDER_PROVENANCE=$destination/document-provider-provenance.json" >> "$GITHUB_ENV"
     - name: Retain original failed provider command diagnostics

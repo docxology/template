@@ -82,6 +82,15 @@ provider. After platform package preparation, require successful `kpsewhich
 soul.sty` resolution and an actual provider file; retain its path and SHA-256.
 A package inventory or cached archive cannot replace that runtime lookup.
 
+External callers select only converter mode and must supply `source-root`,
+the pinned `source-sha` and an absolute `python-executable` from their
+already synced locked virtual environment. Resolve the checkout as the
+`docxology/template` Git root with that exact HEAD. The provider entrypoint,
+manifest and build inputs come from a private export of the pinned commit.
+Verify the caller's on-disk lock and project metadata against that export.
+Key external caches on the Template source SHA and keep the local cache and
+native same-run store rules in effect for in-repository callers.
+
 The Linux mirror guard uses the action-owned `ubuntu_apt_mirrors.py` policy.
 Admit only its exact original three-row ASCII serialization or the corresponding
 extended form: Azure or a reviewed standard commercial EC2 regional Ubuntu host,
