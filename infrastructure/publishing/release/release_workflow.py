@@ -513,7 +513,21 @@ def run_release_workflow(
         )
     final_rendered_pdf_sha256 = _hold_reserved_final_pdf(request, bundle)
 
+    def _verify_bundle_hash(stage: str) -> None:
+        """Re-verify bundle bytes at each provider boundary.
+
+        The recorded hash must match the file on disk at every upload and
+        after every provider, so bytes and their published receipt cannot
+        diverge mid-workflow.
+        """
+        if calculate_file_hash(bundle.pdf_path) != bundle.pdf_sha256:
+            raise PublishingError(
+                f"Release bundle PDF changed before {stage}; "
+                "refusing to proceed with bytes that differ from the recorded hash"
+            )
+
     if not request.skip_zenodo:
+        _verify_bundle_hash("zenodo upload")
         try:
             publish_result = zenodo_publisher(
                 reserve_doi_first=request.reserve_doi_first,
@@ -552,8 +566,10 @@ def run_release_workflow(
             errors.append(f"zenodo: {exc}")
             if not request.dry_run:
                 raise
+        _verify_bundle_hash("after zenodo upload")
 
     if not request.skip_github:
+        _verify_bundle_hash("github upload")
         try:
             _hold_reserved_final_pdf(request, bundle)
             github_url = github_publisher(request, bundle, doi=doi)
@@ -561,6 +577,7 @@ def run_release_workflow(
             errors.append(f"github: {exc}")
             if not request.dry_run:
                 raise
+        _verify_bundle_hash("after github upload")
 
     if doi and doi != existing_doi and not request.reserve_doi_first:
         try:
