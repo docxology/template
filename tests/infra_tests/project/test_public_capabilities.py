@@ -537,6 +537,10 @@ def test_document_preparation_requires_locked_python_for_native_or_linux(
             NIX_STORE_SNAPSHOT="",
             NIX_STORE_MANIFEST_SHA256="",
             RUNNER_OS=system,
+            GITHUB_ACTION_PATH=str(repo / ".github/actions/setup-acceptance-documents"),
+            GITHUB_WORKSPACE=str(repo),
+            SOURCE_ROOT="",
+            SOURCE_SHA="",
             GITHUB_OUTPUT=str(output),
         ),
         capture_output=True,
@@ -545,9 +549,93 @@ def test_document_preparation_requires_locked_python_for_native_or_linux(
         check=False,
     )
     assert result.returncode != 0
+    assert "requires an already locked Python executable" in result.stderr
     assert {path.name for path in tmp_path.iterdir()} == (
-        {"output", "prepared-python"} if nomination == "not-executable" else {"output"}
+        {"prepared-python"} if nomination == "not-executable" else set()
     )
+
+
+@pytest.mark.parametrize(
+    "fault, diagnostic",
+    [
+        ("none", ""),
+        ("implicit-source", "requires explicit Template source-root and source-sha"),
+        ("wrong-sha", "does not match the supplied source pin"),
+        ("default-python", "requires an absolute python-executable"),
+        ("missing-entrypoint", "missing its document preparation entrypoint or provider manifest"),
+        ("changed-lock", "uv.lock"),
+    ],
+)
+def test_document_preparation_binds_external_converter_source(tmp_path: Path, fault: str, diagnostic: str) -> None:
+    repo = Path(__file__).resolve().parents[3]
+    action_dir = repo / ".github/actions/setup-acceptance-documents"
+    action = yaml.safe_load((action_dir / "action.yml").read_text(encoding="utf-8"))
+    workspace = tmp_path / "consumer"
+    checkout = workspace / "Template SDK"
+    entrypoint = Path("infrastructure/reporting/native_document_preparation.py")
+    manifest = Path("infrastructure/config/native-document-providers.json")
+    tracked = {manifest: "{}", Path("pyproject.toml"): "", Path("uv.lock"): "pinned lock data"}
+    if fault != "missing-entrypoint":
+        tracked[entrypoint] = "# pinned entrypoint"
+    for relative, content in tracked.items():
+        path = checkout / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+
+    def git(*arguments: str) -> str:
+        return subprocess.check_output(["git", "-C", str(checkout), *arguments], text=True, timeout=5).strip()
+
+    git("init", "--quiet")
+    git("remote", "add", "origin", "https://github.com/docxology/template")
+    git("add", ".")
+    git("-c", "user.name=Template test", "-c", "user.email=test@example.com", "commit", "--quiet", "-m", "pin")
+    source_sha = git("rev-parse", "HEAD")
+
+    caller_entrypoint = workspace / entrypoint
+    caller_entrypoint.parent.mkdir(parents=True)
+    caller_entrypoint.write_text("# caller code", encoding="utf-8")
+    (checkout / entrypoint).parent.mkdir(parents=True, exist_ok=True)
+    (checkout / entrypoint).write_text("# edited checkout code", encoding="utf-8")
+    if fault == "changed-lock":
+        (checkout / "uv.lock").write_text("different lock data", encoding="utf-8")
+
+    venv = checkout / ".venv"
+    subprocess.run([sys.executable, "-m", "venv", "--without-pip", str(venv)], timeout=15, check=True)
+    output = tmp_path / "output"
+    environment = dict(
+        os.environ,
+        PREPARATION_MODE="converter",
+        PREPARED_PYTHON=".venv/bin/python" if fault == "default-python" else str(venv / "bin/python"),
+        SOURCE_ROOT="" if fault == "implicit-source" else checkout.name,
+        SOURCE_SHA={"implicit-source": "", "wrong-sha": "0" * 40}.get(fault, source_sha),
+        NIX_STORE_SNAPSHOT="",
+        NIX_STORE_MANIFEST_SHA256="",
+        RUNNER_OS="Linux",
+        RUNNER_TEMP=str(tmp_path),
+        GITHUB_WORKSPACE=str(workspace),
+        GITHUB_ACTION_PATH=str(action_dir),
+        GITHUB_OUTPUT=str(output),
+    )
+    result = subprocess.run(
+        ["bash", "-c", action["runs"]["steps"][0]["run"]],
+        cwd=workspace,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    if fault != "none":
+        assert result.returncode != 0
+        assert diagnostic in result.stdout + result.stderr
+        assert not output.exists()
+        return
+
+    assert result.returncode == 0, result.stderr
+    values = dict(line.split("=", 1) for line in output.read_text(encoding="utf-8").splitlines())
+    assert values["mode"] == "converter"
+    assert values["cache-source"] == f"external-{source_sha}"
+    assert (Path(values["provider-root"]) / entrypoint).read_text(encoding="utf-8") == "# pinned entrypoint"
 
 
 @pytest.mark.parametrize("fault", ["length", "sha256"])
