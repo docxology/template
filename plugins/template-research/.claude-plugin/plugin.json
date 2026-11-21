@@ -1,0 +1,17 @@
+{
+  "name": "template-research",
+  "displayName": "Template Research",
+  "version": "0.1.0",
+  "description": "Review pasted manuscript excerpts, map research claims to supplied evidence, and draft reproducibility disclosures from run summaries.",
+  "author": {
+    "name": "docxology",
+    "url": "https://github.com/docxology"
+  },
+  "repository": "https://github.com/docxology/template",
+  "icon": "./assets/icon.png",
+  "documentationUrl": "https://github.com/docxology/template/blob/main/docs/documentation-index.md",
+  "supportUrl": "https://github.com/docxology/template/issues",
+  "privacyPolicyUrl": "https://github.com/docxology/template/blob/claude-plugins/plugins/template-research/README.md#privacy-policy",
+  "license": "Apache-2.0",
+  "keywords": ["research", "manuscripts", "evidence", "reproducibility"]
+}
