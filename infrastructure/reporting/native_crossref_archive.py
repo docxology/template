@@ -158,9 +158,12 @@ def observe_crossref_provider_archive(
     owner = current_native_producer_operation()
     if owner is None or owner.source is not source or owner.deadline != deadline:
         raise ValueError("Crossref provider archive requires its actual live Source/SDK owner and unchanged clock")
-    owner.verify(reader, run_id=owner.run_id, deadline=deadline)
     host = {"system": platform.system(), "machine": platform.machine()}
-    pin_source, pin = _source_pin(source, reader, host, deadline=deadline)
+    with owner._verification_guard(reader, run_id=owner.run_id, deadline=deadline):
+        held_pin = source.current_source_reader.read(PIN_SOURCE)
+        if source.reference.read(PIN_SOURCE) != held_pin.content:
+            raise ValueError("Crossref provider pin source differs from independently admitted original/current Source")
+        pin_source, pin = held_pin.content, select_document_tool(held_pin.content, host, "crossref")
     raw_archive, archive_observation = _physical(archive_path, max_bytes=MAX_ARCHIVE_BYTES, deadline=deadline)
     raw_executable, executable_observation = _physical(executable, max_bytes=MAX_EXECUTABLE_BYTES, deadline=deadline)
     member, body = provider_archive_member(raw_archive, pin, deadline=deadline)

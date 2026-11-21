@@ -76,43 +76,46 @@ def source_crossref_pandoc(
         else:
             if type(compiled) is not CompiledNativeLoader or compiled.owner is not owner:
                 raise ValueError("Crossref parser/parent reuse needs the same genuine Source compiler owner")
-            compiled.verify(deadline=runtime.deadline)
-            held = reader.read(compiled.binding["path"])
-            payload = held.json_object()
-            source = owner.source.current_source_reader.read(SOURCE)
-            if (
-                held.sha256 != compiled.binding["sha256"]
-                or payload["schema_version"] != "template-source-native-loader-compilation-v1"
-                or payload["run_id"] != runtime.run_id
-                or payload["source_binding"] != [owner.source.reference.commit, owner.source.reference.source_identity]
-                or payload["source"] != {"path": SOURCE, "sha256": source.sha256}
-                or source.content != owner.source.reference.read(SOURCE)
-                or payload["library"]
-                != {
-                    "path": compiled.library.relative_to(runtime.root).as_posix(),
-                    "sha256": compiled.observation["sha256"],
-                }
-                or payload["library_identity"] != compiled.identity
-                or payload["platform"] != platform.system()
-                or payload["architecture"] != platform.machine()
-            ):
-                raise ValueError("Crossref parser/parent compiler reuse changed actual Source/run/body/host custody")
-            for key, role in (
-                ("compiler_header_selection", "loader-header-selection"),
-                ("compiler", "loader-source-compilation"),
-            ):
-                tool = reader.read(payload[key]["path"]).json_object()
-                owner.validate_tool(payload[key], tool, reader, run_id=runtime.run_id)
-                if tool["tool"] != "cc" or tool["purpose"] != role or tool["original_exit_code"] != 0:
-                    raise ValueError("Crossref parser/parent reuse omitted the genuine successful compiler ToolAPI")
-        pair_deadline = min(runtime.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS)
+            with owner._verification_guard(reader, run_id=runtime.run_id, deadline=runtime.deadline):
+                compiled._verify_data(deadline=runtime.deadline)
+                held = reader.read(compiled.binding["path"])
+                payload = held.json_object()
+                source = owner.source.current_source_reader.read(SOURCE)
+                if (
+                    held.sha256 != compiled.binding["sha256"]
+                    or payload["schema_version"] != "template-source-native-loader-compilation-v1"
+                    or payload["run_id"] != runtime.run_id
+                    or payload["source_binding"]
+                    != [owner.source.reference.commit, owner.source.reference.source_identity]
+                    or payload["source"] != {"path": SOURCE, "sha256": source.sha256}
+                    or source.content != owner.source.reference.read(SOURCE)
+                    or payload["library"]
+                    != {
+                        "path": compiled.library.relative_to(runtime.root).as_posix(),
+                        "sha256": compiled.observation["sha256"],
+                    }
+                    or payload["library_identity"] != compiled.identity
+                    or payload["platform"] != platform.system()
+                    or payload["architecture"] != platform.machine()
+                ):
+                    raise ValueError(
+                        "Crossref parser/parent compiler reuse changed actual Source/run/body/host custody"
+                    )
+                for key, role in (
+                    ("compiler_header_selection", "loader-header-selection"),
+                    ("compiler", "loader-source-compilation"),
+                ):
+                    tool = reader.read(payload[key]["path"]).json_object()
+                    owner._validate_tool_data(payload[key], tool, reader, run_id=runtime.run_id)
+                    if tool["tool"] != "cc" or tool["purpose"] != role or tool["original_exit_code"] != 0:
+                        raise ValueError("Crossref parser/parent reuse omitted the genuine successful compiler ToolAPI")
         with prepare_source_crossref_pair(
             runtime.root,
             runtime.directory / ("source-filter-pair-" + purpose),
             scope,
             reader,
             env=runtime.env,
-            deadline=pair_deadline,
+            deadline=None,
             output_format=output_format,
             compiled=compiled,
             purpose=purpose,

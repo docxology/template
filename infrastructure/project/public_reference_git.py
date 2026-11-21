@@ -83,6 +83,7 @@ def native_git(root: Path, deadline: float, *arguments: str) -> bytes:
         ("ls-tree", "-rz", "--full-tree", "HEAD"),
         ("ls-files", "--stage", "-z"),
         ("ls-files", "-v", "-z"),
+        ("ls-files", "-v", "--stage", "-z"),
         _PARTIAL_CONFIGURATION,
     }:
         raise ValueError("public reference permits only its fixed read-only native Git inventory commands")
@@ -209,21 +210,25 @@ def _inventory(root: Path, expected_commit: str, deadline: float, *, allow_submo
     if not files or len({row.path for row in files}) != len(files):
         raise ValueError("public reference needs a nonempty unique committed inventory")
     index = []
-    for raw in native_git(root, deadline, "ls-files", "--stage", "-z").split(b"\0"):
+    seen_flags: set[str] = set()
+    for raw in native_git(root, deadline, "ls-files", "-v", "--stage", "-z").split(b"\0"):
         if not raw:
             continue
-        header, filename = raw.split(b"\t", 1)
+        flag = raw[:2]
+        header, filename = raw[2:].split(b"\t", 1)
         mode, oid, stage = header.decode().split(" ")
         if stage != "0":
             raise ValueError("public reference index has an unresolved merge")
-        index.append(GitFile(mode, oid, _path(filename)))
+        if flag != b"H ":
+            raise ValueError("public reference refuses skip-worktree, assume-unchanged or unsupported index flags")
+        entry_path = _path(filename)
+        seen_flags.add(entry_path)
+        index.append(GitFile(mode, oid, entry_path))
         if len(index) > MAX_FILES:
             raise ValueError("public reference index exceeds its file bound")
     if sorted(index, key=lambda row: row.path) != sorted(files, key=lambda row: row.path):
         raise ValueError("public reference index differs from its immutable committed tree")
-    flagged = native_git(root, deadline, "ls-files", "-v", "-z").split(b"\0")
-    flags = {_path(raw[2:]): raw[:2] for raw in flagged if raw}
-    if set(flags) != {row.path for row in files} or any(value != b"H " for value in flags.values()):
+    if seen_flags != {row.path for row in files}:
         raise ValueError("public reference refuses skip-worktree, assume-unchanged or unsupported index flags")
     links = tuple(row for row in files if row.mode == "160000")
     submodules: tuple[tuple[str, GitReference], ...] = ()

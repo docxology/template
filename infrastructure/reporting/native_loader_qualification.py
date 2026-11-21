@@ -120,7 +120,6 @@ def qualify_native_loader_tool(
     if owner is None or owner.run_id != runtime.run_id or owner.deadline != runtime.deadline:
         raise ValueError("loader pair requires the genuine Source owner and same existing original clock")
     reader = SnapshotReader(runtime.root, native_producer_operation=owner)
-    owner.verify(reader, run_id=runtime.run_id, deadline=runtime.deadline)
     from infrastructure.reporting.native_loader_observation import ENV_KEYS
 
     if ENV_KEYS & set(runtime.env) or any(key.startswith("DYLD_") for key in runtime.env):
@@ -130,7 +129,6 @@ def qualify_native_loader_tool(
 
         if type(crossref_pair) is not SourceCrossrefPair or crossref_pair.owner is not owner or name != "pandoc":
             raise ValueError("filtered loader pair requires its concrete genuine Source two-child preparation")
-        crossref_pair.verify()
         if (
             runtime.env != crossref_pair.environment
             or arguments.count(str(runtime.root / crossref_pair.launcher["path"])) != 1
@@ -158,7 +156,10 @@ def qualify_native_loader_tool(
             run_id=runtime.run_id,
         )
         compiled = compile_native_loader(compiler)
-    compiled.verify(deadline=runtime.deadline)
+    with owner._verification_guard(reader, run_id=runtime.run_id, deadline=runtime.deadline):
+        if crossref_pair is not None:
+            crossref_pair._verify_data()
+        compiled._verify_data(deadline=runtime.deadline)
     baseline = runtime.tool(
         name,
         list(arguments),
@@ -210,29 +211,32 @@ def qualify_native_loader_tool(
             owner._validate_tool_data(
                 selected, reader.read(selected["path"]).json_object(), reader, run_id=runtime.run_id
             )
-    if observer.binding is None or held_inputs != [_file(path, reader) for path in inputs] or not reader.unchanged():
-        raise ValueError("actual loader lifecycle/unchanged selected input/output custody is absent")
-    value = {
-        "schema_version": SCHEMA,
-        "run_id": runtime.run_id,
-        "source_binding": [owner.source.reference.commit, owner.source.reference.source_identity],
-        "tool": name,
-        "purpose": purpose,
-        "baseline_tool": baseline_binding,
-        "observed_tool": observed_binding,
-        "compiler": compiled.binding,
-        "loader_lifecycle": observer.binding,
-        "selected_inputs": held_inputs,
-        "stdin": None if stdin_path is None else _file(stdin_path, reader),
-        "baseline_outputs": left_outputs,
-        "observed_outputs": right_outputs,
-        "noninterference": "exact-actual-command-input-output-and-signed-os-result",
-        "scope_limit": "this-original-argument-input-output-and-host-cohort",
-        "environment_scope": "exact-source-selected-before-independent-guardian-and-loader-injections",
-        "crossref_filters": None if crossref_pair is None else list(crossref_pair.completed),
-    }
-    selected = write_json(runtime.root, runtime.directory / (purpose + ".loader-qualification.json"), value)
-    owner.verify(reader, run_id=runtime.run_id, deadline=runtime.deadline)
+        if (
+            observer.binding is None
+            or held_inputs != [_file(path, reader) for path in inputs]
+            or not reader.unchanged()
+        ):
+            raise ValueError("actual loader lifecycle/unchanged selected input/output custody is absent")
+        value = {
+            "schema_version": SCHEMA,
+            "run_id": runtime.run_id,
+            "source_binding": [owner.source.reference.commit, owner.source.reference.source_identity],
+            "tool": name,
+            "purpose": purpose,
+            "baseline_tool": baseline_binding,
+            "observed_tool": observed_binding,
+            "compiler": compiled.binding,
+            "loader_lifecycle": observer.binding,
+            "selected_inputs": held_inputs,
+            "stdin": None if stdin_path is None else _file(stdin_path, reader),
+            "baseline_outputs": left_outputs,
+            "observed_outputs": right_outputs,
+            "noninterference": "exact-actual-command-input-output-and-signed-os-result",
+            "scope_limit": "this-original-argument-input-output-and-host-cohort",
+            "environment_scope": "exact-source-selected-before-independent-guardian-and-loader-injections",
+            "crossref_filters": None if crossref_pair is None else list(crossref_pair.completed),
+        }
+        selected = write_json(runtime.root, runtime.directory / (purpose + ".loader-qualification.json"), value)
     return observed, selected, compiled
 
 

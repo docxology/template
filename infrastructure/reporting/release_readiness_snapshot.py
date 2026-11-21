@@ -14,7 +14,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Any
 
 from infrastructure.core.files.secure_write import read_bytes_confined
-from infrastructure.core.pipeline.fingerprint_files import anchored_parent, verify_directory
+from infrastructure.core.pipeline.fingerprint_files import anchored_parent, digest_file, verify_directory
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 if TYPE_CHECKING:
@@ -191,6 +191,9 @@ def _snapshot_directory_unchanged(descriptor: int, node: _SnapshotDirectory | _S
                 observed = os.stat(item.path.name, dir_fd=frame.descriptor, follow_symlinks=False)
                 identity = observed.st_ino, observed.st_size, observed.st_mtime_ns, observed.st_ctime_ns
                 if not stat.S_ISREG(observed.st_mode) or identity != item.identity:
+                    return False
+                digest = digest_file(item.path, frame.descriptor, item.path.name, observed, max_bytes=identity[1])
+                if digest != item.sha256:
                     return False
         return True
     finally:
@@ -369,7 +372,7 @@ class SnapshotReader:
         return self.snapshots[path]
 
     def unchanged(self) -> bool:
-        """Check every held identity through fresh, closing-checked directories.
+        """Check every held identity and digest through fresh, closing-checked directories.
 
         A directory handle is shared only within this invocation. No path or
         inode observation authorizes a later call; Source's enclosing directory,
@@ -385,7 +388,11 @@ class SnapshotReader:
                     return False
             if os.open not in os.supports_dir_fd or os.stat not in os.supports_dir_fd or not hasattr(os, "O_NOFOLLOW"):
                 valid = all(
-                    self.public_path(item.relative) == item.path and self._identity(item.path) == item.identity
+                    self.public_path(item.relative) == item.path
+                    and self._identity(item.path) == item.identity
+                    and hashlib.sha256(read_bytes_confined(root, item.path, max_bytes=len(item.content))).hexdigest()
+                    == item.sha256
+                    and self._identity(item.path) == item.identity
                     for _, item in held
                 )
             else:

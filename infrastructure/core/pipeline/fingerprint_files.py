@@ -12,7 +12,6 @@ from pathlib import Path
 _DIRECTORY_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
 _ANCESTOR_FLAGS = getattr(os, "O_PATH", os.O_RDONLY) | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
 _FILE_FLAGS = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | os.O_NONBLOCK
-_DIGESTS: dict[tuple[object, ...], str] = {}
 
 
 def _relative_name(path: Path, root: Path) -> str:
@@ -113,48 +112,37 @@ def declared_lean_runtime_roots(project_root: Path) -> frozenset[Path]:
 
 
 def digest_file(path: Path, parent: int, name: str, original: os.stat_result, *, max_bytes: int | None = None) -> str:
-    """Hash exact file bytes, reusing only an unchanged OS file observation."""
+    """Hash newly read bytes from the named inode under its held parent."""
     if not stat.S_ISREG(original.st_mode):
         raise ValueError(f"Content identity requires a regular file: {path}")
     if max_bytes is not None and original.st_size > max_bytes:
         raise ValueError("Fingerprint file exceeds its read budget")
     expected = observation(original)
-    key = (str(path.absolute()), *expected)
-    result = _DIGESTS.get(key)
-    if result is None:
-        descriptor = os.open(name, _FILE_FLAGS, dir_fd=parent)
-        try:
-            before = os.fstat(descriptor)
-            if observation(before) != expected or not stat.S_ISREG(before.st_mode):
-                raise ValueError(f"Content changed before fingerprint read: {path}")
-            digest = hashlib.sha256()
-            size = 0
-            while chunk := os.read(
-                descriptor, 1024 * 1024 if max_bytes is None else min(1024 * 1024, max_bytes + 1 - size)
-            ):
-                size += len(chunk)
-                if max_bytes is not None and size > max_bytes:
-                    raise ValueError("Fingerprint file exceeds its read budget")
-                digest.update(chunk)
-            if observation(os.fstat(descriptor)) != expected:
-                raise ValueError(f"Content changed during fingerprint read: {path}")
-            result = digest.hexdigest()
-        finally:
-            os.close(descriptor)
-    if observation(os.stat(name, dir_fd=parent, follow_symlinks=False)) != expected:
-        raise ValueError(f"Content changed during fingerprint observation: {path}")
-    if len(_DIGESTS) >= 16384:
-        _DIGESTS.clear()
-    _DIGESTS[key] = result
-    return result
+    # Same-inode rewrites can leave even ctime unchanged on coarse clocks.
+    descriptor = os.open(name, _FILE_FLAGS, dir_fd=parent)
+    try:
+        if observation(os.fstat(descriptor)) != expected:
+            raise ValueError(f"Content changed before fingerprint read: {path}")
+        digest = hashlib.sha256()
+        size = 0
+        while chunk := os.read(
+            descriptor, 1024 * 1024 if max_bytes is None else min(1024 * 1024, max_bytes + 1 - size)
+        ):
+            size += len(chunk)
+            if max_bytes is not None and size > max_bytes:
+                raise ValueError("Fingerprint file exceeds its read budget")
+            digest.update(chunk)
+        if size != original.st_size or observation(os.fstat(descriptor)) != expected:
+            raise ValueError(f"Content changed during fingerprint read: {path}")
+        if observation(os.stat(name, dir_fd=parent, follow_symlinks=False)) != expected:
+            raise ValueError(f"Content changed during fingerprint observation: {path}")
+        return digest.hexdigest()
+    finally:
+        os.close(descriptor)
 
 
 def digest_path(root: Path, path: Path, *, max_bytes: int) -> str:
-    """Digest one bounded file with fresh no-follow ancestry and file observations.
-
-    Repeated calls share only the existing exact-observation byte digest. Each
-    call still checks the byte ceiling, named inode, clocks, mode and ancestors.
-    """
+    """Digest fresh bounded file bytes with no-follow ancestry and closing checks."""
     if type(max_bytes) is not int or max_bytes < 0:
         raise ValueError("Fingerprint read budget must be a nonnegative integer")
     root = root.absolute()
