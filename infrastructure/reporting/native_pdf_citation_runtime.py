@@ -110,6 +110,24 @@ class CitationRuntime:
         if any(file_observation(path) != row for path, row in self.inputs.items()):
             raise ValueError("citation source/private input changed during original observation")
 
+    def _crossref_timing(self, purpose: str, phase: str) -> None:
+        """Retain a bounded timing marker for a fixed Crossref call site."""
+        if purpose not in {"crossref-filter-version", "crossref-filter-json", "baseline-crossref-filter-json"}:
+            return
+        observed = time.monotonic()
+        if observed >= self.deadline:
+            return
+        write_json(
+            self.root,
+            self.directory / f"{purpose}-timing-{phase}.json",
+            {
+                "schema_version": "template-crossref-timing-v1",
+                "phase": phase,
+                "observed_monotonic": observed,
+                "original_deadline_monotonic": self.deadline,
+            },
+        )
+
     def tool(
         self,
         name: str,
@@ -154,12 +172,15 @@ class CitationRuntime:
                 raise ValueError("citation stdin must be a genuine runtime-frozen original input")
             if stdin_path not in input_paths:
                 input_paths = (*input_paths, stdin_path)
+        self._crossref_timing(purpose, "tool-input-verification")
         self.unchanged()
         producer = current_native_producer_operation()
         if self.on_original_tool is not None and producer is None:
             raise ValueError("citation original callback requires the actual live Source owner before launch")
         if producer is not None:
+            self._crossref_timing(purpose, "tool-owner-verification")
             producer.verify(SnapshotReader(self.root), run_id=self.run_id, deadline=self.deadline)
+        self._crossref_timing(purpose, "tool-executable-and-input-admission")
         selected = shutil.which(name, path=self.env.get("PATH"))
         if not selected:
             raise NativeToolUnavailable(f"{name} is not installed in the selected citation environment")
@@ -181,6 +202,7 @@ class CitationRuntime:
                     },
                 }
             )
+        self._crossref_timing(purpose, "tool-native-launch")
         if time.monotonic() >= operation_deadline:
             raise TimeoutError("citation tool Source admission exhausted its existing native ceiling")
         result = run_native_tool_process(
