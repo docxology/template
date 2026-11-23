@@ -616,7 +616,7 @@ requires-dist = [
 provides-extras = ["scientific", "llm", "rendering", "rendering-pptx", "dashboard", "dotenv", "steganography", "docxplus", "monitoring", "publishing", "deep-research"]
 
 [package.metadata.requires-dev]
-active-inference = [{ name = "inferactively-pymdp", specifier = "==1.0.3" }]
+active-inference = [{ name = "inferactively-pymdp", specifier = "==1.0.5" }]
 dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]
 deep-research = [
     { name = "google-genai", specifier = ">=1.0" },
