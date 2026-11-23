@@ -210,7 +210,7 @@ installed-build = [
     "hatchling==1.32.4",
     # 84.1.0 is the first setuptools release with no open advisory: 83.0.0 carries
     # GHSA-xmj3-9gf7-h52w in every lock this group reaches. Do not lower this pin.
-    "setuptools==84.1.0",
+    "setuptools==84.2.1",
     "wheel==0.48.0",
 ]
 
