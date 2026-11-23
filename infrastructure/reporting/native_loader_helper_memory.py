@@ -78,41 +78,43 @@ def observe_helper_memory(
     if type(live) is not NativeLiveToolProcess or type(compiled) is not CompiledNativeLoader:
         raise ValueError("auditor memory needs the real fixed compiler and live original ToolAPI")
     live.verify_live()
-    compiled.verify(deadline=deadline)
-    content = (
-        SnapshotReader(compiled.owner.source.bindings.current_root)
-        .read(
+    reader = SnapshotReader(compiled.owner.source.bindings.current_root)
+    with compiled.owner._verification_guard(reader, run_id=compiled.owner.run_id, deadline=deadline):
+        compiled._verify_data(deadline=deadline)
+        content = reader.read(
             compiled.library.relative_to(compiled.owner.source.bindings.current_root).as_posix(),
             max_bytes=8 * 1024 * 1024,
-        )
-        .content
-    )
-    base, ranges = helper_ranges(rows, compiled.identity, content, page=page, deadline=deadline)
-    # The kernel path comes solely from the genuine live Popen capability. No
-    # pid from JSON/environment/caller DATA is accepted here.
-    try:
-        descriptor = os.open(Path("/proc") / str(live.pid) / "mem", os.O_RDONLY | os.O_CLOEXEC)
-    except OSError as error:
-        raise ValueError("ordinary Linux parent proc-mem access denied auditor mapped-byte qualification") from error
-    observed = []
-    try:
-        for selected in ranges:
-            digest, offset = hashlib.sha256(), 0
-            while offset < selected["bytes"]:
-                remaining(deadline)
-                live.verify_live()
-                count = min(CHUNK, selected["bytes"] - offset)
-                piece = os.pread(descriptor, count, selected["address"] + offset)
-                start = selected["file_offset"] + offset
-                if len(piece) != count or piece != content[start : start + count]:
-                    raise ValueError("auditor actual consuming-process code differs from fixed compiled Source bytes")
-                digest.update(piece)
-                offset += count
-            observed.append({**selected, "sha256": digest.hexdigest()})
-    finally:
-        os.close(descriptor)
-    live.verify_live()
-    compiled.verify(deadline=deadline)
+        ).content
+        base, ranges = helper_ranges(rows, compiled.identity, content, page=page, deadline=deadline)
+        # The kernel path comes solely from the genuine live Popen capability. No
+        # pid from JSON/environment/caller DATA is accepted here.
+        try:
+            descriptor = os.open(Path("/proc") / str(live.pid) / "mem", os.O_RDONLY | os.O_CLOEXEC)
+        except OSError as error:
+            raise ValueError(
+                "ordinary Linux parent proc-mem access denied auditor mapped-byte qualification"
+            ) from error
+        observed = []
+        try:
+            for selected in ranges:
+                digest, offset = hashlib.sha256(), 0
+                while offset < selected["bytes"]:
+                    remaining(deadline)
+                    live.verify_live()
+                    count = min(CHUNK, selected["bytes"] - offset)
+                    piece = os.pread(descriptor, count, selected["address"] + offset)
+                    start = selected["file_offset"] + offset
+                    if len(piece) != count or piece != content[start : start + count]:
+                        raise ValueError(
+                            "auditor actual consuming-process code differs from fixed compiled Source bytes"
+                        )
+                    digest.update(piece)
+                    offset += count
+                observed.append({**selected, "sha256": digest.hexdigest()})
+        finally:
+            os.close(descriptor)
+        live.verify_live()
+        compiled._verify_data(deadline=deadline)
     return {
         "schema_version": SCHEMA,
         "pid": live.pid,

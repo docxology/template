@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import os
+import platform
+import shutil
+import time
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterator
@@ -322,11 +325,16 @@ class SourceCrossrefPair:
         self.filters[slot].observe(live)
 
     def finish(self, slot: int, parent_tool: dict[str, str]) -> None:
-        self.verify()
-        if slot != len(self.completed) or slot not in (0, 1):
-            raise ValueError("paired filter cannot repeat or substitute a completed actual parent")
-        self.completed.append(self.filters[slot].finish(parent_tool))
-        self.verify()
+        remaining(self.deadline)
+        owner = self.owner
+        if owner is None:
+            raise ValueError("paired filter lost its genuine live Source owner")
+        with owner._verification_guard(self.reader, run_id=owner.run_id, deadline=self.deadline):
+            self._verify_data()
+            if slot != len(self.completed) or slot not in (0, 1):
+                raise ValueError("paired filter cannot repeat or substitute a completed actual parent")
+            self.completed.append(self.filters[slot]._finish_data(parent_tool))
+            self._verify_data()
 
 
 @contextmanager
@@ -337,22 +345,59 @@ def prepare_source_crossref_pair(
     reader: SnapshotReader,
     *,
     env: dict[str, str],
-    deadline: float,
+    deadline: float | None = None,
     output_format: str,
     compiled: CompiledNativeLoader,
     purpose: str,
 ) -> Iterator[SourceCrossrefPair]:
     """Prepare both genuine child slots before either actual parent Popen."""
+    from infrastructure.reporting.native_pdf_citation_runtime import (
+        NATIVE_OBSERVATION_CEILING_SECONDS,
+        file_observation,
+    )
+
     owner = current_native_producer_operation()
     if owner is None:
         raise ValueError("paired filter preparation requires the actual Source producer")
-    owner.verify(reader, run_id=owner.run_id, deadline=owner.deadline)
     create_private_native_directory(root, directory)
+    preobserved_archives: list[dict[str, str] | None] = [None, None]
+    if platform.system() == "Linux":
+        from infrastructure.reporting.native_crossref_archive import observe_crossref_provider_archive
+        from infrastructure.reporting.native_document_provider_contracts import PIN_SOURCE, select_document_tool
+
+        selected = shutil.which("pandoc-crossref", path=env.get("PATH"))
+        if selected is None:
+            raise ValueError("filter lacks its independently nominated current crossref executable")
+        crossref = file_observation(Path(selected).resolve(strict=True))
+        pin_source = owner.source.current_source_reader.read(PIN_SOURCE)
+        host = {"system": platform.system(), "machine": platform.machine()}
+        pin = select_document_tool(pin_source.content, host, "crossref")
+        archive_root = env.get("RUNNER_TEMP")
+        if not archive_root or not Path(archive_root).is_absolute():
+            raise ValueError(
+                "Source native Linux filter lacks the actual prepared provider archive directory nomination"
+            )
+        archive_path = Path(archive_root) / "template-acceptance-document-archives" / pin["asset"]
+        for index in range(2):
+            slot_dir = directory / ("slot-" + str(index))
+            create_private_native_directory(root, slot_dir)
+            preobserved_archives[index] = observe_crossref_provider_archive(
+                owner.source,
+                slot_dir / "provider-archive",
+                archive_path,
+                Path(crossref["path"]),
+                reader,
+                deadline=owner.deadline,
+            )
+    # Stamp the 600s pair execution ceiling after static archive admission so
+    # pre-launch provider custody does not consume the live Pandoc/Crossref clock.
+    pair_deadline = (
+        min(owner.deadline, time.monotonic() + NATIVE_OBSERVATION_CEILING_SECONDS) if deadline is None else deadline
+    )
     with ExitStack() as stack:
-        compiled.verify(deadline=deadline)
         leaf = compiled.directory / ("callbacks-" + purpose)
         create_private_native_directory(root, leaf)
-        observer = NativeLoaderObservation(compiled, leaf, purpose=purpose, deadline=deadline)
+        observer = NativeLoaderObservation(compiled, leaf, purpose=purpose, deadline=pair_deadline)
         stack.callback(observer.socket_directory.cleanup)
         stack.callback(observer.abort)
         filters = tuple(
@@ -363,8 +408,9 @@ def prepare_source_crossref_pair(
                     scope,
                     reader,
                     env=env,
-                    deadline=deadline,
+                    deadline=pair_deadline,
                     output_format=output_format,
+                    preobserved_provider_archive=preobserved_archives[index],
                 )
             )
             for index in range(2)
@@ -378,7 +424,7 @@ def prepare_source_crossref_pair(
             "directory": directory.relative_to(root).as_posix(),
             "source_binding": [owner.source.reference.commit, owner.source.reference.source_identity],
             "owner_pid": owner.owner_pid,
-            "deadline_monotonic": deadline,
+            "deadline_monotonic": pair_deadline,
             "slots": [{"specification": item.declaration, "launcher": item.launcher} for item in filters],
             "parent_loader": _parent_loader_selection(observer),
         }

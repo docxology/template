@@ -13,6 +13,7 @@ import pytest
 
 from infrastructure.core.pipeline.fingerprints import paths_digest, tree_records
 from infrastructure.core.pipeline.fingerprint_files import digest_path
+from infrastructure.project.public_reference import _canonical_inventory, _observe_reference
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.reporting.readiness_receipts import (
     _public_roots,
@@ -165,6 +166,36 @@ def _reference_fingerprint(root: Path) -> str:
     }
     # Serialize/hash independently instead of invoking the production digest helper.
     return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def test_reference_observation_preserves_fingerprint_and_rechecks_deliverable_bytes(tmp_path: Path) -> None:
+    root = tmp_path.resolve()
+    _public(root)
+    for boundary in _public_roots(root)[0]:
+        if not boundary.exists():
+            boundary.mkdir(parents=True)
+    subprocess.run(["git", "init", "--quiet", str(root)], check=True, capture_output=True)
+    deliverable = root / "projects" / _SCOPE / "output/pdf/paper.pdf"
+    deliverable.parent.mkdir(parents=True)
+    deliverable.write_bytes(b"original")
+    original = deliverable.stat()
+
+    records, identity = _observe_reference(root, fingerprint=True)
+    assert (deliverable.relative_to(root).as_posix(), "deliverable", "") in records
+    assert records == _canonical_inventory(root)
+    assert identity == _reference_fingerprint(root)
+
+    deliverable.write_bytes(b"replaced")
+    os.utime(deliverable, ns=(original.st_atime_ns, original.st_mtime_ns))
+    assert deliverable.stat().st_ino == original.st_ino
+    changed_records, changed_identity = _observe_reference(root, fingerprint=True)
+    assert changed_records == records
+    assert changed_identity != identity
+    assert changed_identity == _reference_fingerprint(root)
+
+    deliverable.write_bytes(b"original")
+    os.utime(deliverable, ns=(original.st_atime_ns, original.st_mtime_ns))
+    assert _observe_reference(root, fingerprint=True) == (records, identity)
 
 
 def test_exact_name_pruning_has_independent_record_and_hash_parity(tmp_path: Path) -> None:

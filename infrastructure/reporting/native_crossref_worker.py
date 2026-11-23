@@ -218,7 +218,6 @@ def main() -> int:
                 }
                 observation = write_json(root, directory / "filter-observation.json", result)
                 owner.verify(live_reader, run_id=args.run_id, deadline=args.deadline)
-                source.verify_correspondence(source.reference, root, live_reader, args.deadline)
                 if (
                     process_birth(os.getpid(), deadline=args.deadline) != child
                     or process_birth(os.getppid(), deadline=args.deadline) != parent

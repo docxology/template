@@ -2377,39 +2377,39 @@
     },
     {
       "active": true,
-      "checked_at": "2026-11-15T22:42:25Z",
-      "kind": "section",
-      "source": "manuscript/06_usage_notes.md",
+      "checked_at": "2026-11-20T01:11:42Z",
+      "kind": "figure",
+      "source": "manuscript/AGENTS.md",
       "source_field": "",
-      "source_path": "manuscript/06_usage_notes.md",
+      "source_path": "manuscript/AGENTS.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:usage"
+      "value": "fig:schema_overview"
     },
     {
       "active": true,
-      "checked_at": "2026-11-15T22:42:25Z",
-      "kind": "section",
+      "checked_at": "2026-11-20T01:11:42Z",
+      "kind": "figure",
+      "source": "manuscript/README.md",
+      "source_field": "",
+      "source_path": "manuscript/README.md",
+      "source_tier": "artifact",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "fig:schema_overview"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-11-20T01:11:42Z",
+      "kind": "figure",
       "source": "manuscript/03_schema.md",
       "source_field": "",
       "source_path": "manuscript/03_schema.md",
       "source_tier": "artifact",
       "stale": false,
       "tolerance": 0.0,
-      "value": "sec:schema"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-11-15T22:42:25Z",
-      "kind": "section",
-      "source": "manuscript/04_provenance.md",
-      "source_field": "",
-      "source_path": "manuscript/04_provenance.md",
-      "source_tier": "artifact",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "sec:provenance"
+      "value": "fig:schema_overview"
     }
   ],
   "schema": "template-evidence-registry-report-v1",

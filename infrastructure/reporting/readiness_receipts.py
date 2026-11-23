@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Literal
@@ -91,13 +91,18 @@ def deliverable_identity(repo_root: Path, project: str, *, path_admission: Calla
     if path_admission is not None:
         for path in inventory.files:
             path_admission(path)
+    return _deliverable_fingerprint(repo_root, root, inventory.files)
+
+
+def _deliverable_fingerprint(repo_root: Path, root: Path, files: tuple[Path, ...]) -> str:
+    """Hash the exact files from a fresh stable-output census."""
     return canonical_digest(
         [
             (
                 path.relative_to(root).as_posix(),
                 digest_path(repo_root, path, max_bytes=64 * 1024 * 1024),
             )
-            for path in inventory.files
+            for path in files
         ]
     )
 
@@ -166,19 +171,30 @@ def public_resource_source_paths(repo_root: Path, dependency: str) -> tuple[Path
     )
 
 
-def source_fingerprint(repo_root: Path, *, path_admission: Callable[[Path], None] | None = None) -> str:
-    """Bind public source and stable deliverables; never traverse private mirrors."""
-    repo_root = repo_root.resolve()
+def _public_source_trees(
+    repo_root: Path, *, path_admission: Callable[[Path], None] | None = None
+) -> Iterator[tuple[str, tuple[tuple[str, str, str], ...]]]:
+    """Observe each public root once in the established paths_digest ordering."""
     roots, excluded = _public_roots(repo_root)
-    return canonical_digest(
-        {
-            "sources": paths_digest(
-                roots,
+    for root in sorted(set(roots), key=lambda path: path.as_posix()):
+        yield (
+            str(root.relative_to(repo_root)),
+            tree_records(
+                root,
                 source=True,
                 excluded_roots=excluded,
                 excluded_names=_READINESS_SOURCE_METADATA_NAMES,
                 path_admission=path_admission,
             ),
+        )
+
+
+def source_fingerprint(repo_root: Path, *, path_admission: Callable[[Path], None] | None = None) -> str:
+    """Bind public source and stable deliverables; never traverse private mirrors."""
+    repo_root = repo_root.resolve()
+    return canonical_digest(
+        {
+            "sources": canonical_digest(tuple(_public_source_trees(repo_root, path_admission=path_admission))),
             "deliverables": {
                 name: deliverable_identity(repo_root, name, path_admission=path_admission)
                 for name in PUBLIC_PROJECT_NAMES

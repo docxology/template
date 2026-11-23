@@ -192,6 +192,97 @@ def test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_ti
         budget(time.monotonic() - 1)
 
 
+def test_runtime_identity_fast_header_matches_importlib_metadata() -> None:
+    """Fast METADATA header extraction must match importlib.metadata exactly."""
+    import sysconfig
+    from importlib.metadata import distributions
+
+    from infrastructure.core.implementation_custody import runtime_identity
+
+    paths = sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")})
+    expected = sorted(
+        [str(item.metadata.get("Name", "")), item.metadata["Version"]] for item in distributions(path=paths)
+    )
+    assert runtime_identity()["packages"] == expected
+
+
+@pytest.mark.parametrize(
+    "headers",
+    [
+        "name: Example\nVersion: 1.0",
+        "Version: 1.0\nNAME: Example  ",
+        "Name: Example\n  project\nVersion: 1.0",
+        "Name: Example\r\nVersion: 1.0",
+    ],
+)
+def test_distribution_identity_preserves_standard_header_parsing(tmp_path: Path, headers: str) -> None:
+    from importlib.metadata import PathDistribution
+
+    from infrastructure.core.implementation_custody import _distribution_name_version
+
+    metadata_dir = tmp_path / "example-1.0.dist-info"
+    metadata_dir.mkdir()
+    (metadata_dir / "METADATA").write_bytes(f"Metadata-Version: 2.4\n{headers}\n\nName: Body text\n".encode())
+    distribution = PathDistribution(metadata_dir)
+    expected = [str(distribution.metadata.get("Name", "")), distribution.metadata["Version"]]
+    assert _distribution_name_version(distribution) == expected
+
+
+def test_public_reference_inventory_combined_ls_files_rejects_flags_and_drift(tmp_path: Path) -> None:
+    """Combined ``git ls-files -v --stage -z`` retains all index-flag and drift refusals."""
+    from infrastructure.project.public_reference_git import inventory
+
+    root = (tmp_path / "repo").resolve()
+    root.mkdir()
+
+    def run_git(*args: str) -> None:
+        subprocess.run(
+            ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", *args],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+
+    run_git("init", "-q")
+    (root / "README.md").write_text("clean\n", encoding="utf-8")
+    run_git("add", "README.md")
+    run_git("commit", "-q", "-m", "initial")
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+    deadline = time.monotonic() + 30.0
+
+    observed = inventory(root, commit, deadline)
+    assert [entry.path for entry in observed.files] == ["README.md"]
+
+    for flag in ("--assume-unchanged", "--skip-worktree"):
+        run_git("update-index", flag, "README.md")
+        try:
+            with pytest.raises(ValueError, match="skip-worktree, assume-unchanged"):
+                inventory(root, commit, deadline)
+        finally:
+            run_git("update-index", flag.replace("--", "--no-"), "README.md")
+
+    (root / "README.md").write_text("mutated\n", encoding="utf-8")
+    run_git("add", "README.md")
+    with pytest.raises(ValueError, match="immutable committed tree"):
+        inventory(root, commit, deadline)
+
+
+def test_source_crossref_pandoc_defers_pair_deadline_until_after_archive_observation() -> None:
+    """source_crossref_pandoc delegates pair_deadline stamping to prepare_source_crossref_pair."""
+    import inspect
+
+    from infrastructure.reporting import native_crossref_pair, native_crossref_pandoc
+
+    pandoc_src = inspect.getsource(native_crossref_pandoc.source_crossref_pandoc)
+    assert "deadline=None" in pandoc_src
+    pair_sig = inspect.signature(native_crossref_pair.prepare_source_crossref_pair)
+    assert pair_sig.parameters["deadline"].default is None
+    pair_src = inspect.getsource(native_crossref_pair.prepare_source_crossref_pair)
+    archive_idx = pair_src.index("observe_crossref_provider_archive(")
+    deadline_idx = pair_src.index("pair_deadline =")
+    assert archive_idx < deadline_idx
+
+
 @pytest.mark.parametrize(
     "refusal", ["unclosed-file", "missing-close", "duplicate-close", "non-kernel", "aliased-kernel"]
 )

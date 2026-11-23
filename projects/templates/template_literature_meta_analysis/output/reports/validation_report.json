@@ -310,7 +310,7 @@
     "passed": 9,
     "total_checks": 9
   },
-  "timestamp": "2026-11-19T00:06:11Z",
+  "timestamp": "2026-11-20T23:45:17Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -458,7 +458,7 @@
     "fingerprints": {
       "config": {
         "file_count": 22,
-        "sha256": "3467e54eb22cc54f969c4f5a141779f30c1c57cf445dae8b25f66cdc22e0d148"
+        "sha256": "430ca5d08408d0684ff4b98b6fb02b06a3610f3f9ce3b52cacfef44ac4aaa4a2"
       },
       "output": {
         "file_count": 127,
@@ -470,7 +470,7 @@
       },
       "stage": {
         "file_count": 1774,
-        "sha256": "fc0530926e2cdf44103a4f32d7b911df7593b59bcd76f84331f6a89887e9ce4f"
+        "sha256": "e56a574f33eb919ef8282217ef6782567de9dcc18cc26a103d970b1ae23f029d"
       }
     },
     "project": "templates/template_literature_meta_analysis",
