@@ -12,6 +12,7 @@ from infrastructure.prose.analysis.metrics import (
     split_sentences,
     tokenize_words,
 )
+from infrastructure.rendering._pandoc_filters import CROSS_REFERENCE_KEY_PREFIXES
 
 # Common "to be" forms used to flag potential passive constructions.
 _BE_FORMS = {"is", "are", "was", "were", "be", "been", "being", "am"}
@@ -48,25 +49,12 @@ _HEDGE_WORDS = {
 _CITE_RE = re.compile(r"(?<!\w)@[A-Za-z][A-Za-z0-9_:.-]*")
 _BRACKET_CITE_RE = re.compile(r"\[@[^\]]+\]")
 
-# pandoc-crossref and COGANT formalism reference prefixes (NOT citations).
-# A bracketed reference like [@sec:methodology] resolves through pandoc-crossref,
-# and a reference like @def:program-graph resolves through COGANT's generated
-# formalism registry, not through the bibliography. Excluded from citation_keys
-# so the bibliography_consistency check does not misreport them as missing bib
-# entries.
-_CROSSREF_PREFIXES = (
-    "fig:",
-    "tbl:",
-    "eq:",
-    "sec:",
-    "lst:",
-    "def:",
-    "prop:",
-    "inv:",
-    "conj:",
-    "alg:",
-    "thm:",
-)
+# Cross-reference prefixes (NOT citations). [@sec:methodology] resolves through
+# pandoc-crossref and [@rem:central] through formalism.lua, not through the
+# bibliography, so they are excluded from citation_keys and the
+# bibliography_consistency check does not misreport them as missing bib entries.
+# Read from the shared registry so this list cannot drift from the validator's.
+_CROSSREF_PREFIXES = CROSS_REFERENCE_KEY_PREFIXES
 
 
 @dataclass
@@ -127,10 +115,10 @@ def detect_hedge_words(text: str) -> list[str]:
 def extract_citation_keys(text: str) -> list[str]:
     """Extract Pandoc-style ``@key`` citations from *text*.
 
-    Matches both ``[@key1; @key2]`` and bare ``@key``. pandoc-crossref
-    references (``fig:``, ``tbl:``, ``eq:``, ``sec:``, ``lst:`` prefixes)
-    are excluded — they resolve via the cross-reference filter, not the
-    bibliography.
+    Matches both ``[@key1; @key2]`` and bare ``@key``. Cross-references
+    (every prefix in ``infrastructure.rendering._pandoc_filters``, such as
+    ``fig:``, ``sec:`` or ``rem:``) are excluded — they resolve via
+    pandoc-crossref or ``formalism.lua``, not the bibliography.
     """
     keys: list[str] = []
     for match in _BRACKET_CITE_RE.finditer(text):

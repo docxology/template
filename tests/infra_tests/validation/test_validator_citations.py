@@ -22,6 +22,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+from infrastructure.core.exceptions import RenderingError
+from infrastructure.rendering._pandoc_filters import (
+    CROSS_REFERENCE_PREFIXES,
+    FORMALISM_KINDS,
+    FormalismKind,
+)
+from infrastructure.validation.content.prerender import prevalidate_for_render
 from infrastructure.validation.content.validator_citations import (
     CITE_KEY_PATTERN,
     validate_citations,
@@ -135,3 +144,76 @@ def test_a_genuinely_missing_key_is_still_reported(tmp_path: Path) -> None:
     # The period must not have been folded into the reported key either, or the
     # fix_suggestion would tell an author to add an unusable bib entry.
     assert all("." not in m.split("'")[1] for m in reported), reported
+
+
+# ── formalism cross-references are not bibliography keys ─────────────────────
+#
+# formalism.lua numbers every kind in the shared registry and consumes
+# ``[@<prefix>:label]`` before natbib or citeproc sees it. The validator used to
+# accept only ``def:``, ``prop:`` and ``thm:`` of those prefixes, so a manuscript
+# that cited ``[@rem:x]`` was blocked here with "Undefined citation key" and the
+# combined PDF never reached Pandoc (hit on 2026-11-24 rendering a remark-heavy
+# paper, worked around by relabelling remarks as propositions).
+
+
+def _kind_id(kind: FormalismKind) -> str:
+    return kind.css_class
+
+
+@pytest.mark.parametrize("kind", FORMALISM_KINDS, ids=_kind_id)
+def test_every_formalism_reference_passes_the_prerender_gate(tmp_path: Path, kind: FormalismKind) -> None:
+    """The regression, through the gate that raised: one block of every kind, cited."""
+    label = f"{kind.label_prefix}:central"
+    md_paths, _root, _bib = _write_case(
+        tmp_path,
+        "# Results\n\n"
+        f"::: {{.{kind.css_class} #{label}}}\nThe central statement.\n:::\n\n"
+        f"By [@{label}] and the frame of @parr2022active, the result follows.\n",
+    )
+    # bib_file=None mirrors the combined-PDF renderer, which lets the gate find
+    # references.bib beside the sections. The bib does not contain the label.
+    prevalidate_for_render(md_paths, bib_file=None)
+
+
+@pytest.mark.parametrize("prefix", CROSS_REFERENCE_PREFIXES)
+def test_validator_accepts_every_registered_cross_reference_prefix(tmp_path: Path, prefix: str) -> None:
+    """The validator reads the shared registry rather than a list of its own."""
+    md_paths, root, bib = _write_case(tmp_path, f"# Results\n\nSee @{prefix}:anything and [@{prefix}:other].\n")
+    problems = validate_citations(md_paths, root, bib)
+    assert problems == [], [p.message for p in problems]
+
+
+def test_a_plain_missing_key_still_fails_beside_formalism_references(tmp_path: Path) -> None:
+    """NEGATIVE CONTROL — accepting ``rem:`` must not accept every key in the file.
+
+    A validator that skipped the whole file once it saw a formalism reference,
+    or that accepted everything, would pass the two tests above. A genuine
+    undefined bibliography key in the same section must still block the render.
+    """
+    md_paths, root, bib = _write_case(
+        tmp_path,
+        "# Results\n\n"
+        "::: {.remark #rem:central}\nA remark.\n:::\n\n"
+        "By [@rem:central] and as argued by @nosuchkey2099, the result follows.\n",
+    )
+    problems = validate_citations(md_paths, root, bib)
+    assert [p.message for p in problems] == ["Undefined citation key '@nosuchkey2099' (not in references.bib)"]
+
+    with pytest.raises(RenderingError) as raised:
+        prevalidate_for_render(md_paths, bib_file=None)
+    assert "@nosuchkey2099" in str(raised.value)
+    assert "rem:central" not in str(raised.value)
+
+
+@pytest.mark.parametrize("prefix", CROSS_REFERENCE_PREFIXES)
+def test_the_prefix_colon_is_load_bearing(tmp_path: Path, prefix: str) -> None:
+    """NEGATIVE CONTROL — a key that merely starts with a prefix's letters is a citation.
+
+    ``@remington1990``, ``@axelrod1984`` and ``@exner2000`` are ordinary
+    author-year keys. Matching on the bare prefix instead of ``prefix:`` would
+    wave every one of them through as a cross-reference.
+    """
+    key = f"{prefix}author1999"
+    md_paths, root, bib = _write_case(tmp_path, f"# Related work\n\nAs shown by @{key}, it holds.\n")
+    problems = validate_citations(md_paths, root, bib)
+    assert [p.message for p in problems] == [f"Undefined citation key '@{key}' (not in references.bib)"]
