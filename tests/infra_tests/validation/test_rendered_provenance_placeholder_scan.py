@@ -3,6 +3,7 @@
 from __future__ import annotations
 import subprocess
 from pathlib import Path
+from infrastructure.rendering._pandoc_filters import CROSS_REFERENCE_PREFIXES
 from infrastructure.validation.publication.audit import (
     AuditContext,
     build_publication_audit,
@@ -126,3 +127,30 @@ def test_source_publication_mode_permits_declared_hydratable_tokens(tmp_path: Pa
     )
 
     assert all(finding.diagnostic_code != "PUBLICATION.PLACEHOLDER_TOKEN" for finding in report.findings)
+
+
+def test_placeholder_scan_exempts_every_registered_cross_reference(tmp_path: Path) -> None:
+    """``{{#<prefix>:label}}`` is a cross-reference for every prefix in the shared registry.
+
+    The scan carried its own prefix alternation, which knew ``rem``, ``lem``,
+    ``cor`` and ``ax`` but not ``claim``, ``ex`` or ``lst``. It now reads the
+    same registry as the citation validator. ``{{#if result}}`` is the negative
+    control: a real unresolved template token must still be reported.
+    """
+    project = _green_project(tmp_path)
+    references = ", ".join(f"{{{{#{prefix}:overview}}}}" for prefix in CROSS_REFERENCE_PREFIXES)
+    write_doc(
+        project / "output" / "manuscript" / "00_abstract.md",
+        f"# Abstract\n\nCross-references {references}.\n\nUnresolved {{{{#if result}}}}.\n",
+    )
+    ctx = AuditContext(
+        repo_root=tmp_path,
+        project=PROJECT,
+        project_root=project,
+        rendered=True,
+        include_drift=False,
+    )
+
+    tokens = [finding.message.rsplit(": ", 1)[1] for finding in check_placeholder_tokens(ctx)]
+
+    assert tokens == ["{{#if result}}"]

@@ -7,6 +7,7 @@ from pathlib import Path
 
 from infrastructure.core.logging import DiagnosticEvent, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pandoc_filters import CROSS_REFERENCE_KEY_PREFIXES
 from infrastructure.validation.content.diagnostic_codes import BibtexCode
 from infrastructure.validation.content.markdown_strip import strip_code_and_math
 from infrastructure.validation.content.validator_pitfalls import NON_RENDERED_MANUSCRIPT_FILES
@@ -23,19 +24,12 @@ logger = get_logger(__name__)
 # keys stay legal through the optional group.
 CITE_KEY_PATTERN = re.compile(r"(?<![A-Za-z0-9_])@([A-Za-z](?:[\w:.\-]*[A-Za-z0-9_])?)")
 BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
-CROSSREF_PREFIXES = (
-    "sec:",
-    "fig:",
-    "tbl:",
-    "eq:",
-    "lst:",
-    "def:",
-    "prop:",
-    "inv:",
-    "conj:",
-    "alg:",
-    "thm:",
-)
+# Keys that name a cross-reference rather than a bibliography entry. pandoc-crossref,
+# formalism.lua or a manuscript's own environments resolve these, so the bibliography
+# check leaves them alone. Read from the shared registry: a hand-written list here
+# once knew only def/prop/thm of the formalism kinds, and blocked every manuscript
+# that cited a remark, lemma, corollary, axiom, claim or example.
+CROSSREF_PREFIXES = CROSS_REFERENCE_KEY_PREFIXES
 
 
 def validate_citations(
@@ -100,7 +94,7 @@ def validate_citations(
             key = m.group(1)
             if key in known_keys or key in seen_in_file:
                 continue
-            if any(key.startswith(prefix) for prefix in CROSSREF_PREFIXES):
+            if key.startswith(CROSSREF_PREFIXES):
                 continue
             seen_in_file.add(key)
             problems.append(

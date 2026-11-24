@@ -16,6 +16,7 @@ from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_pro
 from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 from infrastructure.project.drift import run_drift_checks
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.rendering._pandoc_filters import CROSS_REFERENCE_PREFIXES
 from infrastructure.validation.content.figure_validator import (
     validate_configured_cover_accessibility,
     validate_figure_registry,
@@ -375,12 +376,17 @@ def check_cover_accessibility(ctx: AuditContext) -> Iterable[PublicationFinding]
         )
 
 
+# ``{{#fig:overview}}`` is a cross-reference, not a template section. The
+# lookahead below is redundant with today's grammar -- the identifier after ``#``
+# cannot contain ``:`` -- and is kept so widening that class cannot start flagging
+# cross-references. Its prefixes come from the shared registry rather than a
+# literal alternation of its own.
 _PLACEHOLDER_TOKEN_RE = re.compile(
     r"""
     (?:
         \{\{\{?\s*
         (?:
-            (?!\#(?:fig|tbl|sec|eq|def|prop|thm|lem|cor|rem|ax):)
+            (?!\#(?:CROSS_REFERENCE_ALTERNATION):)
             [\#/>^&!]\s*[A-Za-z_][A-Za-z0-9_.-]*(?:\s+[^{}\n]+)?
             |
             [A-Za-z_][A-Za-z0-9_.-]*
@@ -396,7 +402,7 @@ _PLACEHOLDER_TOKEN_RE = re.compile(
         |
         \$\{\s*(?!\()[#!]?[A-Za-z_][A-Za-z0-9_.-]*(?:[^{}\n]*)?\}
     )
-    """,
+    """.replace("CROSS_REFERENCE_ALTERNATION", "|".join(CROSS_REFERENCE_PREFIXES)),
     re.VERBOSE,
 )
 

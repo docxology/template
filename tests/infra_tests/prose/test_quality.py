@@ -10,6 +10,7 @@ from infrastructure.prose.analysis.quality import (
     detect_passive_sentences,
     extract_citation_keys,
 )
+from infrastructure.rendering._pandoc_filters import CROSS_REFERENCE_PREFIXES
 
 
 class TestPassiveDetection:
@@ -67,6 +68,16 @@ class TestCitationExtraction:
 
     def test_no_citations(self):
         assert extract_citation_keys("Just plain text.") == []
+
+    def test_every_registered_cross_reference_is_excluded(self):
+        """Formalism and crossref labels resolve through filters, not the bibliography.
+
+        The extractor feeds the bibliography-consistency check, so a ``[@rem:x]``
+        it counted as a key would be reported as a missing bib entry.
+        """
+        bracketed = " ".join(f"[@{prefix}:x]" for prefix in CROSS_REFERENCE_PREFIXES)
+        bare = " ".join(f"@{prefix}:y" for prefix in CROSS_REFERENCE_PREFIXES)
+        assert extract_citation_keys(f"{bracketed} {bare} and @remington1990 notes") == ["remington1990"]
 
     def test_crossref_excluded_from_citations(self):
         """pandoc-crossref refs (`fig:`, `tbl:`, `eq:`, `sec:`, `lst:`) must

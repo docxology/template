@@ -37,7 +37,11 @@ LaTeX/pandoc warnings.
   escaped table-cell `\|` patterns Pandoc turns into `\mid`; defines
   `NON_RENDERED_MANUSCRIPT_FILES`
 - `validator_citations.py` - `validate_citations`: every `[@key]` resolves in
-  the manuscript `*.bib` union (ERROR, `BIBTEX.UNDEFINED_KEY`)
+  the manuscript `*.bib` union (ERROR, `BIBTEX.UNDEFINED_KEY`); keys carrying a
+  cross-reference prefix from `infrastructure/rendering/_pandoc_filters.py`
+  (`[@rem:x]`, `[@fig:x]`, ...) are left to the resolvers that own them;
+  `formalism.lua` reports an undeclared label when the document declares another
+  block with the same prefix
 - `prerender.py` - `prevalidate_for_render`:
   hard-gates a combined-PDF render by raising `RenderingError` when pitfall or
   citation blockers are found before Pandoc/xelatex runs
