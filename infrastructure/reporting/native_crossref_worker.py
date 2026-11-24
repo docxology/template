@@ -223,6 +223,8 @@ def main() -> int:
                     or process_birth(os.getppid(), deadline=args.deadline) != parent
                 ):
                     raise ValueError("actual crossref child/parent birth changed before final original output seal")
+                if qualifications is not None:
+                    runtime._crossref_timing("crossref-filter-json", "before-filter-seal")
                 send(
                     connection,
                     {

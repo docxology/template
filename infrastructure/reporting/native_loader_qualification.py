@@ -119,6 +119,7 @@ def qualify_native_loader_tool(
     owner = current_native_producer_operation()
     if owner is None or owner.run_id != runtime.run_id or owner.deadline != runtime.deadline:
         raise ValueError("loader pair requires the genuine Source owner and same existing original clock")
+    runtime._crossref_timing(purpose, "qualification-entry")
     reader = SnapshotReader(runtime.root, native_producer_operation=owner)
     from infrastructure.reporting.native_loader_observation import ENV_KEYS
 
@@ -156,10 +157,13 @@ def qualify_native_loader_tool(
             run_id=runtime.run_id,
         )
         compiled = compile_native_loader(compiler)
+    runtime._crossref_timing(purpose, "prebaseline-custody-enter")
     with owner._verification_guard(reader, run_id=runtime.run_id, deadline=runtime.deadline):
+        runtime._crossref_timing(purpose, "compiled-loader-verification")
         if crossref_pair is not None:
             crossref_pair._verify_data()
         compiled._verify_data(deadline=runtime.deadline)
+    runtime._crossref_timing(purpose, "prebaseline-custody-returned")
     baseline = runtime.tool(
         name,
         list(arguments),
@@ -237,6 +241,8 @@ def qualify_native_loader_tool(
             "crossref_filters": None if crossref_pair is None else list(crossref_pair.completed),
         }
         selected = write_json(runtime.root, runtime.directory / (purpose + ".loader-qualification.json"), value)
+        runtime._crossref_timing(purpose, "qualification-record-written")
+    runtime._crossref_timing(purpose, "qualification-custody-returned")
     return observed, selected, compiled
 
 

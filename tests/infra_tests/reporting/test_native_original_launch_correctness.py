@@ -30,7 +30,11 @@ from infrastructure.reporting.native_format_acceptance_contracts import native_e
 from infrastructure.reporting.native_loader_maps import terminal_kernel_residents
 from infrastructure.reporting.native_loader_observation import ENV_KEYS
 from infrastructure.reporting.native_original_supervisor import _worker_environment
-from infrastructure.reporting.native_pdf_citation_runtime import NATIVE_OBSERVATION_CEILING_SECONDS, budget
+from infrastructure.reporting.native_pdf_citation_runtime import (
+    CitationRuntime,
+    NATIVE_OBSERVATION_CEILING_SECONDS,
+    budget,
+)
 from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 from tests.infra_tests.project.test_public_reference import (
     _clone_complete_reference,
@@ -190,6 +194,21 @@ def test_native_observation_budget_has_one_finite_ceiling_and_refuses_expired_ti
     assert budget(time.monotonic() + 1200) == 600.0
     with pytest.raises(TimeoutError, match="exhausted its original finite deadline"):
         budget(time.monotonic() - 1)
+
+
+def test_crossref_timing_preserves_the_admitted_deadline_and_is_scoped(tmp_path: Path) -> None:
+    root = tmp_path.resolve()
+    deadline = time.monotonic() + 30
+    runtime = CitationRuntime(root, root / "output/readiness/timing", env={}, deadline=deadline, run_id="timing")
+    begin = time.monotonic()
+    runtime._crossref_timing("crossref-filter-version", "qualification-record-written")
+    runtime._crossref_timing("ordinary-citation-tool", "qualification-record-written")
+    (marker,) = runtime.directory.iterdir()
+    row = json.loads(marker.read_text())
+    assert marker.name == "crossref-filter-version-timing-qualification-record-written.json"
+    assert row["schema_version"] == "template-crossref-timing-v1"
+    assert row["phase"] == "qualification-record-written"
+    assert begin <= row["observed_monotonic"] < deadline == row["original_deadline_monotonic"] == runtime.deadline
 
 
 def test_runtime_identity_fast_header_matches_importlib_metadata() -> None:
