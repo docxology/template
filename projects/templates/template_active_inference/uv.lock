@@ -889,7 +889,7 @@ requires-dist = [
 provides-extras = ["scientific", "llm", "rendering", "rendering-pptx", "dashboard", "dotenv", "steganography", "docxplus", "monitoring", "publishing", "deep-research"]
 
 [package.metadata.requires-dev]
-active-inference = [{ name = "inferactively-pymdp", specifier = "==1.0.3" }]
+active-inference = [{ name = "inferactively-pymdp", specifier = "==1.0.5" }]
 dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]
 deep-research = [
     { name = "google-genai", specifier = ">=1.0" },
@@ -919,7 +919,7 @@ discopy = [{ name = "discopy", specifier = ">=1.0.0" }]
 dotenv = [{ name = "python-dotenv", specifier = ">=1.2.2" }]
 installed-build = [
     { name = "hatchling", specifier = "==1.32.4" },
-    { name = "setuptools", specifier = "==84.1.0" },
+    { name = "setuptools", specifier = "==84.2.1" },
     { name = "wheel", specifier = "==0.48.0" },
 ]
 llm = [{ name = "requests", specifier = ">=2.31.0" }]
