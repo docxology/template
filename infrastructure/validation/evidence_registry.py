@@ -229,10 +229,10 @@ def missing_evidence_source_paths(
         """Return whether a resolved source is inside the project or repository."""
         return any(path == boundary or boundary in path.parents for boundary in (root, repository))
 
-    for fact in registry.facts():
-        source_path = fact.source_path.strip()
-        if not source_path:
-            continue
+    # A single archived table can contribute many facts from the same file.
+    source_paths = {fact.source_path.strip() for fact in registry.facts()}
+    source_paths.discard("")
+    for source_path in sorted(source_paths):
         candidate = Path(source_path)
         resolved_candidates = (
             (candidate.resolve(),)
