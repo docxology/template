@@ -12,7 +12,7 @@ from PIL import Image
 
 from infrastructure.rendering import _mermaid_v122
 
-from infrastructure.rendering._pdf_mermaid import _resolve_chrome_executable, replace_inline_mermaid
+from infrastructure.rendering._pdf_mermaid import _inline_mermaid_dir, _resolve_chrome_executable, replace_inline_mermaid
 
 
 def _write_executable(path: Path, body: str) -> Path:
@@ -34,6 +34,11 @@ def _fake_manuscript_dir(tmp_path: Path) -> Path:
 
 def _sample_mermaid_block(source: str) -> str:
     return f"```mermaid\n{source}\n```\n*Sample Caption*\n"
+
+
+@pytest.mark.parametrize("layout", ["docs/manuscript", "output/manuscript", "manuscript"])
+def test_inline_mermaid_uses_project_figure_directory(tmp_path: Path, layout: str) -> None:
+    assert _inline_mermaid_dir(tmp_path / layout) == tmp_path / "output" / "figures" / "mermaid_inline"
 
 
 def test_resolve_chrome_prefers_env_path_over_cache_and_system(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
