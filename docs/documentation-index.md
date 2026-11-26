@@ -105,6 +105,7 @@ Development standards are documented in **`docs/rules/`**. The shared agent entr
 ## Core documentation
 
 - **[README.md](../README.md)** - Main project overview and quick start
+- **[Infrastructure manuscript](manuscript/README.md)** - Architecture, evidence flow, and pinned PDF build
 - **[Documentation hub (`docs/AGENTS.md`)](AGENTS.md)**
 - **[Repository system (`AGENTS.md` at repo root)](../AGENTS.md)**
 - **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - Headless / cloud server deployment

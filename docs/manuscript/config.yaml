@@ -1,0 +1,30 @@
+paper:
+  title: "Reproducible Research Workflows in the Research Project Template"
+  subtitle: "Pipeline architecture, manuscript source, and output evidence"
+
+authors:
+  - name: "Daniel Ari Friedman"
+
+publication:
+  repository_url: "https://github.com/docxology/template"
+  release_status: "unreleased"
+
+metadata:
+  language: "en"
+  license: "Apache-2.0"
+
+keywords:
+  - research software
+  - reproducibility
+  - manuscript rendering
+  - provenance
+
+manuscript_dir: "docs/manuscript"
+
+render:
+  formats:
+    pdf: true
+    html: false
+    slides: false
+    docx: false
+    epub: false

@@ -149,6 +149,10 @@ What this does:
 6. Creates the GitHub release and attaches the release-bundle PDF.
 7. Writes `output/<project>/release_bundle/RELEASE_RECEIPT.json`.
 
+The status-report command reads the configuration in the resolved manuscript
+source directory. It supports `docs/manuscript/config.yaml` when
+`docs/manuscript/` is the canonical source.
+
 Commit the changed publication sidecars after checking the receipt:
 
 ```bash
