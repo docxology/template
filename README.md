@@ -158,6 +158,10 @@ Pick the entry point that matches your goal:
 
 **📚 [Documentation Index](docs/documentation-index.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
+The [infrastructure manuscript](docs/manuscript/README.md) describes the root
+repository’s architecture, render pipeline, and verification evidence. It
+includes a local render walkthrough.
+
 The template ships with a large documentation corpus under `docs/`. The
 hierarchical map (with mermaid diagram) lives in [`docs/AGENTS.md`](docs/AGENTS.md);
 the curated long-lived documentation map lives in

@@ -1,10 +1,12 @@
-# docs/manuscript/ — agent notes
+# Infrastructure manuscript guidance
 
-Layout map: one file, [MANUSCRIPT_STATUS.md](MANUSCRIPT_STATUS.md) — the
-2026-08-29 docs-audit receipt explaining that this infrastructure checkout
-hosts exemplar manuscripts but publishes none itself.
+This directory is the canonical source for the repository's methods manuscript.
+Keep the numbered sections, bibliography, preamble, and diagram source here.
+The [build instructions](README.md) stage the generated figure and render output
+in a disposable project checkout.
 
-Invariants: do not promote this directory into a research manuscript; those
-belong to Layer-2 exemplars. If a publication target ever applies here,
-update MANUSCRIPT_STATUS.md and the audit it cites. See
-[../../AGENTS.md](../../AGENTS.md).
+Use repository code, contract tests, and generated facts to substantiate
+claims. Identify the revision when citing implementation behavior and keep
+volatile metrics linked to [their generated facts](../_generated/COUNTS.md).
+Exemplar manuscripts, generated outputs, and publication records retain their
+own scopes.

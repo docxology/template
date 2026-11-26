@@ -1,0 +1,14 @@
+{
+  "schema_version": "template-infrastructure-figure-registry-v1",
+  "figures": [
+    {
+      "caption": "Source and evidence flow in the shared manuscript pipeline. The dashed arrow indicates that validation also reads the selected manuscript source.",
+      "filename": "pipeline-evidence.png",
+      "generated_by": "Graphviz: docs/manuscript/assets/pipeline-evidence.dot",
+      "label": "fig:pipeline_evidence",
+      "metadata": {
+        "alt_text": "Authored sections and analysis outputs feed rendering. Rendered formats and authored source feed validation, which writes reports and provenance."
+      }
+    }
+  ]
+}

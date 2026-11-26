@@ -1,7 +1,7 @@
 """Compile all-platform publishing metadata + status into a README markdown block.
 
 This is the single place that turns the publishing **registry** (the source of
-truth for *which* platforms exist) plus a project's ``manuscript/config.yaml``
+truth for *which* platforms exist) plus a project's canonical manuscript configuration
 (the source of truth for *what has been published*) into a compact, regenerable
 Markdown block suitable for a project README.
 
@@ -36,6 +36,7 @@ from typing import Any, Mapping
 
 import yaml
 
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.publishing.config_doi import (
     read_publication_doi,
     read_publication_version_doi,
@@ -102,6 +103,7 @@ class PublishingStatusReport:
     release_status: str | None = None
     intended_version: str | None = None
     last_published_version: str | None = None
+    config_reference: str | None = "manuscript/config.yaml"
 
     @property
     def published_count(self) -> int:
@@ -110,7 +112,7 @@ class PublishingStatusReport:
 
 
 def _config_path_for(project_root: Path, config_path: Path | None) -> Path:
-    return config_path or (project_root / "manuscript" / "config.yaml")
+    return config_path or (resolve_source_manuscript_dir(project_root) / "config.yaml")
 
 
 def _load_config(config_path: Path) -> dict[str, Any]:
@@ -186,7 +188,7 @@ def compile_publishing_status(
     """Aggregate publishing metadata + per-platform status for a project.
 
     Args:
-        project_root: Project directory (containing ``manuscript/config.yaml``).
+        project_root: Project directory containing the manuscript source.
         config_path: Explicit config path override.
         published: Optional map of platform-name -> reference URL for artifacts
             published outside config (used to upgrade rows to PUBLISHED).
@@ -196,6 +198,10 @@ def compile_publishing_status(
     """
     cfg_path = _config_path_for(project_root, config_path)
     config = _load_config(cfg_path)
+    try:
+        config_reference = cfg_path.absolute().relative_to(project_root.absolute()).as_posix()
+    except ValueError:
+        config_reference = None
 
     paper = config.get("paper") or config.get("book") or {}
     publication = config.get("publication") or {}
@@ -268,6 +274,7 @@ def compile_publishing_status(
         release_status=release_status,
         intended_version=intended_version,
         last_published_version=last_published_version,
+        config_reference=config_reference,
     )
 
 
@@ -354,13 +361,14 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
         if any(p.state is PublicationState.HISTORICAL for p in report.platforms)
         else ""
     )
+    config_label = f"`{report.config_reference}`" if report.config_reference else "the supplied `--config` file"
     lines.append(
         "_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · "
         "🔵 reserved (identifier reserved but not yet registered by final publication) · "
         f"{unreachable_legend}"
         f"{historical_legend}"
         "⚪ available (adapter implemented and locally verifiable) · 🟡 planned. "
-        "This block is generated — edit `manuscript/config.yaml`, then regenerate with "
+        f"This block is generated — edit {config_label}, then regenerate with "
         "`uv run python -m infrastructure.publishing.status_report --project <path> --write`._"
     )
     return "\n".join(lines)
@@ -439,7 +447,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Compile all-platform publishing metadata + status into a README block.",
     )
     parser.add_argument("--project", required=True, type=Path, help="Project root directory")
-    parser.add_argument("--config", type=Path, default=None, help="Override manuscript/config.yaml path")
+    parser.add_argument("--config", type=Path, default=None, help="Override the manuscript configuration path")
     parser.add_argument("--readme", type=Path, default=None, help="README path (default: <project>/README.md)")
     parser.add_argument("--write", action="store_true", help="Write the block into the README")
     parser.add_argument(
@@ -469,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
             "Display-only — cannot be combined with --write/--check, because "
             "committed README blocks must stay offline-deterministic. Default "
             "runs are fully offline; never enable this in the default pipeline "
-            "or CI. On a finding, fix manuscript/config.yaml, don't commit the ❌."
+            "or CI. On a finding, fix the manuscript configuration, don't commit the ❌."
         ),
     )
     parser.add_argument(
@@ -489,7 +497,7 @@ def main(argv: list[str] | None = None) -> int:
         # gate recompiles offline and would report the block stale forever.
         parser.error(
             "--verify-reachability is a display-only live audit; it cannot be "
-            "combined with --write or --check. Fix manuscript/config.yaml instead."
+            "combined with --write or --check. Fix the manuscript configuration instead."
         )
 
     report = compile_publishing_status(

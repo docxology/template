@@ -1,0 +1,19 @@
+digraph pipeline_evidence {
+  graph [bgcolor=white, ranksep=0.47, nodesep=0.30, dpi=176];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans",
+        fontsize=11, color="#294252", fillcolor="#EEF4F7", margin="0.14,0.08"];
+  edge [color="#294252", arrowsize=0.72];
+
+  authored [label="Authored manuscript\nSections, config, bibliography"];
+  analysis [label="Project analysis\nVariables and figures"];
+  render [label="Stage 03: Render\nResolve source and compose outputs", fillcolor="#D7EBEA"];
+  formats [label="Enabled output formats"];
+  check [label="Stage 04: Validate\nCheck selected outputs and evidence", fillcolor="#D7EBEA"];
+  receipts [label="Validation report and\nrendered provenance receipt"];
+
+  { rank=same; authored; analysis; }
+  authored -> render;
+  analysis -> render;
+  render -> formats -> check -> receipts;
+  authored -> check [constraint=false, style=dashed];
+}

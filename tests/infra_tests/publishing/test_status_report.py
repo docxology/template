@@ -75,6 +75,37 @@ def test_compile_extracts_durable_metadata(tmp_path: Path) -> None:
     assert report.keywords == ("gold refining", "assaying")
 
 
+def test_compile_uses_documentation_manuscript_when_conventional_source_is_empty(tmp_path: Path) -> None:
+    root = _project(tmp_path, config_text="paper: {title: Conventional}")
+    source_dir = root / "docs" / "manuscript"
+    source_dir.mkdir(parents=True)
+    (source_dir / "00_abstract.md").write_text("# Abstract\n", encoding="utf-8")
+    (source_dir / "config.yaml").write_text(CONFIG_YAML, encoding="utf-8")
+
+    report = compile_publishing_status(root)
+
+    assert report.concept_doi == "10.5281/zenodo.20931955"
+    assert "edit `docs/manuscript/config.yaml`" in render_status_markdown(report)
+
+
+def test_compile_keeps_conventional_source_precedence_and_config_override(tmp_path: Path) -> None:
+    root = _project(tmp_path)
+    (root / "manuscript" / "00_abstract.md").write_text("# Abstract\n", encoding="utf-8")
+    other = root / "docs" / "manuscript"
+    other.mkdir(parents=True)
+    (other / "00_abstract.md").write_text("# Abstract\n", encoding="utf-8")
+    config = other / "config.yaml"
+    config.write_text("paper: {title: Documentation}", encoding="utf-8")
+
+    default = compile_publishing_status(root)
+    override = compile_publishing_status(root, config_path=config)
+
+    assert default.version == "0.1.0"
+    assert "edit `manuscript/config.yaml`" in render_status_markdown(default)
+    assert override.title == "Documentation"
+    assert "edit `docs/manuscript/config.yaml`" in render_status_markdown(override)
+
+
 def test_zenodo_and_github_are_published_rest_available(tmp_path: Path) -> None:
     report = compile_publishing_status(_project(tmp_path))
     by_name = {p.name: p for p in report.platforms}
