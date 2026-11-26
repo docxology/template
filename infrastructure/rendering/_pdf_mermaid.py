@@ -176,6 +176,8 @@ def _inline_mermaid_dir(manuscript_dir: Path) -> Path:
     """Return the project output directory for inline Mermaid images."""
     if manuscript_dir.name == "manuscript" and manuscript_dir.parent.name == "output":
         return manuscript_dir.parent / "figures" / "mermaid_inline"
+    if manuscript_dir.name == "manuscript" and manuscript_dir.parent.name == "docs":
+        return manuscript_dir.parent.parent / "output" / "figures" / "mermaid_inline"
     if manuscript_dir.name == "manuscript":
         return manuscript_dir.parent / "output" / "figures" / "mermaid_inline"
     return manuscript_dir / "output" / "figures" / "mermaid_inline"
