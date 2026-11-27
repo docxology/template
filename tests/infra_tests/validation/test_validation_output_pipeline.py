@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
+from infrastructure.project.linking import sync_private_project_links
 import infrastructure.validation.output.pipeline as mod
 from infrastructure.validation.output.pipeline import (
     generate_validation_report,
@@ -23,6 +24,7 @@ from infrastructure.validation.output.pipeline import (
     validate_pdfs,
     verify_outputs_exist,
 )
+from infrastructure.validation.output.validator import validate_output_structure
 
 
 def test_generated_markdown_diagnostics_exclude_undeclared_residue(tmp_path: Path) -> None:
@@ -354,6 +356,42 @@ class TestVerifyOutputsExist:
         )
         assert isinstance(structure_valid, bool)
         assert details["structure"]["directory_structure"]["combined_pdf"]["exists"] is True
+
+    @pytest.mark.parametrize(
+        ("pdf_names", "expected_valid"),
+        [
+            pytest.param(("reader",), True, id="registered-only"),
+            pytest.param(("physical",), False, id="physical-only"),
+            pytest.param(("reader", "physical"), True, id="coexisting"),
+        ],
+    )
+    def test_verify_outputs_uses_registered_basename(
+        self, tmp_path: Path, pdf_names: tuple[str, ...], expected_valid: bool
+    ) -> None:
+        repo_root = tmp_path / "template"
+        private_root = tmp_path / "sidecar"
+        project = private_root / "working" / "physical"
+        manuscript_dir = project / "manuscript"
+        manuscript_dir.mkdir(parents=True)
+        (manuscript_dir / "01_intro.md").write_text("# Introduction\n", encoding="utf-8")
+        (private_root / "archive").mkdir()
+        (project.parent / "reader").symlink_to(project, target_is_directory=True)
+        sync_private_project_links(repo_root, private_root)
+        registered = repo_root / "projects/working/reader"
+        assert registered.is_symlink() and registered.resolve() == project
+
+        output_dir = project / "output"
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        for name in pdf_names:
+            (pdf_dir / f"{name}_combined.pdf").write_bytes(_minimal_structural_pdf())
+
+        valid, details = verify_outputs_exist("working/reader", repo_root=repo_root, enabled_formats=("pdf",))
+
+        assert valid is expected_valid
+        assert details["structure"]["missing_files"] == ([] if expected_valid else ["reader_combined.pdf"])
+        assert details["directories"]["pdf"]["file_count"] == len(pdf_names)
+        assert validate_output_structure(output_dir, enabled_formats=("pdf",))["valid"] is ("physical" in pdf_names)
 
 
 def test_validate_project_design_includes_autoresearch_when_configured(tmp_path, monkeypatch):
