@@ -197,7 +197,13 @@ def _is_output_evidence_json(path: Path, output_dir: Path) -> bool:
         relative = path.relative_to(output_dir)
     except ValueError:
         return False
-    return ".pipeline" not in relative.parts and path.name not in _CONTROL_REPORT_NAMES
+    # The root prose diagnostic remains an artifact. Its structural counts
+    # support numeric claims only when a project explicitly registers them.
+    return (
+        relative != Path("manuscript_report.json")
+        and ".pipeline" not in relative.parts
+        and path.name not in _CONTROL_REPORT_NAMES
+    )
 
 
 def _register_claim_ledgers(
