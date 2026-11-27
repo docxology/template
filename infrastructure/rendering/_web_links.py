@@ -25,6 +25,10 @@ _PASSTHROUGH_SRC_SCHEMES = frozenset({"http", "https", "mailto", "tel", "data", 
 
 _PASSTHROUGH_HREF_SCHEMES = frozenset({"http", "https", "mailto", "tel"})
 
+# The renderer emits one descriptor-free mobile companion in this picture lane.
+_MOBILE_IMAGE_MEDIA = "(max-width: 600px)"
+_SRCSET_WHITESPACE = " \t\n\r\f"
+
 _PUBLIC_POOL_ROOTS = frozenset({"projects", "fonds", "rules", "tools"})
 
 
@@ -325,20 +329,36 @@ def rewrite_repository_links(
 
 
 class _ImageSources(HTMLParser):
-    """Collect the first actual src attribute of each image element."""
+    """Collect fallback image URLs and renderer-shaped mobile picture sources."""
 
     def __init__(self) -> None:
         super().__init__()
         self.sources: list[str] = []
+        self._picture_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag != "img":
-            return
-        for name, value in attrs:
-            if name == "src":
-                if value is not None:
-                    self.sources.append(value)
-                break
+        if tag == "picture":
+            self._picture_depth += 1
+        elif tag == "img":
+            source = next((value for name, value in attrs if name == "src"), None)
+            if source is not None:
+                self.sources.append(source)
+        elif tag == "source" and self._picture_depth:
+            media = next((value for name, value in attrs if name == "media"), None)
+            source = next((value for name, value in attrs if name == "srcset"), None)
+            if media != _MOBILE_IMAGE_MEDIA or not source:
+                return
+            source = source.strip(_SRCSET_WHITESPACE)
+            # Spaces separate URLs from descriptors. Internal commas may be
+            # literal URL bytes, including the comma in a data URL.
+            if not source or any(char in source for char in _SRCSET_WHITESPACE):
+                return
+            if Path(urlsplit(source).path).stem.endswith("_mobile"):
+                self.sources.append(source)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "picture" and self._picture_depth:
+            self._picture_depth -= 1
 
 
 def web_image_issues(page: Path, content: str) -> list[str]:

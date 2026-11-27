@@ -47,6 +47,7 @@ from infrastructure.rendering._web_assets import (
 )
 from infrastructure.rendering._web_links import (
     _ANCHOR_HREF_RE as _ANCHOR_HREF_RE,
+    _MOBILE_IMAGE_MEDIA,
     _PASSTHROUGH_HREF_SCHEMES as _PASSTHROUGH_HREF_SCHEMES,
     _PUBLIC_POOL_ROOTS as _PUBLIC_POOL_ROOTS,
     repository_root_for as repository_root_for,
@@ -495,7 +496,7 @@ def add_responsive_image_variants(html_file: Path) -> None:
         if not (html_file.parent / mobile_source).resolve().is_file():
             return tag
         return (
-            '<picture><source media="(max-width: 600px)" '
+            f'<picture><source media="{_MOBILE_IMAGE_MEDIA}" '
             f'srcset="{html.escape(mobile_source, quote=True)}">{tag}</picture>'
         )
 
