@@ -1,9 +1,15 @@
-"""Real-filesystem regressions for Stage 4 HTML-only and PDF render gates."""
+"""Real-filesystem regressions for combined HTML and Stage 4 format gates."""
 
 from __future__ import annotations
+
 import subprocess
+from pathlib import Path
+
+import pytest
+
 from infrastructure.core.pipeline.artifacts import collect_stable_output_inventory, output_inventory_mode_for_project
 from infrastructure.project.discovery import resolve_project_root
+from infrastructure.rendering._pipeline_summary import verify_render_outputs
 from infrastructure.validation.output.pipeline import (
     build_core_checks,
     execute_validation_pipeline,
@@ -11,6 +17,85 @@ from infrastructure.validation.output.pipeline import (
 )
 from infrastructure.validation.output.render_formats import validate_enabled_render_outputs
 from tests.infra_tests.validation._render_formats_helpers import _minimal_pdf, _html_only_project
+
+_BIBLIOGRAPHY = '<div id="refs" class="references csl-bib-body" role="list">{}</div>'
+_ENTRY = '<div id="ref-demo" class="csl-entry" role="listitem"><em>Example work.</em></div>'
+
+
+@pytest.mark.parametrize("stage", ["stage03", "stage04"])
+@pytest.mark.parametrize(
+    ("href", "destination", "valid"),
+    [
+        pytest.param("#ref-demo", _BIBLIOGRAPHY.format(_ENTRY), True, id="visible-entry"),
+        pytest.param(
+            "#ref-d%C3%A9mo%26co",
+            _BIBLIOGRAPHY.format(_ENTRY.replace("ref-demo", "ref-d&eacute;mo&amp;co")),
+            True,
+            id="decoded-identifier",
+        ),
+        pytest.param("#ref-demo", _BIBLIOGRAPHY.format(""), False, id="missing-entry"),
+        pytest.param("#ref-demo", _BIBLIOGRAPHY.format(_ENTRY * 2), False, id="duplicate-entries"),
+        pytest.param(
+            "#ref-demo",
+            _BIBLIOGRAPHY.format(_ENTRY) + '<h2 id="ref-demo">Duplicate ID elsewhere</h2>',
+            False,
+            id="duplicate-id-outside-bibliography",
+        ),
+        pytest.param(
+            "#ref-demo",
+            _BIBLIOGRAPHY.format('<h2 id="ref-demo">Unrelated content</h2>'),
+            False,
+            id="unrelated-id",
+        ),
+        pytest.param("#ref-demo", _ENTRY, False, id="entry-outside-bibliography"),
+        pytest.param(
+            "#ref-demo",
+            _BIBLIOGRAPHY.format(_ENTRY.replace("<em>Example work.</em>", "&nbsp;<br><em> </em>")),
+            False,
+            id="empty-entry",
+        ),
+        pytest.param("#ref-demo", _BIBLIOGRAPHY.format(f"<!--{_ENTRY}-->"), False, id="commented-entry"),
+        pytest.param("#ref-demo", _BIBLIOGRAPHY.format(f"<template>{_ENTRY}</template>"), False, id="inert-entry"),
+        pytest.param("#ref-demo", _BIBLIOGRAPHY.format(f"<div hidden>{_ENTRY}</div>"), False, id="hidden-entry"),
+        pytest.param(
+            "#ref-demo",
+            _BIBLIOGRAPHY.format(_ENTRY.replace("<em>", "<em hidden>")),
+            False,
+            id="hidden-entry-text",
+        ),
+        pytest.param("#REF-demo", _BIBLIOGRAPHY.format(_ENTRY), False, id="case-sensitive-identifier"),
+    ],
+)
+def test_native_html_gates_require_linked_bibliography_entries(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+    stage: str,
+    href: str,
+    destination: str,
+    valid: bool,
+) -> None:
+    for name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(name, raising=False)
+    project_root = _html_only_project(tmp_path)
+    (project_root / "output" / "web" / "index.html").write_text(
+        "<!doctype html><html><body>"
+        f'<p><span class="citation" data-cites="demo"><a href="{href}" role="doc-biblioref">Demo</a></span></p>'
+        '<p><a href="#ref-authored-fragment">Ordinary link</a></p>'
+        f"{destination}</body></html>",
+        encoding="utf-8",
+    )
+
+    if stage == "stage03":
+        result = verify_render_outputs("demo", repo_root=tmp_path)
+    else:
+        checks = {check.name: check.run for check in build_core_checks("demo", repo_root=tmp_path)}
+        result = checks["Enabled render outputs"]()
+
+    assert result is valid
+    if not valid:
+        assert "Combined HTML citation validation failed" in caplog.text
+        assert href in caplog.text
 
 
 def test_stage4_html_only_accepts_clean_tree(tmp_path) -> None:

@@ -4,6 +4,10 @@ Tests web/HTML rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+from logging import getLogger
+
+import pytest
+
 
 class TestCombinedHtmlRendering:
     """Test combined HTML rendering functionality."""
@@ -84,15 +88,18 @@ class TestCombinedHtmlRendering:
         assert result.exists()
         assert result.name == "index.html"
 
-    def test_render_combined_resolves_bibliographic_citations(self, tmp_path):
+    @pytest.mark.parametrize("suppress_bibliography", [False, True])
+    def test_render_combined_resolves_bibliographic_citations(self, tmp_path, suppress_bibliography):
         from infrastructure.rendering.config import RenderingConfig
+        from infrastructure.rendering.output_validation import validate_combined_html
         from infrastructure.rendering.web_renderer import WebRenderer
 
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         md = manuscript_dir / "01_intro.md"
+        metadata = "---\nsuppress-bibliography: true\n---\n\n" if suppress_bibliography else ""
         md.write_text(
-            "# Introduction\n\nPrior work matters [@jaynes2003probability; @shannon1948theory].\n",
+            f"{metadata}# Introduction\n\nPrior work matters [@jaynes2003probability; @shannon1948theory].\n",
             encoding="utf-8",
         )
         (manuscript_dir / "references.bib").write_text(
@@ -121,7 +128,12 @@ class TestCombinedHtmlRendering:
         content = result.read_text(encoding="utf-8")
         assert "Jaynes" in content
         assert "Shannon" in content
-        assert "#ref-jaynes2003probability" in content
-        assert "#ref-shannon1948theory" in content
         assert "[@jaynes2003probability]" not in content
         assert "[jaynes2003probability]" not in content
+        if suppress_bibliography:
+            assert 'role="doc-biblioref"' not in content
+            assert 'id="refs"' not in content
+        else:
+            assert "#ref-jaynes2003probability" in content
+            assert "#ref-shannon1948theory" in content
+        assert validate_combined_html(tmp_path / "output", logger=getLogger(__name__))
