@@ -210,7 +210,7 @@ def test_real_source_projection_retains_owned_definitions_and_global_reference_v
         path.write_bytes(body)
         sources.append((path.relative_to(tmp_path).as_posix(), body))
     arguments = [pandoc, *semantic_parser_options(tmp_path, scope)]
-    for lua_filter in semantic_lua_filters():
+    for lua_filter in semantic_lua_filters(has_crossref=False):
         arguments.extend(["--lua-filter", str(lua_filter)])
     actual = subprocess.run(arguments, input=compose_html_ordinal_input(bodies), capture_output=True, check=True).stdout
     artifact = NativeArtifact(
@@ -256,7 +256,7 @@ def test_real_table_ordinals_follow_owned_projection_not_repeated_values(tmp_pat
         bodies, ((owned_index, 1, "TABLE", first, first + len(b"a | 7"), hashlib.sha256(b"a | 7").hexdigest()),)
     )
     arguments = [pandoc, *semantic_parser_options(tmp_path, scope)]
-    for lua_filter in semantic_lua_filters():
+    for lua_filter in semantic_lua_filters(has_crossref=False):
         arguments.extend(["--lua-filter", str(lua_filter)])
     actual = subprocess.run(arguments, input=compose_html_ordinal_input(bodies), capture_output=True, check=True).stdout
     annotated = subprocess.run(

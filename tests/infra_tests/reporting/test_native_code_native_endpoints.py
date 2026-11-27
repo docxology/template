@@ -264,7 +264,7 @@ def test_real_html_owned_inputs_drive_occurrences_and_section_absence(
     }
     context_sources = tuple((snapshot.relative, snapshot.content) for snapshot in sources)
     arguments = [pandoc, *semantic_parser_options(tmp_path, CODE_SCOPE)]
-    for lua_filter in semantic_lua_filters():
+    for lua_filter in semantic_lua_filters(has_crossref=False):
         arguments.extend(["--lua-filter", str(lua_filter)])
     actual_ast = subprocess.run(
         arguments,
