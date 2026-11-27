@@ -27,4 +27,3 @@ Hosted run 41940842593 hit exactly that in `template_madlib` and
 The attribute is only truthful because the syscall cannot return. Marking a
 function `noreturn` that can return is undefined behaviour at every call site, so
 change this only together with the syscall it rests on.
-

@@ -417,7 +417,7 @@ class TestModuleName:
 uv run pytest tests/infra_tests/core/ -v -s
 
 # Debug specific test
-uv run pytest tests/infra_tests/core/test_config_loader_loading.py::TestConfigLoader::test_load_config -x --pdb
+uv run pytest tests/infra_tests/core/test_config_loader_loading.py::TestLoadConfig::test_load_valid_config -x --pdb
 
 # Profile test performance
 uv run pytest tests/infra_tests/core/ --durations=10

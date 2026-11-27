@@ -339,7 +339,7 @@ def _citation_author(author: _ParsedAuthor) -> dict[str, str]:
     if author.given_names:
         citation_author["given-names"] = author.given_names
     if author.orcid:
-        citation_author["orcid"] = author.orcid
+        citation_author["orcid"] = _orcid_url(author.orcid)
     if author.affiliation:
         citation_author["affiliation"] = author.affiliation
     return citation_author

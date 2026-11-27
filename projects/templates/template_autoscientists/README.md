@@ -66,7 +66,7 @@ Publishing surface — 20 platforms, 0 published for the intended release:
 
 _Keywords: agent coordination, scientific discovery, noise-band confirmation, ablation study, reproducible research, language-model agents._
 
-_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated — edit `manuscript/config.yaml`, then regenerate with `uv run python -m infrastructure.publishing.status_report --project <path> --write`._
+_Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 🔵 reserved (identifier reserved but not yet registered by final publication) · 📚 historical reference (last published release; not intended-version publication evidence) · ⚪ available (adapter implemented and locally verifiable) · 🟡 planned. This block is generated. To update it, edit `manuscript/config.yaml`. From the `docxology/template` checkout, run `uv run python -m infrastructure.publishing.status_report --project "/path/to/project" --write`. Replace `/path/to/project` with the absolute path to the standalone checkout or a directory relative to Template, such as `projects/templates/<name>` for a bundled project._
 <!-- PUBLISHING-STATUS:END -->
 
 - Canonical renderer: [docxology/template](https://github.com/docxology/template) with `--project templates/template_autoscientists`

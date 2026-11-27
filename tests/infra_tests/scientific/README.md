@@ -46,16 +46,14 @@ Individual function testing:
 
 ```bash
 # Test stability checking
-uv run pytest tests/infra_tests/scientific/test_scientific_dev.py::test_check_stability -v
+uv run pytest tests/infra_tests/scientific/test_scientific_dev.py::TestNumericalStability::test_check_numerical_stability_stable_function -v
 ```
 
-### Integration Tests
-
-End-to-end scientific workflows:
+### Benchmarking Tests
 
 ```bash
-# Full benchmarking workflow
-uv run pytest tests/infra_tests/scientific/test_scientific_dev.py::test_benchmark_function -v
+# Run the benchmark cases
+uv run pytest tests/infra_tests/scientific/test_scientific_dev.py::TestBenchmarking -v
 ```
 
 ## Common Test Patterns

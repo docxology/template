@@ -2,7 +2,11 @@
 
 ## Overview
 
-This guide provides formatting standards for writing research manuscripts in the `projects/{name}/manuscript/` directory. All manuscript content must follow these standards to ensure consistency, proper rendering, and correct cross-referencing.
+Apply these formatting standards to authored manuscripts. Standalone repositories
+keep their manuscript in `docs/manuscript/`. Bundled exemplars use the
+manuscript directory within their registered project. Follow the
+[standalone manuscript contract](../guides/manuscript-semantics.md#standalone-manuscript-contract)
+for configuration, covers, producers, and validation.
 
 **Canonical syntax reference:** [`docs/guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) is the single source of truth for manuscript Markdown semantics. The PDF pipeline runs Pandoc with `--natbib` (converts `[@key]` to natbib citation commands) plus the `pandoc-crossref` filter (resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references). Raw `\cite{}` and `\ref{}` work in PDF-only output but **break HTML / EPUB rendering** and are never used in any real exemplar manuscript — this guide teaches the Pandoc-native syntax throughout.
 
@@ -154,16 +158,8 @@ f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
 $$ {#eq:objective}
 ```
 
-**Also acceptable — raw-LaTeX `equation` environment (pandoc-crossref still resolves the label):**
-
-```markdown
-\begin{equation}
-\label{eq:objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
-\end{equation}
-```
-
-Both forms number correctly and both labels resolve via `[@eq:objective]`. Prefer the `$$ … $$ {#eq:label}` form for new content — it's shorter and doesn't imply a LaTeX-only dependency.
+Add one unique label to each numbered display block. The compatible
+`pandoc-crossref` filter resolves [the portable equation syntax](../guides/manuscript-semantics.md#2-equations).
 
 **When to Use:**
 
@@ -191,7 +187,7 @@ All important equations must have descriptive labels.
 **Naming Convention:**
 
 - Prefix: `eq:`
-- Format: `{#eq:descriptive_name}` (or `\label{eq:descriptive_name}` inside a raw `equation` environment)
+- Format: `{#eq:descriptive_name}` on the closing display delimiter line
 - Use lowercase with underscores
 - Be descriptive, not generic
 
@@ -214,7 +210,8 @@ All important equations must have descriptive labels.
 
 ### Equation References
 
-**Reference equations with `[@eq:label]`, never `\eqref{}` or `\ref{}`.** The bracketed cross-reference form renders as "eq. 1" (or "Equation 1" with `cleveref`) in every output format; `\eqref{}` requires LaTeX-only output and breaks HTML/EPUB.
+Reference the labelled display with `[@eq:label]`. Verify the resulting
+number and reference in each edition the project enables.
 
 **Syntax:**
 
@@ -232,16 +229,9 @@ The convergence rate [@eq:convergence] demonstrates...
 
 ### Multi-Line Equations
 
-For equations spanning multiple lines, use `align` or `split` environments — pandoc-crossref resolves labels on these the same way as a plain `equation` block.
-
-**Align Environment (multiple equations):**
-
-```markdown
-\begin{align}
-x_{k+1} &= x_k - \alpha_k \nabla f(x_k) \\
-y_{k+1} &= y_k + \beta_k (x_k - x_{k-1})
-\end{align} {#eq:system}
-```
+Use `split` inside a single labelled display block to give multiple lines
+one equation number. Use separate labelled display blocks for independent
+equation numbers.
 
 **Split Environment (single equation, multiple lines):**
 
@@ -257,8 +247,8 @@ $$ {#eq:complex}
 
 ### Numbering Conventions
 
-- Equations are automatically numbered by `pandoc-crossref`
-- Numbering is sequential throughout the document
+- With `pandoc-crossref` installed, labelled displays receive numbers in admitted manuscript order
+- Verify the numbers and their references in each enabled format
 - Supplemental sections use separate numbering (S1, S2, etc.) if the project configures a supplement prefix
 
 ### DO NOT Use
@@ -308,7 +298,10 @@ Control figure size with the `width` (or `height`) attribute — a fraction of t
 
 ### Figure Paths
 
-All figures must use relative paths from the manuscript directory.
+Use a relative path to the figure from its authored manuscript file. Store
+authored artwork with the manuscript and generated figures under the
+project’s `output/figures/`. The example below uses a flat bundled
+`manuscript/` directory.
 
 **Path Format:**
 
@@ -318,8 +311,8 @@ All figures must use relative paths from the manuscript directory.
 
 **Requirements:**
 
-- Paths are relative to `projects/{name}/manuscript/` (Pandoc resolves them via `--resource-path`)
-- Figures are stored in `projects/{name}/output/figures/`
+- Check the physical image target and its rendered reference for the
+  project’s actual layout
 - Use forward slashes (`/`) even on Windows
 - Include file extension (`.png` preferred for archival stability)
 
@@ -585,8 +578,8 @@ distinctions, so keys such as `Smith2024` and `smith2024` conflict.
 
 **Requirements:**
 
-- Prefer keys in one canonical
-  `projects/{name}/manuscript/references.bib`. Supplemental top-level `.bib`
+- Prefer a curated `references.bib` within the authored manuscript
+  directory. Supplemental top-level `.bib`
   files are allowed: combined PDF, HTML, DOCX, EPUB, and ebook-stage exports
   consume the same filename-sorted union. Keep citation keys unique
   case-insensitively within and across the files; duplicate and case-only

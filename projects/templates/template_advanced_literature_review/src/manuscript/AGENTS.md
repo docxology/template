@@ -26,13 +26,16 @@ Package (`variables/`: `compute.py`, `context.py`, `formatters.py`, `inject.py`,
 1. Add a computation in `compute_variables()` reading from an existing JSON output file.
 2. Store as a string: `variables["MY_VAR"] = f"{value}"`.
 3. Place `{{MY_VAR}}` in the appropriate `manuscript/*.md` file.
-4. Add a test in `tests/test_variables.py` verifying the value with a synthetic JSON file.
+4. Add a test in `tests/test_publication_extensions.py` verifying the value with a synthetic JSON file.
 5. Update `README.md` variable table.
 
 ## Running Injection Manually
 
+From the Template repository root, use the prepared Advanced Literature Review project environment.
+
 ```bash
-uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
+cd projects/templates/template_advanced_literature_review
+.venv/bin/python scripts/05_inject_variables.py
 ```
 
 Output: `output/manuscript/*.md` — rendered copies of all manuscript files with all `{{VAR}}`

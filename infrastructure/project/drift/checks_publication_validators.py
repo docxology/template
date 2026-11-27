@@ -104,10 +104,9 @@ def _fold_name(value: str) -> str:
 def _normalize_orcid(value: object) -> str:
     """Strip an orcid.org URL prefix so bare and URL ORCID forms compare equal.
 
-    CFF files historically carry `https://orcid.org/0000-...` while the current
-    generator emits the bare identifier; both name the same person and must not
-    read as authorship drift. Handles http/https schemes, an optional `www.`
-    host prefix, and a trailing slash.
+    Older CFF exports may carry bare identifiers. Both forms name the same
+    person and must not read as authorship drift. Handles http/https schemes,
+    an optional `www.` host prefix, and a trailing slash.
     """
     original = str(value or "").strip()
     text = original.rstrip("/")

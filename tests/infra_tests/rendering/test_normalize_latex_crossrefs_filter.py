@@ -20,8 +20,10 @@ def _render(markdown: str, *, has_crossref: bool = True) -> str:
         pytest.skip("matching Pandoc and crossref tools are required")
     args = [
         pandoc,
-        "-f", "markdown+raw_tex+header_attributes",
-        "-t", "html5",
+        "-f",
+        "markdown+raw_tex+header_attributes",
+        "-t",
+        "html5",
         "--number-sections",
         "--metadata=linkReferences:true",
         "--math-method=mathjax",
@@ -116,9 +118,9 @@ Reference \ref{fig:duplicate}.
 @pytest.mark.parametrize(
     ("anchor", "raw_format"),
     [
-        ('<span ID=sec:human>Existing marker</span>', "html"),
+        ("<span ID=sec:human>Existing marker</span>", "html"),
         ('<a NAME="sec&#58;human">Existing marker</a>', "HTML"),
-        ('<!--> <span id=sec:human>Existing marker</span> -->', "html"),
+        ("<!--> <span id=sec:human>Existing marker</span> -->", "html"),
         ('<span id="sec:human">Existing marker</span>', "html5"),
     ],
 )

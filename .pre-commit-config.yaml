@@ -67,7 +67,8 @@ repos:
           (?x)^(
             output/.*|
             projects/templates/[^/]+/output/.*|
-            projects/templates/.*\.svg
+            projects/templates/.*\.svg|
+            infrastructure/config/native-document-ghc-(?:pkg-cache-order|provider-ways)\.patch\Z
           )
       - id: end-of-file-fixer
         name: end-of-file-fixer (ensure trailing newline)

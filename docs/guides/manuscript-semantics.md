@@ -1,6 +1,8 @@
 # Manuscript Semantics & Syntax (Canonical)
 
-This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars under `projects/templates/` conform to the conventions below. The authoritative, always-current roster lives in [`docs/_generated/active_projects.md`](../_generated/active_projects.md). New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
+This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public exemplars under `projects/templates/` illustrate these conventions. The authoritative, always-current roster lives in [`docs/_generated/active_projects.md`](../_generated/active_projects.md). New projects should copy the exemplar that matches their shape and follow the
+[standalone manuscript contract](#standalone-manuscript-contract) when authoring
+outside the Template repository.
 
 The PDF rendering pipeline uses **three cooperating tools**:
 
@@ -50,6 +52,59 @@ split page owns only its exact source's generated-value and absence obligations.
 Selected table ordinals are projected through those same ownership boundaries
 before joining the semantic contract; context membership alone confers no native
 location or absence claim.
+
+## Standalone manuscript contract
+
+For a standalone public repository, keep the authored manuscript in
+`docs/manuscript/`. The renderer discovers that directory automatically.
+When setting `manuscript_dir` explicitly in `config.yaml`, use
+`docs/manuscript`. Order the main Markdown sections with numeric prefixes.
+Keep `references.bib`, any supplemental bibliography, the optional PDF
+preamble, and authored artwork with the manuscript. `README.md` describes
+the build and `AGENTS.md` records the project-specific editing rules.
+
+### Configure the editions and cover
+
+Set the title and authors in `config.yaml` and use Boolean values under
+`render.formats` for the editions the project delivers. Check the effective
+format settings in the runner before building. [Output formats](../usage/output-formats.md)
+
+Use `paper.cover.image` and `paper.cover.alt` for a paper, or `book.cover.image`
+and `book.cover.alt` for a book. Store the cover within the authored project.
+Use a project-root path such as `docs/manuscript/assets/cover.png` so the
+cover resolves from the authored and hydrated configurations. Supply a
+nonempty description as plain text. The combined HTML paper cover requires
+a `paper.frontmatter` list alongside the cover configuration. List the
+Markdown files in order using paths relative to the manuscript directory.
+Each file needs one heading and one labelled, captioned figure. EPUB can
+package the configured cover with its text alternative. The tagged PDF route uses
+`metadata.tagged_pdf` and the compatible LuaLaTeX toolchain.
+[Configuration reference](../operational/config/configuration.md)
+
+### Generate, render, and verify
+
+Keep the project runtime locked. Where the manuscript depends on computed
+results, list its ordered producers in `analysis.scripts` as filenames under
+the project’s `scripts/` directory. Generate tables and figures from the same
+canonical records as `{{TOKEN}}` values. Register a physical checkout under
+Template’s `projects/working/` for automatic manuscript hydration.
+[Automatic variable injection](../rules/manuscript_style.md#automatic-variable-injection)
+
+After installing the locked renderer environment, run Stage 03 and Stage 04
+from the pinned Template checkout with the same
+qualified project selector. For a concrete example after registering
+`working/template_storybook`, use the commands below.
+
+```bash
+uv run --no-sync python scripts/pipeline/stage_03_render.py --project working/template_storybook
+uv run --no-sync python scripts/pipeline/stage_04_validate.py --project working/template_storybook
+```
+
+Record the authored commit, the Template pin, and the enabled formats. Open
+each reader and check equation numbers and links, cover artwork and its
+alternative text where configured, figures, tables, and bibliography targets.
+Keep the validation report and `rendered_provenance.json` with the outputs.
+[Standalone Storybook build](https://github.com/docxology/template_storybook/blob/0de8a3d2acc037c8309673d08f17faf03587ab5c/docs/manuscript/README.md)
 
 ## 1. Citations
 
@@ -109,26 +164,32 @@ location or absence claim.
 ### Syntax — 2. Equations
 
 ```markdown
-<!-- Display equation with label -->
 $$
 \nabla f(x) = Ax - b
 $$ {#eq:gradient}
 
-<!-- LaTeX equation environment (also recognised by pandoc-crossref) -->
-\begin{equation}
-\label{eq:gradient_descent}
-x_{k+1} = x_k - \alpha \nabla f(x_k)
-\end{equation}
+$$
+\begin{split}
+x_{k+1} &= x_k - \alpha \nabla f(x_k) \\
+r_{k+1} &= Ax_{k+1} - b
+\end{split}
+$$ {#eq:update}
 
-<!-- Cross-reference -->
-[@eq:gradient] gives the gradient; iteration follows [@eq:gradient_descent].
+[@eq:gradient] defines the gradient. [@eq:update] gives the update and residual.
 ```
 
 ### Rules — 2. Equations
 
-1. Either form works — `$$ … $$ {#eq:label}` is the preferred pure-Pandoc form, and `\begin{equation}\label{eq:label}…\end{equation}` is an acceptable raw-LaTeX form that pandoc-crossref still picks up.
-2. **Reference equations with `[@eq:label]`**, not `\ref{eq:label}`. The bracketed form renders as "eq. 1" and is portable; the raw form requires LaTeX-only output.
-3. Inline math uses `$…$`, never raw `\(…\)`.
+1. Put each numbered equation in a standalone `$$` block. Add its unique
+   `{#eq:label}` on the closing delimiter line and refer to it with
+   `[@eq:label]`.
+2. Install the compatible `pandoc-crossref` filter to assign the numbers and
+   resolve the references. Check numbering and targets in every enabled
+   edition. Leave the label off for an unnumbered display.
+3. Use `split` inside a labelled display block for a single number across
+   multiple lines. Use a separate labelled block for each equation that
+   needs its own number.
+4. Use `$…$` for inline math.
 
 ## 3. Figures
 
@@ -143,7 +204,10 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 ### Rules — 3. Figures
 
-1. Image paths are **relative to `manuscript/`** (Pandoc resolves them via `--resource-path`). Use `../output/figures/<name>.png` for figures the analysis pipeline writes.
+1. Use an image path relative to the authored Markdown file. The example
+   uses a flat bundled `manuscript/` directory. Generated figures live under
+   the project's `output/figures/`. Verify that the path resolves for the
+   actual manuscript layout and in each enabled format.
 2. Labels follow the pattern `{#fig:<lowercase_underscore_name>}`. Use stable,
    descriptive lowercase names with underscores; do not encode a displayed
    figure number in the label.

@@ -40,7 +40,6 @@ from infrastructure.core.testing.pytest_orchestration import (
     resolve_xdist_worker_config,
     validate_project_matrix_concurrency,
 )
-from infrastructure.core.testing.test_runner import run_per_project_pytest
 from infrastructure.project.discovery import discover_projects, resolve_project_root
 from infrastructure.project.public_scope import public_project_names
 from infrastructure.reporting.output_statistics import (
@@ -50,7 +49,6 @@ from infrastructure.reporting.output_statistics import (
     log_output_summary,
     write_output_statistics_reports,
 )
-from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 from infrastructure.validation.output.render_formats import (
     enabled_render_formats,
     load_effective_rendering_config,
@@ -359,6 +357,8 @@ def execute_test_stage(options: TestStageOptions, project: str, repo_root: Path)
     # (one pytest process per project, combined coverage gate at end).
     # This is the local mirror of the bash loop in .github/workflows/ci.yml.
     if options.project_only and options.all_projects:
+        from infrastructure.core.testing.test_runner import run_per_project_pytest
+
         projects: list[str] | None = None
         if options.public_projects:
             projects = public_project_names(repo_root)
@@ -378,6 +378,8 @@ def execute_test_stage(options: TestStageOptions, project: str, repo_root: Path)
             parallel=options.parallel,
             receipt_path=options.receipt_path,
         )
+
+    from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 
     return execute_test_pipeline(
         project_name=resolution.project,

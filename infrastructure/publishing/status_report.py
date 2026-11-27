@@ -368,8 +368,10 @@ def render_status_markdown(report: PublishingStatusReport) -> str:
         f"{unreachable_legend}"
         f"{historical_legend}"
         "⚪ available (adapter implemented and locally verifiable) · 🟡 planned. "
-        f"This block is generated — edit {config_label}, then regenerate with "
-        "`uv run python -m infrastructure.publishing.status_report --project <path> --write`._"
+        f"This block is generated. To update it, edit {config_label}. From the `docxology/template` checkout, run "
+        '`uv run python -m infrastructure.publishing.status_report --project "/path/to/project" --write`. '
+        "Replace `/path/to/project` with the absolute path to the standalone checkout or a directory relative to "
+        "Template, such as `projects/templates/<name>` for a bundled project._"
     )
     return "\n".join(lines)
 

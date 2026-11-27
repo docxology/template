@@ -8,6 +8,7 @@ paper:
   date: "2026-07-06"
   cover:
     image: "figures/cover_art.png"
+    alt: "A five-part ring labels dynamics, optimization, graph, signal, and statistics around the project seed."
 
 authors:
   - name: "Daniel Ari Friedman"

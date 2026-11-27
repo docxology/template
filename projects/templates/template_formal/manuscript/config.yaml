@@ -12,6 +12,7 @@ paper:
   date: ""  # Auto-generated via `infrastructure/validation/output/validator.py` if empty
   cover:
     image: "figures/cover_colony.png"
+    alt: "Gold-outlined ant with a mosaic of colored hexagons in its abdomen, above a faint grid."
 
 # Consumed by: `infrastructure.publishing.extract_publication_metadata` (in `infrastructure/publishing/_metadata_extraction.py`)
 authors:

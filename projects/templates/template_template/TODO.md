@@ -127,4 +127,3 @@ Historical line references below identify the original packet, not the current l
     ```
     Require nonempty complete collection and a successful complete own-suite receipt; focused results do not qualify.
   - **Negative control:** `uv run --locked --no-sync --python 3.14 python -c 'import sys; assert sys.version_info[:3] == (3, 15, 2), sys.version'` must fail the version assertion when that interpreter is available. Missing interpreters or dependencies are blockers, never a passing 3.15.2 cell.
-

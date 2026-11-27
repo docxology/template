@@ -7,14 +7,30 @@ source and contracts; each exemplar retains its own package and publication
 versions. Confidential and local workspaces outside the canonical public roster
 are excluded.
 
-## [5.2.0] - 2026-11-07
+## [5.2.0] - 2026-11-25
 
 See the [5.2.0 candidate notes](docs/releases/v5.2.0.md). This minor preparation
 coordinates the Root SDK and all 25 canonical exemplar compatibility bindings
 with preserved own versions and provider declarations. Exemplar-owned dependency
 locks retain their project-specific pins; the reviewed refresh records the
-changed tzdata and Active Inference JAX/jaxlib entries in the owning project
-locks.
+changed `tzdata`, Active Inference `numpy`/`jax`/`jaxlib`/`inferactively-pymdp`,
+Advanced Literature Review `pypdf`, and root dev-group pins (`ruff`, `numpy`,
+`setuptools`, `plotly`) across the owning project locks (#332–#339, #342).
+
+- Add the root `README.md` Mermaid pipeline architecture diagram and exemplar
+  hero figures (#327).
+- Give archive slide decks a finite 250,000-node AST ceiling (#328) and apply
+  reviewed security, correctness, and evidence-binding fixes across core runtime,
+  git guards, and pipeline configuration (#329).
+- Eliminate Linux `LD_AUDIT` Native Pandoc/Crossref `pair_deadline` timeouts
+  without relaxing clocks or custody (#330), retain Crossref qualification and
+  JSON admission timings in diagnostics (#340), and resolve external document
+  converter calls in `setup-acceptance-documents` to the pinned Template checkout
+  and its prepared Python environment (#331).
+- Accept every `formalism.lua` fenced-block label prefix during pre-render
+  citation validation (#341).
+- Add `infrastructure/reporting/native_document_preparation.py` to Ruff's
+  explicit `T201` CLI/human-report per-file ignore list in `pyproject.toml`.
 
 - Keep poisoned-bytecode controls bound to the ordinary isolated child's local
   cache even when the Root test runner owns a separate fresh prefix. Preserve

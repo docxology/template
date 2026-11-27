@@ -100,4 +100,3 @@ with the caller inside its original step/job clock. The optional
 `TEMPLATE_ELAN_DOWNLOAD_TIMEOUT_SECONDS` preserve existing curl limits; defaults
 are 2 and 60, with explicit zero retaining an existing unbounded transfer.
 Do not add retries, fallbacks, new default toolchains or authority claims.
-

@@ -311,8 +311,8 @@ launch or manage a Chrome/CDP process.
 Renders from isolated or private paths skip the public-repository rewrite, so
 private source paths are never projected into the public repository URL. The
 source-aware behavior is covered by
-`tests/infra_tests/rendering/test_web_renderer.py` and exercised by the real
-Pandoc render path.
+`tests/infra_tests/rendering/test_web_repository_links.py` and
+exercised by the real Pandoc render path.
 
 ### Add Bibliography and Citations
 
@@ -1167,10 +1167,7 @@ uv run pytest tests/infra_tests/rendering/test_latex_package_validator.py -v
 uv run pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 
 # Integration tests
-uv run pytest tests/integration/test_rendering_pipeline.py -v
-
-# Performance benchmarking
-uv run pytest tests/infra_tests/rendering/test_performance.py -v
+uv run pytest tests/integration/test_figure_equation_citation.py -v
 
 # Coverage analysis
 uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=html

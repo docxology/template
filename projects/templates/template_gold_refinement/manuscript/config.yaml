@@ -5,6 +5,7 @@ paper:
   date: "2026-06-25"
   cover:
     image: "figures/cover_visualization.png"
+    alt: "Five manuscript refinement stages, from ore to certification, surround a gold pentagon marked 9N."
 
 authors:
   - name: "Daniel Ari Friedman"

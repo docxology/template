@@ -100,7 +100,7 @@ def test_build_metadata_with_full_config() -> None:
             },
             {
                 "name": "Grace Hopper",
-                "orcid": "0000-0000-0000-5678",
+                "orcid": "https://orcid.org/0000-0000-0000-5678",
                 "email": "grace@example.org",
                 "affiliation": "Department of Computational Mathematics",
                 "corresponding": False,
@@ -122,6 +122,8 @@ def test_build_metadata_with_full_config() -> None:
     assert citation["authors"][0]["family-names"] == "Author"
     assert citation["authors"][1]["given-names"] == "Grace"
     assert citation["authors"][1]["family-names"] == "Hopper"
+    assert citation["authors"][0]["orcid"] == "https://orcid.org/0000-0000-0000-1234"
+    assert citation["authors"][1]["orcid"] == config["authors"][1]["orcid"]
     assert citation["doi"] == "10.5281/zenodo.123456"
     assert citation["repository-code"] == "https://github.com/docxology/template_code_project"
     assert citation["date-released"] == "2026-05-27"
@@ -138,6 +140,8 @@ def test_build_metadata_with_full_config() -> None:
     assert zenodo["upload_type"] == "software"
     assert zenodo["creators"][0]["name"] == "Author, Research Template"
     assert zenodo["creators"][1]["name"] == "Hopper, Grace"
+    assert zenodo["creators"][0]["orcid"] == config["authors"][0]["orcid"]
+    assert zenodo["creators"][1]["orcid"] == config["authors"][1]["orcid"]
     assert zenodo["related_identifiers"] == [
         {
             "relation": "isVersionOf",

@@ -285,20 +285,16 @@ def test_metadata_export_authorless_config_fallback_is_clean(drift_module, tmp_p
     assert not [f for f in rep.findings if f.rule.startswith("metadata_export")]
 
 
-def test_metadata_export_url_form_orcid_is_not_drift(drift_module, tmp_path):
-    """A CITATION.cff carrying the URL ORCID form (`https://orcid.org/0000-...`)
-    names the same person as the generator's bare form — must NOT fire. A
-    genuinely different identifier in the same URL form still must."""
+def test_metadata_export_legacy_bare_orcid_is_not_drift(drift_module, tmp_path):
+    """A legacy bare ORCID and the generated URL identify the same author."""
     root = _scaffold_minimal_project(tmp_path)
     (root / "manuscript" / "config.yaml").write_text(_GOOD_METADATA_CONFIG, encoding="utf-8")
     _write_metadata_exports(root, _GOOD_METADATA_CONFIG)
     cff = root / "CITATION.cff"
-    cff.write_text(
-        cff.read_text(encoding="utf-8").replace(
-            "orcid: 0000-0002-1825-0097", "orcid: https://orcid.org/0000-0002-1825-0097"
-        ),
-        encoding="utf-8",
-    )
+    generated = cff.read_text(encoding="utf-8")
+    url = "https://orcid.org/0000-0002-1825-0097"
+    assert url in generated
+    cff.write_text(generated.replace(url, "0000-0002-1825-0097"), encoding="utf-8")
     rep = drift_module.Report()
     drift_module.check_metadata_export_current(root, rep, "fake_project")
     assert not [f for f in rep.findings if f.rule.startswith("metadata_export")], [
@@ -306,7 +302,7 @@ def test_metadata_export_url_form_orcid_is_not_drift(drift_module, tmp_path):
     ]
     # Same URL form, different identifier → still drift.
     cff.write_text(
-        cff.read_text(encoding="utf-8").replace("0000-0002-1825-0097", "0000-0002-9999-9999"),
+        generated.replace("0000-0002-1825-0097", "0000-0002-9999-9999"),
         encoding="utf-8",
     )
     rep = drift_module.Report()
