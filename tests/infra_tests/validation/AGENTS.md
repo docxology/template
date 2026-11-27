@@ -91,7 +91,7 @@ def test_pdf_text_extraction():
 
 ### Markdown Validation Tests
 
-**Markdown Validator Tests (`test_markdown_validator.py`)**
+**Markdown Validator Tests (`test_markdown_validator_*.py`)**
 - Markdown syntax validation
 - Cross-reference integrity checking
 - Image reference resolution
@@ -542,7 +542,7 @@ def validate_academic_standards(document, standards):
 - File readability and permission testing
 - Directory completeness assessment
 
-**Render-format Contract Tests (`test_render_formats.py`)**
+**Render-format Contract Tests (`test_render_formats_*.py`)**
 - Effective YAML/environment format selection shared by Stage 4 and Stage 5
 - HTML-only success without a PDF and fail-closed stale-PDF rejection
 - Exact canonical combined-PDF enforcement when PDF is enabled
@@ -630,7 +630,7 @@ uv run pytest tests/infra_tests/validation/
 uv run pytest tests/infra_tests/validation/test_pdf_validator.py
 
 # Run link and cross-reference tests
-uv run pytest tests/infra_tests/validation/test_check_links.py tests/infra_tests/validation/test_cross_link_lint.py
+uv run pytest tests/infra_tests/validation/test_check_links.py tests/infra_tests/validation/docs/test_cross_link_lint.py
 
 # Doc scanner verification + security gate
 uv run pytest tests/infra_tests/validation/test_documentation_scanner.py tests/infra_tests/validation/test_security_gate.py -v

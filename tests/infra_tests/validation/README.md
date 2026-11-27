@@ -44,12 +44,12 @@ uv run pytest tests/infra_tests/validation/test_pdf_validator.py -v
 - Rendering validation
 - Reference checking
 
-### Markdown Validator Tests (`test_markdown_validator.py`)
+### Markdown Validator Tests (`test_markdown_validator_*.py`)
 
 Markdown structure validation:
 
 ```bash
-uv run pytest tests/infra_tests/validation/test_markdown_validator.py -v
+uv run pytest tests/infra_tests/validation/test_markdown_validator_*.py -v
 ```
 
 **Test Coverage:**
@@ -58,12 +58,12 @@ uv run pytest tests/infra_tests/validation/test_markdown_validator.py -v
 - Equation validation
 - Link verification
 
-### Render-format Contract Tests (`test_render_formats.py`)
+### Render-format Contract Tests (`test_render_formats_*.py`)
 
 Stage 4 and Stage 5 publication-format validation:
 
 ```bash
-uv run pytest tests/infra_tests/validation/test_render_formats.py -v
+uv run pytest tests/infra_tests/validation/test_render_formats_*.py -v
 ```
 
 **Test Coverage:**
@@ -121,7 +121,7 @@ def test_validate_pdf():
 ### Markdown Validation Testing
 
 ```python
-# test_markdown_validator.py pattern
+# Markdown validator test pattern
 def test_validate_markdown():
     problems, exit_code = validate_markdown(markdown_dir, repo_root)
     assert exit_code == 0

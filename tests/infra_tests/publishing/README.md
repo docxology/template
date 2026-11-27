@@ -56,12 +56,15 @@ uv run pytest tests/infra_tests/publishing/test_cli*.py -v
 - Help text generation
 - Error handling
 
-### Publishing Tests (`test_publishing.py`)
+### Core Publishing Tests
 
 Core publishing functionality:
 
 ```bash
-uv run pytest tests/infra_tests/publishing/test_publishing.py -v
+uv run pytest -v \
+  tests/infra_tests/publishing/test_publishing_core.py \
+  tests/infra_tests/publishing/test_publishing_metadata.py \
+  tests/infra_tests/publishing/test_publishing_citations.py
 ```
 
 **Test Coverage:**
@@ -78,10 +81,10 @@ Individual function testing:
 
 ```bash
 # Test metadata extraction
-uv run pytest tests/infra_tests/publishing/test_publishing.py::test_extract_metadata -v
+uv run pytest tests/infra_tests/publishing/test_publishing_metadata.py::TestPublicationMetadata::test_extract_publication_metadata_complete_document -v
 
 # Test citation generation
-uv run pytest tests/infra_tests/publishing/test_publishing.py::test_generate_citation -v
+uv run pytest tests/infra_tests/publishing/test_publishing_citations.py::TestCitationGeneration::test_generate_citation_bibtex -v
 ```
 
 ### Integration Tests
@@ -99,7 +102,7 @@ Error conditions and boundaries:
 
 ```bash
 # Error handling tests
-uv run pytest tests/infra_tests/publishing/test_publishing.py::TestPublishingEdgeCases -v
+uv run pytest tests/infra_tests/publishing/test_publishing_edge_cases.py::TestPublishingEdgeCases -v
 ```
 
 ## Common Test Patterns
@@ -116,7 +119,7 @@ def test_zenodo_client():
 ### Metadata Testing
 
 ```python
-# test_publishing.py pattern
+# Metadata extraction test pattern
 def test_extract_metadata():
     metadata = extract_publication_metadata([Path("manuscript.md")])
     assert metadata.title is not None
@@ -125,7 +128,7 @@ def test_extract_metadata():
 ### Citation Testing
 
 ```python
-# test_publishing.py pattern
+# Citation generation test pattern
 def test_generate_citation():
     bibtex = generate_citation_bibtex(metadata)
     assert "@article" in bibtex
@@ -149,7 +152,7 @@ uv run pytest tests/infra_tests/publishing/test_api.py -v
 uv run pytest tests/infra_tests/publishing/test_cli*.py -v
 
 # Core functionality
-uv run pytest tests/infra_tests/publishing/test_publishing.py -v
+uv run pytest tests/infra_tests/publishing/test_publishing_core.py -v
 ```
 
 ### With Coverage
@@ -171,7 +174,7 @@ uv run pytest tests/infra_tests/publishing/ -vv -s
 ### Test Specific Function
 
 ```bash
-uv run pytest tests/infra_tests/publishing/test_publishing.py::test_extract_metadata -v
+uv run pytest tests/infra_tests/publishing/test_publishing_metadata.py::TestPublicationMetadata::test_extract_publication_metadata_complete_document -v
 ```
 
 ## Architecture
