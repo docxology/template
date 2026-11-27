@@ -31,8 +31,11 @@ Package (`variables/`: `compute.py`, `context.py`, `formatters.py`, `inject.py`,
 
 ## Running Injection Manually
 
+From the Template repository root, use the prepared Advanced Literature Review project environment.
+
 ```bash
-uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
+cd projects/templates/template_advanced_literature_review
+.venv/bin/python scripts/05_inject_variables.py
 ```
 
 Output: `output/manuscript/*.md` — rendered copies of all manuscript files with all `{{VAR}}`
