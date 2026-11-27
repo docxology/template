@@ -12,10 +12,10 @@ from infrastructure.core.files.pdf_locator import find_combined_pdf as locate_co
 from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 
 WORKING_DIR = "projects/working"
-REQUIRED_MARKERS = ("tests", "manuscript")
 
 
 @dataclass
@@ -55,8 +55,8 @@ def list_working_projects(repo: Path) -> list[str]:
 
 
 def has_manuscript(project_dir: Path) -> bool:
-    """Return True when *project_dir* holds a ``manuscript/`` dir with ``*.md`` files."""
-    manuscript = project_dir / "manuscript"
+    """Return whether the selected manuscript directory has Markdown source."""
+    manuscript = resolve_source_manuscript_dir(project_dir)
     return manuscript.is_dir() and any(manuscript.glob("*.md"))
 
 
@@ -70,9 +70,10 @@ def _combined_pdf_path(output_dir: Path, project_name: str) -> Path | None:
 def check_structure(project_dir: Path) -> tuple[bool, list[str]]:
     """Verify minimum WIP structure (tests + manuscript; src optional but noted)."""
     notes: list[str] = []
-    for marker in REQUIRED_MARKERS:
-        if not (project_dir / marker).is_dir():
-            notes.append(f"missing {marker}/")
+    if not (project_dir / "tests").is_dir():
+        notes.append("missing tests/")
+    if not resolve_source_manuscript_dir(project_dir).is_dir():
+        notes.append("missing manuscript/")
     if not (project_dir / "src").is_dir():
         notes.append("missing src/")
     return len(notes) == 0 or (len(notes) == 1 and notes == ["missing src/"]), notes

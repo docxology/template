@@ -12,6 +12,7 @@ from infrastructure.project.working_render import (
     _classify_filesystem_only,
     _combined_pdf_path,
     audit_project,
+    audit_project_filesystem_only,
     check_structure,
     classify_status,
     consolidate_audits,
@@ -63,6 +64,30 @@ def test_has_manuscript_false_when_dir_missing_or_empty(tmp_path: Path) -> None:
     assert has_manuscript(tmp_path) is False
     (tmp_path / "manuscript").mkdir()
     assert has_manuscript(tmp_path) is False  # dir present but no *.md
+
+
+def test_has_manuscript_uses_docs_when_legacy_directory_only_has_config(tmp_path: Path) -> None:
+    legacy = tmp_path / "manuscript"
+    legacy.mkdir()
+    (legacy / "config.yaml").write_text("paper: {}\n", encoding="utf-8")
+    manuscript = tmp_path / "docs" / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    assert has_manuscript(tmp_path) is True
+
+
+def test_filesystem_audit_accepts_docs_manuscript_layout(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "working" / "paper"
+    (project / "tests").mkdir(parents=True)
+    manuscript = project / "docs" / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+
+    assert has_manuscript(project) is True
+    audit = audit_project_filesystem_only(tmp_path, "paper")
+    assert audit.structure_ok is True
+    assert audit.structure_notes == ["missing src/"]
+    assert audit.status == "FAIL — no PDF"
 
 
 def test_classify_filesystem_only_rubric() -> None:
