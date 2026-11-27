@@ -766,6 +766,10 @@ Advanced Literature Review `pypdf`, and root dev-group pins (`ruff`, `numpy`,
   locally instead of overlapping through automatic line breaking or disappearing
   behind page-level clipping. Authored TeX, fonts, and mathematical content remain
   unchanged.
+- Use the registered project name for Stage 04 combined PDF checks on symlinked
+  checkouts. Working-project audits and PDF rerender selection use the canonical
+  manuscript directory, including Markdown sources in `docs/manuscript/`.
+  ([#366](https://github.com/docxology/template/issues/366), [#368](https://github.com/docxology/template/issues/368))
 
 ## [5.1.0] - 2026-11-06
 
