@@ -12,22 +12,29 @@ from infrastructure.core.logging.utils import log_success
 from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering._slides_accessibility_reveal import accessible_reveal_output_issues
+from infrastructure.rendering._web_links import web_image_issues
 
 
 def validate_combined_html(output_dir: Path, *, logger: Logger) -> bool:
-    """Require a non-empty standalone combined HTML document."""
+    """Require standalone combined HTML with resolvable relative image sources."""
 
     path = output_dir / "web" / "index.html"
     try:
         if not path.is_file() or path.stat().st_size == 0:
             logger.error("Combined HTML output missing or empty: %s", path)
             return False
-        prefix = path.read_text(encoding="utf-8")[:8192].lower()
+        content = path.read_text(encoding="utf-8")
+        prefix = content[:8192].lower()
     except (OSError, UnicodeDecodeError) as exc:
         logger.error("Could not validate combined HTML output %s: %s", path, exc)
         return False
     if not re.search(r"(?:<!doctype\s+html\b|<html(?:\s|>))", prefix):
         logger.error("Combined HTML output is not a standalone HTML document: %s", path)
+        return False
+    issues = web_image_issues(path, content)
+    if issues:
+        for issue in issues:
+            logger.error("Combined HTML image validation failed: %s", issue)
         return False
     log_success(f"Combined HTML valid: {path.name}", logger)
     return True

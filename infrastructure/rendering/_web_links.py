@@ -327,6 +327,36 @@ def rewrite_repository_links(
     write_if_changed(html_file, _ANCHOR_HREF_RE.sub(_rewrite, content))
 
 
+def web_image_issues(page: Path, content: str) -> list[str]:
+    """Check relative image sources in an already-read rendered HTML page."""
+
+    root = page.parent.resolve()
+    issues: list[str] = []
+    for match in _IMG_SRC_RE.finditer(content):
+        raw_src = html.unescape(match.group("src"))
+        parsed = urlsplit(raw_src)
+        scheme = parsed.scheme.lower()
+        if scheme in _PASSTHROUGH_SRC_SCHEMES:
+            continue
+        if scheme or parsed.netloc:
+            issues.append(f"{page.name}: unsupported img src scheme: {raw_src}")
+            continue
+        if not parsed.path or parsed.path.startswith("/"):
+            continue
+        decoded = unquote(parsed.path)
+        if "\x00" in decoded or "\\" in decoded:
+            issues.append(f"{page.name}: unsafe local img src: {raw_src}")
+            continue
+        candidate = page.parent / decoded
+        try:
+            resolved = candidate.resolve(strict=True)
+            resolved.relative_to(root)
+        except (OSError, ValueError):
+            if _renderer_figure_asset_target(page, parsed.path) is None:
+                issues.append(f"{page.name}: local img src is missing or leaves output/web: {raw_src}")
+    return issues
+
+
 def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
     """Return fail-closed issues for renderer-owned deployed HTML anchors and image sources."""
 
@@ -369,26 +399,5 @@ def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
             except (OSError, ValueError):
                 if _renderer_figure_asset_target(page, parsed.path) is None:
                     issues.append(f"{page.name}: local href leaves output/web or is missing: {raw_href}")
-        for match in _IMG_SRC_RE.finditer(content):
-            raw_src = html.unescape(match.group("src"))
-            parsed = urlsplit(raw_src)
-            scheme = parsed.scheme.lower()
-            if scheme in _PASSTHROUGH_SRC_SCHEMES:
-                continue
-            if scheme or parsed.netloc:
-                issues.append(f"{page.name}: unsupported img src scheme: {raw_src}")
-                continue
-            if not parsed.path or parsed.path.startswith("/"):
-                continue
-            decoded = unquote(parsed.path)
-            if "\x00" in decoded or "\\" in decoded:
-                issues.append(f"{page.name}: unsafe local img src: {raw_src}")
-                continue
-            candidate = page.parent / decoded
-            try:
-                resolved = candidate.resolve(strict=True)
-                resolved.relative_to(root)
-            except (OSError, ValueError):
-                if _renderer_figure_asset_target(page, parsed.path) is None:
-                    issues.append(f"{page.name}: local img src is missing or leaves output/web: {raw_src}")
+        issues.extend(web_image_issues(page, content))
     return tuple(issues)
