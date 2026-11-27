@@ -262,9 +262,11 @@ flowchart TB
     class SC_F,M_F,DOCS_F,OUT_F f
 ```
 
-### Stub directory (not discovered)
+### Validation fixtures
 
-[`projects/active/_test_project/`](active/_test_project/) contains only `output/` for validation tests that reference a fixed project name. It does **not** satisfy the required `src/` + `tests/` layout and is omitted from `discover_projects()`.
+Tests that need a project stub create it in a temporary directory. Inspect the
+[project discovery tests](../tests/infra_tests/core/test_project_discovery.py)
+for examples and the rules for omitting incomplete project directories.
 
 ## Infrastructure Compliance
 
