@@ -211,7 +211,7 @@ def _body_arguments(
     arguments = [str(markdown.path), *semantic_parser_options(reader.root, scope)]
     inputs = [markdown.path]
     filters = body["filters"]
-    selected_filters = semantic_lua_filters()
+    selected_filters = semantic_lua_filters(has_crossref=body["crossref_filter"] is not None)
     if not isinstance(filters, list) or len(filters) != len(selected_filters):
         raise ValueError("HTML ordinal parser omitted a Source-selected Lua filter")
     sdk_root = Path(__file__).absolute().parents[2]
@@ -549,7 +549,7 @@ def replay_html_hydration_ordinals(
     ]
     filters = body["filters"]
 
-    selected_filters = semantic_lua_filters()
+    selected_filters = semantic_lua_filters(has_crossref=body["crossref_filter"] is not None)
     if not isinstance(filters, list) or len(filters) != len(selected_filters):
         raise ValueError("HTML ordinal readback changed the exact Source Lua roster")
     sdk_root = Path(__file__).absolute().parents[2]

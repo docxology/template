@@ -177,3 +177,8 @@ __all__ = [
     "formalism_filter_args",
     "formalism_filter_path",
 ]
+
+def combined_html_lua_filters(rendering: Path, *, has_crossref: bool) -> list[Path]:
+    """Select the exact ordered Lua files for combined HTML and its replays."""
+    filters = [rendering / "normalize_latex_crossrefs.lua"] if has_crossref else []
+    return [*filters, rendering / "convert_latex_images.lua", rendering / FORMALISM_FILTER_NAME]

@@ -20,7 +20,7 @@ from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
-from infrastructure.rendering._pandoc_filters import formalism_filter_args
+from infrastructure.rendering._pandoc_filters import combined_html_lua_filters, formalism_filter_args
 from infrastructure.rendering._untrusted_web import PreparedWeb, prepare_web_sources, render_prepared_web
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.combined_native_commands import html_combined_command, html_metadata_arguments
@@ -247,20 +247,14 @@ class WebRenderer:
 
         # Build pandoc command for HTML conversion
         figures_dir = Path(self.config.figures_dir)
-        lua_filter = Path(__file__).parent / "convert_latex_images.lua"
 
         # The combined page is the authoritative HTML edition; publish the
         # pandoc output by rename from an exclusive temporary target.
         render_target = output_dir / f".{output_file.stem}.{secrets.token_hex(12)}.html.tmp"
         metadata = self._pandoc_metadata_args(manuscript_dir)
         resource_paths = [path for path in (manuscript_dir, figures_dir) if path.exists()]
-        lua_filters = [lua_filter] if lua_filter.exists() else []
-        formalism = formalism_filter_args()
-        if len(formalism) != 2 or formalism[0] != "--lua-filter":
-            raise ValueError("combined HTML requires the exact Source formalism filter role")
-        lua_filters.append(Path(formalism[1]))
-
         crossref = shutil.which("pandoc-crossref")
+        lua_filters = combined_html_lua_filters(Path(__file__).parent, has_crossref=crossref is not None)
         if crossref:
             logger.info("Using pandoc-crossref at %s for combined HTML", crossref)
         else:

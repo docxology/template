@@ -147,7 +147,7 @@ def replay_html_source(
         raise ValueError("source semantic contract is not derived from actual admitted AST bytes")
     original_args = [str(producer_path(custody, root, consumed.path)), *semantic_parser_options(root, scope)]
     filters = raw.get("filters")
-    selected_filters = semantic_lua_filters()
+    selected_filters = semantic_lua_filters(has_crossref=raw["crossref_filter"] is not None)
     if not isinstance(filters, list) or len(filters) != len(selected_filters):
         raise ValueError("semantic source omitted the canonical Source Lua filters")
     sdk_root = Path(__file__).absolute().parents[2]

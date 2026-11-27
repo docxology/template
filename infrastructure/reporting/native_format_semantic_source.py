@@ -101,13 +101,12 @@ def semantic_parser_options(root: Path, scope: str) -> list[str]:
     ]
 
 
-def semantic_lua_filters() -> tuple[Path, ...]:
+def semantic_lua_filters(*, has_crossref: bool) -> tuple[Path, ...]:
     """Select the same ordered Source filters as the canonical HTML writer."""
-    from infrastructure.rendering._pandoc_filters import formalism_filter_args
+    from infrastructure.rendering._pandoc_filters import combined_html_lua_filters
 
     rendering = Path(__file__).absolute().parents[1] / "rendering"
-    images = rendering / "convert_latex_images.lua"
-    return (*((images,) if images.is_file() else ()), *(Path(path) for path in formalism_filter_args()[1::2]))
+    return tuple(combined_html_lua_filters(rendering, has_crossref=has_crossref))
 
 
 def observe_html_source(
@@ -132,7 +131,8 @@ def observe_html_source(
     sdk_root = Path(__file__).absolute().parents[2]
     sdk_reader = SnapshotReader(sdk_root)
 
-    for index, original in enumerate(semantic_lua_filters()):
+    crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
+    for index, original in enumerate(semantic_lua_filters(has_crossref=crossref is not None)):
         snapshot = sdk_reader.read(Path(original).relative_to(sdk_root).as_posix())
         target = directory / f"semantic-filter-{index}.lua"
         atomic_write_bytes_confined(root, target, snapshot.content, mode=0o600)
@@ -143,7 +143,6 @@ def observe_html_source(
                 "consumed": {"path": target.relative_to(root).as_posix(), "sha256": snapshot.sha256},
             }
         )
-    crossref = shutil.which("pandoc-crossref", path=env.get("PATH"))
     if crossref:
         args.extend(["--filter", crossref])
     for index, (_, data) in enumerate(bibliographies):

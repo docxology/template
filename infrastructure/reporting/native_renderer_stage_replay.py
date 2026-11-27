@@ -14,6 +14,7 @@ from typing import Any
 import yaml
 
 from infrastructure.project.public_reference_git import remaining
+from infrastructure.rendering._pandoc_filters import combined_html_lua_filters
 from infrastructure.rendering._bibliography import (
     pandoc_bibliography_args,
     resolve_bibliography,
@@ -205,7 +206,7 @@ def _one_renderer(
         )
         bibliographies: list[Path] = []
     else:
-        lua_paths = [sdk / "rendering/convert_latex_images.lua", formalism]
+        lua_paths = combined_html_lua_filters(sdk / "rendering", has_crossref=crossref is not None)
         resources = [original_consumed]
         if (project / "output/figures").exists():
             resources.append(original_figures)
