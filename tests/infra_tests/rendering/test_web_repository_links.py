@@ -4,6 +4,7 @@ Tests web/HTML rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import logging
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,7 @@ from infrastructure.rendering._web_postprocess import (
     repository_root_for,
     rewrite_repository_links,
 )
+from infrastructure.rendering.output_validation import validate_combined_html
 
 
 def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pages(tmp_path: Path) -> None:
@@ -235,3 +237,21 @@ def test_repository_link_rewrite_collapses_hydration_pair_duplicates(tmp_path: P
         'href="https://github.com/docxology/template/blob/main/'
         'projects/templates/template_search_project/manuscript/references.bib"' in content
     )
+
+
+def test_combined_html_requires_local_images(tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    web = output / "web"
+    web.mkdir(parents=True)
+    (web / "index.html").write_text(
+        '<!doctype html><html><body><img src="../figures/figure%20one.png" alt="Figure"></body></html>',
+        encoding="utf-8",
+    )
+    logger = logging.getLogger(__name__)
+
+    assert not validate_combined_html(output, logger=logger)
+
+    figures = output / "figures"
+    figures.mkdir()
+    (figures / "figure one.png").write_bytes(b"figure")
+    assert validate_combined_html(output, logger=logger)
