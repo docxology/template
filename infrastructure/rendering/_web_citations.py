@@ -7,6 +7,9 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from urllib.parse import unquote
 
+from infrastructure.rendering._pandoc_filters import CROSS_REFERENCE_KEY_PREFIXES
+
+_CROSS_REFERENCE_IDS = tuple(f"ref-{prefix}" for prefix in CROSS_REFERENCE_KEY_PREFIXES)
 _VOID_TAGS = frozenset(
     {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 )
@@ -93,6 +96,10 @@ def web_citation_issues(content: str) -> list[str]:
     issues: list[str] = []
     for href, line in document.citations.items():
         identifier = unquote(href[1:])
+        # Citeproc can label unresolved cross-references as bibliography links
+        # when their optional resolver is unavailable.
+        if identifier.startswith(_CROSS_REFERENCE_IDS):
+            continue
         count = document.identifiers[identifier]
         if count == 0:
             reason = f"targets missing ID {identifier!r}"

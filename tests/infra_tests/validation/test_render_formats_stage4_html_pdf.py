@@ -34,6 +34,8 @@ _ENTRY = '<div id="ref-demo" class="csl-entry" role="listitem"><em>Example work.
             id="decoded-identifier",
         ),
         pytest.param("#ref-demo", _BIBLIOGRAPHY.format(""), False, id="missing-entry"),
+        pytest.param("#ref-fig%3Ademo", "", True, id="reserved-cross-reference"),
+        pytest.param("#ref-figure:demo", "", False, id="ordinary-key-with-colon"),
         pytest.param("#ref-demo", _BIBLIOGRAPHY.format(_ENTRY * 2), False, id="duplicate-entries"),
         pytest.param(
             "#ref-demo",
