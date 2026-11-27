@@ -11,6 +11,7 @@ import pytest
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._web_postprocess import (
+    add_responsive_image_variants,
     deployed_web_link_issues,
     repository_root_for,
     rewrite_repository_links,
@@ -276,3 +277,34 @@ def test_combined_html_rejects_missing_images_and_directories(tmp_path: Path, im
     (web / "index.html").write_text(f"<!doctype html>{image}", encoding="utf-8")
 
     assert not validate_combined_html(tmp_path, logger=logging.getLogger(__name__))
+
+
+def test_combined_html_requires_generated_mobile_figure(tmp_path: Path) -> None:
+    web = tmp_path / "web"
+    web.mkdir()
+    page = web / "index.html"
+    page.write_text('<!doctype html><img src="series,a.png">', encoding="utf-8")
+    (web / "series,a.png").write_bytes(b"desktop")
+    mobile = web / "series,a_mobile.png"
+    mobile.write_bytes(b"mobile")
+    add_responsive_image_variants(page)
+
+    assert "series,a_mobile.png" in page.read_text(encoding="utf-8")
+    assert validate_combined_html(tmp_path, logger=logging.getLogger(__name__))
+
+    mobile.unlink()
+    assert not validate_combined_html(tmp_path, logger=logging.getLogger(__name__))
+
+
+def test_combined_html_leaves_other_srcset_formats_to_the_browser(tmp_path: Path) -> None:
+    web = tmp_path / "web"
+    web.mkdir()
+    (web / "index.html").write_text(
+        "<!doctype html><picture>"
+        '<source media="(max-width: 600px)" srcset="data:image/png;base64,AAAA">'
+        '<source media="(max-width: 600px)" srcset="https://example.invalid/one,two_mobile.png">'
+        '<source media="(max-width: 600px)" srcset="small.png 1x, large.png 2x">'
+        '</picture><video><source srcset="video_mobile.png"></video>',
+        encoding="utf-8",
+    )
+    assert validate_combined_html(tmp_path, logger=logging.getLogger(__name__))
