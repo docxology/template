@@ -9,8 +9,8 @@ Synthetic benchmark for template workflow skills: keyword/heuristic grader, harn
 | Path | Role |
 | --- | --- |
 | [`evals/evals.json`](evals/evals.json) | 34 eval cases (30 positive, 4 negative) |
-| [`latest/`](latest/) | Default harness output (`benchmark.json`, per-eval grading, optional `review.html`) |
-| [`baseline/`](baseline/) | Pinned compare reference (`benchmark.json` from `--save-baseline` or `--save-baseline-only`) |
+| `latest/` | Default harness output (`benchmark.json`, per-eval grading, optional `review.html`) |
+| `baseline/` | Pinned compare reference (`benchmark.json` from `--save-baseline` or `--save-baseline-only`) |
 | [`review-template.html`](review-template.html) | Static HTML shell for review generation |
 | [`scripts/skill_eval/`](scripts/skill_eval/) | Importable harness package (config, responses, grader, benchmark, report, review, workspace) |
 | [`scripts/run_eval_harness.py`](scripts/run_eval_harness.py) | CLI entry (thin shim over `skill_eval.runner`) |

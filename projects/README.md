@@ -155,13 +155,13 @@ lifecycle repo's `active/` tree; inspect planned syncs with
 
 ### In-progress projects (under `projects/working/`)
 
-These are actively being developed under [`working/`](working/) but are not yet pipeline-ready. The roster is deliberately not copied here; use `ls projects/working/` for the current checkout and [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for projects actually discovered by `./run.sh`.
+Developing projects can be linked under the local `projects/working/` directory. When present, use `ls projects/working/` to inspect its contents and [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for projects actually discovered by `./run.sh`.
 
 **Note:** Use `projects/templates/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares project shapes. Keep ordinary private work in the sidecar's `working/` or `archive/` folders; render it explicitly with qualified names such as `working/<name>`, or deliberately restore it to optional sidecar `active/` only when it should enter default discovery.
 
 ### Archived exemplars (under `projects/archive/`)
 
-Preserved under [`archive/`](archive/) until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects/archive/` for local inspection and [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) for the public policy — do not hard-code names here.
+Archived projects can be retained locally under `projects/archive/` until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects/archive/` for local inspection and [`docs/_generated/COUNTS.md`](../docs/_generated/COUNTS.md) for the public policy — do not hard-code names here.
 
 ## Standalone Project Paradigm
 

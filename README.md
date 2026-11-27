@@ -51,7 +51,7 @@ graph TB
 
 ## Quickstart
 
-Just cloned the repo? Do this:
+Install Git and [uv](https://docs.astral.sh/uv/) before starting. The root lock uses Python 3.14 by default. For the PDF example, prepare Pandoc, pandoc-crossref and XeLaTeX using the [system prerequisites](docs/guides/startup-and-setup.md).
 
 1. `git clone https://github.com/docxology/template && cd template`
 2. `uv sync --locked` (installs the declared root environment; independent project runtimes retain their own locks)
