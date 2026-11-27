@@ -255,3 +255,24 @@ def test_combined_html_requires_local_images(tmp_path: Path) -> None:
     figures.mkdir()
     (figures / "figure one.png").write_bytes(b"figure")
     assert validate_combined_html(output, logger=logger)
+
+
+def test_combined_html_uses_first_actual_image_src(tmp_path: Path) -> None:
+    web = tmp_path / "web"
+    web.mkdir()
+    (web / "figure.png").write_bytes(b"figure")
+    (web / "index.html").write_text(
+        '<!doctype html><img data-src="unused.png" SRC=figure.png src="duplicate.png">',
+        encoding="utf-8",
+    )
+    assert validate_combined_html(tmp_path, logger=logging.getLogger(__name__))
+
+
+@pytest.mark.parametrize("image", ["<img src=missing.png>", '<img src="directory.png">'])
+def test_combined_html_rejects_missing_images_and_directories(tmp_path: Path, image: str) -> None:
+    web = tmp_path / "web"
+    web.mkdir()
+    (web / "directory.png").mkdir()
+    (web / "index.html").write_text(f"<!doctype html>{image}", encoding="utf-8")
+
+    assert not validate_combined_html(tmp_path, logger=logging.getLogger(__name__))

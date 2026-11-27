@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import re
 from collections.abc import Mapping
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
 
@@ -18,10 +19,6 @@ _ANCHOR_HREF_RE = re.compile(
     flags=re.IGNORECASE | re.DOTALL,
 )
 
-_IMG_SRC_RE = re.compile(
-    r"<img\b[^>]*?\bsrc\s*=\s*(?P<quote>[\"'])(?P<src>.*?)(?P=quote)",
-    flags=re.IGNORECASE | re.DOTALL,
-)
 # Images legitimately embed remote or inline payloads; ``data``/``blob`` are
 # not valid navigation targets but are valid image sources.
 _PASSTHROUGH_SRC_SCHEMES = frozenset({"http", "https", "mailto", "tel", "data", "blob"})
@@ -327,13 +324,32 @@ def rewrite_repository_links(
     write_if_changed(html_file, _ANCHOR_HREF_RE.sub(_rewrite, content))
 
 
+class _ImageSources(HTMLParser):
+    """Collect the first actual src attribute of each image element."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.sources: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag != "img":
+            return
+        for name, value in attrs:
+            if name == "src":
+                if value is not None:
+                    self.sources.append(value)
+                break
+
+
 def web_image_issues(page: Path, content: str) -> list[str]:
     """Check relative image sources in an already-read rendered HTML page."""
 
     root = page.parent.resolve()
     issues: list[str] = []
-    for match in _IMG_SRC_RE.finditer(content):
-        raw_src = html.unescape(match.group("src"))
+    parser = _ImageSources()
+    parser.feed(content)
+    parser.close()
+    for raw_src in parser.sources:
         parsed = urlsplit(raw_src)
         scheme = parsed.scheme.lower()
         if scheme in _PASSTHROUGH_SRC_SCHEMES:
@@ -354,6 +370,9 @@ def web_image_issues(page: Path, content: str) -> list[str]:
         except (OSError, ValueError):
             if _renderer_figure_asset_target(page, parsed.path) is None:
                 issues.append(f"{page.name}: local img src is missing or leaves output/web: {raw_src}")
+        else:
+            if not resolved.is_file():
+                issues.append(f"{page.name}: local img src is not a file: {raw_src}")
     return issues
 
 
