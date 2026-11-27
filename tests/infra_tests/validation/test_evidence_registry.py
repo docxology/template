@@ -335,6 +335,31 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     assert {fact.source_path for fact in registry.lookup("number", "3.12")} == {"pyproject.toml"}
 
 
+def test_registry_does_not_infer_numbers_from_root_manuscript_report(tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    domain_reports = output / "domain"
+    domain_reports.mkdir(parents=True)
+    (output / "manuscript_report.json").write_text(
+        '{"structure": {"word_count": 347}, "metrics": {"count": 83}}', encoding="utf-8"
+    )
+    (domain_reports / "manuscript_report.json").write_text('{"measured": 59}', encoding="utf-8")
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "claim_ledger.json").write_text(
+        '{"claims": [{"claim_id": "verified-count", "value": 83, "artifact_path": "output/manuscript_report.json"}]}',
+        encoding="utf-8",
+    )
+
+    registry = build_project_evidence_registry(tmp_path)
+    report = validate_text_against_registry("The results were 347, 59 and 83.", registry, strict=True)
+
+    assert [(issue.kind, issue.value) for issue in report.errors] == [("number", "347")]
+    assert registry.has("artifact", "output/manuscript_report.json")
+    assert {fact.source_path for fact in registry.lookup("number", "59")} == {"output/domain/manuscript_report.json"}
+    assert {fact.source_tier for fact in registry.lookup("number", "83")} == {"claim_ledger"}
+    assert missing_evidence_source_paths(tmp_path, registry) == ()
+
+
 def test_project_registry_is_invariant_to_ignored_runtime_and_control_reports(tmp_path: Path, monkeypatch) -> None:
     """Stage 4 evidence cannot depend on Stage 5/self-report or runtime residue."""
     project = tmp_path / "project"
