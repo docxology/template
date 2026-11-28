@@ -22,6 +22,7 @@ from infrastructure.publishing.pypi_release import (
     Deadline,
     Distribution,
     TestPyPIError,
+    _run_installed_probe,
     admit_retrieved,
     admit_sdist,
     build_package,
@@ -240,6 +241,47 @@ def test_missing_credentials_and_production_contract_are_blocked(tmp_path: Path)
     wrong_destination = PyPIAdapter(PyPIConfig(test=True, repository_url="https://other.invalid/upload"), env={})
     refused = wrong_destination.publish(tmp_path, dry_run=False)
     assert refused.status == "error" and refused.ok is False
+
+
+def test_installed_probe_runs_large_body_from_private_payload(tmp_path: Path) -> None:
+    scratch = tmp_path.resolve()
+    outside = scratch / "outside-source"
+    source = scratch / "source"
+    bytecode = scratch / "fresh-bytecode"
+    for directory in (outside, source, bytecode):
+        directory.mkdir()
+    spec = {"audit": {"prefix": str(bytecode)}, "forbidden_roots": [str(source)]}
+    body = (
+        b"#"
+        + b"x" * 250_000
+        + b"\n"
+        + b"""
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+spec, observation = map(Path, sys.argv[1:])
+observation.write_text(json.dumps({
+    "isolated": sys.flags.isolated,
+    "bytecode": sys.pycache_prefix,
+    "cwd": str(Path.cwd()),
+    "spec_sha256": hashlib.sha256(spec.read_bytes()).hexdigest(),
+}))
+"""
+    )
+    content = _run_installed_probe(Path(sys.executable), scratch, spec, body, Deadline.start(15))
+    assert json.loads((outside / "observation.json").read_text()) == {
+        "isolated": 1,
+        "bytecode": str(bytecode),
+        "cwd": str(outside),
+        "spec_sha256": hashlib.sha256(content).hexdigest(),
+    }
+    payload = outside / "installed-probe-payload.py"
+    assert payload.read_bytes() == body
+    binding = json.loads(content)["probe_payload"]
+    assert binding["path"] == str(payload)
+    assert binding["sha256"] == hashlib.sha256(body).hexdigest()
 
 
 def test_explicit_wheel_verifier_rejects_original_hash_before_runtime(tmp_path: Path) -> None:

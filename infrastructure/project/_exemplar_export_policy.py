@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import fnmatch
-from pathlib import Path
 import tomllib
-
+from pathlib import Path
 
 _IGNORED_NAMES = frozenset(
     {
@@ -31,6 +30,9 @@ _IGNORED_NAMES = frozenset(
 _IGNORED_PATTERNS = ("*.egg-info", "*.pyc", "*.pyo")
 
 
+PUBLIC_RESOURCE_ROOTS = frozenset({"fonds/templates", "rules/templates", "tools/templates", "infrastructure"})
+
+
 def declared_resource_dependencies(source_root: Path) -> tuple[str, ...]:
     """Read validated cross-root resource declarations from ``export.toml``."""
     config_path = source_root / "export.toml"
@@ -44,8 +46,7 @@ def declared_resource_dependencies(source_root: Path) -> tuple[str, ...]:
     if not isinstance(raw, list) or not all(isinstance(item, str) for item in raw):
         raise ValueError("template_export.cross_root_dependencies must be a list of strings")
     dependencies = tuple(raw)
-    allowed = {"fonds/templates", "rules/templates", "tools/templates", "infrastructure"}
-    invalid = sorted(set(dependencies) - allowed)
+    invalid = sorted(set(dependencies) - PUBLIC_RESOURCE_ROOTS)
     if invalid:
         raise ValueError(f"unsupported cross-root resource dependencies: {', '.join(invalid)}")
     if len(dependencies) != len(set(dependencies)):

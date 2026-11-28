@@ -14,6 +14,7 @@ import pytest
 
 from infrastructure.publishing.publication_tree import (
     INVENTORY_NAME,
+    RESOURCE_REFRESH_RECEIPT,
     PublicationLimits,
     PublicationTarget,
     prepare_removal_plan,
@@ -26,6 +27,7 @@ from infrastructure.publishing.static_site.github_pages import _credential_envir
 
 pytestmark = pytest.mark.timeout(120)
 TARGET = PublicationTarget("https://github.com/example/owned-publication-fixture", "gh-pages")
+RESOURCE_ROOT = "_template_resources/infrastructure"
 
 
 def _trees(tmp_path: Path) -> tuple[Path, Path, Path]:
@@ -48,9 +50,145 @@ def _backup(quarantine: Path) -> Path:
     return quarantine / journal["quarantine"]
 
 
+def _resource_trees(tmp_path: Path) -> tuple[Path, Path, Path]:
+    source, destination, quarantine = _trees(tmp_path)
+    for relative in (f"{RESOURCE_ROOT}/current.txt", f"{RESOURCE_ROOT}/retired.txt", ".template-export.json"):
+        path = source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"Historical {relative}\n")
+    update_publication_tree(source, destination, TARGET)
+    return source, destination, quarantine
+
+
+def test_resource_scope_preserves_other_files_and_historical_ownership(tmp_path: Path) -> None:
+    source, destination, _ = _resource_trees(tmp_path)
+    old_inventory = json.loads((destination / INVENTORY_NAME).read_text())["files"]
+    historical_export = (destination / ".template-export.json").read_bytes()
+    (destination / "src/retired.py").unlink()
+    (destination / "README.md").write_bytes(b"Standalone author content\n")
+    (destination / "README.md").chmod(0o755)
+    (source / ".template-export.json").write_bytes(b"Different export provenance\n")
+    (source / f"{RESOURCE_ROOT}/current.txt").write_bytes(b"Refreshed provider resource\n")
+    (source / f"{RESOURCE_ROOT}/added.txt").write_bytes(b"Added provider resource\n")
+    excluded = "_template_resources/infrastructure-other/ignored.txt"
+    for root in (source, destination):
+        (root / excluded).parent.mkdir(parents=True)
+        (root / excluded).write_text(root.name)
+
+    update = update_publication_tree(source, destination, TARGET, resource_roots=("infrastructure",))
+    validate_publication_update(destination, TARGET, update)
+    assert update.plan["resource_roots"] == ["infrastructure"]
+    assert {"README.md", ".template-export.json", excluded} <= set(update.preserved)
+    assert not update.stale_managed
+    assert not update.managed_export_parity and not update.exact_tree_parity
+    assert (destination / "README.md").read_bytes() == b"Standalone author content\n"
+    assert (destination / "README.md").stat().st_mode & 0o111
+    assert (destination / ".template-export.json").read_bytes() == historical_export
+    assert (destination / excluded).read_text() == "destination"
+    assert not (destination / "src/retired.py").exists()
+    assert (destination / f"{RESOURCE_ROOT}/current.txt").read_bytes() == b"Refreshed provider resource\n"
+    assert (destination / f"{RESOURCE_ROOT}/added.txt").read_bytes() == b"Added provider resource\n"
+    current_inventory = json.loads((destination / INVENTORY_NAME).read_text())["files"]
+    assert {name: row for name, row in current_inventory.items() if not name.startswith(f"{RESOURCE_ROOT}/")} == {
+        name: row for name, row in old_inventory.items() if not name.startswith(f"{RESOURCE_ROOT}/")
+    }
+
+
+def test_resource_scope_requires_review_for_selected_removal(tmp_path: Path) -> None:
+    source, destination, quarantine = _resource_trees(tmp_path)
+    obsolete = f"{RESOURCE_ROOT}/retired.txt"
+    (source / obsolete).unlink()
+    scope = ("infrastructure",)
+    plan = prepare_removal_plan(source, destination, TARGET, resource_roots=scope)
+    assert set(plan["removals"]) == {obsolete}
+    observed = update_publication_tree(source, destination, TARGET, resource_roots=scope)
+    assert observed.stale_managed == (obsolete,)
+    assert (destination / obsolete).exists() and not tuple(quarantine.iterdir())
+    update = update_publication_tree(
+        source,
+        destination,
+        TARGET,
+        resource_roots=scope,
+        removal_plan=plan,
+        reviewed_plan_sha256=review_plan_sha256(plan),
+        quarantine_root=quarantine,
+    )
+    validate_publication_update(destination, TARGET, update)
+    assert update.removed == (obsolete,) and not update.stale_managed
+    assert not (destination / obsolete).exists()
+    assert (destination / "src/retired.py").is_file()
+    assert (_backup(quarantine) / obsolete).read_text() == f"Historical {obsolete}\n"
+
+
+def test_resource_scope_receipt_survives_full_sync_and_can_be_refreshed(tmp_path: Path) -> None:
+    source, destination, quarantine = _resource_trees(tmp_path)
+    receipt = f"{RESOURCE_ROOT}/{RESOURCE_REFRESH_RECEIPT}"
+    nested = f"{RESOURCE_ROOT}/nested/{RESOURCE_REFRESH_RECEIPT}"
+    (source / receipt).write_bytes(b"First scoped receipt\n")
+    (source / nested).parent.mkdir()
+    (source / nested).write_bytes(b"Ordinary resource with the same filename\n")
+    update_publication_tree(source, destination, TARGET, resource_roots=("infrastructure",))
+    (source / receipt).unlink()
+    (source / nested).unlink()
+
+    plan = prepare_removal_plan(source, destination, TARGET)
+    assert plan["retained_immutable"] == [receipt]
+    assert set(plan["removals"]) == {nested, "src/retired.py"}
+    full = update_publication_tree(
+        source,
+        destination,
+        TARGET,
+        removal_plan=plan,
+        reviewed_plan_sha256=review_plan_sha256(plan),
+        quarantine_root=quarantine,
+    )
+    assert full.managed_export_parity and not full.stale_managed
+    assert (destination / receipt).read_bytes() == b"First scoped receipt\n"
+    assert not (destination / nested).exists()
+
+    (source / receipt).write_bytes(b"Second scoped receipt\n")
+    refresh = update_publication_tree(source, destination, TARGET, resource_roots=("infrastructure",))
+    assert (destination / receipt).read_bytes() == b"Second scoped receipt\n"
+    assert not refresh.stale_managed
+    validate_publication_update(destination, TARGET, refresh)
+
+
+@pytest.mark.parametrize("fault", ["unowned-file", "unowned-directory", "owned-content", "owned-mode"])
+def test_resource_scope_refuses_unowned_collisions_and_changed_preimages(tmp_path: Path, fault: str) -> None:
+    source, destination, _ = _resource_trees(tmp_path)
+    (source / f"{RESOURCE_ROOT}/added.txt").write_bytes(b"New provider resource\n")
+    inventory = (destination / INVENTORY_NAME).read_bytes()
+    existing = destination / f"{RESOURCE_ROOT}/current.txt"
+    collision = destination / f"{RESOURCE_ROOT}/added.txt"
+    if fault == "unowned-file":
+        collision.write_bytes(b"Standalone file\n")
+    elif fault == "unowned-directory":
+        collision.mkdir()
+    elif fault == "owned-content":
+        existing.write_bytes(b"Locally modified provider resource\n")
+    else:
+        existing.chmod(0o755)
+    original = (existing.read_bytes(), existing.stat().st_mode)
+    with pytest.raises(ValueError, match="unowned destination content|original ownership evidence"):
+        update_publication_tree(source, destination, TARGET, resource_roots=("infrastructure",))
+    assert (existing.read_bytes(), existing.stat().st_mode) == original
+    assert collision.exists() == fault.startswith("unowned")
+    assert (destination / INVENTORY_NAME).read_bytes() == inventory
+
+
+@pytest.mark.parametrize(
+    "roots", [("infrastructure", "tools/templates"), ("../infrastructure",), ("infrastructure",) * 2]
+)
+def test_resource_scope_refuses_empty_or_invalid_provider_selection(tmp_path: Path, roots: tuple[str, ...]) -> None:
+    source, destination, _ = _resource_trees(tmp_path)
+    with pytest.raises(ValueError, match="no source files|unique declared resource names"):
+        prepare_removal_plan(source, destination, TARGET, resource_roots=roots)
+
+
 def test_unreviewed_stale_files_refuse_parity_and_keep_ownership(tmp_path: Path) -> None:
     source, destination, quarantine = _trees(tmp_path)
     observed = update_publication_tree(source, destination, TARGET)
+    assert "resource_roots" not in observed.plan
     assert observed.stale_managed == ("src/retired.py",)
     assert not observed.managed_export_parity and not observed.exact_tree_parity
     assert (destination / "src/retired.py").read_text() == "ORIGINAL_PUBLIC_BYTES = 17\n"

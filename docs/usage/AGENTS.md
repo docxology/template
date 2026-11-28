@@ -22,8 +22,8 @@ Technical guide for `docs/usage/` — content authoring, formatting, visualizati
 
 - **Manuscript examples**: default to [`projects/templates/template_code_project/manuscript/`](../../projects/templates/template_code_project/manuscript/); active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md).
 - Figures use Pandoc image syntax `![caption](path){#fig:name}` with cross-references `[@fig:name]` — never a raw LaTeX `\begin{figure}`/`\ref{fig:name}` pair (see [Manuscript Semantics](../guides/manuscript-semantics.md)).
-- Equations use `$$ … $$ {#eq:name}` (or `\begin{equation}\label{eq:name}…\end{equation}`) with cross-references `[@eq:name]` — never raw `\eqref{eq:name}`.
-- All images must exist in `output/figures/` before manuscript build
+- Use labelled standalone `$$` displays with `[@eq:name]` references and the compatible `pandoc-crossref` filter.
+- Generate analysis figures in `output/figures/` before rendering. Keep authored artwork with the manuscript.
 - Use descriptive link text (no bare URLs)
 - Follow the style guide for consistent formatting
 

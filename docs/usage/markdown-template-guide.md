@@ -4,7 +4,9 @@ This document explains the markdown template structure and cross-referencing sys
 
 ## Template Structure
 
-The template demonstrates an academic paper structure organized as numbered markdown sections.
+The bundled example uses numbered Markdown sections. For a standalone
+repository, keep that structure under `docs/manuscript/` and follow the
+[standalone manuscript contract](../guides/manuscript-semantics.md#standalone-manuscript-contract).
 
 > **Note:** The section file names, section labels (`{#sec:...}`), and the `eq:`/`fig:` labels listed throughout this guide are *illustrative naming patterns*, not the literal contents of any one exemplar. The canonical `template_code_project` ships `00_abstract.md`, `01_introduction.md`, `02_methodology.md`, `03_results.md`, `04_conclusion.md`, `05_experimental_setup.md`, `06_reproducibility.md`, `07_scope_and_related_work.md`, and `99_references.md` (plus `preamble.md`). List the real files for your checkout with `ls projects/templates/template_code_project/manuscript/`.
 
@@ -43,7 +45,7 @@ rg -n '\{#sec:' projects/templates/template_code_project/manuscript/
 
 ### Equation References
 
-Use `[@eq:equation_name]` to reference equations — never raw `\eqref{}`:
+Use `[@eq:equation_name]` to reference a labelled standalone display.
 
 ```markdown
 $$
@@ -53,8 +55,12 @@ $$ {#eq:convergence}
 The convergence rate [@eq:convergence] shows...
 ```
 
-Equation labels are likewise project-owned. Inspect them with
-`rg -n '\{#eq:|\\label\{eq:' projects/<qualified-name>/manuscript/`.
+The bundled Code Project's numbered chapters use native LaTeX equation labels.
+Run this command from the Template checkout root to list those declarations.
+
+```bash
+rg -n -F -g '[0-9]*.md' '\label{eq:' projects/templates/template_code_project/manuscript/
+```
 
 ### Figure References
 
@@ -88,9 +94,9 @@ Use `[@tbl:table_name]` to reference tables — never raw `\ref{}`:
 
 ### Equation Forms
 
-The template supports two equivalent forms for a labelled display equation —
-the pure-Pandoc form is preferred; the raw-LaTeX `equation` environment also
-works because pandoc-crossref picks up `\label{}`:
+Use the standalone display block below for ordering and references with the
+compatible `pandoc-crossref` filter. Use a `split` inside the display when
+several lines share one number. [Equation syntax](../guides/manuscript-semantics.md#2-equations)
 
 ```markdown
 $$
@@ -271,7 +277,7 @@ Generated outputs include:
 
 ### Adding Equations
 
-1. **Use a labelled display block**: `$$ ... $$ {#eq:name}` (or `\begin{equation}\label{eq:name}...\end{equation}`)
+1. Use a standalone display and place `{#eq:name}` on the closing `$$` line.
 2. **Choose descriptive labels**: Avoid generic names like `eq:1`
 3. **Reference consistently**: Use `[@eq:name]` throughout — never `\eqref{}`
 

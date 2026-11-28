@@ -47,10 +47,10 @@ top-level schema includes `analysis.scripts` for the Stage 02 script allowlist;
 arbitrary project-owned settings belong under `project_config` unless a
 project registers a schema extension.
 Full usage example:
-[`docs/operational/config/configuration.md`](../../../docs/operational/config/configuration.md#per-project-schema-extensions).
+[`docs/operational/config/configuration.md`](https://github.com/docxology/template/blob/main/docs/operational/config/configuration.md#per-project-schema-extensions).
 
 ## See Also
 
 - [`README.md`](README.md)
 - [`../AGENTS.md`](../AGENTS.md)
-- [`docs/operational/config/configuration.md`](../../../docs/operational/config/configuration.md) — per-project schema extensions section
+- [`docs/operational/config/configuration.md`](https://github.com/docxology/template/blob/main/docs/operational/config/configuration.md) — per-project schema extensions section

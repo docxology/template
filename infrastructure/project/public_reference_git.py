@@ -29,7 +29,9 @@ from infrastructure.project.git_guards import (
 MAX_GIT_BYTES = 16 * 1024 * 1024
 MAX_FILES = 100_000
 _PINNED_SUBMODULE = "infrastructure/steganography/kmyth"
-_PINNED_SUBMODULE_URL = "https://github.com/docxology/kmyth.git"
+_PINNED_SUBMODULE_URLS = frozenset(
+    {"https://github.com/NationalSecurityAgency/kmyth.git", "https://github.com/docxology/kmyth.git"}
+)
 _PARTIAL_CONFIGURATION = (
     "config",
     "--includes",
@@ -247,7 +249,7 @@ def _inventory(root: Path, expected_commit: str, deadline: float, *, allow_submo
             or declarations.sections() != [section]
             or not set(declarations[section]).issubset({"path", "url", "branch"})
             or declarations.get(section, "path", fallback="") != _PINNED_SUBMODULE
-            or declarations.get(section, "url", fallback="") != _PINNED_SUBMODULE_URL
+            or declarations.get(section, "url", fallback="") not in _PINNED_SUBMODULE_URLS
         ):
             raise ValueError("pinned public reference submodule differs from its actual declaration")
         nested = _inventory(root / links[0].path, links[0].oid, deadline, allow_submodule=False)

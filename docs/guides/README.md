@@ -29,7 +29,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`publication-runbook.md`](publication-runbook.md) | Front-door release runbook for standalone public GitHub mirrors, Zenodo DOI minting, new-version releases, status blocks, and archival handoff | Advanced |
 | [`secure-research-guide.md`](secure-research-guide.md) | PDF watermarking, provenance, and integrity | Expert |
 | [`zenodo-doi-strategy.md`](zenodo-doi-strategy.md) | Concept vs version DOI strategy for repeat Zenodo releases | Expert |
-| [`manuscript-semantics.md`](manuscript-semantics.md) | **Canonical** manuscript syntax & semantics — Pandoc citations `[@key]`, cross-refs `[@eq:/@fig:/@sec:]`, `{{TOKEN}}` substitution, preamble. Read before authoring any manuscript. | All levels |
+| [Manuscript semantics](manuscript-semantics.md) | Canonical citations, equation numbering, cross-references, and [standalone manuscript configuration and validation](manuscript-semantics.md#standalone-manuscript-contract). | All levels |
 | [`fork-an-exemplar.md`](fork-an-exemplar.md) | Fork-readiness walkthrough for canonical exemplars | All levels |
 | [`literature-workflow-guide.md`](literature-workflow-guide.md) | Literature discovery → export → synthesis (Ollama-assisted) | Expert |
 

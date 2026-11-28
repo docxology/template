@@ -299,6 +299,7 @@ def collect_detailed_validation_results(
     inventory: StableOutputInventory | None = None,
     enabled_formats: Collection[str],
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+    project_name: str | None = None,
 ) -> ValidationResultDict:
     """Collect detailed validation results for reporting.
 
@@ -311,6 +312,7 @@ def collect_detailed_validation_results(
             run. When omitted it is collected from ``output_dir``.
         enabled_formats: Effective publication formats for required-category
             diagnostics; callers must provide the current effective format set.
+        project_name: Registered selector for the expected combined PDF.
 
     Returns:
         Dictionary with detailed validation results:
@@ -328,7 +330,9 @@ def collect_detailed_validation_results(
         inventory_mode=inventory_mode,
     )
     validation_results: ValidationResultDict = {
-        "structure": validate_output_structure(output_dir, inventory=current, enabled_formats=enabled_formats),
+        "structure": validate_output_structure(
+            output_dir, inventory=current, enabled_formats=enabled_formats, project_name=project_name
+        ),
         "directories": {},
         "file_counts": {},
         "total_size_mb": 0.0,
@@ -426,6 +430,7 @@ def validate_output_structure(
     inventory: StableOutputInventory | None = None,
     enabled_formats: Collection[str],
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+    project_name: str | None = None,
 ) -> OutputStructureResult:
     """Validate complete output directory structure.
 
@@ -442,6 +447,8 @@ def validate_output_structure(
             run. When omitted it is collected from ``output_dir``.
         enabled_formats: Effective publication formats for required-category
             diagnostics; callers must provide the current effective format set.
+        project_name: Registered selector for the expected combined PDF. When
+            omitted, infer the name from the output directory layout.
 
     Returns:
         Dictionary with structure validation results
@@ -471,7 +478,10 @@ def validate_output_structure(
 
     # Check combined PDF using shared location logic
     path_parts = output_dir.parts
-    if output_dir.name == "output" and "projects" in path_parts:
+    if project_name is not None:
+        # The renderer names the file from the selector, even for a symlinked project.
+        project_name = Path(project_name).name
+    elif output_dir.name == "output" and "projects" in path_parts:
         # Handle source project directory, including typed-subfolder and nested
         # layouts: projects/{name}/output, projects/{type}/{name}/output (e.g.
         # projects/templates/{name}/output), or projects/{program}/{name}/output.

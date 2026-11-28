@@ -15,22 +15,22 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 | `commands.py` | Non-interactive command handlers and dispatch table. |
 | `interactive.py` | TTY-only menu loop and project prompting. |
 | `discovery.py` | `validate_project_slug`, `resolve_project_info`, `select_project_interactive`, `discover_qualified_names` — one `discover_projects()` pass is shared by slug validation and lookup (`validate_project_slug(..., projects=)`). When `writer` is set, the picker lists projects and prints `Choice [index / a=all / q=quit]: ` before reading input. |
-| `menu.py` | `MENU_OPTIONS`, `render_menu`, `_menu_row` — deterministic, ANSI-free menu text. Framing and section rules use ASCII (`+`, `=`, `-`, `|`) for TTY compatibility; option rows stay column-aligned. [`tests/infra_tests/orchestration/test_menu.py`](../../tests/infra_tests/orchestration/test_menu.py) asserts stable legend substrings and each `_menu_row` line. Used by `_interactive` and the `menu` subcommand. |
+| `menu.py` | `MENU_OPTIONS`, `render_menu`, `_menu_row` — deterministic, ANSI-free menu text. Framing and section rules use ASCII (`+`, `=`, `-`, `|`) for TTY compatibility; option rows stay column-aligned. [`tests/infra_tests/orchestration/test_menu.py`](https://github.com/docxology/template/blob/main/tests/infra_tests/orchestration/test_menu.py) asserts stable legend substrings and each `_menu_row` line. Used by `_interactive` and the `menu` subcommand. |
 | `pipeline_runner.py` | `PipelineRunner` — thin adapter over `PipelineExecutor`. |
 | `stage_logger.py` | `setup_stage_log`, `stage_log_path` — append-only banners under project log paths. |
 | `secure_run.py` | `run_secure_pipeline` — pipeline + steganography post-processing. |
 | `link_sync.py` | Sidecar link-sync hook registry: `register_link_sync` / `registered_link_sync_hooks`, `maybe_sync_all_links`, and `print_link_sync_result(s)`. Registers the projects/fonds/rules/tools sync hooks (each skipped via its own `*_SKIP` env var). |
-| `stage_policy.py` | Extracted stage-script orchestration policy: profile/worker defaulting (`resolve_effective_project_workers`, `resolve_test_stage_options`), default-project fallback (`resolve_default_project`), and the `execute_test_stage` / `execute_copy_stage` entry points consumed by the thin `scripts/pipeline/stage_01_test.py` and `stage_05_copy.py`. Tested in [`tests/infra_tests/orchestration/test_stage_policy.py`](../../tests/infra_tests/orchestration/test_stage_policy.py). |
+| `stage_policy.py` | Extracted stage-script orchestration policy: profile/worker defaulting (`resolve_effective_project_workers`, `resolve_test_stage_options`), default-project fallback (`resolve_default_project`), and the `execute_test_stage` / `execute_copy_stage` entry points consumed by the thin `scripts/pipeline/stage_01_test.py` and `stage_05_copy.py`. Tested in [`tests/infra_tests/orchestration/test_stage_policy.py`](https://github.com/docxology/template/blob/main/tests/infra_tests/orchestration/test_stage_policy.py). |
 
 ## Contracts
 
-- **No pipeline stage logic.** Stage scripts remain under [`scripts/`](../../scripts/).
+- **No pipeline stage logic.** Template stage scripts remain under [`scripts/`](https://github.com/docxology/template/tree/main/scripts).
 - **Interactive menu keys `0`–`7`** dispatch single stages via [`stage_registry.MENU_KEY_TO_STAGE`](../core/pipeline/stage_registry.py) → [`execute_single_stage()`](../core/pipeline/single_stage.py), using the same immutable plan, executor, locking, prerequisites, and outcomes as complete runs. Keys `6`/`7` explicitly select live mode.
 - **Slug validation** rejects traversal (`..`), NUL bytes, `-` prefixes, unknown project names from `discover_projects()`.
-- **Qualified exemplar paths** resolve as `templates/<name>` and `active/<name>` under `projects/` (see [`docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md)). Live counts link to [`docs/_generated/COUNTS.md`](../../docs/_generated/COUNTS.md).
+- **Qualified exemplar paths** resolve as `templates/<name>` and `active/<name>` under `projects/` in the Template checkout (see [`docs/_generated/active_projects.md`](https://github.com/docxology/template/blob/main/docs/_generated/active_projects.md)). Live counts link to [`docs/_generated/COUNTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md).
 - **Modes:** `--mode core` is the default local run. `--mode live` explicitly selects live capabilities. Opt-in publication remains directly invoked. Both single and multi-project completion require exact expected stage contracts. Shared infrastructure runs once before serial or parallel project execution; failure prevents project execution.
 - **Resume:** `pipeline --all-projects --resume` passes the existing checkpoint policy to every selected project. Shared infrastructure still runs fresh once. Missing, stale, or non-reusable checkpoints retain their refusal status; never fall back to fresh execution. `--incremental` remains single-project only, and the all-projects combination refuses with invocation error 2 before constructing a runner.
-- **Tests:** [`tests/infra_tests/orchestration/`](../../tests/infra_tests/orchestration/).
+- **Tests:** [`tests/infra_tests/orchestration/`](https://github.com/docxology/template/tree/main/tests/infra_tests/orchestration).
 
 ## See also
 

@@ -16,6 +16,8 @@ Maintain small benchmark harnesses that validate canonical template outputs usin
 
 ## Validation
 
+Run these commands from the root of a Template checkout.
+
 ```bash
 uv run pytest tests/infra_tests/benchmark/test_template_benchmark_harness.py -v
 uv run python -m infrastructure.benchmark --repo-root .
@@ -25,4 +27,4 @@ uv run python -m infrastructure.benchmark --repo-root .
 
 - [`README.md`](README.md)
 - [`../validation/AGENTS.md`](../validation/AGENTS.md)
-- [`../../tests/infra_tests/benchmark/AGENTS.md`](../../tests/infra_tests/benchmark/AGENTS.md)
+- [`tests/infra_tests/benchmark/AGENTS.md`](https://github.com/docxology/template/blob/main/tests/infra_tests/benchmark/AGENTS.md)

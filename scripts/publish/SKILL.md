@@ -14,17 +14,14 @@ Start with [`docs/guides/publication-runbook.md`](../../docs/guides/publication-
 for the modular path from rendered project to standalone public GitHub mirror,
 real Zenodo DOI, optional mirrors, and archival handoff.
 
-## Invocation
+## PyPI package checks
 
-```bash
-uv run python scripts/publish/test_pypi.py
-uv run python scripts/publish/verify_install.py
-uv run python scripts/publish/publish_project_release.py \
-  --project templates/<name> --tag v1.0.0 --repo owner/repo
-uv run python scripts/publish/upload_template_project.py --project <name>
-```
+Use the credential-free adapter for a local package preview. The TestPyPI CLI
+makes an actual sandbox transfer and requires explicit approval. The offline
+verifier takes the original wheel path and SHA-256.
+[Commands and locked tools](README.md#pypi-package-checks)
 
 ## Related
 
-- `scripts/publish/AGENTS.md` — detailed publishing documentation
-- `infrastructure/publishing/` — publishing modules
+- [Publishing agent guide](AGENTS.md)
+- [Publishing infrastructure](../../infrastructure/publishing/README.md)

@@ -77,7 +77,7 @@ print(command.display)
 unexpected = verify_codegraph_scope_payload(codegraph_files_json)
 ```
 
-Use [`docs/guides/codegraph-local.md`](../../docs/guides/codegraph-local.md)
+Use [`docs/guides/codegraph-local.md`](https://github.com/docxology/template/blob/main/docs/guides/codegraph-local.md)
 for the runbook.
 
 If your repository uses “program directories” (a top-level folder containing multiple projects),
@@ -209,7 +209,7 @@ uv run python scripts/gates/public_capabilities.py --ci-matrix-json
 - `installed_acceptance.py` — builds and admits genuine root/public wheels with
   declared provider topology and locked transitives, then probes actual isolated
   installed environments across supported Python minors. See the
-  [installed-wheel matrix](../../docs/development/installed-wheel-matrix.md).
+  [installed-wheel matrix](https://github.com/docxology/template/blob/main/docs/development/installed-wheel-matrix.md).
 - `domain_profile.py` — `load_domain_profile(project_root)` returns a `DomainProfile`
   describing a project's validators, render tracks, and defaults.
 - `experiment_plan.py` — `load_experiment_plan(project_root)` /
@@ -328,7 +328,7 @@ authors:
 
 ## Testing
 
-The project module includes tests:
+Run the project module tests from the root of a Template checkout.
 
 ```bash
 # Test project discovery functionality
@@ -441,8 +441,8 @@ POSIX-only and is skipped with a warning on Windows hosts.
 
 - [AGENTS.md](AGENTS.md) - technical documentation
 - [manuscript/README.md](manuscript/README.md) - Manuscript utilities
-- [../../scripts/AGENTS.md](../../scripts/AGENTS.md) - Pipeline integration
-- [../../projects/AGENTS.md](../../projects/AGENTS.md) - Multi-project overview
+- [Template `scripts/AGENTS.md`](https://github.com/docxology/template/blob/main/scripts/AGENTS.md) - Pipeline integration
+- [../../projects/AGENTS.md](https://github.com/docxology/template/blob/main/projects/AGENTS.md) - Multi-project overview
 
 ### Project-scoped required auxiliary acceptance
 

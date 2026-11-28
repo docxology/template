@@ -224,8 +224,11 @@ Minimum mirror contents:
 
 - Project source tree from `projects/<qualified-name>/`.
 - Project-local `output/` tree when files are within the public output ceiling.
-- `CITATION.cff`, `.zenodo.json`, `README.md`, and `manuscript/config.yaml`.
+- `CITATION.cff`, `.zenodo.json`, `README.md`, and the canonical manuscript's `config.yaml`.
 - Git tag matching the release tag passed to `publish_project_release.py`.
+
+Full mirror sync refuses an export that would add a populated `manuscript/`
+beside the standalone's canonical `docs/manuscript/`.
 
 After publishing, verify the mirror and the DOI matrix:
 
@@ -234,6 +237,36 @@ uv run python scripts/docgen/publication_records.py --refresh-external
 ```
 
 Do not hand-edit `docs/_generated/publication_records.md`; regenerate it.
+
+### Refresh bundled resources
+
+From a clean Template checkout at the reviewed source revision, preview a
+resource-only update for one standalone.
+
+```bash
+uv run python scripts/publish/sync_standalone_mirrors.py \
+  --project template_code_project --resources-only
+```
+
+The sync derives its resource roots from the committed `export.toml` and
+checks the current ownership of those files in the standalone. The sync
+preserves the canonical manuscript layout and the original
+`.template-export.json` as historical export evidence. A receipt in each
+refreshed resource records its source. A later full sync retains the receipt
+when its export omits it.
+
+Review the preview before adding `--commit` to push the verified update. If
+the preview reports stale managed resources, save the reported JSON removal
+plan and review it with its reported SHA-256. Use an existing retained
+quarantine directory outside both checkouts for the reviewed removal.
+
+```bash
+uv run python scripts/publish/sync_standalone_mirrors.py \
+  --project template_code_project --resources-only --commit \
+  --removal-plan "$RESOURCE_REMOVAL_PLAN_FILE" \
+  --reviewed-plan-sha256 "$RESOURCE_REMOVAL_PLAN_SHA256" \
+  --quarantine-root "$RESOURCE_REMOVAL_QUARANTINE_ROOT"
+```
 
 ## Optional mirrors
 

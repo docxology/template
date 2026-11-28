@@ -5,6 +5,7 @@ paper:
   date: "2026-06-26"
   cover:
     image: "figures/madlib_cover_overview.png"
+    alt: "A flowchart links YAML configuration, token choices, manuscript sections, evidence, and reader outputs above four summary panels."
     title: "Configuration-to-manuscript audit overview"
     description: "Generated cover visualization showing how YAML declarations become token choices, conditional sections, validation gates, and rendered outputs."
 

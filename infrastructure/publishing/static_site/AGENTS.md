@@ -46,7 +46,7 @@ real deployments.
 GitHub Pages preserves destination-only and immutable publication evidence.
 Obsolete previously managed source requires an exact reviewed removal plan;
 unreviewed stale source prevents a push. Quarantine, rollback and parity limits
-are documented in [`publication-removals.md`](../../../docs/guides/publication-removals.md).
+are documented in [`publication-removals.md`](https://github.com/docxology/template/blob/main/docs/guides/publication-removals.md).
 
 ### `SiteDeployResult`
 

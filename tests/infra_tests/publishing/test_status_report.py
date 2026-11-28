@@ -238,6 +238,15 @@ def test_render_markdown_contains_metadata_and_table(tmp_path: Path) -> None:
         assert f"| {platform.name} |" in md
 
 
+def test_rendered_footer_identifies_checkout_and_project_directory(tmp_path: Path) -> None:
+    footer = render_status_markdown(compile_publishing_status(_project(tmp_path))).splitlines()[-1]
+
+    assert "From the `docxology/template` checkout" in footer
+    assert '`uv run python -m infrastructure.publishing.status_report --project "/path/to/project" --write`' in footer
+    assert "absolute path to the standalone checkout" in footer
+    assert "`projects/templates/<name>`" in footer
+
+
 def test_render_block_wraps_markers(tmp_path: Path) -> None:
     block = render_status_block(compile_publishing_status(_project(tmp_path)))
     assert block.startswith(BLOCK_START)

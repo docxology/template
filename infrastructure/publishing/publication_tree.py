@@ -10,8 +10,8 @@ import re
 import stat
 import time
 import uuid
-from dataclasses import dataclass
 from collections.abc import Iterator
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -20,8 +20,10 @@ from infrastructure.core.files.secure_write import (
     hold_confined_directory,
     read_bytes_confined,
 )
+from infrastructure.project._exemplar_export_policy import PUBLIC_RESOURCE_ROOTS
 
 INVENTORY_NAME = ".template-publication-tree.json"
+RESOURCE_REFRESH_RECEIPT = ".template-resource-refresh.json"
 _SCHEMA = "template-publication-tree/1"
 _PLAN_SCHEMA = "template-publication-removals/1"
 _SHA = re.compile(r"[0-9a-f]{64}")
@@ -132,6 +134,12 @@ def _path(value: str) -> Path:
 
 def _protected(relative: str) -> bool:
     path = _path(relative)
+    if (
+        path.name == RESOURCE_REFRESH_RECEIPT
+        and path.parts[0] == "_template_resources"
+        and "/".join(path.parts[1:-1]) in PUBLIC_RESOURCE_ROOTS
+    ):
+        return True
     return path.suffix.casefold() in _PUBLICATION_SUFFIXES or any(
         part.casefold() in _IMMUTABLE or part.casefold().startswith("frozen_") for part in path.parts
     )
@@ -208,9 +216,26 @@ def _file(root: Path, relative: str, identity: tuple[int, int], budget: _Budget 
     return {"sha256": hashlib.sha256(content).hexdigest(), "mode": 0o755 if after.st_mode & 0o111 else 0o644}
 
 
-def _records(root: Path, budget: _Budget) -> dict[str, dict[str, Any]]:
+def _resource_prefixes(resource_roots: tuple[str, ...]) -> tuple[str, ...]:
+    if (
+        not isinstance(resource_roots, tuple)
+        or any(not isinstance(name, str) or name not in PUBLIC_RESOURCE_ROOTS for name in resource_roots)
+        or len(set(resource_roots)) != len(resource_roots)
+    ):
+        raise ValueError("publication resource roots must be unique declared resource names")
+    return tuple(f"_template_resources/{name}/" for name in resource_roots)
+
+
+def _records(root: Path, budget: _Budget, *, resource_prefixes: tuple[str, ...] = ()) -> dict[str, dict[str, Any]]:
     root, identity = _root(root)
-    names = {name for name, directory in _entries(root, budget, source=True) if not directory}
+    names = {
+        name
+        for name, directory in _entries(root, budget, source=True)
+        if not directory and (not resource_prefixes or name.startswith(resource_prefixes))
+    }
+    for prefix in resource_prefixes:
+        if not any(name.startswith(prefix) for name in names):
+            raise ValueError(f"publication resource root has no source files: {prefix}")
     if not names:
         raise ValueError("publication source export must be nonempty")
     return {name: _file(root, name, identity, budget) for name in sorted(names)}
@@ -284,20 +309,37 @@ def prepare_removal_plan(
     destination: Path,
     target: PublicationTarget,
     *,
+    resource_roots: tuple[str, ...] = (),
     limits: PublicationLimits | None = None,
     _budget: _Budget | None = None,
 ) -> dict[str, Any]:
-    """Describe the exact diff; prior provenance alone supplies no removal authority."""
+    """Describe the whole export or the selected declared resources without authorizing removals."""
     budget = _budget or _Budget(limits)
-    desired = _records(source, budget)
+    prefixes = _resource_prefixes(resource_roots)
+    desired = _records(source, budget, resource_prefixes=prefixes)
     destination, identity = _root(destination)
     previous, previous_sha = _inventory(destination, target, budget)
-    names = _names(destination, budget)
+    previous_selected = previous
+    if prefixes:
+        previous_selected = {name: record for name, record in previous.items() if name.startswith(prefixes)}
+        entries = dict(_entries(destination, budget))
+        names = {name for name, directory in entries.items() if not directory and name != INVENTORY_NAME}
+        unowned = names - previous_selected.keys()
+        for name in desired:
+            path = Path(name)
+            if entries.get(name, False) or any(candidate.as_posix() in unowned for candidate in (path, *path.parents)):
+                raise ValueError(f"publication resource path collides with unowned destination content: {name}")
+    else:
+        names = _names(destination, budget)
     observed = {
         name: _file(destination, name, identity, budget) if name in names else None
-        for name in sorted(previous.keys() | desired.keys())
+        for name in sorted(previous_selected.keys() | desired.keys())
     }
-    stale = previous.keys() - desired.keys()
+    if prefixes:
+        for name, record in observed.items():
+            if record is not None and record != previous_selected.get(name):
+                raise ValueError(f"publication resource differs from its original ownership evidence: {name}")
+    stale = previous_selected.keys() - desired.keys()
     if any(_immutable(name) and observed[name] is not None and observed[name] != desired[name] for name in desired):
         raise ValueError("immutable publication history or frozen records cannot be overwritten")
     removable = {}
@@ -307,11 +349,11 @@ def prepare_removal_plan(
             raise ValueError("previously managed publication file is missing; reconcile it before planning")
         if _protected(name):
             retained.append(name)
-        elif observed[name] != previous[name]:
+        elif observed[name] != previous_selected[name]:
             raise ValueError("stale managed publication file differs from its original ownership evidence")
         else:
             removable[name] = observed[name]
-    return {
+    plan: dict[str, Any] = {
         "schema_version": _PLAN_SCHEMA,
         "destination": target.payload(),
         "prior_inventory_sha256": previous_sha,
@@ -321,8 +363,11 @@ def prepare_removal_plan(
         "desired_export_sha256": hashlib.sha256(_bytes(desired)).hexdigest(),
         "removals": removable,
         "retained_immutable": retained,
-        "destination_only": sorted(names - previous.keys() - desired.keys()),
+        "destination_only": sorted(names - previous_selected.keys() - desired.keys()),
     }
+    if resource_roots:
+        plan["resource_roots"] = sorted(resource_roots)
+    return plan
 
 
 def _restore(
@@ -562,16 +607,17 @@ def update_publication_tree(
     destination: Path,
     target: PublicationTarget,
     *,
+    resource_roots: tuple[str, ...] = (),
     removal_plan: dict[str, Any] | None = None,
     reviewed_plan_sha256: str | None = None,
     quarantine_root: Path | None = None,
     limits: PublicationLimits | None = None,
 ) -> PublicationUpdate:
-    """Update regular source bytes; remove only an exact explicitly reviewed diff."""
+    """Update the whole export or selected declared resources with reviewed removals only."""
     budget = _Budget(limits)
     source, source_identity = _root(source)
     destination, destination_identity = _root(destination)
-    plan = prepare_removal_plan(source, destination, target, _budget=budget)
+    plan = prepare_removal_plan(source, destination, target, resource_roots=resource_roots, _budget=budget)
     if (
         removal_plan is None
         and reviewed_plan_sha256 is not None
@@ -613,9 +659,9 @@ def update_publication_tree(
             mode=0o400,
             expected_root_identity=quarantine_root_identity,
         )
-    previous, _ = _inventory(destination, target, budget)
+    desired = plan["desired_export_files"]
     try:
-        if prepare_removal_plan(source, destination, target, _budget=budget) != plan:
+        if prepare_removal_plan(source, destination, target, resource_roots=resource_roots, _budget=budget) != plan:
             raise ValueError("publication source or destination changed before update")
         if quarantine is not None:
             assert quarantine_identity is not None
@@ -623,7 +669,7 @@ def update_publication_tree(
                 budget.check()
                 _quarantine_file(destination, quarantine, relative, expected, destination_identity, quarantine_identity)
                 removed.append(relative)
-        for relative, expected in plan["desired_export_files"].items():
+        for relative, expected in desired.items():
             budget.check()
             content = read_bytes_confined(
                 source, source / relative, max_bytes=64 * 1024 * 1024, expected_root_identity=source_identity
@@ -637,14 +683,14 @@ def update_publication_tree(
                 mode=expected["mode"],
                 expected_root_identity=destination_identity,
             )
-        if _records(source, budget) != plan["desired_export_files"] or any(
+        if _records(source, budget, resource_prefixes=_resource_prefixes(resource_roots)) != desired or any(
             _file(destination, relative, destination_identity, budget) != expected
-            for relative, expected in plan["desired_export_files"].items()
+            for relative, expected in desired.items()
         ):
             raise ValueError("publication source/export changed during update")
         _validate_updated_tree(destination, target, plan, tuple(removed), budget, inventory_written=False)
-        inventory = {name: record for name, record in previous.items() if name not in removed}
-        inventory.update(plan["desired_export_files"])
+        inventory = {name: record for name, record in plan["prior_owned_files"].items() if name not in removed}
+        inventory.update(desired)
         atomic_write_bytes_confined(
             destination,
             destination / INVENTORY_NAME,
@@ -661,11 +707,15 @@ def update_publication_tree(
         raise
     stale = tuple(name for name in plan["removals"] if name not in removed)
     preserved = tuple(sorted(set(plan["destination_only"]) | set(plan["retained_immutable"])))
-    return PublicationUpdate(plan, tuple(removed), stale, preserved, not stale, not stale and not preserved)
+    managed_export_parity = not resource_roots and not stale
+    return PublicationUpdate(
+        plan, tuple(removed), stale, preserved, managed_export_parity, managed_export_parity and not preserved
+    )
 
 
 __all__ = [
     "INVENTORY_NAME",
+    "RESOURCE_REFRESH_RECEIPT",
     "PublicationTarget",
     "PublicationLimits",
     "copy_publication_source",

@@ -80,7 +80,7 @@ Individual component testing:
 
 ```bash
 # Test error aggregation
-uv run pytest tests/infra_tests/reporting/test_error_aggregator.py::test_aggregate_errors -v
+uv run pytest tests/infra_tests/reporting/test_error_aggregator.py::test_error_aggregator_summary_and_actionable_fixes -v
 ```
 
 ### Integration Tests

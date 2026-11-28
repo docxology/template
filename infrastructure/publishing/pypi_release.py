@@ -36,6 +36,7 @@ from infrastructure.core.execution_boundary import BoundedSubprocessResult, buil
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.core.implementation_custody import bytecode_audit_bootstrap, source_file_bytes
 from infrastructure.core.pipeline.fingerprints import canonical_digest
+from infrastructure.project.acceptance_payload import format_acceptance_payload_loader, write_acceptance_payload
 from infrastructure.project.installed_acceptance_artifacts import AdmittedWheel, INSTALLED_PROBE, freeze_wheel_bytes
 from infrastructure.project.installed_acceptance_runtime import freeze_locked_metadata, install_runtime
 from infrastructure.reporting.readiness_receipts import public_source_paths
@@ -560,6 +561,36 @@ def retrieve_distributions(
     return returned, payload
 
 
+def _run_installed_probe(python: Path, scratch: Path, spec: dict[str, Any], body: bytes, deadline: Deadline) -> bytes:
+    """Run the exact probe through the shared bounded outside-Source loader."""
+    outside = scratch / "outside-source"
+    payload = write_acceptance_payload(
+        scratch,
+        outside / "installed-probe-payload.py",
+        body,
+        forbidden_roots=tuple(Path(root) for root in spec["forbidden_roots"]),
+    )
+    spec["probe_payload"] = payload
+    content = json.dumps(spec, sort_keys=True).encode()
+    spec_path, observation = outside / "spec.json", outside / "observation.json"
+    atomic_write_bytes_confined(scratch, spec_path, content, mode=0o400)
+    run_command(
+        (
+            str(python),
+            "-I",
+            "-X",
+            f"pycache_prefix={spec['audit']['prefix']}",
+            "-c",
+            format_acceptance_payload_loader(payload),
+            str(spec_path),
+            str(observation),
+        ),
+        outside,
+        deadline=deadline,
+    )
+    return content
+
+
 def install_and_verify(
     source: PublicBuildSource,
     retrieved: tuple[Distribution, ...],
@@ -632,23 +663,8 @@ def install_and_verify(
             "sha256": hashlib.sha256(source_file_bytes(audit_path)).hexdigest(),
         },
     }
-    content = json.dumps(spec, sort_keys=True).encode()
-    spec_path, observation = outside / "spec.json", outside / "observation.json"
-    atomic_write_bytes_confined(scratch, spec_path, content, mode=0o400)
-    run_command(
-        (
-            str(python),
-            "-I",
-            "-X",
-            f"pycache_prefix={bytecode}",
-            "-c",
-            bootstrap + "\n" + INSTALLED_PROBE,
-            str(spec_path),
-            str(observation),
-        ),
-        outside,
-        deadline=deadline,
-    )
+    content = _run_installed_probe(python, scratch, spec, (bootstrap + "\n" + INSTALLED_PROBE).encode(), deadline)
+    observation = outside / "observation.json"
     result: dict[str, Any] = json.loads(read_bytes_confined(scratch, observation, max_bytes=MAX_ARTIFACT_BYTES))
     if not isinstance(result, dict):
         raise TestPyPIError("installed functional probe result is not an object")

@@ -12,6 +12,7 @@ from infrastructure.rendering._pdf_combined_transmission import (
     _END_TRANSMISSION_SECTION,
     _END_TRANSMISSION_SECTION_NUMBERED,
     _TRANSMISSION_END_BOOKEND_MARKER,
+    _TRANSMISSION_END_PAGE_BREAK,
 )
 
 logger = get_logger(__name__)
@@ -105,6 +106,10 @@ def inject_bibliography(
                 logger.info("✓ Moved \\bibliography{...} before END OF TRANSMISSION")
             return tex_content
         else:
+            if inline_bibliography and tex_content.startswith(_TRANSMISSION_END_BOOKEND_MARKER, end_idx):
+                before_bookend = tex_content[:end_idx].rstrip()
+                if before_bookend.endswith("\n" + _TRANSMISSION_END_PAGE_BREAK):
+                    end_idx = len(before_bookend) - len(_TRANSMISSION_END_PAGE_BREAK)
             tex_content = tex_content[:end_idx] + insertion + tex_content[end_idx:]
             logger.info("✓ Inserted \\bibliography{...} before END OF TRANSMISSION")
             return tex_content

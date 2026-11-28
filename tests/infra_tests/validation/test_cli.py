@@ -17,13 +17,20 @@ from infrastructure.validation.cli.main import (
 )
 
 
-def test_evidence_cli_uses_stable_local_inventory_for_managed_working_project(tmp_path) -> None:
+@pytest.mark.parametrize(
+    ("manuscript_subdir", "override"),
+    [("manuscript", False), ("docs/manuscript", False), ("review-manuscript", True)],
+    ids=("bundled", "canonical", "explicit"),
+)
+def test_evidence_cli_uses_stable_local_inventory_for_managed_working_project(
+    tmp_path, manuscript_subdir: str, override: bool
+) -> None:
     """A blanket-ignored private output remains evidence through the real CLI handler."""
 
     repo_root = tmp_path / "template"
     (repo_root / "infrastructure").mkdir(parents=True)
     private_project = tmp_path / "private" / "demo"
-    manuscript = private_project / "manuscript"
+    manuscript = private_project / manuscript_subdir
     result = private_project / "output" / "data" / "result.json"
     manuscript.mkdir(parents=True)
     result.parent.mkdir(parents=True)
@@ -39,7 +46,7 @@ def test_evidence_cli_uses_stable_local_inventory_for_managed_working_project(tm
     managed.symlink_to(private_project, target_is_directory=True)
     args = argparse.Namespace(
         project_root=str(managed),
-        manuscript_dir=None,
+        manuscript_dir=str(manuscript) if override else None,
         output_json=None,
         fail_on_issues=True,
     )

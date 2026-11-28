@@ -142,4 +142,3 @@ execution is not a waiver of those requirements.
 - [Exact-plan execution, lock ownership and reporting](../../../infrastructure/core/pipeline/execution_session.py)
 - [Operational recovery runbook](../runbook.md)
 - [Troubleshooting](../troubleshooting/)
-

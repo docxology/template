@@ -207,8 +207,17 @@ See [LLM Configuration](../../../infrastructure/llm/AGENTS.md) for options.
 
 ### Rendering
 
-`paper.cover.image` and `paper.cover.alt` configure paper title-page artwork;
-book projects use `book.cover.image` and `book.cover.alt`. Setting
+`paper.cover.image` and `paper.cover.alt` configure paper title-page artwork.
+Book projects use `book.cover.image` and `book.cover.alt`. Use a project-root
+image path such as `docs/manuscript/assets/cover.png` for authored standalone
+artwork, or `output/figures/cover.png` for a generated cover. The image path
+then resolves whether the renderer selects the authored or the hydrated
+configuration. The combined HTML paper cover also needs an admitted
+`paper.frontmatter` list and an alternative description. EPUB can package
+the configured cover with its text alternative. See the
+[standalone manuscript contract](../../guides/manuscript-semantics.md#configure-the-editions-and-cover).
+
+Setting
 `metadata.tagged_pdf: true` opts the combined PDF into the compatible
 LuaLaTeX tagging path. If the selected paper or book cover declares an image,
 its `alt` must then be a non-empty YAML string: both the publication audit and

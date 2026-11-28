@@ -8,6 +8,7 @@ paper:
   date: ""
   cover:
     image: "figures/cover_visualization.png"
+    alt: "Five manuscript refinement stages, from ore to certification, surround a gold pentagon marked 9N."
 
 authors:
   - name: "Your Name"

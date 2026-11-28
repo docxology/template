@@ -18,6 +18,10 @@ To regenerate the diagram, run Graphviz from this directory.
 dot -Tpng assets/pipeline-evidence.dot -o assets/pipeline-evidence.png
 ```
 
+The [standalone manuscript contract](../guides/manuscript-semantics.md#standalone-manuscript-contract)
+covers edition settings, covers, numbered equations, and source-bound
+render verification.
+
 ## Render and validate
 
 Use a clean checkout of this source revision and a separate checkout of
@@ -30,6 +34,8 @@ Run from the root of the clean source checkout.
 
 ```bash
 source_checkout="$(pwd -P)"
+project_name="${source_checkout##*/}"
+project="working/$project_name"
 renderer_checkout="$(mktemp -d)/template"
 mkdir -p output/figures
 cp docs/manuscript/assets/pipeline-evidence.png docs/manuscript/assets/figure_registry.json output/figures/
@@ -39,14 +45,15 @@ git -C "$renderer_checkout" checkout --detach 87704feae0a4490ef7dad9c931d268e8c3
 cd "$renderer_checkout"
 uv sync --locked
 mkdir -p projects/working
-ln -s "$source_checkout" projects/working/template-infrastructure
-uv run --no-sync python scripts/pipeline/stage_03_render.py --project working/template-infrastructure
-uv run --no-sync python scripts/pipeline/stage_04_validate.py --project working/template-infrastructure
+ln -s "$source_checkout" "projects/$project"
+uv run --no-sync python scripts/pipeline/stage_03_render.py --project "$project"
+uv run --no-sync python scripts/pipeline/stage_04_validate.py --project "$project"
 ```
 
-The registration is local to the renderer checkout. The build resolves
-`docs/manuscript/` and writes to `output/` in the source checkout.
-Check `output/pdf/template-infrastructure_combined.pdf` for all ordered
-sections, the pipeline diagram, and the resolved bibliography. Check the verdict in
+The registration uses the physical source checkout name so the renderer and
+validator agree on the PDF filename. The build resolves `docs/manuscript/`
+and writes to `output/` in the source checkout. In a checkout named
+`template`, open `output/pdf/template_combined.pdf` and check the ordered
+sections, pipeline diagram, and bibliography. Check the verdict in
 `output/reports/validation_report.md` and the source bindings in
 `output/reports/rendered_provenance.json`.

@@ -12,7 +12,11 @@ from PIL import Image
 
 from infrastructure.rendering import _mermaid_v122
 
-from infrastructure.rendering._pdf_mermaid import _inline_mermaid_dir, _resolve_chrome_executable, replace_inline_mermaid
+from infrastructure.rendering._pdf_mermaid import (
+    _inline_mermaid_dir,
+    _resolve_chrome_executable,
+    replace_inline_mermaid,
+)
 
 
 def _write_executable(path: Path, body: str) -> Path:

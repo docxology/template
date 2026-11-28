@@ -266,6 +266,8 @@ def harden_mathjax_script(html_file: Path) -> None:
     content = html_file.read_text(encoding="utf-8")
     if MATHJAX_URL not in content:
         return
+    # Remove the separator from our adjacent config and loader without shifting the insertion point.
+    content = content.replace(f"{_MATHJAX_CONFIG_SCRIPT}\n<script", "<script")
     config_re = re.compile(
         r"<script\b(?=[^>]*\b" + re.escape(_MATHJAX_CONFIG_MARKER) + r"\b)[^>]*>.*?</script>",
         flags=re.IGNORECASE | re.DOTALL,

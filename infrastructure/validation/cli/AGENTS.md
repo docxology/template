@@ -36,10 +36,17 @@ Automatic selection covers public delivery PDFs and refuses ambiguity.
 uv run python -m infrastructure.validation.cli pdf --project templates/template_code_project --repo-root .
 ```
 
+### `evidence`
+
+The command selects the first populated source directory from `manuscript/`
+and `docs/manuscript/`. Use `--manuscript-dir` to select an explicit source.
+
 ### `publication-audit`
 
-Deterministic publication-readiness gate for public exemplars. Defaults to every
-project in `PUBLIC_PROJECT_NAMES` when `--project` is omitted.
+The published-exemplar contract applies to every selected project, including
+an explicit working project. With `--rendered`, the audit checks cached-Git
+Output custody. Defaults to every project in `PUBLIC_PROJECT_NAMES` when
+`--project` is omitted.
 
 ```bash
 uv run python -m infrastructure.validation.cli publication-audit \

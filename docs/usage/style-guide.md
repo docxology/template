@@ -44,46 +44,36 @@ $$ {#eq:objective}
 where $\lambda$ controls regularization strength.
 ```
 
-The `\begin{equation}\label{eq:objective}…\end{equation}` raw-LaTeX form also
-works (pandoc-crossref still picks up `\label{}`), but the `$$ … $$ {#eq:name}`
-form above is the pure-Pandoc, PDF/HTML/EPUB-portable default — see
-[Manuscript Semantics](../guides/manuscript-semantics.md).
+The compatible `pandoc-crossref` filter assigns the display number and
+resolves its `[@eq:objective]` reference. See
+[canonical equation syntax](../guides/manuscript-semantics.md#2-equations).
 
 **Key rules:**
 
 - ✅ Use isolated Pandoc display math blocks: `$$ ... $$` on their own line(s)
-- ✅ For numbered equations, use the project's registry/crossref syntax or a labelled `equation` environment when the target is PDF-only
+- ✅ Give each numbered display a unique `{#eq:name}` after the closing `$$`
 - ❌ **Never** use inline `$$ ... $$` inside prose
 - ❌ **Never** use `\[ ... \]` — Pandoc emits literal brackets in HTML
 
 ### Multi-Line Equations
 
-**Multiple related equations** — use `align`:
+Use one display block per equation number. Put a `split` inside a labelled
+display when several lines share a single number.
 
 ```markdown
-\begin{align}
-\label{eq:gradient_update}
-x_{k+1} &= x_k - \alpha_k \nabla f(x_k) \\
-y_{k+1} &= y_k + \beta_k (x_k - x_{k-1})
-\end{align}
-```
-
-**Single equation broken across lines** — use `split` inside `equation`:
-
-```markdown
-\begin{equation}
-\label{eq:loss_expanded}
+$$
 \begin{split}
 \mathcal{L}(\theta) &= \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i) \\
     &\quad + \lambda_1 \|\theta\|_1 \\
     &\quad + \lambda_2 \|\theta\|_2^2
 \end{split}
-\end{equation}
+$$ {#eq:loss_expanded}
 ```
 
 ### Referencing Equations
 
-Use `[@eq:label]` (never raw `\eqref{}` or `\ref{}`) to reference equations — this is the one form that renders correctly in PDF, HTML, and EPUB alike:
+Use `[@eq:label]` to reference a labelled display. Check the reference in
+each enabled edition.
 
 ```markdown
 As shown in [@eq:objective], the regularization term controls...
@@ -316,7 +306,7 @@ The hyperparameters ([@tbl:hyperparameters]) were tuned via grid search.
 
 | Element      | Label format          | Reference syntax    | In-text example                            |
 | ------------ | --------------------- | -------------------- | ------------------------------------------ |
-| **Equation** | `{#eq:name}` (or `\label{eq:name}` inside `equation`) | `[@eq:name]` | "as shown in [@eq:loss]"       |
+| **Equation** | `{#eq:name}` on the closing display delimiter | `[@eq:name]` | "as shown in [@eq:loss]"       |
 | **Figure**   | `{#fig:name}`          | `[@fig:name]`         | "[@fig:setup] shows"                       |
 | **Table**    | `{#tbl:name}`          | `[@tbl:name]`         | "[@tbl:results] lists"                     |
 | **Section**  | `{#sec:name}`          | `[@sec:name]`         | "[@sec:method] describes"                  |
@@ -338,7 +328,7 @@ syntax is the one form that renders correctly in PDF, HTML, and EPUB alike
 
 | ❌ Mistake                           | ✅ Correct                                                             | Why                                          |
 | ------------------------------------ | ---------------------------------------------------------------------- | -------------------------------------------- |
-| `Prose $$ f(x)=x^2 $$`              | `$$ f(x)=x^2 $$` on its own line or registered equation syntax       | Inline `$$` is fragile across render targets |
+| `Prose $$ f(x)=x^2 $$`              | A standalone `$$` display block       | Inline `$$` is fragile across render targets |
 | `![...](figures/fig.png){#fig:x}`   | `![...](../output/figures/fig.png){#fig:x}`                            | Paths are relative to `manuscript/`          |
 | Caption "results" (too brief)       | "Comparison of model accuracy across three benchmarks."                | Captions must be complete sentences         |
 | `{#eq:1}`                            | `{#eq:convergence_rate}`                                               | Labels must be descriptive                   |

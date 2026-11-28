@@ -57,4 +57,3 @@ bootstrap and compiler setup. Acquisition alone receives the step's GitHub token
 the installer and following compiler commands do not. There is no implicit
 default Lean installation, browser-download fallback or acceptance output.
 This installer is for isolated hosted runners, not a shared workstation.
-

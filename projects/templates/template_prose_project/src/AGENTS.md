@@ -75,10 +75,10 @@ flowchart LR
 
 - [ ] Added a new check → add field to `ProseAnalysisConfig`, parse in
   `from_dict`, add `_check_<name>` to `pipeline/checks.py`, append to the
-  checks list, add a test in `tests/test_pipeline.py`.
+  checks list, add a test in `tests/pipeline/test_pipeline.py`.
 - [ ] Added a new figure → add `plot_<name>(report, output_dir) -> Path`
   in `figures.py`, append to `generate_all_figures`, add a test in
-  `tests/test_figures.py`.
+  `tests/figures/test_figures.py`.
 - [ ] Changed report layout → re-run `tests/test_report.py` and verify
   `tests/test_pipeline_integration.py` still produces the expected
   signposts.

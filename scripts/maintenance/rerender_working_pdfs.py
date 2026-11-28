@@ -52,7 +52,7 @@ def main() -> int:
     names = [n for n in names if has_manuscript(repo / "projects" / "working" / n)]
 
     if not names:
-        logger.error("No working projects with manuscript/*.md found")
+        logger.error("No working projects with Markdown manuscripts found")
         return 1
 
     log_header(f"Working PDF re-render ({len(names)} projects)", logger)

@@ -161,7 +161,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - Thin gate: `scripts/gates/installed_public.py`; select each installed minor with
   repeated `--python MINOR=/absolute/env/bin/python`, nominate the candidate build
   epoch/provenance, and retain a fresh ignored evidence directory. See
-  [`docs/development/installed-wheel-matrix.md`](../../docs/development/installed-wheel-matrix.md).
+  [`docs/development/installed-wheel-matrix.md`](https://github.com/docxology/template/blob/main/docs/development/installed-wheel-matrix.md).
 - `copy_exemplar`/`export_exemplar` remain the canonical source/resource copying
   APIs. A source export or source-path import is distinct from installed evidence.
 - `locked_dependency_export.normalize_locked_dependency_export(metadata_root,
@@ -189,7 +189,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   Whole collection, exact chunk union, actual child exits, finite deadlines,
   project output locks, and source/deliverable custody are required; skips and
   deselection cannot pass. Missing selected interpreters/test tools are blocked.
-  See [`public-runtime-matrix.md`](../../docs/development/public-runtime-matrix.md)
+  See [`public-runtime-matrix.md`](https://github.com/docxology/template/blob/main/docs/development/public-runtime-matrix.md)
   for setup, raw receipts, diagnostic scope, and proof boundaries.
 
 - `run_public_readiness(repo_root)` runs one isolated `stage_01_test.py`
@@ -284,7 +284,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `verify_codegraph_scope_payload(payload)` — parse CodeGraph file JSON and
   report any indexed non-template path under `projects/`.
 - Used by `scripts/maintenance/codegraph_local.py`; see
-  [`docs/guides/codegraph-local.md`](../../docs/guides/codegraph-local.md).
+  [`docs/guides/codegraph-local.md`](https://github.com/docxology/template/blob/main/docs/guides/codegraph-local.md).
 
 CodeGraph indexes (`.codegraph/`) are generated local state and must never be
 committed. The generated-artifact guard treats `.codegraph/*` as an offender.
@@ -710,7 +710,7 @@ projects = discover_projects(repo_root)
 
 ## Testing
 
-The module includes tests under `tests/infra_tests/project/`:
+Run the tests under `tests/infra_tests/project/` from the root of a Template checkout.
 
 ```bash
 # Run project discovery tests
@@ -730,8 +730,8 @@ uv run python -m pytest tests/infra_tests/project/ -v
 
 - [`infrastructure/core/script_discovery.py`](../core/script_discovery.py) - Analysis script discovery
 - [`infrastructure/core/files/operations.py`](../core/files/operations.py) - File operations with project support
-- [`scripts/AGENTS.md`](../../scripts/AGENTS.md) - Generic entry point orchestrators
-- [`AGENTS.md`](../../AGENTS.md) - system documentation
+- [`scripts/AGENTS.md`](https://github.com/docxology/template/blob/main/scripts/AGENTS.md) - Generic entry point orchestrators
+- [`AGENTS.md`](https://github.com/docxology/template/blob/main/AGENTS.md) - system documentation
 
 ## Summary
 

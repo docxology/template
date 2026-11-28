@@ -12,11 +12,12 @@ from infrastructure.core.logging.utils import log_success
 from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering._slides_accessibility_reveal import accessible_reveal_output_issues
+from infrastructure.rendering._web_citations import web_citation_issues
 from infrastructure.rendering._web_links import web_image_issues
 
 
 def validate_combined_html(output_dir: Path, *, logger: Logger) -> bool:
-    """Require standalone combined HTML with resolvable relative image sources."""
+    """Require standalone combined HTML with usable images and citation links."""
 
     path = output_dir / "web" / "index.html"
     try:
@@ -35,6 +36,11 @@ def validate_combined_html(output_dir: Path, *, logger: Logger) -> bool:
     if issues:
         for issue in issues:
             logger.error("Combined HTML image validation failed: %s", issue)
+        return False
+    citation_issues = web_citation_issues(content)
+    if citation_issues:
+        for issue in citation_issues:
+            logger.error("Combined HTML citation validation failed in %s: %s", path, issue)
         return False
     log_success(f"Combined HTML valid: {path.name}", logger)
     return True

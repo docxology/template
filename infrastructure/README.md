@@ -8,7 +8,7 @@ The infrastructure layer provides generic, reusable functionality that can be ap
 
 ## Agent skills (`SKILL.md`)
 
-Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.agents/skill_manifest.json`](../.agents/skill_manifest.json) (or `@.agents/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`.
+Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. For discovery, open the [Template skill manifest](https://github.com/docxology/template/blob/main/.agents/skill_manifest.json), search `infrastructure/**/SKILL.md`, or open the hub [SKILL.md](SKILL.md). In a Template checkout, use `@.agents/skill_manifest.json`, `@infrastructure/SKILL.md`, or `@infrastructure/<module>/SKILL.md` in Cursor. Regenerate the manifest after skill changes with `uv run python -m infrastructure.skills write`.
 
 | Path | Frontmatter `name` | Description |
 | --- | --- | --- |
@@ -352,7 +352,7 @@ flowchart TD
 
 ## Testing
 
-Infrastructure modules maintain **≥60% test coverage** (live overall % → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)):
+The full infrastructure test suite has a 60% coverage floor. The [Template coverage gap analysis](https://github.com/docxology/template/blob/main/docs/development/coverage-gaps.md) documents the gate and historical module results. The [Template test status](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md#test-status) records test counts and measured exemplar coverage.
 
 ```bash
 # Test all infrastructure
@@ -424,8 +424,8 @@ flowchart TB
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - infrastructure documentation
-- [../tests/infra_tests/](../tests/infra_tests/) - Infrastructure test suite
-- [../scripts/](../scripts/) - Orchestration scripts
+- [Template infrastructure test suite](https://github.com/docxology/template/tree/main/tests/infra_tests)
+- [Template orchestration scripts](https://github.com/docxology/template/tree/main/scripts)
 
 <!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 

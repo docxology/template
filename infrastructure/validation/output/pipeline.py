@@ -206,7 +206,10 @@ def verify_outputs_exist(
     inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
 
     detailed_validation = collect_detailed_validation_results(
-        output_dir, enabled_formats=enabled_formats, inventory_mode=inventory_mode
+        output_dir,
+        enabled_formats=enabled_formats,
+        inventory_mode=inventory_mode,
+        project_name=project_name,
     )
     structure_valid = detailed_validation["structure"]["valid"]
 
