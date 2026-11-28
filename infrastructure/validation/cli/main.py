@@ -18,7 +18,7 @@ from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project
-from infrastructure.core.project_paths import find_repo_root
+from infrastructure.core.project_paths import find_repo_root, resolve_source_manuscript_dir
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.integrity.checks import verify_output_integrity
@@ -221,10 +221,10 @@ def validate_links_command(args: argparse.Namespace) -> None:
 def validate_evidence_command(args: argparse.Namespace) -> None:
     """Validate manuscript numbers and citations against the verified registry."""
     project_root = Path(args.project_root)
-    manuscript_dir = Path(args.manuscript_dir) if args.manuscript_dir else project_root / "manuscript"
     if not project_root.exists():
         logger.error(f"Project root not found: {project_root}")
         raise SystemExit(1)
+    manuscript_dir = Path(args.manuscript_dir) if args.manuscript_dir else resolve_source_manuscript_dir(project_root)
     if not manuscript_dir.exists():
         logger.error(f"Manuscript directory not found: {manuscript_dir}")
         raise SystemExit(1)
@@ -413,7 +413,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Validate manuscript claims against registered project evidence",
     )
     evidence_parser.add_argument("project_root", help="Path to project root")
-    evidence_parser.add_argument("--manuscript-dir", help="Path to manuscript markdown directory")
+    evidence_parser.add_argument("--manuscript-dir", help="Override the detected manuscript source directory")
     evidence_parser.add_argument("--output-json", help="Write JSON evidence report")
     evidence_parser.add_argument(
         "--fail-on-issues",
@@ -438,11 +438,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     publication_parser = subparsers.add_parser(
         "publication-audit",
-        help="Audit public exemplars for deterministic publication readiness",
+        help="Audit published exemplars for deterministic publication readiness",
+        description="Audit published exemplars. With --rendered, require matching cached-Git Output.",
     )
     publication_parser.add_argument("--repo-root", default=".", help="Repository root")
     project_group = publication_parser.add_mutually_exclusive_group()
-    project_group.add_argument("--project", help="Qualified project name under projects/")
+    project_group.add_argument(
+        "--project",
+        help="Qualified project name under projects/ (checked under the published-exemplar contract)",
+    )
     project_group.add_argument(
         "--all-public",
         action="store_true",
