@@ -15,29 +15,31 @@ Real git repositories and real files under ``tmp_path`` — no mocks.
 
 from __future__ import annotations
 
-import os
 import json
+import os
 import shutil
 import subprocess
 import sys
-
-import pytest
 from pathlib import Path
 
+import pytest
+
+from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES
+from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.publishing._standalone_mirror_source import (
     clean_source_revision,
     declared_repository,
     tracked_relative_paths,
 )
+from infrastructure.publishing.publication_tree import PublicationTarget, update_publication_tree
 from infrastructure.publishing.standalone_mirror import (
     _git as _mirror_git,
+)
+from infrastructure.publishing.standalone_mirror import (
     populate_mirror_tree,
     sync_exemplar,
     validate_git_destination,
 )
-from infrastructure.publishing.publication_tree import PublicationTarget, update_publication_tree
-from infrastructure.project.copy_exemplar import export_exemplar
-from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES
 from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES
 from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES
 
@@ -603,6 +605,66 @@ def _install_actual_cli(root: Path) -> Path:
     return script
 
 
+@pytest.mark.parametrize(
+    ("export_path", "destination_paths", "refused"),
+    [
+        ("manuscript/chapters/01_intro.tex", ("docs/manuscript/01_intro.md",), True),
+        ("manuscript/01_intro.md", ("manuscript/01_intro.md", "docs/manuscript/01_intro.md"), False),
+        ("manuscript/README.md", ("docs/manuscript/01_intro.md",), False),
+        ("manuscript/01_intro.md", ("docs/manuscript/README.md",), False),
+    ],
+    ids=["active-docs-manuscript", "active-legacy-manuscript", "source-guide-only", "destination-guide-only"],
+)
+def test_preserve_active_manuscript_layout(
+    tmp_path: Path, export_path: str, destination_paths: tuple[str, ...], refused: bool
+) -> None:
+    from infrastructure.publishing.standalone_mirror import _preserve_active_manuscript_layout
+
+    source, destination = tmp_path / "source", tmp_path / "destination"
+    for path in (source / export_path, *(destination / relative for relative in destination_paths)):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("Manuscript or guide content\n", encoding="utf-8")
+
+    if refused:
+        with pytest.raises(ValueError, match=r"would shadow.*docs/manuscript/"):
+            _preserve_active_manuscript_layout(source, destination)
+    else:
+        _preserve_active_manuscript_layout(source, destination)
+
+    assert sorted(
+        path.relative_to(destination).as_posix() for path in destination.rglob("*") if path.is_file()
+    ) == sorted(destination_paths)
+
+
+def test_resource_refresh_receipt_is_stable_after_destination_advances(tmp_path: Path) -> None:
+    from infrastructure.publishing.standalone_mirror import _write_resource_receipts
+
+    revision = "a" * 40
+    files = {"_template_resources/infrastructure/README.md": "b" * 64}
+    manifest = json.dumps(
+        {"source_commit": revision, "resource_dependencies": ["infrastructure"], "files": files}
+    ).encode()
+    relative = Path("_template_resources/infrastructure/.template-resource-refresh.json")
+    export, next_export, destination = (tmp_path / name for name in ("export", "next", "destination"))
+    for root in (export, next_export):
+        (root / relative.parent).mkdir(parents=True)
+        (root / ".template-export.json").write_bytes(manifest)
+    (destination / relative.parent).mkdir(parents=True)
+    provenance = {
+        "source_commit": revision,
+        "destination": {"repository": "https://github.com/example/mirror", "branch": "main"},
+        "destination_base": "c" * 40,
+    }
+    _write_resource_receipts(export, destination, ("infrastructure",), provenance)
+    first = (export / relative).read_bytes()
+    (destination / relative).write_bytes(first)
+    _write_resource_receipts(
+        next_export, destination, ("infrastructure",), {**provenance, "destination_base": "d" * 40}
+    )
+    assert (next_export / relative).read_bytes() == first
+    assert (export / ".template-export.json").read_bytes() == manifest
+
+
 def test_actual_commit_cli_blocks_unreviewed_removal_with_plan_and_remote_unchanged(tmp_path: Path) -> None:
     root = _monorepo(tmp_path)
     script = _install_actual_cli(root)
@@ -712,6 +774,98 @@ def test_actual_commit_cli_binds_retrieved_managed_bytes_to_full_source_head(tmp
     ).stdout
     assert f"Source: {revision}\n" in message and "Export-SHA256:" in message
     _git(["merge-base", "--is-ancestor", original, "refs/heads/main"], bare)
+
+
+@pytest.mark.slow
+def test_actual_resource_only_sync_preserves_project_and_original_export(tmp_path: Path) -> None:
+    root = _pools_monorepo(tmp_path)
+    script = _install_actual_cli(root)
+    project = root / "projects/templates/template_pools_rules_tools"
+    resource = Path("tools") / sorted(PUBLIC_TOOL_NAMES)[0] / "data/public.txt"
+    retired = resource.with_name("retired.txt")
+    retired_bytes = b"Historical declared resource\n"
+    (root / retired).write_bytes(retired_bytes)
+    (project / "manuscript").mkdir()
+    (project / "manuscript/01_intro.md").write_text("Bundled manuscript\n", encoding="utf-8")
+    _git(["add", "-A"], root)
+    _git(["commit", "-qm", "bundled source manuscript"], root)
+    bare, env, _ = _owned_transport(tmp_path, root, exemplar="template_pools_rules_tools")
+    seed = tmp_path / "seed"
+    (seed / "docs/manuscript").mkdir(parents=True)
+    _git(["mv", "manuscript/01_intro.md", "docs/manuscript/01_intro.md"], seed)
+    (seed / "docs/manuscript/01_intro.md").write_text("Standalone manuscript\n", encoding="utf-8")
+    (seed / "README.md").write_text("# Standalone reader\n", encoding="utf-8")
+    _git(["add", "-A"], seed)
+    _git(["commit", "-qm", "standalone canonical manuscript and reader"], seed)
+    _git(["push", "-q", "origin", "main"], seed)
+    before = _tree_bytes(seed)
+    ref_command = ["git", "rev-parse", "refs/heads/main"]
+    before_ref = subprocess.check_output(ref_command, cwd=bare, timeout=20)
+
+    (root / resource).write_text("Updated declared resource\n", encoding="utf-8")
+    (root / retired).unlink()
+    (project / "README.md").write_text("# Bundled source reader\n", encoding="utf-8")
+    _git(["add", "-A"], root)
+    _git(["commit", "-qm", "update resource and bundled reader"], root)
+    revision = clean_source_revision(root)
+    command = [sys.executable, str(script), "--project", "template_pools_rules_tools", "--resources-only"]
+    preview = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True, check=False, timeout=150)
+    assert preview.returncode == 1, preview.stdout + preview.stderr
+    assert "REVIEW REQUIRED" in preview.stdout
+    lines = preview.stdout.splitlines()
+    digest = next(line.split(": ", 1)[1] for line in lines if line.startswith("  removal-plan-sha256: "))
+    plan, _ = json.JSONDecoder().raw_decode(preview.stdout[preview.stdout.index("\n{\n") + 1 :])
+    retired_export = f"_template_resources/{retired.as_posix()}"
+    assert set(plan["removals"]) == {retired_export}
+    assert subprocess.check_output(ref_command, cwd=bare, timeout=20) == before_ref
+    reviewed_plan = tmp_path / "reviewed-removals.json"
+    reviewed_plan.write_text(json.dumps(plan), encoding="utf-8")
+    quarantine = tmp_path / "quarantine"
+    quarantine.mkdir()
+    actual = subprocess.run(
+        command
+        + [
+            "--commit",
+            "--removal-plan",
+            str(reviewed_plan),
+            "--reviewed-plan-sha256",
+            digest,
+            "--quarantine-root",
+            str(quarantine),
+        ],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=150,
+    )
+    assert actual.returncode == 0, actual.stdout + actual.stderr
+    assert "SYNCED" in actual.stdout and "source-export-sha256:" in actual.stdout
+    retrieved = tmp_path / "resource-only-result"
+    _git(["clone", "--quiet", str(bare), str(retrieved)], tmp_path)
+    current = _tree_bytes(retrieved)
+    assert current["README.md"] == before["README.md"]
+    assert current["docs/manuscript/01_intro.md"] == before["docs/manuscript/01_intro.md"]
+    assert "manuscript/01_intro.md" not in current
+    assert current[".template-export.json"] == before[".template-export.json"]
+    assert current[f"_template_resources/{resource.as_posix()}"] == b"Updated declared resource\n"
+    assert retired_export not in current
+    assert [path.read_bytes() for path in quarantine.rglob(retired.name)] == [retired_bytes]
+    saved = json.loads(current["_template_resources/tools/templates/.template-resource-refresh.json"])
+    assert saved["source_commit"] == revision
+    before_owned = json.loads(before[".template-publication-tree.json"])["files"]
+    current_owned = json.loads(current[".template-publication-tree.json"])["files"]
+    assert current_owned["manuscript/01_intro.md"] == before_owned["manuscript/01_intro.md"]
+    changed = {name for name in before.keys() | current.keys() if before.get(name) != current.get(name)}
+    assert changed == {
+        f"_template_resources/{resource.as_posix()}",
+        retired_export,
+        ".template-publication-tree.json",
+        "_template_resources/fonds/templates/.template-resource-refresh.json",
+        "_template_resources/rules/templates/.template-resource-refresh.json",
+        "_template_resources/tools/templates/.template-resource-refresh.json",
+    }
 
 
 def test_actual_pools_mirror_transfers_and_retrieves_complete_canonical_export(tmp_path: Path) -> None:

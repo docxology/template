@@ -182,7 +182,7 @@ where $\mathcal{X}$ is the feasible set.
 
 ### Equation Labels
 
-All important equations must have descriptive labels.
+Give each numbered equation a descriptive label.
 
 **Naming Convention:**
 
@@ -259,7 +259,7 @@ $$ {#eq:complex}
 Prose $$ f(x) = x^2 $$ continues here.     # ❌ BAD: breaks paragraph flow
 ```
 
-**Always give a display equation its own block, with a label:**
+Give every display equation its own block. Add a label to number it.
 
 ```markdown
 $$
@@ -273,8 +273,10 @@ Manuscript figures use standard Pandoc image syntax — never a raw `\begin{figu
 
 ### Figure Syntax
 
+The examples use paths relative to a section in `docs/manuscript/`.
+
 ```markdown
-![Descriptive caption explaining the figure.](../output/figures/figure_name.png){#fig:figure_name width=80%}
+![Descriptive caption explaining the figure.](../../output/figures/figure_name.png){#fig:figure_name width=80%}
 ```
 
 - The bracketed text `[...]` is the caption.
@@ -300,13 +302,13 @@ Control figure size with the `width` (or `height`) attribute — a fraction of t
 
 Use a relative path to the figure from its authored manuscript file. Store
 authored artwork with the manuscript and generated figures under the
-project’s `output/figures/`. The example below uses a flat bundled
-`manuscript/` directory.
+project’s `output/figures/`. A section under `docs/manuscript/` refers to that
+folder with `../../output/figures/`.
 
 **Path Format:**
 
 ```markdown
-../output/figures/figure_name.png
+../../output/figures/figure_name.png
 ```
 
 **Requirements:**
@@ -319,7 +321,7 @@ project’s `output/figures/`. The example below uses a flat bundled
 **Example:**
 
 ```markdown
-![Convergence plot showing objective value vs iteration.](../output/figures/convergence_plot.png){#fig:convergence width=90%}
+![Convergence plot showing objective value vs iteration.](../../output/figures/convergence_plot.png){#fig:convergence width=90%}
 ```
 
 ### Figure Captions, Alt Text, and Long Descriptions
@@ -348,17 +350,17 @@ the accessibility gate checks presence, not semantic adequacy.
 **Good Examples:**
 
 ```markdown
-![Objective value by iteration for the declared methods; lines show the per-iteration values and shaded bands show the declared uncertainty interval.](../output/figures/convergence.png){#fig:convergence}
-![Directed processing stages from canonical input through validation output; arrows indicate data dependencies.](../output/figures/setup.png){#fig:setup}
-![Observed runtime by input size for the measured environment; points are observations and the line is the declared fitted model.](../output/figures/scalability.png){#fig:scalability}
+![Objective value by iteration for the declared methods; lines show the per-iteration values and shaded bands show the declared uncertainty interval.](../../output/figures/convergence.png){#fig:convergence}
+![Directed processing stages from canonical input through validation output; arrows indicate data dependencies.](../../output/figures/setup.png){#fig:setup}
+![Observed runtime by input size for the measured environment; points are observations and the line is the declared fitted model.](../../output/figures/scalability.png){#fig:scalability}
 ```
 
 **Bad Examples:**
 
 ```markdown
-![convergence plot](../output/figures/convergence.png){#fig:convergence}      # Too brief, not a sentence
-![Figure showing results](../output/figures/results.png){#fig:results}       # Vague, doesn't describe content
-![Results.](../output/figures/results.png){#fig:results}                     # Incomplete sentence
+![convergence plot](../../output/figures/convergence.png){#fig:convergence}      # Too brief, not a sentence
+![Figure showing results](../../output/figures/results.png){#fig:results}       # Vague, doesn't describe content
+![Results.](../../output/figures/results.png){#fig:results}                     # Incomplete sentence
 ```
 
 ### Figure Labels
@@ -610,14 +612,16 @@ build log. A resolved key proves only that the bibliography can be rendered; it
 does not prove that the work exists, that its metadata is correct, or that it
 supports the sentence.
 
-Before submission, run both metadata and existence checks:
+Before submission, run both checks with the bibliography from the selected
+manuscript directory. The example uses Template’s root bibliography. Set the
+cutoff year for the literature you are verifying.
 
 ```bash
-uv run python -m infrastructure.reference.citation.cli validate \
-  projects/<qualified-name>/manuscript/references.bib --strict
-uv run python -m infrastructure.reference.verification verify \
-  projects/<qualified-name>/manuscript/references.bib \
-  --live --as-of-year <manuscript-year>
+bibliography=docs/manuscript/references.bib
+as_of_year="$(date -u +%Y)"
+uv run python -m infrastructure.reference.citation.cli validate "$bibliography" --strict
+uv run python -m infrastructure.reference.verification verify "$bibliography" \
+  --live --as-of-year "$as_of_year"
 ```
 
 Treat `unchecked` and `unverifiable` as unresolved review work. Read the
@@ -859,15 +863,17 @@ For projects with computed results:
 The shared substitution function warns and preserves unknown tokens; it is not
 a fail-closed release gate by itself. Verify the hydrated tree explicitly:
 
+The hydration example uses the bundled Code Project. Set both paths to the project and authored source you are checking.
+
 ```bash
-uv run python projects/<qualified-name>/scripts/z_generate_manuscript_variables.py
-if rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' \
-  projects/<qualified-name>/output/manuscript; then
+project_dir=projects/templates/template_code_project
+manuscript_dir="$project_dir/manuscript"
+uv run python "$project_dir/scripts/z_generate_manuscript_variables.py"
+if rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' "$project_dir/output/manuscript"; then
   echo "Unresolved manuscript token(s)" >&2
   exit 1
 fi
-uv run python -m infrastructure.validation.cli prerender \
-  projects/<qualified-name>/manuscript --repo-root .
+uv run python -m infrastructure.validation.cli prerender "$manuscript_dir" --repo-root .
 ```
 
 Document each token's semantic definition, canonical source, unit, formatting
@@ -946,9 +952,9 @@ from one raw value; do not independently round copied literals.
 
 - Verify every `[@eq:]`, `[@fig:]`, `[@tbl:]`, `[@sec:]` target has a matching label somewhere in the manuscript
 - Check label spelling matches exactly
-- Ensure all figures/tables/equations have labels
-- Run source validation against the qualified project path:
-  `uv run python -m infrastructure.validation.cli prerender projects/<qualified-name>/manuscript --repo-root .`
+- Check labels on figures, tables, and numbered equations
+- Validate the selected authored directory. Template’s root manuscript uses this command.
+  `uv run python -m infrastructure.validation.cli prerender docs/manuscript --repo-root .`
 
 ### Figure/Table Placement Guidelines
 
@@ -1013,17 +1019,10 @@ $$ {#eq:name}
 
 ### Incorrect Path References
 
-**Never:**
+For a section in `docs/manuscript/`, resolve generated figures relative to the authored file.
 
 ```markdown
-![caption](figures/figure.png){#fig:name}           # ❌ Wrong path — missing ../output
-![caption](output/figures/figure.png){#fig:name}     # ❌ Wrong path — missing ../
-```
-
-**Always:**
-
-```markdown
-![caption](../output/figures/figure.png){#fig:name}  # ✅ Correct relative path
+![Caption describing the figure.](../../output/figures/figure.png){#fig:name}
 ```
 
 ### Case-Sensitive Citation Keys
@@ -1078,7 +1077,7 @@ As shown in [@fig:convergence]...             # ✅ Works in every output format
 ![Objective value by iteration for the declared methods. Lines show the
 per-iteration statistic over {{FIGURE_RUN_COUNT}} independent runs; bands show
 {{INTERVAL_LEVEL}}% {{INTERVAL_TYPE}} intervals, and the fitted convergence
-rate is $\rho={{CONVERGENCE_RATE}}$.](../output/figures/convergence_plot.png){#fig:convergence_plot width=90%}
+rate is $\rho={{CONVERGENCE_RATE}}$.](../../output/figures/convergence_plot.png){#fig:convergence_plot width=90%}
 
 As shown in [@fig:convergence_plot], the estimated between-method difference is
 {{PRIMARY_EFFECT_ESTIMATE}} ({{INTERVAL_LEVEL}}% {{INTERVAL_TYPE}}

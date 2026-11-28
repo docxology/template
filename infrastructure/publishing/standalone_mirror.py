@@ -28,8 +28,9 @@ The file list always comes from ``git ls-files``, so untracked local noise
 from __future__ import annotations
 
 import hashlib
-import re
+import json
 import os
+import re
 import stat
 import subprocess
 import tempfile
@@ -42,21 +43,38 @@ from typing import TYPE_CHECKING, Any
 from infrastructure.core.execution_boundary import build_bounded_env, run_bounded_subprocess
 from infrastructure.core.files.secure_write import atomic_write_bytes_confined, read_bytes_confined
 from infrastructure.core.pipeline.fingerprint_files import observation
+from infrastructure.core.project_paths import _has_manuscript_sources, resolve_source_manuscript_dir
 from infrastructure.fonds.public_scope import PUBLIC_FOND_NAMES as PUBLIC_FOND_NAMES
 from infrastructure.project._exemplar_export_policy import (
     declared_resource_dependencies as _declared_resource_dependencies,
+)
+from infrastructure.project._exemplar_export_policy import (
     is_clean_resource_path as _is_clean_resource_path,
+)
+from infrastructure.project._exemplar_export_policy import (
     is_clean_source_path as _is_clean_source_path,
 )
 from infrastructure.project.public_reference_git import GitReference, inventory
 from infrastructure.publishing._standalone_export import canonical_snapshot_export
 from infrastructure.publishing._standalone_git import (
     _GIT_LOCAL_ENVIRONMENT as _GIT_LOCAL_ENVIRONMENT,
+)
+from infrastructure.publishing._standalone_git import (
     _PUBLIC_ROOTS as _PUBLIC_ROOTS,
+)
+from infrastructure.publishing._standalone_git import (
     _git as _git,
+)
+from infrastructure.publishing._standalone_git import (
     _git_clean_source_inventory as _git_clean_source_inventory,
+)
+from infrastructure.publishing._standalone_git import (
     _git_destination_inventory as _git_destination_inventory,
+)
+from infrastructure.publishing._standalone_git import (
     _git_environment as _git_environment,
+)
+from infrastructure.publishing._standalone_git import (
     _git_source_inventory as _git_source_inventory,
 )
 from infrastructure.publishing._standalone_mirror_source import (
@@ -74,9 +92,9 @@ from infrastructure.publishing._standalone_mirror_verify import (
     _classify,
     validate_publication_commit,
 )
-from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES as PUBLIC_RULE_NAMES
-from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES as PUBLIC_TOOL_NAMES
 from infrastructure.publishing.publication_tree import (
+    INVENTORY_NAME,
+    RESOURCE_REFRESH_RECEIPT,
     PublicationTarget,
     _Budget,
     publication_export_sha256,
@@ -84,6 +102,8 @@ from infrastructure.publishing.publication_tree import (
     update_publication_tree,
     validate_publication_update,
 )
+from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES as PUBLIC_RULE_NAMES
+from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES as PUBLIC_TOOL_NAMES
 
 if TYPE_CHECKING:
     from infrastructure.publishing.standalone_install_projection import GitInstallProvider
@@ -497,6 +517,71 @@ def populate_mirror_tree(
         return count
 
 
+def _write_resource_receipts(
+    export: Path, destination: Path, resource_roots: tuple[str, ...], provenance: dict[str, Any]
+) -> None:
+    """Bind the refreshed resource bytes to the admitted full source export."""
+    manifest_bytes = read_bytes_confined(export, export / ".template-export.json", max_bytes=32 * 1024 * 1024)
+    manifest = json.loads(manifest_bytes)
+    if (
+        manifest["source_commit"] != provenance["source_commit"]
+        or tuple(manifest["resource_dependencies"]) != resource_roots
+    ):
+        raise ValueError("resource scope differs from the admitted export manifest")
+    for resource in resource_roots:
+        prefix = f"_template_resources/{resource}/"
+        files = {path: digest for path, digest in manifest["files"].items() if path.startswith(prefix)}
+        if not files:
+            raise ValueError(f"declared resource {resource!r} has no exported files")
+        relative = Path(prefix) / RESOURCE_REFRESH_RECEIPT
+        reserved = export / relative
+        if reserved.exists() or reserved.is_symlink():
+            raise ValueError("canonical source already contains the mirror resource receipt path")
+        evidence = {
+            **provenance,
+            "resource": resource,
+            "source_manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "resource_files_sha256": hashlib.sha256(
+                json.dumps(files, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest(),
+        }
+        body = (json.dumps(evidence, sort_keys=True, indent=2) + "\n").encode()
+        previous = destination / relative
+        if previous.exists() or previous.is_symlink():
+            prior_bytes = read_bytes_confined(destination, previous, max_bytes=64 * 1024)
+            prior = json.loads(prior_bytes)
+            prior_base = prior.get("destination_base") if isinstance(prior, dict) else None
+            if (
+                isinstance(prior_base, str)
+                and re.fullmatch(r"[0-9a-f]{40}", prior_base)
+                and prior == {**evidence, "destination_base": prior_base}
+            ):
+                body = prior_bytes
+        atomic_write_bytes_confined(export, reserved, body, mode=0o644)
+
+
+def _validate_resource_delta(destination: Path, roots: tuple[str, ...], arguments: list[str]) -> None:
+    """Require a staged or committed delta restricted to declared resources and ownership."""
+    prefixes = tuple(f"_template_resources/{name}/" for name in roots)
+    paths = _git(arguments, cwd=destination).stdout.split("\0")
+    if any(path and path != INVENTORY_NAME and not path.startswith(prefixes) for path in paths):
+        raise ValueError("resource refresh changed paths outside the declared resource scope")
+
+
+def _preserve_active_manuscript_layout(source: Path, destination: Path) -> None:
+    """Refuse an export that would supersede an existing canonical manuscript."""
+    canonical = destination / "docs" / "manuscript"
+    if (
+        _has_manuscript_sources(source / "manuscript")
+        and canonical.resolve().is_relative_to(destination)
+        and (destination / "manuscript").resolve().is_relative_to(destination)
+        and resolve_source_manuscript_dir(destination) == canonical
+    ):
+        raise ValueError(
+            "standalone mirror export would shadow the destination's active docs/manuscript/ with manuscript/"
+        )
+
+
 def sync_exemplar(
     repo_root: Path,
     exemplar: str,
@@ -509,6 +594,7 @@ def sync_exemplar(
     quarantine_root: Path | None = None,
     install_projection: bool = False,
     meta_provider: GitInstallProvider | None = None,
+    resources_only: bool = False,
 ) -> MirrorResult:
     """Sync one exemplar into its standalone repository.
 
@@ -517,6 +603,8 @@ def sync_exemplar(
     touches a public repository. Supplied removal authority additionally requires
     caller-retained quarantine; no remote update occurs until ``commit=True``.
     """
+    if type(resources_only) is not bool or resources_only and install_projection:
+        raise ValueError("resource-only sync and installation projection are separate modes")
     if type(install_projection) is not bool or meta_provider is not None and not install_projection:
         raise ValueError("Meta installation providers require explicit installation projection")
     project_rel = project_rel or f"projects/templates/{exemplar}"
@@ -533,6 +621,9 @@ def sync_exemplar(
         export.mkdir()
         populate_mirror_tree(repo_root, project_rel, export, source_revision=revision)
         source_export_sha256 = publication_export_sha256(export)
+        resource_roots = _declared_resource_dependencies(export) if resources_only else ()
+        if resources_only and not resource_roots:
+            return MirrorResult(exemplar, repository, "SKIP: no declared resources", export_kind="resources")
         projection_sha256 = ""
         if install_projection:
             from infrastructure.publishing.standalone_install_projection import (
@@ -572,6 +663,21 @@ def sync_exemplar(
         destination_revision = _git(["rev-parse", "--verify", "HEAD^{commit}"], cwd=work).stdout.strip()
         target = PublicationTarget(repository, branch)
         _validate_git_destination_current(admitted, work)
+        if resource_roots:
+            _write_resource_receipts(
+                export,
+                work,
+                resource_roots,
+                {
+                    "schema_version": "template-mirror-resource-refresh/1",
+                    "source_commit": revision,
+                    "source_export_sha256": source_export_sha256,
+                    "destination": target.payload(),
+                    "destination_base": destination_revision,
+                },
+            )
+        else:
+            _preserve_active_manuscript_layout(export, work)
         update = update_publication_tree(
             export,
             work,
@@ -579,6 +685,7 @@ def sync_exemplar(
             removal_plan=removal_plan,
             reviewed_plan_sha256=reviewed_plan_sha256,
             quarantine_root=quarantine_root,
+            resource_roots=resource_roots,
         )
         evidence: dict[str, Any] = {
             "managed_export_parity": update.managed_export_parity,
@@ -586,11 +693,15 @@ def sync_exemplar(
             "removal_plan": update.plan,
             "removal_plan_sha256": review_plan_sha256(update.plan),
             "source_commit": revision,
-            "export_kind": "install-projection" if install_projection else "source",
+            "export_kind": "resources" if resource_roots else "install-projection" if install_projection else "source",
             "source_export_sha256": source_export_sha256,
             "install_projection_sha256": projection_sha256,
         }
         _git(["add", "-A"], cwd=work)
+        if resource_roots:
+            _validate_resource_delta(
+                work, resource_roots, ["diff", "--cached", "--no-renames", "--name-only", "-z", "--"]
+            )
         added, modified, deleted = _classify(_git(["status", "--porcelain"], cwd=work).stdout)
         if update.stale_managed:
             return MirrorResult(
@@ -625,6 +736,14 @@ def sync_exemplar(
             "docs/guides/publication-runbook.md. Destination-only publication "
             "evidence is preserved; source removals require an exact reviewed manifest."
         )
+        if resource_roots:
+            message = (
+                f"Refresh declared Template mirror resources\n\n"
+                f"Source: {revision}\n"
+                f"Source-Export-SHA256: {source_export_sha256}\n"
+                f"Resources: {', '.join(resource_roots)}"
+            )
+        parent = destination_revision
         _git(["commit", "--quiet", "-m", message], cwd=work)
         destination_revision = _git(["rev-parse", "--verify", "HEAD^{commit}"], cwd=work).stdout.strip()
         _assert_source_current(
@@ -638,6 +757,24 @@ def sync_exemplar(
         )
         validate_publication_update(work, target, update)
         validate_publication_commit(work, update, destination_revision)
+        if resource_roots:
+            if _git(["rev-parse", "HEAD^"], cwd=work).stdout.strip() != parent:
+                raise ValueError("resource refresh is no longer based on the admitted destination")
+            _validate_resource_delta(
+                work,
+                resource_roots,
+                [
+                    "diff-tree",
+                    "--no-commit-id",
+                    "-r",
+                    "--no-renames",
+                    "--name-only",
+                    "-z",
+                    parent,
+                    destination_revision,
+                    "--",
+                ],
+            )
         if _git(["symbolic-ref", "--short", "HEAD"], cwd=work).stdout.strip() != branch:
             raise ValueError("standalone destination branch changed before push")
         _validate_git_destination_current(admitted, work)

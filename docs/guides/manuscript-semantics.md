@@ -143,7 +143,8 @@ Keep the validation report and `rendered_provenance.json` with the outputs.
 3. Citation keys are lowercase alphanumeric with optional underscores. The convention used by the auto-generators is `<surname><year><titleword>` — e.g. `boyd2004convex`, `nocedal2006numerical`, `peng2011reproducible`.
 4. Prefer one curated `references.bib`, but supplemental top-level `.bib`
    databases are supported. Combined PDF, HTML, DOCX, EPUB, and the opt-in
-   ebook stage all consume the same filename-sorted `manuscript/*.bib` union.
+   ebook stage consume the same filename-sorted bibliography files from the
+   selected manuscript directory.
    Repeated or symlinked paths are included once, and duplicate citation keys,
    including case-only variants within or across databases, fail before
    rendering because BibTeX and citeproc otherwise have different winner
@@ -151,14 +152,16 @@ Keep the validation report and `rendered_provenance.json` with the outputs.
    [cross-format bibliography contract](../usage/output-formats.md#cross-format-bibliography-contract).
 5. Syntax and metadata validation do not establish that a source supports the
    adjacent claim. Before submission, validate the BibTeX, resolve identifiers
-   against scholarly indexes, and inspect the primary source for claim support:
+   against scholarly indexes, and inspect the primary source for claim support.
+   The example uses Template’s root bibliography. Select your manuscript’s
+   bibliography and set the cutoff year for the review.
 
    ```bash
-   uv run python -m infrastructure.reference.citation.cli validate \
-     projects/<qualified-name>/manuscript/references.bib --strict
-   uv run python -m infrastructure.reference.verification verify \
-     projects/<qualified-name>/manuscript/references.bib \
-     --live --as-of-year <manuscript-year>
+   bibliography=docs/manuscript/references.bib
+   as_of_year="$(date -u +%Y)"
+   uv run python -m infrastructure.reference.citation.cli validate "$bibliography" --strict
+   uv run python -m infrastructure.reference.verification verify "$bibliography" \
+     --live --as-of-year "$as_of_year"
    ```
 
    `unchecked` and `unverifiable` are honest incomplete outcomes, not passes.
@@ -203,7 +206,7 @@ $$ {#eq:update}
 ### Syntax — 3. Figures
 
 ```markdown
-![Convergence plot showing objective value vs iteration. Reference line at $f(x^\ast)=0$.](../output/figures/convergence_plot.png){#fig:convergence width=80%}
+![Convergence plot showing objective value vs iteration. Reference line at $f(x^\ast)=0$.](../../output/figures/convergence_plot.png){#fig:convergence width=80%}
 
 <!-- Cross-reference -->
 [@fig:convergence] shows that smaller step sizes converge slower.
@@ -212,7 +215,7 @@ $$ {#eq:update}
 ### Rules — 3. Figures
 
 1. Use an image path relative to the authored Markdown file. The example
-   uses a flat bundled `manuscript/` directory. Generated figures live under
+   uses `docs/manuscript/`. Generated figures live under
    the project's `output/figures/`. Verify that the path resolves for the
    actual manuscript layout and in each enabled format.
 2. Labels follow the pattern `{#fig:<lowercase_underscore_name>}`. Use stable,
@@ -356,12 +359,14 @@ Authors may instead write `\begin{theorem}…\end{theorem}` raw LaTeX, which the
 
 ## 7. Bibliography Section (`99_references.md`)
 
-Every project has a thin `99_references.md` that points Pandoc-citeproc at the BibTeX file:
+The renderer reads the bibliography from the selected manuscript directory.
+Projects that add an explicit references heading can put it in `99_references.md`.
 
 ```markdown
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc with `--natbib` during PDF render.
+Bibliography entries are drawn from [`references.bib`](references.bib) and any
+supplemental bibliography files in this directory.
 ```
 
 The `99_` prefix ensures lexicographic-order assembly places it last. The PDF
@@ -427,15 +432,17 @@ regenerate all downstream consumers from the same source revision.
 
 To verify all tokens resolved before rendering:
 
+The hydration example uses the bundled Code Project. Set both paths to the project and authored source you are checking.
+
 ```bash
-uv run python projects/<qualified-name>/scripts/z_generate_manuscript_variables.py
-if rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' \
-  projects/<qualified-name>/output/manuscript; then
+project_dir=projects/templates/template_code_project
+manuscript_dir="$project_dir/manuscript"
+uv run python "$project_dir/scripts/z_generate_manuscript_variables.py"
+if rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' "$project_dir/output/manuscript"; then
   echo "Unresolved manuscript token(s)" >&2
   exit 1
 fi
-uv run python -m infrastructure.validation.cli prerender \
-  projects/<qualified-name>/manuscript --repo-root .
+uv run python -m infrastructure.validation.cli prerender "$manuscript_dir" --repo-root .
 ```
 
 ## 9. Preamble (`preamble.md`)
@@ -497,10 +504,10 @@ records, but automated green checks do not establish study validity or source
 support. Use the evidence gate where the project provides a claim ledger:
 
 ```bash
-uv run python -m infrastructure.validation.cli evidence \
-  projects/<qualified-name> --fail-on-issues
+project=templates/template_code_project
+uv run python -m infrastructure.validation.cli evidence "projects/$project" --fail-on-issues
 uv run python -m infrastructure.validation.cli publication-audit \
-  --project <qualified-name> --rendered --strict \
+  --project "$project" --rendered --strict \
   --require-figure-accessibility --format markdown
 ```
 
@@ -513,11 +520,12 @@ Before committing a manuscript change:
       its generator, self-contained caption, and meaningful explicit alt text;
       complex figures also have a long description, data table, or equivalent.
 - [ ] Every table has `{#tbl:label}` and is referenced with `[@tbl:label]`.
-- [ ] Every numbered equation has `{#eq:label}` (or `\label{eq:label}` inside a `\begin{equation}` block) and is referenced with `[@eq:label]`.
+- [ ] Each numbered equation has `{#eq:label}` on its closing `$$` line and
+      is referenced with `[@eq:label]`.
 - [ ] Every section H1 has `{#sec:label}`.
 - [ ] Every Definition/Proposition/Theorem is a `::: {.definition #def:label}` block — **no hand-typed numbers** — and is referenced with `[@def:label]`.
 - [ ] The build log shows no `formalism.lua: reference to undeclared formalism` or `duplicate label` lines.
-- [ ] Every `[@key]` citation resolves in `references.bib`.
+- [ ] Every `[@key]` citation resolves in the bibliography files selected for the manuscript.
 - [ ] Each citation supports the adjacent proposition; metadata/existence,
       correction, and retraction checks have explicit outcomes.
 - [ ] Cross-section references use `[@sec:label]`, not Markdown filename links.

@@ -4,36 +4,10 @@ This document describes how autonomous agents (Hermes, CI/CD systems) should int
 
 ## Purpose
 
-The scripts in this directory automate PyPI release validation and post-publish verification. They are designed to be **non-interactive** and **fully automated** — suitable for CI/CD pipelines, agent workflows, and pre-commit hooks.
-
-## Conventions
-
-### Importability
-
-All scripts are intended to be executed with:
-
-```bash
-uv run python scripts/publish/<script>.py
-```
-
-This ensures the runtime environment matches the project's dependency resolution via `uv sync`.
-
-### Environment Variables
-
-| Variable | Purpose | Required |
-|---|---|---|
-| `TEST_PYPI_API_TOKEN` | TestPyPI upload token (for `test_pypi.py`) | Yes |
-| `PACKAGE_NAME` | Override package name (default: `template`) | No |
-| `INDEX_URL` | Custom package index URL (default: `https://pypi.org/simple/`) | No |
-
-### Exit Codes
-
-- `0` — Success
-- non-zero — Failure (build error, upload failure, or verification failure)
-
-### Output
-
-Scripts are verbose by design, printing each non-secret command executed and streaming subprocess output. Token-bearing values must stay in environment variables or trusted-publishing credentials and must never be printed in command logs.
+These scripts coordinate manuscript distribution, local package checks, and
+explicit sandbox publication. Prepare the locked environment for the selected
+operation and keep publication credentials in the process environment.
+[Publishing commands](README.md#pypi-package-checks)
 
 ## Scripts
 
@@ -49,87 +23,34 @@ Local projection admission is separate from public provider retrieval and
 isolated installation acceptance. See
 [`standalone-install-projection.md`](../../docs/guides/standalone-install-projection.md).
 
+### Local package preview
+
+Use `PyPIAdapter.publish(..., dry_run=True)` with an empty credential environment.
+The command returns original wheel and source distribution digests from a
+private build. Use this path for local verification and credential-free CI.
+[Local build preview](README.md#local-build-preview)
+
 ### test_pypi.py
 
-**Workflow:** Build → Upload → Fresh venv install → `template doctor`
-
-**Usage:**
-
-```bash
-export TEST_PYPI_API_TOKEN="pypi-..."
-uv run python scripts/publish/test_pypi.py
-```
-
-**Expected sequence:**
-
-1. Clean `dist/` directory (remove old builds)
-2. `uv build` → produces `dist/*.whl` and `dist/*.tar.gz`
-3. `twine upload --repository testpypi ...` with `TWINE_USERNAME` / `TWINE_PASSWORD` in the subprocess environment → pushes to TestPyPI
-4. Create temp virtual environment
-5. `pip install <package> --index-url https://test.pypi.org/simple/`
-6. Run `<venv>/bin/template doctor`
-7. Exit 0 if doctor succeeds; else exit 1
-
-**Agent notes:**
-
-- Run this **before** any production PyPI upload as a gate.
-- The script performs a full dependency resolution on TestPyPI; this catches missing dependencies that may not appear in local development.
-- Requires `twine` to be available or pip-installable (the script attempts `pip install twine` if module not found).
-- The fresh venv approach mimics a real user installation.
+This command makes an actual TestPyPI transfer. Require explicit approval for
+that operation and supply `TEST_PYPI_API_TOKEN` through the process environment.
+The CLI checks prepared tools, admits the build, retrieves the exact published
+bytes, and performs isolated installed verification. Use the separately
+reviewed release contract for production promotion.
+[TestPyPI sandbox transfer](README.md#testpypi-sandbox-transfer)
 
 ### verify_install.py
 
-**Workflow:** Fresh venv → Install from index → Import check → `template doctor`
-
-**Usage:**
-
-```bash
-# Against production PyPI (default)
-uv run python scripts/publish/verify_install.py
-
-# Against a specific package/index
-PACKAGE_NAME=template INDEX_URL=https://test.pypi.org/simple/ uv run python scripts/publish/verify_install.py
-```
-
-**Expected sequence:**
-
-1. Create temp virtual environment
-2. `pip install <package>` from `INDEX_URL`
-3. Import check: `python -c "import template; print(template.__version__)"`
-4. Run `template doctor`
-5. Exit 0 if both steps succeed; else exit 1
-
-**Agent notes:**
-
-- Run this **after** a production PyPI release to confirm deploy success.
-- Also useful as a health check in monitoring (periodic re-verification that the package remains installable).
-- If the package name changed (e.g., monorepo with multiple packages), set `PACKAGE_NAME` accordingly.
-
-## Integration with Pre-Commit or CI
-
-Example GitHub Actions step:
-
-```yaml
-- name: TestPyPI dry-run
-  env:
-    TEST_PYPI_API_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
-  run: uv run python scripts/publish/test_pypi.py
-
-- name: Upload to PyPI
-  if: success() && github.ref == 'refs/tags/v*'
-  env:
-    TWINE_USERNAME: __token__
-    TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-  run: |
-    uv build
-    twine upload dist/*
-```
+Supply the retained wheel and its original admission digest through `--wheel`
+and `--sha256`. Keep the prepared locked dependencies for its offline installed
+verification. The result describes that wheel and runtime.
+[Exact wheel installation check](README.md#exact-wheel-installation-check)
 
 ## File Locations
 
 - `infrastructure/publishing/pypi_release.py` — TestPyPI build/upload helpers (imported by script below)
-- `scripts/publish/test_pypi.py` — TestPyPI integration test orchestrator
-- `scripts/publish/verify_install.py` — Post-publish verification
+- [`test_pypi.py`](test_pypi.py) — explicit TestPyPI transfer and installed verification
+- [`verify_install.py`](verify_install.py) — offline verification of an admitted wheel
 - `scripts/publish/README.md` — Human-readable usage guide
 
 ## Related
