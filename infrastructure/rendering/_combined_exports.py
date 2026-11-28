@@ -199,6 +199,7 @@ def render_combined_docx(
     combined_md: Path | None = None,
     docx_renderer: Callable[..., Any] | None = None,
     diagram_png_sha256: tuple[str, ...] = (),
+    mark_mermaid_occurrences: bool = False,
 ) -> None:
     """Render the combined DOCX from the preprocessed combined markdown."""
     if docx_renderer is None:
@@ -244,23 +245,19 @@ def render_combined_docx(
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
+        layout_options: dict[str, Any] = {}
         if diagram_png_sha256:
-            result = docx_renderer(
-                combined_md,
-                out_path,
-                bibliography=None,
-                pandoc_path=manager.config.pandoc_path,
-                extra_args=extra_args,
-                diagram_png_sha256=diagram_png_sha256,
-            )
-        else:
-            result = docx_renderer(
-                combined_md,
-                out_path,
-                bibliography=None,
-                pandoc_path=manager.config.pandoc_path,
-                extra_args=extra_args,
-            )
+            layout_options["diagram_png_sha256"] = diagram_png_sha256
+            if mark_mermaid_occurrences:
+                layout_options["mark_mermaid_occurrences"] = True
+        result = docx_renderer(
+            combined_md,
+            out_path,
+            bibliography=None,
+            pandoc_path=manager.config.pandoc_path,
+            extra_args=extra_args,
+            **layout_options,
+        )
         logger.info(f"✅ Generated combined DOCX: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
     except RenderingError as rendering_exc:
         logger.warning(f"⚠️  Rendering error generating combined DOCX: {rendering_exc.message}")
@@ -488,6 +485,7 @@ def render_combined_outputs(
                 reporter,
                 combined_md=combined_md,
                 diagram_png_sha256=shared_source.diagram_png_sha256 if shared_source else (),
+                mark_mermaid_occurrences=True,
             )
         else:
             logger.debug("[skip] DOCX rendering disabled in config (default; render.formats.docx=true to enable)")

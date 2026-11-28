@@ -58,14 +58,20 @@ def _start_tag_end(data: bytes, start: int) -> int:
     raise ValueError("source-bound DOCX extent has an unbounded literal XML start tag")
 
 
-def project_docx_diagram_layout(data: bytes, diagram_png_sha256: tuple[str, ...]) -> tuple[bytes, dict[str, Any]]:
-    """Cap actual source-linked DrawingML extents and preserve aspect to one EMU."""
+def project_docx_diagram_layout(
+    data: bytes, diagram_png_sha256: tuple[str, ...], *, occurrence_marker: str | None = None
+) -> tuple[bytes, dict[str, Any]]:
+    """Cap source-linked DrawingML extents and restore marked writer titles."""
+    if occurrence_marker is not None and not re.fullmatch(r"template-docx-mermaid-[0-9a-f]{32}:", occurrence_marker):
+        raise ValueError("invalid DOCX Mermaid occurrence marker")
     if len(data) > MAX_BYTES or len(diagram_png_sha256) > 100:
         raise ValueError("original diagram DOCX projection exceeds its finite package/source bound")
     if any(len(value) != 64 or any(char not in "0123456789abcdef" for char in value) for value in diagram_png_sha256):
         raise ValueError("original diagram DOCX projection requires exact original PNG SHA256 bindings")
     expected = Counter(diagram_png_sha256)
     if not expected:
+        if occurrence_marker is not None:
+            raise ValueError("DOCX Mermaid occurrence marker requires source PNG bindings")
         return data, {
             "schema_version": "template-office-original-diagram-height-projection-v1",
             "maximum_height_emu": MAX_HEIGHT_EMU,
@@ -112,7 +118,19 @@ def project_docx_diagram_layout(data: bytes, diagram_png_sha256: tuple[str, ...]
         for drawing in document.iter(W + "drawing"):
             containers = list(drawing.findall(WP + "inline")) + list(drawing.findall(WP + "anchor"))
             for container in containers:
+                title = None
+                marker = None
+                if occurrence_marker is not None:
+                    title = container.find(WP + "docPr")
+                    value = "" if title is None else title.get("title", "")
+                    if not value.startswith(occurrence_marker):
+                        continue
+                    marker = f"{occurrence_marker}{len(occurrences) + 1}:"
+                    if not value.startswith(marker):
+                        raise ValueError("DOCX Mermaid writer changed source occurrence order")
                 pictures = list(container.iter(PIC + "pic"))
+                if marker is not None and len(pictures) != 1:
+                    raise ValueError("marked DOCX Mermaid occurrence does not contain one picture")
                 for picture in pictures:
                     blips = list(picture.iter(A + "blip"))
                     if len(blips) != 1:
@@ -124,7 +142,22 @@ def project_docx_diagram_layout(data: bytes, diagram_png_sha256: tuple[str, ...]
                         digests[target] = hashlib.sha256(source.read(target)).hexdigest()
                     digest = digests[target]
                     if digest not in expected:
+                        if marker is not None:
+                            raise ValueError("marked DOCX Mermaid picture differs from its source PNG")
                         continue
+                    if marker is not None:
+                        assert title is not None
+                        start = positions[id(title)]
+                        end = _start_tag_end(original_xml, start)
+                        tag, matches = re.subn(
+                            rb"""(\stitle\s*=\s*['"])""" + re.escape(marker.encode("ascii")),
+                            lambda match: match[1],
+                            original_xml[start:end],
+                        )
+                        if matches != 1 or start in replacements:
+                            raise ValueError("cannot restore the original DOCX Mermaid picture title")
+                        replacements[start] = (end, tag)
+                        changed = True
                     actual[digest] += 1
                     extent = container.find(WP + "extent")
                     transform = picture.find(PIC + "spPr/" + A + "xfrm")
@@ -189,9 +222,10 @@ def project_docx_diagram_layout(data: bytes, diagram_png_sha256: tuple[str, ...]
             output = BytesIO()
             with zipfile.ZipFile(output, "w") as destination:
                 for row in source.infolist():
-                    destination.writestr(
-                        row, projected_xml if row.filename == "word/document.xml" else source.read(row)
-                    )
+                    payload = projected_xml if row.filename == "word/document.xml" else source.read(row)
+                    if occurrence_marker is not None and occurrence_marker.encode("ascii") in payload:
+                        raise ValueError("DOCX Mermaid occurrence marker remains in the package")
+                    destination.writestr(row, payload)
             result = output.getvalue()
     if len(result) > MAX_BYTES:
         raise ValueError("projected DOCX diagram package exceeds its original byte bound")
@@ -202,14 +236,16 @@ def project_docx_diagram_layout(data: bytes, diagram_png_sha256: tuple[str, ...]
     }
 
 
-def apply_docx_diagram_layout(package: Path, diagram_png_sha256: tuple[str, ...]) -> None:
+def apply_docx_diagram_layout(
+    package: Path, diagram_png_sha256: tuple[str, ...], *, occurrence_marker: str | None = None
+) -> None:
     """Atomically finish a genuine writer package at its existing output path."""
     if not diagram_png_sha256:
         return
     if package.is_symlink() or package.stat().st_size > MAX_BYTES:
         raise ValueError("source-bound DOCX diagram layout requires a bounded regular package")
     original = package.read_bytes()
-    projected, _ = project_docx_diagram_layout(original, diagram_png_sha256)
+    projected, _ = project_docx_diagram_layout(original, diagram_png_sha256, occurrence_marker=occurrence_marker)
     if projected == original:
         return
     descriptor, temporary = tempfile.mkstemp(prefix=".office-diagram-layout-", suffix=".docx", dir=package.parent)
