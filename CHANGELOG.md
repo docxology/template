@@ -773,6 +773,8 @@ Advanced Literature Review `pypdf`, and root dev-group pins (`ruff`, `numpy`,
   checkouts. Working-project audits and PDF rerender selection use the canonical
   manuscript directory, including Markdown sources in `docs/manuscript/`.
   ([#366](https://github.com/docxology/template/issues/366), [#368](https://github.com/docxology/template/issues/368))
+- Preserve the original loader position and surrounding HTML when normalizing
+  MathJax on a page again.
 
 ## [5.1.0] - 2026-11-06
 
