@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
+import tempfile
 import traceback
 from collections.abc import Callable
+from contextlib import ExitStack
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -19,8 +23,9 @@ from infrastructure.transmission.transmission_bookends import is_transmission_bo
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering._bibliography import resolve_bibliography
 from infrastructure.rendering._pandoc_args import combined_pandoc_args
-from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
+from infrastructure.rendering._pdf_combined_markdown import normalize_combined_markdown, preprocess_combined_markdown
 from infrastructure.rendering._pdf_combined_prevalidate import prevalidate_for_render
+from infrastructure.rendering._pdf_mermaid import replace_inline_mermaid
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
 from infrastructure.rendering._slides_crossref import COMBINED_AUX_BASENAME
@@ -98,6 +103,13 @@ def _project_root_for_manuscript(manuscript_dir: Path) -> Path:
     return manuscript_dir.parent
 
 
+@dataclass(frozen=True)
+class _SharedCombinedMarkdown:
+    path: Path
+    portable_content: str | None = None
+    diagram_png_sha256: tuple[str, ...] = ()
+
+
 def prepare_shared_combined_markdown(
     manager: RenderManager,
     md_files: list[Path],
@@ -106,14 +118,22 @@ def prepare_shared_combined_markdown(
     *,
     paper_layout: PaperLayout | None = None,
 ) -> Path:
-    """Write a current combined source for exports and provenance.
+    """Write the canonical combined source and its composition receipt."""
+    return _prepare_shared_combined_markdown(
+        manager, md_files, manuscript_dir, project_name, paper_layout=paper_layout
+    ).path
 
-    DOCX and EPUB must not depend on a prior PDF run. The shared source is
-    rebuilt from the exact ordered manuscript inputs, receives the same generic
-    preprocessing as the combined PDF, and is bound to the composition receipt.
-    PDF-only and slides-only runs also use it because the HTML renderer is not
-    present to emit the cross-format composition evidence in those lanes.
-    """
+
+def _prepare_shared_combined_markdown(
+    manager: RenderManager,
+    md_files: list[Path],
+    manuscript_dir: Path,
+    project_name: str,
+    *,
+    paper_layout: PaperLayout | None = None,
+    portable_exports: bool = False,
+) -> _SharedCombinedMarkdown:
+    """Prepare the canonical source and, if selected, the portable writer input."""
 
     layout = admit_paper_layout(manuscript_dir, tuple(md_files), paper_layout)
     source_files = combined_source_files(list(layout.complete))
@@ -130,10 +150,16 @@ def prepare_shared_combined_markdown(
         section_breaks=_rendering_options(project_config)["section_breaks"],
         paper_layout=layout if layout.frontmatter else None,
     )
-    combined_content = preprocess_combined_markdown(
-        combined_content,
-        manuscript_dir=manuscript_dir,
-    ).content
+    portable_content = None
+    diagram_png_sha256: tuple[str, ...] = ()
+    if portable_exports:
+        mermaid = replace_inline_mermaid(combined_content, manuscript_dir, include_portable=True)
+        combined_content = normalize_combined_markdown(mermaid.content, manuscript_dir).content
+        if mermaid.portable_content is not None:
+            portable_content = normalize_combined_markdown(mermaid.portable_content, manuscript_dir).content
+            diagram_png_sha256 = mermaid.diagram_png_sha256
+    else:
+        combined_content = preprocess_combined_markdown(combined_content, manuscript_dir).content
 
     project_root = _project_root_for_manuscript(manuscript_dir)
     combined_path = project_root / "output" / "web" / "_combined_manuscript.md"
@@ -148,7 +174,7 @@ def prepare_shared_combined_markdown(
         algorithm=SHARED_ALGORITHM if layout.frontmatter else "shared-combined-markdown-v1",
     )
     logger.info("Prepared shared combined manuscript: %s", combined_path)
-    return combined_path
+    return _SharedCombinedMarkdown(combined_path, portable_content, diagram_png_sha256)
 
 
 def resolve_combined_markdown(manuscript_dir: Path) -> Path | None:
@@ -173,6 +199,7 @@ def render_combined_docx(
     combined_md: Path | None = None,
     docx_renderer: Callable[..., Any] | None = None,
     diagram_png_sha256: tuple[str, ...] = (),
+    mark_mermaid_occurrences: bool = False,
 ) -> None:
     """Render the combined DOCX from the preprocessed combined markdown."""
     if docx_renderer is None:
@@ -218,23 +245,19 @@ def render_combined_docx(
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined DOCX manuscript...")
     try:
+        layout_options: dict[str, Any] = {}
         if diagram_png_sha256:
-            result = docx_renderer(
-                combined_md,
-                out_path,
-                bibliography=None,
-                pandoc_path=manager.config.pandoc_path,
-                extra_args=extra_args,
-                diagram_png_sha256=diagram_png_sha256,
-            )
-        else:
-            result = docx_renderer(
-                combined_md,
-                out_path,
-                bibliography=None,
-                pandoc_path=manager.config.pandoc_path,
-                extra_args=extra_args,
-            )
+            layout_options["diagram_png_sha256"] = diagram_png_sha256
+            if mark_mermaid_occurrences:
+                layout_options["mark_mermaid_occurrences"] = True
+        result = docx_renderer(
+            combined_md,
+            out_path,
+            bibliography=None,
+            pandoc_path=manager.config.pandoc_path,
+            extra_args=extra_args,
+            **layout_options,
+        )
         logger.info(f"✅ Generated combined DOCX: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
     except RenderingError as rendering_exc:
         logger.warning(f"⚠️  Rendering error generating combined DOCX: {rendering_exc.message}")
@@ -430,42 +453,47 @@ def render_combined_outputs(
     else:
         logger.info("[skip] HTML rendering disabled in config (render.formats.html=false)")
 
-    shared_combined_md: Path | None = None
-    needs_shared_evidence = (
-        config.enable_docx
-        or config.enable_epub
-        or (not config.enable_html and (config.enable_pdf or config.enable_slides))
-    )
+    shared_source = None
+    portable_exports = config.enable_docx or config.enable_epub
+    needs_shared_evidence = portable_exports or (not config.enable_html and (config.enable_pdf or config.enable_slides))
     if md_files and needs_shared_evidence:
-        shared_combined_md = prepare_shared_combined_markdown(
+        shared_source = _prepare_shared_combined_markdown(
             manager,
             md_files,
             manuscript_dir,
             project_name,
             paper_layout=layout,
+            portable_exports=portable_exports,
         )
 
-    if config.enable_docx:
-        render_combined_docx(
-            manager,
-            manuscript_dir,
-            project_name,
-            reporter,
-            combined_md=shared_combined_md,
-        )
-    else:
-        logger.debug("[skip] DOCX rendering disabled in config (default; render.formats.docx=true to enable)")
+    combined_md = shared_source.path if shared_source is not None else None
+    with ExitStack() as writer_inputs:
+        if shared_source is not None and shared_source.portable_content is not None:
+            descriptor, name = tempfile.mkstemp(
+                prefix=".portable-manuscript-", suffix=".md", dir=shared_source.path.parent
+            )
+            combined_md = Path(name)
+            writer_inputs.callback(combined_md.unlink, missing_ok=True)
+            with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
+                handle.write(shared_source.portable_content)
 
-    if config.enable_epub:
-        render_combined_epub(
-            manager,
-            manuscript_dir,
-            project_name,
-            reporter,
-            combined_md=shared_combined_md,
-        )
-    else:
-        logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")
+        if config.enable_docx:
+            render_combined_docx(
+                manager,
+                manuscript_dir,
+                project_name,
+                reporter,
+                combined_md=combined_md,
+                diagram_png_sha256=shared_source.diagram_png_sha256 if shared_source else (),
+                mark_mermaid_occurrences=True,
+            )
+        else:
+            logger.debug("[skip] DOCX rendering disabled in config (default; render.formats.docx=true to enable)")
+
+        if config.enable_epub:
+            render_combined_epub(manager, manuscript_dir, project_name, reporter, combined_md=combined_md)
+        else:
+            logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")
 
 
 def _refresh_slides_against_combined_aux(

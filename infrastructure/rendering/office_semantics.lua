@@ -42,6 +42,23 @@ local function comment_description(raw)
   return body:match('^%s*alt:%s*(.-)%s*$')
 end
 
+local function move_inline_mermaid_label(div)
+  if #div.content ~= 1 or not div.identifier:match('^fig:.+') or div.classes:includes('subfigures') then return nil end
+  local figure = div.content[1]
+  if figure.t ~= 'Figure' or figure.identifier ~= '' or #figure.content ~= 1 then return nil end
+  local body = figure.content[1]
+  if body.t ~= 'Plain' or #body.content ~= 1 then return nil end
+  local image = body.content[1]
+  if image.t ~= 'Image' or image.attributes['data-template-max-height'] ~= '4.2in' then return nil end
+  local ordinal, fingerprint = image.src:match('^%.%./figures/mermaid_inline/inline_mermaid_(%d+)_([0-9a-f]+)%.png$')
+  if not ordinal or #ordinal < 4 or #fingerprint ~= 12 then return nil end
+
+  -- Crossref numbers the Figure, while the surrounding Div retains its context.
+  figure.identifier = div.identifier
+  div.identifier = ''
+  return div
+end
+
 function Pandoc(doc)
   target = FORMAT
   if target == 'json' then target = pandoc.utils.stringify(doc.meta['office-native-target'] or '') end
@@ -51,6 +68,7 @@ function Pandoc(doc)
   local compact = nil
   local alternative = nil
   local retained_alternatives = doc.meta['template-office-source-alternatives']
+  if not retained_alternatives then doc = doc:walk({Div=move_inline_mermaid_label}) end
   local source_alternatives = pandoc.List()
   local image_index = 0
   doc.meta['template-office-source-alternatives'] = nil

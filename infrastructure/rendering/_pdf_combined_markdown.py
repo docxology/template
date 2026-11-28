@@ -111,13 +111,16 @@ def preprocess_combined_markdown(
         figure path fixes, and variable substitutions.
     """
     mermaid_result = replace_inline_mermaid(combined_content, manuscript_dir)
-    content = mermaid_result.content
-    n_mermaid = mermaid_result.diagrams_rendered
-    if n_mermaid:
-        logger.info(f"✓ Rendered {n_mermaid} Mermaid diagram block(s) into combined markdown")
+    if mermaid_result.diagrams_rendered:
+        logger.info(f"✓ Rendered {mermaid_result.diagrams_rendered} Mermaid diagram block(s) into combined markdown")
     else:
         logger.debug("No Mermaid blocks rendered in combined markdown")
+    normalized = normalize_combined_markdown(mermaid_result.content, manuscript_dir)
+    return normalized._replace(mermaid_blocks_processed=mermaid_result.diagrams_rendered)
 
+
+def normalize_combined_markdown(content: str, manuscript_dir: Path | None) -> CombinedMarkdownResult:
+    """Normalize shared figure paths and variables after format-specific Mermaid replacement."""
     n_fig_paths = 0
     for old_prefix, new_prefix in _FIG_PATH_REPLACEMENTS:
         count = content.count(old_prefix)
@@ -184,4 +187,4 @@ def preprocess_combined_markdown(
                 else:
                     logger.warning("manuscript_vars.yaml root must be a mapping; skipping placeholder substitution")
 
-    return CombinedMarkdownResult(content, n_mermaid, n_fig_paths, n_vars)
+    return CombinedMarkdownResult(content, 0, n_fig_paths, n_vars)

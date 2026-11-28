@@ -11,11 +11,14 @@ RenderingError on failure.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from uuid import uuid4
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
@@ -49,6 +52,7 @@ def render_docx(
     pandoc_path: str = "pandoc",
     extra_args: list[str] | None = None,
     diagram_png_sha256: tuple[str, ...] = (),
+    mark_mermaid_occurrences: bool = False,
 ) -> DocxRenderResult:
     """Render *combined_md* to a DOCX at *output_path*.
 
@@ -63,6 +67,9 @@ def render_docx(
             the Word document's Author core property).
         pandoc_path: pandoc binary (default "pandoc").
         extra_args: Extra args appended to the pandoc command.
+        diagram_png_sha256: Expected rendered diagram PNG hashes in source order.
+        mark_mermaid_occurrences: Bind the current portable projection's marked
+            Mermaid figures to their exact writer occurrences.
 
     Returns:
         DocxRenderResult with the output path, byte size, and duration.
@@ -82,74 +89,86 @@ def render_docx(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    cmd: list[str] = [
-        pandoc_path,
-        "-f",
-        "markdown+yaml_metadata_block",
-        "-t",
-        "docx",
-        str(combined_md),
-        "-o",
-        str(output_path),
-        "--standalone",
-    ]
-    from infrastructure.rendering.office_native_projection import office_semantics_filter_path
+    with tempfile.TemporaryDirectory(prefix=".docx-writer-", dir=output_path.parent) as temporary:
+        rendered_path = Path(temporary) / output_path.name
+        cmd: list[str] = [
+            pandoc_path,
+            "-f",
+            "markdown+yaml_metadata_block",
+            "-t",
+            "docx",
+            str(combined_md),
+            "-o",
+            str(rendered_path),
+            "--standalone",
+        ]
+        from infrastructure.rendering.office_native_projection import office_semantics_filter_path
 
-    cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
-    if title is not None:
-        cmd.append(f"--metadata=title:{title}")
-    if author is not None:
-        cmd.append(f"--metadata=author:{author}")
-    if bibliography is not None:
-        cmd.extend(["--citeproc", f"--bibliography={bibliography}"])
-    if reference_doc is not None:
-        cmd.append(f"--reference-doc={reference_doc}")
-    if extra_args:
-        cmd.extend(extra_args)
-    cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
+        cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
+        occurrence_marker = None
+        environment = None
+        if mark_mermaid_occurrences and diagram_png_sha256:
+            occurrence_marker = f"template-docx-mermaid-{uuid4().hex}:"
+            environment = {**os.environ, "TEMPLATE_DOCX_MERMAID_LAYOUT_MARKER": occurrence_marker}
+            cmd.extend(["--lua-filter", str(Path(__file__).with_name("office_mermaid_layout.lua"))])
+        if title is not None:
+            cmd.append(f"--metadata=title:{title}")
+        if author is not None:
+            cmd.append(f"--metadata=author:{author}")
+        if bibliography is not None:
+            cmd.extend(["--citeproc", f"--bibliography={bibliography}"])
+        if reference_doc is not None:
+            cmd.append(f"--reference-doc={reference_doc}")
+        if extra_args:
+            cmd.extend(extra_args)
+        cmd.extend(["--lua-filter", str(office_semantics_filter_path())])
 
-    logger.debug("Invoking pandoc for DOCX: %s", " ".join(cmd))
-    start = time.monotonic()
-    try:
-        result = subprocess.run(
-            cmd,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=_TIMEOUT_SECONDS,
+        logger.debug("Invoking pandoc for DOCX: %s", " ".join(cmd))
+        start = time.monotonic()
+        try:
+            result = subprocess.run(
+                cmd,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=_TIMEOUT_SECONDS,
+                env=environment,
+            )
+        except subprocess.TimeoutExpired as exc:
+            stderr_text = _process_output_text(exc.stderr) or _process_output_text(exc.stdout) or str(exc)
+            raise RenderingError(
+                f"pandoc DOCX render timed out after {_TIMEOUT_SECONDS}s: {_truncate_error_context(stderr_text)}"
+            ) from exc
+
+        duration = time.monotonic() - start
+
+        if result.returncode != 0:
+            stderr_text = result.stderr or result.stdout or ""
+            raise RenderingError(
+                f"pandoc DOCX render failed (exit {result.returncode}): {_truncate_error_context(stderr_text)}"
+            )
+        if not rendered_path.is_file():
+            raise RenderingError(f"pandoc reported success but DOCX was not created: {output_path}")
+
+        from infrastructure.rendering.office_native_projection import project_docx_transmission_layout
+
+        project_docx_transmission_layout(rendered_path)
+        from infrastructure.rendering.office_diagram_layout import apply_docx_diagram_layout
+
+        apply_docx_diagram_layout(rendered_path, diagram_png_sha256, occurrence_marker=occurrence_marker)
+        size = rendered_path.stat().st_size
+        if size == 0:
+            raise RenderingError(f"pandoc reported success but DOCX is empty: {output_path}")
+
+        if output_path.is_file() and not output_path.is_symlink():
+            rendered_path.chmod(output_path.stat().st_mode & 0o777)
+        os.replace(rendered_path, output_path)
+        logger.info("  Generated DOCX: %s (%.1f KB, %.1fs)", output_path.name, size / 1024, duration)
+        return DocxRenderResult(
+            output_path=output_path,
+            size_bytes=size,
+            duration_seconds=duration,
         )
-    except subprocess.TimeoutExpired as exc:
-        stderr_text = _process_output_text(exc.stderr) or _process_output_text(exc.stdout) or str(exc)
-        raise RenderingError(
-            f"pandoc DOCX render timed out after {_TIMEOUT_SECONDS}s: {_truncate_error_context(stderr_text)}"
-        ) from exc
-
-    duration = time.monotonic() - start
-
-    if result.returncode != 0:
-        stderr_text = result.stderr or result.stdout or ""
-        raise RenderingError(
-            f"pandoc DOCX render failed (exit {result.returncode}): {_truncate_error_context(stderr_text)}"
-        )
-    if not output_path.exists():
-        raise RenderingError(f"pandoc reported success but DOCX was not created: {output_path}")
-
-    from infrastructure.rendering.office_native_projection import project_docx_transmission_layout
-
-    project_docx_transmission_layout(output_path)
-    from infrastructure.rendering.office_diagram_layout import apply_docx_diagram_layout
-
-    apply_docx_diagram_layout(output_path, diagram_png_sha256)
-    size = output_path.stat().st_size
-    if size == 0:
-        raise RenderingError(f"pandoc reported success but DOCX is empty: {output_path}")
-
-    logger.info("  Generated DOCX: %s (%.1f KB, %.1fs)", output_path.name, size / 1024, duration)
-    return DocxRenderResult(
-        output_path=output_path,
-        size_bytes=size,
-        duration_seconds=duration,
-    )
 
 
 __all__ = ["DocxRenderResult", "render_docx"]
