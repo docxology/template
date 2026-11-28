@@ -10,6 +10,7 @@ _BEGIN_TRANSMISSION_LABEL = r"\label{beginning-of-transmission}"
 _END_TRANSMISSION_SECTION = r"\section*{END OF TRANSMISSION}"
 _END_TRANSMISSION_SECTION_NUMBERED = r"\section{END OF TRANSMISSION}"
 _TRANSMISSION_END_BOOKEND_MARKER = r"% transmission-end-bookend"
+_TRANSMISSION_END_PAGE_BREAK = "% transmission-end-page-break\n\\newpage"
 
 
 def _inject_toc_after_begin_transmission(tex_content: str, begin_doc_idx: int, title_page_body: str = "") -> str:

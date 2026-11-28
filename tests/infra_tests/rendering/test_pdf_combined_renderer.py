@@ -18,6 +18,8 @@ from infrastructure.rendering._pdf_combined_prevalidate import (
     prevalidate_for_render,
 )
 from infrastructure.rendering._pdf_combined_preamble import inject_latex_preamble
+from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
+from infrastructure.transmission.transmission_bookends import END_FILENAME
 
 
 class TestFlattenManuscriptVars:
@@ -463,6 +465,100 @@ class TestInjectBibliography:
         assert bib_idx >= 0
         assert end_idx >= 0
         assert bib_idx < end_idx
+
+    def test_inline_bibliography_precedes_renderer_owned_terminal_break(self):
+        tex = (
+            "\\section{References}\n"
+            "\\newpage\nReader-facing note.\n"
+            "% transmission-end-page-break\n\\newpage\n\n"
+            "% transmission-end-bookend\n\\clearpage\n"
+            "\\section{END OF TRANSMISSION}\n\\end{document}\n"
+        )
+
+        result = inject_bibliography(tex, True, "references,extra", before_end_transmission=True)
+
+        bibliography = r"\bibliography{references,extra}"
+        break_marker = "% transmission-end-page-break"
+        assert result.index(r"\newpage" + "\nReader-facing note.") < result.index(bibliography)
+        assert result.index(bibliography) < result.index(break_marker)
+        assert result[result.index(break_marker) :] == tex[tex.index(break_marker) :]
+        assert result.count(bibliography) == 1
+        assert r"\renewcommand{\bibsection}{}" in result
+
+    @pytest.mark.parametrize("page_break", [r"\newpage", r"\clearpage"])
+    def test_inline_bibliography_respects_authored_break(self, page_break):
+        tex = (
+            "\\section{References}\n"
+            f"{page_break}\n\n"
+            "% transmission-end-bookend\n\\clearpage\n"
+            "\\section{END OF TRANSMISSION}\n\\end{document}\n"
+        )
+
+        result = inject_bibliography(tex, True, before_end_transmission=True)
+
+        assert result.index(page_break) < result.index(r"\bibliography{references}")
+        assert result.index(r"\bibliography{references}") < result.index("% transmission-end-bookend")
+
+    def test_explicit_bibliography_keeps_its_placement(self):
+        tex = (
+            "\\section{References}\n"
+            "\\bibliography{authored}\n"
+            "% transmission-end-page-break\n\\newpage\n\n"
+            "% transmission-end-bookend\n\\clearpage\n"
+            "\\section{END OF TRANSMISSION}\n\\end{document}\n"
+        )
+
+        result = inject_bibliography(tex, True, "references,extra", before_end_transmission=True)
+
+        assert result == tex.replace(r"\bibliography{authored}", r"\bibliography{references,extra}")
+
+    def test_automatic_heading_retains_original_terminal_insertion(self):
+        tex = (
+            "\\section{Study}\n"
+            "% transmission-end-page-break\n\\newpage\n\n"
+            "% transmission-end-bookend\n\\clearpage\n"
+            "\\section{END OF TRANSMISSION}\n\\end{document}\n"
+        )
+
+        result = inject_bibliography(tex, True, before_end_transmission=True)
+
+        assert "% transmission-end-page-break\n\\newpage\n\n" in result
+        assert result.index(r"\newpage") < result.index("\\clearpage\n\n\\bibliography{references}")
+        assert result.index(r"\bibliography{references}") < result.index("% transmission-end-bookend")
+        assert r"\renewcommand{\bibsection}" not in result
+
+    def test_legacy_terminal_heading_preserves_insertion_after_page_break(self):
+        tex = (
+            "\\section{References}\n"
+            "% transmission-end-page-break\n\\newpage\n\n"
+            "\\section{END OF TRANSMISSION}\n\\end{document}\n"
+        )
+
+        result = inject_bibliography(tex, True, before_end_transmission=True)
+
+        assert result.index(r"\newpage") < result.index(r"\bibliography{references}")
+        assert result.index(r"\bibliography{references}") < result.index(r"\section{END OF TRANSMISSION}")
+
+    def test_malformed_transmission_does_not_use_terminal_break_as_a_bookend(self):
+        tex = "\\section{References}\n% transmission-end-page-break\n\\newpage\n"
+
+        assert inject_bibliography(tex, True, before_end_transmission=True) == tex
+
+    def test_combiner_marks_only_the_break_before_terminal_source(self, tmp_path):
+        study = tmp_path / "01_study.md"
+        references = tmp_path / "02_references.md"
+        terminal = tmp_path / END_FILENAME
+        study.write_text("# Study\n\nBody.\n", encoding="utf-8")
+        references.write_text("# References\n\nReader-facing note.\n", encoding="utf-8")
+        terminal.write_text("# END OF TRANSMISSION\n\nTerminal body.\n", encoding="utf-8")
+
+        combined = combine_manuscript_markdown_sections([study, references, terminal])
+
+        marker = "% transmission-end-page-break\n\\newpage"
+        assert combined.count(r"\newpage") == 2
+        assert combined.count(marker) == 1
+        assert combined.index("# References") < combined.index(marker) < combined.index("# END OF TRANSMISSION")
+        assert marker not in combine_manuscript_markdown_sections([study, references, terminal], section_breaks=False)
 
     def test_discover_manuscript_bib_paths_sorted(self, tmp_path):
         m = tmp_path / "manuscript"

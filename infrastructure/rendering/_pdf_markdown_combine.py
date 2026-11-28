@@ -6,6 +6,8 @@ from pathlib import Path
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._paper_frontmatter import PaperLayout, admit_paper_layout, combine_layout
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pdf_combined_transmission import _TRANSMISSION_END_PAGE_BREAK
+from infrastructure.transmission.transmission_bookends import END_FILENAME
 
 logger = get_logger(__name__)
 
@@ -52,7 +54,8 @@ def combine_manuscript_markdown_sections(
             combined_parts.append(content)
 
             if section_breaks and i < len(source_files) - 1:
-                combined_parts.append("\n```{=latex}\n\\newpage\n```\n")
+                page_break = _TRANSMISSION_END_PAGE_BREAK if source_files[i + 1].name == END_FILENAME else r"\newpage"
+                combined_parts.append(f"\n```{{=latex}}\n{page_break}\n```\n")
 
         except UnicodeDecodeError as e:
             raise RenderingError(
