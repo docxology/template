@@ -442,7 +442,7 @@ POSIX-only and is skipped with a warning on Windows hosts.
 - [AGENTS.md](AGENTS.md) - technical documentation
 - [manuscript/README.md](manuscript/README.md) - Manuscript utilities
 - [Template `scripts/AGENTS.md`](https://github.com/docxology/template/blob/main/scripts/AGENTS.md) - Pipeline integration
-- [../../projects/AGENTS.md](../../projects/AGENTS.md) - Multi-project overview
+- [../../projects/AGENTS.md](https://github.com/docxology/template/blob/main/projects/AGENTS.md) - Multi-project overview
 
 ### Project-scoped required auxiliary acceptance
 

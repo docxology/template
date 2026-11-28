@@ -59,7 +59,7 @@ empty schema identifier raise `FigureRegistryError`. The registry writer stores
 
 Use `build_generated_figure_registry()` to inspect a validated payload, or
 `write_generated_figure_registry()` when the files are already at their intended
-destination. [Visualization Guide](../../docs/usage/visualization-guide.md)
+destination. [Visualization Guide](https://github.com/docxology/template/blob/main/docs/usage/visualization-guide.md)
 contains a complete figure-generation example and accessibility checks.
 
 ## Figure metadata
@@ -105,8 +105,8 @@ Author manuscript figures with Pandoc image syntax:
 
 Paths are relative to the manuscript source. Keep labels aligned with the figure
 specification and inject changing caption statistics from the same analysis
-outputs that produced the plot. See [Image Management](../../docs/usage/image-management.md)
-and [Manuscript Semantics](../../docs/guides/manuscript-semantics.md).
+outputs that produced the plot. See [Image Management](https://github.com/docxology/template/blob/main/docs/usage/image-management.md)
+and [Manuscript Semantics](https://github.com/docxology/template/blob/main/docs/guides/manuscript-semantics.md).
 
 ## API documentation
 

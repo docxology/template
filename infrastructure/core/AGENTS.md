@@ -101,7 +101,7 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **agent_memory.py**
 - Load/save gitignored continual-learning agent memory at `.agents/state/continual-learning-memory.json`
-- Schema example (tracked): `.agents/state/continual-learning-memory.example.json` — see [`.agents/state/README.md`](../../.agents/state/README.md)
+- Schema example (tracked): `.agents/state/continual-learning-memory.example.json` — see [`.agents/state/README.md`](https://github.com/docxology/template/blob/main/.agents/state/README.md)
 - `audit_memory_payload()` returns advisory warnings when local memory hard-codes public project rosters or measured counts; see [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md)
 - Constants: `MEMORY_REL_PATH`, `EXAMPLE_REL_PATH`, `MAX_BULLETS` (12)
 - Public API: `MemoryAdvisory`, `memory_path(repo_root)`, `example_path(repo_root)`, `empty_memory_payload()`, `normalize_bullets(items, *, max_items=MAX_BULLETS)`, `audit_memory_payload(payload)`, `load_memory(repo_root)`, `save_memory(repo_root, payload)`
@@ -200,7 +200,7 @@ still applies verbatim:
 - Owns the one `linking` CLI those four trees share: `build_link_sync_parser` (the `--repo-root`/`--private-root`/`--dry-run`/`--no-prune` contract) and `run_link_sync_cli` (parse, resolve, sync, report, return 0), so each tree's `linking.py` keeps only its `SidecarLinkConfig` and thin named wrappers
 - Owns the result printer too: `print_link_sync_result` (summary + deltas on stdout) and `write_link_sync_deltas` (deltas only, for callers that prefix their own summary)
 - Public API: `sync_private_links`, `resolve_private_root`, `is_managed_symlink`, `unmanaged_mirror_entries`, `build_link_sync_parser`, `run_link_sync_cli`, `print_link_sync_result`, `write_link_sync_deltas`, dataclasses `SidecarLinkConfig` and `LinkSyncResult`
-- Characterization tests: [`tests/infra_tests/core/test_sidecar_linking.py`](../../tests/infra_tests/core/test_sidecar_linking.py) and [`tests/infra_tests/core/test_sidecar_linking_cli.py`](../../tests/infra_tests/core/test_sidecar_linking_cli.py) (the latter pins all four tree CLIs against one contract)
+- Characterization tests: [`tests/infra_tests/core/test_sidecar_linking.py`](https://github.com/docxology/template/blob/main/tests/infra_tests/core/test_sidecar_linking.py) and [`tests/infra_tests/core/test_sidecar_linking_cli.py`](https://github.com/docxology/template/blob/main/tests/infra_tests/core/test_sidecar_linking_cli.py) (the latter pins all four tree CLIs against one contract)
 
 **cli.py**
 - Command-line interface utilities
