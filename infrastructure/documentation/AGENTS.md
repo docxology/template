@@ -83,6 +83,8 @@ tree instead of copying volatile literals into prose.
 
 ## Public Commands
 
+Run the commands and tests below from the root of a Template checkout.
+
 ```bash
 uv run python scripts/docgen/counts.py --check
 uv run python scripts/docgen/counts.py --write
@@ -115,4 +117,4 @@ long-lived docs, generated-doc producers, or hardcoded-count policy.
 
 - [`README.md`](README.md)
 - [`../skills/AGENTS.md`](../skills/AGENTS.md)
-- [`../../docs/_generated/AGENTS.md`](../../docs/_generated/AGENTS.md)
+- [`docs/_generated/AGENTS.md`](https://github.com/docxology/template/blob/main/docs/_generated/AGENTS.md)

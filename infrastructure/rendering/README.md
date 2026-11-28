@@ -418,7 +418,7 @@ available, because an uninspected PDF cannot satisfy the safe-area contract.
 Unannotated `archive` figures do not require `pdfplumber`. Archive Beamer
 figures selecting measured panels require that capability for the same actual
 embedded-label check, with a 16 pt minimum. The full capability table is in
-[`../../docs/development/optional-dependencies.md`](../../docs/development/optional-dependencies.md).
+[Template `docs/development/optional-dependencies.md`](https://github.com/docxology/template/blob/main/docs/development/optional-dependencies.md).
 
 After installing that capability, opt in through the source-owned
 `manuscript/config.yaml`:

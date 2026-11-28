@@ -356,7 +356,9 @@ def test_containment_guard_rejects_escaping_target(tmp_path: Path) -> None:
         _contained_destination(dest, Path("../outside"))
 
 
-def _scaffold_pinned_resource_repo(tmp_path: Path) -> tuple[Path, Path]:
+def _scaffold_pinned_resource_repo(
+    tmp_path: Path, *, submodule_url: str = "https://github.com/docxology/kmyth.git"
+) -> tuple[Path, Path]:
     """Create actual committed Gitlink custody without network or ambient identity."""
     root = _scaffold_git_repo(tmp_path)
     project = root / "projects/templates/template_code_project"
@@ -375,7 +377,7 @@ def _scaffold_pinned_resource_repo(tmp_path: Path) -> tuple[Path, Path]:
     (root / ".gitmodules").write_text(
         '[submodule "infrastructure/steganography/kmyth"]\n'
         "\tpath = infrastructure/steganography/kmyth\n"
-        "\turl = https://github.com/docxology/kmyth.git\n"
+        f"\turl = {submodule_url}\n"
     )
     _git("add", ".gitmodules", "infrastructure/steganography/kmyth", cwd=root)
     _git("commit", "-m", "pin actual owned source", cwd=root)
@@ -411,12 +413,18 @@ def _resource_archive(destination: Path, *, fault: str = "") -> tuple[dict[str, 
     return {"platform_version": "4.0.1", "source_commit": embedded["source_commit"], "files": files}, buffer.getvalue()
 
 
-def test_pinned_resource_export_preserves_complete_source_and_independent_archive_admission(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "submodule_url",
+    ["https://github.com/NationalSecurityAgency/kmyth.git", "https://github.com/docxology/kmyth.git"],
+)
+def test_pinned_resource_export_preserves_complete_source_and_independent_archive_admission(
+    tmp_path: Path, submodule_url: str
+) -> None:
     from infrastructure.reporting.readiness_receipts import public_resource_source_paths
     from infrastructure.reporting.release_readiness_artifacts import validate_source_archive
     from infrastructure.reporting.release_readiness_snapshot import SnapshotReader
 
-    root, child = _scaffold_pinned_resource_repo(tmp_path)
+    root, child = _scaffold_pinned_resource_repo(tmp_path, submodule_url=submodule_url)
     destination = tmp_path / "template_code_project"
     export_exemplar(root, "templates/template_code_project", destination)
     bundled = destination / "_template_resources/infrastructure"

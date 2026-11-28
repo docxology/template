@@ -55,8 +55,12 @@ $$ {#eq:convergence}
 The convergence rate [@eq:convergence] shows...
 ```
 
-Equation labels are likewise project-owned. Inspect them with
-`rg -n '\{#eq:' projects/templates/template_code_project/manuscript/`.
+The bundled Code Project's numbered chapters use native LaTeX equation labels.
+Run this command from the Template checkout root to list those declarations.
+
+```bash
+rg -n -F -g '[0-9]*.md' '\label{eq:' projects/templates/template_code_project/manuscript/
+```
 
 ### Figure References
 

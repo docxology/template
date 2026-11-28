@@ -19,6 +19,8 @@ Python modules backing `check_*` functions re-exported from [`../consistency_lin
 
 ## Verification
 
+Run these checks from the root of a Template checkout.
+
 ```bash
 uv run pytest tests/infra_tests/validation/docs/test_consistency_lint.py -q
 uv run python scripts/audit/lint_docs.py --consistency-only
@@ -27,4 +29,4 @@ uv run python scripts/audit/lint_docs.py --consistency-only
 ## See also
 
 - [`../AGENTS.md`](../AGENTS.md) — validation docs package
-- [`../../../../tests/infra_tests/validation/docs/`](../../../../tests/infra_tests/validation/docs/) — regression tests
+- [Template `tests/infra_tests/validation/docs/`](https://github.com/docxology/template/tree/main/tests/infra_tests/validation/docs) — regression tests

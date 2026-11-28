@@ -29,7 +29,7 @@ from infrastructure.publishing.zenodo import (
 
 Reserve-first orchestration (write concept/version DOI to config, re-render, upload) lives in
 [`release_workflow_zenodo.py`](../release/release_workflow_zenodo.py); see
-[`docs/guides/publishing-guide.md`](../../../docs/guides/publishing-guide.md).
+[`docs/guides/publishing-guide.md`](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md).
 
 ### `DepositionResult.from_zenodo_body`
 

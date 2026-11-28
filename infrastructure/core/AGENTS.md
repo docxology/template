@@ -102,7 +102,7 @@ The Core module provides fundamental foundation utilities used across the entire
 **agent_memory.py**
 - Load/save gitignored continual-learning agent memory at `.agents/state/continual-learning-memory.json`
 - Schema example (tracked): `.agents/state/continual-learning-memory.example.json` — see [`.agents/state/README.md`](../../.agents/state/README.md)
-- `audit_memory_payload()` returns advisory warnings when local memory hard-codes public project rosters or measured counts; see [`docs/rules/memory_and_decision_records.md`](../../docs/rules/memory_and_decision_records.md)
+- `audit_memory_payload()` returns advisory warnings when local memory hard-codes public project rosters or measured counts; see [`docs/rules/memory_and_decision_records.md`](https://github.com/docxology/template/blob/main/docs/rules/memory_and_decision_records.md)
 - Constants: `MEMORY_REL_PATH`, `EXAMPLE_REL_PATH`, `MAX_BULLETS` (12)
 - Public API: `MemoryAdvisory`, `memory_path(repo_root)`, `example_path(repo_root)`, `empty_memory_payload()`, `normalize_bullets(items, *, max_items=MAX_BULLETS)`, `audit_memory_payload(payload)`, `load_memory(repo_root)`, `save_memory(repo_root, payload)`
 - Tests: `tests/infra_tests/core/test_agent_memory.py`
@@ -507,9 +507,10 @@ print(summary)
 
 ## Testing
 
-Run core tests with:
+Run core tests from the root of a Template checkout.
+
 ```bash
-uv run pytest tests/infra_tests/test_core/
+uv run pytest tests/infra_tests/core/
 ```
 
 ## Configuration
@@ -648,7 +649,7 @@ Core module is imported by all other infrastructure modules for:
 
 - [README.md](README.md) - Quick reference guide
 - [`validation/`](../validation/) - Validation & quality assurance
-- [`../scripts/gates/AGENTS.md`](../../scripts/gates/AGENTS.md) - Opt-in gate scripts
+- [`scripts/gates/AGENTS.md`](https://github.com/docxology/template/blob/main/scripts/gates/AGENTS.md) - Opt-in gate scripts
 
 ## Release acceptance modules
 

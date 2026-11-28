@@ -1,7 +1,7 @@
 # Archival publishing
 
 Multi-target mirror for long-horizon redundancy (Stage 15). See
-[`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md)
+[`docs/maintenance/archival-targets.md`](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md)
 for provider rationale and threat scenarios.
 
 ## Entry points

@@ -474,7 +474,12 @@ def test_actual_committed_submodule_declaration_is_not_ambient_routing_authority
     declaration = root / ".gitmodules"
     original = declaration.read_text()
     assert "path = infrastructure/steganography/kmyth" in original
-    assert "url = https://github.com/docxology/kmyth.git" in original
+    pinned_url = (
+        _git(root, "config", "--file", ".gitmodules", "--get", "submodule.infrastructure/steganography/kmyth.url")
+        .decode()
+        .strip()
+    )
+    assert f"url = {pinned_url}" in original
     try:
         if fault == "path":
             changed = original.replace(
@@ -482,7 +487,7 @@ def test_actual_committed_submodule_declaration_is_not_ambient_routing_authority
             )
         elif fault == "url":
             changed = original.replace(
-                "url = https://github.com/docxology/kmyth.git",
+                f"url = {pinned_url}",
                 "url = https://invalid.example/owned-never-contacted.git",
             )
         elif fault == "extra-declaration":

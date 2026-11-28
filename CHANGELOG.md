@@ -766,6 +766,9 @@ Advanced Literature Review `pypdf`, and root dev-group pins (`ruff`, `numpy`,
   locally instead of overlapping through automatic line breaking or disappearing
   behind page-level clipping. Authored TeX, fonts, and mathematical content remain
   unchanged.
+- Restore the public source URL for the pinned submodule (#362). Standalone
+  export and reference validation admit the two known source URLs and verify
+  the committed Gitlink.
 - Use the registered project name for Stage 04 combined PDF checks on symlinked
   checkouts. Working-project audits and PDF rerender selection use the canonical
   manuscript directory, including Markdown sources in `docs/manuscript/`.

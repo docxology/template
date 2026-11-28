@@ -35,7 +35,7 @@ match both the root package version and a released changelog heading.
 
 For a release operator's path through standalone GitHub mirrors, real Zenodo DOI
 minting, optional mirrors, and archival handoff, start with
-[`../../docs/guides/publication-runbook.md`](../../docs/guides/publication-runbook.md).
+[Template `docs/guides/publication-runbook.md`](https://github.com/docxology/template/blob/main/docs/guides/publication-runbook.md).
 
 The Python API exposes BibTeX, APA, and MLA citation helpers. The
 `generate-citation` CLI subcommand currently exposes BibTeX only.
@@ -317,6 +317,8 @@ export WEB3_STORAGE_TOKEN="your-token"    # IPFS archival via Web3.Storage
 ```
 
 ## Testing
+
+Run these tests from the root of a Template checkout.
 
 ```bash
 uv run pytest tests/infra_tests/publishing/

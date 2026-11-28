@@ -93,4 +93,4 @@ uv run pytest tests/infra_tests/publishing/test_archival.py -q
 - [`README.md`](README.md)
 - [`../AGENTS.md`](../AGENTS.md) — publishing module overview
 - [`../zenodo/AGENTS.md`](../zenodo/AGENTS.md) — rich-metadata Zenodo path (distinct from archival mirror)
-- [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md) — threat scenarios and provider rationale
+- [`docs/maintenance/archival-targets.md`](https://github.com/docxology/template/blob/main/docs/maintenance/archival-targets.md) — threat scenarios and provider rationale

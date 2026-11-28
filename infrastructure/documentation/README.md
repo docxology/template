@@ -146,7 +146,7 @@ uv run python -m infrastructure.documentation.generate_glossary_cli \
   and the count line between `<!-- BEGIN:STAGE_SUMMARY -->` /
   `<!-- END:STAGE_SUMMARY -->`
   in a Markdown file (idempotent)
-- Driver: [`scripts/docgen/stage_table.py`](../../scripts/docgen/stage_table.py)
+- Driver: [`scripts/docgen/stage_table.py`](https://github.com/docxology/template/blob/main/scripts/docgen/stage_table.py)
   updates `README.md`, `.github/GITHUB.md`, `scripts/AGENTS.md`,
   `docs/RUN_GUIDE.md`, and `docs/core/workflow.md` in lockstep
 
@@ -161,12 +161,14 @@ uv run python -m infrastructure.documentation.generate_glossary_cli \
 - `api_reference_gen.inject_api_reference(md_path, content)` - Replace
   the block between `<!-- BEGIN:API_REFERENCE -->` /
   `<!-- END:API_REFERENCE -->` (idempotent).
-- Driver: [`scripts/docgen/api_reference.py`](../../scripts/docgen/api_reference.py)
+- Driver: [`scripts/docgen/api_reference.py`](https://github.com/docxology/template/blob/main/scripts/docgen/api_reference.py)
   with `--write` (apply) and `--check` (CI gate) flags. Target:
-  [`docs/reference/api-reference.md`](../../docs/reference/api-reference.md).
+  [`docs/reference/api-reference.md`](https://github.com/docxology/template/blob/main/docs/reference/api-reference.md).
   Drift fails the `validate` job in `.github/workflows/ci.yml`.
 
 ## Verification
+
+Run these checks from the root of a Template checkout.
 
 ```bash
 uv run pytest tests/infra_tests/documentation/test_figure_manager.py tests/infra_tests/documentation/test_generated_figure_registry.py

@@ -55,10 +55,17 @@ location or absence claim.
 
 ## Standalone manuscript contract
 
-For a standalone public repository, keep the authored manuscript in
-`docs/manuscript/`. The renderer discovers that directory automatically.
-When setting `manuscript_dir` explicitly in `config.yaml`, use
-`docs/manuscript`. Order the main Markdown sections with numeric prefixes.
+For a standalone public repository, keep the authored manuscript and its
+`config.yaml` in `docs/manuscript/`. The shared stages discover the source
+from the directory layout. A top-level `manuscript/` containing manuscript
+source takes precedence.
+
+Stage 02 reads any `analysis.scripts` list from the selected source’s
+`config.yaml`. Stage 03 sets `RenderingConfig.manuscript_dir` at runtime
+to the directory it renders, which can be `output/manuscript/` after
+hydration.
+
+Order the main Markdown sections with numeric prefixes.
 Keep `references.bib`, any supplemental bibliography, the optional PDF
 preamble, and authored artwork with the manuscript. `README.md` describes
 the build and `AGENTS.md` records the project-specific editing rules.
@@ -91,9 +98,10 @@ Template’s `projects/working/` for automatic manuscript hydration.
 [Automatic variable injection](../rules/manuscript_style.md#automatic-variable-injection)
 
 After installing the locked renderer environment, run Stage 03 and Stage 04
-from the pinned Template checkout with the same
-qualified project selector. For a concrete example after registering
-`working/template_storybook`, use the commands below.
+from the pinned Template checkout with the same qualified project selector.
+For the Storybook example, prepare its output figures and copy the figure
+registry into `output/figures/` before registering `working/template_storybook`.
+[Standalone Storybook build](https://github.com/docxology/template_storybook/blob/0de8a3d2acc037c8309673d08f17faf03587ab5c/docs/manuscript/README.md)
 
 ```bash
 uv run --no-sync python scripts/pipeline/stage_03_render.py --project working/template_storybook
@@ -104,7 +112,6 @@ Record the authored commit, the Template pin, and the enabled formats. Open
 each reader and check equation numbers and links, cover artwork and its
 alternative text where configured, figures, tables, and bibliography targets.
 Keep the validation report and `rendered_provenance.json` with the outputs.
-[Standalone Storybook build](https://github.com/docxology/template_storybook/blob/0de8a3d2acc037c8309673d08f17faf03587ab5c/docs/manuscript/README.md)
 
 ## 1. Citations
 

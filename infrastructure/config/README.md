@@ -10,9 +10,9 @@ If you are looking for `from infrastructure.config import ...`, you want `infras
 - **`secure_config.yaml`**: Default secure pipeline configuration (steganography/hashing/encryption).
 - **`acceptance-source-fixtures.json`**: Exact official Requests/FastAPI selected archive members and committed synthetic-seed copy mappings, shared by fixture preparation and complete Source-body admission. Downloaded bodies remain part of source identity; the manifest grants no execution or acceptance evidence.
 
-- **`root-case-policy.json` and derived `.part-NNNN.json` files**: Bounded, lossless source representation of the complete reviewed Root policy draft. Current collection and policy admission remain required; see [Root case policy](../../docs/development/root-case-policy.md).
+- **`root-case-policy.json` and derived `.part-NNNN.json` files**: Bounded, lossless source representation of the complete reviewed Root policy draft. Current collection and policy admission remain required; see [Root case policy](https://github.com/docxology/template/blob/main/docs/development/root-case-policy.md).
 
 ### See also
 
 - **Python config loaders**: [`infrastructure/core/config/`](../core/config/)
-- **Configuration docs**: [`docs/operational/config/configuration.md`](../../docs/operational/config/configuration.md)
+- **Configuration docs**: [`docs/operational/config/configuration.md`](https://github.com/docxology/template/blob/main/docs/operational/config/configuration.md)

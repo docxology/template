@@ -35,6 +35,8 @@ publication boundary.
 
 ## Verification
 
+Run these checks from the root of a Template checkout.
+
 ```bash
 uv run pytest tests/infra_tests/validation/test_rendered_provenance_roles.py \
   tests/infra_tests/validation/test_rendered_provenance_stage_closures.py \
@@ -45,4 +47,4 @@ uv run python scripts/gates/module_line_count_check.py
 ## See Also
 
 - [`../AGENTS.md`](../AGENTS.md) - rendered-snapshot role in validation
-- [`../../../tests/infra_tests/validation/`](../../../tests/infra_tests/validation/) - rendered-provenance tests (`test_rendered_provenance_*` cluster)
+- [Template `tests/infra_tests/validation/`](https://github.com/docxology/template/tree/main/tests/infra_tests/validation) - rendered-provenance tests (`test_rendered_provenance_*` cluster)

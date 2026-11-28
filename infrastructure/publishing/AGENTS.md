@@ -68,8 +68,8 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `upload_runner.py` | `UploadTargets`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` — reusable multi-platform upload dispatch (dry-run by default; per-platform failure never aborts the batch) |
 | `metadata/metadata_export.py` | `build_citation_cff`, `build_codemeta` / `build_codemeta_json`, `build_zenodo` / `build_zenodo_json`, `write_metadata_files`, `write_metadata_for_config_path` — generate `CITATION.cff`, `codemeta.json`, and `.zenodo.json` from a parsed `manuscript/config.yaml`, with `paper` fields taking precedence and a complete `book`-schema fallback (optional `released_date` for byte-stable output) |
 | `standalone_mirror.py` | `sync_exemplar`, `populate_mirror_tree` — mirror a roster-admitted public exemplar with retained publication evidence and explicit reviewed source removals; tracked public project/resource providers are materialized through confined reads. Source/provider admission (`clean_source_revision`, `declared_repository`, `tracked_relative_paths`, committed-inventory verification) is `_standalone_mirror_source.py`; committed-export/receipt parity (`_assert_source_current`, `validate_publication_commit`) is `_standalone_mirror_verify.py` |
-| `standalone_install_projection.py`, `standalone_install_lock.py` | Opt-in versioned standalone installation projection and independent reconstruction: exact schema-2 originals stay separate from Git-pinned installation fields; see [`standalone-install-projection.md`](../../docs/guides/standalone-install-projection.md) |
-| `publication_tree.py` | Destination-bound ownership, exact reviewed removal plans, retained quarantine and no-clobber rollback. Managed export parity is separate from preserved publication evidence and whole-tree parity; see [`publication-removals.md`](../../docs/guides/publication-removals.md) |
+| `standalone_install_projection.py`, `standalone_install_lock.py` | Opt-in versioned standalone installation projection and independent reconstruction: exact schema-2 originals stay separate from Git-pinned installation fields; see [`standalone-install-projection.md`](https://github.com/docxology/template/blob/main/docs/guides/standalone-install-projection.md) |
+| `publication_tree.py` | Destination-bound ownership, exact reviewed removal plans, retained quarantine and no-clobber rollback. Managed export parity is separate from preserved publication evidence and whole-tree parity; see [`publication-removals.md`](https://github.com/docxology/template/blob/main/docs/guides/publication-removals.md) |
 | `metadata/metadata_export_cli.py` | `main` — `metadata-export` CLI writing the citation/archival metadata files for a project (`python -m infrastructure.publishing.metadata.metadata_export_cli metadata-export --project <name>`) |
 | `infrastructure/metadata/metadata_package.py` | Shared metadata package builder; publishing consumers import this canonical rendering-safe leaf directly |
 | `metadata/metadata_stage.py` | `run_metadata_package` — thin stage orchestrator: resolve project, load config, build ebook metadata, write the package into `output/metadata/` |
@@ -573,7 +573,7 @@ uv run python scripts/publish/publish_project_release.py \
   --production
 ```
 
-Environment: `GITHUB_TOKEN`, `GITHUB_REPO`, `ZENODO_SANDBOX_TOKEN` (sandbox) or `ZENODO_PROD_TOKEN` / `ZENODO_TOKEN` (production). Metadata is read from `projects/{name}/manuscript/config.yaml` and `00_abstract.md`. The default workflow publishes to **Zenodo first**, patches the live deposition description with the minted DOI (best-effort via `patch_deposition_description`), then creates the GitHub release (body includes DOI, Zenodo URL, GitHub URL, version, and PDF hash), writes `publication.doi`, and re-renders locally. With `--reserve-doi-first`, the workflow creates a Zenodo draft, reserves the version DOI, writes the concept DOI to `publication.doi` and the version DOI to `publication.version_doi`, re-renders first, uploads the DOI-bearing PDF to that draft, publishes, and only then creates the GitHub release. Deposit descriptions use plaintext normalization (`abstract_plaintext.py`); see [`docs/guides/publishing-guide.md`](../../docs/guides/publishing-guide.md).
+Environment: `GITHUB_TOKEN`, `GITHUB_REPO`, `ZENODO_SANDBOX_TOKEN` (sandbox) or `ZENODO_PROD_TOKEN` / `ZENODO_TOKEN` (production). Metadata is read from `projects/{name}/manuscript/config.yaml` and `00_abstract.md`. The default workflow publishes to **Zenodo first**, patches the live deposition description with the minted DOI (best-effort via `patch_deposition_description`), then creates the GitHub release (body includes DOI, Zenodo URL, GitHub URL, version, and PDF hash), writes `publication.doi`, and re-renders locally. With `--reserve-doi-first`, the workflow creates a Zenodo draft, reserves the version DOI, writes the concept DOI to `publication.doi` and the version DOI to `publication.version_doi`, re-renders first, uploads the DOI-bearing PDF to that draft, publishes, and only then creates the GitHub release. Deposit descriptions use plaintext normalization (`abstract_plaintext.py`); see [`docs/guides/publishing-guide.md`](https://github.com/docxology/template/blob/main/docs/guides/publishing-guide.md).
 
 `publish_to_zenodo` and `publish_new_version_to_zenodo` return `PublishResult(doi, deposition_id)` from `infrastructure.publishing.zenodo.models`.
 
@@ -584,6 +584,8 @@ from infrastructure.publishing.zenodo import ZenodoClient, ZenodoConfig
 ```
 
 ## Testing
+
+Run these tests from the root of a Template checkout.
 
 ```bash
 uv run pytest tests/infra_tests/publishing/
