@@ -8,7 +8,6 @@ fallback can never become an accepted image or an omitted source occurrence.
 from __future__ import annotations
 
 import hashlib
-import json
 from dataclasses import dataclass
 
 from infrastructure.rendering._pdf_mermaid import (
@@ -19,6 +18,7 @@ from infrastructure.rendering._pdf_mermaid import (
     _latex_caption,
     _normalise_mermaid_source,
     _source_hash,
+    portable_mermaid_figure_markdown,
 )
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
 
@@ -75,12 +75,7 @@ def project_office_mermaid_figures(preprocessed: str, combined_source: str) -> O
             raise ValueError("Office Mermaid caption/alternative exceeds the admitted single-line form")
         # Explicit alt travels through the existing Office pre/post Lua passes.
         # Do not manufacture a crossref label absent from the original source.
-        projected = (
-            f"\n![{visible}]({target})"
-            f"{{width=82% data-template-max-height=4.2in "
-            f'style="max-height: 4.2in; height: auto; object-fit: contain;" '
-            f"alt={json.dumps(alternative, ensure_ascii=False)}}}\n"
-        )
+        projected = portable_mermaid_figure_markdown(match, stem + ".png")
         result = result.replace(expected, projected, 1)
         rows.append(
             {

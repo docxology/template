@@ -725,3 +725,133 @@ def test_render_combined_outputs_epub_is_independent_of_pdf(tmp_path: Path) -> N
     assert "STALE PDF SOURCE" not in shared.read_text(encoding="utf-8")
     receipt = json.loads((tmp_path / "output" / "reports" / "manuscript_composition.json").read_text())
     assert receipt["algorithm"] == "shared-combined-markdown-v1"
+
+
+@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc is required for real portable rendering")
+@pytest.mark.parametrize(
+    ("docx", "epub", "diagram_status"),
+    [
+        (True, False, "rendered"),
+        (False, True, "rendered"),
+        (True, True, "rendered"),
+        (True, True, "unavailable-browser"),
+        (True, True, "missing-cli"),
+    ],
+)
+def test_portable_inline_mermaid_with_pdf_disabled(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+    docx: bool,
+    epub: bool,
+    diagram_status: str,
+) -> None:
+    """Run the selected portable Pandoc writers against current inline Mermaid source."""
+    from hashlib import sha256
+    from xml.etree import ElementTree
+
+    from infrastructure.rendering.chrome import resolve_chrome_executable
+    from infrastructure.rendering.office_diagram_layout import MAX_HEIGHT_EMU, WP
+
+    pandoc_path = shutil.which("pandoc")
+    assert pandoc_path is not None
+    if diagram_status == "missing-cli":
+        private_bin = tmp_path / "empty-bin"
+        private_bin.mkdir()
+        monkeypatch.setenv("PATH", str(private_bin))
+    elif shutil.which("mmdc") is None or shutil.which("node") is None:
+        pytest.skip("real Mermaid and Node are required for the native figure")
+
+    if diagram_status == "rendered":
+        chrome = resolve_chrome_executable()
+        if chrome is None:
+            pytest.skip("real Chrome is required for the native figure")
+    else:
+        chrome = tmp_path / "unavailable-browser"
+
+    manuscript = tmp_path / "docs" / "manuscript"
+    manuscript.mkdir(parents=True)
+    source = manuscript / "01_intro.md"
+    source.write_text(
+        "# Introduction\n\n::: {#fig:mermaid-owner}\n\n```mermaid\ngraph TD\nA --> B --> C\n```\n"
+        '<!-- alt: A "quoted" arrow joins two nodes. -->\n\n*Visible **diagram** caption.*\n\n:::\n',
+        encoding="utf-8",
+    )
+    original = source.read_bytes()
+    (manuscript / ".puppeteer.json").write_text(json.dumps({"executablePath": str(chrome)}), encoding="utf-8")
+    output = tmp_path / "output"
+    manager = RenderManager(
+        config=RenderingConfig(
+            enable_pdf=False,
+            enable_html=False,
+            enable_slides=False,
+            enable_docx=docx,
+            enable_epub=epub,
+            pandoc_path=pandoc_path,
+            figures_dir=str(output / "figures"),
+            web_dir=str(output / "web"),
+            docx_dir=str(output / "docx"),
+            epub_dir=str(output / "epub"),
+        )
+    )
+    reporter = _make_reporter(tmp_path)
+    if diagram_status == "missing-cli":
+        with pytest.raises(RenderingError, match="Mermaid CLI 'mmdc' is required"):
+            render_combined_outputs(manager, [source], manuscript, "test-portable", reporter, rendered_count=0)
+        assert not (output / "docx").exists() and not (output / "epub").exists()
+        return
+
+    render_combined_outputs(manager, [source], manuscript, "test-portable", reporter, rendered_count=0)
+
+    rendered = diagram_status == "rendered"
+    directory = output / "figures" / "mermaid_inline"
+    images = list(directory.glob("*.png"))
+    assert len(images) == int(rendered)
+    (process,) = directory.glob("*.mermaid-process.json")
+    execution = json.loads(process.read_text(encoding="utf-8"))
+    assert (execution["original_exit_code"] == 0) is rendered
+    assert execution["input_sha256_before"] == execution["input_sha256_after"]
+    canonical = output / "web" / "_combined_manuscript.md"
+    composition = json.loads((output / "reports" / "manuscript_composition.json").read_text(encoding="utf-8"))
+    assert composition["combined_sha256"] == sha256(canonical.read_bytes()).hexdigest()
+    assert ("\\includegraphics" if rendered else "\\begin{verbatim}") in canonical.read_text(encoding="utf-8")
+    assert not list(canonical.parent.glob(".portable-manuscript-*.md"))
+    assert source.read_bytes() == original
+    assert not (output / "pdf").exists()
+
+    for enabled, extension in ((docx, "docx"), (epub, "epub")):
+        artifact = output / extension / f"test-portable_combined.{extension}"
+        assert artifact.is_file() == enabled
+        if not enabled:
+            continue
+        with zipfile.ZipFile(artifact) as package:
+            members = package.namelist()
+            if not rendered:
+                assert not any(name.endswith(".png") for name in members)
+                text = " ".join(
+                    "".join(ElementTree.fromstring(package.read(name)).itertext())
+                    for name in members
+                    if name == "word/document.xml" or name.endswith(".xhtml")
+                )
+                assert "graph TD" in text
+                assert "mmdc failed" in caplog.text
+                continue
+
+            assert [package.read(name) for name in members if name.endswith(".png")] == [images[0].read_bytes()]
+            if extension == "docx":
+                document = ElementTree.fromstring(package.read("word/document.xml"))
+                assert [node.get("descr") for node in document.iter(f"{WP}docPr")] == [
+                    'A "quoted" arrow joins two nodes.'
+                ]
+                assert 0 < int(next(document.iter(f"{WP}extent")).attrib["cy"]) <= MAX_HEIGHT_EMU
+                assert "Visible diagram caption." in "".join(document.itertext())
+            else:
+                documents = [ElementTree.fromstring(package.read(name)) for name in members if name.endswith(".xhtml")]
+                ns = "{http://www.w3.org/1999/xhtml}"
+                assert [node.get("alt") for document in documents for node in document.iter(ns + "img")] == [
+                    'A "quoted" arrow joins two nodes.'
+                ]
+                captions = [
+                    "".join(node.itertext()) for document in documents for node in document.iter(ns + "figcaption")
+                ]
+                assert len(captions) == 1 and "Visible diagram caption." in captions[0]

@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Final
 
 from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.files.secure_write import read_bytes_confined
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
 from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
@@ -58,17 +59,25 @@ class MermaidReplacementResult:
 
     content: str
     diagrams_rendered: int
+    portable_content: str | None = None
+    diagram_png_sha256: tuple[str, ...] = ()
 
 
 def replace_inline_mermaid(
-    content: str, manuscript_dir: Path | None, *, home: Path | None = None
+    content: str,
+    manuscript_dir: Path | None,
+    *,
+    home: Path | None = None,
+    include_portable: bool = False,
 ) -> MermaidReplacementResult:
-    """Render Mermaid fences and replace them with Markdown image references.
+    """Render Mermaid fences and prepare the LaTeX and optional portable forms.
 
     Args:
         content: Combined Markdown content.
         manuscript_dir: Manuscript directory for resolving project output paths.
         home: Home-directory override forwarded to Chrome resolution.
+        include_portable: Also prepare semantic figures for DOCX/EPUB from the same
+            PNGs, leaving any unrendered fences readable in the portable source.
 
     Returns:
         Rewritten content and the number of Mermaid blocks processed.
@@ -99,9 +108,12 @@ def replace_inline_mermaid(
 
     block_index = 0
     diagrams_rendered = 0
+    portable_parts: list[str] = []
+    portable_cursor = 0
+    diagram_png_sha256: list[str] = []
 
     def _replace(match: re.Match[str]) -> str:
-        nonlocal block_index, diagrams_rendered
+        nonlocal block_index, diagrams_rendered, portable_cursor
         block_index += 1
         raw_source = match.group("source").strip()
         source = _normalise_mermaid_source(raw_source) if raw_source else ""
@@ -133,6 +145,16 @@ def replace_inline_mermaid(
         except RenderingError as exc:
             logger.warning("%s", exc)
             return _mermaid_fallback_figure(fallback_source, caption)
+        if include_portable:
+            try:
+                png_bytes = read_bytes_confined(output_dir.parent, png_path, max_bytes=16 * 1024 * 1024)
+            except (OSError, ValueError) as exc:
+                raise RenderingError("Cannot bind the current inline Mermaid PNG for portable output") from exc
+            portable_parts.extend(
+                (content[portable_cursor : match.start()], portable_mermaid_figure_markdown(match, png_path.name))
+            )
+            portable_cursor = match.end()
+            diagram_png_sha256.append(hashlib.sha256(png_bytes).hexdigest())
         diagrams_rendered += 1
         return inline_mermaid_figure_markdown(match, png_path.name)
 
@@ -150,8 +172,23 @@ def replace_inline_mermaid(
                 runtime_chrome_executable,
                 home=home,
             )
-    logger.info("Rendered %d inline Mermaid diagram(s) for PDF output", diagrams_rendered)
-    return MermaidReplacementResult(rewritten, diagrams_rendered)
+    logger.info("Rendered %d inline Mermaid diagram(s) for the combined manuscript", diagrams_rendered)
+    if not include_portable:
+        return MermaidReplacementResult(rewritten, diagrams_rendered)
+    portable_parts.append(content[portable_cursor:])
+    return MermaidReplacementResult(rewritten, diagrams_rendered, "".join(portable_parts), tuple(diagram_png_sha256))
+
+
+def portable_mermaid_figure_markdown(match: re.Match[str], png_name: str) -> str:
+    """Write a semantic figure carrying its visible caption and alternative text."""
+    caption = _caption_text(match)
+    alternative = _first_alt(match.group("alts")) or caption or "Mermaid diagram"
+    return (
+        f"\n![{caption or alternative}](../figures/mermaid_inline/{png_name})"
+        f"{{width=82% data-template-max-height=4.2in "
+        f'style="max-height: 4.2in; height: auto; object-fit: contain;" '
+        f"alt={json.dumps(alternative, ensure_ascii=False)}}}\n"
+    )
 
 
 def inline_mermaid_figure_markdown(match: re.Match[str], png_name: str) -> str:
